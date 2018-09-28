@@ -1,6 +1,8 @@
 # How to package
 
 
+if you created a new element (component, service, model, etc..) add it to ```public_api.ts```
+
 edit version attribute in package.js
 
 compile package
