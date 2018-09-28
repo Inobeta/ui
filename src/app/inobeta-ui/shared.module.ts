@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 
-
+import { ModuleWithProviders} from '@angular/core';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {CommonModule, DatePipe} from '@angular/common';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';

@@ -1,8 +1,9 @@
-  import {ApplicationRef, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {ResponseHandlerService} from './responseHandler.service';
-  import {HttpClient, HttpHeaders} from '@angular/common/http';
-  import {catchError, finalize, map, tap} from 'rxjs/operators';
-  import {AuthService} from '../auth/auth.service';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {catchError, finalize, map, tap} from 'rxjs/operators';
+import {AuthService} from '../auth/auth.service';
+
 
 /*
   HttpClient with Bearer authentication
@@ -23,7 +24,9 @@ export class HttpClientService {
   createAuthorizationHeader(headers: HttpHeaders) {
     this.turnOnModal();
 
-    if (!this.srvAuth.activeSession) { return; }
+    if (!this.srvAuth.activeSession) {
+      return;
+    }
 
     return headers
       .set('Content-Type', 'application/json')
@@ -34,62 +37,61 @@ export class HttpClientService {
   }
 
 
-  get(url) {
+  get(url): any {
     let headers = new HttpHeaders();
     headers = this.createAuthorizationHeader(headers);
     return this.h.get(url, {headers: headers})
       .pipe(
-        map( x => this.srvResponse.handleOK(x)),
-        catchError( x => this.srvResponse.handleKO(x) ),
-        finalize (() => this.turnOffModal()),
+        map(x => this.srvResponse.handleOK(x)),
+        catchError(x => this.srvResponse.handleKO(x)),
+        finalize(() => this.turnOffModal()),
         tap(x => x, err => this.srvResponse.displayErrors(err))
       );
 
   }
 
-  post(url, data) {
+  post(url, data): any {
 
     let headers = new HttpHeaders();
     headers = this.createAuthorizationHeader(headers);
     return this.h.post(url, data, {headers: headers})
       .pipe(
-        map( x => this.srvResponse.handleOK(x)),
-        catchError( x => this.srvResponse.handleKO(x) ),
-        finalize (() => this.turnOffModal()),
+        map(x => this.srvResponse.handleOK(x)),
+        catchError(x => this.srvResponse.handleKO(x)),
+        finalize(() => this.turnOffModal()),
         tap(x => x, err => this.srvResponse.displayErrors(err))
       );
   }
 
 
-
-  put(url, data) {
+  put(url, data): any {
     let headers = new HttpHeaders();
     headers = this.createAuthorizationHeader(headers);
     return this.h.put(url, data, {headers: headers})
       .pipe(
-        map( x => this.srvResponse.handleOK(x)),
-        catchError( x => this.srvResponse.handleKO(x) ),
-        finalize (() => this.turnOffModal()),
+        map(x => this.srvResponse.handleOK(x)),
+        catchError(x => this.srvResponse.handleKO(x)),
+        finalize(() => this.turnOffModal()),
         tap(x => x, err => this.srvResponse.displayErrors(err))
       );
 
   }
 
-  delete(url) {
+  delete(url): any {
     let headers = new HttpHeaders();
     headers = this.createAuthorizationHeader(headers);
     return this.h.delete(url, {headers: headers})
       .pipe(
-        map( x => this.srvResponse.handleOK(x)),
-        catchError( x => this.srvResponse.handleKO(x) ),
-        finalize (() => this.turnOffModal()),
+        map(x => this.srvResponse.handleOK(x)),
+        catchError(x => this.srvResponse.handleKO(x)),
+        finalize(() => this.turnOffModal()),
         tap(x => x, err => this.srvResponse.displayErrors(err))
       );
   }
 
 
   private turnOnModal() {
-    if (this.pendingRequests == 0) {
+    if (this.pendingRequests === 0) {
       this.showLoading = true;
     }
     this.pendingRequests += 1;
@@ -101,5 +103,7 @@ export class HttpClientService {
       this.showLoading = false;
     }
   }
-} /* istanbul ignore next */
+}
+
+/* istanbul ignore next */
 

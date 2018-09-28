@@ -1,5 +1,5 @@
 import {Component, ViewEncapsulation, Input, OnInit} from '@angular/core';
-import  * as ol  from 'openlayers';
+import * as ol from 'openlayers';
 @Component({
   selector: 'ib-map',
   template: `
