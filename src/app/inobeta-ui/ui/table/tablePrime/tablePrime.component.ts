@@ -53,7 +53,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
               {{rowData[col.key].toLocaleDateString()}}
             </span>
             <span *ngIf="col.type === typeEnum.BUTTON">
-              <button class="tableButton" style="width: 100%" pButton label="{{rowData[col.key]}}" (click)="handleButtonClick($event)"></button>
+              <button class="tableButton" style="width: 100%" pButton label="{{col.key | translate}}" (click)="handleButtonClick(rowData)"></button>
             </span>
           </td>
         </tr>
@@ -121,8 +121,8 @@ export class TablePrimeComponent implements OnChanges {
     this.onFilterChange.emit(data);
   }
 
-  handleButtonClick(event) {
-    this.onButtonClick.emit(event.target.innerText);
+  handleButtonClick(data) {
+    this.onButtonClick.emit(data);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
