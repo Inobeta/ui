@@ -50,7 +50,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
               {{comboOptionsObject[col.key][rowData[col.key]]}}
             </span>
             <span *ngIf="col.type === typeEnum.DATE">
-              {{rowData[col.key].toLocaleDateString()}}
+              {{rowData[col.key] | date: 'dd/MM/yyyy' }}
             </span>
             <span *ngIf="col.type === typeEnum.BUTTON">
               <button class="tableButton" style="width: 100%" pButton label="{{col.key | translate}}" (click)="handleButtonClick(rowData)"></button>
