@@ -21,7 +21,6 @@ import localeIt from '@angular/common/locales/it';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ModalMessageComponent} from './ui/modalMessage.component';
 import {LoginComponent} from './pages/login.component';
-import {MapComponent} from './ui/maps/map.component';
 import {IbTabsComponent} from './ui/ib-tabs/ib-tabs.component';
 import {UploaderComponent} from './ui/uploader/uploader.component';
 import {CookiesStorageService} from 'ngx-store';
@@ -40,7 +39,6 @@ export const components = [
   SpinnerLoadingComponent,
   ModalMessageComponent,
   LoginComponent,
-  MapComponent,
   IbTabsComponent,
   UploaderComponent,
   TablePrimeComponent

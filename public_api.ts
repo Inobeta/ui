@@ -9,7 +9,7 @@ export * from './src/app/inobeta-ui/ui/box.component';
 export * from './src/app/inobeta-ui/http/spinnerLoading.component';
 export * from './src/app/inobeta-ui/ui/modalMessage.component';
 export * from './src/app/inobeta-ui/pages/login.component';
-export * from './src/app/inobeta-ui/ui/maps/map.component';
+// export * from './src/app/inobeta-ui/ui/maps/map.component';
 export * from './src/app/inobeta-ui/ui/ib-tabs/ib-tabs.component';
 export * from './src/app/inobeta-ui/ui/uploader/uploader.component';
 export * from './src/app/inobeta-ui/ui/table/tablePrime/tablePrime.component';
