@@ -14,7 +14,7 @@ export class AuthService {
     if (!this.activeSession) {
       this.activeSession = this.srvLocalStorage.get('userData') as Session;
     }
-    console.log(this.activeSession)
+    console.log(this.activeSession);
   }
 
   public storeSession() {

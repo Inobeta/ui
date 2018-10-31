@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import {ISessionHandler} from './inobeta-ui/auth/session.reducer';
-import {SharedModule} from './inobeta-ui/shared.module';
+import {InobetaUiModule} from './inobeta-ui/inobetaUi.module';
 
 
 export interface IAppState {
@@ -19,7 +19,7 @@ export interface IAppState {
   ],
   imports: [
     BrowserModule,
-    SharedModule
+    InobetaUiModule
   ],
   providers: [],
   bootstrap: [AppComponent]

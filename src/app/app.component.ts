@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {TableTitlesTypes} from './inobeta-ui/ui/table/titles.model';
 import {SortableColumn} from './inobeta-ui/ui/table/tablePrime/sortableColumn.model';
+import {AuthService} from './inobeta-ui/auth/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -43,6 +44,12 @@ export class AppComponent {
     {name: 'pippo', surname: 'franco'},
     {name: 'pippo', surname: 'franco'}
   ];
+
+
+  constructor(svcAuth: AuthService) {
+
+  }
+
 
   applyFilters(data) {
     this.filterValues = data;

@@ -23,12 +23,13 @@ import {ModalMessageComponent} from './ui/modalMessage.component';
 import {LoginComponent} from './pages/login.component';
 import {IbTabsComponent} from './ui/ib-tabs/ib-tabs.component';
 import {UploaderComponent} from './ui/uploader/uploader.component';
-import {CookiesStorageService} from 'ngx-store';
+import {CookiesStorageService, LocalStorageService} from 'ngx-store';
 import {CustomPrimeNgModule} from './customPrimeNg.module';
 import {CustomTranslateService} from './utils/customTranslate.service';
 import {TablePrimeComponent} from './ui/table/tablePrime/tablePrime.component';
 import {JsonFormatterService} from './utils/jsonFormatter.service';
 import {StateActions} from './redux/tools';
+import { RouterModule} from '@angular/router';
 
 registerLocaleData(localeIt, 'it');
 
@@ -55,7 +56,8 @@ export const services = [
   CustomTranslateService,
   DatePipe,
   JsonFormatterService,
-  StateActions
+  StateActions,
+  LocalStorageService
   // ToasterService,
 ];
 
@@ -67,6 +69,10 @@ export const imports = [
   HttpClientModule,
   FormsModule,
   ReactiveFormsModule,
+  RouterModule.forRoot([
+    { path: '', component: LoginComponent, canActivate: [Guard] },
+    { path: 'login', component: LoginComponent, canActivate: [LoginGuard] },
+  ]),
   TranslateModule.forRoot({
     loader: {
       provide: TranslateLoader,
@@ -74,7 +80,7 @@ export const imports = [
       deps: [HttpClient]
     }
   })
-]
+];
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -93,7 +99,8 @@ export function createTranslateLoader(http: HttpClient) {
     CustomMaterialModule,
     CustomPrimeNgModule,
     TranslateModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    RouterModule
     // ToasterModule
   ],
   providers: [
@@ -103,4 +110,4 @@ export function createTranslateLoader(http: HttpClient) {
     ModalMessageComponent
   ]
 })
-export class SharedModule { }
+export class InobetaUiModule { }
