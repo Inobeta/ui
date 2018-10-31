@@ -23,12 +23,12 @@ export class SessionService {
   }
 
 
-  public login( u: UserLogin ) {
+  public login( u: UserLogin, postUrl = null ) {
     this.srvAuth.activeSession = new Session();
     this.srvAuth.activeSession.authToken = window.btoa(u.username + ':' + u.password);
     this.srvAuth.activeSession.valid = false;
     this.srvAuth.activeSession.user = u;
-    return this.h.post(loginUrl, u)
+    return this.h.post((postUrl) ? postUrl : loginUrl, u)
       .pipe(
         map( x => {
           this.srvAuth.activeSession.user.password = '';
