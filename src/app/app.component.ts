@@ -13,7 +13,8 @@ import {AuthService} from './inobeta-ui/auth/auth.service';
       [currentSort]="currentSort"
       (onFilterChange)="applyFilters($event)"
       (onSortChange)="applySortable($event)"
-      (onSelectionChange)="logData($event)"
+      (onCheckboxSelectionChange)="logData($event)"
+      (onItemSelect)="logData($event)"
     ></ib-table-prime>
 
 
@@ -85,7 +86,7 @@ export class AppComponent {
   ];
 
 
-  constructor(svcAuth: AuthService) {
+  constructor() {
 
   }
 

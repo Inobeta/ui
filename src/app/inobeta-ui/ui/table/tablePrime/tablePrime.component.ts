@@ -1,8 +1,8 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {TableTitles, TableTitlesTypes} from '../titles.model';
 import {SortableColumn} from './sortableColumn.model';
 import {JsonFormatterService} from '../../../utils/jsonFormatter.service';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'ib-table-prime',
@@ -44,10 +44,10 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
               <p-checkbox name="selection"
                           [formControlName]="col.key"
                           binary="true"
-                          (onChange)="onSelectionChange.emit({
+                          (onChange)="onCheckboxSelectionChange.emit({
                           elem: 'all',
                           value: filtersForm.controls[col.key].value
-                          })"
+                          }); checkAll = filtersForm.controls[col.key].value;"
               ></p-checkbox>
             </span>
           </th>
@@ -55,7 +55,10 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
       </ng-template>
       <ng-template pTemplate="body" let-rowData let-columns="columns">
         <tr [pSelectableRow]="rowData" class="tableRow">
-          <td *ngFor="let col of columns" style="overflow: hidden; text-overflow: ellipsis;">
+          <td *ngFor="let col of columns"
+              style="overflow: hidden; text-overflow: ellipsis;"
+              (click)="(col.type === typeEnum.CHECKBOX) ? $event.stopPropagation() : null;"
+          >
             <span id="table" *ngIf="col.type === typeEnum.ANY">
               {{rowData[col.key]}}
             </span>
@@ -69,12 +72,16 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
               <button class="tableButton" style="width: 100%" pButton label="{{col.key | translate}}"
                       (click)="handleButtonClick(rowData)"></button>
             </span>
-            <span *ngIf="col.type === typeEnum.CHECKBOX">
+            <div *ngIf="col.type === typeEnum.CHECKBOX" style="width: 100%;text-align: center;" >
               <p-checkbox name="selection"
                           [(ngModel)]="rowData[col.key]"
                           binary="true"
-                          (onChange)="onSelectionChange.emit({ elem: rowData, value: rowData[col.key]})"></p-checkbox>
-            </span>
+                          (onChange)="onCheckboxSelectionChange.emit({
+                          elem: rowData,
+                          value: rowData[col.key]
+                          }); updateSelectAll(rowData[col.key], col.key);"
+              ></p-checkbox>
+            </div>
           </td>
         </tr>
       </ng-template>
@@ -97,7 +104,7 @@ export class TablePrimeComponent implements OnChanges {
   @Output() onFilterChange: EventEmitter<any> = new EventEmitter<any>();
   @Output() onSortChange: EventEmitter<any> = new EventEmitter<any>();
   @Output() onDateMatchModeSelect: EventEmitter<any> = new EventEmitter<any>();
-  @Output() onSelectionChange: EventEmitter<any> = new EventEmitter<any>();
+  @Output() onCheckboxSelectionChange: EventEmitter<any> = new EventEmitter<any>();
 
   filtersForm: FormGroup;
   typeEnum = TableTitlesTypes;
@@ -148,23 +155,41 @@ export class TablePrimeComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    const filterValues = (changes.filterValues && changes.filterValues.currentValue) ? changes.filterValues.currentValue : this.filterValues;
+    const filterValues = (changes.filterValues && changes.filterValues.currentValue)
+      ? changes.filterValues.currentValue
+      : this.filterValues;
     const titles = (changes.titles && changes.titles.currentValue) ? changes.titles.currentValue : this.titles;
     const controls = {};
     titles.forEach(title => {
       if (!filterValues[title.key]) {
-        controls[title.key] = new FormControl();
-        if (title.type === TableTitlesTypes.DATE) {
-          controls[title.key + 'MatchMode'] = new FormControl('gte');
+        switch (title.type) {
+          case TableTitlesTypes.DATE:
+            controls[title.key] = new FormControl();
+            controls[title.key + 'MatchMode'] = new FormControl('gte');
+            break;
+          case TableTitlesTypes.CHECKBOX:
+            controls[title.key] = new FormControl(this.checkAll);
+            break;
+          default:
+            controls[title.key] = new FormControl();
         }
       } else {
-        controls[title.key] = new FormControl(filterValues[title.key].value);
-        if (title.type === TableTitlesTypes.DATE) {
-          controls[title.key + 'MatchMode'] = new FormControl(filterValues[title.key]['matchMode']);
+
+        switch (title.type) {
+          case TableTitlesTypes.DATE:
+            controls[title.key] = new FormControl(filterValues[title.key].value);
+            controls[title.key + 'MatchMode'] = new FormControl(filterValues[title.key]['matchMode']);
+            break;
+          case TableTitlesTypes.CHECKBOX:
+            controls[title.key] = new FormControl(this.checkAll);
+            break;
+          default:
+            controls[title.key] = new FormControl(filterValues[title.key].value);
         }
       }
     });
 
+    console.log('controls', controls);
     this.filtersForm = this.fb.group(controls);
 
     if (changes.titles && changes.titles.currentValue) {
@@ -174,6 +199,15 @@ export class TablePrimeComponent implements OnChanges {
           this.comboOptionsObject[title.key] = this.jsonFormatter.formatArrayToJson(title.comboOptions);
         }
       });
+    }
+  }
+
+  updateSelectAll(value, key) {
+    if (!value) {
+      this.checkAll = false;
+      const checkVal = {};
+      checkVal[key] = false;
+      this.filtersForm.setValue(Object.assign({}, this.filtersForm.value, checkVal));
     }
   }
 }

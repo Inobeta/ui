@@ -68,11 +68,11 @@ export const imports = [
   FlexLayoutModule,
   HttpClientModule,
   FormsModule,
-  ReactiveFormsModule,
-  RouterModule.forRoot([
+  ReactiveFormsModule, /*
+  RouterModule.forChild([
     { path: '', component: LoginComponent, canActivate: [Guard] },
     { path: 'login', component: LoginComponent, canActivate: [LoginGuard] },
-  ]),
+  ]),*/
   TranslateModule.forRoot({
     loader: {
       provide: TranslateLoader,
