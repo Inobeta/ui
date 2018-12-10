@@ -9,7 +9,7 @@ import {SessionService} from '../auth/session.service';
 @Component({
   selector: 'ib-login',
   template: `
-    <!--<form [formGroup]="this.form" class="form-horizontal" role="form" (submit)="doLogin()">-->
+    <form [formGroup]="this.form" class="form-horizontal" role="form" (submit)="doLogin()">
       <div class="form-group">
         <div class="col-sm-2">
           <label class="control-label">{{ 'login.username' | translate}}</label>
@@ -39,37 +39,37 @@ import {SessionService} from '../auth/session.service';
           <button type="submit" class="btn btn-primary">{{ 'login.do' | translate}}</button>
         </div>
       </div>
-    <!--</form>-->
+   </form>-
 
-    
+
 `
 })
 export class LoginComponent {
   form: FormGroup;
 
 
-  // constructor(
-  //   private srvSession: SessionService, private srvFormBuilder: FormBuilder, private srvRouter: Router, private srvToast: ToasterService
-  // ) {
-  //
-  //
-  //   this.form = this.srvFormBuilder.group({
-  //     'username': new FormControl('', Validators.required),
-  //     'password': new FormControl('', Validators.required),
-  //     'domain': new FormControl('', Validators.required),
-  //   });
-  // }
-  //
-  // doLogin() {
-  //   this.srvSession.login(this.form.value).subscribe(
-  //     (ok) => {
-  //       this.srvToast.pop('success', 'Login', 'Log in success');
-  //       console.log('router', this.srvRouter);
-  //       this.srvRouter.navigateByUrl('/quotes');
-  //     },
-  //     (err) => {
-  //       this.srvToast.pop('error', 'Login', 'Email and/or password error');
-  //     }
-  //   );
-  // }
+  constructor(
+    private srvSession: SessionService, private srvFormBuilder: FormBuilder, private srvRouter: Router/*, private srvToast: ToasterService*/
+  ) {
+
+
+    this.form = this.srvFormBuilder.group({
+      'username': new FormControl('', Validators.required),
+      'password': new FormControl('', Validators.required),
+      'domain': new FormControl('', Validators.required),
+    });
+  }
+
+  doLogin() {
+   /* this.srvSession.login(this.form.value).subscribe(
+      (ok) => {
+        this.srvToast.pop('success', 'Login', 'Log in success');
+        console.log('router', this.srvRouter);
+        this.srvRouter.navigateByUrl('/quotes');
+      },
+      (err) => {
+        this.srvToast.pop('error', 'Login', 'Email and/or password error');
+      }
+    );*/
+  }
 } /* istanbul ignore next */

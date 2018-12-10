@@ -7,7 +7,7 @@ export class TableTitles {
 }
 
 export enum TableTitlesTypes {
-  ANY, DATE, TAG, CHANNEL, NUMBER, HOUR, QUALITY, COMBOBOX, BUTTON
+  ANY, DATE, TAG, CHANNEL, NUMBER, HOUR, QUALITY, COMBOBOX, BUTTON, CHECKBOX
 }
 
 export class TableComboItem {

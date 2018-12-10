@@ -4,7 +4,7 @@ import {SortableColumn} from './inobeta-ui/ui/table/tablePrime/sortableColumn.mo
 import {AuthService} from './inobeta-ui/auth/auth.service';
 
 @Component({
-  selector: 'app-root',
+  selector: 'ib-root',
   template: `
     <ib-table-prime
       [titles]="titles"
@@ -13,6 +13,7 @@ import {AuthService} from './inobeta-ui/auth/auth.service';
       [currentSort]="currentSort"
       (onFilterChange)="applyFilters($event)"
       (onSortChange)="applySortable($event)"
+      (onSelectionChange)="logData($event)"
     ></ib-table-prime>
 
 
@@ -25,6 +26,12 @@ export class AppComponent {
 
 
   titles = [
+    {
+      key: 'checked',
+      value: '',
+      type: TableTitlesTypes.CHECKBOX,
+      filterable: false
+    },
     {
       key: 'name',
       value: 'entities.user.name',
@@ -42,6 +49,38 @@ export class AppComponent {
 
   users = [
     {name: 'pippo', surname: 'franco'},
+    {name: 'pippo', surname: 'franco'},
+    {name: 'pippo', surname: 'franco'},
+    {name: 'pippo', surname: 'franco'},
+    {name: 'pippo', surname: 'franco'},
+    {name: 'pippo', surname: 'franco'},
+    {name: 'pippo', surname: 'franco'},
+    {name: 'pippo', surname: 'franco'},
+    {name: 'pippo', surname: 'franco'},
+    {name: 'pippo', surname: 'franco'},
+    {name: 'pippo', surname: 'franco'},
+    {name: 'pippo', surname: 'franco'},
+    {name: 'pippo', surname: 'franco'},
+    {name: 'pippo', surname: 'franco'},
+    {name: 'pippo', surname: 'franco'},
+    {name: 'pippo', surname: 'franco'},
+    {name: 'pippo', surname: 'franco'},
+    {name: 'pippo', surname: 'franco'},
+    {name: 'pippo', surname: 'franco'},
+    {name: 'pippo', surname: 'franco'},
+    {name: 'pippo', surname: 'franco'},
+    {name: 'pippo', surname: 'franco'},
+    {name: 'pippo', surname: 'franco'},
+    {name: 'pippo', surname: 'franco'},
+    {name: 'pippo', surname: 'franco'},
+    {name: 'pippo', surname: 'franco'},
+    {name: 'pippo', surname: 'franco'},
+    {name: 'pippo', surname: 'franco'},
+    {name: 'pippo', surname: 'franco'},
+    {name: 'pippo', surname: 'franco'},
+    {name: 'pippo', surname: 'franco'},
+    {name: 'pippo', surname: 'franco'},
+    {name: 'pippo', surname: 'franco'},
     {name: 'pippo', surname: 'franco'}
   ];
 
@@ -57,5 +96,14 @@ export class AppComponent {
 
   applySortable(data) {
     this.currentSort = data;
+  }
+
+  logData(data) {
+    console.log(data);
+    if (data.elem === 'all') {
+      this.users = this.users.map((el) => {
+        return Object.assign(el, { checked: data.value});
+      });
+    }
   }
 }

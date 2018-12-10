@@ -26,16 +26,29 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
                    pInputText type="text" (input)="table.filter($event.target.value, col.key, 'contains')">
             </span>
             <span *ngIf="col.type === typeEnum.COMBOBOX">
-              <p-dropdown [formControlName]="col.key" [autoWidth]="false" [style]="{'width':'100%'}" [options]="col.comboOptions"
+              <p-dropdown [formControlName]="col.key" [autoWidth]="false" [style]="{'width':'100%'}"
+                          [options]="col.comboOptions"
                           (onChange)="comboFilter(table, $event.value, col, 'equals')"></p-dropdown>
             </span>
             <span *ngIf="col.type === typeEnum.DATE">
-                <p-dropdown [formControlName]="col.key + 'MatchMode'" [autoWidth]="false" [style]="{'width':'50%'}" [options]="dateMatchModes"
+                <p-dropdown [formControlName]="col.key + 'MatchMode'"
+                            [autoWidth]="false" [style]="{'width':'50%'}"
+                            [options]="dateMatchModes"
                           (onChange)="comboDateRangeFilter(table, $event.value, col)"></p-dropdown>
                 <p-calendar [inputStyle]="{'width':'100%'}"
                             [formControlName]="col.key"
                             (onSelect)="dateFilter(table, $event, col)"
                             dateFormat="dd/mm/yy"></p-calendar>
+            </span>
+            <span *ngIf="col.type === typeEnum.CHECKBOX">
+              <p-checkbox name="selection"
+                          [formControlName]="col.key"
+                          binary="true"
+                          (onChange)="onSelectionChange.emit({
+                          elem: 'all',
+                          value: filtersForm.controls[col.key].value
+                          })"
+              ></p-checkbox>
             </span>
           </th>
         </tr>
@@ -53,7 +66,14 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
               {{rowData[col.key] | date: 'dd/MM/yyyy' }}
             </span>
             <span *ngIf="col.type === typeEnum.BUTTON">
-              <button class="tableButton" style="width: 100%" pButton label="{{col.key | translate}}" (click)="handleButtonClick(rowData)"></button>
+              <button class="tableButton" style="width: 100%" pButton label="{{col.key | translate}}"
+                      (click)="handleButtonClick(rowData)"></button>
+            </span>
+            <span *ngIf="col.type === typeEnum.CHECKBOX">
+              <p-checkbox name="selection"
+                          [(ngModel)]="rowData[col.key]"
+                          binary="true"
+                          (onChange)="onSelectionChange.emit({ elem: rowData, value: rowData[col.key]})"></p-checkbox>
             </span>
           </td>
         </tr>
@@ -77,10 +97,12 @@ export class TablePrimeComponent implements OnChanges {
   @Output() onFilterChange: EventEmitter<any> = new EventEmitter<any>();
   @Output() onSortChange: EventEmitter<any> = new EventEmitter<any>();
   @Output() onDateMatchModeSelect: EventEmitter<any> = new EventEmitter<any>();
+  @Output() onSelectionChange: EventEmitter<any> = new EventEmitter<any>();
 
   filtersForm: FormGroup;
   typeEnum = TableTitlesTypes;
   comboOptionsObject: any = {};
+  checkAll = false;
 
   dateMatchModes = [
     { label: '>=', value: 'gte'},
@@ -126,9 +148,9 @@ export class TablePrimeComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    let filterValues = (changes.filterValues && changes.filterValues.currentValue) ? changes.filterValues.currentValue : this.filterValues;
-    let titles = (changes.titles && changes.titles.currentValue) ? changes.titles.currentValue : this.titles;
-    let controls = {};
+    const filterValues = (changes.filterValues && changes.filterValues.currentValue) ? changes.filterValues.currentValue : this.filterValues;
+    const titles = (changes.titles && changes.titles.currentValue) ? changes.titles.currentValue : this.titles;
+    const controls = {};
     titles.forEach(title => {
       if (!filterValues[title.key]) {
         controls[title.key] = new FormControl();
