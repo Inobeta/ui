@@ -3,6 +3,7 @@ import {ResponseHandlerService} from './responseHandler.service';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError, finalize, map, tap} from 'rxjs/operators';
 import {AuthService} from '../auth/auth.service';
+import {AuthTypes} from '../auth/session.model';
 
 
 /*
@@ -12,6 +13,7 @@ import {AuthService} from '../auth/auth.service';
 export class HttpClientService {
   public pendingRequests = 0;
   public showLoading = false;
+  private authType = AuthTypes.BASIC_AUTH;
 
 
   constructor(
@@ -21,6 +23,10 @@ export class HttpClientService {
   ) {
   }
 
+  public setAuthtype(type: AuthTypes) {
+    this.authType = type;
+  }
+
   createAuthorizationHeader(headers: HttpHeaders) {
     this.turnOnModal();
 
@@ -28,11 +34,18 @@ export class HttpClientService {
       return;
     }
 
-    return headers
+    const head =  headers
       .set('Content-Type', 'application/json')
-      .set('x-requested-with', 'XMLHttpRequest')
-      .set('Authorization', 'Basic ' + this.srvAuth.activeSession.authToken);
+      .set('x-requested-with', 'XMLHttpRequest');
+    if (this.authType === AuthTypes.BASIC_AUTH) {
+      return head.set('Authorization', 'Basic ' + this.srvAuth.activeSession.authToken);
+    }
 
+    if (this.authType === AuthTypes.JWT) {
+      return head.set('Authorization', 'Bearer ' + this.srvAuth.activeSession.authToken);
+    }
+
+    return head;
 
   }
 

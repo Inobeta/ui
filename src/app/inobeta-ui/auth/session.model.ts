@@ -10,3 +10,7 @@ export class UserLogin {
   password: string;
   rememberMe: boolean;
 }
+
+export enum AuthTypes {
+  BASIC_AUTH, JWT
+}
