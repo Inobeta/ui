@@ -4,6 +4,8 @@ export * from './src/app/inobeta-ui/customPrimeNg.module';
 export * from './src/app/inobeta-ui/auth/session.reducer';
 export * from './src/app/inobeta-ui/auth/session.model';
 export * from './src/app/inobeta-ui/ui/table/table.component';
+export * from './src/app/inobeta-ui/ui/table/table.reducer';
+export * from './src/app/inobeta-ui/ui/table/table.service';
 export * from './src/app/inobeta-ui/ui/card.component';
 export * from './src/app/inobeta-ui/ui/box.component';
 export * from './src/app/inobeta-ui/http/spinnerLoading.component';
