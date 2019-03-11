@@ -7,24 +7,6 @@ import {TableCellAligns, TableTitles, TableTitlesTypes} from './titles.model';
   template: `
     <div fxLayout="column">
       <div *ngIf="!reduced" fxLayout="row" fxLayoutAlign="left center" fxLayoutGap="20px">
-        <div *ngFor="let filter of filterableTitles">
-          <span *ngIf="filter.type === typeEnum.TAG">
-              <mat-form-field>
-                <mat-select
-                  placeholder="{{ filter.value | translate }}"
-                  multiple
-                  [value]="filterValues[filter.key]"
-                  (selectionChange)="filterChange.emit({
-                    key: filter.key,
-                    data: $event.value
-                })">
-                  <mat-option *ngFor="let tag of tags" [value]="tag">
-                    {{ 'common.' + tag | translate}}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </span>
-        </div>
         <div>
           <mat-form-field>
             <input matInput placeholder="{{ 'shared.ui.table.search' | translate }}"
@@ -78,7 +60,7 @@ import {TableCellAligns, TableTitles, TableTitlesTypes} from './titles.model';
           [matSortDirection]="currentSort ? currentSort.direction : null"
           style="width:100%;" cellpadding="0" cellspacing="0">
           <tr>
-            <th width="10" *ngIf="!reduced"></th>
+            <th width="10" *ngIf="!reduced && selectableRows"></th>
             <th *ngFor="let t of titles" [mat-sort-header]="t.key" style="white-space: nowrap;">
               {{ t.value | translate}}
             </th>
@@ -86,7 +68,7 @@ import {TableCellAligns, TableTitles, TableTitlesTypes} from './titles.model';
           </tr>
 
           <tr *ngFor="let item of sortedData">
-            <td *ngIf="!reduced">
+            <td *ngIf="!reduced && selectableRows">
               <mat-checkbox [(ngModel)]="item.checked"></mat-checkbox>
             </td>
             <td *ngFor="let t of titles"
@@ -146,7 +128,7 @@ import {TableCellAligns, TableTitles, TableTitlesTypes} from './titles.model';
       </div>
       <div *ngIf="!reduced">
         <mat-paginator
-          style="margin-top: 10px;"
+          style="margin-top: 10px;background-color: transparent;"
           [length]="items.length"
           [pageSize]="(!reduced) ? 10 : items.length"
           [pageSizeOptions]="[5, 10, 25, 100]"
@@ -231,6 +213,7 @@ export class TableComponent implements OnChanges {
   @Input() items: any[] = [];
   @Input() filterValues: any = {};
   @Input() currentSort: any = {};
+  @Input() selectableRows = true;
 
   // input non necessari
   @Input() tags: string[] = [];
