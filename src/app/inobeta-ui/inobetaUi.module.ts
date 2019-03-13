@@ -30,11 +30,13 @@ import {TablePrimeComponent} from './ui/table/tablePrime/tablePrime.component';
 import {JsonFormatterService} from './utils/jsonFormatter.service';
 import {StateActions} from './redux/tools';
 import { RouterModule} from '@angular/router';
+import {TableInterfaceComponent} from './ui/table/table.const';
 
 registerLocaleData(localeIt, 'it');
 
 export const components = [
   TableComponent,
+  TableInterfaceComponent,
   CardComponent,
   BoxComponent,
   SpinnerLoadingComponent,
