@@ -3,13 +3,13 @@ export class TableTitles {
   value: string;
   type: TableTitlesTypes = TableTitlesTypes.ANY;
   filterable = false;
-  comboOptions?: TableComboItem[];
+  comboOptions?: any; // TableComboItem[];  <-- questa cosa è un mezzo casino da gestire con l'array
   format?: any;
   align?: TableCellAligns;
 }
 
 export enum TableTitlesTypes {
-  ANY, DATE, TAG, CHANNEL, NUMBER, HOUR, QUALITY, COMBOBOX, BUTTON, CHECKBOX
+  ANY, DATE, TAG, NUMBER, HOUR, COMBOBOX, BUTTON, CHECKBOX, BOOLEAN
 }
 export enum TableCellAligns {
   LEFT= 'left', CENTER= 'center', RIGHT= 'right'

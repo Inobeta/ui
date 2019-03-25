@@ -5,7 +5,7 @@ import {TableCellAligns, TableTitles, TableTitlesTypes} from './titles.model';
 @Component({
   selector: 'ib-table',
   template: `
-    <div fxLayout="column">
+    <div fxLayout="column" class="ib-table">
       <div *ngIf="!reduced" fxLayout="row" fxLayoutAlign="left center" fxLayoutGap="20px">
         <div>
           <mat-form-field>
@@ -14,11 +14,11 @@ import {TableCellAligns, TableTitles, TableTitlesTypes} from './titles.model';
                 key: 'generic',
                 data: $event
               })"/>
-            <i class="material-icons" matSuffix>search</i>
+            <i class="material-icons hover" matSuffix style="cursor: pointer;">search</i>
           </mat-form-field>
         </div>
         <div fxFlex fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="20px">
-          <div
+          <div class="hover"
             (click)="csvExport()"
             fxLayout="row"
             *ngIf="displayCsvExport"
@@ -35,6 +35,24 @@ import {TableCellAligns, TableTitles, TableTitlesTypes} from './titles.model';
             </i>
           </div>
           <div
+            class="hover"
+            (click)="add.emit()"
+            *ngIf="hasAdd"
+            fxLayout="row"
+            fxLayoutAlign="center center"
+            [ngStyle]="{
+              'color':'black',
+              'cursor':'pointer',
+              'border': '1px solid black',
+              'border-radius': '20px',
+              'padding': '5px',
+              'padding-left': '10px',
+              'padding-right': '15px'
+            }">
+            <i class="material-icons" style="width: 24px">add_cicle</i> {{ 'shared.ui.table.add' | translate }}
+          </div>
+          <div
+            class="hover"
             (click)="filterReset.emit()"
             fxLayout="row"
             fxLayoutAlign="center center"
@@ -92,28 +110,27 @@ import {TableCellAligns, TableTitles, TableTitlesTypes} from './titles.model';
                    </mat-chip>
                  </mat-chip-list>
                </span>
-              <span *ngIf="t.type === typeEnum.CHANNEL">
-                 <ul style="text-align: left; padding-left: 15px;">
-                   <li [ngStyle]="{color: t.colors[item[t.key]]}">{{item[t.key]}}</li>
-                 </ul>
-               </span>
 
-              <span *ngIf="t.type === typeEnum.QUALITY">
-                 <span *ngIf="item[t.key] === 0" [ngStyle]="{color: 'orange'}">
-                   {{ 'shared.entities.quality.progress' | translate }}
-                 </span>
-                 <span *ngIf="item[t.key] === 1" [ngStyle]="{color: 'green'}">
-                   {{ 'shared.entities.quality.ok' | translate }}
-                 </span>
-                 <span *ngIf="item[t.key] === 2" [ngStyle]="{color: 'red'}">
-                   {{ 'shared.entities.quality.fail' | translate }}
-                 </span>
+              <span *ngIf="t.type === typeEnum.COMBOBOX">
+                {{ t.comboOptions[item[t.key]] | translate }}
+              </span>
+              <span *ngIf="t.type === typeEnum.BOOLEAN">
+                <i
+                  class="material-icons"
+                  style="color:green;"
+                  *ngIf="item[t.key] === true"
+                >check</i>
+                <i
+                  class="material-icons"
+                  style="color:gray;"
+                  *ngIf="item[t.key] === false"
+                >clear</i>
                </span>
 
             </td>
             <td *ngIf="!reduced">
               <i
-                class="material-icons"
+                class="hover material-icons"
                 style="color:#5a6dd8; cursor: pointer;"
                 (click)="arrowClick.emit(item)"
               >play_circle_outline</i>
@@ -146,6 +163,9 @@ import {TableCellAligns, TableTitles, TableTitlesTypes} from './titles.model';
   `,
   styles: [
       `
+      ib-table .hover:hover{
+        opacity: .5 !important;
+      }
       .mat-sort-header-container {
         align-items: center;
       }
@@ -214,6 +234,7 @@ export class TableComponent implements OnChanges {
   @Input() filterValues: any = {};
   @Input() currentSort: any = {};
   @Input() selectableRows = true;
+  @Input() hasAdd = false;
 
   // input non necessari
   @Input() tags: string[] = [];
@@ -226,7 +247,7 @@ export class TableComponent implements OnChanges {
   @Output() filterChange: EventEmitter<any> = new EventEmitter<any>();
   @Output() filterReset: EventEmitter<any> = new EventEmitter<any>();
   @Output() sortChange: EventEmitter<any> = new EventEmitter<any>();
-
+  @Output() add: EventEmitter<any> = new EventEmitter<any>();
 
 
   @Output() arrowClick: EventEmitter<any> = new EventEmitter<any>();
