@@ -103,14 +103,14 @@ export class HttpClientService {
   }
 
 
-  private turnOnModal() {
+  public turnOnModal() {
     if (this.pendingRequests === 0) {
       this.showLoading = true;
     }
     this.pendingRequests += 1;
   }
 
-  private turnOffModal() {
+  public turnOffModal() {
     this.pendingRequests -= 1;
     if (this.pendingRequests <= 0) {
       this.showLoading = false;
