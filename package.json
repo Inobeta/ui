@@ -11,7 +11,7 @@
     "packagr": "ng-packagr -p ng-package.json",
     "release": "npm run packagr && cd dist/ && npm pack"
   },
-  "private": true,
+  "private": false,
   "dependencies": {
     "@angular-redux/store": "^9.0.0",
     "@angular/animations": "^6.1.0",
