@@ -39,20 +39,17 @@ import {SessionService} from '../auth/session.service';
           <button type="submit" class="btn btn-primary">{{ 'login.do' | translate}}</button>
         </div>
       </div>
-   </form>-
-
-
+   </form>
 `
 })
 export class LoginComponent {
   form: FormGroup;
 
-
   constructor(
-    private srvSession: SessionService, private srvFormBuilder: FormBuilder, private srvRouter: Router/*, private srvToast: ToasterService*/
-  ) {
-
-
+    private srvSession: SessionService,
+    private srvFormBuilder: FormBuilder,
+    private srvRouter: Router/*,
+    private srvToast: ToasterService*/) {
     this.form = this.srvFormBuilder.group({
       'username': new FormControl('', Validators.required),
       'password': new FormControl('', Validators.required),

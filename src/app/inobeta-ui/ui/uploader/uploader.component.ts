@@ -7,18 +7,14 @@ import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@an
       <input (change)="onChooseChange($event)" #uploader class="hidden" single type="file"/>
       <button fxFlex mat-button (click)="onChooseClick()" >{{textKey | translate}}</button>
     </div>
-
   `
 })
 export class UploaderComponent {
   @ViewChild('uploader', {static: false}) uploader !: ElementRef;
-
   @Input() textKey: string;
   @Output() onFileSelected: EventEmitter<any> = new EventEmitter<any>();
 
-  constructor() {
-
-  }
+  constructor() {}
 
   onChooseClick() {
     this.uploader.nativeElement.click();

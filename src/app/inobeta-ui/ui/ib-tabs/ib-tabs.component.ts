@@ -1,7 +1,5 @@
 import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 
-
-
 export class IbTabsItem {
   name: string;
   active: boolean;
@@ -11,21 +9,19 @@ export class IbTabsItem {
   selector: 'ib-tabs',
   template: `
     <div fxFlex fxLayoutAlign="space-between start">
-        <a *ngFor="let item of this.tabs"
-           [ngClass]="{'active': item.active}"
-           href="javascript:void(0);" (click)="tabClick(item)">{{ item.name | translate }}</a>         
-      
+      <a *ngFor="let item of this.tabs"
+         [ngClass]="{'active': item.active}"
+         href="javascript:void(0);" (click)="tabClick(item)">{{ item.name | translate }}</a>
     </div>
-<!--<ul class="nav nav-justified nav-pills">-->
-  <!--<li *ngFor="let item of this.tabs"-->
+    <!--<ul class="nav nav-justified nav-pills">-->
+    <!--<li *ngFor="let item of this.tabs"-->
     <!--[ngClass]="{-->
-      <!--'active': item.active-->
+    <!--'active': item.active-->
     <!--}">-->
     <!--<a href="javascript:void(0);" (click)="tabClick(item)">{{ item.name | translate }}</a>-->
-  <!--</li>-->
-<!--</ul>-->
-`,
-  styleUrls: ['ib-tabs.component.css']
+    <!--</li>-->
+    <!--</ul>-->
+  `
 })
 export class IbTabsComponent implements OnInit {
 
@@ -35,7 +31,7 @@ export class IbTabsComponent implements OnInit {
   @Output() onTabSelect: EventEmitter<any> = new EventEmitter<any>();
   /* istanbul ignore end */
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit() {
     console.log(this.tabs);
@@ -45,9 +41,7 @@ export class IbTabsComponent implements OnInit {
     this.tabs.forEach( (t) => {
       t.active = false;
     });
-
     item.active = true;
-
     this.onTabSelect.emit(item);
   }
 } /* istanbul ignore next */

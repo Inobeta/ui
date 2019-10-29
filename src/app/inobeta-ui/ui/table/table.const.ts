@@ -14,9 +14,7 @@ export class TableInterfaceComponent {
     private ngReduxP: NgRedux<IAppState>,
     private actionsP: StateActions,
     private routerP: Router
-  ) {
-
-  }
+  ) {}
 
   onFilter(value) {
     if (!value) {

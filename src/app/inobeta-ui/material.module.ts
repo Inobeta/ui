@@ -1,5 +1,4 @@
 import {forwardRef, Injectable, NgModule} from '@angular/core';
-
 import {
   MatButtonModule,
   MatCheckboxModule, MatChipsModule, MatDialogModule, MatIconModule, MatInputModule, MatMenuModule, MatPaginatorIntl,
@@ -28,7 +27,6 @@ export class PaginatorTranslations extends MatPaginatorIntl {
   constructor(private srvTranslate: TranslateService) {
     super();
     const labels = this.translations[this.srvTranslate.currentLang];
-
     this.itemsPerPageLabel = labels['items_page'];
     this.firstPageLabel = labels['first_page'];
     this.lastPageLabel = labels['last_page'];

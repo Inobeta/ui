@@ -1,7 +1,18 @@
 import {NgModule} from '@angular/core';
 import {MenuModule} from 'primeng/menu';
 import {ButtonModule} from 'primeng/button';
-import {AccordionModule, AutoCompleteModule, CalendarModule, CheckboxModule, ConfirmDialogModule, DragDropModule, DropdownModule, FileUploadModule, InputTextModule, PanelMenuModule} from 'primeng/primeng';
+import {
+  AccordionModule,
+  AutoCompleteModule,
+  CalendarModule,
+  CheckboxModule,
+  ConfirmDialogModule,
+  DragDropModule,
+  DropdownModule,
+  FileUploadModule,
+  InputTextModule,
+  PanelMenuModule
+} from 'primeng/primeng';
 import {MessagesModule} from 'primeng/messages';
 import {MessageModule} from 'primeng/message';
 import {TableModule} from 'primeng/table';

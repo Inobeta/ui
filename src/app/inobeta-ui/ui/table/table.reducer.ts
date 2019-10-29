@@ -2,8 +2,6 @@ import {Action} from 'redux';
 import {Injectable} from '@angular/core';
 import {StateAction} from '../../redux/tools';
 
-
-
 /** State Interface **/
 export interface ITableHandler {
   items: any[];
@@ -11,6 +9,7 @@ export interface ITableHandler {
   filterConditions: any;
   sortField: any;
 }
+
 export const TABLE_INITIAL_STATE: ITableHandler = {
   items: [],
   filteredItems: [],
@@ -26,10 +25,7 @@ export class TableActions {
   static LOCAL_FILTER = '[Table] LOCAL_FILTER';
   static LOCAL_SORT = '[Table] LOCAL_SORT';
   static FILTER_RESET = '[Table] FILTER_RESET';
-
 }
-
-
 
 /** Reducer (BL) **/
 export function tableReducer(
