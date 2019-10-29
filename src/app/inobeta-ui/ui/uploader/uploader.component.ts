@@ -11,7 +11,7 @@ import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@an
   `
 })
 export class UploaderComponent {
-  @ViewChild('uploader') uploader: ElementRef;
+  @ViewChild('uploader', {static: false}) uploader !: ElementRef;
 
   @Input() textKey: string;
   @Output() onFileSelected: EventEmitter<any> = new EventEmitter<any>();
@@ -24,7 +24,7 @@ export class UploaderComponent {
     this.uploader.nativeElement.click();
   }
 
-  onChooseChange(data) {
+  onChooseChange() {
     if (this.uploader.nativeElement.files && this.uploader.nativeElement.files.length > 0) {
       this.onFileSelected.emit(this.uploader.nativeElement.files[0]);
     }
