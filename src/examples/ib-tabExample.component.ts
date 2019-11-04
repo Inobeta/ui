@@ -1,15 +1,16 @@
 import {Component} from '@angular/core';
 import {IbTabsItem} from '../app/inobeta-ui/ui/ib-tabs/ib-tabs.component';
 
-Component({
+@Component({
   template: `
     <ib-tabs
       [tabs]="tabs"
       (onTabSelect)="stampa($event)">
     </ib-tabs>
   `
-});
-export class TablePrimeExampleComponent {
+})
+
+export class TabExampleComponent {
   tabs: IbTabsItem[];
   constructor() {
     this.tabs = [

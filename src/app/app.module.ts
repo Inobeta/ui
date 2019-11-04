@@ -3,7 +3,8 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import {ISessionHandler} from './inobeta-ui/auth/session.reducer';
 import {InobetaUiModule} from './inobeta-ui/inobetaUi.module';
-import {RouterModule} from '@angular/router';
+import {RoutingModule} from './routing.module';
+import {TabExampleComponent} from '../examples/ib-tabExample.component';
 
 export interface IAppState {
   sessionHandler: ISessionHandler;
@@ -11,12 +12,13 @@ export interface IAppState {
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    TabExampleComponent
   ],
   imports: [
     BrowserModule,
     InobetaUiModule,
-    RouterModule
+    RoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]
