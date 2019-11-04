@@ -5,22 +5,20 @@ import {catchError, finalize, map, tap} from 'rxjs/operators';
 import {AuthService} from '../auth/auth.service';
 import {AuthTypes} from '../auth/session.model';
 
-
 /*
   HttpClient with Bearer authentication
  */
 @Injectable()
 export class HttpClientService {
+
   public pendingRequests = 0;
   public showLoading = false;
   private authType = AuthTypes.BASIC_AUTH;
 
-
   constructor(
     protected h: HttpClient,
     private srvAuth: AuthService,
-    private srvResponse: ResponseHandlerService
-  ) {
+    private srvResponse: ResponseHandlerService) {
   }
 
   public setAuthtype(type: AuthTypes) {
@@ -29,26 +27,19 @@ export class HttpClientService {
 
   createAuthorizationHeader(headers: HttpHeaders) {
     this.turnOnModal();
-
     if (!this.srvAuth.activeSession) {
       return;
     }
-
     const head =  headers
       .set('Content-Type', 'application/json')
       .set('x-requested-with', 'XMLHttpRequest');
     if (this.authType === AuthTypes.BASIC_AUTH) {
       return head.set('Authorization', 'Basic ' + this.srvAuth.activeSession.authToken);
-    }
-
-    if (this.authType === AuthTypes.JWT) {
+    } else if (this.authType === AuthTypes.JWT) {
       return head.set('Authorization', 'Bearer ' + this.srvAuth.activeSession.authToken);
     }
-
     return head;
-
   }
-
 
   get(url): any {
     let headers = new HttpHeaders();
@@ -64,7 +55,6 @@ export class HttpClientService {
   }
 
   post(url, data): any {
-
     let headers = new HttpHeaders();
     headers = this.createAuthorizationHeader(headers);
     return this.h.post(url, data, {headers: headers})
@@ -76,7 +66,6 @@ export class HttpClientService {
       );
   }
 
-
   put(url, data): any {
     let headers = new HttpHeaders();
     headers = this.createAuthorizationHeader(headers);
@@ -87,7 +76,6 @@ export class HttpClientService {
         finalize(() => this.turnOffModal()),
         tap(x => x, err => this.srvResponse.displayErrors(err))
       );
-
   }
 
   delete(url): any {
@@ -101,7 +89,6 @@ export class HttpClientService {
         tap(x => x, err => this.srvResponse.displayErrors(err))
       );
   }
-
 
   public turnOnModal() {
     if (this.pendingRequests === 0) {
@@ -118,5 +105,4 @@ export class HttpClientService {
   }
 }
 
-/* istanbul ignore next */
 

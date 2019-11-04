@@ -3,6 +3,7 @@ import {CommonModule} from '@angular/common';
 import {RouterModule, Routes} from '@angular/router';
 import {AppComponent} from './app.component';
 import {TabExampleComponent} from '../examples/ib-tabExample.component';
+import {LoginComponent} from './inobeta-ui/pages/login.component';
 
 const appRoutes: Routes = [
   {
@@ -15,6 +16,9 @@ const appRoutes: Routes = [
   },
   { path: 'tabExample',
     component: TabExampleComponent
+  },
+  { path: 'login',
+    component: LoginComponent
   }
 ];
 

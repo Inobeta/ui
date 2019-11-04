@@ -12,7 +12,6 @@ export const SESSION_INITIAL_STATE: ISessionHandler = {
   activeSession: null
 };
 
-
 @Injectable()
 export class SessionActions {
   static LOGIN = 'SESSION_LOGIN';
@@ -21,8 +20,7 @@ export class SessionActions {
 
 /** Reducer (BL) **/
 export function sessionReducer(lastState: ISessionHandler = SESSION_INITIAL_STATE,
-                                   a: Action): ISessionHandler {
-
+                               a: Action): ISessionHandler {
   const action = a as StateAction;
   switch (action.type) {
     case SessionActions.LOGIN:

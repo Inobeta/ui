@@ -21,7 +21,6 @@ export class AuthService {
     console.log(this.activeSession);
   }
 
-
   public storeSession() {
     this.activeSession.valid = true;
     this.srvLocalStorage.set(`userData-${this.sessionStorageKey}`, this.activeSession);

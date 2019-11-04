@@ -10,8 +10,7 @@ export class ResponseHandlerService {
 
   constructor(
   //  private srvNotify: NotificationService
-  ) {
-  }
+  ) {}
 
   handleOK(res: Object) {
     if (res) {

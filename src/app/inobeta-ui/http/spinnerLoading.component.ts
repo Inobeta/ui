@@ -1,5 +1,5 @@
 import {Component, ViewEncapsulation} from '@angular/core';
-import {HttpClientService} from "./httpclient.service";
+import {HttpClientService} from './httpclient.service';
 @Component({
   selector: 'ib-spinner-loading',
   styles: [`
@@ -47,7 +47,7 @@ import {HttpClientService} from "./httpclient.service";
   position: fixed;
   width: 100%;
   height: 100%;
-  top: 0px;
+  top: 0;
   z-index: 9999;
   background-color: rgba(0,0,0,0.4);
 }
