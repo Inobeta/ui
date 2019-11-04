@@ -1,6 +1,4 @@
 export * from './src/app/inobeta-ui/ui/table/titles.model';
-export * from './src/app/inobeta-ui/ui/table/tablePrime/sortableColumn.model';
-export * from './src/app/inobeta-ui/customPrimeNg.module';
 export * from './src/app/inobeta-ui/auth/session.reducer';
 export * from './src/app/inobeta-ui/auth/session.model';
 export * from './src/app/inobeta-ui/ui/table/table.component';
@@ -14,7 +12,6 @@ export * from './src/app/inobeta-ui/pages/login.component';
 // export * from './src/app/inobeta-ui/ui/maps/map.component';
 export * from './src/app/inobeta-ui/ui/ib-tabs/ib-tabs.component';
 export * from './src/app/inobeta-ui/ui/uploader/uploader.component';
-export * from './src/app/inobeta-ui/ui/table/tablePrime/tablePrime.component';
 export * from './src/app/inobeta-ui/http/httpclient.service';
 export * from './src/app/inobeta-ui/http/responseHandler.service';
 export * from './src/app/inobeta-ui/auth/guard.service';
