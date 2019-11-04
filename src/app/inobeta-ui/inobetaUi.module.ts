@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { ModuleWithProviders} from '@angular/core';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {CommonModule, DatePipe} from '@angular/common';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
@@ -23,9 +22,7 @@ import {LoginComponent} from './pages/login.component';
 import {IbTabsComponent} from './ui/ib-tabs/ib-tabs.component';
 import {UploaderComponent} from './ui/uploader/uploader.component';
 import {CookiesStorageService, LocalStorageService} from 'ngx-store';
-import {CustomPrimeNgModule} from './customPrimeNg.module';
 import {CustomTranslateService} from './utils/customTranslate.service';
-import {TablePrimeComponent} from './ui/table/tablePrime/tablePrime.component';
 import {JsonFormatterService} from './utils/jsonFormatter.service';
 import {StateActions} from './redux/tools';
 import { RouterModule} from '@angular/router';
@@ -42,8 +39,7 @@ export const components = [
   ModalMessageComponent,
   LoginComponent,
   IbTabsComponent,
-  UploaderComponent,
-  TablePrimeComponent
+  UploaderComponent
 ];
 
 export const services = [
@@ -65,7 +61,6 @@ export const services = [
 export const imports = [
   CommonModule,
   CustomMaterialModule,
-  CustomPrimeNgModule,
   FlexLayoutModule,
   HttpClientModule,
   FormsModule,
@@ -98,7 +93,6 @@ export function createTranslateLoader(http: HttpClient) {
   exports: [
     ...components,
     CustomMaterialModule,
-    CustomPrimeNgModule,
     TranslateModule,
     FlexLayoutModule,
     RouterModule

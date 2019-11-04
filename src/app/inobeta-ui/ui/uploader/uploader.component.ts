@@ -4,7 +4,7 @@ import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@an
   selector: 'ib-uploader',
   template: `
     <div fxFlex fxLayout="column" fxLayoutAlign="center center">
-      <input (change)="onChooseChange($event)" #uploader class="hidden" single type="file"/>
+      <input (change)="onChooseChange()" #uploader class="hidden" type="file"/>
       <button fxFlex mat-button (click)="onChooseClick()" >{{textKey | translate}}</button>
     </div>
   `
