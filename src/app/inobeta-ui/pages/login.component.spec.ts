@@ -17,6 +17,7 @@ describe('LoginFormComponent', () => {
           if (sessionServiceStub.loginSuccess) {
             funcSucc();
           } else {
+            console.log('CALLINGFAKE ON ERROR');
             funcErr();
           }
         }
@@ -25,10 +26,7 @@ describe('LoginFormComponent', () => {
   };
 
   const snackBarStub = {
-    success: true,
-    open: jasmine.createSpy('mock snack bar').and.callFake(() => {
-      return snackBarStub.success;
-    })
+    open: jasmine.createSpy('mock snack bar')
   };
 
   let component: LoginComponent;
@@ -56,6 +54,8 @@ describe('LoginFormComponent', () => {
   }));
 
   beforeEach(() => {
+    sessionServiceStub.login.calls.reset();
+    snackBarStub.open.calls.reset();
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -66,40 +66,32 @@ describe('LoginFormComponent', () => {
   });
 
   it('should login correctly', () => {
-    spyOn(component, 'doLogin').and.callThrough();
     const email = component.form.controls['username'];
     const password = component.form.controls['password'];
     email.setValue('salvatore.niglio@inobeta.net');
     password.setValue('password');
     component.doLogin('/dashboard');
-    expect(component.doLogin).toHaveBeenCalled();
-    expect(component.doLogin).toHaveBeenCalledTimes(1);
-    // mi aspetto che sia stato chiamato anche il servizio, con questi valori
     expect(sessionServiceStub.login).toHaveBeenCalled();
     expect(sessionServiceStub.login).toHaveBeenCalledTimes(1);
     expect(sessionServiceStub.login).toHaveBeenCalledWith(Object({ username: 'salvatore.niglio@inobeta.net', password: 'password' }));
     expect(snackBarStub.open).toHaveBeenCalled();
-    const result = snackBarStub.open();
-    expect(result).toBe(true);
-    expect(routerSpy.navigateByUrl).toHaveBeenCalled();
     expect(routerSpy.navigateByUrl).toHaveBeenCalledTimes(1);
     expect (routerSpy.navigateByUrl).toHaveBeenCalledWith ('/dashboard');
   });
 
+
   it('should login fail', () => {
-    spyOn(component, 'doLogin').and.callThrough();
     const email = component.form.controls['username'];
     const password = component.form.controls['password'];
     email.setValue('ciao');
     password.setValue('ciao');
-    snackBarStub.success = false;
+    sessionServiceStub.loginSuccess = false;
     component.doLogin('/dashboard');
-    expect(component.doLogin).toHaveBeenCalled();
-    expect(component.doLogin).toHaveBeenCalledTimes(1);
     expect(sessionServiceStub.login).toHaveBeenCalled();
-    expect(sessionServiceStub.login).toHaveBeenCalledTimes(2);
+    expect(sessionServiceStub.login).toHaveBeenCalledTimes(1);
     expect(sessionServiceStub.login).toHaveBeenCalledWith(Object({ username: 'ciao', password: 'ciao' }));
-    const result = snackBarStub.open();
-    expect(result).toBe(false);
+    expect(snackBarStub.open).toHaveBeenCalled();
+    // const result = snackBarStub.open();
+    // expect(result).toBe(false);
   });
 });
