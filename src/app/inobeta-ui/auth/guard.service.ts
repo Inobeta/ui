@@ -10,8 +10,8 @@ export class Guard implements CanActivate {
   constructor(
     private authService: AuthService,
     private router: Router,
-   // private ngRedux: NgRedux<IAppState>,
-   // private actions: MenuActions
+    // private ngRedux: NgRedux<IAppState>,
+    // private actions: MenuActions
   ) {}
 
   canActivate(routeData): boolean {
@@ -19,9 +19,9 @@ export class Guard implements CanActivate {
     const isAuth = this.authService.activeSession != null;
     console.log('this.authService.activeSession', this.authService.activeSession);
     if (!isAuth) { this.router.navigateByUrl('login'); }
-   /* if(!routeData.data.skipMenuStateChange){
-      this.ngRedux.dispatch(this.actions.pageChange(`/${routeData.routeConfig.path}`, MenuActions.PAGE_CHANGE))
-    }*/
+    /* if(!routeData.data.skipMenuStateChange){
+       this.ngRedux.dispatch(this.actions.pageChange(`/${routeData.routeConfig.path}`, MenuActions.PAGE_CHANGE))
+     }*/
     return isAuth;
   }
 } /* istanbul ignore next */
@@ -31,8 +31,7 @@ export class Guard implements CanActivate {
 export class LoginGuard implements CanActivate {
   constructor(
     private authService: AuthService,
-    private router: Router
-  ) {}
+    private router: Router) {}
 
   canActivate(): boolean {
     const isAuth = this.authService.activeSession != null;

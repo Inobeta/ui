@@ -9,11 +9,11 @@ import {IAppState} from '../../app.module';
 import {StateActions} from '../redux/tools';
 import {SessionActions} from './session.reducer';
 
-const loginUrl = '/api/rezona-auth/login';
+const loginUrl = '/api/auth/login';
 
 @Injectable()
 export class SessionService {
-  private authType = AuthTypes.BASIC_AUTH;
+  private authType = null /*AuthTypes.BASIC_AUTH*/;
 
   constructor(
     private srvAuth: AuthService,
@@ -50,7 +50,7 @@ export class SessionService {
           } else {
             this.srvAuth.cookieSession();
           }
-          this.ngRedux.dispatch(this.actions.stateChange(this.srvAuth.activeSession, SessionActions.LOGIN));
+          // this.ngRedux.dispatch(this.actions.stateChange(this.srvAuth.activeSession, \.LOGIN));
           return x;
         }),
         catchError( err => {
@@ -61,4 +61,4 @@ export class SessionService {
       );
   }
 
-} /* istanbul ignore next */
+}
