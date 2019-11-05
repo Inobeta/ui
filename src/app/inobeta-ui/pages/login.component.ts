@@ -27,14 +27,6 @@ import {MatSnackBar} from '@angular/material';
         </div>
       </div>
       <div class="form-group">
-        <div class="col-sm-2">
-          <label class="control-label">{{ 'login.domain' | translate}}</label>
-        </div>
-        <div class="col-sm-10">
-          <input type="text" class="form-control" formControlName="domain" placeholder="{{ 'login.domain' | translate}}">
-        </div>
-      </div>
-      <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
           <button type="submit" class="btn btn-primary">{{ 'login.do' | translate}}</button>
         </div>
@@ -54,8 +46,7 @@ export class LoginComponent {
     private snackBar: MatSnackBar) {
     this.form = this.srvFormBuilder.group({
       'username': new FormControl('', Validators.required),
-      'password': new FormControl('', Validators.required)/*,
-      'domain': new FormControl('', Validators.required),*/
+      'password': new FormControl('', Validators.required)
     });
   }
 
