@@ -17,7 +17,6 @@ describe('LoginFormComponent', () => {
           if (sessionServiceStub.loginSuccess) {
             funcSucc();
           } else {
-            console.log('CALLINGFAKE ON ERROR');
             funcErr();
           }
         }
@@ -61,11 +60,11 @@ describe('LoginFormComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  fit('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should login correctly', () => {
+  fit('should login correctly', () => {
     const email = component.form.controls['username'];
     const password = component.form.controls['password'];
     email.setValue('salvatore.niglio@inobeta.net');
@@ -79,7 +78,6 @@ describe('LoginFormComponent', () => {
     expect (routerSpy.navigateByUrl).toHaveBeenCalledWith ('/dashboard');
   });
 
-
   it('should login fail', () => {
     const email = component.form.controls['username'];
     const password = component.form.controls['password'];
@@ -91,7 +89,5 @@ describe('LoginFormComponent', () => {
     expect(sessionServiceStub.login).toHaveBeenCalledTimes(1);
     expect(sessionServiceStub.login).toHaveBeenCalledWith(Object({ username: 'ciao', password: 'ciao' }));
     expect(snackBarStub.open).toHaveBeenCalled();
-    // const result = snackBarStub.open();
-    // expect(result).toBe(false);
   });
 });
