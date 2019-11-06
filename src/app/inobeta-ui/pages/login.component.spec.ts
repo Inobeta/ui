@@ -60,11 +60,11 @@ describe('LoginFormComponent', () => {
     fixture.detectChanges();
   });
 
-  fit('should create', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  fit('should login correctly', () => {
+  it('should login correctly', () => {
     const email = component.form.controls['username'];
     const password = component.form.controls['password'];
     email.setValue('salvatore.niglio@inobeta.net');
@@ -90,4 +90,5 @@ describe('LoginFormComponent', () => {
     expect(sessionServiceStub.login).toHaveBeenCalledWith(Object({ username: 'ciao', password: 'ciao' }));
     expect(snackBarStub.open).toHaveBeenCalled();
   });
+
 });

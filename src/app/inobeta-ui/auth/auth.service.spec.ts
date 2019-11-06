@@ -2,18 +2,64 @@ import {AuthService} from './auth.service';
 import {TestBed} from '@angular/core/testing';
 import {CookiesStorageService, LocalStorageService} from 'ngx-store';
 import {Router} from '@angular/router';
-import {mockCookiesStorage, mockLocalStorage} from './mock';
 
 describe('AuthService', () => {
-  const mockLocal = mockLocalStorage;
-  const mockCookies = mockCookiesStorage;
+
+  const mockCookiesStorage = {
+    empty: true,
+    get: jasmine.createSpy('cook get Spy').and.callFake(() => {
+      if (mockCookiesStorage.empty) {
+        return null;
+      } else {
+        return {
+          user: {
+            username: 'prova',
+            password: 'prova',
+            rememberMe: true
+          },
+          userData: {
+            prova: 'prova'
+          },
+          valid: true,
+          authToken: 'ufwehliruui'
+        };
+      }
+    }),
+    set: jasmine.createSpy('cook set Spy').and.callFake(() => {
+      return true;
+    })
+  };
+  const mockLocalStorage = {
+    empty: true,
+    get: jasmine.createSpy('loc get Spy').and.callFake(() => {
+      if (mockLocalStorage.empty) {
+        return null;
+      } else {
+        return {
+          user: {
+            username: 'prova',
+            password: 'prova',
+            rememberMe: true
+          },
+          userData: {
+            prova: 'prova'
+          },
+          valid: true,
+          authToken: 'ufwehliruui'
+        };
+      }
+    }),
+    set: jasmine.createSpy('loc set Spy').and.callFake(() => {
+      return true;
+    })
+  };
   const routerSpy = { navigate: jasmine.createSpy('navigate')};
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [
-        { provide: LocalStorageService, useValue: mockLocal },
-        { provide: CookiesStorageService, useValue: mockCookies },
+        { provide: LocalStorageService, useValue: mockLocalStorage },
+        { provide: CookiesStorageService, useValue: mockCookiesStorage },
         { provide: Router, useValue: routerSpy },
         AuthService
       ]
@@ -21,10 +67,10 @@ describe('AuthService', () => {
   });
 
   beforeEach(() => {
-    mockLocal.get.calls.reset();
-    mockLocal.set.calls.reset();
-    mockCookies.get.calls.reset();
-    mockCookies.set.calls.reset();
+    mockLocalStorage.get.calls.reset();
+    mockLocalStorage.set.calls.reset();
+    mockCookiesStorage.get.calls.reset();
+    mockCookiesStorage.set.calls.reset();
     routerSpy.navigate.calls.reset();
   });
 
@@ -34,7 +80,7 @@ describe('AuthService', () => {
   });
 
   it('should be created with active session', () => {
-    mockCookies.empty = false;
+    mockCookiesStorage.empty = false;
     const authService = TestBed.get(AuthService);
     expect(authService).toBeTruthy();
   });
@@ -42,24 +88,24 @@ describe('AuthService', () => {
   it('should call local storage method', () => {
     const authService = TestBed.get(AuthService);
     authService.storeSession();
-    expect(mockLocal.set).toHaveBeenCalled();
-    expect(mockLocal.set).toHaveBeenCalledTimes(1);
+    expect(mockLocalStorage.set).toHaveBeenCalled();
+    expect(mockLocalStorage.set).toHaveBeenCalledTimes(1);
   });
 
   it('should call local cookie method', () => {
     const authService = TestBed.get(AuthService);
     authService.cookieSession();
-    expect(mockCookies.set).toHaveBeenCalled();
-    expect(mockCookies.set).toHaveBeenCalledTimes(1);
+    expect(mockCookiesStorage.set).toHaveBeenCalled();
+    expect(mockCookiesStorage.set).toHaveBeenCalledTimes(1);
   });
 
   it('should do logout', () => {
     const authService = TestBed.get(AuthService);
     authService.logout();
-    expect(mockLocal.set).toHaveBeenCalled();
-    expect(mockLocal.set).toHaveBeenCalledTimes(1);
-    expect(mockCookies.set).toHaveBeenCalled();
-    expect(mockCookies.set).toHaveBeenCalledTimes(1);
+    expect(mockLocalStorage.set).toHaveBeenCalled();
+    expect(mockLocalStorage.set).toHaveBeenCalledTimes(1);
+    expect(mockCookiesStorage.set).toHaveBeenCalled();
+    expect(mockCookiesStorage.set).toHaveBeenCalledTimes(1);
     expect(routerSpy.navigate).toHaveBeenCalledTimes(1);
     expect (routerSpy.navigate).toHaveBeenCalledWith (['/login']);
   });
