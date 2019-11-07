@@ -4,10 +4,10 @@ import {HttpClientService} from '../http/httpclient.service';
 import {AuthService} from './auth.service';
 import {catchError, map} from 'rxjs/operators';
 import {throwError} from 'rxjs';
-import {NgRedux} from '@angular-redux/store';
-import {IAppState} from '../../app.module';
-import {StateActions} from '../redux/tools';
-import {SessionActions} from './session.reducer';
+/*import {NgRedux} from '@angular-redux/store';
+import {IAppState} from '../../app.module';*/
+/*import {StateActions} from '../redux/tools';
+import {SessionActions} from './session.reducer';*/
 
 const loginUrl = '/api/auth/login';
 
@@ -17,9 +17,9 @@ export class SessionService {
 
   constructor(
     private srvAuth: AuthService,
-    private h: HttpClientService,
+    private h: HttpClientService/*,
     private ngRedux: NgRedux<IAppState>,
-    private actions: StateActions
+    private actions: StateActions*/
   ) {
   }
 

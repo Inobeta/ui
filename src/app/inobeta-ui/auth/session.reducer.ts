@@ -1,9 +1,10 @@
+/*
 import {Action} from 'redux';
 import {Injectable} from '@angular/core';
 import {Session} from './session.model';
 import {StateAction} from '../redux/tools';
 
-/** State Interface **/
+/!** State Interface **!/
 export interface ISessionHandler {
   activeSession: Session;
 }
@@ -18,7 +19,7 @@ export class SessionActions {
   static LOGOUT = 'SESSION_LOGOUT';
 }
 
-/** Reducer (BL) **/
+/!** Reducer (BL) **!/
 export function sessionReducer(lastState: ISessionHandler = SESSION_INITIAL_STATE,
                                a: Action): ISessionHandler {
   const action = a as StateAction;
@@ -33,3 +34,4 @@ export function sessionReducer(lastState: ISessionHandler = SESSION_INITIAL_STAT
   return lastState;
 }
 
+*/

@@ -3,6 +3,7 @@ import {CommonModule} from '@angular/common';
 import {RouterModule, Routes} from '@angular/router';
 import {AppComponent} from './app.component';
 import {TabExampleComponent} from '../examples/ib-tabExample.component';
+import {MyCounterComponent} from '../examples/redux-example/my-counter.component';
 
 const appRoutes: Routes = [
   {
@@ -15,6 +16,9 @@ const appRoutes: Routes = [
   },
   { path: 'tabExample',
     component: TabExampleComponent
+  },
+  { path: 'mycounter',
+    component: MyCounterComponent
   }
 ];
 

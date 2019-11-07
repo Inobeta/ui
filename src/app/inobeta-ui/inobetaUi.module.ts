@@ -24,7 +24,7 @@ import {UploaderComponent} from './ui/uploader/uploader.component';
 import {CookiesStorageService, LocalStorageService} from 'ngx-store';
 import {CustomTranslateService} from './utils/customTranslate.service';
 import {JsonFormatterService} from './utils/jsonFormatter.service';
-import {StateActions} from './redux/tools';
+/*import {StateActions} from './redux/tools';*/
 import { RouterModule} from '@angular/router';
 import {TableInterfaceComponent} from './ui/table/table.const';
 
@@ -53,7 +53,7 @@ export const services = [
   CustomTranslateService,
   DatePipe,
   JsonFormatterService,
-  StateActions,
+  /*StateActions,*/
   LocalStorageService
   // ToasterService,
 ];
@@ -81,7 +81,6 @@ export const imports = [
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
-
 
 @NgModule({
   declarations: [
