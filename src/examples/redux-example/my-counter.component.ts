@@ -1,28 +1,33 @@
 import { Component } from '@angular/core';
-import { Store, select } from '@ngrx/store';
+import {Store, select, Action} from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { increment, decrement, reset } from './counter.action';
+import * as CounterActions from './counter.action';
+import {selectCounter} from './counter.reducer';
 
 @Component({
-  selector: 'app-my-counter',
+  selector: 'ib-my-counter',
   templateUrl: './my-counter.component.html'
 })
 export class MyCounterComponent {
   count$: Observable<number>;
 
-  constructor(private store: Store<{ count: number }>) {
-    this.count$ = store.pipe(select('count'));
+  constructor(private store: Store) {
+    this.count$ = store.pipe(select(rootState => rootState.countState.number));
   }
 
   increment() {
-    this.store.dispatch(increment());
+    this.store.dispatch (CounterActions.increment());
   }
 
   decrement() {
-    this.store.dispatch(decrement());
+    this.store.dispatch(CounterActions.decrement());
   }
 
   reset() {
-    this.store.dispatch(reset());
+    this.store.dispatch(CounterActions.reset());
+  }
+
+  addingNumber(n) {
+    this.store.dispatch(CounterActions.addingNumber({numberToAdd: n}));
   }
 }

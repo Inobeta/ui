@@ -1,7 +1,13 @@
 import {forwardRef, Injectable, NgModule} from '@angular/core';
 import {
   MatButtonModule,
-  MatCheckboxModule, MatChipsModule, MatDialogModule, MatIconModule, MatInputModule, MatMenuModule, MatPaginatorIntl,
+  MatCheckboxModule,
+  MatChipsModule,
+  MatDialogModule,
+  MatIconModule,
+  MatInputModule,
+  MatMenuModule,
+  MatPaginatorIntl,
   MatPaginatorModule,
   MatSelectModule, MatSnackBarModule,
   MatSortModule
@@ -67,5 +73,5 @@ export class PaginatorTranslations extends MatPaginatorIntl {
     TranslateModule
   ]
 })
-export class CustomMaterialModule {
-}
+
+export class CustomMaterialModule {}

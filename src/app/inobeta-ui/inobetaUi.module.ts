@@ -27,6 +27,8 @@ import {JsonFormatterService} from './utils/jsonFormatter.service';
 /*import {StateActions} from './redux/tools';*/
 import { RouterModule} from '@angular/router';
 import {TableInterfaceComponent} from './ui/table/table.const';
+import {StoreModule} from '@ngrx/store';
+import * as fromCounter from '../../examples/redux-example/counter.reducer';
 
 registerLocaleData(localeIt, 'it');
 
@@ -55,7 +57,6 @@ export const services = [
   JsonFormatterService,
   /*StateActions,*/
   LocalStorageService
-  // ToasterService,
 ];
 
 export const imports = [
@@ -64,11 +65,8 @@ export const imports = [
   FlexLayoutModule,
   HttpClientModule,
   FormsModule,
-  ReactiveFormsModule, /*
-  RouterModule.forChild([
-    { path: '', component: LoginComponent, canActivate: [Guard] },
-    { path: 'login', component: LoginComponent, canActivate: [LoginGuard] },
-  ]),*/
+  ReactiveFormsModule,
+  StoreModule.forRoot({ countState: fromCounter.counterReducer }),
   TranslateModule.forRoot({
     loader: {
       provide: TranslateLoader,
@@ -95,7 +93,6 @@ export function createTranslateLoader(http: HttpClient) {
     TranslateModule,
     FlexLayoutModule,
     RouterModule
-    // ToasterModule
   ],
   providers: [
     ...services

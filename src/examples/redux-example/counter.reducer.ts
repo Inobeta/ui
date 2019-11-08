@@ -1,14 +1,22 @@
-import { createReducer, on } from '@ngrx/store';
-import { increment, decrement, reset } from './counter.action';
+import {Action, createReducer, createSelector, on} from '@ngrx/store';
+import * as CounterActions from '../redux-example/counter.action';
 
-export const initialState = 0;
+export interface ICounterState {
+  number: number;
+}
 
-const _counterReducer = createReducer(initialState,
-  on(increment, state => state + 1),
-  on(decrement, state => state - 1),
-  on(reset, state => 0),
+export const INITIAL_COUNTER_STATE: ICounterState = {
+  number: 0
+};
+
+const mainCounterReducer = createReducer(INITIAL_COUNTER_STATE,
+  on(CounterActions.increment, state => ({ ...state, number: state.number + 1 })),
+  on(CounterActions.decrement, state => ({ ...state, number: state.number - 1 })),
+  on(CounterActions.reset, state => ({ ...state, number: 0 })),
+  on(CounterActions.addingNumber, (state, { numberToAdd }) => ({ number: state.number + numberToAdd}))
 );
 
-export function counterReducer(state, action) {
-  return _counterReducer(state, action);
+export function counterReducer(state: ICounterState = INITIAL_COUNTER_STATE, action: Action) {
+  console.log('state', state)
+  return mainCounterReducer(state, action);
 }
