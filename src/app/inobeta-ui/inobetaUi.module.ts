@@ -3,7 +3,7 @@ import {FlexLayoutModule} from '@angular/flex-layout';
 import {CommonModule, DatePipe} from '@angular/common';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
-import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
+import {TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate/core';
 import {CustomMaterialModule} from './material.module';
 import {TableComponent} from './ui/table/table.component';
 import {CardComponent} from './ui/card/card.component';
@@ -28,6 +28,7 @@ import { RouterModule} from '@angular/router';
 import {TableInterfaceComponent} from './ui/table/table.const';
 import {StoreModule} from '@ngrx/store';
 import * as fromCounter from '../../examples/redux-example/counter.reducer';
+import * as fromSession from '../../app/inobeta-ui/auth/redux/session.reducer';
 
 registerLocaleData(localeIt, 'it');
 
@@ -54,7 +55,8 @@ export const services = [
   CustomTranslateService,
   DatePipe,
   JsonFormatterService,
-  LocalStorageService
+  LocalStorageService,
+  TranslateService
 ];
 
 export const imports = [
@@ -64,7 +66,10 @@ export const imports = [
   HttpClientModule,
   FormsModule,
   ReactiveFormsModule,
-  StoreModule.forRoot({ countState: fromCounter.counterReducer }),
+  StoreModule.forRoot({
+    countState: fromCounter.counterReducer,
+    sessionState: fromSession.sessionReducer
+  }),
   TranslateModule.forRoot({
     loader: {
       provide: TranslateLoader,

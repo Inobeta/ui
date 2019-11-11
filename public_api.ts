@@ -1,8 +1,8 @@
 export * from './src/app/inobeta-ui/ui/table/titles.model';
-export * from './src/app/inobeta-ui/auth/session.reducer';
+export * from './src/app/inobeta-ui/auth/redux/session.reducer';
 export * from './src/app/inobeta-ui/auth/session.model';
 export * from './src/app/inobeta-ui/ui/table/table.component';
-export * from './src/app/inobeta-ui/ui/table/table.reducer';
+/*export * from './src/app/inobeta-ui/ui/table/table.reducer';*/
 export * from './src/app/inobeta-ui/ui/table/table.const';
 export * from './src/app/inobeta-ui/ui/card/card.component';
 export * from './src/app/inobeta-ui/ui/box/box.component';
@@ -19,6 +19,6 @@ export * from './src/app/inobeta-ui/auth/auth.service';
 export * from './src/app/inobeta-ui/auth/session.service';
 export * from './src/app/inobeta-ui/utils/customTranslate.service';
 export * from './src/app/inobeta-ui/utils/jsonFormatter.service';
-export * from './src/app/inobeta-ui/redux/tools';
+/*export * from './src/app/inobeta-ui/redux/tools';*/
 export * from './src/app/inobeta-ui/inobetaUi.module';
 

@@ -4,10 +4,10 @@ import {HttpClientService} from '../http/httpclient.service';
 import {AuthService} from './auth.service';
 import {catchError, map} from 'rxjs/operators';
 import {throwError} from 'rxjs';
-/*import {NgRedux} from '@angular-redux/store';
-import {IAppState} from '../../app.module';*/
-/*import {StateActions} from '../redux/tools';
-import {SessionActions} from './session.reducer';*/
+import {Store} from '@ngrx/store';
+import * as SessionActions from './redux/session.actions';
+import {Router} from '@angular/router';
+import {MatSnackBar} from '@angular/material';
 
 const loginUrl = '/api/auth/login';
 
@@ -17,11 +17,10 @@ export class SessionService {
 
   constructor(
     private srvAuth: AuthService,
-    private h: HttpClientService/*,
-    private ngRedux: NgRedux<IAppState>,
-    private actions: StateActions*/
-  ) {
-  }
+    private h: HttpClientService,
+    private store: Store<any>,
+    private srvRouter: Router,
+    private snackBar: MatSnackBar) {}
 
   public setAuthtype(type: AuthTypes) {
     this.authType = type;
@@ -50,7 +49,7 @@ export class SessionService {
           } else {
             this.srvAuth.cookieSession();
           }
-          // this.ngRedux.dispatch(this.actions.stateChange(this.srvAuth.activeSession, \.LOGIN));
+          this.store.dispatch(SessionActions.login({activeSession: this.srvAuth.activeSession}));
           return x;
         }),
         catchError( err => {
@@ -61,4 +60,10 @@ export class SessionService {
       );
   }
 
+  public logout() {
+    this.srvAuth.activeSession = null;
+    this.store.dispatch(SessionActions.logout());
+    this.srvRouter.navigateByUrl('/login');
+    this.snackBar.open('Logout completed', null, {duration: 2000});
+  }
 }

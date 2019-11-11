@@ -45,8 +45,8 @@ export class LoginComponent {
     private srvRouter: Router,
     private snackBar: MatSnackBar) {
     this.form = this.srvFormBuilder.group({
-      'username': new FormControl('', Validators.required),
-      'password': new FormControl('', Validators.required)
+      username: new FormControl('', Validators.required),
+      password: new FormControl('', Validators.required)
     });
   }
 
@@ -62,3 +62,4 @@ export class LoginComponent {
     );
   }
 }
+
