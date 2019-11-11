@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
-import {Store, select, Action} from '@ngrx/store';
+import {Store, select} from '@ngrx/store';
 import { Observable } from 'rxjs';
 import * as CounterActions from './counter.action';
-import {selectCounter} from './counter.reducer';
 
 @Component({
   selector: 'ib-my-counter',
@@ -11,7 +10,7 @@ import {selectCounter} from './counter.reducer';
 export class MyCounterComponent {
   count$: Observable<number>;
 
-  constructor(private store: Store) {
+  constructor(private store: Store<any>) {
     this.count$ = store.pipe(select(rootState => rootState.countState.number));
   }
 
@@ -31,3 +30,4 @@ export class MyCounterComponent {
     this.store.dispatch(CounterActions.addingNumber({numberToAdd: n}));
   }
 }
+

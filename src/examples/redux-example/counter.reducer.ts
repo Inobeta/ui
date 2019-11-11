@@ -1,4 +1,4 @@
-import {Action, createReducer, createSelector, on} from '@ngrx/store';
+import {Action, createReducer, on} from '@ngrx/store';
 import * as CounterActions from '../redux-example/counter.action';
 
 export interface ICounterState {
@@ -17,6 +17,5 @@ const mainCounterReducer = createReducer(INITIAL_COUNTER_STATE,
 );
 
 export function counterReducer(state: ICounterState = INITIAL_COUNTER_STATE, action: Action) {
-  console.log('state', state)
   return mainCounterReducer(state, action);
 }

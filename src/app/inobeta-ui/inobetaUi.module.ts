@@ -24,7 +24,6 @@ import {UploaderComponent} from './ui/uploader/uploader.component';
 import {CookiesStorageService, LocalStorageService} from 'ngx-store';
 import {CustomTranslateService} from './utils/customTranslate.service';
 import {JsonFormatterService} from './utils/jsonFormatter.service';
-/*import {StateActions} from './redux/tools';*/
 import { RouterModule} from '@angular/router';
 import {TableInterfaceComponent} from './ui/table/table.const';
 import {StoreModule} from '@ngrx/store';
@@ -55,7 +54,6 @@ export const services = [
   CustomTranslateService,
   DatePipe,
   JsonFormatterService,
-  /*StateActions,*/
   LocalStorageService
 ];
 

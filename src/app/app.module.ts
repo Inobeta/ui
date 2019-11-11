@@ -7,11 +7,9 @@ import { TabExampleComponent } from '../examples/ib-tabExample.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { StoreModule } from '@ngrx/store';
 import { MyCounterComponent } from '../examples/redux-example/my-counter.component';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
-import * as fromCounter from '../examples/redux-example/counter.reducer'
 
 @NgModule({
   declarations: [
