@@ -44,7 +44,7 @@ export class HttpClientService {
   get(url): any {
     let headers = new HttpHeaders();
     headers = this.createAuthorizationHeader(headers);
-    return this.h.get(url, {headers: headers})
+    return this.h.get(url, {headers})
       .pipe(
         map(x => this.srvResponse.handleOK(x)),
         catchError(x => this.srvResponse.handleKO(x)),
@@ -57,7 +57,7 @@ export class HttpClientService {
   post(url, data): any {
     let headers = new HttpHeaders();
     headers = this.createAuthorizationHeader(headers);
-    return this.h.post(url, data, {headers: headers})
+    return this.h.post(url, data, {headers})
       .pipe(
         map(x => this.srvResponse.handleOK(x)),
         catchError(x => this.srvResponse.handleKO(x)),
@@ -69,7 +69,7 @@ export class HttpClientService {
   put(url, data): any {
     let headers = new HttpHeaders();
     headers = this.createAuthorizationHeader(headers);
-    return this.h.put(url, data, {headers: headers})
+    return this.h.put(url, data, {headers})
       .pipe(
         map(x => this.srvResponse.handleOK(x)),
         catchError(x => this.srvResponse.handleKO(x)),
@@ -81,7 +81,7 @@ export class HttpClientService {
   delete(url): any {
     let headers = new HttpHeaders();
     headers = this.createAuthorizationHeader(headers);
-    return this.h.delete(url, {headers: headers})
+    return this.h.delete(url, {headers})
       .pipe(
         map(x => this.srvResponse.handleOK(x)),
         catchError(x => this.srvResponse.handleKO(x)),

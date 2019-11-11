@@ -9,7 +9,7 @@ export class StateAction implements Action {
 @Injectable()
 export class StateActions {
   stateChange = (payload, type: string): StateAction => ({
-    type: type,
-    payload: payload
+    type,
+    payload
   })
 }
