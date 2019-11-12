@@ -1,39 +1,37 @@
 import {TestBed} from '@angular/core/testing';
 import {Router} from '@angular/router';
 import {AuthService} from './auth.service';
-import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {MatSnackBar} from '@angular/material';
 import {SessionService} from './session.service';
 import {HttpClientService} from '../http/httpclient.service';
 import {MockStore, provideMockStore} from '@ngrx/store/testing';
 import {Store} from '@ngrx/store';
 import {ISessionState} from './redux/session.reducer';
-import {of} from 'rxjs';
+import {AuthTypes} from './session.model';
+import {ResponseHandlerService} from '../http/responseHandler.service';
+import {HttpClient} from '@angular/common/http';
 
 describe('Session service test', () => {
-
-  const fintoPost = {
-    username: 'luca.c',
-    name: 'Clausio',
-    surname: 'Bisio',
-    email: 'luca.casamenti@inobeta.net',
-    type: 2
-  };
+  let sessionService;
+  let httpClient: HttpClient;
+  let httpMock: HttpTestingController;
   const mockSnackBar = {
     open: jasmine.createSpy('open')
   };
   const mockAuthService = {
-    activeSession: 'prova'
+    activeSession: 'prova',
+    storeSession: jasmine.createSpy('storeSession spy').and.callFake(() => {
+      return true;
+    }),
+    cookieSession: jasmine.createSpy('storeSession spy').and.callFake(() => {
+      return true;
+    })
   };
   const routerSpy = { navigateByUrl: jasmine.createSpy('navigateByUrl')};
   let store: MockStore<{ activeSession: any }>;
   const initialState = { activeSession: 'fake' };
   let dispatchSpy;
-  const mockHttpClientService = {
-    goPost: true,
-    setAuthtype: jasmine.createSpy('setAuthtype spy'),
-    post: jasmine.createSpy('post').and.returnValue(of(fintoPost))
-  };
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
@@ -43,13 +41,17 @@ describe('Session service test', () => {
       providers: [
         { provide: Router, useValue: routerSpy },
         { provide: AuthService, useValue: mockAuthService},
-        { provide: HttpClientService, useValue: mockHttpClientService},
         { provide: MatSnackBar, useValue: mockSnackBar},
         provideMockStore({ initialState }),
+        HttpClientService,
+        ResponseHandlerService,
         SessionService
       ]
     }).compileComponents();
+    httpClient = TestBed.get(HttpClient);
+    httpMock = TestBed.get(HttpTestingController);
     store = TestBed.get<Store<ISessionState>>(Store);
+    sessionService = TestBed.get(SessionService);
   });
 
   beforeEach(() => {
@@ -64,26 +66,227 @@ describe('Session service test', () => {
   it('Should be use correctly setAuthtype', () => {
     const svcSession = TestBed.get(SessionService);
     svcSession.setAuthtype();
-    expect(mockHttpClientService.setAuthtype).toHaveBeenCalled();
-    expect(mockHttpClientService.setAuthtype).toHaveBeenCalledTimes(1);
   });
 
-  it('Should be use correctly login', () => {
+  it('should do login()', (done) => {
     dispatchSpy = spyOn(store, 'dispatch');
-    const svcSession = TestBed.get(SessionService);
-    svcSession.login({
-      username: 'ciao',
-      password: 'ciao',
+    sessionService.login({
+      username: 'Luca',
+      password: 'Luca123',
       rememberMe: true
+    }, '/api/auth/login').subscribe(
+      (response) => {
+        expect(response).toEqual({
+          id: 1,
+          username: 'salvo',
+          name: 'Salvatore',
+          surname: 'Niglio',
+          type: 2,
+          is_active: true,
+          email: 'salvatore.niglio@inobeta.net',
+          created_at: '2019-10-23T15:35:08.500Z',
+          updated_at: '2019-10-23T1b7lT_x96yDm2x4hw13KOrfziM60'
+        });
+        expect(mockAuthService.storeSession).toHaveBeenCalled();
+        expect(dispatchSpy).toHaveBeenCalledTimes(1);
+        done();
+      });
+    let req = httpMock.expectOne('/api/auth/login');
+    expect(req.request.method).toEqual('POST');
+    req.flush({
+      id: 1,
+      username: 'salvo',
+      name: 'Salvatore',
+      surname: 'Niglio',
+      type: 2,
+      is_active: true,
+      email: 'salvatore.niglio@inobeta.net',
+      created_at: '2019-10-23T15:35:08.500Z',
+      updated_at: '2019-10-23T1b7lT_x96yDm2x4hw13KOrfziM60'
     });
-   /* expect(dispatchSpy).toHaveBeenCalled();
-    expect(dispatchSpy).toHaveBeenCalledTimes(1);
-    expect(dispatchSpy).toHaveBeenCalledWith( Object({ type: '[Session Service] Logout' }) );
-    expect(routerSpy.navigateByUrl).toHaveBeenCalled();
-    expect(routerSpy.navigateByUrl).toHaveBeenCalledWith('/login');
-    expect(routerSpy.navigateByUrl).toHaveBeenCalledTimes(1);
-    expect(mockSnackBar.open).toHaveBeenCalled();
-    expect(mockSnackBar.open).toHaveBeenCalledTimes(1);*/
+    httpMock.verify();
+    expect(mockAuthService.storeSession).toHaveBeenCalled();
+    expect(dispatchSpy).toHaveBeenCalled();
+
+    // WITH NO URL PASSED TO LOGIN METHOD
+
+    sessionService.login({
+      username: 'Luca',
+      password: 'Luca123',
+      rememberMe: true
+    }).subscribe(
+      (response) => {
+        expect(response).toEqual({
+          id: 1,
+          username: 'salvo',
+          name: 'Salvatore',
+          surname: 'Niglio',
+          type: 2,
+          is_active: true,
+          email: 'salvatore.niglio@inobeta.net',
+          created_at: '2019-10-23T15:35:08.500Z',
+          updated_at: '2019-10-23T1b7lT_x96yDm2x4hw13KOrfziM60'
+        });
+        expect(mockAuthService.storeSession).toHaveBeenCalled();
+        expect(dispatchSpy).toHaveBeenCalledTimes(2);
+        done();
+      });
+    req = httpMock.expectOne('/api/auth/login');
+    expect(req.request.method).toEqual('POST');
+    req.flush({
+      id: 1,
+      username: 'salvo',
+      name: 'Salvatore',
+      surname: 'Niglio',
+      type: 2,
+      is_active: true,
+      email: 'salvatore.niglio@inobeta.net',
+      created_at: '2019-10-23T15:35:08.500Z',
+      updated_at: '2019-10-23T1b7lT_x96yDm2x4hw13KOrfziM60'
+    });
+    httpMock.verify();
+    expect(mockAuthService.storeSession).toHaveBeenCalled();
+    expect(dispatchSpy).toHaveBeenCalled();
+
+    // WITH AUTH = JWT
+
+    sessionService.authType = AuthTypes.JWT;
+    sessionService.login({
+      username: 'Luca',
+      password: 'Luca123',
+      rememberMe: true
+    }).subscribe(
+      (response) => {
+        expect(response).toEqual({
+          id: 1,
+          username: 'salvo',
+          name: 'Salvatore',
+          surname: 'Niglio',
+          type: 2,
+          is_active: true,
+          email: 'salvatore.niglio@inobeta.net',
+          created_at: '2019-10-23T15:35:08.500Z',
+          updated_at: '2019-10-23T1b7lT_x96yDm2x4hw13KOrfziM60'
+        });
+        expect(mockAuthService.storeSession).toHaveBeenCalled();
+        expect(dispatchSpy).toHaveBeenCalledTimes(3);
+        done();
+      });
+    req = httpMock.expectOne('/api/auth/login');
+    expect(req.request.method).toEqual('POST');
+    req.flush({
+      id: 1,
+      username: 'salvo',
+      name: 'Salvatore',
+      surname: 'Niglio',
+      type: 2,
+      is_active: true,
+      email: 'salvatore.niglio@inobeta.net',
+      created_at: '2019-10-23T15:35:08.500Z',
+      updated_at: '2019-10-23T1b7lT_x96yDm2x4hw13KOrfziM60'
+    });
+    httpMock.verify();
+    expect(mockAuthService.storeSession).toHaveBeenCalled();
+    expect(dispatchSpy).toHaveBeenCalled();
+
+    // WITH AUTH = BASIC AUTH
+
+    sessionService.authType = AuthTypes.BASIC_AUTH;
+    sessionService.login({
+      username: 'Luca',
+      password: 'Luca123',
+      rememberMe: true
+    }).subscribe(
+      (response) => {
+        expect(response).toEqual({
+          id: 1,
+          username: 'salvo',
+          name: 'Salvatore',
+          surname: 'Niglio',
+          type: 2,
+          is_active: true,
+          email: 'salvatore.niglio@inobeta.net',
+          created_at: '2019-10-23T15:35:08.500Z',
+          updated_at: '2019-10-23T1b7lT_x96yDm2x4hw13KOrfziM60'
+        });
+        expect(mockAuthService.storeSession).toHaveBeenCalled();
+        expect(dispatchSpy).toHaveBeenCalledTimes(4);
+        done();
+      });
+    req = httpMock.expectOne('/api/auth/login');
+    expect(req.request.method).toEqual('POST');
+    req.flush({
+      id: 1,
+      username: 'salvo',
+      name: 'Salvatore',
+      surname: 'Niglio',
+      type: 2,
+      is_active: true,
+      email: 'salvatore.niglio@inobeta.net',
+      created_at: '2019-10-23T15:35:08.500Z',
+      updated_at: '2019-10-23T1b7lT_x96yDm2x4hw13KOrfziM60'
+    });
+    httpMock.verify();
+    expect(mockAuthService.storeSession).toHaveBeenCalled();
+    expect(dispatchSpy).toHaveBeenCalled();
+
+    // WITH REMEMBER ME = FALSE
+
+    sessionService.login({
+      username: 'Luca',
+      password: 'Luca123',
+      rememberMe: false
+    }).subscribe(
+      (response) => {
+        expect(response).toEqual({
+          id: 1,
+          username: 'salvo',
+          name: 'Salvatore',
+          surname: 'Niglio',
+          type: 2,
+          is_active: true,
+          email: 'salvatore.niglio@inobeta.net',
+          created_at: '2019-10-23T15:35:08.500Z',
+          updated_at: '2019-10-23T1b7lT_x96yDm2x4hw13KOrfziM60'
+        });
+        expect(mockAuthService.storeSession).toHaveBeenCalled();
+        expect(dispatchSpy).toHaveBeenCalledTimes(5);
+        done();
+      });
+    req = httpMock.expectOne('/api/auth/login');
+    expect(req.request.method).toEqual('POST');
+    req.flush({
+      id: 1,
+      username: 'salvo',
+      name: 'Salvatore',
+      surname: 'Niglio',
+      type: 2,
+      is_active: true,
+      email: 'salvatore.niglio@inobeta.net',
+      created_at: '2019-10-23T15:35:08.500Z',
+      updated_at: '2019-10-23T1b7lT_x96yDm2x4hw13KOrfziM60'
+    });
+    httpMock.verify();
+    expect(mockAuthService.cookieSession).toHaveBeenCalled();
+    expect(dispatchSpy).toHaveBeenCalled();
+  });
+
+  it('should do login() FAIL', (done) => {
+    sessionService = TestBed.get(SessionService);
+    sessionService.login({
+      username: 'Luca',
+      password: 'Luca123',
+      rememberMe: true
+    }).subscribe((res: any) => {
+        expect(res.failure.error.type).toBe('ERROR_POST');
+        done();
+      }, () => {
+        console.log('error');
+        done();
+      });
+    const getRequest = httpMock.expectOne('/api/auth/login');
+    getRequest.error(new ErrorEvent('ERROR_POST'));
+    httpMock.verify();
   });
 
   it('Should be use correctly logout', () => {
