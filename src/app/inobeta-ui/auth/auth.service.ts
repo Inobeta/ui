@@ -38,4 +38,8 @@ export class AuthService {
     this.srvRouter.navigate(['/login']);
   }
 
+  public isLoggedIn() {
+    return this.activeSession !== null;
+  }
+
 }
