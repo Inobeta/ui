@@ -18,4 +18,5 @@ export * from './src/app/inobeta-ui/auth/session.service';
 export * from './src/app/inobeta-ui/utils/customTranslate.service';
 export * from './src/app/inobeta-ui/utils/jsonFormatter.service';
 export * from './src/app/inobeta-ui/inobetaUi.module';
+export * from './src/test/mockTranslatePipe.directive';
 
