@@ -13,7 +13,7 @@ export class HttpClientService {
 
   public pendingRequests = 0;
   public showLoading = false;
-  private authType = AuthTypes.BASIC_AUTH;
+  private authType = AuthTypes.JWT;
 
   constructor(
     protected h: HttpClient,
@@ -26,6 +26,7 @@ export class HttpClientService {
   }
 
   createAuthorizationHeader(headers: HttpHeaders) {
+    console.log('sono entrato in createAuthorizationHeader')
     this.turnOnModal();
     if (!this.srvAuth.activeSession) {
       return;
