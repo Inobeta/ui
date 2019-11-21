@@ -32,10 +32,8 @@ export class AuthService {
   }
 
   public logout() {
-    this.activeSession = null;
     this.srvLocalStorage.set(`userData-${this.sessionStorageKey}`, null);
     this.svcCookie.set(`userData-${this.sessionStorageKey}`, null);
-    this.srvRouter.navigate(['/login']);
   }
 
   public isLoggedIn() {

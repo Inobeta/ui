@@ -63,6 +63,7 @@ export class SessionService {
   public logout() {
     this.srvAuth.activeSession = null;
     this.store.dispatch(SessionActions.logout());
+    this.srvAuth.logout();
     this.srvRouter.navigateByUrl('/login');
     this.snackBar.open('Logout completed', null, {duration: 2000});
   }

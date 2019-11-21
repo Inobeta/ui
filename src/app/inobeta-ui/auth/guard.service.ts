@@ -13,7 +13,7 @@ export class Guard implements CanActivate {
     console.log('check path', routeData);
     const isAuth = this.authService.activeSession != null;
     console.log('this.authService.activeSession', this.authService.activeSession);
-    if (!isAuth) { this.router.navigateByUrl('login'); }
+    if (!isAuth) { this.router.navigateByUrl('/login'); }
     return isAuth;
   }
 }
@@ -26,7 +26,7 @@ export class LoginGuard implements CanActivate {
 
   canActivate(): boolean {
     const isAuth = this.authService.activeSession != null;
-    if (isAuth) { this.router.navigateByUrl('dashboard'); }
+    if (isAuth) { this.router.navigateByUrl('/dashboard'); }
     return !isAuth;
   }
 }
