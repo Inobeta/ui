@@ -10,6 +10,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MyCounterComponent } from '../examples/redux-example/my-counter.component';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
+import { TestUtilsModule } from './test/testUtils.module';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { environment } from '../environments/environment';
   imports: [
     CommonModule,
     InobetaUiModule,
+    TestUtilsModule,
     RoutingModule,
     FormsModule,
     ReactiveFormsModule,
