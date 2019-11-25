@@ -138,7 +138,7 @@ import {TableCellAligns, TableTitles, TableTitlesTypes} from './titles.model';
           </tr>
           <tr *ngIf="sortedData.length == 0">
             <td [attr.colspan]="4+titles.length" style="text-align: center;">
-              <br><br>{{ 'shared.ui.table.no_data' | translate }}<br><br>
+              <!--<br><br>{{ 'shared.ui.table.no_data' | translate }}<br><br>-->
             </td>
           </tr>
         </table>
@@ -248,7 +248,6 @@ export class TableComponent implements OnChanges {
   @Output() filterReset: EventEmitter<any> = new EventEmitter<any>();
   @Output() sortChange: EventEmitter<any> = new EventEmitter<any>();
   @Output() add: EventEmitter<any> = new EventEmitter<any>();
-
 
   @Output() arrowClick: EventEmitter<any> = new EventEmitter<any>();
   @Output() actionsClick: EventEmitter<any> = new EventEmitter<any>();

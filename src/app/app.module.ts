@@ -11,12 +11,14 @@ import { MyCounterComponent } from '../examples/redux-example/my-counter.compone
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { TestUtilsModule } from './test/testUtils.module';
+import { IbTableExampleComponent } from '../examples/ib-tableExample.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     TabExampleComponent,
-    MyCounterComponent
+    MyCounterComponent,
+    IbTableExampleComponent
   ],
   imports: [
     CommonModule,

@@ -1,12 +1,11 @@
 import {Component, OnInit} from '@angular/core';
+import 'hammerjs';
 
 @Component({
   selector: 'ib-root',
   template: `
-    <a routerLink="/tabExample">  esempio tab  </a>
-    <a routerLink="/login">  login  </a>
-    <a routerLink="/mycounter">  mycounter  </a>
-    <router-outlet></router-outlet>`
+    <ib-table-example></ib-table-example>
+  `
 })
 export class AppComponent implements OnInit {
   ngOnInit() {}

@@ -20,20 +20,24 @@ import {TranslateModule, TranslateService} from '@ngx-translate/core';
 @Injectable()
 export class PaginatorTranslations extends MatPaginatorIntl {
   translations = {
-    'it': {
-      'items_page': 'Elementi per pagina',
-      'of': 'di',
-      'next_page': 'Pagina successiva',
-      'prev_page': 'Pagina precedente',
-      'first_page': 'Inizio',
-      'last_page': 'Fine'
+    it: {
+      items_page: 'Elementi per pagina',
+      of: 'di',
+      next_page: 'Pagina successiva',
+      prev_page: 'Pagina precedente',
+      first_page: 'Inizio',
+      last_page: 'Fine'
     }
   };
 
   constructor(private srvTranslate: TranslateService) {
     super();
     const labels = this.translations[this.srvTranslate.currentLang];
-    this.itemsPerPageLabel = labels['items_page'];
+    this.srvTranslate.get(['items_page', 'of', 'next_page']).subscribe((res) => {
+      console.log(res);
+    });
+    /*console.log('labels =>', labels);*/
+    /*this.itemsPerPageLabel = labels['items_page'];
     this.firstPageLabel = labels['first_page'];
     this.lastPageLabel = labels['last_page'];
     this.nextPageLabel = labels['next_page'];
@@ -46,7 +50,7 @@ export class PaginatorTranslations extends MatPaginatorIntl {
       const startIndex = page * pageSize;
       const endIndex = startIndex < length ? Math.min(startIndex + pageSize, length) : startIndex + pageSize;
       return `${startIndex + 1} - ${endIndex} ${labels['of']} ${length}`;
-    };
+    };*/
   }
 }
 

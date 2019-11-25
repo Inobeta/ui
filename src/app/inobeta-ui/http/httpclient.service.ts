@@ -26,7 +26,6 @@ export class HttpClientService {
   }
 
   createAuthorizationHeader(headers: HttpHeaders) {
-    console.log('sono entrato in createAuthorizationHeader')
     this.turnOnModal();
     if (!this.srvAuth.activeSession) {
       return;
