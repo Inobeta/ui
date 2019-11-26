@@ -20,5 +20,6 @@ export * from './src/app/inobeta-ui/utils/jsonFormatter.service';
 export * from './src/app/inobeta-ui/inobetaUi.module';
 export * from './src/app/test/testUtils.module';
 export * from './src/app/test/mockTranslatePipe.directive';
+export * from './src/examples/ib-tableExample.component';
 
 

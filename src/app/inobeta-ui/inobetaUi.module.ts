@@ -29,6 +29,7 @@ import {TableInterfaceComponent} from './ui/table/table.const';
 import {StoreModule} from '@ngrx/store';
 import * as fromCounter from '../../examples/redux-example/counter.reducer';
 import * as fromSession from '../../app/inobeta-ui/auth/redux/session.reducer';
+import {IbTableExampleComponent} from '../../examples/ib-tableExample.component';
 
 registerLocaleData(localeIt, 'it');
 
@@ -41,7 +42,8 @@ export const components = [
   ModalMessageComponent,
   LoginComponent,
   IbTabsComponent,
-  UploaderComponent
+  UploaderComponent,
+  IbTableExampleComponent
 ];
 
 export const services = [

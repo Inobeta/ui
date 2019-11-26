@@ -9,8 +9,10 @@ import {
   MatMenuModule,
   MatPaginatorIntl,
   MatPaginatorModule,
-  MatSelectModule, MatSnackBarModule,
-  MatSortModule
+  MatSelectModule,
+  MatSnackBarModule,
+  MatSortModule,
+  MatFormFieldModule
 } from '@angular/material';
 import {MatRadioModule} from '@angular/material/radio';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -33,11 +35,8 @@ export class PaginatorTranslations extends MatPaginatorIntl {
   constructor(private srvTranslate: TranslateService) {
     super();
     const labels = this.translations[this.srvTranslate.currentLang];
-    this.srvTranslate.get(['items_page', 'of', 'next_page']).subscribe((res) => {
-      console.log(res);
-    });
-    /*console.log('labels =>', labels);*/
-    /*this.itemsPerPageLabel = labels['items_page'];
+    console.log('labels =>', labels);
+    this.itemsPerPageLabel = labels['items_page'];
     this.firstPageLabel = labels['first_page'];
     this.lastPageLabel = labels['last_page'];
     this.nextPageLabel = labels['next_page'];
@@ -49,8 +48,9 @@ export class PaginatorTranslations extends MatPaginatorIntl {
       length = Math.max(length, 0);
       const startIndex = page * pageSize;
       const endIndex = startIndex < length ? Math.min(startIndex + pageSize, length) : startIndex + pageSize;
-      return `${startIndex + 1} - ${endIndex} ${labels['of']} ${length}`;
-    };*/
+      return `${startIndex + 1} - ${endIndex} of ${length}`;
+      /*${labels['of']}*/
+    };
   }
 }
 
@@ -68,7 +68,8 @@ export class PaginatorTranslations extends MatPaginatorIntl {
     MatButtonModule,
     MatMenuModule,
     MatDialogModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatFormFieldModule
   ],
   providers: [
     {provide: MatPaginatorIntl, useClass: forwardRef(() => PaginatorTranslations)}

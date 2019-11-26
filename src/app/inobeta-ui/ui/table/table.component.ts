@@ -9,7 +9,7 @@ import {TableCellAligns, TableTitles, TableTitlesTypes} from './titles.model';
       <div *ngIf="!reduced" fxLayout="row" fxLayoutAlign="left center" fxLayoutGap="20px">
         <div>
           <mat-form-field>
-            <input matInput placeholder="{{ 'shared.ui.table.search' | translate }}"
+            <input matInput placeholder="{{ 'shared.ibTable.search' | translate }}"
                    [value]="filterValues['generic']" (change)="filterChange.emit({
                 key: 'generic',
                 data: $event
@@ -19,12 +19,12 @@ import {TableCellAligns, TableTitles, TableTitlesTypes} from './titles.model';
         </div>
         <div fxFlex fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="20px">
           <div class="hover"
-            (click)="csvExport()"
-            fxLayout="row"
-            *ngIf="displayCsvExport"
-            fxLayoutAlign="center center"
-            style="cursor:pointer; border: 1px solid gray; border-radius: 20px; padding: 5px;padding-left: 10px;padding-right: 15px;">
-            <i class="material-icons">call_made</i> {{ 'shared.ui.table.csv' | translate }}
+               (click)="csvExport()"
+               fxLayout="row"
+               *ngIf="displayCsvExport"
+               fxLayoutAlign="center center"
+               style="cursor:pointer; border: 1px solid gray; border-radius: 20px; padding: 5px;padding-left: 10px;padding-right: 15px;">
+            <i class="material-icons">call_made</i> {{ 'shared.ibTable.csv' | translate }}
           </div>
           <div fxLayout="row" fxLayoutAlign="center center"
                *ngIf="actions.length > 0"
@@ -66,7 +66,7 @@ import {TableCellAligns, TableTitles, TableTitlesTypes} from './titles.model';
               'padding-left': '10px',
               'padding-right': '15px'
             }">
-            <i class="material-icons">restore</i> {{ 'shared.ui.table.filter_reset' | translate }}
+            <i class="material-icons">restore</i> {{ 'shared.ibTable.filterReset' | translate }}
           </div>
         </div>
       </div>
@@ -101,6 +101,7 @@ import {TableCellAligns, TableTitles, TableTitlesTypes} from './titles.model';
                 {{item[t.key] | number:t.format:'it'}}
               </span>
               <span *ngIf="t.type === typeEnum.DATE">{{item[t.key] | date: 'dd/MM/yyyy'}}</span>
+              <span *ngIf="t.type === typeEnum.CUSTOMDATE">{{item[t.key] | date: 'dd/MM/yyyy'}}</span>
               <span *ngIf="t.type === typeEnum.HOUR">{{item[t.key] | date: 'HH:mm:ss'}}</span>
               <span *ngIf="t.type === typeEnum.TAG">
                  <mat-chip-list>
@@ -150,8 +151,7 @@ import {TableCellAligns, TableTitles, TableTitlesTypes} from './titles.model';
           [pageSize]="(!reduced) ? 10 : items.length"
           [pageSizeOptions]="[5, 10, 25, 100]"
           [showFirstLastButtons]="true"
-          (page)="pageChangeHandle($event)"
-        >
+          (page)="pageChangeHandle($event)">
         </mat-paginator>
       </div>
     </div>
