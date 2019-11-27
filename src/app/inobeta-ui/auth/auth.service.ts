@@ -9,7 +9,6 @@ export class AuthService {
   sessionStorageKey = '';
 
   constructor(private srvLocalStorage: LocalStorageService,
-              private srvRouter: Router,
               private svcCookie: CookiesStorageService,
               @Inject('SessionStorageKey') @Optional() public SessionStorageKey?: string
   ) {

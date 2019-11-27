@@ -18,8 +18,13 @@ export * from './src/app/inobeta-ui/auth/session.service';
 export * from './src/app/inobeta-ui/utils/customTranslate.service';
 export * from './src/app/inobeta-ui/utils/jsonFormatter.service';
 export * from './src/app/inobeta-ui/inobetaUi.module';
-export * from './src/app/test/testUtils.module';
-export * from './src/app/test/mockTranslatePipe.directive';
+export * from './src/app/inobeta-ui/testUtils.module';
+export * from './src/app/inobeta-ui/stubs/mockTranslatePipe.directive';
 export * from './src/examples/ib-tableExample.component';
+export * from './src/app/inobeta-ui/auth/auth.service.stub';
+export * from './src/app/inobeta-ui/auth/localStorage.stub';
+export * from './src/app/inobeta-ui/auth/cookiesStorage.stub';
+export * from './src/app/inobeta-ui/stubs/router.stub';
+export * from './src/app/inobeta-ui/stubs/translate.service.stub';
 
 
