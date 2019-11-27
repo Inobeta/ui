@@ -24,7 +24,7 @@ export const testServices = [
   { provide: LocalStorageService, useValue: localStorageStub },
   { provide: CookiesStorageService, useValue: cookiesStorageStub },
   { provide: Router, useValue: routerSpy },
-  { provide: TranslateService, useClass: TranslateServiceStub}
+  { provide: TranslateService, useValue: TranslateServiceStub}
 ];
 
 export const testImports = [
