@@ -1,10 +1,10 @@
 import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
-  name: 'mockTranslate'
+  name: 'translate'
 })
 export class MockTranslatePipeDirective implements PipeTransform {
-  public name = 'mockTranslate';
+  public name = 'translate';
   public transform(query: string, ...args: any[]): any {
     return query;
   }
