@@ -8,10 +8,8 @@ import {cookiesStorageStub} from './auth/cookiesStorage.stub';
 import {HttpClientService} from './http/httpclient.service';
 import {ResponseHandlerService} from './http/responseHandler.service';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {Router} from '@angular/router';
 import {TranslateService} from '@ngx-translate/core';
 import {TranslateServiceStub} from './stubs/translate.service.stub';
-import {routerSpy} from './stubs/router.stub';
 
 export const testComponents = [
   MockTranslatePipeDirective,
@@ -23,7 +21,6 @@ export const testServices = [
   { provide: AuthService, useValue: authServiceStub},
   { provide: LocalStorageService, useValue: localStorageStub },
   { provide: CookiesStorageService, useValue: cookiesStorageStub },
-  { provide: Router, useValue: routerSpy },
   { provide: TranslateService, useValue: TranslateServiceStub}
 ];
 
