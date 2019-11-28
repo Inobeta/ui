@@ -21,7 +21,6 @@ import { TestUtilsModule } from './inobeta-ui/testUtils.module';
   imports: [
     CommonModule,
     InobetaUiModule,
-    TestUtilsModule,
     RoutingModule,
     FormsModule,
     ReactiveFormsModule,
