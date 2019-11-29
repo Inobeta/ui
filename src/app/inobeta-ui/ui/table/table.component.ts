@@ -7,67 +7,28 @@ import {TableCellAligns, TableTitles, TableTitlesTypes} from './titles.model';
   template: `
     <div fxLayout="column" class="ib-table">
       <div *ngIf="!reduced" fxLayout="row" fxLayoutAlign="left center" fxLayoutGap="20px">
-        <div>
-          <mat-form-field>
-            <input matInput placeholder="{{ 'shared.ibTable.search' | translate }}"
-                   [value]="filterValues['generic']" (change)="filterChange.emit({
-                key: 'generic',
-                data: $event
-              })"/>
-            <i class="material-icons hover" matSuffix style="cursor: pointer;">search</i>
-          </mat-form-field>
-        </div>
+        <ib-table-search
+          [filterValues]="filterValues"
+          (filterChange)="filterChange.emit($event)"
+          [hasSearch]="hasSearch">
+        </ib-table-search>
         <div fxFlex fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="20px">
-          <div class="hover"
-               (click)="csvExport()"
-               fxLayout="row"
-               *ngIf="displayCsvExport"
-               fxLayoutAlign="center center"
-               style="cursor:pointer; border: 1px solid gray; border-radius: 20px; padding: 5px;padding-left: 10px;padding-right: 15px;">
-            <i class="material-icons">call_made</i> {{ 'shared.ibTable.csv' | translate }}
-          </div>
-          <div fxLayout="row" fxLayoutAlign="center center"
-               *ngIf="actions.length > 0"
-               style="border: 1px solid gray; border-radius: 20px; padding: 5px;padding-left: 10px;padding-right: 15px;">
-            <i class="material-icons">touch_app</i> {{ 'shared.ui.table.actions' | translate }}
-            <i class="material-icons" style="cursor:pointer;" [matMenuTriggerFor]="menuTableActions">
-              keyboard_arrow_down
-            </i>
-          </div>
-          <div
-            class="hover"
-            (click)="add.emit()"
-            *ngIf="hasAdd"
-            fxLayout="row"
-            fxLayoutAlign="center center"
-            [ngStyle]="{
-              'color':'black',
-              'cursor':'pointer',
-              'border': '1px solid black',
-              'border-radius': '20px',
-              'padding': '5px',
-              'padding-left': '10px',
-              'padding-right': '15px'
-            }">
-            <i class="material-icons" style="width: 24px">add_cicle</i> {{ 'shared.ui.table.add' | translate }}
-          </div>
-          <div
-            class="hover"
-            (click)="filterReset.emit()"
-            fxLayout="row"
-            fxLayoutAlign="center center"
-            [ngStyle]="{
-              'color':'white',
-              'background-color':'#f2536e',
-              'cursor':'pointer',
-              'border': '0px',
-              'border-radius': '20px',
-              'padding': '5px',
-              'padding-left': '10px',
-              'padding-right': '15px'
-            }">
-            <i class="material-icons">restore</i> {{ 'shared.ibTable.filterReset' | translate }}
-          </div>
+          <ib-table-export-csv
+            (exportCsv)="csvExport()"
+            [hasCsvExport]="hasCsvExport">
+          </ib-table-export-csv>
+          <ib-table-menu-actions
+            [menuTableActions]="menuTableActions"
+            [actionsLength]="actions.length">
+          </ib-table-menu-actions>
+          <ib-table-add-button
+            [hasAdd]="hasAdd"
+            (add)="add.emit()">
+          </ib-table-add-button>
+          <ib-table-filter-reset-button
+            (filterReset)="filterReset.emit()"
+            [hasFilterReset]="hasFilterReset">
+          </ib-table-filter-reset-button>
         </div>
       </div>
       <div>
@@ -235,13 +196,16 @@ export class TableComponent implements OnChanges {
   @Input() currentSort: any = {};
   @Input() selectableRows = true;
   @Input() hasAdd = false;
+  @Input() hasFilterReset = false;
+  @Input() hasSearch = false;
+  @Input() hasCsvExport = false;
 
   // input non necessari
   @Input() tags: string[] = [];
   @Input() reduced = false;
   @Input() displayInfo = true;
   @Input() actions: string[] = [];
-  @Input() displayCsvExport = false;
+
 
   // Output necessari
   @Output() filterChange: EventEmitter<any> = new EventEmitter<any>();

@@ -30,6 +30,11 @@ import {StoreModule} from '@ngrx/store';
 import * as fromCounter from '../../examples/redux-example/counter.reducer';
 import * as fromSession from '../../app/inobeta-ui/auth/redux/session.reducer';
 import {IbTableExampleComponent} from '../../examples/ib-tableExample.component';
+import {TableSeachComponent} from './ui/table/table-seach.component';
+import {TableExportCsvComponent} from './ui/table/table-export-csv.component';
+import {TableMenuActionsComponent} from './ui/table/table-menu-actions.component';
+import {TableAddComponent} from './ui/table/table-add.component';
+import {TableFilterResetComponent} from './ui/table/table-filter-reset.component';
 
 registerLocaleData(localeIt, 'it');
 
@@ -43,7 +48,12 @@ export const components = [
   LoginComponent,
   IbTabsComponent,
   UploaderComponent,
-  IbTableExampleComponent
+  IbTableExampleComponent,
+  TableSeachComponent,
+  TableExportCsvComponent,
+  TableMenuActionsComponent,
+  TableAddComponent,
+  TableFilterResetComponent
 ];
 
 export const services = [

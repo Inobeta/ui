@@ -9,7 +9,7 @@ import {TableTitlesTypes} from '../app/inobeta-ui/ui/table/titles.model';
       [items]="items"
       [filterValues]="filters"
       [selectableRows]="selectableRows"
-      [hasAdd]="hasAdd">
+      (filterChange)="stampa($event)">
     </ib-table>
   `
 })
@@ -25,26 +25,14 @@ export class IbTableExampleComponent {
     },
     {
       key: 'date',
-      value: 'dashboard.goodsReceiving.ibTable.date',
-      type: TableTitlesTypes.DATE,
-      filterable: true
-    },
-    {
-      key: 'deadline',
-      value: 'dashboard.goodsReceiving.ibTable.deadline',
-      type: TableTitlesTypes.CUSTOMDATE,
-      filterable: true
-    },
-    {
-      key: 'sender',
       value: 'dashboard.goodsReceiving.ibTable.sender',
       type: TableTitlesTypes.STRING,
       filterable: true
     },
     {
-      key: 'article',
-      value: 'dashboard.goodsReceiving.ibTable.article',
-      type: TableTitlesTypes.STRING,
+      key: 'deadline',
+      value: 'dashboard.goodsReceiving.ibTable.date',
+      type: TableTitlesTypes.DATE,
       filterable: true
     }
   ];
@@ -188,8 +176,11 @@ export class IbTableExampleComponent {
   filters = {};
   currentSort = {};
   selectableRows = true;
-  hasAdd = false;
 
   constructor() {}
+
+  stampa(item) {
+    console.log(item);
+  }
 
 }
