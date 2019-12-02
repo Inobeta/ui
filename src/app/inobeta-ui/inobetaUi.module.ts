@@ -30,11 +30,12 @@ import {StoreModule} from '@ngrx/store';
 import * as fromCounter from '../../examples/redux-example/counter.reducer';
 import * as fromSession from '../../app/inobeta-ui/auth/redux/session.reducer';
 import {IbTableExampleComponent} from '../../examples/ib-tableExample.component';
-import {TableSeachComponent} from './ui/table/table-seach.component';
-import {TableExportCsvComponent} from './ui/table/table-export-csv.component';
-import {TableMenuActionsComponent} from './ui/table/table-menu-actions.component';
-import {TableAddComponent} from './ui/table/table-add.component';
-import {TableFilterResetComponent} from './ui/table/table-filter-reset.component';
+import {TableSeachComponent} from './ui/table/components/table-seach.component';
+import {TableExportCsvComponent} from './ui/table/components/table-export-csv.component';
+import {TableMenuActionsComponent} from './ui/table/components/table-menu-actions.component';
+import {TableAddComponent} from './ui/table/components/table-add.component';
+import {TableFilterResetComponent} from './ui/table/components/table-filter-reset.component';
+import {TablePaginatorComponent} from './ui/table/components/table-paginator.component';
 
 registerLocaleData(localeIt, 'it');
 
@@ -53,7 +54,8 @@ export const components = [
   TableExportCsvComponent,
   TableMenuActionsComponent,
   TableAddComponent,
-  TableFilterResetComponent
+  TableFilterResetComponent,
+  TablePaginatorComponent
 ];
 
 export const services = [

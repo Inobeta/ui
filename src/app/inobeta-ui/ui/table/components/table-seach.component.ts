@@ -3,21 +3,21 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 @Component({
   selector: 'ib-table-search',
   template: `
-    <div>
+    <div *ngIf="hasSearch">
       <mat-form-field>
         <input
-          *ngIf="hasSearch"
           matInput
           placeholder="{{ 'shared.ibTable.search' | translate }}"
           [value]="filterValues['generic']"
           (change)="filterChange.emit({
                 key: 'generic',
                 data: $event
-              })"/>
+           })"/>
         <i
           class="material-icons hover"
           matSuffix
-          style="cursor: pointer;">search</i>
+          style="cursor: pointer;">search
+        </i>
       </mat-form-field>
     </div>
   `,

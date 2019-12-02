@@ -18,7 +18,6 @@ import {MatRadioModule} from '@angular/material/radio';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 
-
 @Injectable()
 export class PaginatorTranslations extends MatPaginatorIntl {
   translations = {
@@ -35,7 +34,6 @@ export class PaginatorTranslations extends MatPaginatorIntl {
   constructor(private srvTranslate: TranslateService) {
     super();
     const labels = this.translations[this.srvTranslate.currentLang];
-    console.log('labels =>', labels);
     this.itemsPerPageLabel = labels['items_page'];
     this.firstPageLabel = labels['first_page'];
     this.lastPageLabel = labels['last_page'];

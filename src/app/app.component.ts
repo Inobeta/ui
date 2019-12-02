@@ -13,7 +13,6 @@ export class AppComponent implements OnInit {
 
   constructor(
     private translateService: TranslateService) {
-    console.log(this.translateService);
     this.translateService.setDefaultLang('it');
     this.translateService.use('it');
   }

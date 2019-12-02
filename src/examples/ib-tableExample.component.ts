@@ -24,23 +24,23 @@ export class IbTableExampleComponent {
       filterable: true
     },
     {
-      key: 'date',
+      key: 'sender',
       value: 'dashboard.goodsReceiving.ibTable.sender',
       type: TableTitlesTypes.STRING,
       filterable: true
     },
     {
       key: 'deadline',
-      value: 'dashboard.goodsReceiving.ibTable.date',
+      value: 'dashboard.goodsReceiving.ibTable.deadline',
       type: TableTitlesTypes.DATE,
       filterable: true
     }
   ];
   items = [
     {
-      lot: 1,
+      lot: 17,
       date: '10/05/2019',
-      deadline: new Date(),
+      deadline: new Date(2019, 4, 12),
       sender: 'NocciolineTostate srl sede Cesena',
       article: 'Noccioline 200 Kg',
       created_at: new Date(),
@@ -49,7 +49,7 @@ export class IbTableExampleComponent {
     {
       lot: 2,
       date: '07/01/2019',
-      deadline: new Date(),
+      deadline: new Date(2019, 2, 12),
       sender: 'MyNoce srl sede Forlì',
       article: 'Pistacchi crudi 150 Kg',
       created_at: new Date(),
@@ -58,7 +58,7 @@ export class IbTableExampleComponent {
     {
       lot: 3,
       date: '04/26/2019',
-      deadline: new Date(),
+      deadline: new Date(2019, 6, 12),
       sender: 'Inoceci srl sede Aquila',
       article: 'Ceci tostati 20 Kg',
       created_at: new Date(),
@@ -67,7 +67,7 @@ export class IbTableExampleComponent {
     {
       lot: 4,
       date: '08/12/2019',
-      deadline: new Date(),
+      deadline: new Date(2019, 4, 10),
       sender: 'MELAVERDE srl sede Faenza',
       article: 'Semi di girasole crudi 10 Kg',
       created_at: new Date(),
@@ -76,7 +76,7 @@ export class IbTableExampleComponent {
     {
       lot: 5,
       date: '05/11/2019',
-      deadline: new Date(),
+      deadline: new Date(2019, 4, 19),
       sender: 'GranoInfinito srl sede Bologna',
       article: 'Mais Tostato 7 Kg',
       created_at: new Date(),
@@ -85,7 +85,7 @@ export class IbTableExampleComponent {
     {
       lot: 6,
       date: '10/05/2019',
-      deadline: new Date(),
+      deadline: new Date(2019, 7, 12),
       sender: 'NocciolineTostate srl sede Cesena',
       article: 'Noccioline 200 Kg',
       created_at: new Date(),
@@ -94,7 +94,7 @@ export class IbTableExampleComponent {
     {
       lot: 7,
       date: '07/01/2019',
-      deadline: new Date(),
+      deadline: new Date(2019, 9, 12),
       sender: 'MyNoce srl sede Forlì',
       article: 'Pistacchi crudi 150 Kg',
       created_at: new Date(),
@@ -103,7 +103,7 @@ export class IbTableExampleComponent {
     {
       lot: 8,
       date: '04/26/2019',
-      deadline: new Date(),
+      deadline: new Date(2019, 4, 2),
       sender: 'Inoceci srl sede Aquila',
       article: 'Ceci tostati 20 Kg',
       created_at: new Date(),
@@ -112,7 +112,7 @@ export class IbTableExampleComponent {
     {
       lot: 9,
       date: '08/12/2019',
-      deadline: new Date(),
+      deadline: new Date(2019, 4, 6),
       sender: 'MELAVERDE srl sede Faenza',
       article: 'Semi di girasole crudi 10 Kg',
       created_at: new Date(),
@@ -121,7 +121,7 @@ export class IbTableExampleComponent {
     {
       lot: 10,
       date: '05/11/2019',
-      deadline: new Date(),
+      deadline: new Date(2019, 8, 12),
       sender: 'GranoInfinito srl sede Bologna',
       article: 'Mais Tostato 7 Kg',
       created_at: new Date(),
@@ -130,7 +130,7 @@ export class IbTableExampleComponent {
     {
       lot: 11,
       date: '10/05/2019',
-      deadline: new Date(),
+      deadline: new Date(2019, 7, 1),
       sender: 'NocciolineTostate srl sede Cesena',
       article: 'Noccioline 200 Kg',
       created_at: new Date(),
@@ -139,7 +139,7 @@ export class IbTableExampleComponent {
     {
       lot: 12,
       date: '07/01/2019',
-      deadline: new Date(),
+      deadline: new Date(2019, 1, 10),
       sender: 'MyNoce srl sede Forlì',
       article: 'Pistacchi crudi 150 Kg',
       created_at: new Date(),
@@ -148,7 +148,7 @@ export class IbTableExampleComponent {
     {
       lot: 13,
       date: '04/26/2019',
-      deadline: new Date(),
+      deadline: new Date(2019, 2, 5),
       sender: 'Inoceci srl sede Aquila',
       article: 'Ceci tostati 20 Kg',
       created_at: new Date(),
@@ -157,7 +157,7 @@ export class IbTableExampleComponent {
     {
       lot: 14,
       date: '08/12/2019',
-      deadline: new Date(),
+      deadline: new Date(2019, 6, 6),
       sender: 'MELAVERDE srl sede Faenza',
       article: 'Semi di girasole crudi 10 Kg',
       created_at: new Date(),
@@ -166,7 +166,7 @@ export class IbTableExampleComponent {
     {
       lot: 15,
       date: '05/11/2019',
-      deadline: new Date(),
+      deadline: new Date(2019, 9, 9),
       sender: 'GranoInfinito srl sede Bologna',
       article: 'Mais Tostato 7 Kg',
       created_at: new Date(),

@@ -62,6 +62,7 @@ import {TableCellAligns, TableTitles, TableTitlesTypes} from './titles.model';
                 {{item[t.key] | number:t.format:'it'}}
               </span>
               <span *ngIf="t.type === typeEnum.DATE">{{item[t.key] | date: 'dd/MM/yyyy'}}</span>
+              <span *ngIf="t.type === typeEnum.STRING">{{item[t.key]}}</span>
               <span *ngIf="t.type === typeEnum.CUSTOMDATE">{{item[t.key] | date: 'dd/MM/yyyy'}}</span>
               <span *ngIf="t.type === typeEnum.HOUR">{{item[t.key] | date: 'HH:mm:ss'}}</span>
               <span *ngIf="t.type === typeEnum.TAG">
@@ -98,94 +99,24 @@ import {TableCellAligns, TableTitles, TableTitlesTypes} from './titles.model';
               >play_circle_outline</i>
             </td>
           </tr>
-          <tr *ngIf="sortedData.length == 0">
+          <tr *ngIf="sortedData.length === 0">
             <td [attr.colspan]="4+titles.length" style="text-align: center;">
-              <!--<br><br>{{ 'shared.ui.table.no_data' | translate }}<br><br>-->
+              <br><br>{{ 'shared.ui.table.no_data' | translate }}<br><br>
             </td>
           </tr>
         </table>
       </div>
-      <div *ngIf="!reduced">
-        <mat-paginator
-          style="margin-top: 10px;background-color: transparent;"
-          [length]="items.length"
-          [pageSize]="(!reduced) ? 10 : items.length"
-          [pageSizeOptions]="[5, 10, 25, 100]"
-          [showFirstLastButtons]="true"
-          (page)="pageChangeHandle($event)">
-        </mat-paginator>
-      </div>
+      <ib-table-paginator
+        [hasPaginator]="hasPaginator"
+        [items]="items"
+        (pageChangeHandle)="pageChangeHandle($event)">
+      </ib-table-paginator>
     </div>
-
-
     <mat-menu #menuTableActions="matMenu">
       <button mat-menu-item *ngFor="let a of actions" (click)="actionButtonClick(a)">{{ a | translate}}</button>
     </mat-menu>
   `,
-  styles: [
-      `
-      ib-table .hover:hover{
-        opacity: .5 !important;
-      }
-      .mat-sort-header-container {
-        align-items: center;
-      }
-
-      th {
-        color: #555;
-        font-weight: normal;
-        border-bottom: 2px solid #ccc;
-        padding: 15px;
-        margin-bottom: 20px;
-      }
-
-      th >>> button.mat-sort-header-button {
-        text-transform: uppercase !important;
-      }
-
-      td {
-        border-bottom: 1px solid #ccc;
-        padding: 10px;
-      }
-
-      mat-paginator >>> .mat-paginator-container {
-        justify-content: flex-start !important;
-        background-color: inherit;
-      }
-
-      mat-paginator >>> button {
-        transform: scale(0.8);
-      }
-
-      mat-paginator >>> .mat-form-field-underline {
-        display: none;
-      }
-
-      mat-paginator >>> .mat-input-flex {
-        background-color: gray;
-        border-radius: 10px;
-        padding-left: 15px;
-        padding-right: 10px;
-        padding-bottom: 0px;
-        margin-top: 10px;
-      }
-
-
-      mat-paginator >>> .mat-input-infix {
-        border-top: 0px !important;
-      }
-
-      /*td span{
-        display: block;
-        padding: 10px;
-      }*/
-
-      /*
-            .mat-sort-header-container{
-              justify-content: center;
-            }*/
-    `
-  ]
+  styleUrls: ['./table.component.css']
 })
 export class TableComponent implements OnChanges {
 
@@ -199,13 +130,13 @@ export class TableComponent implements OnChanges {
   @Input() hasFilterReset = false;
   @Input() hasSearch = false;
   @Input() hasCsvExport = false;
+  @Input() hasPaginator = true;
 
   // input non necessari
   @Input() tags: string[] = [];
   @Input() reduced = false;
   @Input() displayInfo = true;
   @Input() actions: string[] = [];
-
 
   // Output necessari
   @Output() filterChange: EventEmitter<any> = new EventEmitter<any>();
@@ -253,16 +184,27 @@ export class TableComponent implements OnChanges {
   }
 
   sortData(sort: Sort, emitChange: boolean = true) {
+    console.log('funzione SORTDATA');
+    console.log('OCCHIO A QUESTO CAMPO CHE ALLA TERZA VOLTA DOVREBBE ESSERE TRUE', sort.direction === '');
+    console.log('campo sort', sort);
+    console.log('campo emitChange', emitChange);
+    console.log('sortedData ', this.sortedData);
     if (emitChange) {
       this.sortChange.emit(sort);
     }
     this.currentSort = sort;
+    // data diventa la copia dell'array di elem
     const data = this.items.slice();
     if (!sort.active || sort.direction === '') {
-      this.sortedData = data;
+      this.currentSort = {};
+      console.log('currentSort ', this.currentSort);
+      console.log('sort.active ', sort.active);
+      console.log('sort.direction ', sort.direction);
+      console.log('sono entrato nell if');
+      this.sortedData = this.items;
+      this.paginationHandle();
       return;
     }
-
 
     this.sortedData = data.sort((a, b) => {
       const isAsc = sort.direction === 'asc';
@@ -272,21 +214,35 @@ export class TableComponent implements OnChanges {
     this.paginationHandle();
   }
 
-
   pageChangeHandle(data) {
+    console.log('funzione PAGECHANGEHANDLE chiamata con : ', data);
     this.currentPagination = data;
-    this.sortedData = this.items.slice();
-    if (this.currentSort) {
+    this.sortedData = this.items.slice(); // copia dell'intero array
+    console.log('currentSort', this.currentSort);
+    console.log('sortedData = ', this.sortedData);
+    console.log('currentSort length = ', Object.keys(this.currentSort).length);
+    if (Object.keys(this.currentSort).length !== 0) {
       this.sortData(this.currentSort, false);
     } else {
       this.paginationHandle();
     }
   }
 
-
   paginationHandle() {
+    console.log('funzione PAGINATION HANDLE');
+    console.log('Prima della paginazione ', this.sortedData);
+    /*
+    * all'interno di data ho questo:
+    * {
+    *   length: 15
+        pageIndex: 0
+        pageSize: 5 (elementi per pagina)
+        previousPageIndex: 0
+      }
+    */
     const data = this.currentPagination;
     const paginatedData = [];
+    // scorro tutte le pagine della tabella
     for (let i = data.pageIndex * data.pageSize; i < (data.pageIndex + 1) * data.pageSize; i++) {
       if (i >= this.sortedData.length) {
         break;
@@ -294,6 +250,7 @@ export class TableComponent implements OnChanges {
       paginatedData.push(this.sortedData[i]);
     }
     this.sortedData = paginatedData;
+    console.log('Dopo la paginazione ', this.sortedData);
   }
 
   csvExport() {
