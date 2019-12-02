@@ -24,7 +24,6 @@ export * from './src/examples/ib-tableExample.component';
 export * from './src/app/inobeta-ui/auth/auth.service.stub';
 export * from './src/app/inobeta-ui/auth/localStorage.stub';
 export * from './src/app/inobeta-ui/auth/cookiesStorage.stub';
-export * from './src/app/inobeta-ui/stubs/router.stub';
 export * from './src/app/inobeta-ui/stubs/translate.service.stub';
 
 

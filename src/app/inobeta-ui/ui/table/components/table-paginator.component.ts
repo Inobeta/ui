@@ -18,5 +18,6 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 export class TablePaginatorComponent {
   @Input() hasPaginator;
   @Input() items;
+  @Input() reduced;
   @Output() pageChangeHandle = new EventEmitter();
 }

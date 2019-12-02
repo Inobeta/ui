@@ -142,7 +142,8 @@ import {TableCellAligns, TableTitles, TableTitlesTypes} from './titles.model';
       <ib-table-paginator
         [hasPaginator]="hasPaginator"
         [items]="items"
-        (pageChangeHandle)="pageChangeHandle($event)">
+        (pageChangeHandle)="pageChangeHandle($event)"
+        [reduced]="reduced">
       </ib-table-paginator>
     </div>
     <mat-menu #menuTableActions="matMenu">
