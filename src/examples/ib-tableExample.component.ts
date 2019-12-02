@@ -7,8 +7,6 @@ import {TableTitlesTypes} from '../app/inobeta-ui/ui/table/titles.model';
     <ib-table
       [titles]="titles"
       [items]="items"
-      [filterValues]="filters"
-      [selectableRows]="selectableRows"
       (filterChange)="stampa($event)">
     </ib-table>
   `
@@ -173,9 +171,6 @@ export class IbTableExampleComponent {
       updated_at: new Date()
     }
   ];
-  filters = {};
-  currentSort = {};
-  selectableRows = true;
 
   constructor() {}
 

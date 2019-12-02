@@ -5,13 +5,14 @@ import {Component, Input} from '@angular/core';
   template: `
     <div fxLayout="row"
          fxLayoutAlign="center center"
-         *ngIf="actionsLength > 0"
+         *ngIf="hasActions"
          style="
           border: 1px solid gray;
           border-radius: 20px;
           padding: 5px 15px 5px 10px;">
       <i
-        class="material-icons">touch_app</i> {{ 'shared.ui.table.actions' | translate }}
+        class="material-icons">touch_app
+      </i> {{ 'shared.ui.table.actions' | translate }}
       <i
         class="material-icons"
         style="cursor:pointer;"
@@ -21,6 +22,7 @@ import {Component, Input} from '@angular/core';
   `,
 })
 export class TableMenuActionsComponent {
+  @Input() hasActions;
   @Input() menuTableActions;
   @Input() actionsLength;
 }

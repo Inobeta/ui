@@ -19,7 +19,8 @@ import {TableCellAligns, TableTitles, TableTitlesTypes} from './titles.model';
           </ib-table-export-csv>
           <ib-table-menu-actions
             [menuTableActions]="menuTableActions"
-            [actionsLength]="actions.length">
+            [actionsLength]="actions.length"
+            [hasActions]="hasActions">
           </ib-table-menu-actions>
           <ib-table-add-button
             [hasAdd]="hasAdd"
@@ -38,65 +39,97 @@ import {TableCellAligns, TableTitles, TableTitlesTypes} from './titles.model';
           [matSortActive]="currentSort ? currentSort.active : null"
           [matSortDirection]="currentSort ? currentSort.direction : null"
           style="width:100%;" cellpadding="0" cellspacing="0">
+
+          <!--HEADER-->
           <tr>
             <th width="10" *ngIf="!reduced && selectableRows"></th>
-            <th *ngFor="let t of titles" [mat-sort-header]="t.key" style="white-space: nowrap;">
-              {{ t.value | translate}}
-            </th>
+            <th
+              *ngFor="let t of titles"
+              [mat-sort-header]="t.key"
+              style="white-space: nowrap;">{{ t.value | translate}}
             <th width="10" *ngIf="!reduced"></th>
           </tr>
 
           <tr *ngFor="let item of sortedData">
+
+            <!--CHECKBOX-->
             <td *ngIf="!reduced && selectableRows">
               <mat-checkbox [(ngModel)]="item.checked"></mat-checkbox>
             </td>
-            <td *ngFor="let t of titles"
-                style="padding: 15px;padding-top: 10px; padding-bottom: 10px;"
-                [ngStyle]="{
-                  'text-align': (t.align) ? t.align : alignEnum.LEFT
-                }"
-            >
-              <span *ngIf="!t.type || t.type === typeEnum.ANY"
-              >{{item[t.key] | translate}}</span>
-              <span *ngIf="t.type === typeEnum.NUMBER">
-                {{item[t.key] | number:t.format:'it'}}
+
+            <td
+              *ngFor="let t of titles"
+              style="padding: 10px 15px;"
+              [ngStyle]="{
+                 'text-align': (t.align) ? t.align : alignEnum.LEFT
+              }">
+
+              <!--TYPE = ANY-->
+              <span *ngIf="!t.type || t.type === typeEnum.ANY">
+                {{item[t.key] | translate}}
               </span>
-              <span *ngIf="t.type === typeEnum.DATE">{{item[t.key] | date: 'dd/MM/yyyy'}}</span>
-              <span *ngIf="t.type === typeEnum.STRING">{{item[t.key]}}</span>
-              <span *ngIf="t.type === typeEnum.CUSTOMDATE">{{item[t.key] | date: 'dd/MM/yyyy'}}</span>
-              <span *ngIf="t.type === typeEnum.HOUR">{{item[t.key] | date: 'HH:mm:ss'}}</span>
+
+              <!--TYPE = NUMBER-->
+              <span *ngIf="t.type === typeEnum.NUMBER">
+                  {{item[t.key] | number:t.format:'it'}}
+              </span>
+
+              <!--TYPE = DATE-->
+              <span *ngIf="t.type === typeEnum.DATE">
+                {{item[t.key] | date: 'dd/MM/yyyy'}}
+              </span>
+
+              <!--TYPE = STRING-->
+              <span *ngIf="t.type === typeEnum.STRING">
+                {{item[t.key]}}
+              </span>
+
+              <!--TYPE = HOUR-->
+              <span *ngIf="t.type === typeEnum.HOUR">
+                {{item[t.key] | date: 'HH:mm:ss'}}
+              </span>
+
+              <!--TYPE = TAG-->
               <span *ngIf="t.type === typeEnum.TAG">
                  <mat-chip-list>
-                   <mat-chip *ngFor="let tag of item[t.key]"
-                             style="background-color: #f2536e; color:white !important; text-transform: uppercase;">
+                   <mat-chip
+                     *ngFor="let tag of item[t.key]"
+                     style="
+                        background-color: #f2536e;
+                        color:white !important;
+                        text-transform: uppercase;">
                      {{ 'common.' + tag | translate }}
                    </mat-chip>
                  </mat-chip-list>
                </span>
 
+              <!--TYPE = COMBOBOX-->
               <span *ngIf="t.type === typeEnum.COMBOBOX">
                 {{ t.comboOptions[item[t.key]] | translate }}
               </span>
+
+              <!--TYPE = BOOLEAN-->
               <span *ngIf="t.type === typeEnum.BOOLEAN">
                 <i
                   class="material-icons"
                   style="color:green;"
-                  *ngIf="item[t.key] === true"
-                >check</i>
+                  *ngIf="item[t.key] === true">check
+                </i>
                 <i
                   class="material-icons"
                   style="color:gray;"
-                  *ngIf="item[t.key] === false"
-                >clear</i>
+                  *ngIf="item[t.key] === false">clear
+                </i>
                </span>
 
-            </td>
-            <td *ngIf="!reduced">
+              <!--<td *ngIf="!reduced">
               <i
                 class="hover material-icons"
                 style="color:#5a6dd8; cursor: pointer;"
                 (click)="arrowClick.emit(item)"
               >play_circle_outline</i>
+            </td>-->
+
             </td>
           </tr>
           <tr *ngIf="sortedData.length === 0">
@@ -131,6 +164,8 @@ export class TableComponent implements OnChanges {
   @Input() hasSearch = false;
   @Input() hasCsvExport = false;
   @Input() hasPaginator = true;
+  @Input() hasActions = false;
+  @Input() hasButton = false;
 
   // input non necessari
   @Input() tags: string[] = [];
@@ -147,7 +182,7 @@ export class TableComponent implements OnChanges {
   @Output() arrowClick: EventEmitter<any> = new EventEmitter<any>();
   @Output() actionsClick: EventEmitter<any> = new EventEmitter<any>();
 
-  objectKeys = Object.keys;
+  /*objectKeys = Object.keys;*/
   filterableTitles: TableTitles[] = [];
   typeEnum = TableTitlesTypes;
   alignEnum = TableCellAligns;
@@ -184,11 +219,6 @@ export class TableComponent implements OnChanges {
   }
 
   sortData(sort: Sort, emitChange: boolean = true) {
-    console.log('funzione SORTDATA');
-    console.log('OCCHIO A QUESTO CAMPO CHE ALLA TERZA VOLTA DOVREBBE ESSERE TRUE', sort.direction === '');
-    console.log('campo sort', sort);
-    console.log('campo emitChange', emitChange);
-    console.log('sortedData ', this.sortedData);
     if (emitChange) {
       this.sortChange.emit(sort);
     }
@@ -197,10 +227,6 @@ export class TableComponent implements OnChanges {
     const data = this.items.slice();
     if (!sort.active || sort.direction === '') {
       this.currentSort = {};
-      console.log('currentSort ', this.currentSort);
-      console.log('sort.active ', sort.active);
-      console.log('sort.direction ', sort.direction);
-      console.log('sono entrato nell if');
       this.sortedData = this.items;
       this.paginationHandle();
       return;
@@ -215,12 +241,8 @@ export class TableComponent implements OnChanges {
   }
 
   pageChangeHandle(data) {
-    console.log('funzione PAGECHANGEHANDLE chiamata con : ', data);
     this.currentPagination = data;
     this.sortedData = this.items.slice(); // copia dell'intero array
-    console.log('currentSort', this.currentSort);
-    console.log('sortedData = ', this.sortedData);
-    console.log('currentSort length = ', Object.keys(this.currentSort).length);
     if (Object.keys(this.currentSort).length !== 0) {
       this.sortData(this.currentSort, false);
     } else {
@@ -229,8 +251,6 @@ export class TableComponent implements OnChanges {
   }
 
   paginationHandle() {
-    console.log('funzione PAGINATION HANDLE');
-    console.log('Prima della paginazione ', this.sortedData);
     /*
     * all'interno di data ho questo:
     * {
@@ -250,7 +270,6 @@ export class TableComponent implements OnChanges {
       paginatedData.push(this.sortedData[i]);
     }
     this.sortedData = paginatedData;
-    console.log('Dopo la paginazione ', this.sortedData);
   }
 
   csvExport() {
@@ -265,13 +284,13 @@ export class TableComponent implements OnChanges {
       headers: headerMap
     };
 
-    // new Angular2Csv(this.sortedData.map((el) => {
-    //   const retEl = {}
-    //   headerMap.map((h) => {
-    //     retEl[h] = (el[h] !== undefined) ? el[h] : ''
-    //   })
-    //   return retEl
-    // }), 'Export Data', options);
+    /*new Angular2Csv(this.sortedData.map((el) => {
+      const retEl = {}
+      headerMap.map((h) => {
+        retEl[h] = (el[h] !== undefined) ? el[h] : ''
+      })
+      return retEl
+    }), 'Export Data', options);*/
   }
 
   actionButtonClick(a) {
