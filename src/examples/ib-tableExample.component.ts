@@ -7,7 +7,8 @@ import {TableTitlesTypes} from '../app/inobeta-ui/ui/table/titles.model';
     <ib-table
       [titles]="titles"
       [items]="items"
-      (filterChange)="stampa($event)">
+      (filterChange)="stampa($event)"
+      [selectRowName]="'Ricevuto'">
     </ib-table>
   `
 })
@@ -17,19 +18,19 @@ export class IbTableExampleComponent {
   titles = [
     {
       key: 'lot',
-      value: 'dashboard.goodsReceiving.ibTable.lot',
+      value: 'Lotto',
       type: TableTitlesTypes.NUMBER,
       filterable: true
     },
     {
       key: 'sender',
-      value: 'dashboard.goodsReceiving.ibTable.sender',
+      value: 'Mittente',
       type: TableTitlesTypes.STRING,
       filterable: true
     },
     {
       key: 'deadline',
-      value: 'dashboard.goodsReceiving.ibTable.deadline',
+      value: 'Scadenza',
       type: TableTitlesTypes.DATE,
       filterable: true
     }

@@ -1,6 +1,7 @@
 ib-table .hover:hover{
   opacity: .5 !important;
 }
+
 .mat-sort-header-container {
   align-items: center;
 }
@@ -8,14 +9,14 @@ ib-table .hover:hover{
 th {
   color: #555;
   font-weight: normal;
-  border-bottom: 2px solid #ccc;
+  /*border-bottom: 2px solid #ccc;*/
   padding: 15px;
   margin-bottom: 20px;
 }
 
-th >>> button.mat-sort-header-button {
+/*th >>> button.mat-sort-header-button {
   text-transform: uppercase !important;
-}
+}*/
 
 td {
   border-bottom: 1px solid #ccc;

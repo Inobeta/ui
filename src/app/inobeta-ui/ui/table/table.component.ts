@@ -41,16 +41,17 @@ import {TableCellAligns, TableTitles, TableTitlesTypes} from './titles.model';
           style="width:100%;" cellpadding="0" cellspacing="0">
 
           <!--HEADER-->
-          <tr>
-            <th width="10" *ngIf="!reduced && selectableRows"></th>
+          <tr class="table-header">
+            <th id="select-row-name" width="10" *ngIf="!reduced && selectableRows">{{selectRowName | translate}}</th>
             <th
               *ngFor="let t of titles"
               [mat-sort-header]="t.key"
-              style="white-space: nowrap;">{{ t.value | translate}}
-            <th width="10" *ngIf="!reduced"></th>
+              style="white-space: nowrap;"
+              class="table-header-title">{{ t.value | translate}}
+            </th>
           </tr>
 
-          <tr *ngFor="let item of sortedData">
+          <tr class="table-row" *ngFor="let item of sortedData">
 
             <!--CHECKBOX-->
             <td *ngIf="!reduced && selectableRows">
@@ -167,6 +168,7 @@ export class TableComponent implements OnChanges {
   @Input() hasPaginator = true;
   @Input() hasActions = false;
   @Input() hasButton = false;
+  @Input() selectRowName = 'Seleziona';
 
   // input non necessari
   @Input() tags: string[] = [];
