@@ -1,10 +1,10 @@
 .table-header{
   background-color: #FF4931;
 }
-button.mat-sort-header-button, #select-row-name{
+button.mat-sort-header-button, #select-row-name, #delete-row-name{
   color: #ffffff;
 }
-.mat-sort-header-container, #select-row-name {
+.mat-sort-header-container, #select-row-name, #delete-row-name {
   font-family: 'Roboto', 'Regular', sans-serif;
 }
 .table-row td, .table-header-title {
@@ -17,9 +17,11 @@ tr td{
 .mat-sort-header-arrow {
   color: #FCEE21 !important;
 }
-.table-row:hover{
-  background-color: #F7F7F7;
-}
+
 .table-row:hover > td{
   color: #515151;
+  background-color: #F7F7F7;
+}
+td {
+  background-color: #ffffff;
 }

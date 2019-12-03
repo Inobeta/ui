@@ -4,11 +4,23 @@ import {TableTitlesTypes} from '../app/inobeta-ui/ui/table/titles.model';
 @Component({
   selector: 'ib-table-example',
   template: `
+
+    <ng-template #deleteTemplate let-item="item">
+      <span class="delete-button">
+          <i (click)="stampa(item)" class="material-icons">search</i>
+      </span>
+    </ng-template>
+
     <ib-table
       [titles]="titles"
       [items]="items"
       (filterChange)="stampa($event)"
-      [selectRowName]="'Ricevuto'">
+      [selectRowName]="'Ricevuto'"
+      [templateButtons]="[{
+        template: deleteTemplate,
+        columnName: 'Elimina'
+      }]"
+    >
     </ib-table>
   `
 })
@@ -178,5 +190,4 @@ export class IbTableExampleComponent {
   stampa(item) {
     console.log(item);
   }
-
 }

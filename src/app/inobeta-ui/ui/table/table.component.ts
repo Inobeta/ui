@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {Sort} from '@angular/material';
 import {TableCellAligns, TableTitles, TableTitlesTypes} from './titles.model';
+import {TemplateButtonModel} from './templateButton.model';
 
 @Component({
   selector: 'ib-table',
@@ -49,6 +50,14 @@ import {TableCellAligns, TableTitles, TableTitlesTypes} from './titles.model';
               style="white-space: nowrap;"
               class="table-header-title">{{ t.value | translate}}
             </th>
+            <th
+              width="10"
+              style="white-space: nowrap;"
+              class="table-header-title"
+              [mat-sort-header]="btn.columnName"
+              disabled="true"
+              *ngFor="let btn of templateButtons"
+            >{{btn.columnName | translate}}</th>
           </tr>
 
           <tr class="table-row" *ngFor="let item of sortedData">
@@ -123,29 +132,33 @@ import {TableCellAligns, TableTitles, TableTitlesTypes} from './titles.model';
                 </i>
                </span>
 
-              <!--<td *ngIf="!reduced">
-              <i
-                class="hover material-icons"
-                style="color:#5a6dd8; cursor: pointer;"
-                (click)="arrowClick.emit(item)"
-              >play_circle_outline</i>
-            </td>-->
-
             </td>
+            <td style="text-align: center" *ngFor="let btn of templateButtons">
+              <ng-container
+                *ngTemplateOutlet="btn.template; context: { item: item}">
+              </ng-container>
+            </td>
+
           </tr>
           <tr *ngIf="sortedData.length === 0">
             <td [attr.colspan]="4+titles.length" style="text-align: center;">
-              <br><br>{{ 'shared.ui.table.no_data' | translate }}<br><br>
+              <br><br>{{ 'shared.ui.able.no_data' | translate }}<br><br>
             </td>
           </tr>
         </table>
       </div>
-      <ib-table-paginator
-        [hasPaginator]="hasPaginator"
-        [items]="items"
-        (pageChangeHandle)="pageChangeHandle($event)"
-        [reduced]="reduced">
-      </ib-table-paginator>
+      <ng-container
+        *ngTemplateOutlet="((paginatorTemplate != null) ? paginatorTemplate : defaultPaginatorTemplate);
+        context: this"
+      ></ng-container>
+      <ng-template #defaultPaginatorTemplate >
+        <ib-table-paginator
+          [hasPaginator]="hasPaginator"
+          [items]="items"
+          (pageChangeHandle)="pageChangeHandle($event)"
+          [reduced]="reduced">
+        </ib-table-paginator>
+      </ng-template>
     </div>
     <mat-menu #menuTableActions="matMenu">
       <button mat-menu-item *ngFor="let a of actions" (click)="actionButtonClick(a)">{{ a | translate}}</button>
@@ -166,9 +179,10 @@ export class TableComponent implements OnChanges {
   @Input() hasSearch = false;
   @Input() hasCsvExport = false;
   @Input() hasPaginator = true;
+  @Input() paginatorTemplate;
   @Input() hasActions = false;
-  @Input() hasButton = false;
   @Input() selectRowName = 'Seleziona';
+  @Input() templateButtons: TemplateButtonModel[];
 
   // input non necessari
   @Input() tags: string[] = [];
@@ -181,6 +195,7 @@ export class TableComponent implements OnChanges {
   @Output() filterReset: EventEmitter<any> = new EventEmitter<any>();
   @Output() sortChange: EventEmitter<any> = new EventEmitter<any>();
   @Output() add: EventEmitter<any> = new EventEmitter<any>();
+  @Output() deleteItem: EventEmitter<any> = new EventEmitter<any>();
 
   @Output() arrowClick: EventEmitter<any> = new EventEmitter<any>();
   @Output() actionsClick: EventEmitter<any> = new EventEmitter<any>();
