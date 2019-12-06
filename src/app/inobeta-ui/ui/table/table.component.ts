@@ -53,7 +53,7 @@ import {TemplateButtonModel} from './templateButton.model';
             <th
               width="10"
               style="white-space: nowrap;"
-              class="table-header-title"
+              class="table-header-title-custom"
               [mat-sort-header]="btn.columnName"
               disabled="true"
               *ngFor="let btn of templateButtons"
