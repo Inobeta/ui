@@ -142,7 +142,7 @@ import {TemplateButtonModel} from './templateButton.model';
           </tr>
           <tr *ngIf="sortedData.length === 0">
             <td [attr.colspan]="4+titles.length" style="text-align: center;">
-              <br><br>{{ 'shared.ui.able.no_data' | translate }}<br><br>
+              <br><br>{{ 'shared.ibTable.noData' | translate }}<br><br>
             </td>
           </tr>
         </table>
