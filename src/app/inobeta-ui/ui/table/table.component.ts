@@ -182,7 +182,7 @@ export class TableComponent implements OnChanges {
   @Input() paginatorTemplate;
   @Input() hasActions = false;
   @Input() selectRowName = 'Seleziona';
-  @Input() templateButtons: TemplateButtonModel[];
+  @Input() templateButtons: TemplateButtonModel[] = [];
 
   // input non necessari
   @Input() tags: string[] = [];
