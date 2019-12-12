@@ -208,8 +208,9 @@ import {TemplateModel} from './template.model';
       ></ng-container>
       <ng-template #defaultPaginatorTemplate >
         <ib-table-paginator
-          [hasPaginator]="hasPaginator"
-          [items]="items"
+          *ngIf="hasPaginator"
+          [numOfElements]="numOfElements"
+          [paginationInfo]="currentPagination"
           (pageChangeHandle)="pageChangeHandle($event)"
           [reduced]="reduced">
         </ib-table-paginator>
@@ -267,10 +268,10 @@ export class TableComponent implements OnChanges {
   typeEnum = TableTitlesTypes;
   alignEnum = TableCellAligns;
   sortedData;
-  currentPagination;
+  currentPagination: any = {};
   visibleHeaders = {};
   columnFilter = {};
-
+  numOfElements = 0;
 
   @HostListener('document:click', ['$event'])
   clickout(event) {
@@ -347,6 +348,7 @@ export class TableComponent implements OnChanges {
       });
 
     }
+    this.numOfElements = this.sortedData.length;
 
     if (!sort || !sort.active || sort.direction === '') {
       this.currentSort = {};
@@ -364,11 +366,8 @@ export class TableComponent implements OnChanges {
 
   setFilter(key, value) {
     this.columnFilter[key] = value;
-    this.pageChangeHandle({
-      pageIndex: 0,
-      pageSize: 10,
-      length: this.sortedData.length
-    });
+    this.currentPagination.pageIndex = 0;
+    this.pageChangeHandle(this.currentPagination);
   }
 
   resetFilters() {
