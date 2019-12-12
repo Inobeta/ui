@@ -276,7 +276,6 @@ export class TableComponent implements OnChanges {
   clickout(event) {
     // tslint:disable-next-line: forin
     for (const el in this.visibleHeaders) {
-      console.log('stop propagation');
       event.stopPropagation();
       break;
     }
@@ -348,7 +347,6 @@ export class TableComponent implements OnChanges {
       });
 
     }
-    console.log(this.sortedData);
 
     if (!sort || !sort.active || sort.direction === '') {
       this.currentSort = {};
