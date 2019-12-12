@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { TableTitles } from './titles.model';
-import { TemplateButtonModel } from './templateButton.model';
+import { TemplateModel } from './template.model';
 
 @Component({
   selector: 'ib-table',
@@ -20,7 +20,8 @@ export class TableStubComponent {
   @Input() paginatorTemplate;
   @Input() hasActions = false;
   @Input() selectRowName = 'Seleziona';
-  @Input() templateButtons: TemplateButtonModel[] = [];
+  @Input() templateButtons: TemplateModel[] = [];
+  @Input() templateHeaders: any = {};
   @Input() tags: string[] = [];
   @Input() reduced = false;
   @Input() displayInfo = true;

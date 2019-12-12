@@ -1,11 +1,11 @@
-import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, HostListener} from '@angular/core';
 import {Sort} from '@angular/material';
 import {TableCellAligns, TableTitles, TableTitlesTypes} from './titles.model';
-import {TemplateButtonModel} from './templateButton.model';
+import {TemplateModel} from './template.model';
 
 @Component({
   selector: 'ib-table',
-  template: `
+  template: /*template*/`
     <div fxLayout="column" class="ib-table">
       <div *ngIf="!reduced" fxLayout="row" fxLayoutAlign="left center" fxLayoutGap="20px">
         <ib-table-search
@@ -44,12 +44,67 @@ import {TemplateButtonModel} from './templateButton.model';
           <!--HEADER-->
           <tr class="table-header">
             <th id="select-row-name" width="10" *ngIf="!reduced && selectableRows">{{selectRowName | translate}}</th>
-            <th
+            <ng-template
               *ngFor="let t of titles"
-              [mat-sort-header]="t.key"
+              [ngIf]="true"
+            >
+            <th
               style="white-space: nowrap;"
-              class="table-header-title">{{ t.value | translate}}
+              class="table-header-title"
+              width="{{t.width}}"
+              [mat-sort-header]="t.key"
+              *ngIf="!templateHeaders[t.key]"
+            >
+            {{ t.value | translate}}
+            <ng-template
+              [ngIf]="columnFilter[t.key]"
+            >
+              [{{columnFilter[t.key]}}]
+              <i
+              style="font-size: 14px;font-weight: bolder;cursor:pointer"
+              class="material-icons"
+              (click)="$event.stopPropagation(); setFilter(t.key, null);"
+              >close</i>
+            </ng-template>
             </th>
+            <th
+              style="white-space: nowrap;"
+              class="table-header-title"
+              width="{{t.width}}"
+              *ngIf="templateHeaders[t.key]"
+              (click)="resetCustomHeaderVisibility($event); visibleHeaders[t.key] = !visibleHeaders[t.key]"
+            >
+            {{ t.value | translate}}
+            <ng-template
+              [ngIf]="columnFilter[t.key]"
+            >
+              [{{columnFilter[t.key]}}]
+              <i
+              style="font-size: 14px;font-weight: bolder;cursor:pointer"
+              class="material-icons"
+              (click)="$event.stopPropagation(); setFilter(t.key, null);"
+              >close</i>
+            </ng-template>
+             <i class="material-icons table-sort-indicator"
+             style="font-size: 14px;font-weight: bolder;"
+             *ngIf="currentSort && currentSort.active==t.key && currentSort.direction=='asc'"
+             >
+               arrow_upward
+              </i>
+              <i class="material-icons table-sort-indicator"
+             style="font-size: 14px;font-weight: bolder;"
+             *ngIf="currentSort && currentSort.active==t.key && currentSort.direction=='desc'"
+             >
+               arrow_downward
+              </i>
+            <ng-template [ngIf]="visibleHeaders[t.key]">
+              <ng-container
+                  *ngTemplateOutlet="templateHeaders[t.key]; context: { ibTable: this, col: t}">
+              </ng-container>
+            </ng-template>
+            </th>
+            </ng-template>
+
             <th
               width="10"
               style="white-space: nowrap;"
@@ -182,7 +237,8 @@ export class TableComponent implements OnChanges {
   @Input() paginatorTemplate;
   @Input() hasActions = false;
   @Input() selectRowName = 'Seleziona';
-  @Input() templateButtons: TemplateButtonModel[] = [];
+  @Input() templateButtons: TemplateModel[] = [];
+  @Input() templateHeaders: any = {}; /** { columnName: TemplateRef } */
 
   // input non necessari
   @Input() tags: string[] = [];
@@ -206,6 +262,16 @@ export class TableComponent implements OnChanges {
   alignEnum = TableCellAligns;
   sortedData;
   currentPagination;
+  visibleHeaders = {};
+  columnFilter = {};
+
+
+  @HostListener('document:click', ['$event'])
+  clickout(event) {
+    this.resetCustomHeaderVisibility();
+  }
+
+
 
   ngOnChanges(changes: SimpleChanges): void {
 
@@ -241,16 +307,42 @@ export class TableComponent implements OnChanges {
       this.sortChange.emit(sort);
     }
     this.currentSort = sort;
-    // data diventa la copia dell'array di elem
-    const data = this.items.slice();
-    if (!sort.active || sort.direction === '') {
+
+    this.sortedData = this.items.slice();
+
+    for (const k in this.columnFilter) {
+      if (!this.columnFilter[k]) { delete this.columnFilter[k]; }
+    }
+    if (Object.keys(this.columnFilter).length > 0 ) {
+
+      this.sortedData = this.sortedData.filter(el => {
+        let include = false;
+        // tslint:disable-next-line: forin
+        for (const k in this.columnFilter) {
+          /*TODO INSERT COLUMN TYPE HERE */
+          switch(this.titles.find(t => t.key === k).type){
+            case TableTitlesTypes.STRING:
+                if (el[k] && el[k].match && el[k].toLowerCase().match(this.columnFilter[k].toLowerCase())) {
+                  include = true;
+                } else { include = false; }
+                break;
+                default: include = true;
+          }
+
+        }
+        return include;
+      });
+
+    }
+    console.log(this.sortedData);
+
+    if (!sort || !sort.active || sort.direction === '') {
       this.currentSort = {};
-      this.sortedData = this.items;
       this.paginationHandle();
       return;
     }
 
-    this.sortedData = data.sort((a, b) => {
+    this.sortedData = this.sortedData.sort((a, b) => {
       const isAsc = sort.direction === 'asc';
       return compare(a[sort.active], b[sort.active], isAsc);
     });
@@ -258,14 +350,22 @@ export class TableComponent implements OnChanges {
     this.paginationHandle();
   }
 
+  setFilter(key, value) {
+    this.columnFilter[key] = value;
+    this.pageChangeHandle({
+      pageIndex: 0,
+      pageSize: 10,
+      length: this.sortedData.length
+    });
+  }
+
+  resetFilters() {
+    this.columnFilter = {};
+  }
+
   pageChangeHandle(data) {
     this.currentPagination = data;
-    this.sortedData = this.items.slice(); // copia dell'intero array
-    if (Object.keys(this.currentSort).length !== 0) {
-      this.sortData(this.currentSort, false);
-    } else {
-      this.paginationHandle();
-    }
+    this.sortData(this.currentSort, false);
   }
 
   paginationHandle() {
@@ -316,6 +416,13 @@ export class TableComponent implements OnChanges {
       action: a,
       data: this.sortedData.filter((el) => el.checked)
     });
+  }
+
+  resetCustomHeaderVisibility(event = null) {
+    if (event) {
+      event.stopPropagation();
+    }
+    this.visibleHeaders = {};
   }
 }
 

@@ -1,9 +1,18 @@
-import {Component} from '@angular/core';
+import {Component, ViewChild, ElementRef, TemplateRef, ViewChildren} from '@angular/core';
 import {TableTitlesTypes} from '../app/inobeta-ui/ui/table/titles.model';
 
 @Component({
   selector: 'ib-table-example',
   template: `
+  <ng-template #headerClickTemplate let-ibTable="ibTable" let-col="col">
+    <div class="modal-selector" (click)="$event.stopPropagation();">
+      <div class="modal-row" (click)="ibTable.resetCustomHeaderVisibility($event)">Close this popup</div>
+      <div class="modal-row" (click)="ibTable.sortData({active: col.key, direction: 'asc'})">Sort ASC</div>
+      <div class="modal-row" (click)="ibTable.sortData({active: col.key, direction: 'desc'})">Sort DESC</div>
+      <div class="modal-row" (click)="ibTable.setFilter('sender', 'bologna')">Filter sender</div>
+      <div class="modal-row" (click)="ibTable.setFilter('deadline', '2019-05-02')">Filter expires</div>
+    </div>
+  </ng-template>
 
     <ng-template #deleteTemplate let-item="item">
       <span class="delete-button">
@@ -20,19 +29,42 @@ import {TableTitlesTypes} from '../app/inobeta-ui/ui/table/titles.model';
         template: deleteTemplate,
         columnName: 'Elimina'
       }]"
+      [templateHeaders]="{
+        'lot': headerClickTemplate,
+        'deadline': headerClickTemplate
+      }"
     >
     </ib-table>
-  `
+  `,
+  styles: [
+`
+
+.modal-selector{
+  position: fixed;
+  width: 150px;
+  height: 200px;
+  background-color:white;
+  border:1px solid black;
+  color:black;
+}
+
+.modal-row {
+  border:1px solid black;
+  background-color: yellow;
+}
+`
+
+  ]
 })
 
 export class IbTableExampleComponent {
-
   titles = [
     {
       key: 'lot',
       value: 'Lotto',
       type: TableTitlesTypes.NUMBER,
-      filterable: true
+      filterable: true,
+      width: '10%'
     },
     {
       key: 'sender',
@@ -44,7 +76,8 @@ export class IbTableExampleComponent {
       key: 'deadline',
       value: 'Scadenza',
       type: TableTitlesTypes.DATE,
-      filterable: true
+      filterable: true,
+      width: '10%'
     }
   ];
   items = [
@@ -185,9 +218,11 @@ export class IbTableExampleComponent {
     }
   ];
 
-  constructor() {}
+  constructor() {
+  }
 
   stampa(item) {
     console.log(item);
+    console.log(this.titles)
   }
 }

@@ -1,6 +1,6 @@
 import {TemplateRef} from '@angular/core';
 
-export class TemplateButtonModel {
+export class TemplateModel {
   template: TemplateRef<any>;
   columnName: string;
 }

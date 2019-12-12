@@ -42,3 +42,8 @@ mat-paginator >>> .mat-input-infix {
 .table-header-title-custom >>> button{
   cursor: default;
 }
+
+.table-header-title{
+  text-align: left;
+  cursor: pointer;
+}
