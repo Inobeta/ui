@@ -10,9 +10,11 @@ import {ResponseHandlerService} from './http/responseHandler.service';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {TranslateService} from '@ngx-translate/core';
 import {TranslateServiceStub} from './stubs/translate.service.stub';
+import { TableStubComponent } from './ui/table/table.stub.spec';
 
 export const testComponents = [
   MockTranslatePipeDirective,
+  TableStubComponent
 ];
 
 export const testServices = [
