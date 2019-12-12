@@ -40,7 +40,7 @@ import {TableTitlesTypes} from '../app/inobeta-ui/ui/table/titles.model';
 `
 
 .modal-selector{
-  position: fixed;
+  position: absolute;
   width: 150px;
   height: 200px;
   background-color:white;
