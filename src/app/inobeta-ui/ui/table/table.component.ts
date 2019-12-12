@@ -218,6 +218,12 @@ import {TemplateModel} from './template.model';
     <mat-menu #menuTableActions="matMenu">
       <button mat-menu-item *ngFor="let a of actions" (click)="actionButtonClick(a)">{{ a | translate}}</button>
     </mat-menu>
+    <!--overlay pane for custom headers popups--->
+    <div
+    class="ib-table-overlay"
+    *ngIf="hasCustomHeadersVisible()"
+    style="position:fixed; top:0px; left:0px;width:100%; height:100%; z-index:99; background-color:transparent;"
+    ></div>
   `,
   styleUrls: ['./table.component.css']
 })
@@ -268,10 +274,18 @@ export class TableComponent implements OnChanges {
 
   @HostListener('document:click', ['$event'])
   clickout(event) {
+    // tslint:disable-next-line: forin
+    for (const el in this.visibleHeaders) {
+      console.log('stop propagation');
+      event.stopPropagation();
+      break;
+    }
     this.resetCustomHeaderVisibility();
   }
 
-
+  hasCustomHeadersVisible() {
+    return Object.keys(this.visibleHeaders).length > 0;
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
 
@@ -320,7 +334,7 @@ export class TableComponent implements OnChanges {
         // tslint:disable-next-line: forin
         for (const k in this.columnFilter) {
           /*TODO INSERT COLUMN TYPE HERE */
-          switch(this.titles.find(t => t.key === k).type){
+          switch (this.titles.find(t => t.key === k).type) {
             case TableTitlesTypes.STRING:
                 if (el[k] && el[k].match && el[k].toLowerCase().match(this.columnFilter[k].toLowerCase())) {
                   include = true;

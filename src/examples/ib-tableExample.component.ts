@@ -46,6 +46,7 @@ import {TableTitlesTypes} from '../app/inobeta-ui/ui/table/titles.model';
   background-color:white;
   border:1px solid black;
   color:black;
+  z-index: 100;
 }
 
 .modal-row {
@@ -223,6 +224,6 @@ export class IbTableExampleComponent {
 
   stampa(item) {
     console.log(item);
-    console.log(this.titles)
+    console.log(this.titles);
   }
 }
