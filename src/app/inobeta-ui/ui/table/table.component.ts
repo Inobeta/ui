@@ -336,7 +336,7 @@ export class TableComponent implements OnChanges {
           /*TODO INSERT COLUMN TYPE HERE */
           switch (this.titles.find(t => t.key === k).type) {
             case TableTitlesTypes.STRING:
-                if (!(el[k] && el[k].match && el[k].toLowerCase().match(this.columnFilter[k].toLowerCase()))) {
+                if (!(el[k] && el[k].includes && el[k].toLowerCase().includes(this.columnFilter[k].toLowerCase()))) {
                   include = false;
                 }
                 break;
