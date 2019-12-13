@@ -10,7 +10,7 @@ import {TableTitlesTypes} from '../app/inobeta-ui/ui/table/titles.model';
       <div class="modal-row" (click)="ibTable.sortData({active: col.key, direction: 'asc'})">Sort ASC</div>
       <div class="modal-row" (click)="ibTable.sortData({active: col.key, direction: 'desc'})">Sort DESC</div>
       <div class="modal-row" (click)="ibTable.setFilter('sender', 'bologna')">Filter sender</div>
-      <div class="modal-row" (click)="ibTable.setFilter('deadline', '2019-05-02')">Filter expires</div>
+      <div class="modal-row" (click)="ibTable.setFilter('date', '05')">Filter expires</div>
     </div>
   </ng-template>
 
@@ -74,9 +74,9 @@ export class IbTableExampleComponent {
       filterable: true
     },
     {
-      key: 'deadline',
+      key: 'date',
       value: 'Scadenza',
-      type: TableTitlesTypes.DATE,
+      type: TableTitlesTypes.STRING,
       filterable: true,
       width: '10%'
     }
@@ -120,7 +120,7 @@ export class IbTableExampleComponent {
     },
     {
       lot: 5,
-      date: '05/11/2019',
+      date: '06/11/2019',
       deadline: new Date(2019, 4, 19),
       sender: 'GranoInfinito srl sede Bologna',
       article: 'Mais Tostato 7 Kg',

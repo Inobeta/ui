@@ -330,15 +330,15 @@ export class TableComponent implements OnChanges {
     if (Object.keys(this.columnFilter).length > 0 ) {
 
       this.sortedData = this.sortedData.filter(el => {
-        let include = false;
+        let include = true;
         // tslint:disable-next-line: forin
         for (const k in this.columnFilter) {
           /*TODO INSERT COLUMN TYPE HERE */
           switch (this.titles.find(t => t.key === k).type) {
             case TableTitlesTypes.STRING:
-                if (el[k] && el[k].match && el[k].toLowerCase().match(this.columnFilter[k].toLowerCase())) {
-                  include = true;
-                } else { include = false; }
+                if (!(el[k] && el[k].match && el[k].toLowerCase().match(this.columnFilter[k].toLowerCase()))) {
+                  include = false;
+                }
                 break;
                 default: include = true;
           }
