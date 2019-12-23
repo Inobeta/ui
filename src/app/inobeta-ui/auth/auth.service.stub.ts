@@ -2,6 +2,7 @@ import {localStorageStub} from './localStorage.stub';
 import {cookiesStorageStub} from './cookiesStorage.stub';
 
 export const authServiceStub = {
+
   activeSession: {
     valid: true,
     user: {
@@ -23,21 +24,25 @@ export const authServiceStub = {
     },
     authToken: 'eyJhbGciOigP4O_MSO'
   },
+
   storeSession: () => {
-    this.activeSession.valid = true;
+    authServiceStub.activeSession.valid = true;
     return localStorageStub.set(this.activeSession);
   },
+
   cookieSession: () => {
     this.activeSession.valid = true;
     return cookiesStorageStub.set(this.activeSession);
   },
+
   logout: () => {
-    this.activeSession = null;
+    authServiceStub.activeSession = null;
     cookiesStorageStub.set(null);
     localStorageStub.set(null);
     return true;
   },
+
   isLoggedIn: () => {
-    return this.activeSession !== null;
+    return authServiceStub.activeSession !== null;
   }
 };

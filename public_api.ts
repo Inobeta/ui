@@ -25,5 +25,6 @@ export * from './src/app/inobeta-ui/auth/auth.service.stub';
 export * from './src/app/inobeta-ui/auth/localStorage.stub';
 export * from './src/app/inobeta-ui/auth/cookiesStorage.stub';
 export * from './src/app/inobeta-ui/stubs/translate.service.stub';
+export * from './src/app/inobeta-ui/auth/session.stub.spec';
 
 

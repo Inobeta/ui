@@ -11,6 +11,8 @@ import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {TranslateService} from '@ngx-translate/core';
 import {TranslateServiceStub} from './stubs/translate.service.stub';
 import { TableStubComponent } from './ui/table/table.stub.spec';
+import {SessionService} from './auth/session.service';
+import {sessionStubSpec} from './auth/session.stub.spec';
 
 export const testComponents = [
   MockTranslatePipeDirective,
@@ -23,7 +25,8 @@ export const testServices = [
   { provide: AuthService, useValue: authServiceStub},
   { provide: LocalStorageService, useValue: localStorageStub },
   { provide: CookiesStorageService, useValue: cookiesStorageStub },
-  { provide: TranslateService, useValue: TranslateServiceStub}
+  { provide: TranslateService, useValue: TranslateServiceStub},
+  { provide: SessionService, useValue: sessionStubSpec}
 ];
 
 export const testImports = [
