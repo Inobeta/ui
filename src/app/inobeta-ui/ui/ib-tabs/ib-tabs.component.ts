@@ -34,7 +34,7 @@ export class IbTabsComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
-    console.log(this.tabs);
+    console.log('this.tabs', this.tabs);
   }
 
   tabClick(item: IbTabsItem) {

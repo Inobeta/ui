@@ -30,6 +30,6 @@ export class TabExampleComponent {
   }
 
   stampa(item) {
-    console.log(item);
+    console.log('item', item);
   }
 }

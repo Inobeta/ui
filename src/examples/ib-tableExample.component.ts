@@ -223,7 +223,7 @@ export class IbTableExampleComponent {
   }
 
   stampa(item) {
-    console.log(item);
-    console.log(this.titles);
+    console.log('item', item);
+    console.log('titles', this.titles);
   }
 }
