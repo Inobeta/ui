@@ -1,5 +1,6 @@
 export * from './src/app/inobeta-ui/ui/table/titles.model';
 export * from './src/app/inobeta-ui/auth/redux/session.reducer';
+export * from './src/app/inobeta-ui/auth/redux/session.actions';
 export * from './src/app/inobeta-ui/auth/session.model';
 export * from './src/app/inobeta-ui/ui/table/table.component';
 export * from './src/app/inobeta-ui/ui/table/table.const';
@@ -28,5 +29,6 @@ export * from './src/app/inobeta-ui/stubs/translate.service.stub';
 export * from './src/app/inobeta-ui/stubs/dialog.stub';
 export * from './src/app/inobeta-ui/auth/session.stub.spec';
 export * from './src/app/inobeta-ui/auth/session.fixture.spec';
+export * from './src/app/inobeta-ui/auth/redux/session.actions';
 
 

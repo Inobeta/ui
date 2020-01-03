@@ -9,7 +9,6 @@ compile package
 ```
 npm run packagr
 ```
-
 cd to output dir: 
 ```
 cd dist/
