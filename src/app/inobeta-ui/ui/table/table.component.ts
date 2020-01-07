@@ -5,7 +5,7 @@ import {TemplateModel} from './template.model';
 
 @Component({
   selector: 'ib-table',
-  template: /*template*/`
+  template: `
     <div fxLayout="column" class="ib-table">
       <div *ngIf="!reduced" fxLayout="row" fxLayoutAlign="left center" fxLayoutGap="20px">
         <ib-table-search
@@ -48,61 +48,61 @@ import {TemplateModel} from './template.model';
               *ngFor="let t of titles"
               [ngIf]="true"
             >
-            <th
-              style="white-space: nowrap;"
-              class="table-header-title"
-              width="{{t.width}}"
-              [mat-sort-header]="t.key"
-              *ngIf="!templateHeaders[t.key]"
-            >
-            {{ t.value | translate}}
-            <ng-template
-              [ngIf]="columnFilter[t.key]"
-            >
-              [{{columnFilter[t.key]}}]
-              <i
-              style="font-size: 14px;font-weight: bolder;cursor:pointer"
-              class="material-icons"
-              (click)="$event.stopPropagation(); setFilter(t.key, null);"
-              >close</i>
-            </ng-template>
-            </th>
-            <th
-              style="white-space: nowrap;"
-              class="table-header-title"
-              width="{{t.width}}"
-              *ngIf="templateHeaders[t.key]"
-              (click)="resetCustomHeaderVisibility($event); visibleHeaders[t.key] = !visibleHeaders[t.key]"
-            >
-            {{ t.value | translate}}
-            <ng-template
-              [ngIf]="columnFilter[t.key]"
-            >
-              [{{columnFilter[t.key]}}]
-              <i
-              style="font-size: 14px;font-weight: bolder;cursor:pointer"
-              class="material-icons"
-              (click)="$event.stopPropagation(); setFilter(t.key, null);"
-              >close</i>
-            </ng-template>
-             <i class="material-icons table-sort-indicator"
-             style="font-size: 14px;font-weight: bolder;"
-             *ngIf="currentSort && currentSort.active==t.key && currentSort.direction=='asc'"
-             >
-               arrow_upward
-              </i>
-              <i class="material-icons table-sort-indicator"
-             style="font-size: 14px;font-weight: bolder;"
-             *ngIf="currentSort && currentSort.active==t.key && currentSort.direction=='desc'"
-             >
-               arrow_downward
-              </i>
-            <ng-template [ngIf]="visibleHeaders[t.key]">
-              <ng-container
-                  *ngTemplateOutlet="templateHeaders[t.key]; context: { ibTable: this, col: t}">
-              </ng-container>
-            </ng-template>
-            </th>
+              <th
+                style="white-space: nowrap;"
+                class="table-header-title"
+                width="{{t.width}}"
+                [mat-sort-header]="t.key"
+                *ngIf="!templateHeaders[t.key]"
+              >
+                {{ t.value | translate}}
+                <ng-template
+                  [ngIf]="columnFilter[t.key]"
+                >
+                  [{{columnFilter[t.key]}}]
+                  <i
+                    style="font-size: 14px;font-weight: bolder;cursor:pointer"
+                    class="material-icons"
+                    (click)="$event.stopPropagation(); setFilter(t.key, null);"
+                  >close</i>
+                </ng-template>
+              </th>
+              <th
+                style="white-space: nowrap;"
+                class="table-header-title"
+                width="{{t.width}}"
+                *ngIf="templateHeaders[t.key]"
+                (click)="resetCustomHeaderVisibility($event); visibleHeaders[t.key] = !visibleHeaders[t.key]"
+              >
+                {{ t.value | translate}}
+                <ng-template
+                  [ngIf]="columnFilter[t.key]"
+                >
+                  [{{columnFilter[t.key]}}]
+                  <i
+                    style="font-size: 14px;font-weight: bolder;cursor:pointer"
+                    class="material-icons"
+                    (click)="$event.stopPropagation(); setFilter(t.key, null);"
+                  >close</i>
+                </ng-template>
+                <i class="material-icons table-sort-indicator"
+                   style="font-size: 14px;font-weight: bolder;"
+                   *ngIf="currentSort && currentSort.active==t.key && currentSort.direction=='asc'"
+                >
+                  arrow_upward
+                </i>
+                <i class="material-icons table-sort-indicator"
+                   style="font-size: 14px;font-weight: bolder;"
+                   *ngIf="currentSort && currentSort.active==t.key && currentSort.direction=='desc'"
+                >
+                  arrow_downward
+                </i>
+                <ng-template [ngIf]="visibleHeaders[t.key]">
+                  <ng-container
+                    *ngTemplateOutlet="templateHeaders[t.key]; context: { ibTable: this, col: t}">
+                  </ng-container>
+                </ng-template>
+              </th>
             </ng-template>
 
             <th
@@ -112,7 +112,8 @@ import {TemplateModel} from './template.model';
               [mat-sort-header]="btn.columnName"
               disabled="true"
               *ngFor="let btn of templateButtons"
-            >{{btn.columnName | translate}}</th>
+            >{{btn.columnName | translate}}
+            </th>
           </tr>
 
           <tr class="table-row" *ngFor="let item of sortedData">
@@ -130,32 +131,32 @@ import {TemplateModel} from './template.model';
               }">
 
               <!--TYPE = ANY-->
-              <span *ngIf="!t.type || t.type === typeEnum.ANY">
+              <span *ngIf="!t.type || t.type === typeEnum.ANY" [ngStyle]="fontFormatStyle(t.fontStyle)">
                 {{item[t.key] | translate}}
               </span>
 
               <!--TYPE = NUMBER-->
-              <span *ngIf="t.type === typeEnum.NUMBER">
+              <span *ngIf="t.type === typeEnum.NUMBER" [ngStyle]="fontFormatStyle(t.fontStyle)">
                   {{item[t.key] | number:t.format:'it'}}
               </span>
 
               <!--TYPE = DATE-->
-              <span *ngIf="t.type === typeEnum.DATE">
+              <span *ngIf="t.type === typeEnum.DATE" [ngStyle]="fontFormatStyle(t.fontStyle)">
                 {{item[t.key] | date: 'dd/MM/yyyy'}}
               </span>
 
               <!--TYPE = STRING-->
-              <span *ngIf="t.type === typeEnum.STRING">
+              <span *ngIf="t.type === typeEnum.STRING" [ngStyle]="fontFormatStyle(t.fontStyle)">
                 {{item[t.key]}}
               </span>
 
               <!--TYPE = HOUR-->
-              <span *ngIf="t.type === typeEnum.HOUR">
+              <span *ngIf="t.type === typeEnum.HOUR" [ngStyle]="fontFormatStyle(t.fontStyle)">
                 {{item[t.key] | date: 'HH:mm:ss'}}
               </span>
 
               <!--TYPE = TAG-->
-              <span *ngIf="t.type === typeEnum.TAG">
+              <span *ngIf="t.type === typeEnum.TAG" [ngStyle]="fontFormatStyle(t.fontStyle)">
                  <mat-chip-list>
                    <mat-chip
                      *ngFor="let tag of item[t.key]"
@@ -169,12 +170,12 @@ import {TemplateModel} from './template.model';
                </span>
 
               <!--TYPE = COMBOBOX-->
-              <span *ngIf="t.type === typeEnum.COMBOBOX">
+              <span *ngIf="t.type === typeEnum.COMBOBOX" [ngStyle]="fontFormatStyle(t.fontStyle)">
                 {{ t.comboOptions[item[t.key]] | translate }}
               </span>
 
               <!--TYPE = BOOLEAN-->
-              <span *ngIf="t.type === typeEnum.BOOLEAN">
+              <span *ngIf="t.type === typeEnum.BOOLEAN" [ngStyle]="fontFormatStyle(t.fontStyle)">
                 <i
                   class="material-icons"
                   style="color:green;"
@@ -206,7 +207,7 @@ import {TemplateModel} from './template.model';
         *ngTemplateOutlet="((paginatorTemplate != null) ? paginatorTemplate : defaultPaginatorTemplate);
         context: this"
       ></ng-container>
-      <ng-template #defaultPaginatorTemplate >
+      <ng-template #defaultPaginatorTemplate>
         <ib-table-paginator
           *ngIf="hasPaginator"
           [numOfElements]="numOfElements"
@@ -221,9 +222,9 @@ import {TemplateModel} from './template.model';
     </mat-menu>
     <!--overlay pane for custom headers popups--->
     <div
-    class="ib-table-overlay"
-    *ngIf="hasCustomHeadersVisible()"
-    style="position:fixed; top:0px; left:0px;width:100%; height:100%; z-index:99; background-color:transparent;"
+      class="ib-table-overlay"
+      *ngIf="hasCustomHeadersVisible()"
+      style="position:fixed; top:0px; left:0px;width:100%; height:100%; z-index:99; background-color:transparent;"
     ></div>
   `,
   styleUrls: ['./table.component.css']
@@ -434,6 +435,16 @@ export class TableComponent implements OnChanges {
       event.stopPropagation();
     }
     this.visibleHeaders = {};
+  }
+
+  fontFormatStyle(CSSRules) {
+    if (CSSRules) {
+      return   {
+        'font-size': CSSRules.fontSize ? CSSRules.fontSize : 'initial',
+        'font-weight': CSSRules.fontWeight ? CSSRules.fontWeight : 'initial',
+        color: CSSRules.color ? CSSRules.color : 'none'
+      };
+    }
   }
 }
 

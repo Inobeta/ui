@@ -12,6 +12,17 @@ export class TableComboItem {
   value: any;
 }
 
+/**
+ * class to format the CSS of the font of a specific column.
+ * It is possible to change the color, weight and size of the font
+ * through the optional "fontStyle" field of TableTitles
+ */
+export class FontStyleProperty {
+  color?: string;
+  fontWeight?: string;
+  fontSize?: string;
+}
+
 export class TableTitles {
   key: string;
   value: string;
@@ -21,6 +32,7 @@ export class TableTitles {
   format?: any;
   align?: TableCellAligns;
   width = 'auto';
-  templateHeaderClick: ElementRef;
+  templateHeaderClick?: ElementRef;
+  fontStyle?: FontStyleProperty;
 }
 
