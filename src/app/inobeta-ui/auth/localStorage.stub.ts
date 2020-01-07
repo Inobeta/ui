@@ -29,7 +29,7 @@ export const localStorageStub = {
   },
   set: (item) => {
     this.storage = item;
-    this.empty = false;
+    this.empty = !item;
     return true;
   }
 };

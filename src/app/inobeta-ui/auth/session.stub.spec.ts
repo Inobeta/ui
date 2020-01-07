@@ -1,6 +1,8 @@
 import {of} from 'rxjs';
 import {fixtures} from './session.fixture.spec';
 import {authServiceStub} from './auth.service.stub';
+import {localStorageStub} from './localStorage.stub';
+import {cookiesStorageStub} from './cookiesStorage.stub';
 
 export const sessionStubSpec = {
 
@@ -14,8 +16,9 @@ export const sessionStubSpec = {
   },
 
   logout: () => {
-    authServiceStub.logout();
-    return of(fixtures.login);
+    /*authServiceStub.activeSession = null;
+    localStorageStub.set(null);
+    cookiesStorageStub.set(null);*/
   }
 
 };
