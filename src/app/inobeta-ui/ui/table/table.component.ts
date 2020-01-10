@@ -131,32 +131,32 @@ import {TemplateModel} from './template.model';
               }">
 
               <!--TYPE = ANY-->
-              <span *ngIf="!t.type || t.type === typeEnum.ANY" [ngStyle]="fontFormatStyle(t.fontStyle)">
+              <span *ngIf="!t.type || t.type === typeEnum.ANY" class="{{t.className}}}">
                 {{item[t.key] | translate}}
               </span>
 
               <!--TYPE = NUMBER-->
-              <span *ngIf="t.type === typeEnum.NUMBER" [ngStyle]="fontFormatStyle(t.fontStyle)">
+              <span *ngIf="t.type === typeEnum.NUMBER" class="{{t.className}}">
                   {{item[t.key] | number:t.format:'it'}}
               </span>
 
               <!--TYPE = DATE-->
-              <span *ngIf="t.type === typeEnum.DATE" [ngStyle]="fontFormatStyle(t.fontStyle)">
+              <span *ngIf="t.type === typeEnum.DATE" class="{{t.className}}">
                 {{item[t.key] | date: 'dd/MM/yyyy'}}
               </span>
 
               <!--TYPE = STRING-->
-              <span *ngIf="t.type === typeEnum.STRING" [ngStyle]="fontFormatStyle(t.fontStyle)">
+              <span *ngIf="t.type === typeEnum.STRING" class="{{t.className}}">
                 {{item[t.key]}}
               </span>
 
               <!--TYPE = HOUR-->
-              <span *ngIf="t.type === typeEnum.HOUR" [ngStyle]="fontFormatStyle(t.fontStyle)">
+              <span *ngIf="t.type === typeEnum.HOUR" class="{{t.className}}">
                 {{item[t.key] | date: 'HH:mm:ss'}}
               </span>
 
               <!--TYPE = TAG-->
-              <span *ngIf="t.type === typeEnum.TAG" [ngStyle]="fontFormatStyle(t.fontStyle)">
+              <span *ngIf="t.type === typeEnum.TAG" class="{{t.className}}">
                  <mat-chip-list>
                    <mat-chip
                      *ngFor="let tag of item[t.key]"
@@ -170,12 +170,12 @@ import {TemplateModel} from './template.model';
                </span>
 
               <!--TYPE = COMBOBOX-->
-              <span *ngIf="t.type === typeEnum.COMBOBOX" [ngStyle]="fontFormatStyle(t.fontStyle)">
+              <span *ngIf="t.type === typeEnum.COMBOBOX" class="{{t.className}}">
                 {{ t.comboOptions[item[t.key]] | translate }}
               </span>
 
               <!--TYPE = BOOLEAN-->
-              <span *ngIf="t.type === typeEnum.BOOLEAN" [ngStyle]="fontFormatStyle(t.fontStyle)">
+              <span *ngIf="t.type === typeEnum.BOOLEAN" class="{{t.className}}">
                 <i
                   class="material-icons"
                   style="color:green;"
@@ -435,16 +435,6 @@ export class TableComponent implements OnChanges {
       event.stopPropagation();
     }
     this.visibleHeaders = {};
-  }
-
-  fontFormatStyle(CSSRules) {
-    if (CSSRules) {
-      return   {
-        'font-size': CSSRules.fontSize ? CSSRules.fontSize : 'initial',
-        'font-weight': CSSRules.fontWeight ? CSSRules.fontWeight : 'initial',
-        color: CSSRules.color ? CSSRules.color : 'none'
-      };
-    }
   }
 }
 

@@ -1,5 +1,5 @@
-import {Component, ViewChild, ElementRef, TemplateRef, ViewChildren} from '@angular/core';
-import {TableCellAligns, TableTitles, TableTitlesTypes} from '../app/inobeta-ui/ui/table/titles.model';
+import {Component} from '@angular/core';
+import {TableTitlesTypes} from '../app/inobeta-ui/ui/table/titles.model';
 
 @Component({
   selector: 'ib-table-example',
@@ -60,18 +60,13 @@ import {TableCellAligns, TableTitles, TableTitlesTypes} from '../app/inobeta-ui/
 
 export class IbTableExampleComponent {
 
-  titles: [
+  titles = [
     {
       key: 'lot',
       value: 'Lotto',
       type: TableTitlesTypes.NUMBER,
       filterable: true,
-      width: '10%',
-      fontStyle: {
-        color: 'red',
-        fontWeight: 'bold',
-        fontSize: 'x-large'
-      }
+      width: '10%'
     },
     {
       key: 'sender',
