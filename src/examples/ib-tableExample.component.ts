@@ -80,6 +80,22 @@ export class IbTableExampleComponent {
       type: TableTitlesTypes.STRING,
       filterable: true,
       width: '10%'
+    },
+    {
+      key: 'userType',
+      value: 'Tipo Utente',
+      type: TableTitlesTypes.MATERIAL_SELECT,
+      width: '10%',
+      materialSelectItems: [
+        {
+          value: 1,
+          label: 'Op Lavoraz.'
+        },
+        {
+          value: 3,
+          label: 'Super Admin'
+        }
+      ]
     }
   ];
   items = [
@@ -90,7 +106,8 @@ export class IbTableExampleComponent {
       sender: 'NocciolineTostate srl sede Cesena',
       article: 'Noccioline 200 Kg',
       created_at: new Date(),
-      updated_at: new Date()
+      updated_at: new Date(),
+      userType: 1
     },
     {
       lot: 2,
@@ -99,7 +116,8 @@ export class IbTableExampleComponent {
       sender: 'MyNoce srl sede Forlì',
       article: 'Pistacchi crudi 150 Kg',
       created_at: new Date(),
-      updated_at: new Date()
+      updated_at: new Date(),
+      userType: 3
     },
     {
       lot: 3,
@@ -108,7 +126,8 @@ export class IbTableExampleComponent {
       sender: 'Inoceci srl sede Aquila',
       article: 'Ceci tostati 20 Kg',
       created_at: new Date(),
-      updated_at: new Date()
+      updated_at: new Date(),
+      userType: 1
     },
     {
       lot: 4,
@@ -117,7 +136,8 @@ export class IbTableExampleComponent {
       sender: 'MELAVERDE srl sede Faenza',
       article: 'Semi di girasole crudi 10 Kg',
       created_at: new Date(),
-      updated_at: new Date()
+      updated_at: new Date(),
+      userType: 3
     },
     {
       lot: 5,
@@ -126,7 +146,8 @@ export class IbTableExampleComponent {
       sender: 'GranoInfinito srl sede Bologna',
       article: 'Mais Tostato 7 Kg',
       created_at: new Date(),
-      updated_at: new Date()
+      updated_at: new Date(),
+      userType: 1
     },
     {
       lot: 6,
@@ -135,7 +156,8 @@ export class IbTableExampleComponent {
       sender: 'NocciolineTostate srl sede Cesena',
       article: 'Noccioline 200 Kg',
       created_at: new Date(),
-      updated_at: new Date()
+      updated_at: new Date(),
+      userType: 3
     },
     {
       lot: 7,
@@ -144,7 +166,8 @@ export class IbTableExampleComponent {
       sender: 'MyNoce srl sede Forlì',
       article: 'Pistacchi crudi 150 Kg',
       created_at: new Date(),
-      updated_at: new Date()
+      updated_at: new Date(),
+      userType: 1
     },
     {
       lot: 8,
@@ -153,7 +176,8 @@ export class IbTableExampleComponent {
       sender: 'Inoceci srl sede Aquila',
       article: 'Ceci tostati 20 Kg',
       created_at: new Date(),
-      updated_at: new Date()
+      updated_at: new Date(),
+      userType: 3
     },
     {
       lot: 9,
@@ -162,7 +186,8 @@ export class IbTableExampleComponent {
       sender: 'MELAVERDE srl sede Faenza',
       article: 'Semi di girasole crudi 10 Kg',
       created_at: new Date(),
-      updated_at: new Date()
+      updated_at: new Date(),
+      userType: 1
     },
     {
       lot: 10,
@@ -171,7 +196,8 @@ export class IbTableExampleComponent {
       sender: 'GranoInfinito srl sede Bologna',
       article: 'Mais Tostato 7 Kg',
       created_at: new Date(),
-      updated_at: new Date()
+      updated_at: new Date(),
+      userType: 3
     },
     {
       lot: 11,
@@ -180,7 +206,8 @@ export class IbTableExampleComponent {
       sender: 'NocciolineTostate srl sede Cesena',
       article: 'Noccioline 200 Kg',
       created_at: new Date(),
-      updated_at: new Date()
+      updated_at: new Date(),
+      userType: 1
     },
     {
       lot: 12,
@@ -189,7 +216,8 @@ export class IbTableExampleComponent {
       sender: 'MyNoce srl sede Forlì',
       article: 'Pistacchi crudi 150 Kg',
       created_at: new Date(),
-      updated_at: new Date()
+      updated_at: new Date(),
+      userType: 3
     },
     {
       lot: 13,
@@ -198,7 +226,8 @@ export class IbTableExampleComponent {
       sender: 'Inoceci srl sede Aquila',
       article: 'Ceci tostati 20 Kg',
       created_at: new Date(),
-      updated_at: new Date()
+      updated_at: new Date(),
+      userType: 1
     },
     {
       lot: 14,
@@ -207,7 +236,8 @@ export class IbTableExampleComponent {
       sender: 'MELAVERDE srl sede Faenza',
       article: 'Semi di girasole crudi 10 Kg',
       created_at: new Date(),
-      updated_at: new Date()
+      updated_at: new Date(),
+      userType: 3
     },
     {
       lot: 15,
@@ -216,12 +246,12 @@ export class IbTableExampleComponent {
       sender: 'GranoInfinito srl sede Bologna',
       article: 'Mais Tostato 7 Kg',
       created_at: new Date(),
-      updated_at: new Date()
+      updated_at: new Date(),
+      userType: 3
     }
   ];
 
-  constructor() {
-  }
+  constructor() {}
 
   stampa(item) {
     console.log('item', item);

@@ -174,6 +174,17 @@ import {TemplateModel} from './template.model';
                 {{ t.comboOptions[item[t.key]] | translate }}
               </span>
 
+              <!--TYPE = MATERIAL_SELECT-->
+              <span *ngIf="t.type === typeEnum.MATERIAL_SELECT" class="{{t.className}}">
+                <mat-form-field >
+                <mat-select [(value)]="item[t.key]">
+                  <mat-option *ngFor="let opt of t.materialSelectItems" [value]="opt.value">
+                    {{opt.label | translate}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              </span>
+
               <!--TYPE = BOOLEAN-->
               <span *ngIf="t.type === typeEnum.BOOLEAN" class="{{t.className}}">
                 <i
