@@ -147,7 +147,7 @@ import {TemplateModel} from './template.model';
 
               <!--TYPE = STRING-->
               <span *ngIf="t.type === typeEnum.STRING" class="{{t.className}}">
-                {{item[t.key] | translate}}
+                {{item[t.key]}}
               </span>
 
               <!--TYPE = HOUR-->
