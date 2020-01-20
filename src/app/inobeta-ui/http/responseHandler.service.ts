@@ -28,7 +28,7 @@ export class ResponseHandlerService {
   }
 
   handleKO(res: HttpEvent<object> | any) {
-    const errMsg = 'Ci sono errori';
+    const errMsg = res.error.message ? res.error.message : 'Ci sono errori';
     /*   if (error instanceof Response) {
          const body = (error.status) ? error : error.json();
          var json_body = null;
@@ -50,7 +50,6 @@ export class ResponseHandlerService {
 
 
   displayErrors(errMsg) {
-    console.log('displayErrors', errMsg);
 //    if(!this.disableGlobalErrors)
 //      this.srvNotify.add({severity: 'error', summary: 'Error', detail: errMsg});
   }
