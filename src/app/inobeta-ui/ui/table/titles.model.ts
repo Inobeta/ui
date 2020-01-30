@@ -1,7 +1,7 @@
 import { ElementRef } from '@angular/core';
 
 export enum TableTitlesTypes {
-  ANY, DATE, TAG, NUMBER, HOUR, COMBOBOX, BUTTON, CHECKBOX, BOOLEAN, STRING, CUSTOMDATE, MATERIAL_SELECT
+  ANY, DATE, TAG, NUMBER, HOUR, COMBOBOX, BUTTON, CHECKBOX, BOOLEAN, STRING, CUSTOMDATE, MATERIAL_SELECT, INPUT_NUMBER
 }
 export enum TableCellAligns {
   LEFT= 'left', CENTER= 'center', RIGHT= 'right'
@@ -29,5 +29,6 @@ export class TableTitles {
   templateHeaderClick?: ElementRef;
   className?: string;
   materialSelectItems?: MaterialSelectComboItem[];
+  placeHolderInput?: string;
 }
 

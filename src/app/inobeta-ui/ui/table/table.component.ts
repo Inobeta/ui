@@ -199,6 +199,18 @@ import {TemplateModel} from './template.model';
                 </i>
                </span>
 
+              <!--TYPE = INPUT-->
+              <span *ngIf="t.type === typeEnum.INPUT_NUMBER" class="{{t.className}}">
+                <mat-form-field>
+                  <input
+                    [(ngModel)]="item[t.key]"
+                    matInput
+                    type="number"
+                    placeholder="{{ t.placeHolderInput | translate }}"
+                    value="{{item[t.key]}}">
+                  </mat-form-field>
+              </span>
+
             </td>
             <td style="text-align: center" *ngFor="let btn of templateButtons">
               <ng-container

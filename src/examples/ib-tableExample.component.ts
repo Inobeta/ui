@@ -16,14 +16,13 @@ import {TableTitlesTypes} from '../app/inobeta-ui/ui/table/titles.model';
 
     <ng-template #deleteTemplate let-item="item">
       <span class="delete-button">
-          <i (click)="stampa(item)" class="material-icons">search</i>
+          <i (click)="stampa()" class="material-icons">search</i>
       </span>
     </ng-template>
 
     <ib-table
       [titles]="titles"
       [items]="items"
-      (filterChange)="stampa($event)"
       [selectRowName]="'Ricevuto'"
       [templateButtons]="[{
         template: deleteTemplate,
@@ -35,6 +34,7 @@ import {TableTitlesTypes} from '../app/inobeta-ui/ui/table/titles.model';
       }"
     >
     </ib-table>
+    <button (click)="stampa()">ciao</button>
   `,
   styles: [
 `
@@ -96,6 +96,13 @@ export class IbTableExampleComponent {
           label: 'Super Admin'
         }
       ]
+    },
+    {
+      key: 'qt',
+      value: 'Qt',
+      type: TableTitlesTypes.INPUT_NUMBER,
+      filterable: true,
+      placeHolderInput: 'Inserisci qt'
     }
   ];
   items = [
@@ -107,7 +114,8 @@ export class IbTableExampleComponent {
       article: 'Noccioline 200 Kg',
       created_at: new Date(),
       updated_at: new Date(),
-      userType: 1
+      userType: 1,
+      qt: 5
     },
     {
       lot: 2,
@@ -117,7 +125,8 @@ export class IbTableExampleComponent {
       article: 'Pistacchi crudi 150 Kg',
       created_at: new Date(),
       updated_at: new Date(),
-      userType: 3
+      userType: 3,
+      qt: 6
     },
     {
       lot: 3,
@@ -127,134 +136,14 @@ export class IbTableExampleComponent {
       article: 'Ceci tostati 20 Kg',
       created_at: new Date(),
       updated_at: new Date(),
-      userType: 1
-    },
-    {
-      lot: 4,
-      date: '08/12/2019',
-      deadline: new Date(2019, 4, 10),
-      sender: 'MELAVERDE srl sede Faenza',
-      article: 'Semi di girasole crudi 10 Kg',
-      created_at: new Date(),
-      updated_at: new Date(),
-      userType: 3
-    },
-    {
-      lot: 5,
-      date: '06/11/2019',
-      deadline: new Date(2019, 4, 19),
-      sender: 'GranoInfinito srl sede Bologna',
-      article: 'Mais Tostato 7 Kg',
-      created_at: new Date(),
-      updated_at: new Date(),
-      userType: 1
-    },
-    {
-      lot: 6,
-      date: '10/05/2019',
-      deadline: new Date(2019, 7, 12),
-      sender: 'NocciolineTostate srl sede Cesena',
-      article: 'Noccioline 200 Kg',
-      created_at: new Date(),
-      updated_at: new Date(),
-      userType: 3
-    },
-    {
-      lot: 7,
-      date: '07/01/2019',
-      deadline: new Date(2019, 9, 12),
-      sender: 'MyNoce srl sede Forlì',
-      article: 'Pistacchi crudi 150 Kg',
-      created_at: new Date(),
-      updated_at: new Date(),
-      userType: 1
-    },
-    {
-      lot: 8,
-      date: '04/26/2019',
-      deadline: new Date(2019, 4, 2),
-      sender: 'Inoceci srl sede Aquila',
-      article: 'Ceci tostati 20 Kg',
-      created_at: new Date(),
-      updated_at: new Date(),
-      userType: 3
-    },
-    {
-      lot: 9,
-      date: '08/12/2019',
-      deadline: new Date(2019, 4, 6),
-      sender: 'MELAVERDE srl sede Faenza',
-      article: 'Semi di girasole crudi 10 Kg',
-      created_at: new Date(),
-      updated_at: new Date(),
-      userType: 1
-    },
-    {
-      lot: 10,
-      date: '05/11/2019',
-      deadline: new Date(2019, 8, 12),
-      sender: 'GranoInfinito srl sede Bologna',
-      article: 'Mais Tostato 7 Kg',
-      created_at: new Date(),
-      updated_at: new Date(),
-      userType: 3
-    },
-    {
-      lot: 11,
-      date: '10/05/2019',
-      deadline: new Date(2019, 7, 1),
-      sender: 'NocciolineTostate srl sede Cesena',
-      article: 'Noccioline 200 Kg',
-      created_at: new Date(),
-      updated_at: new Date(),
-      userType: 1
-    },
-    {
-      lot: 12,
-      date: '07/01/2019',
-      deadline: new Date(2019, 1, 10),
-      sender: 'MyNoce srl sede Forlì',
-      article: 'Pistacchi crudi 150 Kg',
-      created_at: new Date(),
-      updated_at: new Date(),
-      userType: 3
-    },
-    {
-      lot: 13,
-      date: '04/26/2019',
-      deadline: new Date(2019, 2, 5),
-      sender: 'Inoceci srl sede Aquila',
-      article: 'Ceci tostati 20 Kg',
-      created_at: new Date(),
-      updated_at: new Date(),
-      userType: 1
-    },
-    {
-      lot: 14,
-      date: '08/12/2019',
-      deadline: new Date(2019, 6, 6),
-      sender: 'MELAVERDE srl sede Faenza',
-      article: 'Semi di girasole crudi 10 Kg',
-      created_at: new Date(),
-      updated_at: new Date(),
-      userType: 3
-    },
-    {
-      lot: 15,
-      date: '05/11/2019',
-      deadline: new Date(2019, 9, 9),
-      sender: 'GranoInfinito srl sede Bologna',
-      article: 'Mais Tostato 7 Kg',
-      created_at: new Date(),
-      updated_at: new Date(),
-      userType: 3
+      userType: 1,
+      qt: 7
     }
   ];
 
   constructor() {}
 
-  stampa(item) {
-    console.log('item', item);
-    console.log('titles', this.titles);
+  stampa() {
+    console.log('oggetti in tabella', this.items);
   }
 }
