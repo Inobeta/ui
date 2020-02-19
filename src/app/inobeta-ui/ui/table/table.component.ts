@@ -116,7 +116,7 @@ import {TemplateModel} from './template.model';
             </th>
           </tr>
 
-          <tr class="table-row" *ngFor="let item of sortedData">
+          <tr (click)="rowClicked.emit(item)" class="table-row" *ngFor="let item of sortedData">
 
             <!--CHECKBOX-->
             <td *ngIf="!reduced && selectableRows">
@@ -219,6 +219,7 @@ import {TemplateModel} from './template.model';
             </td>
 
           </tr>
+
           <tr *ngIf="sortedData.length === 0">
             <td [attr.colspan]="4+titles.length" style="text-align: center;">
               <br><br>{{ 'shared.ibTable.noData' | translate }}<br><br>
@@ -286,6 +287,7 @@ export class TableComponent implements OnChanges {
 
   @Output() arrowClick: EventEmitter<any> = new EventEmitter<any>();
   @Output() actionsClick: EventEmitter<any> = new EventEmitter<any>();
+  @Output() rowClicked: EventEmitter<any> = new EventEmitter<any>();
 
   /*objectKeys = Object.keys;*/
   filterableTitles: TableTitles[] = [];

@@ -16,7 +16,7 @@ import {TableTitlesTypes} from '../app/inobeta-ui/ui/table/titles.model';
 
     <ng-template #deleteTemplate let-item="item">
       <span class="delete-button">
-          <i (click)="stampa()" class="material-icons">search</i>
+          <i class="material-icons">search</i>
       </span>
     </ng-template>
 
@@ -32,9 +32,8 @@ import {TableTitlesTypes} from '../app/inobeta-ui/ui/table/titles.model';
         'lot': headerClickTemplate,
         'deadline': headerClickTemplate
       }"
-    >
+    (rowClicked)="stampa($event)">
     </ib-table>
-    <button (click)="stampa()">ciao</button>
   `,
   styles: [
 `
@@ -143,7 +142,7 @@ export class IbTableExampleComponent {
 
   constructor() {}
 
-  stampa() {
-    console.log('oggetti in tabella', this.items);
+  stampa(item) {
+    console.log(item);
   }
 }
