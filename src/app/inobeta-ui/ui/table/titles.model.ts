@@ -30,6 +30,6 @@ export class TableTitles {
   className?: string;
   materialSelectItems?: MaterialSelectComboItem[];
   placeHolderInput?: string;
-  template?:any;
+  getClassByCondition?: any;
 }
 

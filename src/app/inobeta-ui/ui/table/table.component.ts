@@ -128,7 +128,8 @@ import {TemplateModel} from './template.model';
               style="padding: 10px 15px;"
               [ngStyle]="{
                  'text-align': (t.align) ? t.align : alignEnum.LEFT
-              }">
+              }"
+              [ngClass]="(t.getClassByCondition) ? t.getClassByCondition(item) : null">
 
               <!--TYPE = ANY-->
               <span *ngIf="!t.type || t.type === typeEnum.ANY" class="{{t.className}}}">
@@ -210,15 +211,6 @@ import {TemplateModel} from './template.model';
                     value="{{item[t.key]}}">
                   </mat-form-field>
               </span>
-
-
-              <!--TYPE = CUSTOM-->
-              <span *ngIf="t.type === typeEnum.CUSTOM" class="{{t.className}}">
-              <ng-container
-                *ngTemplateOutlet="t.template; context: { item: item}">
-              </ng-container>
-              </span>
-
             </td>
             <td style="text-align: center" *ngFor="let btn of templateButtons">
               <ng-container
