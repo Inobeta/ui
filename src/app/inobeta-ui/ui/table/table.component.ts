@@ -211,6 +211,14 @@ import {TemplateModel} from './template.model';
                   </mat-form-field>
               </span>
 
+
+              <!--TYPE = CUSTOM-->
+              <span *ngIf="t.type === typeEnum.CUSTOM" class="{{t.className}}">
+              <ng-container
+                *ngTemplateOutlet="t.template; context: { item: item}">
+              </ng-container>
+              </span>
+
             </td>
             <td style="text-align: center" *ngFor="let btn of templateButtons">
               <ng-container
