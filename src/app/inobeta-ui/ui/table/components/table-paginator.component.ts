@@ -7,7 +7,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
       <mat-paginator
         style="margin-top: 10px;background-color: transparent;"
         [length]="numOfElements"
-        [pageSize]="(!reduced) ? 10 : numOfElements"
+        [pageSize]="elemForPage"
         [pageSizeOptions]="[5, 10, 25, 100]"
         [showFirstLastButtons]="true"
         [pageIndex]="paginationInfo.pageIndex"
@@ -20,5 +20,7 @@ export class TablePaginatorComponent {
   @Input() numOfElements;
   @Input() reduced;
   @Input() paginationInfo;
+  @Input() elemForPage = 0;
+
   @Output() pageChangeHandle = new EventEmitter();
 }

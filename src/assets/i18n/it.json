@@ -1,3 +1,36 @@
 {
-
+  "shared": {
+    "login": {
+      "email": "E-mail",
+      "password": "Password",
+      "rememberMe": "Rimani collegato"
+    },
+    "tableHeaderPopup": {
+      "sort": "Ordinamento",
+      "filter": "Filtra",
+      "elementsToFilter": "Seleziona elementi"
+    },
+    "header": {},
+    "ibTable": {
+      "noData": "Nessun elemento presente in lista",
+      "search": "Cerca",
+      "filterReset": "Resetta filtri",
+      "delete": "Elimina",
+      "update": "Modifica"
+    },
+    "profile": {
+      "name": "Nome",
+      "surname": "Cognome",
+      "oldPassword": "Password attuale",
+      "newPassword": "Nuova Password",
+      "confirmPassword": "Conferma Password",
+      "dataChangedSuccessfully": "Dati cambiati con successo",
+      "caution": "Attenzione!",
+      "confirm": "Conferma",
+      "errors": {
+        "passwordsMatch": "Le password non coincidono!",
+        "min6max32": "La password deve essere compresa tra 6 e 32 caratteri!"
+      }
+    }
+  }
 }

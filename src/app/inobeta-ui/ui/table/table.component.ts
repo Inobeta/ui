@@ -2,6 +2,8 @@ import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, HostLi
 import {Sort} from '@angular/material';
 import {TableCellAligns, TableTitles, TableTitlesTypes} from './titles.model';
 import {TemplateModel} from './template.model';
+import {Store} from '@ngrx/store';
+import * as TableFiltersActions from './redux/table.action';
 
 @Component({
   selector: 'ib-table',
@@ -177,7 +179,7 @@ import {TemplateModel} from './template.model';
 
               <!--TYPE = MATERIAL_SELECT-->
               <span *ngIf="t.type === typeEnum.MATERIAL_SELECT" class="{{t.className}}">
-                <mat-form-field >
+                <mat-form-field>
                 <mat-select [(value)]="item[t.key]">
                   <mat-option *ngFor="let opt of t.materialSelectItems" [value]="opt.value">
                     {{opt.label | translate}}
@@ -237,7 +239,8 @@ import {TemplateModel} from './template.model';
           [numOfElements]="numOfElements"
           [paginationInfo]="currentPagination"
           (pageChangeHandle)="pageChangeHandle($event)"
-          [reduced]="reduced">
+          [reduced]="reduced"
+          [elemForPage]="currentPagination.pageSize">
         </ib-table-paginator>
       </ng-template>
     </div>
@@ -270,13 +273,16 @@ export class TableComponent implements OnChanges {
   @Input() hasActions = false;
   @Input() selectRowName = 'Seleziona';
   @Input() templateButtons: TemplateModel[] = [];
-  @Input() templateHeaders: any = {}; /** { columnName: TemplateRef } */
+  @Input() templateHeaders: any = {};
+  /** { columnName: TemplateRef } */
+  @Input() tableName = 'default_table_name';
 
   // input non necessari
   @Input() tags: string[] = [];
   @Input() reduced = false;
   @Input() displayInfo = true;
   @Input() actions: string[] = [];
+  @Input() tableFilters: any;
 
   // Output necessari
   @Output() filterChange: EventEmitter<any> = new EventEmitter<any>();
@@ -299,6 +305,8 @@ export class TableComponent implements OnChanges {
   columnFilter = {};
   numOfElements = 0;
 
+  constructor(private store: Store<any>) {}
+
   @HostListener('document:click', ['$event'])
   clickout(event) {
     // tslint:disable-next-line: forin
@@ -315,6 +323,31 @@ export class TableComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
 
+    if (changes && changes.tableFilters && changes.tableFilters.currentValue) {
+      const data = changes.tableFilters.currentValue[this.tableName];
+      // questo mette a posto il paginator
+      if (data.paginatorFilters) {
+        this.currentPagination = data.paginatorFilters;
+      } else {
+        this.currentPagination = {
+          pageIndex: 0,
+          pageSize: 10,
+          previousPageIndex: 0
+        };
+      }
+      // questo mette a posto i filtri
+      for (const prop of Object.keys(data)) {
+        if (prop !== 'paginatorFilters') {
+          // filtri input
+          this.setFilter(prop, data[prop].value, this.currentPagination.pageIndex);
+          // ordinamento colonne
+          if (data[prop].columnSort) {
+            this.sortData(data[prop].columnSort.sort, data[prop].columnSort.emitChange);
+          }
+        }
+      }
+    }
+
     let triggerRefresh = false;
     if (changes.items && changes.items.currentValue) {
       this.items = changes.items.currentValue;
@@ -327,22 +360,28 @@ export class TableComponent implements OnChanges {
     }
 
     if (changes.currentSort && changes.currentSort.currentValue) {
-
       this.currentSort = changes.currentSort.currentValue;
       triggerRefresh = true;
     }
 
-
     if (triggerRefresh) {
       this.pageChangeHandle({
-        pageIndex: 0,
-        pageSize: 10,
+        previousPageIndex: this.currentPagination.previousPageIndex,
+        pageIndex: this.currentPagination.pageIndex,
+        pageSize: this.currentPagination.pageSize,
         length: this.sortedData.length
       });
     }
   }
 
   sortData(sort: Sort, emitChange: boolean = true) {
+    if (Object.keys(sort).length !== 0) {
+      this.store.dispatch(TableFiltersActions.addSortToTable({
+        tableName: this.tableName,
+        sortType: sort,
+        emitChange: emitChange
+      }));
+    }
     if (emitChange) {
       this.sortChange.emit(sort);
     }
@@ -351,9 +390,11 @@ export class TableComponent implements OnChanges {
     this.sortedData = this.items.slice();
 
     for (const k in this.columnFilter) {
-      if (!this.columnFilter[k]) { delete this.columnFilter[k]; }
+      if (!this.columnFilter[k]) {
+        delete this.columnFilter[k];
+      }
     }
-    if (Object.keys(this.columnFilter).length > 0 ) {
+    if (Object.keys(this.columnFilter).length > 0) {
 
       this.sortedData = this.sortedData.filter(el => {
         let include = true;
@@ -362,11 +403,12 @@ export class TableComponent implements OnChanges {
           /*TODO INSERT COLUMN TYPE HERE */
           switch (this.titles.find(t => t.key === k).type) {
             case TableTitlesTypes.STRING:
-                if (!(el[k] && el[k].includes && el[k].toLowerCase().includes(this.columnFilter[k].toLowerCase()))) {
-                  include = false;
-                }
-                break;
-                default: include = true;
+              if (!(el[k] && el[k].includes && el[k].toLowerCase().includes(this.columnFilter[k].toLowerCase()))) {
+                include = false;
+              }
+              break;
+            default:
+              include = true;
           }
 
         }
@@ -390,10 +432,15 @@ export class TableComponent implements OnChanges {
     this.paginationHandle();
   }
 
-  setFilter(key, value) {
+  setFilter(key, value, indexToSet = 0) {
     this.columnFilter[key] = value;
-    this.currentPagination.pageIndex = 0;
+    this.currentPagination.pageIndex = indexToSet;
     this.pageChangeHandle(this.currentPagination);
+    this.store.dispatch(TableFiltersActions.addFilterToTable({
+      tableName: this.tableName,
+      filterName: key,
+      filterValue: value
+    }));
   }
 
   resetFilters() {
@@ -401,6 +448,13 @@ export class TableComponent implements OnChanges {
   }
 
   pageChangeHandle(data) {
+    this.store.dispatch(TableFiltersActions.addPaginatorFiltersToTable({
+      tableName: this.tableName,
+      previousPageIndex: data.previousPageIndex | 0,
+      pageIndex: data.pageIndex,
+      pageSize: data.pageSize,
+      lengthP: data['length']
+    }));
     this.currentPagination = data;
     this.sortData(this.currentSort, false);
   }

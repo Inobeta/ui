@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import {NgModule} from '@angular/core';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {CommonModule, DatePipe} from '@angular/common';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
@@ -14,7 +14,7 @@ import {Guard, LoginGuard} from './auth/guard.service';
 import {AuthService} from './auth/auth.service';
 import {SessionService} from './auth/session.service';
 import {SpinnerLoadingComponent} from './http/spinnerLoading.component';
-import { registerLocaleData } from '@angular/common';
+import {registerLocaleData} from '@angular/common';
 import localeIt from '@angular/common/locales/it';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ModalMessageComponent} from './ui/modal/modalMessage.component';
@@ -24,11 +24,12 @@ import {UploaderComponent} from './ui/uploader/uploader.component';
 import {CookiesStorageService, LocalStorageService} from 'ngx-store';
 import {CustomTranslateService} from './utils/customTranslate.service';
 import {JsonFormatterService} from './utils/jsonFormatter.service';
-import { RouterModule} from '@angular/router';
+import {RouterModule} from '@angular/router';
 import {TableInterfaceComponent} from './ui/table/table.const';
 import {StoreModule} from '@ngrx/store';
 import * as fromCounter from '../../examples/redux-example/counter.reducer';
 import * as fromSession from '../../app/inobeta-ui/auth/redux/session.reducer';
+import * as fromTableFilters from '../../app/inobeta-ui/ui/table/redux/table.reducer';
 import {IbTableExampleComponent} from '../../examples/ib-tableExample.component';
 import {TableSeachComponent} from './ui/table/components/table-seach.component';
 import {TableExportCsvComponent} from './ui/table/components/table-export-csv.component';
@@ -36,6 +37,7 @@ import {TableMenuActionsComponent} from './ui/table/components/table-menu-action
 import {TableAddComponent} from './ui/table/components/table-add.component';
 import {TableFilterResetComponent} from './ui/table/components/table-filter-reset.component';
 import {TablePaginatorComponent} from './ui/table/components/table-paginator.component';
+import {TableHeaderPopupComponent} from './ui/table/components/tableHeaderPopup.component';
 
 registerLocaleData(localeIt, 'it');
 
@@ -55,7 +57,8 @@ export const components = [
   TableMenuActionsComponent,
   TableAddComponent,
   TableFilterResetComponent,
-  TablePaginatorComponent
+  TablePaginatorComponent,
+  TableHeaderPopupComponent
 ];
 
 export const services = [
@@ -82,7 +85,8 @@ export const imports = [
   ReactiveFormsModule,
   StoreModule.forRoot({
     countState: fromCounter.counterReducer,
-    sessionState: fromSession.sessionReducer
+    sessionState: fromSession.sessionReducer,
+    tableFiltersState: fromTableFilters.tableFiltersReducer
   }),
   TranslateModule.forRoot({
     loader: {
@@ -118,4 +122,4 @@ export function createTranslateLoader(http: HttpClient) {
     ModalMessageComponent
   ]
 })
-export class InobetaUiModule { }
+export class InobetaUiModule {}

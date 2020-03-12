@@ -1,18 +1,19 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {TableTitlesTypes} from '../app/inobeta-ui/ui/table/titles.model';
+import {Store} from '@ngrx/store';
 
 @Component({
   selector: 'ib-table-example',
   template: `
-  <ng-template #headerClickTemplate let-ibTable="ibTable" let-col="col">
-    <div class="modal-selector" (click)="$event.stopPropagation();">
-      <div class="modal-row" (click)="ibTable.resetCustomHeaderVisibility($event)">Close this popup</div>
-      <div class="modal-row" (click)="ibTable.sortData({active: col.key, direction: 'asc'})">Sort ASC</div>
-      <div class="modal-row" (click)="ibTable.sortData({active: col.key, direction: 'desc'})">Sort DESC</div>
-      <div class="modal-row" (click)="ibTable.setFilter('sender', 'bologna')">Filter sender</div>
-      <div class="modal-row" (click)="ibTable.setFilter('date', '05')">Filter expires</div>
-    </div>
-  </ng-template>
+    <!--<ng-template #headerClickTemplate let-ibTable="ibTable" let-col="col">
+      <div class="modal-selector" (click)="$event.stopPropagation();">
+        <div class="modal-row" (click)="ibTable.resetCustomHeaderVisibility($event)">Close this popup</div>
+        <div class="modal-row" (click)="ibTable.sortData({active: col.key, direction: 'asc'})">Sort ASC</div>
+        <div class="modal-row" (click)="ibTable.sortData({active: col.key, direction: 'desc'})">Sort DESC</div>
+        <div class="modal-row" (click)="ibTable.setFilter('sender', 'bologna')">Filter sender</div>
+        <div class="modal-row" (click)="ibTable.setFilter('date', '05')">Filter expires</div>
+      </div>
+    </ng-template>-->
 
     <ng-template #deleteTemplate let-item="item">
       <span class="delete-button">
@@ -20,7 +21,15 @@ import {TableTitlesTypes} from '../app/inobeta-ui/ui/table/titles.model';
       </span>
     </ng-template>
 
+    <ng-template #headerClickTemplate let-ibTable="ibTable" let-col="col">
+      <table-header-popup
+        [ibTable]="ibTable"
+        [col]="col">
+      </table-header-popup>
+    </ng-template>
+
     <ib-table
+      [tableName]="'tabella_di_prova'"
       [titles]="titles"
       [items]="items"
       [selectRowName]="'Ricevuto'"
@@ -30,34 +39,36 @@ import {TableTitlesTypes} from '../app/inobeta-ui/ui/table/titles.model';
       }]"
       [templateHeaders]="{
         'lot': headerClickTemplate,
-        'deadline': headerClickTemplate
+        'sender': headerClickTemplate,
+        'date': headerClickTemplate,
+        'qt': headerClickTemplate
       }"
-    (rowClicked)="stampa($event)">
+      (rowClicked)="stampa($event)"
+      [tableFilters] = tableFilters>
     </ib-table>
   `,
   styles: [
-`
+      `      
+      .modal-selector {
+        position: absolute;
+        width: 150px;
+        height: 200px;
+        background-color: white;
+        border: 1px solid black;
+        color: black;
+        z-index: 100;
+      }
 
-.modal-selector{
-  position: absolute;
-  width: 150px;
-  height: 200px;
-  background-color:white;
-  border:1px solid black;
-  color:black;
-  z-index: 100;
-}
-
-.modal-row {
-  border:1px solid black;
-  background-color: yellow;
-}
-`
+      .modal-row {
+        border: 1px solid black;
+        background-color: yellow;
+      }
+    `
 
   ]
 })
 
-export class IbTableExampleComponent {
+export class IbTableExampleComponent implements OnInit {
 
   titles = [
     {
@@ -137,12 +148,334 @@ export class IbTableExampleComponent {
       updated_at: new Date(),
       userType: 1,
       qt: 7
+    },
+    {
+      lot: 17,
+      date: '10/05/2019',
+      deadline: new Date(2019, 4, 12),
+      sender: 'NocciolineTostate srl sede Cesena',
+      article: 'Noccioline 200 Kg',
+      created_at: new Date(),
+      updated_at: new Date(),
+      userType: 1,
+      qt: 5
+    },
+    {
+      lot: 2,
+      date: '07/01/2019',
+      deadline: new Date(2019, 2, 12),
+      sender: 'MyNoce srl sede Forlì',
+      article: 'Pistacchi crudi 150 Kg',
+      created_at: new Date(),
+      updated_at: new Date(),
+      userType: 3,
+      qt: 6
+    },
+    {
+      lot: 3,
+      date: '04/26/2019',
+      deadline: new Date(2019, 6, 12),
+      sender: 'Inoceci srl sede Aquila',
+      article: 'Ceci tostati 20 Kg',
+      created_at: new Date(),
+      updated_at: new Date(),
+      userType: 1,
+      qt: 7
+    },
+    {
+      lot: 17,
+      date: '10/05/2019',
+      deadline: new Date(2019, 4, 12),
+      sender: 'NocciolineTostate srl sede Cesena',
+      article: 'Noccioline 200 Kg',
+      created_at: new Date(),
+      updated_at: new Date(),
+      userType: 1,
+      qt: 5
+    },
+    {
+      lot: 2,
+      date: '07/01/2019',
+      deadline: new Date(2019, 2, 12),
+      sender: 'MyNoce srl sede Forlì',
+      article: 'Pistacchi crudi 150 Kg',
+      created_at: new Date(),
+      updated_at: new Date(),
+      userType: 3,
+      qt: 6
+    },
+    {
+      lot: 3,
+      date: '04/26/2019',
+      deadline: new Date(2019, 6, 12),
+      sender: 'Inoceci srl sede Aquila',
+      article: 'Ceci tostati 20 Kg',
+      created_at: new Date(),
+      updated_at: new Date(),
+      userType: 1,
+      qt: 7
+    },
+    {
+      lot: 17,
+      date: '10/05/2019',
+      deadline: new Date(2019, 4, 12),
+      sender: 'NocciolineTostate srl sede Cesena',
+      article: 'Noccioline 200 Kg',
+      created_at: new Date(),
+      updated_at: new Date(),
+      userType: 1,
+      qt: 5
+    },
+    {
+      lot: 2,
+      date: '07/01/2019',
+      deadline: new Date(2019, 2, 12),
+      sender: 'MyNoce srl sede Forlì',
+      article: 'Pistacchi crudi 150 Kg',
+      created_at: new Date(),
+      updated_at: new Date(),
+      userType: 3,
+      qt: 6
+    },
+    {
+      lot: 3,
+      date: '04/26/2019',
+      deadline: new Date(2019, 6, 12),
+      sender: 'Inoceci srl sede Aquila',
+      article: 'Ceci tostati 20 Kg',
+      created_at: new Date(),
+      updated_at: new Date(),
+      userType: 1,
+      qt: 7
+    },
+    {
+      lot: 17,
+      date: '10/05/2019',
+      deadline: new Date(2019, 4, 12),
+      sender: 'NocciolineTostate srl sede Cesena',
+      article: 'Noccioline 200 Kg',
+      created_at: new Date(),
+      updated_at: new Date(),
+      userType: 1,
+      qt: 5
+    },
+    {
+      lot: 2,
+      date: '07/01/2019',
+      deadline: new Date(2019, 2, 12),
+      sender: 'MyNoce srl sede Forlì',
+      article: 'Pistacchi crudi 150 Kg',
+      created_at: new Date(),
+      updated_at: new Date(),
+      userType: 3,
+      qt: 6
+    },
+    {
+      lot: 3,
+      date: '04/26/2019',
+      deadline: new Date(2019, 6, 12),
+      sender: 'Inoceci srl sede Aquila',
+      article: 'Ceci tostati 20 Kg',
+      created_at: new Date(),
+      updated_at: new Date(),
+      userType: 1,
+      qt: 7
+    },
+    {
+      lot: 17,
+      date: '10/05/2019',
+      deadline: new Date(2019, 4, 12),
+      sender: 'NocciolineTostate srl sede Cesena',
+      article: 'Noccioline 200 Kg',
+      created_at: new Date(),
+      updated_at: new Date(),
+      userType: 1,
+      qt: 5
+    },
+    {
+      lot: 2,
+      date: '07/01/2019',
+      deadline: new Date(2019, 2, 12),
+      sender: 'MyNoce srl sede Forlì',
+      article: 'Pistacchi crudi 150 Kg',
+      created_at: new Date(),
+      updated_at: new Date(),
+      userType: 3,
+      qt: 6
+    },
+    {
+      lot: 3,
+      date: '04/26/2019',
+      deadline: new Date(2019, 6, 12),
+      sender: 'Inoceci srl sede Aquila',
+      article: 'Ceci tostati 20 Kg',
+      created_at: new Date(),
+      updated_at: new Date(),
+      userType: 1,
+      qt: 7
+    },
+    {
+      lot: 17,
+      date: '10/05/2019',
+      deadline: new Date(2019, 4, 12),
+      sender: 'NocciolineTostate srl sede Cesena',
+      article: 'Noccioline 200 Kg',
+      created_at: new Date(),
+      updated_at: new Date(),
+      userType: 1,
+      qt: 5
+    },
+    {
+      lot: 2,
+      date: '07/01/2019',
+      deadline: new Date(2019, 2, 12),
+      sender: 'MyNoce srl sede Forlì',
+      article: 'Pistacchi crudi 150 Kg',
+      created_at: new Date(),
+      updated_at: new Date(),
+      userType: 3,
+      qt: 6
+    },
+    {
+      lot: 3,
+      date: '04/26/2019',
+      deadline: new Date(2019, 6, 12),
+      sender: 'Inoceci srl sede Aquila',
+      article: 'Ceci tostati 20 Kg',
+      created_at: new Date(),
+      updated_at: new Date(),
+      userType: 1,
+      qt: 7
+    },
+    {
+      lot: 17,
+      date: '10/05/2019',
+      deadline: new Date(2019, 4, 12),
+      sender: 'NocciolineTostate srl sede Cesena',
+      article: 'Noccioline 200 Kg',
+      created_at: new Date(),
+      updated_at: new Date(),
+      userType: 1,
+      qt: 5
+    },
+    {
+      lot: 2,
+      date: '07/01/2019',
+      deadline: new Date(2019, 2, 12),
+      sender: 'MyNoce srl sede Forlì',
+      article: 'Pistacchi crudi 150 Kg',
+      created_at: new Date(),
+      updated_at: new Date(),
+      userType: 3,
+      qt: 6
+    },
+    {
+      lot: 3,
+      date: '04/26/2019',
+      deadline: new Date(2019, 6, 12),
+      sender: 'Inoceci srl sede Aquila',
+      article: 'Ceci tostati 20 Kg',
+      created_at: new Date(),
+      updated_at: new Date(),
+      userType: 1,
+      qt: 7
+    },
+    {
+      lot: 17,
+      date: '10/05/2019',
+      deadline: new Date(2019, 4, 12),
+      sender: 'NocciolineTostate srl sede Cesena',
+      article: 'Noccioline 200 Kg',
+      created_at: new Date(),
+      updated_at: new Date(),
+      userType: 1,
+      qt: 5
+    },
+    {
+      lot: 2,
+      date: '07/01/2019',
+      deadline: new Date(2019, 2, 12),
+      sender: 'MyNoce srl sede Forlì',
+      article: 'Pistacchi crudi 150 Kg',
+      created_at: new Date(),
+      updated_at: new Date(),
+      userType: 3,
+      qt: 6
+    },
+    {
+      lot: 3,
+      date: '04/26/2019',
+      deadline: new Date(2019, 6, 12),
+      sender: 'Inoceci srl sede Aquila',
+      article: 'Ceci tostati 20 Kg',
+      created_at: new Date(),
+      updated_at: new Date(),
+      userType: 1,
+      qt: 7
+    },
+    {
+      lot: 17,
+      date: '10/05/2019',
+      deadline: new Date(2019, 4, 12),
+      sender: 'NocciolineTostate srl sede Cesena',
+      article: 'Noccioline 200 Kg',
+      created_at: new Date(),
+      updated_at: new Date(),
+      userType: 1,
+      qt: 5
+    },
+    {
+      lot: 2,
+      date: '07/01/2019',
+      deadline: new Date(2019, 2, 12),
+      sender: 'MyNoce srl sede Forlì',
+      article: 'Pistacchi crudi 150 Kg',
+      created_at: new Date(),
+      updated_at: new Date(),
+      userType: 3,
+      qt: 6
+    },
+    {
+      lot: 3,
+      date: '04/26/2019',
+      deadline: new Date(2019, 6, 12),
+      sender: 'Inoceci srl sede Aquila',
+      article: 'Ceci tostati 20 Kg',
+      created_at: new Date(),
+      updated_at: new Date(),
+      userType: 1,
+      qt: 7
     }
   ];
+  tableFilters = null;
 
   constructor() {}
 
   stampa(item) {
     console.log(item);
+  }
+
+  ngOnInit(): void {
+    this.tableFilters = {
+      tabella_di_prova: {
+        paginatorFilters: {
+          previousPageIndex: 2,
+          pageIndex: 3,
+          pageSize: 6
+        },
+        sender: {
+          columnSort: {
+            sort: {
+              active: 'sender',
+              direction: 'asc'
+            },
+            emitChange: true
+          }
+        },
+        date: {
+          value: '07'
+        }
+      }
+    };
   }
 }
