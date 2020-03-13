@@ -122,7 +122,7 @@ import * as TableFiltersActions from './redux/table.action';
 
             <!--CHECKBOX-->
             <td *ngIf="!reduced && selectableRows">
-              <mat-checkbox [(ngModel)]="item.checked"></mat-checkbox>
+              <mat-checkbox (click)="rowChecked.emit(item)" [(ngModel)]="item.checked"></mat-checkbox>
             </td>
 
             <td
@@ -294,6 +294,7 @@ export class TableComponent implements OnChanges {
   @Output() arrowClick: EventEmitter<any> = new EventEmitter<any>();
   @Output() actionsClick: EventEmitter<any> = new EventEmitter<any>();
   @Output() rowClicked: EventEmitter<any> = new EventEmitter<any>();
+  @Output() rowChecked: EventEmitter<any> = new EventEmitter<any>();
 
   /*objectKeys = Object.keys;*/
   filterableTitles: TableTitles[] = [];
@@ -366,9 +367,9 @@ export class TableComponent implements OnChanges {
 
     if (triggerRefresh) {
       this.pageChangeHandle({
-        previousPageIndex: this.currentPagination.previousPageIndex,
-        pageIndex: this.currentPagination.pageIndex,
-        pageSize: this.currentPagination.pageSize,
+        previousPageIndex: this.currentPagination.previousPageIndex ? this.currentPagination.previousPageIndex : 0,
+        pageIndex: this.currentPagination.pageIndex ? this.currentPagination.pageIndex : 0,
+        pageSize: this.currentPagination.pageSize ? this.currentPagination.pageSize : 10,
         length: this.sortedData.length
       });
     }

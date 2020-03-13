@@ -29,7 +29,8 @@ import {Store} from '@ngrx/store';
     </ng-template>
 
     <ib-table
-      [tableName]="'tabella_di_prova'"
+      [selectableRows]="false"
+      (rowChecked)="prova2($event)"
       [titles]="titles"
       [items]="items"
       [selectRowName]="'Ricevuto'"
@@ -42,9 +43,7 @@ import {Store} from '@ngrx/store';
         'sender': headerClickTemplate,
         'date': headerClickTemplate,
         'qt': headerClickTemplate
-      }"
-      (rowClicked)="stampa($event)"
-      [tableFilters] = tableFilters>
+      }">
     </ib-table>
   `,
   styles: [
@@ -455,27 +454,9 @@ export class IbTableExampleComponent implements OnInit {
     console.log(item);
   }
 
-  ngOnInit(): void {
-    this.tableFilters = {
-      tabella_di_prova: {
-        paginatorFilters: {
-          previousPageIndex: 2,
-          pageIndex: 3,
-          pageSize: 6
-        },
-        sender: {
-          columnSort: {
-            sort: {
-              active: 'sender',
-              direction: 'asc'
-            },
-            emitChange: true
-          }
-        },
-        date: {
-          value: '07'
-        }
-      }
-    };
+  ngOnInit(): void {}
+
+  prova2($event: any) {
+    console.log($event);
   }
 }
