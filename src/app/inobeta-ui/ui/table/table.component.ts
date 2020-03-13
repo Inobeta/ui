@@ -122,7 +122,7 @@ import * as TableFiltersActions from './redux/table.action';
 
             <!--CHECKBOX-->
             <td *ngIf="!reduced && selectableRows">
-              <mat-checkbox (click)="rowChecked.emit(item)" [(ngModel)]="item.checked"></mat-checkbox>
+              <mat-checkbox #c (click)="emitItemAndCheckbox(item, !c.checked)"></mat-checkbox>
             </td>
 
             <td
@@ -515,6 +515,10 @@ export class TableComponent implements OnChanges {
       event.stopPropagation();
     }
     this.visibleHeaders = {};
+  }
+
+  emitItemAndCheckbox(item, checkbox) {
+    this.rowChecked.emit({item, isChecked: checkbox});
   }
 }
 

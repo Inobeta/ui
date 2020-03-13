@@ -29,7 +29,7 @@ import {Store} from '@ngrx/store';
     </ng-template>
 
     <ib-table
-      [selectableRows]="false"
+      [selectableRows]="true"
       (rowChecked)="prova2($event)"
       [titles]="titles"
       [items]="items"
@@ -446,7 +446,6 @@ export class IbTableExampleComponent implements OnInit {
       qt: 7
     }
   ];
-  tableFilters = null;
 
   constructor() {}
 
