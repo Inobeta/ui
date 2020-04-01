@@ -20,13 +20,20 @@ export class Guard implements CanActivate {
 
 @Injectable()
 export class LoginGuard implements CanActivate {
+  public path = '';
   constructor(
     private authService: AuthService,
     private router: Router) {}
 
   canActivate(): boolean {
     const isAuth = this.authService.activeSession != null;
-    if (isAuth) { this.router.navigateByUrl('/dashboard'); }
+    if (isAuth) {
+      if (this.path !== '') {
+        this.router.navigateByUrl(this.path);
+      } else {
+        this.router.navigateByUrl('/dashboard');
+      }
+    }
     return !isAuth;
   }
 }

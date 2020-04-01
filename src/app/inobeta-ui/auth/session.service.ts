@@ -27,7 +27,7 @@ export class SessionService {
     this.h.setAuthtype(type);
   }
 
-  public login( u: UserLogin, postUrl = null ) {
+  public login( u: UserLogin, postUrl = null, fieldToSave = null ) {
     this.srvAuth.activeSession = new Session();
     if (this.authType === AuthTypes.BASIC_AUTH) {
       this.srvAuth.activeSession.authToken = window.btoa(u.username + ':' + u.password);
@@ -42,7 +42,7 @@ export class SessionService {
           }
           this.srvAuth.activeSession.user.password = '';
           this.srvAuth.activeSession.valid = true;
-          this.srvAuth.activeSession.userData = x;
+          this.srvAuth.activeSession.userData = fieldToSave ? x[fieldToSave] : x;
           console.log('Session login ok', this.srvAuth.activeSession);
           if (u.rememberMe) {
             this.srvAuth.storeSession();
@@ -60,11 +60,13 @@ export class SessionService {
       );
   }
 
-  public logout() {
+  public logout(makeSnack: boolean = true) {
     this.srvAuth.activeSession = null;
     this.store.dispatch(SessionActions.logout());
     this.srvAuth.logout();
     this.srvRouter.navigateByUrl('/login');
-    this.snackBar.open('Logout completed', null, {duration: 2000});
+    if (makeSnack) {
+      this.snackBar.open('Logout completed', null, {duration: 2000});
+    }
   }
 }
