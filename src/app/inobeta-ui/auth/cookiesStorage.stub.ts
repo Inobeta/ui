@@ -27,9 +27,13 @@ export const cookiesStorageStub = {
       };
     }
   },
-  set: (item) => {
-    this.storage = item;
-    this.empty = !item;
+  set: (key, value) => {
+    cookiesStorageStub.storage[key] = value;
+    cookiesStorageStub.empty = false;
     return true;
+  },
+  clear: () => {
+    cookiesStorageStub.storage = {};
+    cookiesStorageStub.empty = true;
   }
 };

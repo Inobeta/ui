@@ -27,18 +27,18 @@ export const authServiceStub = {
 
   storeSession: () => {
     authServiceStub.activeSession.valid = true;
-    return localStorageStub.set(this.activeSession);
+    return localStorageStub.set('activeSession', authServiceStub.activeSession);
   },
 
   cookieSession: () => {
     this.activeSession.valid = true;
-    return cookiesStorageStub.set(this.activeSession);
+    return cookiesStorageStub.set('activeSession', authServiceStub.activeSession);
   },
 
   logout: () => {
     authServiceStub.activeSession = null;
-    cookiesStorageStub.set(null);
-    localStorageStub.set(null);
+    cookiesStorageStub.set('activeSession', null);
+    localStorageStub.set('activeSession', null);
     return true;
   },
 

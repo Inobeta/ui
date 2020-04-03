@@ -1,5 +1,5 @@
 export const localStorageStub = {
-  storage: null,
+  storage: {},
   empty: true,
   get: () => {
     if (localStorageStub.empty) {
@@ -27,9 +27,13 @@ export const localStorageStub = {
       };
     }
   },
-  set: (item) => {
-    this.storage = item;
-    this.empty = !item;
+  set: (key, value) => {
+    localStorageStub.storage[key] = value;
+    localStorageStub.empty = false;
     return true;
+  },
+  clear: () => {
+    localStorageStub.storage = {};
+    localStorageStub.empty = true;
   }
 };
