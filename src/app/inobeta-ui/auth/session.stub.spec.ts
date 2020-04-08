@@ -16,9 +16,8 @@ export const sessionStubSpec = {
   },
 
   logout: () => {
-    /*authServiceStub.activeSession = null;
-    localStorageStub.set(null);
-    cookiesStorageStub.set(null);*/
+    localStorageStub.clear();
+    cookiesStorageStub.clear();
   }
 
 };

@@ -29,31 +29,24 @@ export class HttpClientService {
   /*public setAdditionalHeaders(headers: any[] = []) {}*/
 
   createAuthorizationHeader(headers: HttpHeaders) {
-    console.log('createAuthorizationHeader')
     this.turnOnModal();
     if (!this.srvAuth.activeSession) {
-      console.log('activeSession vuoto, esco')
       return;
     }
     let head = headers
       .set('Content-Type', 'application/json')
       .set('x-requested-with', 'XMLHttpRequest');
     if (this.authType === AuthTypes.BASIC_AUTH) {
-      console.log('basic auth')
       return head.set('Authorization', 'Basic ' + this.srvAuth.activeSession.authToken);
     } else if (this.authType === AuthTypes.JWT) {
-      console.log('jwt auth')
       return head.set('Authorization', 'Bearer ' + this.srvAuth.activeSession.authToken);
     } else {
-      console.log('auth type è null');
       if (this.additionalHeaders.length) {
-        console.log('aggiungo gli header nel vettore qui', this.additionalHeaders);
         for (const elem of this.additionalHeaders) {
           head = head.set(elem.key, elem.value);
         }
       }
     }
-    console.log('head = ', head);
     return head;
   }
 
@@ -71,10 +64,8 @@ export class HttpClientService {
   }
 
   post(url, data): any {
-    console.log('faccio una post', url, data);
     let headers = new HttpHeaders();
     headers = this.createAuthorizationHeader(headers);
-    console.log('headers creati', headers);
     return this.h.post(url, data, {headers})
       .pipe(
         map(x => this.srvResponse.handleOK(x)),
