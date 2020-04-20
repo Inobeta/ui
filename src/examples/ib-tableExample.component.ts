@@ -1,6 +1,6 @@
-import {Component, OnInit} from '@angular/core';
-import {TableTitlesTypes} from '../app/inobeta-ui/ui/table/titles.model';
-import {Store} from '@ngrx/store';
+import { Component, OnInit } from '@angular/core';
+import { TableTitlesTypes } from '../app/inobeta-ui/ui/table/titles.model';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'ib-table-example',
@@ -27,8 +27,10 @@ import {Store} from '@ngrx/store';
         [col]="col">
       </table-header-popup>
     </ng-template>
+    
 
     <ib-table
+      [customItemTemplate]="{ lot: lotTemplate }"
       [selectableRows]="true"
       (rowChecked)="prova2($event)"
       [titles]="titles"
@@ -44,10 +46,13 @@ import {Store} from '@ngrx/store';
         'date': headerClickTemplate,
         'qt': headerClickTemplate
       }">
+      <ng-template #lotTemplate let-item="item">
+        <div style="font-weight: bold; color: red;">{{item.lot}}</div>
+      </ng-template>
     </ib-table>
   `,
   styles: [
-      `      
+    `      
       .modal-selector {
         position: absolute;
         width: 150px;
@@ -73,9 +78,9 @@ export class IbTableExampleComponent implements OnInit {
     {
       key: 'lot',
       value: 'Lotto',
-      type: TableTitlesTypes.NUMBER,
+      type: TableTitlesTypes.CUSTOM,
       filterable: true,
-      width: '10%'
+      width: '10%',
     },
     {
       key: 'sender',
@@ -447,13 +452,14 @@ export class IbTableExampleComponent implements OnInit {
     }
   ];
 
-  constructor() {}
+  constructor() { }
+
 
   stampa(item) {
     console.log(item);
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   prova2($event: any) {
     console.log($event);

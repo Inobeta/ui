@@ -1,8 +1,8 @@
-import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, HostListener} from '@angular/core';
-import {Sort} from '@angular/material';
-import {TableCellAligns, TableTitles, TableTitlesTypes} from './titles.model';
-import {TemplateModel} from './template.model';
-import {Store} from '@ngrx/store';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, HostListener } from '@angular/core';
+import { Sort } from '@angular/material';
+import { TableCellAligns, TableTitles, TableTitlesTypes } from './titles.model';
+import { TemplateModel } from './template.model';
+import { Store } from '@ngrx/store';
 import * as TableFiltersActions from './redux/table.action';
 
 @Component({
@@ -213,6 +213,13 @@ import * as TableFiltersActions from './redux/table.action';
                     value="{{item[t.key]}}">
                   </mat-form-field>
               </span>
+
+              <!--TYPE = CUSTOM-->
+              <span *ngIf="t.type === typeEnum.CUSTOM" class="{{t.className}}">
+                <ng-container
+                  *ngTemplateOutlet="customItemTemplate[t.key]; context: { item: item}">
+              </ng-container>
+              </span>
             </td>
             <td style="text-align: center" *ngFor="let btn of templateButtons">
               <ng-container
@@ -259,6 +266,7 @@ import * as TableFiltersActions from './redux/table.action';
 export class TableComponent implements OnChanges {
 
   // input necessari
+  @Input() customItemTemplate: any;
   @Input() titles: TableTitles[] = [];
   @Input() items: any[] = [];
   @Input() filterValues: any = {};
@@ -306,7 +314,7 @@ export class TableComponent implements OnChanges {
   columnFilter = {};
   numOfElements = 0;
 
-  constructor(private store: Store<any>) {}
+  constructor(private store: Store<any>) { }
 
   @HostListener('document:click', ['$event'])
   clickout(event) {
@@ -518,7 +526,7 @@ export class TableComponent implements OnChanges {
   }
 
   emitItemAndCheckbox(item, checkbox) {
-    this.rowChecked.emit({item, isChecked: checkbox});
+    this.rowChecked.emit({ item, isChecked: checkbox });
   }
 }
 
