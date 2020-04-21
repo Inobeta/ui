@@ -13,10 +13,12 @@ import {TranslateServiceStub} from './stubs/translate.service.stub';
 import { TableStubComponent } from './ui/table/table.stub.spec';
 import {SessionService} from './auth/session.service';
 import {sessionStubSpec} from './auth/session.stub.spec';
+import { SpinnerLoadingStubComponent } from './http/spinnerLoading.stub.spec';
 
 export const testComponents = [
   MockTranslatePipeDirective,
-  TableStubComponent
+  TableStubComponent,
+  SpinnerLoadingStubComponent
 ];
 
 export const testServices = [
