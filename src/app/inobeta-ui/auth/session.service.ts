@@ -28,13 +28,17 @@ export class SessionService {
   }
 
   public login( u: UserLogin, postUrl = null, fieldToSave = null ) {
-    this.srvAuth.activeSession = new Session();
-    if (this.authType === AuthTypes.BASIC_AUTH) {
-      this.srvAuth.activeSession.authToken = window.btoa(u.username + ':' + u.password);
+
+    if (u) {
+      this.srvAuth.activeSession = new Session();
+      if (this.authType === AuthTypes.BASIC_AUTH) {
+        this.srvAuth.activeSession.authToken = window.btoa(u.username + ':' + u.password);
+      }
+      this.srvAuth.activeSession.valid = false;
+      this.srvAuth.activeSession.user = u;
     }
-    this.srvAuth.activeSession.valid = false;
-    this.srvAuth.activeSession.user = u;
-    return this.h.post((postUrl) ? postUrl : loginUrl, u)
+    const data = u || {};
+    return this.h.post((postUrl) ? postUrl : loginUrl, data)
       .pipe(
         map( x => {
           if (this.authType === AuthTypes.JWT) {
@@ -44,7 +48,7 @@ export class SessionService {
           this.srvAuth.activeSession.valid = true;
           this.srvAuth.activeSession.userData = fieldToSave ? x[fieldToSave] : x;
           console.log('Session login ok', this.srvAuth.activeSession);
-          if (u.rememberMe) {
+          if (this.srvAuth.activeSession.user.rememberMe) {
             this.srvAuth.storeSession();
           } else {
             this.srvAuth.cookieSession();

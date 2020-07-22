@@ -10,12 +10,14 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MyCounterComponent } from '../examples/redux-example/my-counter.component';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
+import { HttpExampleComponent } from 'src/examples/httpExample.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     TabExampleComponent,
-    MyCounterComponent
+    MyCounterComponent,
+    HttpExampleComponent
   ],
   imports: [
     CommonModule,
@@ -34,7 +36,9 @@ import { environment } from '../environments/environment';
   exports: [
     FlexLayoutModule
   ],
-  providers: [],
+  providers: [
+    {provide: 'HttpMode', useValue: 'MOBILE'}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

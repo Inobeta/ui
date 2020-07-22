@@ -416,6 +416,11 @@ export class TableComponent implements OnChanges {
                 include = false;
               }
               break;
+            case TableTitlesTypes.NUMBER:
+              if (!(el[k] && el[k].toString() && el[k].toString().includes(this.columnFilter[k].toString().toLowerCase()))) {
+                include = false;
+              }
+              break;
             default:
               include = true;
           }

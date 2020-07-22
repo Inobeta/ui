@@ -5,7 +5,7 @@ import {TranslateService} from '@ngx-translate/core';
 @Component({
   selector: 'ib-root',
   template: `
-    <ib-table-example></ib-table-example>
+    <app-test></app-test>
   `
 })
 export class AppComponent implements OnInit {
