@@ -14,7 +14,8 @@ deploy_unstable:
   stage: deploy
   script:
     - echo '//gitlab.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}'>.npmrc
-    - npm version --no-git-tag-version prerelease --preid=$CI_COMMIT_SHA
+    - CURRENT_VERSION=$(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[\",]//g' | tr -d '[[:space:]]')
+    - sed -e "s/\"version\"\: \"$CURRENT_VERSION\"/\"version\":\"$CURRENT_VERSION-$CI_COMMIT_SHA\"/g" package.json > package.json
     - npm publish --tag unstable
   except:
     - master
