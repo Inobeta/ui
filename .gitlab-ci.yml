@@ -1,4 +1,4 @@
-image: node:latest
+image: node:10.11.0
 
 stages:
   - deploy
@@ -7,13 +7,13 @@ deploy:
   stage: deploy
   script:
     - echo '//gitlab.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}'>.npmrc
-    - npm publish
+    - npm publish --tag stable
   only:
     - master
 deploy_unstable:
   stage: deploy
   script:
     - echo '//gitlab.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}'>.npmrc
-    - npm publish --tag
+    - npm publish --tag unstable
   except:
     - master
