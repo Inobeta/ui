@@ -7,14 +7,25 @@ deploy:
   stage: deploy
   script:
     - echo '//gitlab.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}'>.npmrc
-    - npm publish --tag stable
+    - npm publish --tag latest
   only:
     - master
 deploy_unstable:
   stage: deploy
   script:
     - echo '//gitlab.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}'>.npmrc
-    - npm version --no-git-tag-version prerelease --preid=$CI_COMMIT_SHA
+    - create_temp_version
     - npm publish --tag unstable
   except:
     - master
+.inobeta_pkg: &inobeta_pkg |
+  [[ "$TRACE" ]] && set -x
+
+  function create_temp_version() {
+      CURRENT_VERSION=$(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[\",]//g' | tr -d '[[:space:]]')
+      sed -i "s/\"version\"\: \"$CURRENT_VERSION\"/\"version\": \"$CURRENT_VERSION-$CI_COMMIT_SHA\"/g" ./package.json
+      echo $CURRENT_VERSION-$CI_COMMIT_SHA
+  }
+
+before_script:
+  - *inobeta_pkg
