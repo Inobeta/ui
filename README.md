@@ -1,9 +1,6 @@
 # How to version
 
-Daily version (before each commit)
-```
-npm run pre-release
-```
+Before work, run the change type
 
 Bug fixes
 ```
@@ -25,7 +22,5 @@ Setup gitlab registry  (manual)
 npm config set @inobeta:registry https://gitlab.com/api/v4/packages/npm/
 npm config set '//gitlab.com/api/v4/packages/npm/:_authToken' "GITLAB_TOKEN"
 npm config set '//gitlab.com/api/v4/projects/8604184/packages/npm/:_authToken' "GITLAB_TOKEN"
-
-
-npm publish
+echo @Inobeta:registry=https://gitlab.com/api/v4/packages/npm/ >> .npmrc
 ```
