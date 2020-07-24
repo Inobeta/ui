@@ -5,7 +5,7 @@ import {Injectable} from '@angular/core';
 export class JsonFormatterService {
 
   formatArrayToJson(array): any {
-    let obj: any = {};
+    const obj: any = {};
     for (let i = 0; i < array.length; i++) {
       if (array[i].value !== null && array[i].value !== '') {
         obj[array[i].value] = array[i].label;

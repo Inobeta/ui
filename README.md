@@ -1,32 +1,26 @@
-# How to package
+# How to version
 
+Before work, run the change type
 
-if you created a new element (component, service, model, etc..) add it to ```public_api.ts```
-
-edit version attribute in package.js
-
-compile package
+Bug fixes
 ```
-npm run packagr
+npm run patch
 ```
 
-cd to output dir: 
+New feature
 ```
-cd dist/
+npm run minor
 ```
-compress pkg: 
+
+Breaking changes
 ```
-npm pack
+npm run major
 ```
-copy output package to client project: 
+
+Setup gitlab registry  (manual)
 ```
-cp inobeta-ui-0.0.4.tgz ../../RezonaGUI/src/lib/
-```
-in client project, install pkg: 
-```
-npm i --save src/lib/inobeta-ui-0.0.4.tgz
-```
-import any element from root module: 
-```javascript
-import {StateAction} from 'inobeta-ui';
+npm config set @inobeta:registry https://gitlab.com/api/v4/packages/npm/
+npm config set '//gitlab.com/api/v4/packages/npm/:_authToken' "GITLAB_TOKEN"
+npm config set '//gitlab.com/api/v4/projects/8604184/packages/npm/:_authToken' "GITLAB_TOKEN"
+echo @Inobeta:registry=https://gitlab.com/api/v4/packages/npm/ >> .npmrc
 ```

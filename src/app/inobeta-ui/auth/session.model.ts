@@ -12,5 +12,6 @@ export class UserLogin {
 }
 
 export enum AuthTypes {
-  BASIC_AUTH, JWT
+  BASIC_AUTH,
+  JWT
 }

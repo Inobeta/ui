@@ -1,0 +1,27 @@
+.table-header{
+  background-color: #FF4931;
+}
+button.mat-sort-header-button, #select-row-name, #delete-row-name, .table-header-title{
+  color: #ffffff !important;
+}
+.mat-sort-header-container, #select-row-name, #delete-row-name {
+  font-family: 'Roboto', 'Regular', sans-serif;
+}
+.table-row td, .table-header-title {
+  border: none !important;
+}
+tr td{
+  color: #999999;
+  font-family: 'Red Hat Text', 'Regular', sans-serif;
+}
+.mat-sort-header-arrow, .table-sort-indicator {
+  color: #FCEE21 !important;
+}
+
+.table-row:hover > td{
+  color: #515151;
+  background-color: #F7F7F7;
+}
+td {
+  background-color: #ffffff;
+}

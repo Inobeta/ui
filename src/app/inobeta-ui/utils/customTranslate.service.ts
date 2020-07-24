@@ -4,8 +4,7 @@ import {TranslateService} from '@ngx-translate/core';
 @Injectable()
 export class CustomTranslateService {
 
-  constructor(private translateService: TranslateService) {
-  }
+  constructor(private translateService: TranslateService) {}
 
   /**
    * Questa funzione traduce array di MenuItem ricorsivamente.

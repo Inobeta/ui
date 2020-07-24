@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
-//import {NotificationService} from '../../modules/UIKit/components/toastNotification/notification.service';
+// import {NotificationService} from '../../modules/UIKit/components/toastNotification/notification.service';
 import {Observable, throwError} from 'rxjs';
-import {HttpEvent} from "@angular/common/http";
+import {HttpEvent} from '@angular/common/http';
 
 @Injectable()
 export class ResponseHandlerService {
@@ -10,8 +10,7 @@ export class ResponseHandlerService {
 
   constructor(
   //  private srvNotify: NotificationService
-  ) {
-  }
+  ) {}
 
   handleOK(res: Object) {
     if (res) {
@@ -24,12 +23,12 @@ export class ResponseHandlerService {
         return data.rsp_data;
       }*/
     } else {
-      throw "Unable to make request with server.";
+      throw new Error('Unable to make request with server.');
     }
   }
 
   handleKO(res: HttpEvent<object> | any) {
-    let errMsg: string = 'Ci sono errori';
+    const errMsg = res.error.message ? res.error.message : 'Ci sono errori';
     /*   if (error instanceof Response) {
          const body = (error.status) ? error : error.json();
          var json_body = null;
@@ -51,7 +50,6 @@ export class ResponseHandlerService {
 
 
   displayErrors(errMsg) {
-    console.log("displayErrors", errMsg)
 //    if(!this.disableGlobalErrors)
 //      this.srvNotify.add({severity: 'error', summary: 'Error', detail: errMsg});
   }

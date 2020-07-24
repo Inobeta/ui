@@ -1,7 +1,8 @@
 import {Inject, Injectable, Optional} from '@angular/core';
 import {Session} from './session.model';
-import {Router} from '@angular/router';
 import {CookiesStorageService, LocalStorageService} from 'ngx-store';
+import * as SessionActions from './redux/session.actions';
+import {Store} from '@ngrx/store';
 
 @Injectable()
 export class AuthService {
@@ -9,8 +10,8 @@ export class AuthService {
   sessionStorageKey = '';
 
   constructor(private srvLocalStorage: LocalStorageService,
-              private srvRouter: Router,
               private svcCookie: CookiesStorageService,
+              private store: Store<any>,
               @Inject('SessionStorageKey') @Optional() public SessionStorageKey?: string
   ) {
     this.sessionStorageKey = SessionStorageKey || '';
@@ -18,9 +19,10 @@ export class AuthService {
     if (!this.activeSession) {
       this.activeSession = this.srvLocalStorage.get(`userData-${this.sessionStorageKey}`) as Session;
     }
-    console.log(this.activeSession);
+    if (!this.activeSession) {
+      this.store.dispatch(SessionActions.logout());
+    }
   }
-
 
   public storeSession() {
     this.activeSession.valid = true;
@@ -33,12 +35,12 @@ export class AuthService {
   }
 
   public logout() {
-    this.activeSession = null;
     this.srvLocalStorage.set(`userData-${this.sessionStorageKey}`, null);
     this.svcCookie.set(`userData-${this.sessionStorageKey}`, null);
-    this.srvRouter.navigate(['/login']);
+  }
+
+  public isLoggedIn() {
+    return this.activeSession !== null;
   }
 
 }
-
-/* istanbul ignore next */

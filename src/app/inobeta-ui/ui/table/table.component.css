@@ -1,0 +1,49 @@
+ib-table .hover:hover{
+  opacity: .5 !important;
+}
+.mat-sort-header-container {
+  align-items: center;
+  cursor: none !important;
+}
+#select-row-name{
+  cursor: default;
+}
+th {
+  color: #555;
+  font-weight: normal;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+td {
+  border-bottom: 1px solid #ccc;
+  padding: 10px;
+}
+mat-paginator >>> .mat-paginator-container {
+  justify-content: flex-start !important;
+  background-color: inherit;
+}
+mat-paginator >>> button {
+  transform: scale(0.8);
+}
+mat-paginator >>> .mat-form-field-underline {
+  display: none;
+}
+mat-paginator >>> .mat-input-flex {
+  background-color: gray;
+  border-radius: 10px;
+  padding-left: 15px;
+  padding-right: 10px;
+  padding-bottom: 0;
+  margin-top: 10px;
+}
+mat-paginator >>> .mat-input-infix {
+  border-top: 0 !important;
+}
+.table-header-title-custom >>> button{
+  cursor: default;
+}
+
+.table-header-title{
+  text-align: left;
+  cursor: pointer;
+}

@@ -4,38 +4,41 @@ import {HttpClientService} from '../http/httpclient.service';
 import {AuthService} from './auth.service';
 import {catchError, map} from 'rxjs/operators';
 import {throwError} from 'rxjs';
-import {NgRedux} from '@angular-redux/store';
-import {IAppState} from '../../app.module';
-import {StateActions} from '../redux/tools';
-import {SessionActions} from './session.reducer';
+import {Store} from '@ngrx/store';
+import * as SessionActions from './redux/session.actions';
+import {Router} from '@angular/router';
+import {MatSnackBar} from '@angular/material';
 
-const loginUrl = '/api/rezona-auth/login';
+const loginUrl = '/api/auth/login';
 
 @Injectable()
 export class SessionService {
-  private authType = AuthTypes.BASIC_AUTH;
+  private authType = null /*AuthTypes.BASIC_AUTH*/;
 
   constructor(
     private srvAuth: AuthService,
     private h: HttpClientService,
-    private ngRedux: NgRedux<IAppState>,
-    private actions: StateActions
-  ) {
-  }
+    private store: Store<any>,
+    private srvRouter: Router,
+    private snackBar: MatSnackBar) {}
 
   public setAuthtype(type: AuthTypes) {
     this.authType = type;
     this.h.setAuthtype(type);
   }
 
-  public login( u: UserLogin, postUrl = null ) {
-    this.srvAuth.activeSession = new Session();
-    if (this.authType === AuthTypes.BASIC_AUTH) {
-      this.srvAuth.activeSession.authToken = window.btoa(u.username + ':' + u.password);
+  public login( u: UserLogin, postUrl = null, fieldToSave = null ) {
+
+    if (u) {
+      this.srvAuth.activeSession = new Session();
+      if (this.authType === AuthTypes.BASIC_AUTH) {
+        this.srvAuth.activeSession.authToken = window.btoa(u.username + ':' + u.password);
+      }
+      this.srvAuth.activeSession.valid = false;
+      this.srvAuth.activeSession.user = u;
     }
-    this.srvAuth.activeSession.valid = false;
-    this.srvAuth.activeSession.user = u;
-    return this.h.post((postUrl) ? postUrl : loginUrl, u)
+    const data = u || {};
+    return this.h.post((postUrl) ? postUrl : loginUrl, data)
       .pipe(
         map( x => {
           if (this.authType === AuthTypes.JWT) {
@@ -43,14 +46,14 @@ export class SessionService {
           }
           this.srvAuth.activeSession.user.password = '';
           this.srvAuth.activeSession.valid = true;
-          this.srvAuth.activeSession.userData = x;
+          this.srvAuth.activeSession.userData = fieldToSave ? x[fieldToSave] : x;
           console.log('Session login ok', this.srvAuth.activeSession);
-          if (u.rememberMe) {
+          if (this.srvAuth.activeSession.user.rememberMe) {
             this.srvAuth.storeSession();
           } else {
             this.srvAuth.cookieSession();
           }
-          this.ngRedux.dispatch(this.actions.stateChange(this.srvAuth.activeSession, SessionActions.LOGIN));
+          this.store.dispatch(SessionActions.login({activeSession: this.srvAuth.activeSession}));
           return x;
         }),
         catchError( err => {
@@ -61,4 +64,13 @@ export class SessionService {
       );
   }
 
-} /* istanbul ignore next */
+  public logout(makeSnack: boolean = true) {
+    this.srvAuth.activeSession = null;
+    this.store.dispatch(SessionActions.logout());
+    this.srvAuth.logout();
+    this.srvRouter.navigateByUrl('/login');
+    if (makeSnack) {
+      this.snackBar.open('Logout completed', null, {duration: 2000});
+    }
+  }
+}

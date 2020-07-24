@@ -1,16 +1,16 @@
-import {Action} from 'redux';
+/*
+/!*import {Action} from 'redux';*!/
 import {Injectable} from '@angular/core';
-import {StateAction} from '../../redux/tools';
+/!*import {StateAction} from '../../redux/tools';*!/
 
-
-
-/** State Interface **/
+/!** State Interface **!/
 export interface ITableHandler {
   items: any[];
   filteredItems: any[];
   filterConditions: any;
   sortField: any;
 }
+
 export const TABLE_INITIAL_STATE: ITableHandler = {
   items: [],
   filteredItems: [],
@@ -26,15 +26,12 @@ export class TableActions {
   static LOCAL_FILTER = '[Table] LOCAL_FILTER';
   static LOCAL_SORT = '[Table] LOCAL_SORT';
   static FILTER_RESET = '[Table] FILTER_RESET';
-
 }
 
-
-
-/** Reducer (BL) **/
+/!** Reducer (BL) **!/
 export function tableReducer(
   lastState: ITableHandler,
-  a: Action,
+  /!*a: Action,*!/
   type: string): ITableHandler {
 
   const action = a as StateAction;
@@ -131,3 +128,4 @@ function getFilterCond(lastFilters, newFilters) {
   }
   return filterCond;
 }
+*/
