@@ -29,3 +29,15 @@ import any element from root module:
 ```javascript
 import {StateAction} from 'inobeta-ui';
 ```
+
+
+
+Setup del registry di gitlab:
+```
+npm config set @inobeta:registry https://gitlab.com/api/v4/packages/npm/
+npm config set '//gitlab.com/api/v4/packages/npm/:_authToken' "GITLAB_TOKEN"
+npm config set '//gitlab.com/api/v4/projects/8604184/packages/npm/:_authToken' "GITLAB_TOKEN"
+
+
+npm publish
+```
