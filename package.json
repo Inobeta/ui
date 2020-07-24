@@ -1,6 +1,6 @@
 {
   "name": "@Inobeta/inobeta-ui",
-  "version": "0.0.20",
+  "version": "0.0.21-3",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --host 0.0.0.0",
@@ -12,7 +12,11 @@
     "e2e": "ng e2e",
     "packagr": "ng-packagr -p ng-package.json",
     "release": "npm run packagr && cd dist/ && npm pack",
-    "compodoc": "npx compodoc -p tsconfig.app.json"
+    "compodoc": "npx compodoc -p tsconfig.app.json",
+    "pre-release": "npm version --no-git-tag-version prerelease",
+    "patch": "npm version --no-git-tag-version patch",
+    "minor": "npm version --no-git-tag-version minor",
+    "major": "npm version --no-git-tag-version major"
   },
   "private": false,
   "dependencies": {
