@@ -24,6 +24,8 @@ deploy_unstable:
   function create_temp_version() {
       CURRENT_VERSION=$(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[\",]//g' | tr -d '[[:space:]]')
       sed -e "s/\"version\"\: \"$CURRENT_VERSION\"/\"version\":\"$CURRENT_VERSION-$CI_COMMIT_SHA\"/g" package.json > package.json
+      echo $CURRENT_VERSION-$CI_COMMIT_SHA
+      cat package.json
   }
 
 before_script:
