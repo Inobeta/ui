@@ -388,7 +388,7 @@ export class TableComponent implements OnChanges {
       this.store.dispatch(TableFiltersActions.addSortToTable({
         tableName: this.tableName,
         sortType: sort,
-        emitChange: emitChange
+        emitChange
       }));
     }
     if (emitChange) {
@@ -464,7 +464,7 @@ export class TableComponent implements OnChanges {
   pageChangeHandle(data) {
     this.store.dispatch(TableFiltersActions.addPaginatorFiltersToTable({
       tableName: this.tableName,
-      previousPageIndex: data.previousPageIndex | 0,
+      previousPageIndex: data.previousPageIndex,
       pageIndex: data.pageIndex,
       pageSize: data.pageSize,
       lengthP: data['length']

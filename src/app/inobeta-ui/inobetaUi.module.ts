@@ -4,12 +4,9 @@ import {CommonModule, DatePipe} from '@angular/common';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate/core';
-import {CustomMaterialModule} from './material.module';
 import {TableComponent} from './ui/table/table.component';
-import {CardComponent} from './ui/card/card.component';
 import {HttpClientService} from './http/httpclient.service';
 import {ResponseHandlerService} from './http/responseHandler.service';
-import {BoxComponent} from './ui/box/box.component';
 import {Guard, LoginGuard} from './auth/guard.service';
 import {AuthService} from './auth/auth.service';
 import {SessionService} from './auth/session.service';
@@ -19,11 +16,8 @@ import localeIt from '@angular/common/locales/it';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ModalMessageComponent} from './ui/modal/modalMessage.component';
 import {LoginComponent} from './pages/login.component';
-import {IbTabsComponent} from './ui/ib-tabs/ib-tabs.component';
 import {UploaderComponent} from './ui/uploader/uploader.component';
 import {CookiesStorageService, LocalStorageService} from 'ngx-store';
-import {CustomTranslateService} from './utils/customTranslate.service';
-import {JsonFormatterService} from './utils/jsonFormatter.service';
 import {RouterModule} from '@angular/router';
 import {TableInterfaceComponent} from './ui/table/table.const';
 import {StoreModule} from '@ngrx/store';
@@ -38,18 +32,16 @@ import {TableAddComponent} from './ui/table/components/table-add.component';
 import {TableFilterResetComponent} from './ui/table/components/table-filter-reset.component';
 import {TablePaginatorComponent} from './ui/table/components/table-paginator.component';
 import {TableHeaderPopupComponent} from './ui/table/components/tableHeaderPopup.component';
+import { CustomMaterialModule } from './material.module';
 
 registerLocaleData(localeIt, 'it');
 
 export const components = [
   TableComponent,
   TableInterfaceComponent,
-  CardComponent,
-  BoxComponent,
   SpinnerLoadingComponent,
   ModalMessageComponent,
   LoginComponent,
-  IbTabsComponent,
   UploaderComponent,
   IbTableExampleComponent,
   TableSeachComponent,
@@ -69,18 +61,16 @@ export const services = [
   AuthService,
   SessionService,
   CookiesStorageService,
-  CustomTranslateService,
   DatePipe,
-  JsonFormatterService,
   LocalStorageService,
   TranslateService
 ];
 
 export const imports = [
   CommonModule,
+  HttpClientModule,
   CustomMaterialModule,
   FlexLayoutModule,
-  HttpClientModule,
   FormsModule,
   ReactiveFormsModule,
   StoreModule.forRoot({
@@ -110,7 +100,6 @@ export function createTranslateLoader(http: HttpClient) {
   ],
   exports: [
     ...components,
-    CustomMaterialModule,
     TranslateModule,
     FlexLayoutModule,
     RouterModule

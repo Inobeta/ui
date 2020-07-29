@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { TableTitles } from './titles.model';
-import { TemplateModel } from './template.model';
+import { TableTitles } from '../ui/table/titles.model';
+import { TemplateModel } from '../ui/table/template.model';
 
 @Component({
   selector: 'ib-table',
