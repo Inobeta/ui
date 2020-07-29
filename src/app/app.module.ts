@@ -6,16 +6,18 @@ import { RoutingModule } from './routing.module';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { MyCounterComponent } from '../examples/redux-example/my-counter.component';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
-import { HttpExampleComponent } from 'src/examples/httpExample.component';
+import { HomeComponent } from 'src/app/examples/home.component';
+import { IbTableExampleComponent } from 'src/app/examples/table-example/ib-tableExample.component';
+import { NavComponent } from './examples/nav/nav.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    MyCounterComponent,
-    HttpExampleComponent
+    HomeComponent,
+    IbTableExampleComponent,
+    NavComponent
   ],
   imports: [
     CommonModule,
@@ -23,9 +25,7 @@ import { HttpExampleComponent } from 'src/examples/httpExample.component';
     RoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    BrowserModule,
     FlexLayoutModule,
-    BrowserModule,
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       logOnly: environment.production,

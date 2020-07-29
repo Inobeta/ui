@@ -22,9 +22,6 @@ export class TableStubComponent {
   @Input() selectRowName = 'Seleziona';
   @Input() templateButtons: TemplateModel[] = [];
   @Input() templateHeaders: any = {};
-  @Input() tags: string[] = [];
-  @Input() reduced = false;
-  @Input() displayInfo = true;
   @Input() actions: string[] = [];
   @Output() filterChange: EventEmitter<any> = new EventEmitter<any>();
   @Output() filterReset: EventEmitter<any> = new EventEmitter<any>();

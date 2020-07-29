@@ -9,7 +9,7 @@ import * as TableFiltersActions from './redux/table.action';
   selector: 'ib-table',
   template: `
     <div fxLayout="column" class="ib-table">
-      <div *ngIf="!reduced" fxLayout="row" fxLayoutAlign="left center" fxLayoutGap="20px">
+      <div fxLayout="row" fxLayoutAlign="left center" fxLayoutGap="20px">
         <ib-table-search
           [filterValues]="filterValues"
           (filterChange)="filterChange.emit($event)"
@@ -45,7 +45,7 @@ import * as TableFiltersActions from './redux/table.action';
 
           <!--HEADER-->
           <tr class="table-header">
-            <th id="select-row-name" width="10" *ngIf="!reduced && selectableRows">{{selectRowName | translate}}</th>
+            <th id="select-row-name" width="10" *ngIf="selectableRows">{{selectRowName | translate}}</th>
             <ng-template
               *ngFor="let t of titles"
               [ngIf]="true"
@@ -121,7 +121,7 @@ import * as TableFiltersActions from './redux/table.action';
           <tr (click)="rowClicked.emit(item)" class="table-row" *ngFor="let item of sortedData">
 
             <!--CHECKBOX-->
-            <td *ngIf="!reduced && selectableRows">
+            <td *ngIf="selectableRows">
               <mat-checkbox #c (click)="emitItemAndCheckbox(item, !c.checked)"></mat-checkbox>
             </td>
 
@@ -246,13 +246,12 @@ import * as TableFiltersActions from './redux/table.action';
           [numOfElements]="numOfElements"
           [paginationInfo]="currentPagination"
           (pageChangeHandle)="pageChangeHandle($event)"
-          [reduced]="reduced"
           [elemForPage]="currentPagination.pageSize">
         </ib-table-paginator>
       </ng-template>
     </div>
     <mat-menu #menuTableActions="matMenu">
-      <button mat-menu-item *ngFor="let a of actions" (click)="actionButtonClick(a)">{{ a | translate}}</button>
+      <button mat-menu-item *ngFor="let a of actions" (click)="actionButtonClick(a)">{{ a }}</button>
     </mat-menu>
     <!--overlay pane for custom headers popups--->
     <div
@@ -286,11 +285,7 @@ export class TableComponent implements OnChanges {
   @Input() tableName = 'default_table_name';
 
   // input non necessari
-  @Input() tags: string[] = [];
-  @Input() reduced = false;
-  @Input() displayInfo = true;
   @Input() actions: string[] = [];
-  @Input() tableFilters: any;
 
   // Output necessari
   @Output() filterChange: EventEmitter<any> = new EventEmitter<any>();

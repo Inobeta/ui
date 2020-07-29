@@ -1,75 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { TableTitlesTypes } from '../app/inobeta-ui/ui/table/titles.model';
-import { Store } from '@ngrx/store';
+import { TableTitlesTypes } from 'src/app/inobeta-ui/ui/table/titles.model';
 
 @Component({
   selector: 'ib-table-example',
-  template: `
-    <!--<ng-template #headerClickTemplate let-ibTable="ibTable" let-col="col">
-      <div class="modal-selector" (click)="$event.stopPropagation();">
-        <div class="modal-row" (click)="ibTable.resetCustomHeaderVisibility($event)">Close this popup</div>
-        <div class="modal-row" (click)="ibTable.sortData({active: col.key, direction: 'asc'})">Sort ASC</div>
-        <div class="modal-row" (click)="ibTable.sortData({active: col.key, direction: 'desc'})">Sort DESC</div>
-        <div class="modal-row" (click)="ibTable.setFilter('sender', 'bologna')">Filter sender</div>
-        <div class="modal-row" (click)="ibTable.setFilter('date', '05')">Filter expires</div>
-      </div>
-    </ng-template>-->
-
-    <ng-template #deleteTemplate let-item="item">
-      <span class="delete-button">
-          <i class="material-icons">search</i>
-      </span>
-    </ng-template>
-
-    <ng-template #headerClickTemplate let-ibTable="ibTable" let-col="col">
-      <table-header-popup
-        [ibTable]="ibTable"
-        [col]="col">
-      </table-header-popup>
-    </ng-template>
-    
-
-    <ib-table
-      [customItemTemplate]="{ lot: lotTemplate }"
-      [selectableRows]="true"
-      (rowChecked)="prova2($event)"
-      [titles]="titles"
-      [items]="items"
-      [selectRowName]="'Ricevuto'"
-      [templateButtons]="[{
-        template: deleteTemplate,
-        columnName: 'Elimina'
-      }]"
-      [templateHeaders]="{
-        'lot': headerClickTemplate,
-        'sender': headerClickTemplate,
-        'date': headerClickTemplate,
-        'qt': headerClickTemplate
-      }">
-      <ng-template #lotTemplate let-item="item">
-        <div style="font-weight: bold; color: red;">{{item.lot}}</div>
-      </ng-template>
-    </ib-table>
-  `,
-  styles: [
-    `      
-      .modal-selector {
-        position: absolute;
-        width: 150px;
-        height: 200px;
-        background-color: white;
-        border: 1px solid black;
-        color: black;
-        z-index: 100;
-      }
-
-      .modal-row {
-        border: 1px solid black;
-        background-color: yellow;
-      }
-    `
-
-  ]
+  templateUrl: 'ib-tableExample.component.html',
+  styleUrls: ['./ib-tableExample.component.css']
 })
 
 export class IbTableExampleComponent implements OnInit {

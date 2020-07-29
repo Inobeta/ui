@@ -21,10 +21,8 @@ import {CookiesStorageService, LocalStorageService} from 'ngx-store';
 import {RouterModule} from '@angular/router';
 import {TableInterfaceComponent} from './ui/table/table.const';
 import {StoreModule} from '@ngrx/store';
-import * as fromCounter from '../../examples/redux-example/counter.reducer';
 import * as fromSession from '../../app/inobeta-ui/auth/redux/session.reducer';
 import * as fromTableFilters from '../../app/inobeta-ui/ui/table/redux/table.reducer';
-import {IbTableExampleComponent} from '../../examples/ib-tableExample.component';
 import {TableSeachComponent} from './ui/table/components/table-seach.component';
 import {TableExportCsvComponent} from './ui/table/components/table-export-csv.component';
 import {TableMenuActionsComponent} from './ui/table/components/table-menu-actions.component';
@@ -43,7 +41,6 @@ export const components = [
   ModalMessageComponent,
   LoginComponent,
   UploaderComponent,
-  IbTableExampleComponent,
   TableSeachComponent,
   TableExportCsvComponent,
   TableMenuActionsComponent,
@@ -74,7 +71,6 @@ export const imports = [
   FormsModule,
   ReactiveFormsModule,
   StoreModule.forRoot({
-    countState: fromCounter.counterReducer,
     sessionState: fromSession.sessionReducer,
     tableFiltersState: fromTableFilters.tableFiltersReducer
   }),
