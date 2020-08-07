@@ -1,0 +1,25 @@
+.mat-sort-header-container {
+  align-items: center;
+  cursor: none !important;
+}
+#select-row-name{
+  cursor: default;
+}
+th {
+  color: #555;
+  font-weight: normal;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+td {
+  border-bottom: 1px solid #ccc;
+  padding: 10px;
+}
+.table-header-title-custom >>> button{
+  cursor: default;
+}
+
+.table-header-title{
+  text-align: left;
+  cursor: pointer;
+}

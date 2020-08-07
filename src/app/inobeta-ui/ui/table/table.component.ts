@@ -44,190 +44,30 @@ import * as TableFiltersActions from './redux/table.action';
           style="width:100%;" cellpadding="0" cellspacing="0">
 
           <!--HEADER-->
-          <tr class="table-header">
-            <th id="select-row-name" width="10" *ngIf="selectableRows">{{selectRowName | translate}}</th>
-            <ng-template
-              *ngFor="let t of titles"
-              [ngIf]="true"
-            >
-              <th
-                style="white-space: nowrap;"
-                class="table-header-title"
-                width="{{t.width}}"
-                [mat-sort-header]="t.key"
-                *ngIf="!templateHeaders[t.key]"
-              >
-                {{ t.value | translate}}
-                <ng-template
-                  [ngIf]="columnFilter[t.key]"
-                >
-                  [{{columnFilter[t.key]}}]
-                  <i
-                    style="font-size: 14px;font-weight: bolder;cursor:pointer"
-                    class="material-icons"
-                    (click)="$event.stopPropagation(); setFilter(t.key, null);"
-                  >close</i>
-                </ng-template>
-              </th>
-              <th
-                style="white-space: nowrap;"
-                class="table-header-title"
-                width="{{t.width}}"
-                *ngIf="templateHeaders[t.key]"
-                (click)="resetCustomHeaderVisibility($event); visibleHeaders[t.key] = !visibleHeaders[t.key]"
-              >
-                {{ t.value | translate}}
-                <ng-template
-                  [ngIf]="columnFilter[t.key]"
-                >
-                  [{{columnFilter[t.key]}}]
-                  <i
-                    style="font-size: 14px;font-weight: bolder;cursor:pointer"
-                    class="material-icons"
-                    (click)="$event.stopPropagation(); setFilter(t.key, null);"
-                  >close</i>
-                </ng-template>
-                <i class="material-icons table-sort-indicator"
-                   style="font-size: 14px;font-weight: bolder;"
-                   *ngIf="currentSort && currentSort.active==t.key && currentSort.direction=='asc'"
-                >
-                  arrow_upward
-                </i>
-                <i class="material-icons table-sort-indicator"
-                   style="font-size: 14px;font-weight: bolder;"
-                   *ngIf="currentSort && currentSort.active==t.key && currentSort.direction=='desc'"
-                >
-                  arrow_downward
-                </i>
-                <ng-template [ngIf]="visibleHeaders[t.key]">
-                  <ng-container
-                    *ngTemplateOutlet="templateHeaders[t.key]; context: { ibTable: this, col: t}">
-                  </ng-container>
-                </ng-template>
-              </th>
-            </ng-template>
+          <thead>
+            <tr class="table-header" ib-table-header
+              [table]="this"
+              [titles]="titles"
+              [selectRowName]="selectRowName"
+              [selectableRows]="selectableRows"
+              [templateHeaders]="templateHeaders"
+              [templateButtons]="templateButtons"
+              [columnFilter]="columnFilter"
+              [currentSort]="currentSort"
+              (handleSetFilter)="setFilter($event.key, $event.value, $event.indexToSet)"
+            ></tr>
+          </thead>
 
-            <th
-              width="10"
-              style="white-space: nowrap;"
-              class="table-header-title-custom"
-              [mat-sort-header]="btn.columnName"
-              disabled="true"
-              *ngFor="let btn of templateButtons"
-            >{{btn.columnName | translate}}
-            </th>
-          </tr>
-
-          <tr (click)="rowClicked.emit(item)" class="table-row" *ngFor="let item of sortedData">
-
-            <!--CHECKBOX-->
-            <td *ngIf="selectableRows">
-              <mat-checkbox #c (click)="emitItemAndCheckbox(item, !c.checked)"></mat-checkbox>
-            </td>
-
-            <td
-              *ngFor="let t of titles"
-              style="padding: 10px 15px;"
-              [ngStyle]="{
-                 'text-align': (t.align) ? t.align : alignEnum.LEFT
-              }"
-              [ngClass]="(t.getClassByCondition) ? t.getClassByCondition(item) : null">
-
-              <!--TYPE = ANY-->
-              <span *ngIf="!t.type || t.type === typeEnum.ANY" class="{{t.className}}}">
-                {{item[t.key] | translate}}
-              </span>
-
-              <!--TYPE = NUMBER-->
-              <span *ngIf="t.type === typeEnum.NUMBER" class="{{t.className}}">
-                  {{item[t.key] | number:t.format:'it'}}
-              </span>
-
-              <!--TYPE = DATE-->
-              <span *ngIf="t.type === typeEnum.DATE" class="{{t.className}}">
-                {{item[t.key] | date: 'dd/MM/yyyy'}}
-              </span>
-
-              <!--TYPE = STRING-->
-              <span *ngIf="t.type === typeEnum.STRING" class="{{t.className}}">
-                {{item[t.key]}}
-              </span>
-
-              <!--TYPE = HOUR-->
-              <span *ngIf="t.type === typeEnum.HOUR" class="{{t.className}}">
-                {{item[t.key] | date: 'HH:mm:ss'}}
-              </span>
-
-              <!--TYPE = TAG-->
-              <span *ngIf="t.type === typeEnum.TAG" class="{{t.className}}">
-                 <mat-chip-list>
-                   <mat-chip
-                     *ngFor="let tag of item[t.key]"
-                     style="
-                        background-color: #f2536e;
-                        color:white !important;
-                        text-transform: uppercase;">
-                     {{ 'common.' + tag | translate }}
-                   </mat-chip>
-                 </mat-chip-list>
-               </span>
-
-              <!--TYPE = COMBOBOX-->
-              <span *ngIf="t.type === typeEnum.COMBOBOX" class="{{t.className}}">
-                {{ t.comboOptions[item[t.key]] | translate }}
-              </span>
-
-              <!--TYPE = MATERIAL_SELECT-->
-              <span *ngIf="t.type === typeEnum.MATERIAL_SELECT" class="{{t.className}}">
-                <mat-form-field>
-                <mat-select [(value)]="item[t.key]">
-                  <mat-option *ngFor="let opt of t.materialSelectItems" [value]="opt.value">
-                    {{opt.label | translate}}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-              </span>
-
-              <!--TYPE = BOOLEAN-->
-              <span *ngIf="t.type === typeEnum.BOOLEAN" class="{{t.className}}">
-                <i
-                  class="material-icons"
-                  style="color:green;"
-                  *ngIf="item[t.key] === true">check
-                </i>
-                <i
-                  class="material-icons"
-                  style="color:gray;"
-                  *ngIf="item[t.key] === false">clear
-                </i>
-               </span>
-
-              <!--TYPE = INPUT-->
-              <span *ngIf="t.type === typeEnum.INPUT_NUMBER" class="{{t.className}}">
-                <mat-form-field>
-                  <input
-                    [(ngModel)]="item[t.key]"
-                    matInput
-                    type="number"
-                    placeholder="{{ t.placeHolderInput | translate }}"
-                    value="{{item[t.key]}}">
-                  </mat-form-field>
-              </span>
-
-              <!--TYPE = CUSTOM-->
-              <span *ngIf="t.type === typeEnum.CUSTOM" class="{{t.className}}">
-                <ng-container
-                  *ngTemplateOutlet="customItemTemplate[t.key]; context: { item: item}">
-              </ng-container>
-              </span>
-            </td>
-            <td style="text-align: center" *ngFor="let btn of templateButtons">
-              <ng-container
-                *ngTemplateOutlet="btn.template; context: { item: item}">
-              </ng-container>
-            </td>
-
-          </tr>
+          <!--ROWS-->
+          <tbody ib-table-rows
+            [titles]="titles"
+            [sortedData]="sortedData"
+            [customItemTemplate]="customItemTemplate"
+            [selectableRows]="selectableRows"
+            [templateButtons]="templateButtons"
+            (rowClicked)="rowClicked.emit($event)"
+            (rowChecked)="rowChecked.emit($event)"
+          ></tbody>
 
           <tr *ngIf="sortedData.length === 0">
             <td [attr.colspan]="4+titles.length" style="text-align: center;">
@@ -253,12 +93,6 @@ import * as TableFiltersActions from './redux/table.action';
     <mat-menu #menuTableActions="matMenu">
       <button mat-menu-item *ngFor="let a of actions" (click)="actionButtonClick(a)">{{ a }}</button>
     </mat-menu>
-    <!--overlay pane for custom headers popups--->
-    <div
-      class="ib-table-overlay"
-      *ngIf="hasCustomHeadersVisible()"
-      style="position:fixed; top:0px; left:0px;width:100%; height:100%; z-index:99; background-color:transparent;"
-    ></div>
   `,
   styleUrls: ['./table.component.css']
 })
@@ -305,25 +139,10 @@ export class TableComponent implements OnChanges {
   alignEnum = TableCellAligns;
   sortedData;
   currentPagination: any = {};
-  visibleHeaders = {};
   columnFilter = {};
   numOfElements = 0;
 
   constructor(private store: Store<any>) { }
-
-  @HostListener('document:click', ['$event'])
-  clickout(event) {
-    // tslint:disable-next-line: forin
-    for (const el in this.visibleHeaders) {
-      event.stopPropagation();
-      break;
-    }
-    this.resetCustomHeaderVisibility();
-  }
-
-  hasCustomHeadersVisible() {
-    return Object.keys(this.visibleHeaders).length > 0;
-  }
 
   ngOnChanges(changes: SimpleChanges): void {
 
@@ -516,13 +335,6 @@ export class TableComponent implements OnChanges {
       action: a,
       data: this.sortedData.filter((el) => el.checked)
     });
-  }
-
-  resetCustomHeaderVisibility(event = null) {
-    if (event) {
-      event.stopPropagation();
-    }
-    this.visibleHeaders = {};
   }
 
   emitItemAndCheckbox(item, checkbox) {

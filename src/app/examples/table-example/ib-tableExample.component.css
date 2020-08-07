@@ -8,7 +8,7 @@ ib-table >>> .table-header-title{
   font-family: 'Roboto', 'Regular', sans-serif;
   color: #ffffff !important;
 }
-ib-table >>> .table-row td, ib-table >>> .table-header-title {
+ib-table >>> .table-row td, ib-table-header >>> .table-header-title {
   border: none !important;
 }
 ib-table >>> .mat-sort-header-arrow, ib-table >>> .table-sort-indicator {

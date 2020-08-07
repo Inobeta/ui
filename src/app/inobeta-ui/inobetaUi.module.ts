@@ -31,6 +31,8 @@ import {TableFilterResetComponent} from './ui/table/components/table-filter-rese
 import {TablePaginatorComponent} from './ui/table/components/table-paginator.component';
 import {TableHeaderPopupComponent} from './ui/table/components/tableHeaderPopup.component';
 import { CustomMaterialModule } from './material.module';
+import { TableHeaderComponent } from './ui/table/components/table-header/table-header.component';
+import { TableRowsComponent } from './ui/table/components/table-rows/table-rows.component';
 
 registerLocaleData(localeIt, 'it');
 
@@ -89,13 +91,17 @@ export function createTranslateLoader(http: HttpClient) {
 
 @NgModule({
   declarations: [
-    ...components
+    ...components,
+    TableHeaderComponent,
+    TableRowsComponent
   ],
   imports: [
     ...imports
   ],
   exports: [
     ...components,
+    TableHeaderComponent,
+    TableRowsComponent,
     TranslateModule,
     FlexLayoutModule,
     RouterModule
