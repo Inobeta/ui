@@ -11,13 +11,15 @@ import { environment } from '../environments/environment';
 import { HomeComponent } from 'src/app/examples/home.component';
 import { IbTableExampleComponent } from 'src/app/examples/table-example/ib-tableExample.component';
 import { NavComponent } from './examples/nav/nav.component';
+import { DynamicFormsExampleComponent } from './examples/dynamic-forms-example/dynamic-forms-example.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     IbTableExampleComponent,
-    NavComponent
+    NavComponent,
+    DynamicFormsExampleComponent,
   ],
   imports: [
     CommonModule,
