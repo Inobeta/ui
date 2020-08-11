@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBase } from 'src/app/inobeta-ui/forms/form-base';
-import { Textbox } from 'src/app/inobeta-ui/forms/form-textbox';
+import { FormControlBase } from 'src/app/inobeta-ui/forms/controls/form-control-base';
+import { Textbox } from 'src/app/inobeta-ui/forms/controls/textbox';
 import { Validators } from '@angular/forms';
-import { Dropdown } from 'src/app/inobeta-ui/forms/form-dropdown';
+import { Dropdown } from 'src/app/inobeta-ui/forms/controls/dropdown';
+import { Radio } from 'src/app/inobeta-ui/forms/controls/radio';
 
 @Component({
   selector: 'app-dynamic-forms-example',
@@ -10,14 +11,14 @@ import { Dropdown } from 'src/app/inobeta-ui/forms/form-dropdown';
   styleUrls: ['./dynamic-forms-example.component.css']
 })
 export class DynamicFormsExampleComponent implements OnInit {
-  inputs: FormBase<string>[]
+  fields: FormControlBase<string>[];
 
   constructor() {
-    this.inputs = [
+    this.fields = [
       new Textbox({
         key: 'firstName',
         label: 'First name',
-        value: 'Bombasto',
+        value: 'Mario',
         required: true,
         validators: [Validators.minLength(3)]
       }),
@@ -25,8 +26,8 @@ export class DynamicFormsExampleComponent implements OnInit {
         type: 'email',
         key: 'email',
         label: 'Email',
-        value: '',
         required: true,
+        validators: [Validators.email]
       }),
       new Textbox({
         type: 'date',
@@ -36,12 +37,22 @@ export class DynamicFormsExampleComponent implements OnInit {
       }),
       new Dropdown({
         key: 'options',
-        label: 'options',
+        label: 'Options',
         options: [
-          {key: 'test', value: 'test'}
+          { key: 'test', value: 'value' }
         ]
+      }),
+      new Radio({
+        key: 'food',
+        value: 'test-1',
+        label: 'Scegli qualcosa',
+        options: [
+          { key: 'test-1', value: 'Lasagne' },
+          { key: 'test-2', value: 'Maccheroni' },
+        ],
+        required: true
       })
-    ]
+    ];
   }
 
   ngOnInit() {

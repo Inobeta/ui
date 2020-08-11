@@ -1,17 +1,23 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormBase } from '../form-base';
+import { FormControlBase } from '../controls/form-control-base';
 import { FormGroup } from '@angular/forms';
 
 @Component({
-  // tslint:disable-next-line: component-selector
-  selector: '[ib-dynamic-form-control]',
+  selector: 'ib-dynamic-form-control',
   templateUrl: './dynamic-form-control.component.html',
+  host: {
+    class: 'ibFormControl'
+  },
 })
 export class DynamicFormControlComponent {
-  @Input() base: FormBase<string>;
+  @Input() base: FormControlBase<string>;
   @Input() form: FormGroup;
 
   constructor() { }
 
-  get isValid() { return this.form.controls[this.base.key].valid; }
+  get isValid() { return this.form.get(this.base.key).valid; }
+
+  get isInvalid() { return this.form.get(this.base.key).invalid; }
+
+  hasError(e) { return this.form.get(this.base.key).hasError(e); }
 }

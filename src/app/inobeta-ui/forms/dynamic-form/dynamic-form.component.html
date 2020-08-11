@@ -1,8 +1,8 @@
 <form (ngSubmit)="onSubmit()" [formGroup]="form" class="ibForm">
 
-  <div ib-dynamic-form-control *ngFor="let input of inputs" class="ibForm-row" [base]="input" [form]="form"></div>
+  <ib-dynamic-form-control *ngFor="let field of fields" class="ibFormRow" [base]="field" [form]="form"></ib-dynamic-form-control>
 
-  <div class="ibForm-row">
+  <div class="ibFormRow ibFormActions">
     <button type="submit" [disabled]="!form.valid">Save</button>
   </div>
 </form>

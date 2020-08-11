@@ -12,6 +12,9 @@ import { HomeComponent } from 'src/app/examples/home.component';
 import { IbTableExampleComponent } from 'src/app/examples/table-example/ib-tableExample.component';
 import { NavComponent } from './examples/nav/nav.component';
 import { DynamicFormsExampleComponent } from './examples/dynamic-forms-example/dynamic-forms-example.component';
+import { CustomMaterialModule } from './inobeta-ui/material.module';
+import { CustomMaterialFormComponent } from './examples/dynamic-forms-example/custom-material-form/custom-material-form.component';
+import { CustomMaterialFormControlComponent } from './examples/dynamic-forms-example/custom-material-form-control/custom-material-form-control.component';
 
 @NgModule({
   declarations: [
@@ -20,10 +23,13 @@ import { DynamicFormsExampleComponent } from './examples/dynamic-forms-example/d
     IbTableExampleComponent,
     NavComponent,
     DynamicFormsExampleComponent,
+    CustomMaterialFormComponent,
+    CustomMaterialFormControlComponent,
   ],
   imports: [
     CommonModule,
     InobetaUiModule,
+    CustomMaterialModule,
     RoutingModule,
     FormsModule,
     ReactiveFormsModule,

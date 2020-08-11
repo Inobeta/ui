@@ -12,7 +12,8 @@ import {
   MatSelectModule,
   MatSnackBarModule,
   MatSortModule,
-  MatFormFieldModule
+  MatFormFieldModule,
+  MatCardModule
 } from '@angular/material';
 import {MatRadioModule} from '@angular/material/radio';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -67,7 +68,8 @@ export class PaginatorTranslations extends MatPaginatorIntl {
     MatMenuModule,
     MatDialogModule,
     MatSnackBarModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatCardModule
   ],
   providers: [
     {provide: MatPaginatorIntl, useClass: forwardRef(() => PaginatorTranslations)}

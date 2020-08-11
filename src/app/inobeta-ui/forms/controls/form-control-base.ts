@@ -1,4 +1,4 @@
-export class FormBase<T> {
+export class FormControlBase<T> {
   value: T;
   key: string;
   label: string;

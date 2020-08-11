@@ -1,9 +1,9 @@
-<div [formGroup]="form" class="ibForm-control">
-  <label [attr.for]="base.key">{{base.label}}</label>
+<div [formGroup]="form">
+  <label [attr.for]="base.key" class="ibFormControl-label">{{base.label}}</label>
 
   <div [ngSwitch]="base.controlType">
 
-    <input *ngSwitchCase="'textbox'" [formControlName]="base.key"
+    <input [ngSwitch]="base.controlType" *ngSwitchCase="'textbox'" [formControlName]="base.key"
             [id]="base.key" [type]="base.type">
 
     <select [id]="base.key" *ngSwitchCase="'dropdown'" [formControlName]="base.key">
@@ -12,5 +12,5 @@
 
   </div>
 
-  <div class="ibForm-errorMessage" *ngIf="!isValid">{{base.label}} is required</div>
+  <div class="ibFormControl-errorMessage" *ngIf="isInvalid">{{base.label}} is required</div>
 </div>

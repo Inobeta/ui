@@ -1,13 +1,3 @@
-ib-dynamic-form.ibFormExample {
+ib-form.ibFormExample {
   font-family: sans-serif;
-}
-
-ib-dynamic-form.ibFormExample >>> .ibForm-row {
-  display: flex;
-  flex-direction: column;
-}
-
-ib-dynamic-form.ibFormExample >>> .ibForm-row >>> .ibForm-control {
-  display: flex;
-  flex-direction: column;
 }

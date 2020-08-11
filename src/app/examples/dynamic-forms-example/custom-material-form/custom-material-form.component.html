@@ -1,0 +1,8 @@
+<form (ngSubmit)="onSubmit()" [formGroup]="form" class="ibForm">
+
+  <ib-custom-material-form-control *ngFor="let field of fields" class="ibFormRow" [base]="field" [form]="form"></ib-custom-material-form-control>
+
+  <div class="ibFormRow ibFormActions">
+    <button mat-button color="primary" [disabled]="!form.valid">Save</button>
+  </div>
+</form>
