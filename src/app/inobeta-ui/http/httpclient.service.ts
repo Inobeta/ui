@@ -22,7 +22,7 @@ export class HttpClientService {
 
   constructor(
     protected h: HttpClient,
-    protected hMobile: HTTP,
+    protected hMobile: HTTP, // TODO: remove this dependency and bring it to optional
     private srvAuth: AuthService,
     private srvResponse: ResponseHandlerService,
     @Inject('HttpMode') @Optional() public HttpMode?: string) {
