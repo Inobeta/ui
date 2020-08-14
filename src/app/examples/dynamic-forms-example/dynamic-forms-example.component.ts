@@ -4,7 +4,6 @@ import { Textbox } from 'src/app/inobeta-ui/forms/controls/textbox';
 import { Validators } from '@angular/forms';
 import { Dropdown } from 'src/app/inobeta-ui/forms/controls/dropdown';
 import { Radio } from 'src/app/inobeta-ui/forms/controls/radio';
-import { CustomFormActionEvent } from './custom-material-form/custom-material-form.component';
 
 @Component({
   selector: 'app-dynamic-forms-example',
