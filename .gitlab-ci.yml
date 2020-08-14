@@ -28,10 +28,10 @@ deploy_unstable:
   [[ "$TRACE" ]] && set -x
 
   function create_temp_version() {
-      CURRENT_VERSION=$(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[\",]//g' | tr -d '[[:space:]]')
       sed -i "s/\"version\"\: \"$CURRENT_VERSION\"/\"version\": \"$CURRENT_VERSION-$CI_COMMIT_SHA\"/g" ./package.json
       echo $CURRENT_VERSION-$CI_COMMIT_SHA
   }
 
 before_script:
   - *inobeta_pkg
+  - CURRENT_VERSION=$(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[\",]//g' | tr -d '[[:space:]]')
