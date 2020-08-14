@@ -1,24 +1,22 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterModule, Routes} from '@angular/router';
-import {AppComponent} from './app.component';
-import {TabExampleComponent} from '../examples/ib-tabExample.component';
-import {MyCounterComponent} from '../examples/redux-example/my-counter.component';
+import { IbTableExampleComponent } from 'src/app/examples/table-example/ib-tableExample.component';
+import { HomeComponent } from 'src/app/examples/home.component';
 
 const appRoutes: Routes = [
   {
-    path: 'welcome',
-    component: AppComponent
+    path: '',
+    component: HomeComponent,
   },
-  { path: '',
-    redirectTo: 'welcome',
+  {
+    path: 'table',
+    component: IbTableExampleComponent
+  },
+  {
+    path: '**',
+    redirectTo: '',
     pathMatch: 'full'
-  },
-  { path: 'tabExample',
-    component: TabExampleComponent
-  },
-  { path: 'mycounter',
-    component: MyCounterComponent
   }
 ];
 

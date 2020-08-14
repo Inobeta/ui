@@ -1,0 +1,34 @@
+<ng-template #deleteTemplate let-item="item">
+  <span class="delete-button">
+      <i class="material-icons">search</i>
+  </span>
+</ng-template>
+
+<ng-template #headerClickTemplate let-ibTable="ibTable" let-col="col">
+  <table-header-popup
+    [ibTable]="ibTable"
+    [col]="col">
+  </table-header-popup>
+</ng-template>
+
+<ib-table
+  [customItemTemplate]="{ lot: lotTemplate }"
+  [selectableRows]="true"
+  (rowChecked)="prova2($event)"
+  [titles]="titles"
+  [items]="items"
+  [selectRowName]="'Ricevuto'"
+  [templateButtons]="[{
+    template: deleteTemplate,
+    columnName: 'Elimina'
+  }]"
+  [templateHeaders]="{
+    'lot': headerClickTemplate,
+    'sender': headerClickTemplate,
+    'date': headerClickTemplate,
+    'qt': headerClickTemplate
+  }" [actions]="['test']">
+  <ng-template #lotTemplate let-item="item">
+    <div style="font-weight: bold; color: red;">{{item.lot}}</div>
+  </ng-template>
+</ib-table>

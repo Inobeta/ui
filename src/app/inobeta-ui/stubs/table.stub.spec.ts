@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { TableTitles } from './titles.model';
-import { TemplateModel } from './template.model';
+import { TableTitles } from '../ui/table/titles.model';
+import { TemplateModel } from '../ui/table/template.model';
 
 @Component({
   selector: 'ib-table',
@@ -22,9 +22,6 @@ export class TableStubComponent {
   @Input() selectRowName = 'Seleziona';
   @Input() templateButtons: TemplateModel[] = [];
   @Input() templateHeaders: any = {};
-  @Input() tags: string[] = [];
-  @Input() reduced = false;
-  @Input() displayInfo = true;
   @Input() actions: string[] = [];
   @Output() filterChange: EventEmitter<any> = new EventEmitter<any>();
   @Output() filterReset: EventEmitter<any> = new EventEmitter<any>();
