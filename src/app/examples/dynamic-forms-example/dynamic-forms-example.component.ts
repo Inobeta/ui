@@ -4,6 +4,7 @@ import { Textbox } from 'src/app/inobeta-ui/forms/controls/textbox';
 import { Validators } from '@angular/forms';
 import { Dropdown } from 'src/app/inobeta-ui/forms/controls/dropdown';
 import { Radio } from 'src/app/inobeta-ui/forms/controls/radio';
+import { Checkbox } from 'src/app/inobeta-ui/forms/controls/checkbox';
 
 @Component({
   selector: 'app-dynamic-forms-example',
@@ -24,7 +25,11 @@ export class DynamicFormsExampleComponent implements OnInit {
       key: 'firstName',
       label: 'First name',
       required: true,
-      validators: [Validators.minLength(3)]
+      validators: [Validators.minLength(3)],
+      errors: [{
+        condition: (control) => control.hasError('required'),
+        message: 'Email richiesta'
+      }]
     }),
     new Textbox({
       type: 'email',
@@ -55,6 +60,10 @@ export class DynamicFormsExampleComponent implements OnInit {
         { key: 'test-2', value: 'Maccheroni' },
       ],
       required: true
+    }),
+    new Checkbox({
+      key: 'checked',
+      label: 'check this',
     })
   ];
   customFormActions = [

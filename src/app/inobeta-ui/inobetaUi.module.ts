@@ -94,7 +94,7 @@ export function createTranslateLoader(http: HttpClient) {
   declarations: [
     ...components,
     TableHeaderComponent,
-    TableRowsComponent
+    TableRowsComponent,
   ],
   imports: [
     ...imports,

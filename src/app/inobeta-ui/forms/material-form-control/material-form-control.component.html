@@ -9,10 +9,13 @@
         [id]="base.key"
         [type]="base.type"
         [placeholder]="base.label">
-      <mat-error *ngIf="hasError('required')">
+      <mat-error *ngFor="let error of base.errors">
+        <span *ngIf="error.condition(self)">{{error.message}}</span>
+      </mat-error>
+      <mat-error *ngIf="!base.errors.length && hasError('required')">
         {{base.label}} is <strong>required</strong>
       </mat-error>
-      <mat-error *ngIf="hasError('email') && !hasError('required')">
+      <mat-error *ngIf="!base.errors.length && (hasError('email') && !hasError('required'))">
         Please enter a valid email address
       </mat-error>
     </mat-form-field>
@@ -24,7 +27,10 @@
           {{opt.value}}
         </mat-option>
       </mat-select>
-      <mat-error *ngIf="hasError('required')">
+      <mat-error *ngFor="let error of base.errors">
+        <span *ngIf="error.condition(self)">{{error.message}}</span>
+      </mat-error>
+      <mat-error *ngIf="!base.errors.length && hasError('required')">
         {{base.label}} is <strong>required</strong>
       </mat-error>
     </mat-form-field>
@@ -36,7 +42,20 @@
           {{opt.value}}
         </mat-radio-button>
       </mat-radio-group>
-      <mat-error *ngIf="hasError('required')">
+      <mat-error *ngFor="let error of base.errors">
+        <span *ngIf="error.condition(self)">{{error.message}}</span>
+      </mat-error>
+      <mat-error *ngIf="!base.errors.length && hasError('required')">
+        {{base.label}} is <strong>required</strong>
+      </mat-error>
+    </div>
+
+    <div *ngSwitchCase="'checkbox'">
+      <mat-checkbox [formControlName]="base.key">{{base.label}}</mat-checkbox>
+      <mat-error *ngFor="let error of base.errors">
+        <span *ngIf="error.condition(self)">{{error.message}}</span>
+      </mat-error>
+      <mat-error *ngIf="!base.errors.length && hasError('required')">
         {{base.label}} is <strong>required</strong>
       </mat-error>
     </div>
