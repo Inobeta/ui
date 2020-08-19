@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CustomMaterialFormComponent } from './custom-material-form.component';
+import { MaterialFormComponent } from './material-form.component';
 
 describe('CustomMaterialFormComponent', () => {
-  let component: CustomMaterialFormComponent;
-  let fixture: ComponentFixture<CustomMaterialFormComponent>;
+  let component: MaterialFormComponent;
+  let fixture: ComponentFixture<MaterialFormComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CustomMaterialFormComponent ]
+      declarations: [ MaterialFormComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CustomMaterialFormComponent);
+    fixture = TestBed.createComponent(MaterialFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

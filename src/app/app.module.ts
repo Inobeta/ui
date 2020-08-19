@@ -13,8 +13,6 @@ import { IbTableExampleComponent } from 'src/app/examples/table-example/ib-table
 import { NavComponent } from './examples/nav/nav.component';
 import { DynamicFormsExampleComponent } from './examples/dynamic-forms-example/dynamic-forms-example.component';
 import { CustomMaterialModule } from './inobeta-ui/material.module';
-import { CustomMaterialFormComponent } from './examples/dynamic-forms-example/custom-material-form/custom-material-form.component';
-import { CustomMaterialFormControlComponent } from './examples/dynamic-forms-example/custom-material-form-control/custom-material-form-control.component';
 
 @NgModule({
   declarations: [
@@ -23,8 +21,6 @@ import { CustomMaterialFormControlComponent } from './examples/dynamic-forms-exa
     IbTableExampleComponent,
     NavComponent,
     DynamicFormsExampleComponent,
-    CustomMaterialFormComponent,
-    CustomMaterialFormControlComponent,
   ],
   imports: [
     CommonModule,

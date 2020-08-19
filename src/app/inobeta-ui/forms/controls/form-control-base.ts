@@ -7,6 +7,7 @@ export class FormControlBase<T> {
   controlType: string;
   type: string;
   validators: any[];
+  errors: any[];
   options: {key: string, value: string}[];
 
   constructor(options: {
@@ -18,6 +19,7 @@ export class FormControlBase<T> {
       controlType?: string;
       type?: string;
       validators?: any[];
+      errors?: any[];
       options?: {key: string, value: string}[];
     } = {}) {
     this.value = options.value;
@@ -28,6 +30,7 @@ export class FormControlBase<T> {
     this.controlType = options.controlType || '';
     this.type = options.type || '';
     this.validators = options.validators || [];
+    this.errors = options.errors || [];
     this.options = options.options || [];
   }
 }

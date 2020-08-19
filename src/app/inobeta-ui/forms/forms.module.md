@@ -1,25 +1,24 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControlBase } from 'src/app/inobeta-ui/forms/controls/form-control-base';
-import { Textbox } from 'src/app/inobeta-ui/forms/controls/textbox';
-import { Validators } from '@angular/forms';
-import { Dropdown } from 'src/app/inobeta-ui/forms/controls/dropdown';
-import { Radio } from 'src/app/inobeta-ui/forms/controls/radio';
-import { Checkbox } from 'src/app/inobeta-ui/forms/controls/checkbox';
+# Dynamic Form Module
 
+Modulo per generare forms.
+
+## Utilizzo
+
+Definire i campi del form attraverso un array di [FormControlBase](/classes/FormControlBase.html). Gli unici valori richiesti sono `key` e `label`, dove `key` viene assegnato come `formControlName`.
+
+`DynamicFormComponent` espongono un evento `ibSubmit` corrispondente a `ngSubmit`.
+
+Per un maggiore controllo sui forms, è possibile estendere le azioni possibili oltre al submit attraverso l'input [actions](/interfaces/FormAction.html).
+Ogni azione necessita di un campo `key`, `label`, e `handler` (callback) eccetto per il bottone relativo alla submit del form. Ricorda: **Deve esistere almeno un azione con `key: 'submit'`**
+
+```typescript
+// dynamic-forms-example.component.ts
 @Component({
   selector: 'app-dynamic-forms-example',
   templateUrl: './dynamic-forms-example.component.html',
   styleUrls: ['./dynamic-forms-example.component.css']
 })
 export class DynamicFormsExampleComponent implements OnInit {
-  defaultFormFields: FormControlBase<string>[] = [
-    new Textbox({
-      key: 'defaultTextbox',
-      label: 'First name',
-      required: true,
-    })
-  ];
-
   customFormFields: FormControlBase<string>[] = [
     new Textbox({
       key: 'firstName',
@@ -76,22 +75,6 @@ export class DynamicFormsExampleComponent implements OnInit {
     }
   ];
 
-  loginFormFields = [
-    new Textbox({
-      key: 'username',
-      label: 'Username',
-      required: true,
-      validators: [Validators.minLength(3)]
-    }),
-    new Textbox({
-      key: 'password',
-      label: 'Password',
-      type: 'password',
-      required: true,
-      validators: [Validators.minLength(8)]
-    })
-  ];
-
   constructor() {}
 
   ngOnInit() {}
@@ -100,3 +83,12 @@ export class DynamicFormsExampleComponent implements OnInit {
     console.log('example', payload)
   }
 }
+```
+
+```html
+<!-- dynamic-forms-example.component.html -->
+<ib-material-form
+  [fields]="customFormFields"
+  [actions]="customFormActions"
+  (ibSubmit)="onSubmit($event)"></ib-material-form>
+```

@@ -15,9 +15,11 @@ export class DynamicFormControlComponent {
 
   constructor() { }
 
-  get isValid() { return this.form.get(this.base.key).valid; }
+  get self() { return this.form.get(this.base.key); }
 
-  get isInvalid() { return this.form.get(this.base.key).invalid; }
+  get isValid() { return this.self.valid; }
 
-  hasError(e) { return this.form.get(this.base.key).hasError(e); }
+  get isInvalid() { return this.self.invalid; }
+
+  hasError(e) { return this.self.hasError(e); }
 }
