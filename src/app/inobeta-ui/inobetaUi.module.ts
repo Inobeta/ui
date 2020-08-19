@@ -33,6 +33,7 @@ import {TableHeaderPopupComponent} from './ui/table/components/tableHeaderPopup.
 import { CustomMaterialModule } from './material.module';
 import { TableHeaderComponent } from './ui/table/components/table-header/table-header.component';
 import { TableRowsComponent } from './ui/table/components/table-rows/table-rows.component';
+import { DynamicFormsModule } from './forms/forms.module';
 
 registerLocaleData(localeIt, 'it');
 
@@ -93,10 +94,11 @@ export function createTranslateLoader(http: HttpClient) {
   declarations: [
     ...components,
     TableHeaderComponent,
-    TableRowsComponent
+    TableRowsComponent,
   ],
   imports: [
-    ...imports
+    ...imports,
+    DynamicFormsModule
   ],
   exports: [
     ...components,
@@ -104,7 +106,8 @@ export function createTranslateLoader(http: HttpClient) {
     TableRowsComponent,
     TranslateModule,
     FlexLayoutModule,
-    RouterModule
+    RouterModule,
+    DynamicFormsModule
   ],
   providers: [
     ...services

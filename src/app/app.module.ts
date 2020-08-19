@@ -11,17 +11,21 @@ import { environment } from '../environments/environment';
 import { HomeComponent } from 'src/app/examples/home.component';
 import { IbTableExampleComponent } from 'src/app/examples/table-example/ib-tableExample.component';
 import { NavComponent } from './examples/nav/nav.component';
+import { DynamicFormsExampleComponent } from './examples/dynamic-forms-example/dynamic-forms-example.component';
+import { CustomMaterialModule } from './inobeta-ui/material.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     IbTableExampleComponent,
-    NavComponent
+    NavComponent,
+    DynamicFormsExampleComponent,
   ],
   imports: [
     CommonModule,
     InobetaUiModule,
+    CustomMaterialModule,
     RoutingModule,
     FormsModule,
     ReactiveFormsModule,
