@@ -4,6 +4,9 @@ import { TableCellAligns, TableTitles, TableTitlesTypes } from './titles.model';
 import { TemplateModel } from './template.model';
 import { Store } from '@ngrx/store';
 import * as TableFiltersActions from './redux/table.action';
+import Papa from 'papaparse';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 @Component({
   selector: 'ib-table',
@@ -17,7 +20,7 @@ import * as TableFiltersActions from './redux/table.action';
         </ib-table-search>
         <div fxFlex fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="20px">
           <ib-table-export-csv
-            (exportCsv)="csvExport()"
+            (exportCsv)="export($event)"
             [hasCsvExport]="hasCsvExport">
           </ib-table-export-csv>
           <ib-table-menu-actions
@@ -309,25 +312,84 @@ export class TableComponent implements OnChanges {
     this.sortedData = paginatedData;
   }
 
-  csvExport() {
-    const headerMap = this.titles.map((el) => el.key);
-    const options = {
-      fieldSeparator: ',',
-      quoteStrings: '"',
-      decimalseparator: '.',
-      showLabels: true,
-      showTitle: false,
-      useBom: true,
-      headers: headerMap
-    };
+  export({ format, dataset }) {
+    const previousPagination = this.currentPagination;
+    if (dataset === 'all') {
+      const pagination = {
+        tableName: this.tableName,
+        previousPageIndex: 0,
+        pageIndex: 0,
+        pageSize: this.items.length,
+        lengthP: this.items.length
+      };
+      this.store.dispatch(TableFiltersActions.addPaginatorFiltersToTable(pagination));
+      this.currentPagination = pagination;
+      this.sortData(this.currentSort, false);
+    }
 
-    /*new Angular2Csv(this.sortedData.map((el) => {
-      const retEl = {}
-      headerMap.map((h) => {
-        retEl[h] = (el[h] !== undefined) ? el[h] : ''
-      })
-      return retEl
-    }), 'Export Data', options);*/
+    const keys = this.titles.map(h => h.key);
+    const headerNameFromKey = (key) =>
+      this.titles.find(h => h.key === key).value;
+    const getValueFromKey = (line, key) => {
+      const value = line[key];
+      const h = this.titles.find(t => t.key === key);
+      if (h.type === TableTitlesTypes.MATERIAL_SELECT) {
+        return h.materialSelectItems.find(item => item.value === value).label;
+      }
+      return value;
+    };
+    const filteredData = this.sortedData
+      .map(
+        line => Object.keys(line)
+          .filter(key => keys.includes(key))
+          .reduce((o, key) => ({
+            ...o,
+            [headerNameFromKey(key)]: getValueFromKey(line, key)
+          }), {})
+    );
+
+    if (format === 'csv') {
+      this.csvExport(filteredData);
+    }
+
+    if (format === 'pdf') {
+      this.pdfExport(filteredData);
+    }
+
+    if (dataset === 'all') {
+      this.currentPagination = previousPagination;
+      this.sortData(this.currentSort, false);
+    }
+  }
+
+  pdfExport(filteredData) {
+    const headers = Object.keys(filteredData[0]);
+    const data = filteredData.map(d => Object.values(d));
+    const doc = new jsPDF();
+    autoTable(doc, {
+      head: [headers],
+      body: data,
+    });
+    doc.save(this.tableName + '.pdf');
+  }
+
+  csvExport(filteredData) {
+    const csv = Papa.unparse(filteredData);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    if (navigator.msSaveBlob) { // IE 10+
+      navigator.msSaveBlob(blob, this.tableName + '.csv');
+    } else {
+      const link = document.createElement('a');
+      if (link.download !== undefined) {
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', this.tableName + '.csv');
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    }
   }
 
   actionButtonClick(a) {

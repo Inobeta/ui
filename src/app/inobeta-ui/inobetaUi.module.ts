@@ -24,7 +24,7 @@ import {StoreModule} from '@ngrx/store';
 import * as fromSession from '../../app/inobeta-ui/auth/redux/session.reducer';
 import * as fromTableFilters from '../../app/inobeta-ui/ui/table/redux/table.reducer';
 import {TableSeachComponent} from './ui/table/components/table-seach.component';
-import {TableExportCsvComponent} from './ui/table/components/table-export-csv.component';
+import {TableExportCsvComponent, TableExportDialogComponent} from './ui/table/components/table-export-csv.component';
 import {TableMenuActionsComponent} from './ui/table/components/table-menu-actions.component';
 import {TableAddComponent} from './ui/table/components/table-add.component';
 import {TableFilterResetComponent} from './ui/table/components/table-filter-reset.component';
@@ -95,6 +95,7 @@ export function createTranslateLoader(http: HttpClient) {
     ...components,
     TableHeaderComponent,
     TableRowsComponent,
+    TableExportDialogComponent
   ],
   imports: [
     ...imports,
@@ -113,7 +114,8 @@ export function createTranslateLoader(http: HttpClient) {
     ...services
   ],
   entryComponents: [
-    ModalMessageComponent
+    ModalMessageComponent,
+    TableExportDialogComponent
   ]
 })
 export class InobetaUiModule {}
