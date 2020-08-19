@@ -25,7 +25,7 @@ export class IbTableExampleComponent implements OnInit {
     },
     {
       key: 'date',
-      value: 'Scadenza',
+      value: 'receiptGoods.historyGoods.table.date',
       type: TableTitlesTypes.STRING,
       filterable: true,
       width: '10%'
@@ -386,6 +386,11 @@ export class IbTableExampleComponent implements OnInit {
       qt: 7
     }
   ];
+
+  pdfCustomStyles = {
+    headStyles: { fillColor: [232, 202, 232] },
+    columnStyles: { sender: { halign: 'center' }},
+  };
 
   constructor() { }
 
