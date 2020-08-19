@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { DynamicFormComponent } from 'src/app/inobeta-ui/forms/dynamic-form/dynamic-form.component';
-import { FormControlService } from 'src/app/inobeta-ui/forms/form-control.service';
+import { DynamicFormComponent } from '../dynamic-form/dynamic-form.component';
+import { FormControlService } from '../form-control.service';
 
 /**
  * Crea un form dinamico usando componenti di Angular Material.
