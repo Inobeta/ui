@@ -28,13 +28,21 @@ pages:
   stage: deploy
   script:
     - npx @compodoc/compodoc -p tsconfig.app.json
+    - dir="$CURRENT_VERSION"
+    - if [ "$CI_COMMIT_REF_SLUG" == "$CI_DEFAULT_BRANCH" ]; then dir="master"; fi;
     - mkdir -p public
-    - mkdir -p public/$CURRENT_VERSION/
-    - mv documentation public/$CURRENT_VERSION/
+    - mkdir -p public/$dir/
+    - mv documentation public/$dir/
   artifacts:
     name: "$CURRENT_VERSION"
     paths:
       - public
+  cache:
+    paths:
+    - public
+  only:
+    - master
+    - canary
 .inobeta_pkg: &inobeta_pkg |
   [[ "$TRACE" ]] && set -x
 
