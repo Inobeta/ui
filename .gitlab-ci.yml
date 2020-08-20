@@ -30,7 +30,7 @@ pages:
     - npx @compodoc/compodoc -p tsconfig.app.json
     - mkdir -p public
     - mkdir -p public/$CURRENT_VERSION/
-    - mv documentation public/$CURRENT_VERSION/ -R
+    - mv documentation public/$CURRENT_VERSION/
   artifacts:
     name: "$CURRENT_VERSION"
     paths:
