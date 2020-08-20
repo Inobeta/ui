@@ -1,14 +1,7 @@
 image: node:10.11.0
 
-# Cache modules in between jobs
-cache:
-  key: ${CI_COMMIT_REF_SLUG}
-  paths:
-    - node_modules/
-
 stages:
   - deploy
-  - documentation
 
 deploy:
   stage: deploy
@@ -32,9 +25,8 @@ deploy_unstable:
   except:
     - master
 pages:
-  stage: documentation
   script:
-    - npm run compodoc
+    - npx @compodoc/compodoc -p tsconfig.app.json
     - mkdir -p public
     - mkdir -p public/$CURRENT_VERSION/
     - mv documentation public/$CURRENT_VERSION/ -R
