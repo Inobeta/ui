@@ -4,6 +4,10 @@ import { TableCellAligns, TableTitles, TableTitlesTypes } from './titles.model';
 import { TemplateModel } from './template.model';
 import { Store } from '@ngrx/store';
 import * as TableFiltersActions from './redux/table.action';
+import Papa from 'papaparse';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'ib-table',
@@ -17,7 +21,7 @@ import * as TableFiltersActions from './redux/table.action';
         </ib-table-search>
         <div fxFlex fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="20px">
           <ib-table-export-csv
-            (exportCsv)="csvExport()"
+            (exportCsv)="export($event)"
             [hasCsvExport]="hasCsvExport">
           </ib-table-export-csv>
           <ib-table-menu-actions
@@ -117,6 +121,7 @@ export class TableComponent implements OnChanges {
   @Input() templateHeaders: any = {};
   /** { columnName: TemplateRef } */
   @Input() tableName = 'default_table_name';
+  @Input() pdfCustomStyles = {};
 
   // input non necessari
   @Input() actions: string[] = [];
@@ -142,7 +147,7 @@ export class TableComponent implements OnChanges {
   columnFilter = {};
   numOfElements = 0;
 
-  constructor(private store: Store<any>) { }
+  constructor(private store: Store<any>, private translate: TranslateService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
 
@@ -309,25 +314,93 @@ export class TableComponent implements OnChanges {
     this.sortedData = paginatedData;
   }
 
-  csvExport() {
-    const headerMap = this.titles.map((el) => el.key);
-    const options = {
-      fieldSeparator: ',',
-      quoteStrings: '"',
-      decimalseparator: '.',
-      showLabels: true,
-      showTitle: false,
-      useBom: true,
-      headers: headerMap
-    };
+  async export({ format, dataset }) {
+    const previousPagination = this.currentPagination;
+    if (dataset === 'all') {
+      const pagination = {
+        tableName: this.tableName,
+        previousPageIndex: 0,
+        pageIndex: 0,
+        pageSize: this.items.length,
+        lengthP: this.items.length
+      };
+      this.store.dispatch(TableFiltersActions.addPaginatorFiltersToTable(pagination));
+      this.currentPagination = pagination;
+      this.sortData(this.currentSort, false);
+    }
 
-    /*new Angular2Csv(this.sortedData.map((el) => {
-      const retEl = {}
-      headerMap.map((h) => {
-        retEl[h] = (el[h] !== undefined) ? el[h] : ''
-      })
-      return retEl
-    }), 'Export Data', options);*/
+    const keys = this.titles.map(h => h.key);
+    const getValueFromKey = (row, key) => {
+      const value = row[key];
+      const h = this.titles.find(t => t.key === key);
+      if (h.type === TableTitlesTypes.MATERIAL_SELECT) {
+        return h.materialSelectItems.find(item => item.value === value).label;
+      }
+      return value;
+    };
+    const filteredData = this.sortedData
+      .map(
+        row => Object.keys(row)
+          .filter(key => keys.includes(key))
+          .reduce((o, key) => ({
+            ...o,
+            [key]: getValueFromKey(row, key)
+          }), {})
+    );
+
+    const translatedHeaders = await Promise.all(this.titles.map(async t => ({
+      value: await this.translate.get(t.value).toPromise(),
+      key: t.key,
+    })));
+
+    if (format === 'csv') {
+      this.csvExport(filteredData, translatedHeaders);
+    }
+
+    if (format === 'pdf') {
+      this.pdfExport(filteredData, translatedHeaders);
+    }
+
+    if (dataset === 'all') {
+      this.currentPagination = previousPagination;
+      this.sortData(this.currentSort, false);
+    }
+  }
+
+  pdfExport(body, titles) {
+    const columns = titles.map(t => ({ header: t.value, dataKey: t.key }));
+    const doc = new jsPDF();
+    autoTable(doc, {
+      ...this.pdfCustomStyles,
+      body,
+      columns,
+    });
+    doc.save(this.tableName + '.pdf');
+  }
+
+  csvExport(filteredData, titles) {
+    const nameFromKey = (key) =>
+      titles.find(t => t.key === key).value;
+    const data = filteredData.map(row => Object.keys(row).reduce((o, key) => ({ ...o, [nameFromKey(key)]: row[key] }), {}));
+    const csv = Papa.unparse(data, {
+      quotes: true,
+      delimiter: ';',
+    });
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    if (navigator.msSaveBlob) { // IE 10+
+      navigator.msSaveBlob(blob, this.tableName + '.csv');
+    } else {
+      const link = document.createElement('a');
+      if (link.download !== undefined) {
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', this.tableName + '.csv');
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    }
   }
 
   actionButtonClick(a) {

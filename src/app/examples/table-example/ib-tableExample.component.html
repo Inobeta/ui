@@ -12,6 +12,8 @@
 </ng-template>
 
 <ib-table
+  [pdfCustomStyles]="pdfCustomStyles"
+  [hasCsvExport]="true"
   [customItemTemplate]="{ lot: lotTemplate }"
   [selectableRows]="true"
   (rowChecked)="prova2($event)"
