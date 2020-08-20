@@ -4,10 +4,10 @@ image: node:10.11.0
 cache:
   key: ${CI_COMMIT_REF_SLUG}
   paths:
-    - .npm/
+    - node_modules/
 
 stages:
-  - deploy
+  # - deploy
   - documentation
 
 deploy:
@@ -34,6 +34,7 @@ deploy_unstable:
 pages:
   stage: documentation
   script:
+    - npm install
     - npm run compodoc
     - mkdir -p public/$CURRENT_VERSION/
     - cp public public/$CURRENT_VERSION/ -R
