@@ -27,6 +27,7 @@ deploy_unstable:
 pages:
   stage: deploy
   script:
+    - npm i
     - npm run compodoc
   artifacts:
     paths:
