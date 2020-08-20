@@ -25,6 +25,7 @@ deploy_unstable:
   except:
     - master
 pages:
+  stage: deploy
   script:
     - npx @compodoc/compodoc -p tsconfig.app.json
     - mkdir -p public
