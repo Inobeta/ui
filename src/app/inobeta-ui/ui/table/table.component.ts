@@ -7,6 +7,7 @@ import * as TableFiltersActions from './redux/table.action';
 import Papa from 'papaparse';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'ib-table',
@@ -120,6 +121,7 @@ export class TableComponent implements OnChanges {
   @Input() templateHeaders: any = {};
   /** { columnName: TemplateRef } */
   @Input() tableName = 'default_table_name';
+  @Input() pdfCustomStyles = {};
 
   // input non necessari
   @Input() actions: string[] = [];
@@ -145,7 +147,7 @@ export class TableComponent implements OnChanges {
   columnFilter = {};
   numOfElements = 0;
 
-  constructor(private store: Store<any>) { }
+  constructor(private store: Store<any>, private translate: TranslateService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
 
@@ -312,7 +314,7 @@ export class TableComponent implements OnChanges {
     this.sortedData = paginatedData;
   }
 
-  export({ format, dataset }) {
+  async export({ format, dataset }) {
     const previousPagination = this.currentPagination;
     if (dataset === 'all') {
       const pagination = {
@@ -328,10 +330,8 @@ export class TableComponent implements OnChanges {
     }
 
     const keys = this.titles.map(h => h.key);
-    const headerNameFromKey = (key) =>
-      this.titles.find(h => h.key === key).value;
-    const getValueFromKey = (line, key) => {
-      const value = line[key];
+    const getValueFromKey = (row, key) => {
+      const value = row[key];
       const h = this.titles.find(t => t.key === key);
       if (h.type === TableTitlesTypes.MATERIAL_SELECT) {
         return h.materialSelectItems.find(item => item.value === value).label;
@@ -340,20 +340,25 @@ export class TableComponent implements OnChanges {
     };
     const filteredData = this.sortedData
       .map(
-        line => Object.keys(line)
+        row => Object.keys(row)
           .filter(key => keys.includes(key))
           .reduce((o, key) => ({
             ...o,
-            [headerNameFromKey(key)]: getValueFromKey(line, key)
+            [key]: getValueFromKey(row, key)
           }), {})
     );
 
+    const translatedHeaders = await Promise.all(this.titles.map(async t => ({
+      value: await this.translate.get(t.value).toPromise(),
+      key: t.key,
+    })));
+
     if (format === 'csv') {
-      this.csvExport(filteredData);
+      this.csvExport(filteredData, translatedHeaders);
     }
 
     if (format === 'pdf') {
-      this.pdfExport(filteredData);
+      this.pdfExport(filteredData, translatedHeaders);
     }
 
     if (dataset === 'all') {
@@ -362,19 +367,25 @@ export class TableComponent implements OnChanges {
     }
   }
 
-  pdfExport(filteredData) {
-    const headers = Object.keys(filteredData[0]);
-    const data = filteredData.map(d => Object.values(d));
+  pdfExport(body, titles) {
+    const columns = titles.map(t => ({ header: t.value, dataKey: t.key }));
     const doc = new jsPDF();
     autoTable(doc, {
-      head: [headers],
-      body: data,
+      ...this.pdfCustomStyles,
+      body,
+      columns,
     });
     doc.save(this.tableName + '.pdf');
   }
 
-  csvExport(filteredData) {
-    const csv = Papa.unparse(filteredData);
+  csvExport(filteredData, titles) {
+    const nameFromKey = (key) =>
+      titles.find(t => t.key === key).value;
+    const data = filteredData.map(row => Object.keys(row).reduce((o, key) => ({ ...o, [nameFromKey(key)]: row[key] }), {}));
+    const csv = Papa.unparse(data, {
+      quotes: true,
+      delimiter: ';',
+    });
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     if (navigator.msSaveBlob) { // IE 10+
       navigator.msSaveBlob(blob, this.tableName + '.csv');

@@ -32,5 +32,12 @@
         "min6max32": "La password deve essere compresa tra 6 e 32 caratteri!"
       }
     }
+  },
+  "receiptGoods": {
+    "historyGoods": {
+      "table": {
+        "date": "Scadenza"
+      }
+    }
   }
 }
