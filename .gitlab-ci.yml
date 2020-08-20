@@ -35,8 +35,9 @@ pages:
   stage: documentation
   script:
     - npm run compodoc
+    - mkdir -p public
     - mkdir -p public/$CURRENT_VERSION/
-    - cp public public/$CURRENT_VERSION/ -R
+    - mv documentation public/$CURRENT_VERSION/ -R
   artifacts:
     name: "$CURRENT_VERSION"
     paths:
