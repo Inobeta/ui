@@ -1,3 +1,5 @@
+import { FormControl, ValidatorFn } from '@angular/forms';
+
 export class FormControlBase<T> {
   value: T;
   key: string;
@@ -6,8 +8,8 @@ export class FormControlBase<T> {
   order: number;
   controlType: string;
   type: string;
-  validators: any[];
-  errors: any[];
+  validators: ValidatorFn[];
+  errors: {message: string, condition: (c: FormControl) => void}[];
   options: {key: string, value: string}[];
 
   constructor(options: {
@@ -18,8 +20,8 @@ export class FormControlBase<T> {
       order?: number;
       controlType?: string;
       type?: string;
-      validators?: any[];
-      errors?: any[];
+      validators?: ValidatorFn[];
+      errors?: {message: string, condition: (c: FormControl) => void}[];
       options?: {key: string, value: string}[];
     } = {}) {
     this.value = options.value;

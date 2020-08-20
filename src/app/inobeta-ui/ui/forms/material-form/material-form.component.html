@@ -9,6 +9,6 @@
       [disabled]="(action.key === 'submit' || action.options?.requireValidation) && !form.valid"
       mat-button
       [color]="action.options?.color || 'primary'"
-      *ngFor="let action of actions">{{action.label}}</button>
+      *ngFor="let action of actions">{{action.label | translate}}</button>
   </div>
 </form>

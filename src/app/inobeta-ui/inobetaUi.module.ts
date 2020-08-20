@@ -34,6 +34,8 @@ import { CustomMaterialModule } from './material.module';
 import { TableHeaderComponent } from './ui/table/components/table-header/table-header.component';
 import { TableRowsComponent } from './ui/table/components/table-rows/table-rows.component';
 import { DynamicFormsModule } from './forms/forms.module';
+import { MaterialFormControlComponent } from './ui/forms/material-form-control/material-form-control.component';
+import { MaterialFormComponent } from './ui/forms/material-form/material-form.component';
 
 registerLocaleData(localeIt, 'it');
 
@@ -95,6 +97,8 @@ export function createTranslateLoader(http: HttpClient) {
     ...components,
     TableHeaderComponent,
     TableRowsComponent,
+    MaterialFormComponent,
+    MaterialFormControlComponent,
     TableExportDialogComponent
   ],
   imports: [
@@ -108,7 +112,9 @@ export function createTranslateLoader(http: HttpClient) {
     TranslateModule,
     FlexLayoutModule,
     RouterModule,
-    DynamicFormsModule
+    DynamicFormsModule,
+    MaterialFormComponent,
+    MaterialFormControlComponent
   ],
   providers: [
     ...services

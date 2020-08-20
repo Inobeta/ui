@@ -2,18 +2,17 @@
   <div [ngSwitch]="base.controlType">
 
     <mat-form-field appearance="fill" *ngSwitchCase="'textbox'">
-      <mat-label>{{base.label}}</mat-label>
+      <mat-label>{{base.label | translate}}</mat-label>
       <input
         matInput
         [formControlName]="base.key"
         [id]="base.key"
-        [type]="base.type"
-        [placeholder]="base.label">
+        [type]="base.type">
       <mat-error *ngFor="let error of base.errors">
-        <span *ngIf="error.condition(self)">{{error.message}}</span>
+        <span *ngIf="error.condition(self)">{{error.message | translate}}</span>
       </mat-error>
       <mat-error *ngIf="!base.errors.length && hasError('required')">
-        {{base.label}} is <strong>required</strong>
+        {{base.label | translate}} is <strong>required</strong>
       </mat-error>
       <mat-error *ngIf="!base.errors.length && (hasError('email') && !hasError('required'))">
         Please enter a valid email address
@@ -21,42 +20,42 @@
     </mat-form-field>
     
     <mat-form-field appearance="fill" *ngSwitchCase="'dropdown'">
-      <mat-label>{{base.label}}</mat-label>
+      <mat-label>{{base.label | translate}}</mat-label>
       <mat-select [formControlName]="base.key" name="food">
         <mat-option *ngFor="let opt of base.options" [value]="opt.key">
-          {{opt.value}}
+          {{opt.value | translate}}
         </mat-option>
       </mat-select>
       <mat-error *ngFor="let error of base.errors">
-        <span *ngIf="error.condition(self)">{{error.message}}</span>
+        <span *ngIf="error.condition(self)">{{error.message | translate}}</span>
       </mat-error>
       <mat-error *ngIf="!base.errors.length && hasError('required')">
-        {{base.label}} is <strong>required</strong>
+        {{base.label | translate}} is <strong>required</strong>
       </mat-error>
     </mat-form-field>
 
     <div *ngSwitchCase="'radio'">
-      <label [attr.for]="base.key" style="display: block">{{base.label}}</label>
+      <label [attr.for]="base.key" style="display: block">{{base.label | translate}}</label>
       <mat-radio-group [formControlName]="base.key">
         <mat-radio-button style="margin: 5px" *ngFor="let opt of base.options" [value]="opt.key">
-          {{opt.value}}
+          {{opt.value | translate}}
         </mat-radio-button>
       </mat-radio-group>
       <mat-error *ngFor="let error of base.errors">
-        <span *ngIf="error.condition(self)">{{error.message}}</span>
+        <span *ngIf="error.condition(self)">{{error.message | translate}}</span>
       </mat-error>
       <mat-error *ngIf="!base.errors.length && hasError('required')">
-        {{base.label}} is <strong>required</strong>
+        {{base.label | translate}} is <strong>required</strong>
       </mat-error>
     </div>
 
     <div *ngSwitchCase="'checkbox'">
-      <mat-checkbox [formControlName]="base.key">{{base.label}}</mat-checkbox>
+      <mat-checkbox [formControlName]="base.key">{{base.label | translate}}</mat-checkbox>
       <mat-error *ngFor="let error of base.errors">
-        <span *ngIf="error.condition(self)">{{error.message}}</span>
+        <span *ngIf="error.condition(self)">{{error.message | translate}}</span>
       </mat-error>
       <mat-error *ngIf="!base.errors.length && hasError('required')">
-        {{base.label}} is <strong>required</strong>
+        {{base.label | translate}} is <strong>required</strong>
       </mat-error>
     </div>
 

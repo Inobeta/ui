@@ -27,7 +27,7 @@ export class DynamicFormsExampleComponent implements OnInit {
       required: true,
       validators: [Validators.minLength(3)],
       errors: [{
-        condition: (control) => control.hasError('required'),
+        condition: (c) => c.hasError('required'),
         message: 'Email richiesta'
       }]
     }),
@@ -85,7 +85,7 @@ export class DynamicFormsExampleComponent implements OnInit {
     }),
     new Textbox({
       key: 'password',
-      label: 'Password',
+      label: 'shared.login.password',
       type: 'password',
       required: true,
       validators: [Validators.minLength(8)]

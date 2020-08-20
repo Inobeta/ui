@@ -13,13 +13,7 @@ export class DynamicFormControlComponent {
   @Input() base: FormControlBase<string>;
   @Input() form: FormGroup;
 
-  constructor() { }
-
   get self() { return this.form.get(this.base.key); }
-
-  get isValid() { return this.self.valid; }
-
-  get isInvalid() { return this.self.invalid; }
 
   hasError(e) { return this.self.hasError(e); }
 }
