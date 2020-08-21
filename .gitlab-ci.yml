@@ -27,7 +27,7 @@ deploy_unstable:
 pages:
   stage: deploy
   script:
-    - npx @compodoc/compodoc -p tsconfig.app.json
+    - npx @compodoc/compodoc -p tsconfig.app.json --disableCoverage --disableDomTree --disableGraph --hideGenerator
     - dir="$CURRENT_VERSION"
     - if [ "$CI_COMMIT_REF_SLUG" == "$CI_DEFAULT_BRANCH" ]; then dir="current"; fi;
     - mkdir -p public
