@@ -29,12 +29,12 @@ pages:
   script:
     - npx @compodoc/compodoc -p tsconfig.app.json
     - dir="$CURRENT_VERSION"
-    - if [ "$CI_COMMIT_REF_SLUG" == "$CI_DEFAULT_BRANCH" ]; then dir="master"; fi;
+    - if [ "$CI_COMMIT_REF_SLUG" == "$CI_DEFAULT_BRANCH" ]; then dir="current"; fi;
     - mkdir -p public
     - mkdir -p public/$dir/
     - mv documentation public/$dir/
   artifacts:
-    name: "$CURRENT_VERSION"
+    name: "$CI_COMMIT_REF_SLUG-$CURRENT_VERSION"
     paths:
       - public
   cache:
