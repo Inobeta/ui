@@ -1,17 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { FormControlBase } from 'src/app/inobeta-ui/forms/controls/form-control-base';
 import { Textbox } from 'src/app/inobeta-ui/forms/controls/textbox';
 import { Validators } from '@angular/forms';
 import { Dropdown } from 'src/app/inobeta-ui/forms/controls/dropdown';
 import { Radio } from 'src/app/inobeta-ui/forms/controls/radio';
 import { Checkbox } from 'src/app/inobeta-ui/forms/controls/checkbox';
+import { MaterialFormComponent } from 'src/app/inobeta-ui/ui/forms/material-form/material-form.component';
 
 @Component({
   selector: 'app-dynamic-forms-example',
   templateUrl: './dynamic-forms-example.component.html',
   styleUrls: ['./dynamic-forms-example.component.css']
 })
-export class DynamicFormsExampleComponent implements OnInit {
+export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
   defaultFormFields: FormControlBase<string>[] = [
     new Textbox({
       key: 'defaultTextbox',
@@ -92,11 +93,34 @@ export class DynamicFormsExampleComponent implements OnInit {
     })
   ];
 
+  noFormFields = [
+    new Textbox({
+      key: 'old',
+      label: 'Old Textbox',
+    })
+  ];
+
+  @ViewChild('customForm', {static: false}) customForm: MaterialFormComponent;
+
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
+
+  ngAfterViewInit(): void {
+    console.log('customForm', this.customForm.form.getRawValue());
+    setTimeout(() => {
+      this.noFormFields = [
+        ...this.noFormFields,
+        new Textbox({
+          key: 'new',
+          label: 'New Textbox',
+        })
+      ];
+    }, 3000);
+  }
 
   onSubmit(payload) {
-    console.log('example', payload)
+    console.log('example', payload);
   }
 }
