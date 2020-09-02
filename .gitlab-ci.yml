@@ -32,6 +32,7 @@ pages:
     - if [ "$CI_COMMIT_REF_SLUG" == "$CI_DEFAULT_BRANCH" ]; then dir="current"; fi;
     - mkdir -p public
     - mkdir -p public/$dir/
+    - rm -rf public/$dir/documentation
     - mv documentation public/$dir/
   artifacts:
     name: "$CI_COMMIT_REF_SLUG-$CURRENT_VERSION"
