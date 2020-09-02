@@ -7,6 +7,7 @@ import * as TableFiltersActions from './redux/table.action';
 import Papa from 'papaparse';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import * as XLSX from 'xlsx';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -361,6 +362,10 @@ export class TableComponent implements OnChanges {
       this.pdfExport(filteredData, translatedHeaders);
     }
 
+    if (format === 'xlsx') {
+      this.xlsxExport(filteredData, translatedHeaders);
+    }
+
     if (dataset === 'all') {
       this.currentPagination = previousPagination;
       this.sortData(this.currentSort, false);
@@ -376,6 +381,15 @@ export class TableComponent implements OnChanges {
       columns,
     });
     doc.save(this.tableName + '.pdf');
+  }
+
+  xlsxExport(filteredData, titles) {
+    const header = titles.reduce((o, t) => ({ ...o, [t.key]: t.value }), {});
+    const data = [header, ...filteredData];
+    const ws = XLSX.utils.json_to_sheet(data, { skipHeader: true });
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, this.tableName);
+    XLSX.writeFile(wb, this.tableName + '.xlsx');
   }
 
   csvExport(filteredData, titles) {

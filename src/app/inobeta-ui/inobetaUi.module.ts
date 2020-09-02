@@ -36,6 +36,8 @@ import { TableRowsComponent } from './ui/table/components/table-rows/table-rows.
 import { DynamicFormsModule } from './forms/forms.module';
 import { MaterialFormControlComponent } from './ui/forms/material-form-control/material-form-control.component';
 import { MaterialFormComponent } from './ui/forms/material-form/material-form.component';
+import { BreadcrumbModule } from './ui/breadcrumb/breadcrumb.module';
+import { MaterialBreadcrumbComponent } from './ui/breadcrumb/material-breadcrumb/material-breadcrumb.component';
 
 registerLocaleData(localeIt, 'it');
 
@@ -70,6 +72,7 @@ export const services = [
 
 export const imports = [
   CommonModule,
+  RouterModule,
   HttpClientModule,
   CustomMaterialModule,
   FlexLayoutModule,
@@ -99,11 +102,13 @@ export function createTranslateLoader(http: HttpClient) {
     TableRowsComponent,
     MaterialFormComponent,
     MaterialFormControlComponent,
-    TableExportDialogComponent
+    TableExportDialogComponent,
+    MaterialBreadcrumbComponent
   ],
   imports: [
     ...imports,
-    DynamicFormsModule
+    DynamicFormsModule,
+    BreadcrumbModule
   ],
   exports: [
     ...components,
@@ -114,7 +119,9 @@ export function createTranslateLoader(http: HttpClient) {
     RouterModule,
     DynamicFormsModule,
     MaterialFormComponent,
-    MaterialFormControlComponent
+    MaterialFormControlComponent,
+    BreadcrumbModule,
+    MaterialBreadcrumbComponent,
   ],
   providers: [
     ...services

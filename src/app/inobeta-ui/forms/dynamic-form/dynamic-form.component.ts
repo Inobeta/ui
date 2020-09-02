@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { FormControlBase } from '../controls/form-control-base';
 import { FormGroup } from '@angular/forms';
 import { FormControlService } from '../form-control.service';
@@ -14,7 +14,7 @@ interface FormAction {
   selector: 'ib-form',
   templateUrl: './dynamic-form.component.html',
 })
-export class DynamicFormComponent implements OnInit {
+export class DynamicFormComponent implements OnInit, OnChanges {
   @Input() fields: FormControlBase<string>[] = [];
   @Input() actions: FormAction[] = [
     { key: 'submit', label: 'Save' }
@@ -26,6 +26,14 @@ export class DynamicFormComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.cs.toFormGroup(this.fields);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    const fields = changes['fields'];
+
+    if (fields && !fields.isFirstChange()) {
+      this.form = this.cs.toFormGroup(fields.currentValue);
+    }
   }
 
   onSubmit() {

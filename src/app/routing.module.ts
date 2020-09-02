@@ -12,10 +12,12 @@ const appRoutes: Routes = [
   },
   {
     path: 'table',
+    data: { breadcrumb: 'Table' },
     component: IbTableExampleComponent
   },
   {
     path: 'forms',
+    data: { breadcrumb: 'Forms' },
     component: DynamicFormsExampleComponent,
   },
   {
