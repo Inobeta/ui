@@ -58,9 +58,10 @@ export class TableExportCsvComponent {
   `,
 })
 export class TableExportDialogComponent {
-  format = 'csv';
+  format = 'xlsx';
   formats = [
-    { value: 'csv', viewValue: 'CSV (Excel)' },
+    { value: 'xlsx', viewValue: 'XLSX (Excel)' },
+    { value: 'csv', viewValue: 'CSV' },
     { value: 'pdf', viewValue: 'PDF' }
   ];
   dataset = 'current';
