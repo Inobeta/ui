@@ -5,6 +5,7 @@ export * from './src/app/inobeta-ui/ui/table/redux/table.action';
 export * from './src/app/inobeta-ui/ui/table/redux/table.reducer';
 export * from './src/app/inobeta-ui/auth/session.model';
 export * from './src/app/inobeta-ui/ui/table/table.component';
+export * from './src/app/inobeta-ui/ui/table/components/table-export-csv.component';
 export * from './src/app/inobeta-ui/ui/table/table.const';
 export * from './src/app/inobeta-ui/http/spinnerLoading.component';
 export * from './src/app/inobeta-ui/ui/modal/modalMessage.component';
