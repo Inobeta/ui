@@ -5,7 +5,7 @@ import { TemplateModel } from './template.model';
 import { Store } from '@ngrx/store';
 import * as TableFiltersActions from './redux/table.action';
 import Papa from 'papaparse';
-import jsPDF from 'jspdf';
+import jsPDF, { jsPDFOptions } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { TranslateService } from '@ngx-translate/core';
@@ -123,7 +123,7 @@ export class TableComponent implements OnChanges {
   /** { columnName: TemplateRef } */
   @Input() tableName = 'default_table_name';
   @Input() pdfCustomStyles = {};
-  @Input() pdfSetup = {
+  @Input() pdfSetup: jsPDFOptions = {
     orientation: 'l',
     unit: null,
     format: null
