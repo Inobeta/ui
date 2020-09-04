@@ -123,6 +123,11 @@ export class TableComponent implements OnChanges {
   /** { columnName: TemplateRef } */
   @Input() tableName = 'default_table_name';
   @Input() pdfCustomStyles = {};
+  @Input() pdfSetup = {
+    orientation: 'l',
+    unit: null,
+    format: null
+  };
 
   // input non necessari
   @Input() actions: string[] = [];
@@ -374,7 +379,7 @@ export class TableComponent implements OnChanges {
 
   pdfExport(body, titles) {
     const columns = titles.map(t => ({ header: t.value, dataKey: t.key }));
-    const doc = new jsPDF();
+    const doc = new jsPDF(this.pdfSetup.orientation, this.pdfSetup.unit, this.pdfSetup.format);
     autoTable(doc, {
       ...this.pdfCustomStyles,
       body,

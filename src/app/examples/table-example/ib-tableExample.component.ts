@@ -392,6 +392,9 @@ export class IbTableExampleComponent implements OnInit {
     columnStyles: { sender: { halign: 'center' }},
   };
 
+  pdfSetup = {
+    orientation: 'p'
+  }
   constructor() { }
 
 
