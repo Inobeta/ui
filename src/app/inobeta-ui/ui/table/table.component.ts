@@ -108,6 +108,7 @@ export class TableComponent implements OnChanges {
   @Input() titles: TableTitles[] = [];
   @Input() items: any[] = [];
   @Input() filterValues: any = {};
+  @Input() tableFilters: any; // FIXME: remove this redundant code
   @Input() currentSort: any = {};
   @Input() selectableRows = true;
   @Input() hasAdd = false;
