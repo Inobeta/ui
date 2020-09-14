@@ -13,6 +13,27 @@ import { IbTableExampleComponent } from 'src/app/examples/table-example/ib-table
 import { NavComponent } from './examples/nav/nav.component';
 import { DynamicFormsExampleComponent } from './examples/dynamic-forms-example/dynamic-forms-example.component';
 import { CustomMaterialModule } from './inobeta-ui/material.module';
+import { ISessionState, sessionReducer } from './inobeta-ui/auth/redux/session.reducer';
+import { ITableFiltersState, tableFiltersReducer } from './inobeta-ui/ui/table/redux/table.reducer';
+import { ActionReducerMap, ActionReducer, MetaReducer, StoreModule } from '@ngrx/store';
+import {localStorageSync} from 'ngrx-store-localstorage';
+
+export interface IAppState {
+  sessionState: ISessionState;
+  tableFiltersState: ITableFiltersState;
+}
+
+const reducers: ActionReducerMap<IAppState> = {
+  sessionState: sessionReducer,
+  tableFiltersState: tableFiltersReducer
+};
+
+export function localStorageSyncReducer(reducer: ActionReducer<any>): ActionReducer<any> {
+  return localStorageSync({keys: ['sessionState', 'tableFiltersState'], rehydrate: true})(reducer);
+}
+
+const metaReducers: Array<MetaReducer<any, any>> = [localStorageSyncReducer];
+
 
 @NgModule({
   declarations: [
@@ -30,6 +51,7 @@ import { CustomMaterialModule } from './inobeta-ui/material.module';
     FormsModule,
     ReactiveFormsModule,
     FlexLayoutModule,
+    StoreModule.forRoot(reducers, {metaReducers}),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       logOnly: environment.production,

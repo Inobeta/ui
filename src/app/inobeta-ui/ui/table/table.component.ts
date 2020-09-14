@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, HostListener } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { Sort } from '@angular/material';
 import { TableCellAligns, TableTitles, TableTitlesTypes } from './titles.model';
 import { TemplateModel } from './template.model';
@@ -15,11 +15,14 @@ import { TranslateService } from '@ngx-translate/core';
   template: `
     <div fxLayout="column" class="ib-table">
       <div fxLayout="row" fxLayoutAlign="left center" fxLayoutGap="20px">
+        <!--
+        FIXME: this feature is not working
         <ib-table-search
           [filterValues]="filterValues"
           (filterChange)="filterChange.emit($event)"
           [hasSearch]="hasSearch">
         </ib-table-search>
+-->
         <div fxFlex fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="20px">
           <ib-table-export-csv
             (exportCsv)="export($event)"
@@ -34,10 +37,10 @@ import { TranslateService } from '@ngx-translate/core';
             [hasAdd]="hasAdd"
             (add)="add.emit()">
           </ib-table-add-button>
-          <ib-table-filter-reset-button
+          <!--<ib-table-filter-reset-button
             (filterReset)="filterReset.emit()"
             [hasFilterReset]="hasFilterReset">
-          </ib-table-filter-reset-button>
+          </ib-table-filter-reset-button>-->
         </div>
       </div>
       <div>
@@ -107,12 +110,11 @@ export class TableComponent implements OnChanges {
   @Input() customItemTemplate: any;
   @Input() titles: TableTitles[] = [];
   @Input() items: any[] = [];
-  @Input() filterValues: any = {};
-  @Input() tableFilters: any; // FIXME: remove this redundant code
-  @Input() currentSort: any = {};
+  @Input() enableReduxStore = false;
+  @Input() currentSort: any = {}; // this input can override redux store. Can we remove it?
   @Input() selectableRows = true;
   @Input() hasAdd = false;
-  @Input() hasFilterReset = false;
+  // @Input() hasFilterReset = false; this feature is not working but it can be useful
   @Input() hasSearch = false;
   @Input() hasCsvExport = false;
   @Input() hasPaginator = true;
@@ -122,7 +124,7 @@ export class TableComponent implements OnChanges {
   @Input() templateButtons: TemplateModel[] = [];
   @Input() templateHeaders: any = {};
   /** { columnName: TemplateRef } */
-  @Input() tableName = 'default_table_name';
+  @Input() tableName = 'default_table_name'; // change this value in order to partition redux data
   @Input() pdfCustomStyles = {};
   @Input() pdfSetup: jsPDFOptions = {
     orientation: 'l',
@@ -135,7 +137,6 @@ export class TableComponent implements OnChanges {
 
   // Output necessari
   @Output() filterChange: EventEmitter<any> = new EventEmitter<any>();
-  @Output() filterReset: EventEmitter<any> = new EventEmitter<any>();
   @Output() sortChange: EventEmitter<any> = new EventEmitter<any>();
   @Output() add: EventEmitter<any> = new EventEmitter<any>();
   @Output() deleteItem: EventEmitter<any> = new EventEmitter<any>();
@@ -157,30 +158,32 @@ export class TableComponent implements OnChanges {
   constructor(private store: Store<any>, private translate: TranslateService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
+    console.log('changes', changes);
+    if (changes.enableReduxStore && changes.enableReduxStore.currentValue) {
+      this.store.select(rootState => rootState.tableFiltersState.tableFilters).subscribe(tableFilters => {
+        const data = tableFilters[this.tableName];
+        console.log('data', data);
 
-    if (changes && changes.tableFilters && changes.tableFilters.currentValue) {
-      const data = changes.tableFilters.currentValue[this.tableName];
-      // questo mette a posto il paginator
-      if (data.paginatorFilters) {
-        this.currentPagination = data.paginatorFilters;
-      } else {
-        this.currentPagination = {
-          pageIndex: 0,
-          pageSize: 10,
-          previousPageIndex: 0
-        };
-      }
-      // questo mette a posto i filtri
-      for (const prop of Object.keys(data)) {
-        if (prop !== 'paginatorFilters') {
-          // filtri input
-          this.setFilter(prop, data[prop].value, this.currentPagination.pageIndex);
-          // ordinamento colonne
-          if (data[prop].columnSort) {
-            this.sortData(data[prop].columnSort.sort, data[prop].columnSort.emitChange);
+        if (data) {
+          if (data.paginatorFilters) {
+            this.currentPagination = data.paginatorFilters;
+          } else {
+            this.currentPagination = {
+              pageIndex: 0,
+              pageSize: 10,
+              previousPageIndex: 0
+            };
+          }
+
+          for (const prop of Object.keys(data).filter(p => ['paginatorFilters', 'sortType'].indexOf(p) === -1)) {
+            this.setFilter(prop, data[prop].value, this.currentPagination.pageIndex);
+          }
+          if (data.sortType) {
+            this.sortData(data.sortType, false);
           }
         }
-      }
+
+      });
     }
 
     let triggerRefresh = false;

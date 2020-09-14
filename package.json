@@ -69,6 +69,7 @@
     "karma-jasmine": "~1.1.0",
     "karma-jasmine-html-reporter": "^0.2.2",
     "ng-packagr": "^5.7.1",
+    "ngrx-store-localstorage": "^10.0.0",
     "protractor": "^5.4.1",
     "ts-node": "~4.1.0",
     "tslint": "~5.9.1",
