@@ -77,12 +77,8 @@ export class HttpClientService {
     }
   }
 
-  get(url, responseType  = null): any {
+  get(url): any {
     const headers = this.createAuthorizationHeader();
-    const dataHead = {headers};
-    if (responseType != null) {
-      dataHead['responseType'] = responseType;
-    }
     return this.getObservableFromMode('get', url, null, headers)
       .pipe(
         map(val => {
@@ -163,7 +159,7 @@ export class HttpClientService {
         break;
       default:
         switch (method) {
-          case 'get': obs = this.h.get(url, headers); break;
+          case 'get': obs = this.h.get(url, {headers}); break;
           case 'post': obs = this.h.post(url, data, {headers}); break;
           case 'put': obs = this.h.put(url, data, {headers}); break;
           case 'delete': obs = this.h.delete(url, {headers}); break;
