@@ -40,7 +40,7 @@ export class HttpClientService {
     if (!this.srvAuth.activeSession) {
       return;
     }
-    switch(this.httpMode){
+    switch (this.httpMode) {
       case 'MOBILE':
         const mobileHeaders = {};
         mobileHeaders['Content-Type'] = 'application/json';
@@ -77,15 +77,19 @@ export class HttpClientService {
     }
   }
 
-  get(url): any {
+  get(url, responseType  = null): any {
     const headers = this.createAuthorizationHeader();
+    const dataHead = {headers};
+    if (responseType != null) {
+      dataHead['responseType'] = responseType;
+    }
     return this.getObservableFromMode('get', url, null, headers)
       .pipe(
         map(val => {
-          if(this.httpMode === 'MOBILE'){
+          if (this.httpMode === 'MOBILE') {
             return (val['data']) ? JSON.parse(val['data']) : '';
           }
-          return val
+          return val;
         }),
         map(x => this.srvResponse.handleOK(x)),
         catchError(x => this.srvResponse.handleKO(x)),
@@ -100,10 +104,10 @@ export class HttpClientService {
     return this.getObservableFromMode('post', url, data, headers)
       .pipe(
         map(val => {
-          if(this.httpMode === 'MOBILE'){
+          if (this.httpMode === 'MOBILE') {
             return (val['data']) ? JSON.parse(val['data']) : '';
           }
-          return val
+          return val;
         }),
         map(x => this.srvResponse.handleOK(x)),
         catchError(x => this.srvResponse.handleKO(x)),
@@ -117,10 +121,10 @@ export class HttpClientService {
     return this.getObservableFromMode('put', url, data, headers)
       .pipe(
         map(val => {
-          if(this.httpMode === 'MOBILE'){
+          if (this.httpMode === 'MOBILE') {
             return (val['data']) ? JSON.parse(val['data']) : '';
           }
-          return val
+          return val;
         }),
         map(x => this.srvResponse.handleOK(x)),
         catchError(x => this.srvResponse.handleKO(x)),
@@ -134,10 +138,10 @@ export class HttpClientService {
     return this.getObservableFromMode('delete', url, null, headers)
       .pipe(
         map(val => {
-          if(this.httpMode === 'MOBILE'){
+          if (this.httpMode === 'MOBILE') {
             return (val['data']) ? JSON.parse(val['data']) : '';
           }
-          return val
+          return val;
         }),
         map(x => this.srvResponse.handleOK(x)),
         catchError(x => this.srvResponse.handleKO(x)),
@@ -159,7 +163,7 @@ export class HttpClientService {
         break;
       default:
         switch (method) {
-          case 'get': obs = this.h.get(url, {headers}); break;
+          case 'get': obs = this.h.get(url, headers); break;
           case 'post': obs = this.h.post(url, data, {headers}); break;
           case 'put': obs = this.h.put(url, data, {headers}); break;
           case 'delete': obs = this.h.delete(url, {headers}); break;
