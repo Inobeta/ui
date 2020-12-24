@@ -4,7 +4,7 @@ import { FormControl, Validators, FormGroup } from '@angular/forms';
 
 @Injectable()
 export class FormControlService {
-  constructor() { }
+  constructor() {}
 
   toFormGroup(fields: FormControlBase<string>[]) {
     const group: any = {};

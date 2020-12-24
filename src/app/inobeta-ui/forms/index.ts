@@ -1,4 +1,3 @@
-export * from './forms.module';
 export * from './form-control.service';
 export * from './controls/textbox';
 export * from './controls/dropdown';

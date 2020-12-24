@@ -27,6 +27,7 @@ export * from './src/app/inobeta-ui/stubs/dialog.stub';
 export * from './src/app/inobeta-ui/stubs/session.stub.spec';
 export * from './src/app/inobeta-ui/auth/session.fixture.spec';
 export * from './src/app/inobeta-ui/forms';
+export * from './src/app/inobeta-ui/forms/forms.module';
 export * from './src/app/inobeta-ui/ui/forms/material-form/material-form.component';
 export * from './src/app/inobeta-ui/ui/forms/material-form-control/material-form-control.component';
 export * from './src/app/inobeta-ui/ui/breadcrumb';
