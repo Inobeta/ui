@@ -22,18 +22,15 @@ export class DynamicFormComponent implements OnInit, OnChanges {
   @Output() ibSubmit = new EventEmitter<any>();
   form: FormGroup;
 
-  constructor(private cs: FormControlService) { 
-    console.log('dynamic form constructor');
+  constructor(private cs: FormControlService) {
   }
 
   ngOnInit() {
-    console.log('onInit', this.fields);
     this.form = this.cs.toFormGroup(this.fields);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     const fields = changes['fields'];
-    console.log('onChanges', fields);
     if (fields && !fields.isFirstChange()) {
       this.form = this.cs.toFormGroup(fields.currentValue);
     }
