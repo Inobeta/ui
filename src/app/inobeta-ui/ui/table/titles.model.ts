@@ -31,5 +31,6 @@ export class TableTitles {
   materialSelectItems?: MaterialSelectComboItem[];
   placeHolderInput?: string;
   getClassByCondition?: any;
+  change?: any;
 }
 
