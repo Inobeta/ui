@@ -103,7 +103,7 @@ export function createTranslateLoader(http: HttpClient) {
     MaterialFormComponent,
     MaterialFormControlComponent,
     TableExportDialogComponent,
-    MaterialBreadcrumbComponent
+    //MaterialBreadcrumbComponent
   ],
   imports: [
     ...imports,
