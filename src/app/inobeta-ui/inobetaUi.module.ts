@@ -42,19 +42,10 @@ import { MaterialBreadcrumbComponent } from './ui/breadcrumb/material-breadcrumb
 registerLocaleData(localeIt, 'it');
 
 export const components = [
-  TableComponent,
-  TableInterfaceComponent,
   SpinnerLoadingComponent,
   ModalMessageComponent,
   LoginComponent,
-  UploaderComponent,
-  TableSeachComponent,
-  TableExportCsvComponent,
-  TableMenuActionsComponent,
-  TableAddComponent,
-  TableFilterResetComponent,
-  TablePaginatorComponent,
-  TableHeaderPopupComponent
+  UploaderComponent
 ];
 
 export const services = [
@@ -98,12 +89,8 @@ export function createTranslateLoader(http: HttpClient) {
 @NgModule({
   declarations: [
     ...components,
-    TableHeaderComponent,
-    TableRowsComponent,
     MaterialFormComponent,
     MaterialFormControlComponent,
-    TableExportDialogComponent,
-    //MaterialBreadcrumbComponent
   ],
   imports: [
     ...imports,
@@ -112,8 +99,6 @@ export function createTranslateLoader(http: HttpClient) {
   ],
   exports: [
     ...components,
-    TableHeaderComponent,
-    TableRowsComponent,
     TranslateModule,
     FlexLayoutModule,
     RouterModule,
@@ -128,7 +113,6 @@ export function createTranslateLoader(http: HttpClient) {
   ],
   entryComponents: [
     ModalMessageComponent,
-    TableExportDialogComponent
   ]
 })
 export class InobetaUiModule {}

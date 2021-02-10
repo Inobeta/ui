@@ -16,6 +16,7 @@ import { TableRowsComponent } from './components/table-rows/table-rows.component
 import { TableSeachComponent } from './components/table-seach.component';
 import { TableHeaderPopupComponent } from './components/tableHeaderPopup.component';
 import { TableComponent } from './table.component';
+import { TableInterfaceComponent } from './table.const';
 
 const COMPONENTS = [
     TableComponent,
@@ -28,7 +29,8 @@ const COMPONENTS = [
     TablePaginatorComponent,
     TableSeachComponent,
     TableHeaderPopupComponent,
-    TableExportDialogComponent
+    TableExportDialogComponent,
+    TableInterfaceComponent
 ]
 
 @NgModule({
