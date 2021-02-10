@@ -31,3 +31,4 @@ export * from './src/app/inobeta-ui/forms/forms.module';
 export * from './src/app/inobeta-ui/ui/forms/material-form/material-form.component';
 export * from './src/app/inobeta-ui/ui/forms/material-form-control/material-form-control.component';
 export * from './src/app/inobeta-ui/ui/breadcrumb';
+export * from './src/app/inobeta-ui/ui/table/table.module';
