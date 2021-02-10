@@ -17,6 +17,13 @@ import { ISessionState, sessionReducer } from './inobeta-ui/auth/redux/session.r
 import { ITableFiltersState, tableFiltersReducer } from './inobeta-ui/ui/table/redux/table.reducer';
 import { ActionReducerMap, ActionReducer, MetaReducer, StoreModule } from '@ngrx/store';
 import {localStorageSync} from 'ngrx-store-localstorage';
+import { TableModule } from './inobeta-ui/ui/table/table.module';
+import { DynamicFormsModule } from './inobeta-ui/forms/forms.module';
+import { BreadcrumbModule } from './inobeta-ui/ui/breadcrumb/breadcrumb.module';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 export interface IAppState {
   sessionState: ISessionState;
@@ -34,6 +41,9 @@ export function localStorageSyncReducer(reducer: ActionReducer<any>): ActionRedu
 
 const metaReducers: Array<MetaReducer<any, any>> = [localStorageSyncReducer];
 
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
 
 @NgModule({
   declarations: [
@@ -45,17 +55,29 @@ const metaReducers: Array<MetaReducer<any, any>> = [localStorageSyncReducer];
   ],
   imports: [
     CommonModule,
-    InobetaUiModule,
-    CustomMaterialModule,
+    //InobetaUiModule,
+    TableModule,
+    BreadcrumbModule,
+   // DynamicFormsModule,
+    //CustomMaterialModule,
     RoutingModule,
     FormsModule,
+    BrowserAnimationsModule,
     ReactiveFormsModule,
     FlexLayoutModule,
+    HttpClientModule,
     StoreModule.forRoot(reducers, {metaReducers}),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       logOnly: environment.production,
     }),
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    })
   ],
   exports: [
     FlexLayoutModule

@@ -25,7 +25,7 @@ import { TranslateService } from '@ngx-translate/core';
 -->
         <div fxFlex fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="20px">
           <ib-table-export-csv
-            (exportCsv)="export($event)"
+            (exportCsv)="export($event || {})"
             [hasCsvExport]="hasCsvExport">
           </ib-table-export-csv>
           <ib-table-menu-actions
