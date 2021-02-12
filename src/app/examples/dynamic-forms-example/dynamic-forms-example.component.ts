@@ -1,11 +1,11 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { FormControlBase } from 'src/app/inobeta-ui/forms/controls/form-control-base';
-import { Textbox } from 'src/app/inobeta-ui/forms/controls/textbox';
+import { FormControlBase } from 'src/app/inobeta-ui/modules/ui/forms/controls/form-control-base';
+import { Textbox } from 'src/app/inobeta-ui/modules/ui/forms/controls/textbox';
 import { Validators } from '@angular/forms';
-import { Dropdown } from 'src/app/inobeta-ui/forms/controls/dropdown';
-import { Radio } from 'src/app/inobeta-ui/forms/controls/radio';
-import { Checkbox } from 'src/app/inobeta-ui/forms/controls/checkbox';
-import { MaterialFormComponent } from 'src/app/inobeta-ui/ui/forms/material-form/material-form.component';
+import { Dropdown } from 'src/app/inobeta-ui/modules/ui/forms/controls/dropdown';
+import { Radio } from 'src/app/inobeta-ui/modules/ui/forms/controls/radio';
+import { Checkbox } from 'src/app/inobeta-ui/modules/ui/forms/controls/checkbox';
+import { MaterialFormComponent } from 'src/app/inobeta-ui/modules/ui/material-forms/material-form/material-form.component';
 
 @Component({
   selector: 'app-dynamic-forms-example',
