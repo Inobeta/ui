@@ -1,34 +1,18 @@
-export * from './src/app/inobeta-ui/ui/table/titles.model';
-export * from './src/app/inobeta-ui/auth/redux/session.reducer';
-export * from './src/app/inobeta-ui/auth/redux/session.actions';
-export * from './src/app/inobeta-ui/ui/table/redux/table.action';
-export * from './src/app/inobeta-ui/ui/table/redux/table.reducer';
-export * from './src/app/inobeta-ui/auth/session.model';
-export * from './src/app/inobeta-ui/ui/table/table.component';
-export * from './src/app/inobeta-ui/ui/table/components/table-export-csv.component';
-export * from './src/app/inobeta-ui/ui/table/table.const';
-export * from './src/app/inobeta-ui/http/spinnerLoading.component';
-export * from './src/app/inobeta-ui/ui/modal/modalMessage.component';
-export * from './src/app/inobeta-ui/pages/login.component';
-export * from './src/app/inobeta-ui/ui/uploader/uploader.component';
-export * from './src/app/inobeta-ui/http/httpclient.service';
-export * from './src/app/inobeta-ui/http/responseHandler.service';
-export * from './src/app/inobeta-ui/auth/guard.service';
-export * from './src/app/inobeta-ui/auth/auth.service';
-export * from './src/app/inobeta-ui/auth/session.service';
+export * from './src/app/inobeta-ui/modules/ui/breadcrumb';
+export * from './src/app/inobeta-ui/modules/ui/forms';
+export * from './src/app/inobeta-ui/modules/ui/material-forms';
+export * from './src/app/inobeta-ui/modules/ui/modal';
+export * from './src/app/inobeta-ui/modules/ui/table';
+export * from './src/app/inobeta-ui/modules/ui/uploader';
+export * from './src/app/inobeta-ui/modules/ibHttp';
+export * from './src/app/inobeta-ui/modules/tools';
+
+
+
+/***DEPRECATED STUFF */
+export * from './src/app/inobeta-ui/_toRemove_pages/login.component';
 export * from './src/app/inobeta-ui/inobetaUi.module';
 export * from './src/app/inobeta-ui/testUtils.module';
-export * from './src/app/inobeta-ui/stubs/mockTranslatePipe.directive';
-export * from './src/app/inobeta-ui/stubs/auth.service.stub';
-export * from './src/app/inobeta-ui/stubs/localStorage.stub';
-export * from './src/app/inobeta-ui/stubs/cookiesStorage.stub';
-export * from './src/app/inobeta-ui/stubs/translate.service.stub';
-export * from './src/app/inobeta-ui/stubs/dialog.stub';
-export * from './src/app/inobeta-ui/stubs/session.stub.spec';
-export * from './src/app/inobeta-ui/auth/session.fixture.spec';
-export * from './src/app/inobeta-ui/forms';
-export * from './src/app/inobeta-ui/forms/forms.module';
-export * from './src/app/inobeta-ui/ui/forms/material-form/material-form.component';
-export * from './src/app/inobeta-ui/ui/forms/material-form-control/material-form-control.component';
-export * from './src/app/inobeta-ui/ui/breadcrumb';
-export * from './src/app/inobeta-ui/ui/table/table.module';
+
+
+

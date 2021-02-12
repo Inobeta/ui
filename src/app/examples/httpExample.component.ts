@@ -1,23 +1,26 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClientService } from 'src/app/inobeta-ui/http/httpclient.service';
+import { HttpClientService } from 'src/app/inobeta-ui/modules/ibHttp/http/httpclient.service';
 
 @Component({
   selector: 'app-test',
   template: `
 
-  test
+  <pre>
+    {{ loadedData | json }}
+  </pre>
 
   `
 })
 
 export class HttpExampleComponent implements OnInit {
+  loadedData: any = {}
   constructor(
     private h: HttpClientService
   ) { }
 
   ngOnInit() {
-    this.h.get('http://google.it').subscribe(data => {
-      console.log(data)
+    this.h.get('assets/i18n/it.json').subscribe(data => {
+      this.loadedData = data
     })
   }
 }
