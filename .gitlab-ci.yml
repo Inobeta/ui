@@ -21,7 +21,7 @@ deploy_unstable:
     - npm install
     - npm run packagr
     - npm pack dist/
-    - npm publish Inobeta-inobeta-ui-$CURRENT_VERSION-build.$(date +%s).tgz --tag unstable
+    - npm publish Inobeta-inobeta-ui-$TEMP_VERSION.tgz --tag unstable
   except:
     - master
 pages:
@@ -52,8 +52,9 @@ pages:
   }
 
   function create_temp_version() {
-      sed -i "s/\"version\"\: \"$CURRENT_VERSION\"/\"version\": \"$CURRENT_VERSION-build.$(date +%s)\"/g" ./package.json
-      echo $CURRENT_VERSION-build.$(date +%s)
+      TEMP_VERSION=$CURRENT_VERSION-build.$(date +%s)
+      sed -i "s/\"version\"\: \"$CURRENT_VERSION\"/\"version\": \"$TEMP_VERSION\"/g" ./package.json
+      echo $TEMP_VERSION
   }
 
 before_script:
