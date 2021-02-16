@@ -22,8 +22,33 @@ deploy_unstable:
     - npm run packagr
     - npm pack dist/
     - npm publish Inobeta-inobeta-ui-$TEMP_VERSION.tgz --tag unstable
+  only:
+    - /^v[0-9]+\.[0-9]+\.[0-9]+$/
+deploy_manual_unstable:
+  stage: deploy
+  script:
+    - echo '//gitlab.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}'>.npmrc
+    - create_temp_version
+    - npm install
+    - npm run packagr
+    - npm pack dist/
+    - npm publish Inobeta-inobeta-ui-$TEMP_VERSION.tgz --tag testing
   except:
     - master
+    - /^v[0-9]+\.[0-9]+\.[0-9]+$/
+  when:
+    - manual
+test_package_creation:
+  stage: deploy
+  script:
+    - echo '//gitlab.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}'>.npmrc
+    - create_temp_version
+    - npm install
+    - npm run packagr
+    - npm pack dist/
+  except:
+    - master
+    - /^v[0-9]+\.[0-9]+\.[0-9]+$/
 pages:
   stage: deploy
   script:
@@ -43,7 +68,7 @@ pages:
     - public
   only:
     - master
-    - canary
+    - /^v[0-9]+\.[0-9]+\.[0-9]+$/
 .inobeta_pkg: &inobeta_pkg |
   [[ "$TRACE" ]] && set -x
 
