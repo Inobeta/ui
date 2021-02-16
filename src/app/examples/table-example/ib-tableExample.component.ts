@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TableTitlesTypes } from 'src/app/inobeta-ui/ui/table/titles.model';
+import { TableTitlesTypes } from 'src/app/inobeta-ui/modules/ui/table/models/titles.model';
 
 @Component({
   selector: 'ib-table-example',
@@ -392,6 +392,9 @@ export class IbTableExampleComponent implements OnInit {
     columnStyles: { sender: { halign: 'center' }},
   };
 
+  pdfSetup = {
+    orientation: 'p'
+  }
   constructor() { }
 
 

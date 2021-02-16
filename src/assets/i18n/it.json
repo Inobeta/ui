@@ -1,5 +1,11 @@
 {
   "shared": {
+    "ui": {
+      "modalMessage": {
+        "yes": "Sì",
+        "no": "No"
+      }
+    },
     "login": {
       "email": "E-mail",
       "password": "Password",

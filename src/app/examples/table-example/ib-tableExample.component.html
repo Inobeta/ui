@@ -13,12 +13,15 @@
 
 <ib-table
   [pdfCustomStyles]="pdfCustomStyles"
+  [pdfSetup]="pdfSetup"
   [hasCsvExport]="true"
   [customItemTemplate]="{ lot: lotTemplate }"
   [selectableRows]="true"
   (rowChecked)="prova2($event)"
   [titles]="titles"
   [items]="items"
+  [enableReduxStore]="true"
+  [tableName]="'pippo'"
   [selectRowName]="'Ricevuto'"
   [templateButtons]="[{
     template: deleteTemplate,

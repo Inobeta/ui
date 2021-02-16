@@ -1,0 +1,4 @@
+<div class="ibBreadcrumbs">
+  <a class="ibBreadcrumbs-link" [routerLink]="['/']">Home</a>
+  <a class="ibBreadcrumbs-link" [routerLink]="[item.url]" *ngFor="let item of items" style="margin: 5px;">{{item.label}}</a>
+</div>

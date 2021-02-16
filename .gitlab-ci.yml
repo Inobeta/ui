@@ -24,6 +24,26 @@ deploy_unstable:
     - npm publish Inobeta-inobeta-ui-$CURRENT_VERSION-$CI_COMMIT_SHA.tgz --tag unstable
   except:
     - master
+pages:
+  stage: deploy
+  script:
+    - npx @compodoc/compodoc -p tsconfig.app.json --disableCoverage --disableDomTree --disableGraph --hideGenerator
+    - dir="$CURRENT_VERSION"
+    - if [ "$CI_COMMIT_REF_SLUG" == "$CI_DEFAULT_BRANCH" ]; then dir="current"; fi;
+    - mkdir -p public
+    - mkdir -p public/$dir/
+    - rm -rf public/$dir/documentation
+    - mv documentation public/$dir/
+  artifacts:
+    name: "$CI_COMMIT_REF_SLUG-$CURRENT_VERSION"
+    paths:
+      - public
+  cache:
+    paths:
+    - public
+  only:
+    - master
+    - canary
 .inobeta_pkg: &inobeta_pkg |
   [[ "$TRACE" ]] && set -x
 
@@ -39,3 +59,4 @@ deploy_unstable:
 before_script:
   - *inobeta_pkg
   - set_current_version
+

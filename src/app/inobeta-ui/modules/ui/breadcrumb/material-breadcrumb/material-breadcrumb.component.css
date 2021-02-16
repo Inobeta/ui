@@ -1,0 +1,36 @@
+.ibBreadcrumbs {
+  background: #f9f9f9;
+  box-shadow: 0 0 0 1px #f0f0f0;
+  
+  margin: 10px;
+  padding: 5px 10px;
+  border-radius: 4px;
+
+  list-style: none;
+  display: flex;
+  align-items: center;
+  align-content: center;
+
+  font-family: Roboto, sans-serif;
+}
+
+.ibBreadcrumbs-link {
+  display: flex;
+  align-items: center;
+}
+
+.ibBreadcrumbs-link a:not(:first-child) {
+  color: black;
+  outline: none;
+  text-decoration: none;
+  margin-left: 5px;
+}
+
+.ibBreadcrumbs-link a:visited {
+  color: black;
+}
+
+.ibBreadcrumbs-link > mat-icon {
+  color: #bbb;
+  margin-left: 5px;
+}

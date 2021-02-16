@@ -1,0 +1,110 @@
+<tr (click)="rowClicked.emit(item)" class="table-row" *ngFor="let item of sortedData">
+  <!--CHECKBOX-->
+  <td *ngIf="selectableRows">
+    <mat-checkbox #c (click)="emitItemAndCheckbox(item, !c.checked)"></mat-checkbox>
+  </td>
+
+  <td
+    *ngFor="let t of titles"
+    style="padding: 10px 15px;"
+    [ngStyle]="{
+       'text-align': (t.align) ? t.align : alignEnum.LEFT
+    }"
+    [ngClass]="(t.getClassByCondition) ? t.getClassByCondition(item) : null">
+
+    <!--TYPE = ANY-->
+    <span *ngIf="!t.type || t.type === typeEnum.ANY" class="{{t.className}}}">
+      {{item[t.key] | translate}}
+    </span>
+
+    <!--TYPE = NUMBER-->
+    <span *ngIf="t.type === typeEnum.NUMBER" class="{{t.className}}">
+        {{item[t.key] | number:t.format:'it'}}
+    </span>
+
+    <!--TYPE = DATE-->
+    <span *ngIf="t.type === typeEnum.DATE" class="{{t.className}}">
+      {{item[t.key] | date: 'dd/MM/yyyy'}}
+    </span>
+
+    <!--TYPE = STRING-->
+    <span *ngIf="t.type === typeEnum.STRING" class="{{t.className}}">
+      {{item[t.key]}}
+    </span>
+
+    <!--TYPE = HOUR-->
+    <span *ngIf="t.type === typeEnum.HOUR" class="{{t.className}}">
+      {{item[t.key] | date: 'HH:mm:ss'}}
+    </span>
+
+    <!--TYPE = TAG-->
+    <span *ngIf="t.type === typeEnum.TAG" class="{{t.className}}">
+       <mat-chip-list>
+         <mat-chip
+           *ngFor="let tag of item[t.key]"
+           style="
+              background-color: #f2536e;
+              color:white !important;
+              text-transform: uppercase;">
+           {{ 'common.' + tag | translate }}
+         </mat-chip>
+       </mat-chip-list>
+     </span>
+
+    <!--TYPE = COMBOBOX-->
+    <span *ngIf="t.type === typeEnum.COMBOBOX" class="{{t.className}}">
+      {{ t.comboOptions[item[t.key]] | translate }}
+    </span>
+
+    <!--TYPE = MATERIAL_SELECT-->
+    <span *ngIf="t.type === typeEnum.MATERIAL_SELECT" class="{{t.className}}">
+      <mat-form-field>
+      <mat-select [(value)]="item[t.key]">
+        <mat-option *ngFor="let opt of t.materialSelectItems" [value]="opt.value">
+          {{opt.label | translate}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    </span>
+
+    <!--TYPE = BOOLEAN-->
+    <span *ngIf="t.type === typeEnum.BOOLEAN" class="{{t.className}}">
+      <i
+        class="material-icons"
+        style="color:green;"
+        *ngIf="item[t.key] === true">check
+      </i>
+      <i
+        class="material-icons"
+        style="color:gray;"
+        *ngIf="item[t.key] === false">clear
+      </i>
+     </span>
+
+    <!--TYPE = INPUT-->
+    <span *ngIf="t.type === typeEnum.INPUT_NUMBER" class="{{t.className}}">
+      <mat-form-field>
+        <input
+          [(ngModel)]="item[t.key]"
+          matInput
+          type="number"
+          (change)="t.change ? t.change(item, $event.value) : null"
+          placeholder="{{ t.placeHolderInput | translate }}"
+          value="{{item[t.key]}}">
+        </mat-form-field>
+    </span>
+
+    <!--TYPE = CUSTOM-->
+    <span *ngIf="t.type === typeEnum.CUSTOM" class="{{t.className}}">
+      <ng-container
+        *ngTemplateOutlet="customItemTemplate[t.key]; context: { item: item}">
+    </ng-container>
+    </span>
+  </td>
+  <td style="text-align: center" *ngFor="let btn of templateButtons">
+    <ng-container
+      *ngTemplateOutlet="btn.template; context: { item: item}">
+    </ng-container>
+  </td>
+
+</tr>
