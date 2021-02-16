@@ -11,10 +11,20 @@
   </table-header-popup>
 </ng-template>
 
+
+<ng-template #exportTemplate let-ibTable="ibTable" let-col="col">
+  <!--example component customization-->
+  Clicca per esportare:&nbsp;
+  <ib-table-export
+    (export)="ibTable.export($event || {})"
+    >
+  </ib-table-export>
+</ng-template>
+
 <ib-table
   [pdfCustomStyles]="pdfCustomStyles"
   [pdfSetup]="pdfSetup"
-  [hasCsvExport]="true"
+  [hasExport]="true"
   [customItemTemplate]="{ lot: lotTemplate }"
   [selectableRows]="true"
   (rowChecked)="prova2($event)"
@@ -32,7 +42,13 @@
     'sender': headerClickTemplate,
     'date': headerClickTemplate,
     'qt': headerClickTemplate
-  }" [actions]="['test']">
+  }"
+  [actions]="['test']"
+  [structureTemplates]="{
+    'exportTemplate': exportTemplate
+  }"
+
+  >
   <ng-template #lotTemplate let-item="item">
     <div style="font-weight: bold; color: red;">{{item.lot}}</div>
   </ng-template>

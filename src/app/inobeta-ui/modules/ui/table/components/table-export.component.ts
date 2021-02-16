@@ -2,21 +2,19 @@ import {Component, EventEmitter, Input, Output, Inject} from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 
 @Component({
-  selector: 'ib-table-export-csv',
+  selector: 'ib-table-export',
   template: `
     <div class="hover"
          (click)="open()"
          fxLayout="row"
-         *ngIf="hasCsvExport"
          fxLayoutAlign="center center"
          style="cursor:pointer; border: 1px solid gray; border-radius: 20px; padding: 5px;padding-left: 10px;padding-right: 15px;">
-      <i class="material-icons">call_made</i> {{ 'shared.ibTable.csv' | translate }}
+      <i class="material-icons">call_made</i> {{ 'shared.ibTable.export' | translate }}
     </div>
   `,
 })
-export class TableExportCsvComponent {
-  @Input() hasCsvExport;
-  @Output() exportCsv = new EventEmitter();
+export class TableExportComponent {
+  @Output() export = new EventEmitter();
 
   constructor(public dialog: MatDialog) { }
 
@@ -25,7 +23,7 @@ export class TableExportCsvComponent {
       width: '400px',
     });
 
-    dialog.afterClosed().subscribe(result => this.exportCsv.emit(result));
+    dialog.afterClosed().subscribe(result => this.export.emit(result));
   }
 }
 

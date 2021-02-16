@@ -22,7 +22,8 @@
       "search": "Cerca",
       "filterReset": "Resetta filtri",
       "delete": "Elimina",
-      "update": "Modifica"
+      "update": "Modifica",
+      "export": "Esporta"
     },
     "profile": {
       "name": "Nome",

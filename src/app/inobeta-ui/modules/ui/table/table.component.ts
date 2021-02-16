@@ -15,19 +15,19 @@ import { TranslateService } from '@ngx-translate/core';
   template: `
     <div fxLayout="column" class="ib-table">
       <div fxLayout="row" fxLayoutAlign="left center" fxLayoutGap="20px">
-        <!--
-        FIXME: this feature is not working
-        <ib-table-search
-          [filterValues]="filterValues"
-          (filterChange)="filterChange.emit($event)"
-          [hasSearch]="hasSearch">
-        </ib-table-search>
--->
-        <div fxFlex fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="20px">
-          <ib-table-export-csv
-            (exportCsv)="export($event || {})"
-            [hasCsvExport]="hasCsvExport">
-          </ib-table-export-csv>
+        <div fxFlex fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+
+          <ng-container
+            *ngTemplateOutlet="((structureTemplates['exportTemplate'] != null) ? structureTemplates['exportTemplate'] : defaultExportTemplate);
+            context: { ibTable: this}"
+          ></ng-container>
+          <ng-template #defaultExportTemplate>
+            <ib-table-export
+              *ngIf="hasExport"
+              (export)="export($event || {})"
+              >
+            </ib-table-export>
+          </ng-template>
           <ib-table-menu-actions
             [menuTableActions]="menuTableActions"
             [actionsLength]="actions.length"
@@ -85,7 +85,7 @@ import { TranslateService } from '@ngx-translate/core';
         </table>
       </div>
       <ng-container
-        *ngTemplateOutlet="((paginatorTemplate != null) ? paginatorTemplate : defaultPaginatorTemplate);
+        *ngTemplateOutlet="((structureTemplates['paginatorTemplate'] != null) ? structureTemplates['paginatorTemplate'] : defaultPaginatorTemplate);
         context: this"
       ></ng-container>
       <ng-template #defaultPaginatorTemplate>
@@ -116,9 +116,10 @@ export class TableComponent implements OnChanges {
   @Input() hasAdd = false;
   // @Input() hasFilterReset = false; this feature is not working but it can be useful
   @Input() hasSearch = false;
-  @Input() hasCsvExport = false;
+  @Input() hasExport = false;
   @Input() hasPaginator = true;
-  @Input() paginatorTemplate;
+
+  @Input() structureTemplates = {}; //exportTemplate, paginatorTemplate
   @Input() hasActions = false;
   @Input() selectRowName = 'Seleziona';
   @Input() templateButtons: TemplateModel[] = [];
