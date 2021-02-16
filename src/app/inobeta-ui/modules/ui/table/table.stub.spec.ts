@@ -15,9 +15,9 @@ export class TableStubComponent {
   @Input() hasAdd = false;
   @Input() hasFilterReset = false;
   @Input() hasSearch = false;
-  @Input() hasCsvExport = false;
+  @Input() hasExport = false;
   @Input() hasPaginator = true;
-  @Input() paginatorTemplate;
+  @Input() structureTemplates;
   @Input() hasActions = false;
   @Input() selectRowName = 'Seleziona';
   @Input() templateButtons: TemplateModel[] = [];
