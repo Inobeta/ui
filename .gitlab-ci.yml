@@ -13,6 +13,7 @@ deploy:
     - npm publish Inobeta-inobeta-ui-$CURRENT_VERSION.tgz --tag latest
   only:
     - master
+
 deploy_unstable:
   stage: deploy
   script:
@@ -24,6 +25,7 @@ deploy_unstable:
     - npm publish Inobeta-inobeta-ui-$TEMP_VERSION.tgz --tag unstable
   only:
     - /^v[0-9]+\.[0-9]+\.[0-9]+$/
+
 deploy_manual_unstable:
   stage: deploy
   script:
@@ -36,8 +38,8 @@ deploy_manual_unstable:
   except:
     - master
     - /^v[0-9]+\.[0-9]+\.[0-9]+$/
-  when:
-    - manual
+  when: manual
+
 test_package_creation:
   stage: deploy
   script:
@@ -49,6 +51,7 @@ test_package_creation:
   except:
     - master
     - /^v[0-9]+\.[0-9]+\.[0-9]+$/
+
 pages:
   stage: deploy
   script:
@@ -69,6 +72,7 @@ pages:
   only:
     - master
     - /^v[0-9]+\.[0-9]+\.[0-9]+$/
+
 .inobeta_pkg: &inobeta_pkg |
   [[ "$TRACE" ]] && set -x
 
