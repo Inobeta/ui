@@ -9,7 +9,7 @@ const entryComponents = [
   ModalMessageComponent
 ]
 const components = [
-  ...entryComponents,
+  ModalMessageComponent
 
 ]
 

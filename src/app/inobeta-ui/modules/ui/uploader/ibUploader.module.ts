@@ -7,7 +7,6 @@ import { UploaderComponent } from './uploader.component';
 
 const entryComponents = []
 const components = [
-  ...entryComponents,
   UploaderComponent
 ]
 
