@@ -12,18 +12,7 @@ export class FormControlBase<T> {
   errors: {message: string, condition: (c: FormControl) => void}[];
   options: {key: string, value: string}[];
 
-  constructor(options: {
-      value?: T;
-      key?: string;
-      label?: string;
-      required?: boolean;
-      order?: number;
-      controlType?: string;
-      type?: string;
-      validators?: ValidatorFn[];
-      errors?: {message: string, condition: (c: FormControl) => void}[];
-      options?: {key: string, value: string}[];
-    } = {}) {
+  constructor(options: FormControlBaseParams<T> = {}) {
     this.value = options.value;
     this.key = options.key || '';
     this.label = options.label || '';
@@ -35,4 +24,17 @@ export class FormControlBase<T> {
     this.errors = options.errors || [];
     this.options = options.options || [];
   }
+}
+
+export interface FormControlBaseParams<T>{
+  value?: T;
+  key?: string;
+  label?: string;
+  required?: boolean;
+  order?: number;
+  controlType?: string;
+  type?: string;
+  validators?: ValidatorFn[];
+  errors?: {message: string, condition: (c: FormControl) => void}[];
+  options?: {key: string, value: string}[];
 }
