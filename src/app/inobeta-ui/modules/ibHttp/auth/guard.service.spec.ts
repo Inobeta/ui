@@ -32,7 +32,7 @@ describe('Guard & LoginGuard with activeSession null', () => {
     const lguard = TestBed.get(Guard);
     lguard.canActivate();
     expect(routerSpy.navigateByUrl).toHaveBeenCalledTimes(1);
-    expect (routerSpy.navigateByUrl).toHaveBeenCalledWith ('login');
+    expect (routerSpy.navigateByUrl).toHaveBeenCalledWith ('/login');
   });
 
   it('LoginGuard should be created', () => {
@@ -88,7 +88,7 @@ describe('Guard & LoginGuard with activeSession something', () => {
     const lguard = TestBed.get(LoginGuard);
     lguard.canActivate();
     expect(routerSpy.navigateByUrl).toHaveBeenCalledTimes(1);
-    expect (routerSpy.navigateByUrl).toHaveBeenCalledWith ('dashboard');
+    expect (routerSpy.navigateByUrl).toHaveBeenCalledWith ('/dashboard');
   });
 
 });

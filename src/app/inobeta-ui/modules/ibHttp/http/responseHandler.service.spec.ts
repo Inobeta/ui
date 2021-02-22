@@ -17,7 +17,7 @@ describe('response handler test', () => {
 
   it('Should use handle Ok (else)', () => {
     const svcResponseHandler = TestBed.get(ResponseHandlerService);
-    svcResponseHandler.handleOK();
+    svcResponseHandler.handleOK({});
   });
 
 });
