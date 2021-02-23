@@ -1,34 +1,32 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MaterialFormControlComponent } from './material-form-control.component';
+import { IbMaterialFormControlComponent } from './material-form-control.component';
 import { IbToolTestModule } from '../../../tools';
-import { CustomMaterialModule } from 'src/app/inobeta-ui/material.module';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DynamicFormsModule } from '../../forms';
+import { IbDynamicFormsModule } from '../../forms';
 
-xdescribe('MaterialFormControlComponent', () => {
-  let component: MaterialFormControlComponent;
-  let fixture: ComponentFixture<MaterialFormControlComponent>;
+xdescribe('IbMaterialFormControlComponent', () => {
+  let component: IbMaterialFormControlComponent;
+  let fixture: ComponentFixture<IbMaterialFormControlComponent>;
 
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MaterialFormControlComponent ],
+      declarations: [ IbMaterialFormControlComponent ],
       imports: [
         IbToolTestModule,
-        CustomMaterialModule,
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
-        DynamicFormsModule
+        IbDynamicFormsModule
       ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MaterialFormControlComponent);
+    fixture = TestBed.createComponent(IbMaterialFormControlComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

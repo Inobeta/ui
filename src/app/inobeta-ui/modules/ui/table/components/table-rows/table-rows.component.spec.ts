@@ -1,32 +1,44 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TableRowsComponent } from './table-rows.component';
-import { MatCheckboxModule } from '@angular/material';
+import { IbTableRowsComponent } from './table-rows.component';
+import { MatCheckboxModule, MatMenuModule, MatSortModule, MatChipsModule, MatFormFieldModule, MatInputModule, MatIconModule, MatDialogModule, MatSelectModule, MatRadioModule, MatPaginatorModule, MatButtonModule, MatSnackBarModule, MatCardModule } from '@angular/material';
 import { IbToolTestModule } from 'src/app/inobeta-ui/modules/tools';
-import { CustomMaterialModule } from 'src/app/inobeta-ui/material.module';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-describe('TableRowsComponent', () => {
-  let component: TableRowsComponent;
-  let fixture: ComponentFixture<TableRowsComponent>;
+describe('IbTableRowsComponent', () => {
+  let component: IbTableRowsComponent;
+  let fixture: ComponentFixture<IbTableRowsComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TableRowsComponent ],
+      declarations: [ IbTableRowsComponent ],
       imports: [
         IbToolTestModule,
-        CustomMaterialModule,
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
+        MatMenuModule,
+        MatSortModule,
+        MatChipsModule,
+        MatCheckboxModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatIconModule,
+        MatDialogModule,
+        MatSelectModule,
+        MatRadioModule,
+        MatPaginatorModule,
+        MatButtonModule,
+        MatSnackBarModule,
+        MatCardModule
       ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TableRowsComponent);
+    fixture = TestBed.createComponent(IbTableRowsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

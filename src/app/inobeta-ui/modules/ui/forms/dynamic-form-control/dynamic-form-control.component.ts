@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormControlBase } from '../controls/form-control-base';
+import { IbFormControlBase } from '../controls/form-control-base';
 import { FormGroup } from '@angular/forms';
 
 @Component({
@@ -9,8 +9,8 @@ import { FormGroup } from '@angular/forms';
     class: 'ibFormControl'
   },
 })
-export class DynamicFormControlComponent {
-  @Input() base: FormControlBase<string>;
+export class IbDynamicFormControlComponent {
+  @Input() base: IbFormControlBase<string>;
   @Input() form: FormGroup;
 
   get self() { return this.form.get(this.base.key); }

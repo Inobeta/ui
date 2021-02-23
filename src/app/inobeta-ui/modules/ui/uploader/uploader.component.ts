@@ -9,7 +9,7 @@ import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@an
     </div>
   `
 })
-export class UploaderComponent {
+export class IbUploaderComponent {
   @ViewChild('uploader', {static: false}) uploader !: ElementRef;
   @Input() textKey: string;
   @Output() onFileSelected: EventEmitter<any> = new EventEmitter<any>();

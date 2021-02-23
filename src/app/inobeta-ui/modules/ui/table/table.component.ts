@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { Sort } from '@angular/material';
-import { TableCellAligns, TableTitles, TableTitlesTypes } from './models/titles.model';
-import { TemplateModel } from './models/template.model';
+import { IbTableCellAligns, IbTableTitles, IbTableTitlesTypes } from './models/titles.model';
+import { IbTemplateModel } from './models/template.model';
 import { Store } from '@ngrx/store';
 import * as TableFiltersActions from './redux/table.action';
 import Papa from 'papaparse';
@@ -104,11 +104,11 @@ import { TranslateService } from '@ngx-translate/core';
   `,
   styleUrls: ['./table.component.css']
 })
-export class TableComponent implements OnChanges {
+export class IbTableComponent implements OnChanges {
 
   // input necessari
   @Input() customItemTemplate: any;
-  @Input() titles: TableTitles[] = [];
+  @Input() titles: IbTableTitles[] = [];
   @Input() items: any[] = [];
   @Input() enableReduxStore = false;
   @Input() currentSort: any = {}; // this input can override redux store. Can we remove it?
@@ -122,7 +122,7 @@ export class TableComponent implements OnChanges {
   @Input() structureTemplates = {}; //exportTemplate, paginatorTemplate
   @Input() hasActions = false;
   @Input() selectRowName = 'Seleziona';
-  @Input() templateButtons: TemplateModel[] = [];
+  @Input() templateButtons: IbTemplateModel[] = [];
   @Input() templateHeaders: any = {};
   /** { columnName: TemplateRef } */
   @Input() tableName = 'default_table_name'; // change this value in order to partition redux data
@@ -148,9 +148,9 @@ export class TableComponent implements OnChanges {
   @Output() rowChecked: EventEmitter<any> = new EventEmitter<any>();
 
   /*objectKeys = Object.keys;*/
-  filterableTitles: TableTitles[] = [];
-  typeEnum = TableTitlesTypes;
-  alignEnum = TableCellAligns;
+  filterableTitles: IbTableTitles[] = [];
+  typeEnum = IbTableTitlesTypes;
+  alignEnum = IbTableCellAligns;
   sortedData;
   currentPagination: any = {};
   columnFilter = {};
@@ -241,12 +241,12 @@ export class TableComponent implements OnChanges {
         for (const k in this.columnFilter) {
           /*TODO INSERT COLUMN TYPE HERE */
           switch (this.titles.find(t => t.key === k).type) {
-            case TableTitlesTypes.STRING:
+            case IbTableTitlesTypes.STRING:
               if (!(el[k] && el[k].includes && el[k].toLowerCase().includes(this.columnFilter[k].toLowerCase()))) {
                 include = false;
               }
               break;
-            case TableTitlesTypes.NUMBER:
+            case IbTableTitlesTypes.NUMBER:
               if (!(el[k] && el[k].toString() && el[k].toString().includes(this.columnFilter[k].toString().toLowerCase()))) {
                 include = false;
               }
@@ -344,7 +344,7 @@ export class TableComponent implements OnChanges {
     const getValueFromKey = (row, key) => {
       const value = row[key];
       const h = this.titles.find(t => t.key === key);
-      if (h.type === TableTitlesTypes.MATERIAL_SELECT) {
+      if (h.type === IbTableTitlesTypes.MATERIAL_SELECT) {
         return h.materialSelectItems.find(item => item.value === value).label;
       }
       return value;

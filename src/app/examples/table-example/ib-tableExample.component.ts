@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TableTitlesTypes } from 'src/app/inobeta-ui/modules/ui/table/models/titles.model';
+import { IbTableTitlesTypes } from 'src/app/inobeta-ui/modules/ui/table/models/titles.model';
 
 @Component({
   selector: 'ib-table-example',
@@ -13,27 +13,27 @@ export class IbTableExampleComponent implements OnInit {
     {
       key: 'lot',
       value: 'Lotto',
-      type: TableTitlesTypes.CUSTOM,
+      type: IbTableTitlesTypes.CUSTOM,
       filterable: true,
       width: '10%',
     },
     {
       key: 'sender',
       value: 'Mittente',
-      type: TableTitlesTypes.STRING,
+      type: IbTableTitlesTypes.STRING,
       filterable: true
     },
     {
       key: 'date',
       value: 'receiptGoods.historyGoods.table.date',
-      type: TableTitlesTypes.STRING,
+      type: IbTableTitlesTypes.STRING,
       filterable: true,
       width: '10%'
     },
     {
       key: 'userType',
       value: 'Tipo Utente',
-      type: TableTitlesTypes.MATERIAL_SELECT,
+      type: IbTableTitlesTypes.MATERIAL_SELECT,
       width: '10%',
       materialSelectItems: [
         {
@@ -49,7 +49,7 @@ export class IbTableExampleComponent implements OnInit {
     {
       key: 'qt',
       value: 'Qt',
-      type: TableTitlesTypes.INPUT_NUMBER,
+      type: IbTableTitlesTypes.INPUT_NUMBER,
       filterable: true,
       placeHolderInput: 'Inserisci qt'
     }

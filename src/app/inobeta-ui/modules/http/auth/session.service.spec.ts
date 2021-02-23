@@ -1,15 +1,15 @@
 import {TestBed} from '@angular/core/testing';
 import {Router} from '@angular/router';
-import {AuthService} from './auth.service';
+import {IbAuthService} from './auth.service';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {MatSnackBar} from '@angular/material';
-import {SessionService} from './session.service';
-import {HttpClientService} from '../http/httpclient.service';
+import {IbSessionService} from './session.service';
+import {IbHttpClientService} from '../http/http-client.service';
 import {MockStore, provideMockStore} from '@ngrx/store/testing';
 import {Store} from '@ngrx/store';
 import {ISessionState} from './redux/session.reducer';
 import {AuthTypes} from './session.model';
-import {ResponseHandlerService} from '../http/responseHandler.service';
+import {IbResponseHandlerService} from '../http/response-handler.service';
 import {HttpClient} from '@angular/common/http';
 
 describe('Session service test', () => {
@@ -41,18 +41,18 @@ describe('Session service test', () => {
       ],
       providers: [
         { provide: Router, useValue: routerSpy },
-        { provide: AuthService, useValue: mockAuthService},
+        { provide: IbAuthService, useValue: mockAuthService},
         { provide: MatSnackBar, useValue: mockSnackBar},
         provideMockStore({ initialState }),
-        HttpClientService,
-        ResponseHandlerService,
-        SessionService
+        IbHttpClientService,
+        IbResponseHandlerService,
+        IbSessionService
       ]
     }).compileComponents();
     httpClient = TestBed.get(HttpClient);
     httpMock = TestBed.get(HttpTestingController);
     store = TestBed.get<Store<ISessionState>>(Store);
-    sessionService = TestBed.get(SessionService);
+    sessionService = TestBed.get(IbSessionService);
   });
 
   beforeEach(() => {
@@ -60,12 +60,12 @@ describe('Session service test', () => {
   });
 
   it('Should be created', () => {
-    const svcSession = TestBed.get(SessionService);
+    const svcSession = TestBed.get(IbSessionService);
     expect(svcSession).toBeTruthy();
   });
 
   it('Should be use correctly setAuthtype', () => {
-    const svcSession = TestBed.get(SessionService);
+    const svcSession = TestBed.get(IbSessionService);
     svcSession.setAuthtype();
   });
 
@@ -273,7 +273,7 @@ describe('Session service test', () => {
   });
 
   it('should do login() FAIL', (done) => {
-    sessionService = TestBed.get(SessionService);
+    sessionService = TestBed.get(IbSessionService);
     sessionService.login({
       username: 'Luca',
       password: 'Luca123',
@@ -292,7 +292,7 @@ describe('Session service test', () => {
 
   it('Should be use correctly logout', () => {
     dispatchSpy = spyOn(store, 'dispatch');
-    const svcSession = TestBed.get(SessionService);
+    const svcSession = TestBed.get(IbSessionService);
     svcSession.logout();
     expect(dispatchSpy).toHaveBeenCalled();
     expect(dispatchSpy).toHaveBeenCalledTimes(1);

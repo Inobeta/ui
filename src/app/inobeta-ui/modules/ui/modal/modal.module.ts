@@ -1,15 +1,15 @@
 import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { ModalMessageComponent } from './modalMessage.component';
+import { IbModalMessageComponent } from './modal-message.component';
 import { CommonModule } from '@angular/common';
 import { MatDialogModule } from '@angular/material';
 
 
 const entryComponents = [
-  ModalMessageComponent
+  IbModalMessageComponent
 ]
 const components = [
-  ModalMessageComponent
+  IbModalMessageComponent
 
 ]
 

@@ -1,9 +1,9 @@
-import {AuthService} from './auth.service';
+import {IbAuthService} from './auth.service';
 import {TestBed} from '@angular/core/testing';
 import {CookiesStorageService, LocalStorageService} from 'ngx-store';
 import {Router} from '@angular/router';
 
-describe('AuthService', () => {
+describe('IbAuthService', () => {
 
   const mockCookiesStorage = {
     empty: true,
@@ -61,7 +61,7 @@ describe('AuthService', () => {
         { provide: LocalStorageService, useValue: mockLocalStorage },
         { provide: CookiesStorageService, useValue: mockCookiesStorage },
         { provide: Router, useValue: routerSpy },
-        AuthService
+        IbAuthService
       ]
     }).compileComponents();
   });
@@ -75,32 +75,32 @@ describe('AuthService', () => {
   });
 
   it('should be created', () => {
-    const authService = TestBed.get(AuthService);
+    const authService = TestBed.get(IbAuthService);
     expect(authService).toBeTruthy();
   });
 
   it('should be created with active session', () => {
     mockCookiesStorage.empty = false;
-    const authService = TestBed.get(AuthService);
+    const authService = TestBed.get(IbAuthService);
     expect(authService).toBeTruthy();
   });
 
   it('should call local storage method', () => {
-    const authService = TestBed.get(AuthService);
+    const authService = TestBed.get(IbAuthService);
     authService.storeSession();
     expect(mockLocalStorage.set).toHaveBeenCalled();
     expect(mockLocalStorage.set).toHaveBeenCalledTimes(1);
   });
 
   it('should call local cookie method', () => {
-    const authService = TestBed.get(AuthService);
+    const authService = TestBed.get(IbAuthService);
     authService.cookieSession();
     expect(mockCookiesStorage.set).toHaveBeenCalled();
     expect(mockCookiesStorage.set).toHaveBeenCalledTimes(1);
   });
 
   it('should do logout', () => {
-    const authService = TestBed.get(AuthService);
+    const authService = TestBed.get(IbAuthService);
     authService.logout();
     expect(mockLocalStorage.set).toHaveBeenCalled();
     expect(mockLocalStorage.set).toHaveBeenCalledTimes(1);

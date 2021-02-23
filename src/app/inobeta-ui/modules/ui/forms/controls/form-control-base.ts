@@ -1,6 +1,6 @@
 import { FormControl, ValidatorFn } from '@angular/forms';
 
-export class FormControlBase<T> {
+export class IbFormControlBase<T> {
   value: T;
   key: string;
   label: string;
@@ -12,7 +12,7 @@ export class FormControlBase<T> {
   errors: {message: string, condition: (c: FormControl) => void}[];
   options: {key: string, value: string}[];
 
-  constructor(options: FormControlBaseParams<T> = {}) {
+  constructor(options: IbFormControlBaseParams<T> = {}) {
     this.value = options.value;
     this.key = options.key || '';
     this.label = options.label || '';
@@ -26,7 +26,7 @@ export class FormControlBase<T> {
   }
 }
 
-export interface FormControlBaseParams<T>{
+export interface IbFormControlBaseParams<T>{
   value?: T;
   key?: string;
   label?: string;

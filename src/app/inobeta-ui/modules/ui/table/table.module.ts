@@ -3,37 +3,36 @@ import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatMenuModule, MatSortModule, MatChipsModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, MatIconModule, MatDialogModule, MatSelectModule, MatRadioModule, MatPaginatorModule, MatButtonModule, MatSnackBarModule, MatCardModule } from '@angular/material';
-import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { TableAddComponent } from './components/table-add.component';
-import { TableExportDialogComponent, TableExportComponent } from './components/table-export.component';
-import { TableFilterResetComponent } from './components/table-filter-reset.component';
-import { TableHeaderComponent } from './components/table-header/table-header.component';
-import { TableMenuActionsComponent } from './components/table-menu-actions.component';
-import { TablePaginatorComponent } from './components/table-paginator.component';
-import { TableRowsComponent } from './components/table-rows/table-rows.component';
-import { TableSeachComponent } from './components/table-seach.component';
-import { TableHeaderPopupComponent } from './components/tableHeaderPopup.component';
-import { TableComponent } from './table.component';
+import { IbTableAddComponent } from './components/table-add.component';
+import { IbTableExportDialogComponent, IbTableExportComponent } from './components/table-export.component';
+import { IbTableFilterResetComponent } from './components/table-filter-reset.component';
+import { IbTableHeaderComponent } from './components/table-header/table-header.component';
+import { IbTableMenuActionsComponent } from './components/table-menu-actions.component';
+import { IbTablePaginatorComponent } from './components/table-paginator.component';
+import { IbTableRowsComponent } from './components/table-rows/table-rows.component';
+import { IbTableSeachComponent } from './components/table-seach.component';
+import { IbTableHeaderPopupComponent } from './components/tableHeaderPopup.component';
+import { IbTableComponent } from './table.component';
 
 const COMPONENTS = [
-    TableComponent,
-    TableHeaderComponent,
-    TableRowsComponent,
-    TableAddComponent,
-    TableExportComponent,
-    TableFilterResetComponent,
-    TableMenuActionsComponent,
-    TablePaginatorComponent,
-    TableSeachComponent,
-    TableHeaderPopupComponent,
-    TableExportDialogComponent
+    IbTableComponent,
+    IbTableHeaderComponent,
+    IbTableRowsComponent,
+    IbTableAddComponent,
+    IbTableExportComponent,
+    IbTableFilterResetComponent,
+    IbTableMenuActionsComponent,
+    IbTablePaginatorComponent,
+    IbTableSeachComponent,
+    IbTableHeaderPopupComponent,
+    IbTableExportDialogComponent
 ]
 
 @NgModule({
     declarations: [
         ...COMPONENTS,
-        TableExportDialogComponent
+        IbTableExportDialogComponent
     ],
     imports: [
         CommonModule,
@@ -54,14 +53,13 @@ const COMPONENTS = [
         MatButtonModule,
         MatSnackBarModule,
         MatCardModule,
-       // RouterModule,
         TranslateModule.forChild({
             extend: true
         })
     ],
     exports: [...COMPONENTS],
     entryComponents: [
-      TableExportDialogComponent
+      IbTableExportDialogComponent
     ]
 })
-export class TableModule { }
+export class IbTableModule { }

@@ -13,13 +13,13 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
     </div>
   `,
 })
-export class TableExportComponent {
+export class IbTableExportComponent {
   @Output() export = new EventEmitter();
 
   constructor(public dialog: MatDialog) { }
 
   open() {
-    const dialog = this.dialog.open(TableExportDialogComponent, {
+    const dialog = this.dialog.open(IbTableExportDialogComponent, {
       width: '400px',
     });
 
@@ -55,7 +55,7 @@ export class TableExportComponent {
     </div>
   `,
 })
-export class TableExportDialogComponent {
+export class IbTableExportDialogComponent {
   format = 'xlsx';
   formats = [
     { value: 'xlsx', viewValue: 'XLSX (Excel)' },
@@ -64,7 +64,7 @@ export class TableExportDialogComponent {
   ];
   dataset = 'current';
 
-  constructor(public dialogRef: MatDialogRef<TableExportDialogComponent>) {}
+  constructor(public dialogRef: MatDialogRef<IbTableExportDialogComponent>) {}
 
   onNoClick(): void {
     this.dialogRef.close();

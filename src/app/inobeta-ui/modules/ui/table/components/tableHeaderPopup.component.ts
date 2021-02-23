@@ -99,7 +99,7 @@ import { debounceTime } from 'rxjs/internal/operators/debounceTime';
   ]
 
 })
-export class TableHeaderPopupComponent implements OnChanges {
+export class IbTableHeaderPopupComponent implements OnChanges {
 
   @Input() ibTable: any;
   @Input() col: any;

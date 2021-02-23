@@ -4,9 +4,9 @@ Modulo per generare forms.
 
 ## Utilizzo
 
-Definire i campi del form attraverso un array di [FormControlBase](/classes/FormControlBase.html). Gli unici valori richiesti sono `key` e `label`, dove `key` viene assegnato come `formControlName`.
+Definire i campi del form attraverso un array di [IbFormControlBase](/classes/IbFormControlBase.html). Gli unici valori richiesti sono `key` e `label`, dove `key` viene assegnato come `formControlName`.
 
-`DynamicFormComponent` espongono un evento `ibSubmit` corrispondente a `ngSubmit`.
+`IbDynamicFormComponent` espongono un evento `ibSubmit` corrispondente a `ngSubmit`.
 
 Per un maggiore controllo sui forms, è possibile estendere le azioni possibili oltre al submit attraverso l'input [actions](/interfaces/FormAction.html).
 Ogni azione necessita di un campo `key`, `label`, e `handler` (callback) eccetto per il bottone relativo alla submit del form. Ricorda: **Deve esistere almeno un azione con `key: 'submit'`**
@@ -19,8 +19,8 @@ Ogni azione necessita di un campo `key`, `label`, e `handler` (callback) eccetto
   styleUrls: ['./dynamic-forms-example.component.css']
 })
 export class DynamicFormsExampleComponent implements OnInit {
-  customFormFields: FormControlBase<string>[] = [
-    new Textbox({
+  customFormFields: IbFormControlBase<string>[] = [
+    new IbTextbox({
       key: 'firstName',
       label: 'First name',
       required: true,
@@ -30,27 +30,27 @@ export class DynamicFormsExampleComponent implements OnInit {
         message: 'Email richiesta'
       }]
     }),
-    new Textbox({
+    new IbTextbox({
       type: 'email',
       key: 'email',
       label: 'Email',
       required: true,
       validators: [Validators.email]
     }),
-    new Textbox({
+    new IbTextbox({
       type: 'date',
       key: 'dateTime',
       label: 'Date',
       required: true,
     }),
-    new Dropdown({
+    new IbDropdown({
       key: 'options',
       label: 'Options',
       options: [
         { key: 'test', value: 'value' }
       ]
     }),
-    new Radio({
+    new IbRadio({
       key: 'food',
       value: 'test-1',
       label: 'Scegli qualcosa',
@@ -60,7 +60,7 @@ export class DynamicFormsExampleComponent implements OnInit {
       ],
       required: true
     }),
-    new Checkbox({
+    new IbCheckbox({
       key: 'checked',
       label: 'check this',
     })

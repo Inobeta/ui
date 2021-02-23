@@ -3,13 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule, MatFormFieldModule, MatOptionModule, MatSelectModule, MatRadioModule, MatCheckboxModule, MatInputModule } from '@angular/material';
 import { TranslateModule } from '@ngx-translate/core';
-import { UploaderComponent } from './uploader.component';
+import { IbUploaderComponent } from './uploader.component';
 
 const entryComponents = []
 const components = [
-  UploaderComponent
+  IbUploaderComponent
 ]
-
 
 @NgModule({
   imports: [

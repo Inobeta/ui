@@ -1,11 +1,11 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { FormControlBase } from 'src/app/inobeta-ui/modules/ui/forms/controls/form-control-base';
-import { Textbox } from 'src/app/inobeta-ui/modules/ui/forms/controls/textbox';
+import { IbFormControlBase } from 'src/app/inobeta-ui/modules/ui/forms/controls/form-control-base';
+import { IbTextbox } from 'src/app/inobeta-ui/modules/ui/forms/controls/textbox';
 import { Validators } from '@angular/forms';
-import { Dropdown } from 'src/app/inobeta-ui/modules/ui/forms/controls/dropdown';
-import { Radio } from 'src/app/inobeta-ui/modules/ui/forms/controls/radio';
-import { Checkbox } from 'src/app/inobeta-ui/modules/ui/forms/controls/checkbox';
-import { MaterialFormComponent } from 'src/app/inobeta-ui/modules/ui/material-forms/material-form/material-form.component';
+import { IbDropdown } from 'src/app/inobeta-ui/modules/ui/forms/controls/dropdown';
+import { IbRadio } from 'src/app/inobeta-ui/modules/ui/forms/controls/radio';
+import { IbCheckbox } from 'src/app/inobeta-ui/modules/ui/forms/controls/checkbox';
+import { IbMaterialFormComponent } from 'src/app/inobeta-ui/modules/ui/material-forms/material-form/material-form.component';
 import { myCustomTextbox, myCustomTextboxParams } from './myCustomTextbox';
 
 @Component({
@@ -14,16 +14,16 @@ import { myCustomTextbox, myCustomTextboxParams } from './myCustomTextbox';
   styleUrls: ['./dynamic-forms-example.component.css']
 })
 export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
-  defaultFormFields: FormControlBase<string>[] = [
-    new Textbox({
+  defaultFormFields: IbFormControlBase<string>[] = [
+    new IbTextbox({
       key: 'defaultTextbox',
       label: 'First name',
       required: true,
     })
   ];
 
-  customFormFields: FormControlBase<string>[] = [
-    new Textbox({
+  customFormFields: IbFormControlBase<string>[] = [
+    new IbTextbox({
       key: 'firstName',
       label: 'First name',
       required: true,
@@ -33,27 +33,27 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
         message: 'Email richiesta'
       }]
     }),
-    new Textbox({
+    new IbTextbox({
       type: 'email',
       key: 'email',
       label: 'Email',
       required: true,
       validators: [Validators.email]
     }),
-    new Textbox({
+    new IbTextbox({
       type: 'date',
       key: 'dateTime',
       label: 'Date',
       required: true,
     }),
-    new Dropdown({
+    new IbDropdown({
       key: 'options',
       label: 'Options',
       options: [
         { key: 'test', value: 'value' }
       ]
     }),
-    new Radio({
+    new IbRadio({
       key: 'food',
       value: 'test-1',
       label: 'Scegli qualcosa',
@@ -63,7 +63,7 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
       ],
       required: true
     }),
-    new Checkbox({
+    new IbCheckbox({
       key: 'checked',
       label: 'check this',
     })
@@ -86,7 +86,7 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
       testField: 'prova',
       validators: [Validators.minLength(3)]
     }),
-    new Textbox({
+    new IbTextbox({
       key: 'password',
       label: 'shared.login.password',
       type: 'password',
@@ -96,13 +96,13 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
   ];
 
   noFormFields = [
-    new Textbox({
+    new IbTextbox({
       key: 'old',
-      label: 'Old Textbox',
+      label: 'Old IbTextbox',
     })
   ];
 
-  @ViewChild('customForm', {static: false}) customForm: MaterialFormComponent;
+  @ViewChild('customForm', {static: false}) customForm: IbMaterialFormComponent;
 
   constructor() {}
 
@@ -114,9 +114,9 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       this.noFormFields = [
         ...this.noFormFields,
-        new Textbox({
+        new IbTextbox({
           key: 'new',
-          label: 'New Textbox',
+          label: 'New IbTextbox',
         })
       ];
     }, 3000);

@@ -1,2 +1,2 @@
 export * from './uploader.component';
-export * from './ibUploader.module';
+export * from './uploader.module';

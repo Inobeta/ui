@@ -4,7 +4,7 @@ import {Observable, throwError} from 'rxjs';
 import {HttpEvent} from '@angular/common/http';
 
 @Injectable()
-export class ResponseHandlerService {
+export class IbResponseHandlerService {
 
   disableGlobalErrors = false;
 

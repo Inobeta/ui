@@ -1,2 +1,2 @@
-export * from './modalMessage.component';
-export * from './ibModal.module';
+export * from './modal-message.component';
+export * from './modal.module';

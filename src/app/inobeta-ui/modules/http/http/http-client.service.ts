@@ -1,8 +1,8 @@
 import {Injectable, Inject, Optional} from '@angular/core';
-import {ResponseHandlerService} from './responseHandler.service';
+import {IbResponseHandlerService} from './response-handler.service';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError, finalize, map, tap} from 'rxjs/operators';
-import {AuthService} from '../auth/auth.service';
+import {IbAuthService} from '../auth/auth.service';
 import {AuthTypes} from '../auth/session.model';
 import { HTTP } from '@ionic-native/http/ngx';
 import { from } from 'rxjs';
@@ -11,7 +11,7 @@ import { from } from 'rxjs';
   HttpClient with Bearer authentication
  */
 @Injectable()
-export class HttpClientService {
+export class IbHttpClientService {
 
   public pendingRequests = 0;
   public showLoading = false;
@@ -22,8 +22,8 @@ export class HttpClientService {
 
   constructor(
     protected h: HttpClient,
-    private srvAuth: AuthService,
-    private srvResponse: ResponseHandlerService,
+    private srvAuth: IbAuthService,
+    private srvResponse: IbResponseHandlerService,
     @Inject('HttpMode') @Optional() public HttpMode?: string,
     @Inject('hMobile') @Optional() protected hMobile?: HTTP) {
       this.httpMode = HttpMode || 'NORMAL';

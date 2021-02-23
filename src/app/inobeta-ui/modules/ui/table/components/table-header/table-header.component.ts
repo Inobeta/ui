@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, EventEmitter, Output, HostListener } from '@angular/core';
-import { TableTitles } from '../../models/titles.model';
-import { TemplateModel } from '../../models/template.model';
+import { IbTableTitles } from '../../models/titles.model';
+import { IbTemplateModel } from '../../models/template.model';
 
 @Component({
   // tslint:disable-next-line: component-selector
@@ -8,14 +8,14 @@ import { TemplateModel } from '../../models/template.model';
   templateUrl: './table-header.component.html',
   styleUrls: ['./table-header.component.css']
 })
-export class TableHeaderComponent implements OnInit {
+export class IbTableHeaderComponent implements OnInit {
   @Input() table: any;
-  @Input() titles: TableTitles[] = [];
+  @Input() titles: IbTableTitles[] = [];
   @Input() selectableRows = true;
   @Input() selectRowName = 'Seleziona';
   @Input() currentSort: any = {};
   @Input() templateHeaders: any = {};
-  @Input() templateButtons: TemplateModel[] = [];
+  @Input() templateButtons: IbTemplateModel[] = [];
   @Input() columnFilter = {};
   visibleHeaders = {};
 
