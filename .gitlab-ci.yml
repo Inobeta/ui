@@ -1,7 +1,19 @@
 image: node:10.11.0
 
 stages:
+  - quality
   - deploy
+
+test_unit:
+  image: inobeta/node-chrome:10
+  stage: quality
+  script:
+  - npm install && npm run test-ci
+  allow_failure: true
+  artifacts:
+    paths: [./src/coverage]
+  tags:
+  - docker
 
 deploy:
   stage: deploy
@@ -41,7 +53,7 @@ deploy_manual_unstable:
   when: manual
 
 test_package_creation:
-  stage: deploy
+  stage: quality
   script:
     - echo '//gitlab.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}'>.npmrc
     - create_temp_version

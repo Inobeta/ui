@@ -26,7 +26,8 @@ describe('Session service test', () => {
     }),
     cookieSession: jasmine.createSpy('storeSession spy').and.callFake(() => {
       return true;
-    })
+    }),
+    logout: () => {}
   };
   const routerSpy = { navigateByUrl: jasmine.createSpy('navigateByUrl')};
   let store: MockStore<{ activeSession: any }>;
