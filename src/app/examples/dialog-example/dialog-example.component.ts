@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { ModalMessageComponent } from 'src/app/inobeta-ui/modules/ui/modal';
+import { IbModalMessageComponent } from 'src/app/inobeta-ui/modules/ui/modal';
 
 @Component({
   selector: 'ib-dialog-example',
@@ -20,7 +20,7 @@ export class DialogExampleComponent implements OnInit {
 
 
   open(){
-    const dialog = this.dialog.open(ModalMessageComponent, {
+    const dialog = this.dialog.open(IbModalMessageComponent, {
       data: {
         title: 'Titolo',
         message: 'Messaggio',

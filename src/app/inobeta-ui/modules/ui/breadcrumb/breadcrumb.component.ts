@@ -18,7 +18,7 @@ enum BreadcrumbMode {
   selector: 'ib-breadcrumb',
   templateUrl: './breadcrumb.component.html',
 })
-export class BreadcrumbComponent implements OnInit {
+export class IbBreadcrumbComponent implements OnInit {
   static readonly ROUTE_DATA_BREADCRUMB = 'breadcrumb';
   /**
    * Modifica l'icona o label per il primo elemento.
@@ -55,7 +55,7 @@ export class BreadcrumbComponent implements OnInit {
         url += `/${routeURL}`;
       }
 
-      const label = child.snapshot.data[BreadcrumbComponent.ROUTE_DATA_BREADCRUMB];
+      const label = child.snapshot.data[IbBreadcrumbComponent.ROUTE_DATA_BREADCRUMB];
       if (!isNullOrUndefined(label)) {
         breadcrumbs.push({label, url});
       }

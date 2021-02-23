@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormControlBase } from '..';
+import { IbFormControlBase } from '..';
 import { FormGroup } from '@angular/forms';
 
 @Component({
@@ -8,6 +8,6 @@ import { FormGroup } from '@angular/forms';
 })
 
 export class DynamicFormControlStubComponent{
-  @Input() base: FormControlBase<string>;
+  @Input() base: IbFormControlBase<string>;
   @Input() form: FormGroup;
 }

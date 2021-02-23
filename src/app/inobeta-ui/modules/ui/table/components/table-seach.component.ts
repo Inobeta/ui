@@ -22,7 +22,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
     </div>
   `,
 })
-export class TableSeachComponent {
+export class IbTableSeachComponent {
   @Input() filterValues: any = {};
   @Input() hasSearch;
   @Output() filterChange = new EventEmitter();

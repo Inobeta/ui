@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
-import { AuthService } from './auth.service';
+import { IbAuthService } from './auth.service';
 
 @Injectable()
-export class Guard implements CanActivate {
+export class IbAuthGuard implements CanActivate {
   constructor(
-    private authService: AuthService,
+    private authService: IbAuthService,
     private router: Router,
   ) {}
 
@@ -19,10 +19,10 @@ export class Guard implements CanActivate {
 }
 
 @Injectable()
-export class LoginGuard implements CanActivate {
+export class IbLoginGuard implements CanActivate {
   public path = '';
   constructor(
-    private authService: AuthService,
+    private authService: IbAuthService,
     private router: Router) {}
 
   canActivate(): boolean {

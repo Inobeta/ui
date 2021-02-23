@@ -1,5 +1,5 @@
-import {localStorageStub} from './localStorage.stub';
-import {cookiesStorageStub} from './cookiesStorage.stub';
+import {localStorageStub} from './local-storage.stub';
+import {cookiesStorageStub} from './cookies-storage.stub';
 
 export const authServiceStub = {
 

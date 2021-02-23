@@ -1,5 +1,5 @@
 import {Component, ViewEncapsulation} from '@angular/core';
-import {HttpClientService} from './httpclient.service';
+import {IbHttpClientService} from './http-client.service';
 
 @Component({
   selector: 'ib-spinner-loading',
@@ -69,8 +69,8 @@ import {HttpClientService} from './httpclient.service';
   encapsulation: ViewEncapsulation.None
 })
 
-export class SpinnerLoadingComponent {
-  constructor(public httpService: HttpClientService) {}
+export class IbSpinnerLoadingComponent {
+  constructor(public httpService: IbHttpClientService) {}
 }
 
 /* istanbul ignore next */

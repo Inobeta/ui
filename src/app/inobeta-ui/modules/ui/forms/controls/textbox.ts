@@ -1,5 +1,5 @@
-import { FormControlBase } from './form-control-base';
+import { IbFormControlBase } from './form-control-base';
 
-export class Textbox extends FormControlBase<string> {
+export class IbTextbox extends IbFormControlBase<string> {
   controlType = 'textbox';
 }

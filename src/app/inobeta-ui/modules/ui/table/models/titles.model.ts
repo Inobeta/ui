@@ -1,34 +1,34 @@
 import { ElementRef } from '@angular/core';
 
-export enum TableTitlesTypes {
+export enum IbTableTitlesTypes {
   ANY, DATE, TAG, NUMBER, HOUR, COMBOBOX, BUTTON, CHECKBOX, BOOLEAN, STRING, CUSTOMDATE, MATERIAL_SELECT, INPUT_NUMBER, CUSTOM
 }
-export enum TableCellAligns {
+export enum IbTableCellAligns {
   LEFT= 'left', CENTER= 'center', RIGHT= 'right'
 }
 
-export class TableComboItem {
+export class IbTableComboItem {
   label: string;
   value: any;
 }
 
-export class MaterialSelectComboItem {
+export class IbMaterialSelectComboItem {
   label: string;
   value: any;
 }
 
-export class TableTitles {
+export class IbTableTitles {
   key: string;
   value: string;
-  type: TableTitlesTypes = TableTitlesTypes.ANY;
+  type: IbTableTitlesTypes = IbTableTitlesTypes.ANY;
   filterable = false;
-  comboOptions?: any; // TableComboItem[];  <-- questa cosa è un mezzo casino da gestire con l'array
+  comboOptions?: any; // IbTableComboItem[];  <-- questa cosa è un mezzo casino da gestire con l'array
   format?: any;
-  align?: TableCellAligns;
+  align?: IbTableCellAligns;
   width = 'auto';
   templateHeaderClick?: ElementRef;
   className?: string;
-  materialSelectItems?: MaterialSelectComboItem[];
+  materialSelectItems?: IbMaterialSelectComboItem[];
   placeHolderInput?: string;
   getClassByCondition?: any;
   change?: any;

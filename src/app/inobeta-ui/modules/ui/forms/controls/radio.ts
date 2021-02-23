@@ -1,5 +1,5 @@
-import { FormControlBase } from './form-control-base';
+import { IbFormControlBase } from './form-control-base';
 
-export class Radio extends FormControlBase<string> {
+export class IbRadio extends IbFormControlBase<string> {
   controlType = 'radio';
 }

@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { HttpClientService } from './http/httpclient.service';
+import { IbHttpClientService } from './http/http-client.service';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { ResponseHandlerService } from './http/responseHandler.service';
-import { AuthService } from './auth/auth.service';
-import { SessionService } from './auth/session.service';
+import { IbResponseHandlerService } from './http/response-handler.service';
+import { IbAuthService } from './auth/auth.service';
+import { IbSessionService } from './auth/session.service';
 import { LocalStorageService, CookiesStorageService } from 'ngx-store';
-import { SpinnerLoadingStubComponent } from './http/spinnerLoading.stub.spec';
+import { SpinnerLoadingStubComponent } from './http/spinner-loading.stub.spec';
 import { authServiceStub } from './auth/auth.service.stub';
-import { localStorageStub } from './auth/localStorage.stub';
-import { cookiesStorageStub } from './auth/cookiesStorage.stub';
+import { localStorageStub } from './auth/local-storage.stub';
+import { cookiesStorageStub } from './auth/cookies-storage.stub';
 import { sessionStubSpec } from './auth/session.stub.spec';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
@@ -23,12 +23,12 @@ const components = [
 ]
 
 const services = [
-  HttpClientService,
-  ResponseHandlerService,
-  { provide: AuthService, useValue: authServiceStub},
+  IbHttpClientService,
+  IbResponseHandlerService,
+  { provide: IbAuthService, useValue: authServiceStub},
   { provide: LocalStorageService, useValue: localStorageStub },
   { provide: CookiesStorageService, useValue: cookiesStorageStub },
-  { provide: SessionService, useValue: sessionStubSpec}
+  { provide: IbSessionService, useValue: sessionStubSpec}
 ]
 
 

@@ -21,10 +21,10 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
       </button>
     </mat-dialog-actions>`,
 })
-export class ModalMessageComponent {
+export class IbModalMessageComponent {
 
   constructor(
-    public dialogRef: MatDialogRef<ModalMessageComponent>,
+    public dialogRef: MatDialogRef<IbModalMessageComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {}
 
   dismiss() {

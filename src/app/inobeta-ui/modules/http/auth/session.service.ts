@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {AuthTypes, Session, UserLogin} from './session.model';
-import {HttpClientService} from '../http/httpclient.service';
-import {AuthService} from './auth.service';
+import {IbHttpClientService} from '../http/http-client.service';
+import {IbAuthService} from './auth.service';
 import {catchError, map} from 'rxjs/operators';
 import {throwError} from 'rxjs';
 import {Store} from '@ngrx/store';
@@ -12,12 +12,12 @@ import {MatSnackBar} from '@angular/material';
 const loginUrl = '/api/auth/login';
 
 @Injectable()
-export class SessionService {
+export class IbSessionService {
   private authType = null /*AuthTypes.BASIC_AUTH*/;
 
   constructor(
-    private srvAuth: AuthService,
-    private h: HttpClientService,
+    private srvAuth: IbAuthService,
+    private h: IbHttpClientService,
     private store: Store<any>,
     private srvRouter: Router,
     private snackBar: MatSnackBar) {}

@@ -1,35 +1,41 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MaterialFormComponent } from './material-form.component';
+import { IbMaterialFormComponent } from './material-form.component';
 import { IbToolTestModule } from '../../../tools';
-import { CustomMaterialModule } from 'src/app/inobeta-ui/material.module';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MaterialFormControlComponent } from '../material-form-control/material-form-control.component';
-import { DynamicFormsModule } from '../../forms';
+import { IbMaterialFormControlComponent } from '../material-form-control/material-form-control.component';
+import { IbDynamicFormsModule } from '../../forms';
+import { MatFormFieldModule, MatOptionModule, MatSelectModule, MatRadioModule, MatCheckboxModule, MatInputModule, MatButtonModule } from '@angular/material';
 
 
-describe('CustomMaterialFormComponent', () => {
-  let component: MaterialFormComponent;
-  let fixture: ComponentFixture<MaterialFormComponent>;
+describe('IbMaterialFormComponent', () => {
+  let component: IbMaterialFormComponent;
+  let fixture: ComponentFixture<IbMaterialFormComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MaterialFormComponent, MaterialFormControlComponent ],
+      declarations: [ IbMaterialFormComponent, IbMaterialFormControlComponent ],
       imports: [
         IbToolTestModule,
-        CustomMaterialModule,
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
-        DynamicFormsModule
+        IbDynamicFormsModule,
+        MatFormFieldModule,
+        MatOptionModule,
+        MatSelectModule,
+        MatRadioModule,
+        MatCheckboxModule,
+        MatInputModule,
+        MatButtonModule
       ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MaterialFormComponent);
+    fixture = TestBed.createComponent(IbMaterialFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
