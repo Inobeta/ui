@@ -6,7 +6,7 @@ import { IbTemplateModel } from './models/template.model';
   selector: 'ib-table',
   template: ``,
 })
-export class TableStubComponent {
+export class IbTableStubComponent {
   @Input() titles: IbTableTitles[] = [];
   @Input() items: any[] = [];
   @Input() filterValues: any = {};

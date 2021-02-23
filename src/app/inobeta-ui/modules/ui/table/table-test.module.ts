@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { TableStubComponent } from './table.stub.spec';
+import { IbTableStubComponent } from './table.stub.spec';
 
 const COMPONENTS = [
-  TableStubComponent
+  IbTableStubComponent
 ]
 
 @NgModule({
@@ -17,4 +17,4 @@ const COMPONENTS = [
     entryComponents: [
     ]
 })
-export class TableTestModule { }
+export class IbTableTestModule { }

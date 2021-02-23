@@ -3,8 +3,10 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { IbMockTranslatePipeDirective } from './stubs/mock-translate-pipe.directive';
 import { TranslateService } from '@ngx-translate/core';
 import { TranslateServiceStub } from './stubs/translate.service.stub';
+import { registerLocaleData } from '@angular/common';
+import localeIt from '@angular/common/locales/it';
 
-
+registerLocaleData(localeIt, 'it');
 
 const entryComponents = []
 const components = [

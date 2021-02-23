@@ -7,7 +7,7 @@ import {TranslateModule} from '@ngx-translate/core';
 import {IbSessionService} from '../auth/session.service';
 import {MatSnackBar, MatSnackBarModule} from '@angular/material';
 
-xdescribe('LoginFormComponent', () => {
+describe('LoginFormComponent', () => {
 
   const sessionServiceStub = {
     loginSuccess: true,
@@ -72,7 +72,7 @@ xdescribe('LoginFormComponent', () => {
     component.doLogin('/dashboard');
     expect(sessionServiceStub.login).toHaveBeenCalled();
     expect(sessionServiceStub.login).toHaveBeenCalledTimes(1);
-    expect(sessionServiceStub.login).toHaveBeenCalledWith(Object({ username: 'salvatore.niglio@inobeta.net', password: 'password' }));
+    expect(sessionServiceStub.login).toHaveBeenCalledWith(Object({ username: 'salvatore.niglio@inobeta.net', password: 'password', rememberMe: false }));
     expect(snackBarStub.open).toHaveBeenCalled();
     expect(routerSpy.navigateByUrl).toHaveBeenCalledTimes(1);
     expect (routerSpy.navigateByUrl).toHaveBeenCalledWith ('/dashboard');
@@ -87,7 +87,7 @@ xdescribe('LoginFormComponent', () => {
     component.doLogin('/dashboard');
     expect(sessionServiceStub.login).toHaveBeenCalled();
     expect(sessionServiceStub.login).toHaveBeenCalledTimes(1);
-    expect(sessionServiceStub.login).toHaveBeenCalledWith(Object({ username: 'ciao', password: 'ciao' }));
+    expect(sessionServiceStub.login).toHaveBeenCalledWith(Object({ username: 'ciao', password: 'ciao', rememberMe: false }));
     expect(snackBarStub.open).toHaveBeenCalled();
   });
 
