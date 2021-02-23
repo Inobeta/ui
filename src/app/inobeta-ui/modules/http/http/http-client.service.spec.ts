@@ -1,8 +1,8 @@
 import {TestBed} from '@angular/core/testing';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
-import {AuthService} from '../auth/auth.service';
-import {HttpClientService} from './httpclient.service';
-import {ResponseHandlerService} from './responseHandler.service';
+import {IbAuthService} from '../auth/auth.service';
+import {IbHttpClientService} from './http-client.service';
+import {IbResponseHandlerService} from './response-handler.service';
 import {AuthTypes} from '../auth/session.model';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {throwError} from 'rxjs';
@@ -36,9 +36,9 @@ describe('http client test', () => {
         HttpClientTestingModule,
       ],
       providers: [
-        { provide: AuthService, useValue: mockAuthService},
-        { provide: ResponseHandlerService, useValue: mockResponseHandler},
-        HttpClientService
+        { provide: IbAuthService, useValue: mockAuthService},
+        { provide: IbResponseHandlerService, useValue: mockResponseHandler},
+        IbHttpClientService
       ]
     }).compileComponents();
     httpClient = TestBed.get(HttpClient);
@@ -46,18 +46,18 @@ describe('http client test', () => {
   });
 
   it('Should be created', () => {
-    const svHttpClientService = TestBed.get(HttpClientService);
+    const svHttpClientService = TestBed.get(IbHttpClientService);
     expect(svHttpClientService).toBeTruthy();
   });
 
   it('Should be use setAuthType', () => {
-    const svHttpClientService = TestBed.get(HttpClientService);
+    const svHttpClientService = TestBed.get(IbHttpClientService);
     svHttpClientService.setAuthtype(AuthTypes.JWT);
     expect(svHttpClientService.authType).toBe(1);
   });
 
   it('createAuthorizationHeader', () => {
-    const svHttpClientService = TestBed.get(HttpClientService);
+    const svHttpClientService = TestBed.get(IbHttpClientService);
     svHttpClientService.createAuthorizationHeader(new HttpHeaders('prova: prova'));
     svHttpClientService.setAuthtype(AuthTypes.JWT);
     svHttpClientService.createAuthorizationHeader(new HttpHeaders('prova: prova'));
@@ -67,12 +67,12 @@ describe('http client test', () => {
 
   it('createAuthorizationHeader', () => {
     mockAuthService.activeSession = null;
-    const svHttpClientService = TestBed.get(HttpClientService);
+    const svHttpClientService = TestBed.get(IbHttpClientService);
     svHttpClientService.createAuthorizationHeader(new HttpHeaders('prova: prova'));
   });
 
   it('should use get', () => {
-    const svHttpClientService = TestBed.get(HttpClientService);
+    const svHttpClientService = TestBed.get(IbHttpClientService);
     const spyModal = spyOn(svHttpClientService, 'turnOffModal');
     const spyHead = spyOn(svHttpClientService, 'createAuthorizationHeader');
     const testData = {name: 'Test Data'};
@@ -103,7 +103,7 @@ describe('http client test', () => {
   });
 
   it('should use get FAIL', (done) => {
-    const svHttpClientService = TestBed.get(HttpClientService);
+    const svHttpClientService = TestBed.get(IbHttpClientService);
     svHttpClientService.get('/ciao/get')
       .subscribe((res: any) => {
         expect(res.failure.error.type).toBe('ERROR_GET');
@@ -120,7 +120,7 @@ describe('http client test', () => {
   });
 
   it('should use delete', () => {
-    const svHttpClientService = TestBed.get(HttpClientService);
+    const svHttpClientService = TestBed.get(IbHttpClientService);
     const spyModal = spyOn(svHttpClientService, 'turnOffModal');
     const spyHead = spyOn(svHttpClientService, 'createAuthorizationHeader');
     const testData = {name: 'Test Data'};
@@ -138,7 +138,7 @@ describe('http client test', () => {
   });
 
   it('should use delete FAIL', (done) => {
-    const svHttpClientService = TestBed.get(HttpClientService);
+    const svHttpClientService = TestBed.get(IbHttpClientService);
     svHttpClientService.delete('/ciao/delete')
       .subscribe((res: any) => {
         expect(res.failure.error.type).toBe('ERROR_DELETE');
@@ -155,7 +155,7 @@ describe('http client test', () => {
   });
 
   it('should use put', () => {
-    const svHttpClientService = TestBed.get(HttpClientService);
+    const svHttpClientService = TestBed.get(IbHttpClientService);
     const spyModal = spyOn(svHttpClientService, 'turnOffModal');
     const spyHead = spyOn(svHttpClientService, 'createAuthorizationHeader');
     const testData = {name: 'Test Data'};
@@ -173,7 +173,7 @@ describe('http client test', () => {
   });
 
   it('should use put with null', () => {
-    const svHttpClientService = TestBed.get(HttpClientService);
+    const svHttpClientService = TestBed.get(IbHttpClientService);
     const spyModal = spyOn(svHttpClientService, 'turnOffModal');
     const spyHead = spyOn(svHttpClientService, 'createAuthorizationHeader');
     const testData = null;
@@ -191,7 +191,7 @@ describe('http client test', () => {
   });
 
   it('should use put FAIL', (done) => {
-    const svHttpClientService = TestBed.get(HttpClientService);
+    const svHttpClientService = TestBed.get(IbHttpClientService);
     svHttpClientService.put('/ciao/put')
       .subscribe((res: any) => {
         expect(res.failure.error.type).toBe('ERROR_PUT');
@@ -208,7 +208,7 @@ describe('http client test', () => {
   });
 
   it('should use turnOffModal with pendind Request > 0', () => {
-    const svHttpClientService = TestBed.get(HttpClientService);
+    const svHttpClientService = TestBed.get(IbHttpClientService);
     const spyModal = spyOn(svHttpClientService, 'turnOffModal');
     const spyHead = spyOn(svHttpClientService, 'createAuthorizationHeader');
     const testData = {name: 'Test Data'};

@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
-import { FormControlBase } from '../controls/form-control-base';
+import { IbFormControlBase } from '../controls/form-control-base';
 import { FormGroup } from '@angular/forms';
-import { FormControlService } from '../form-control.service';
+import { IbFormControlService } from '../form-control.service';
 
 interface FormAction {
   key?: string;
@@ -14,15 +14,15 @@ interface FormAction {
   selector: 'ib-form',
   templateUrl: './dynamic-form.component.html',
 })
-export class DynamicFormComponent implements OnInit, OnChanges {
-  @Input() fields: FormControlBase<string>[] = [];
+export class IbDynamicFormComponent implements OnInit, OnChanges {
+  @Input() fields: IbFormControlBase<string>[] = [];
   @Input() actions: FormAction[] = [
     { key: 'submit', label: 'Save' }
   ];
   @Output() ibSubmit = new EventEmitter<any>();
   form: FormGroup;
 
-  constructor(private cs: FormControlService) {
+  constructor(private cs: IbFormControlService) {
   }
 
   ngOnInit() {

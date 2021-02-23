@@ -1,17 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { DynamicFormControlComponent } from './dynamic-form-control/dynamic-form-control.component';
-import { DynamicFormComponent } from './dynamic-form/dynamic-form.component';
-import { FormControlService } from './form-control.service';
+import { IbDynamicFormControlComponent } from './dynamic-form-control/dynamic-form-control.component';
+import { IbDynamicFormComponent } from './dynamic-form/dynamic-form.component';
+import { IbFormControlService } from './form-control.service';
 
 @NgModule({
-  declarations: [DynamicFormControlComponent, DynamicFormComponent],
+  declarations: [IbDynamicFormControlComponent, IbDynamicFormComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
   ],
-  providers: [FormControlService],
-  exports: [DynamicFormComponent, DynamicFormControlComponent]
+  providers: [IbFormControlService],
+  exports: [IbDynamicFormComponent, IbDynamicFormControlComponent]
 })
-export class DynamicFormsModule { }
+export class IbDynamicFormsModule { }

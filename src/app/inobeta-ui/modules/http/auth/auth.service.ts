@@ -3,7 +3,7 @@ import {Session} from './session.model';
 import {CookiesStorageService, LocalStorageService} from 'ngx-store';
 
 @Injectable()
-export class AuthService {
+export class IbAuthService {
   activeSession: Session = null;
   sessionStorageKey = '';
 

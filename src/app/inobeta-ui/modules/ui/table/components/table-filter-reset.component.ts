@@ -23,7 +23,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
     </div>
   `,
 })
-export class TableFilterResetComponent {
+export class IbTableFilterResetComponent {
   @Input() hasFilterReset;
   @Output() filterReset = new EventEmitter();
 }

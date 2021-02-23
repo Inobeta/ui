@@ -1,5 +1,5 @@
-import { FormControlBase } from './form-control-base';
+import { IbFormControlBase } from './form-control-base';
 
-export class Checkbox extends FormControlBase<string> {
+export class IbCheckbox extends IbFormControlBase<string> {
   controlType = 'checkbox';
 }

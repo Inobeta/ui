@@ -1,6 +1,6 @@
 import {TemplateRef} from '@angular/core';
 
-export class TemplateModel {
+export class IbTemplateModel {
   template: TemplateRef<any>;
   columnName: string;
 }

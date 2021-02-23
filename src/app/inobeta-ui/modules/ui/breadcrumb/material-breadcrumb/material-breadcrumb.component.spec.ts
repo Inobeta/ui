@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MaterialBreadcrumbComponent } from './material-breadcrumb.component';
+import { IbMaterialBreadcrumbComponent } from './material-breadcrumb.component';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatIconModule } from '@angular/material';
 import { of } from 'rxjs';
 
-xdescribe('MaterialBreadcrumbComponent', () => {
-  let component: MaterialBreadcrumbComponent;
-  let fixture: ComponentFixture<MaterialBreadcrumbComponent>;
+xdescribe('IbMaterialBreadcrumbComponent', () => {
+  let component: IbMaterialBreadcrumbComponent;
+  let fixture: ComponentFixture<IbMaterialBreadcrumbComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MaterialBreadcrumbComponent ],
+      declarations: [ IbMaterialBreadcrumbComponent ],
       imports: [
         CommonModule,
         RouterModule,
@@ -33,7 +33,7 @@ xdescribe('MaterialBreadcrumbComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MaterialBreadcrumbComponent);
+    fixture = TestBed.createComponent(IbMaterialBreadcrumbComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

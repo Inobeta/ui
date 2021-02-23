@@ -2,9 +2,9 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import {Router} from '@angular/router';
 import {ReactiveFormsModule} from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {LoginComponent} from './login.component';
+import {IbLoginComponent} from './login.component';
 import {TranslateModule} from '@ngx-translate/core';
-import {SessionService} from '../modules/ibHttp/auth/session.service';
+import {IbSessionService} from '../auth/session.service';
 import {MatSnackBar, MatSnackBarModule} from '@angular/material';
 
 xdescribe('LoginFormComponent', () => {
@@ -28,8 +28,8 @@ xdescribe('LoginFormComponent', () => {
     open: jasmine.createSpy('mock snack bar')
   };
 
-  let component: LoginComponent;
-  let fixture: ComponentFixture<LoginComponent>;
+  let component: IbLoginComponent;
+  let fixture: ComponentFixture<IbLoginComponent>;
   const routerSpy = { navigateByUrl: jasmine.createSpy('navigateByUrl')};
 
   beforeEach(async(() => {
@@ -41,10 +41,10 @@ xdescribe('LoginFormComponent', () => {
         MatSnackBarModule
       ],
       declarations: [
-        LoginComponent
+        IbLoginComponent
       ],
       providers: [
-        { provide: SessionService, useValue: sessionServiceStub },
+        { provide: IbSessionService, useValue: sessionServiceStub },
         { provide: MatSnackBar, useValue: snackBarStub },
         { provide: Router, useValue: routerSpy },
       ]
@@ -55,7 +55,7 @@ xdescribe('LoginFormComponent', () => {
   beforeEach(() => {
     sessionServiceStub.login.calls.reset();
     snackBarStub.open.calls.reset();
-    fixture = TestBed.createComponent(LoginComponent);
+    fixture = TestBed.createComponent(IbLoginComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

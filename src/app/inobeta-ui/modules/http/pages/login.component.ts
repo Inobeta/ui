@@ -1,7 +1,7 @@
 import {Component, Input} from '@angular/core';
 import {FormBuilder, FormGroup, FormControl, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
-import {SessionService} from '../modules/ibHttp/auth/session.service';
+import {IbSessionService} from '../auth/session.service';
 import {MatSnackBar} from '@angular/material';
 
 // TODO angular2-toaster eliminato da package.json, quindi qui ci sono vari commenti per far partire l'app
@@ -34,13 +34,13 @@ import {MatSnackBar} from '@angular/material';
     </form>
   `
 })
-export class LoginComponent {
+export class IbLoginComponent {
 
   @Input() path;
   form: FormGroup;
 
   constructor(
-    private srvSession: SessionService,
+    private srvSession: IbSessionService,
     private srvFormBuilder: FormBuilder,
     private srvRouter: Router,
     private snackBar: MatSnackBar) {

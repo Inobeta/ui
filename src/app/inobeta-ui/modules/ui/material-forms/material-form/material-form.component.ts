@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { DynamicFormComponent } from '../../forms/dynamic-form/dynamic-form.component';
+import { IbDynamicFormComponent } from '../../forms/dynamic-form/dynamic-form.component';
 
 /**
  * Crea un form dinamico usando componenti di Angular Material.
@@ -13,4 +13,4 @@ import { DynamicFormComponent } from '../../forms/dynamic-form/dynamic-form.comp
   selector: 'ib-material-form',
   templateUrl: './material-form.component.html',
 })
-export class MaterialFormComponent extends DynamicFormComponent {}
+export class IbMaterialFormComponent extends IbDynamicFormComponent {}

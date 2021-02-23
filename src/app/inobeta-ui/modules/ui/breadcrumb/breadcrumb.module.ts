@@ -1,15 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BreadcrumbComponent } from './breadcrumb.component';
+import { IbBreadcrumbComponent } from './breadcrumb.component';
 import { RouterModule } from '@angular/router';
-import { MaterialBreadcrumbComponent } from './material-breadcrumb/material-breadcrumb.component';
+import { IbMaterialBreadcrumbComponent } from './material-breadcrumb/material-breadcrumb.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatIconModule } from '@angular/material';
 
 @NgModule({
   declarations: [
-    BreadcrumbComponent,
-    MaterialBreadcrumbComponent
+    IbBreadcrumbComponent,
+    IbMaterialBreadcrumbComponent
   ],
   imports: [
     CommonModule,
@@ -20,8 +20,8 @@ import { MatIconModule } from '@angular/material';
     MatIconModule
   ],
   exports: [
-    BreadcrumbComponent,
-    MaterialBreadcrumbComponent
+    IbBreadcrumbComponent,
+    IbMaterialBreadcrumbComponent
   ]
 })
-export class BreadcrumbModule { }
+export class IbBreadcrumbModule { }

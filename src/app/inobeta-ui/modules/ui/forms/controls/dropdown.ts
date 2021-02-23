@@ -1,5 +1,5 @@
-import { FormControlBase } from './form-control-base';
+import { IbFormControlBase } from './form-control-base';
 
-export class Dropdown extends FormControlBase<string> {
+export class IbDropdown extends IbFormControlBase<string> {
   controlType = 'dropdown';
 }

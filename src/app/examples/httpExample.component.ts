@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClientService } from 'src/app/inobeta-ui/modules/ibHttp/http/httpclient.service';
+import { IbHttpClientService } from 'src/app/inobeta-ui/modules/http/http/http-client.service';
 
 @Component({
   selector: 'app-test',
@@ -15,7 +15,7 @@ import { HttpClientService } from 'src/app/inobeta-ui/modules/ibHttp/http/httpcl
 export class HttpExampleComponent implements OnInit {
   loadedData: any = {}
   constructor(
-    private h: HttpClientService
+    private h: IbHttpClientService
   ) { }
 
   ngOnInit() {

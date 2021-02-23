@@ -1,6 +1,6 @@
-import { FormControlBase, FormControlBaseParams } from 'src/app/inobeta-ui/modules/ui/forms';
+import { IbFormControlBase, IbFormControlBaseParams } from 'src/app/inobeta-ui/modules/ui/forms';
 
-export class myCustomTextbox extends FormControlBase<string> {
+export class myCustomTextbox extends IbFormControlBase<string> {
   controlType = 'textbox';
   testField = 'Questa è una prova'
   constructor(options: myCustomTextboxParams) {
@@ -9,6 +9,6 @@ export class myCustomTextbox extends FormControlBase<string> {
   }
 }
 
-export interface myCustomTextboxParams extends FormControlBaseParams<string>{
+export interface myCustomTextboxParams extends IbFormControlBaseParams<string>{
   testField: string
 }

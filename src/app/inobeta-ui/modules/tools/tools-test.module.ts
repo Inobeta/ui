@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { MockTranslatePipeDirective } from './stubs/mockTranslatePipe.directive';
+import { IbMockTranslatePipeDirective } from './stubs/mock-translate-pipe.directive';
 import { TranslateService } from '@ngx-translate/core';
 import { TranslateServiceStub } from './stubs/translate.service.stub';
 
@@ -9,7 +9,7 @@ import { TranslateServiceStub } from './stubs/translate.service.stub';
 const entryComponents = []
 const components = [
   ...entryComponents,
-  MockTranslatePipeDirective
+  IbMockTranslatePipeDirective
 ]
 
 const services = [

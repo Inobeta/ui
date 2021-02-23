@@ -1,13 +1,13 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { TableTitles } from './models/titles.model';
-import { TemplateModel } from './models/template.model';
+import { IbTableTitles } from './models/titles.model';
+import { IbTemplateModel } from './models/template.model';
 
 @Component({
   selector: 'ib-table',
   template: ``,
 })
 export class TableStubComponent {
-  @Input() titles: TableTitles[] = [];
+  @Input() titles: IbTableTitles[] = [];
   @Input() items: any[] = [];
   @Input() filterValues: any = {};
   @Input() currentSort: any = {};
@@ -20,7 +20,7 @@ export class TableStubComponent {
   @Input() structureTemplates;
   @Input() hasActions = false;
   @Input() selectRowName = 'Seleziona';
-  @Input() templateButtons: TemplateModel[] = [];
+  @Input() templateButtons: IbTemplateModel[] = [];
   @Input() templateHeaders: any = {};
   @Input() actions: string[] = [];
   @Output() filterChange: EventEmitter<any> = new EventEmitter<any>();

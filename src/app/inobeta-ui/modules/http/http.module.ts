@@ -1,32 +1,35 @@
 import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { HttpClientService } from './http/httpclient.service';
+import { IbHttpClientService } from './http/http-client.service';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { ResponseHandlerService } from './http/responseHandler.service';
-import { AuthService } from './auth/auth.service';
-import { SessionService } from './auth/session.service';
+import { IbResponseHandlerService } from './http/response-handler.service';
+import { IbAuthService } from './auth/auth.service';
+import { IbSessionService } from './auth/session.service';
 import { LocalStorageService, CookiesStorageService } from 'ngx-store';
-import { Guard, LoginGuard } from './auth/guard.service';
-import { SpinnerLoadingComponent } from './http/spinnerLoading.component';
+import { IbAuthGuard, IbLoginGuard } from './auth/guard.service';
+import { IbSpinnerLoadingComponent } from './http/spinner-loading.component';
+import { IbLoginComponent } from './pages/login.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 const entryComponents = []
 
 const components = [
   ...entryComponents,
-  SpinnerLoadingComponent
+  IbSpinnerLoadingComponent,
+  IbLoginComponent
 ]
 
 const services = [
-  HttpClientService,
-  ResponseHandlerService,
-  AuthService,
-  SessionService,
+  IbHttpClientService,
+  IbResponseHandlerService,
+  IbAuthService,
+  IbSessionService,
   LocalStorageService,
   CookiesStorageService,
-  Guard,
-  LoginGuard,
+  IbAuthGuard,
+  IbLoginGuard,
 ]
 
 
@@ -37,6 +40,7 @@ const services = [
     }),
     CommonModule,
     HttpClientModule,
+    ReactiveFormsModule
   ],
   exports: [
     ...components

@@ -16,7 +16,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
     </div>
   `,
 })
-export class TablePaginatorComponent {
+export class IbTablePaginatorComponent {
   @Input() numOfElements;
   @Input() paginationInfo;
   @Input() elemForPage = 0;

@@ -1,14 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 
-import { FormControlService } from './form-control.service';
+import { IbFormControlService } from './form-control.service';
 
-describe('FormControlService', () => {
+describe('IbFormControlService', () => {
   beforeEach(() => TestBed.configureTestingModule({
-    providers: [FormControlService]
+    providers: [IbFormControlService]
   }));
 
   it('should be created', () => {
-    const service: FormControlService = TestBed.get(FormControlService);
+    const service: IbFormControlService = TestBed.get(IbFormControlService);
     expect(service).toBeTruthy();
   });
 });
