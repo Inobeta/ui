@@ -1,11 +1,11 @@
-export * from './src/app/inobeta-ui/modules/ui/breadcrumb/index';
-export * from './src/app/inobeta-ui/modules/ui/forms/index';
-export * from './src/app/inobeta-ui/modules/ui/material-forms/index';
-export * from './src/app/inobeta-ui/modules/ui/modal/index';
-export * from './src/app/inobeta-ui/modules/ui/table/index';
-export * from './src/app/inobeta-ui/modules/ui/uploader/index';
-export * from './src/app/inobeta-ui/modules/http/index';
-export * from './src/app/inobeta-ui/modules/tools/index';
+export * from './src/app/inobeta-ui/ui/breadcrumb/index';
+export * from './src/app/inobeta-ui/ui/forms/index';
+export * from './src/app/inobeta-ui/ui/material-forms/index';
+export * from './src/app/inobeta-ui/ui/modal/index';
+export * from './src/app/inobeta-ui/ui/table/index';
+export * from './src/app/inobeta-ui/ui/uploader/index';
+export * from './src/app/inobeta-ui/http/index';
+export * from './src/app/inobeta-ui/tools/index';
 
 
 

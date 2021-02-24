@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IbHttpClientService } from 'src/app/inobeta-ui/modules/http/http/http-client.service';
+import { IbHttpClientService } from 'src/app/inobeta-ui/http/http/http-client.service';
 
 @Component({
   selector: 'app-test',
