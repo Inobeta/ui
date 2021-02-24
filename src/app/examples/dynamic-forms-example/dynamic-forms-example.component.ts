@@ -1,11 +1,11 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { IbFormControlBase } from 'src/app/inobeta-ui/modules/ui/forms/controls/form-control-base';
-import { IbTextbox } from 'src/app/inobeta-ui/modules/ui/forms/controls/textbox';
+import { IbFormControlBase } from 'src/app/inobeta-ui/ui/forms/controls/form-control-base';
+import { IbTextbox } from 'src/app/inobeta-ui/ui/forms/controls/textbox';
 import { Validators } from '@angular/forms';
-import { IbDropdown } from 'src/app/inobeta-ui/modules/ui/forms/controls/dropdown';
-import { IbRadio } from 'src/app/inobeta-ui/modules/ui/forms/controls/radio';
-import { IbCheckbox } from 'src/app/inobeta-ui/modules/ui/forms/controls/checkbox';
-import { IbMaterialFormComponent } from 'src/app/inobeta-ui/modules/ui/material-forms/material-form/material-form.component';
+import { IbDropdown } from 'src/app/inobeta-ui/ui/forms/controls/dropdown';
+import { IbRadio } from 'src/app/inobeta-ui/ui/forms/controls/radio';
+import { IbCheckbox } from 'src/app/inobeta-ui/ui/forms/controls/checkbox';
+import { IbMaterialFormComponent } from 'src/app/inobeta-ui/ui/material-forms/material-form/material-form.component';
 import { myCustomTextbox, myCustomTextboxParams } from './myCustomTextbox';
 
 @Component({

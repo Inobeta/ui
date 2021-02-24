@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IbTableTitlesTypes } from 'src/app/inobeta-ui/modules/ui/table/models/titles.model';
+import { IbTableTitlesTypes } from 'src/app/inobeta-ui/ui/table/models/titles.model';
 
 @Component({
   selector: 'ib-table-example',

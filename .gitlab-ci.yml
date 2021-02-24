@@ -22,7 +22,7 @@ deploy:
     - npm install
     - npm run packagr
     - npm pack dist/
-    - npm publish Inobeta-inobeta-ui-$CURRENT_VERSION.tgz --tag latest
+    - npm publish Inobeta-ui-$CURRENT_VERSION.tgz --tag latest
   only:
     - master
 
@@ -34,7 +34,7 @@ deploy_unstable:
     - npm install
     - npm run packagr
     - npm pack dist/
-    - npm publish Inobeta-inobeta-ui-$TEMP_VERSION.tgz --tag unstable
+    - npm publish Inobeta-ui-$TEMP_VERSION.tgz --tag unstable
   only:
     - /^v[0-9]+\.[0-9]+\.[0-9]+$/
 
@@ -46,7 +46,7 @@ deploy_manual_unstable:
     - npm install
     - npm run packagr
     - npm pack dist/
-    - npm publish Inobeta-inobeta-ui-$TEMP_VERSION.tgz --tag testing
+    - npm publish Inobeta-ui-$TEMP_VERSION.tgz --tag testing
   except:
     - master
     - /^v[0-9]+\.[0-9]+\.[0-9]+$/

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { IbModalMessageComponent } from 'src/app/inobeta-ui/modules/ui/modal';
+import { IbModalMessageComponent } from 'src/app/inobeta-ui/ui/modal';
 
 @Component({
   selector: 'ib-dialog-example',

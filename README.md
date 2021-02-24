@@ -1,4 +1,4 @@
-# Naming conventions
+# Naming convention
 
 kebab case 
 - file names (es: `material-breadcrumb.component.ts`)
@@ -8,7 +8,7 @@ upper camel case:
 - class names (es: `IbMaterialBreadcrumbComponent`)
 
 lower camel case:
-- istance of components/class (es: `ViewChild('ibMaterialBreadcrumbComponent', {static: false}) IbMaterialBreadcrumbComponent: IbMaterialBreadcrumbComponent `)
+- istance of components/class (es: `ViewChild('ibMaterialBreadcrumbComponent', {static: false}) ibMaterialBreadcrumbComponent: IbMaterialBreadcrumbComponent `)
 - function names
 
 All classes/components/services must have "Ib" prefix

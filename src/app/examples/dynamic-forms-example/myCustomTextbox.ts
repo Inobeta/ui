@@ -1,4 +1,4 @@
-import { IbFormControlBase, IbFormControlBaseParams } from 'src/app/inobeta-ui/modules/ui/forms';
+import { IbFormControlBase, IbFormControlBaseParams } from 'src/app/inobeta-ui/ui/forms';
 
 export class myCustomTextbox extends IbFormControlBase<string> {
   controlType = 'textbox';
