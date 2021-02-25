@@ -8,7 +8,7 @@ export * from './http/response-handler.service';
 export * from './auth/guard.service';
 export * from './auth/auth.service';
 export * from './auth/session.service';
-export * from './http.module'
+export * from './http.module';
 
 export * from './auth/auth.service.stub.spec';
 export * from './auth/local-storage.stub.spec';

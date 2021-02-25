@@ -171,7 +171,7 @@ export class TestHostComponent {
 
   pdfSetup = {
     orientation: 'p'
-  }
+  };
   constructor() { }
 
 
@@ -265,23 +265,23 @@ describe('IbTableComponent', () => {
     component.export({
       format: 'csv',
       dataset: null
-    })
+    });
 
     component.export({
       format: 'pdf',
       dataset: null
-    })
+    });
 
     component.export({
       format: 'xlsx',
       dataset: null
-    })
+    });
 
 
     component.export({
       format: 'csv',
       dataset: 'all'
-    })
+    });
   });
 
 
@@ -291,7 +291,7 @@ describe('IbTableComponent', () => {
       tableFiltersState: {
         tableFilters: {}
       }
-    })
+    });
     fixture.detectChanges();
     expect(component).toBeTruthy();
 
@@ -299,7 +299,7 @@ describe('IbTableComponent', () => {
     store.setState({
       tableFiltersState: {
         tableFilters: {
-          'pippo': {
+          pippo: {
             paginatorFilters: {
               previousPageIndex: 0,
               pageIndex: 0,
@@ -319,7 +319,7 @@ describe('IbTableComponent', () => {
           }
         }
       }
-    })
+    });
     fixture.detectChanges();
     expect(component).toBeTruthy();
 
@@ -327,7 +327,7 @@ describe('IbTableComponent', () => {
     store.setState({
       tableFiltersState: {
         tableFilters: {
-          'pippo': {
+          pippo: {
             paginatorFilters: null,
             sortType: {
               active: 'qt2',
@@ -342,7 +342,7 @@ describe('IbTableComponent', () => {
           }
         }
       }
-    })
+    });
     fixture.detectChanges();
     expect(component).toBeTruthy();
 
@@ -352,36 +352,36 @@ describe('IbTableComponent', () => {
     component.sortData({
       active: 'qt2',
       direction: 'asc'
-    }, true)
+    }, true);
 
     component.columnFilter = {
-      'qt2': 5
-    }
+      qt2: 5
+    };
 
     component.sortData({
       active: 'qt2',
       direction: 'asc'
-    }, true)
+    }, true);
 
 
     component.columnFilter = {
-      'qt2': 6
-    }
+      qt2: 6
+    };
 
     component.sortData({
       active: 'qt2',
       direction: 'asc'
-    }, true)
+    }, true);
 
 
     component.columnFilter = {
-      'qt': 5
-    }
+      qt: 5
+    };
 
     component.sortData({
       active: 'qt',
       direction: 'asc'
-    }, true)
+    }, true);
 
     component.resetFilters();
   });

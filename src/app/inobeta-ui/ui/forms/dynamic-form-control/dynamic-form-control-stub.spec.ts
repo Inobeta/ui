@@ -7,7 +7,7 @@ import { FormGroup } from '@angular/forms';
   template: ``
 })
 
-export class DynamicFormControlStubComponent{
+export class DynamicFormControlStubComponent {
   @Input() base: IbFormControlBase<string>;
   @Input() form: FormGroup;
 }

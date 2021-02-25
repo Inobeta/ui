@@ -6,4 +6,4 @@ export * from './controls/checkbox';
 export * from './controls/form-control-base';
 export * from './dynamic-form/dynamic-form.component';
 export * from './dynamic-form-control/dynamic-form-control.component';
-export * from './forms.module'
+export * from './forms.module';

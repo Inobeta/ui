@@ -1,10 +1,10 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterModule, Routes} from '@angular/router';
-import { IbTableExampleComponent } from 'src/app/examples/table-example/ib-tableExample.component';
+import { IbTableExampleComponent } from 'src/app/examples/table-example/table-example.component';
 import { HomeComponent } from 'src/app/examples/home.component';
 import { DynamicFormsExampleComponent } from './examples/dynamic-forms-example/dynamic-forms-example.component';
-import { HttpExampleComponent } from './examples/httpExample.component';
+import { HttpExampleComponent } from './examples/http-example.component';
 import { MyCounterComponent } from './examples/redux-example/my-counter.component';
 import { DialogExampleComponent } from './examples/dialog-example/dialog-example.component';
 

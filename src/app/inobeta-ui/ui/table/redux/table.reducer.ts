@@ -32,7 +32,7 @@ const mainTableFiltersReducer = createReducer(INITIAL_TABLE_FILTERS_STATE,
     };
   }),
 on(TableFiltersActions.addSortToTable, (state, {tableName, sortType/*, emitChange*/}) => {
-    if (state.tableFilters[tableName]){
+    if (state.tableFilters[tableName]) {
       state.tableFilters[tableName].sortType = sortType;
     } else {
       state.tableFilters[tableName] = {

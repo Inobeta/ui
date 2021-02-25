@@ -3,8 +3,8 @@ import { IbTableTitlesTypes } from 'src/app/inobeta-ui/ui/table/models/titles.mo
 
 @Component({
   selector: 'ib-table-example',
-  templateUrl: 'ib-tableExample.component.html',
-  styleUrls: ['./ib-tableExample.component.css']
+  templateUrl: 'table-example.component.html',
+  styleUrls: ['./table-example.component.css']
 })
 
 export class IbTableExampleComponent implements OnInit {
@@ -394,7 +394,7 @@ export class IbTableExampleComponent implements OnInit {
 
   pdfSetup = {
     orientation: 'p'
-  }
+  };
   constructor() { }
 
 

@@ -12,14 +12,14 @@ import { IbModalMessageComponent } from 'src/app/inobeta-ui/ui/modal';
 
 export class DialogExampleComponent implements OnInit {
 
-  response = ''
+  response = '';
 
   constructor(public dialog: MatDialog) { }
 
   ngOnInit() { }
 
 
-  open(){
+  open() {
     const dialog = this.dialog.open(IbModalMessageComponent, {
       data: {
         title: 'Titolo',
@@ -30,7 +30,7 @@ export class DialogExampleComponent implements OnInit {
     });
 
     dialog.afterClosed().subscribe(result => {
-      this.response = `Clicked on ${result}`
+      this.response = `Clicked on ${result}`;
     });
   }
 }

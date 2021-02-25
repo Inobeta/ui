@@ -27,7 +27,7 @@ const COMPONENTS = [
     IbTableSeachComponent,
     IbTableHeaderPopupComponent,
     IbTableExportDialogComponent
-]
+];
 
 @NgModule({
     declarations: [

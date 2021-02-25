@@ -10,16 +10,16 @@ import { serviceDialogStub } from './stubs/dialog.stub.spec';
 
 registerLocaleData(localeIt, 'it');
 
-const entryComponents = []
+const entryComponents = [];
 const components = [
   ...entryComponents,
   IbMockTranslatePipeDirective
-]
+];
 
 const services = [
   { provide: TranslateService, useValue: translateServiceStub},
   { provide: MatDialogRef, useValue: serviceDialogStub}
-]
+];
 
 
 @NgModule({

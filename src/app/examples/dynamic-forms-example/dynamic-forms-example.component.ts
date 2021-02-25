@@ -6,7 +6,7 @@ import { IbDropdown } from 'src/app/inobeta-ui/ui/forms/controls/dropdown';
 import { IbRadio } from 'src/app/inobeta-ui/ui/forms/controls/radio';
 import { IbCheckbox } from 'src/app/inobeta-ui/ui/forms/controls/checkbox';
 import { IbMaterialFormComponent } from 'src/app/inobeta-ui/ui/material-forms/material-form/material-form.component';
-import { myCustomTextbox, myCustomTextboxParams } from './myCustomTextbox';
+import { MyCustomTextbox, MyCustomTextboxParams } from './my-custom-textbox.model';
 
 @Component({
   selector: 'app-dynamic-forms-example',
@@ -79,13 +79,13 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
   ];
 
   loginFormFields = [
-    new myCustomTextbox(<myCustomTextboxParams>{
+    new MyCustomTextbox({
       key: 'username',
       label: 'Username',
       required: true,
       testField: 'prova',
       validators: [Validators.minLength(3)]
-    }),
+    } as MyCustomTextboxParams),
     new IbTextbox({
       key: 'password',
       label: 'shared.login.password',

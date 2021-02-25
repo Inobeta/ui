@@ -4,7 +4,7 @@ import { IbTableStubComponent } from './table.stub.spec';
 
 const COMPONENTS = [
   IbTableStubComponent
-]
+];
 
 @NgModule({
     declarations: [

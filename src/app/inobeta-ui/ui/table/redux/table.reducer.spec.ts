@@ -1,4 +1,4 @@
-import * as actions from './table.action'
+import * as actions from './table.action';
 import { tableFiltersReducer } from './table.reducer';
 import { async } from '@angular/core/testing';
 
