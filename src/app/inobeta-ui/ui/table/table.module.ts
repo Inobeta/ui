@@ -12,7 +12,7 @@ import { IbTableMenuActionsComponent } from './components/table-menu-actions.com
 import { IbTablePaginatorComponent } from './components/table-paginator.component';
 import { IbTableRowsComponent } from './components/table-rows/table-rows.component';
 import { IbTableSeachComponent } from './components/table-seach.component';
-import { IbTableHeaderPopupComponent } from './components/tableHeaderPopup.component';
+import { IbTableHeaderPopupComponent } from './components/table-header-popup.component';
 import { IbTableComponent } from './table.component';
 
 const COMPONENTS = [

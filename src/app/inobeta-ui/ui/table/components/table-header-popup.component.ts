@@ -3,7 +3,7 @@ import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/internal/operators/debounceTime';
 
 @Component({
-  selector: 'table-header-popup',
+  selector: 'ib-table-header-popup',
   template: /*template*/`
   <div class="modal-selector" (click)="$event.stopPropagation();">
       <div class="modal-row" (click)="ibTable.sortData({active: col.key, direction: 'asc'})">

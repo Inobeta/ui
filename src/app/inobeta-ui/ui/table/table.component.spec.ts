@@ -30,10 +30,10 @@ import { Store } from '@ngrx/store';
 </ng-template>
 
 <ng-template #headerClickTemplate let-ibTable="ibTable" let-col="col">
-  <table-header-popup
+  <ib-table-header-popup
     [ibTable]="ibTable"
     [col]="col">
-  </table-header-popup>
+  </ib-table-header-popup>
 </ng-template>
 
 

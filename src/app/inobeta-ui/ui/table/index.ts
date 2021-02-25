@@ -5,5 +5,5 @@ export * from './redux/table.reducer';
 export * from './table.component';
 export * from './components/table-export.component';
 export * from './table-test.module';
-export * from './components/tableHeaderPopup.component';
+export * from './components/table-header-popup.component';
 export * from './table.module';
