@@ -15,8 +15,8 @@ describe('http client test', () => {
   let httpClient: HttpClient;
   let httpMock: HttpTestingController;
   const samplePromise = (resolve, reject) => {
-    resolve({data: '' })
-  }
+    resolve({data: '' });
+  };
   beforeEach(async () => {
     TestBed.configureTestingModule({
       imports: [
@@ -26,10 +26,10 @@ describe('http client test', () => {
         { provide: IbAuthService, useValue: authServiceStub},
         { provide: IbResponseHandlerService, useValue: responseHandlerStub},
         { provide: HTTP, useValue: {
-          get: () => { return new Promise(samplePromise) },
-          put: () => { return new Promise(samplePromise) },
-          post: () => { return new Promise(samplePromise) },
-          delete: () => { return new Promise(samplePromise) },
+          get: () => new Promise(samplePromise),
+          put: () => new Promise(samplePromise),
+          post: () => new Promise(samplePromise),
+          delete: () => new Promise(samplePromise),
         }},
         IbHttpClientService
       ]
@@ -38,7 +38,7 @@ describe('http client test', () => {
     httpMock = TestBed.get(HttpTestingController);
     const svHttpClientService = TestBed.get(IbHttpClientService);
     svHttpClientService.httpMode = 'NORMAL';
-    svHttpClientService.hMobile = null
+    svHttpClientService.hMobile = null;
   });
 
   it('Should be created', () => {
@@ -96,15 +96,15 @@ describe('http client test', () => {
   });
 
 
-  runTestCase('get')
-  runTestCase('post')
-  runTestCase('put')
-  runTestCase('delete')
+  runTestCase('get');
+  runTestCase('post');
+  runTestCase('put');
+  runTestCase('delete');
 
 
 
 
-  function runTestCase(method){
+  function runTestCase(method) {
 
     it(`should use ${method}`, (done) => {
       const svHttpClientService = TestBed.get(IbHttpClientService);
@@ -126,15 +126,15 @@ describe('http client test', () => {
 
       svHttpClientService.httpMode = 'MOBILE';
       const httpMobile = TestBed.get(HTTP);
-      svHttpClientService.hMobile = httpMobile
+      svHttpClientService.hMobile = httpMobile;
       svHttpClientService[method]('/ciao/').subscribe(
         (data) => {
-          done()
+          done();
         },
         (data) => {
-          done()
+          done();
         }
-      )
+      );
     });
 
     it(`should use ${method} with null`, () => {
@@ -166,7 +166,7 @@ describe('http client test', () => {
           done();
         });
       const getRequest = httpMock.expectOne('/ciao/');
-      getRequest.error(new ErrorEvent('ERROR_'+method.toUpperCase()));
+      getRequest.error(new ErrorEvent('ERROR_' + method.toUpperCase()));
       httpMock.verify();
 
 

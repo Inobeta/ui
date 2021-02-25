@@ -1,4 +1,4 @@
-import * as actions from './session.actions'
+import * as actions from './session.actions';
 import { sessionReducer } from './session.reducer';
 import { async } from '@angular/core/testing';
 
@@ -41,7 +41,7 @@ describe('sessionReducer', () => {
 
 
   it('changeNameSurname', () => {
-    let state = sessionReducer({
+    const state = sessionReducer({
       activeSession: {
         user: null,
         authToken: '123',

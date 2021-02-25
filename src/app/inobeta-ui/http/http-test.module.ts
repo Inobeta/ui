@@ -14,11 +14,11 @@ import { responseHandlerStub } from './http/response-handler.service.stub.spec';
 
 
 
-const entryComponents = []
+const entryComponents = [];
 const components = [
   ...entryComponents,
   SpinnerLoadingStubComponent
-]
+];
 
 const services = [
   IbHttpClientService,
@@ -28,7 +28,7 @@ const services = [
   { provide: CookiesStorageService, useValue: cookiesStorageStub },
   { provide: IbSessionService, useValue: sessionServiceStub},
   { provide: IbResponseHandlerService, useValue: responseHandlerStub}
-]
+];
 
 
 @NgModule({

@@ -77,7 +77,7 @@ export class TestHostComponent {
     })
   ];
 
-  onSubmit(){}
+  onSubmit() {}
 }
 
 
@@ -123,7 +123,7 @@ describe('IbMaterialFormComponent', () => {
         required: true,
         validators: [Validators.email]
       })
-    ]
+    ];
     fixture.detectChanges();
 
     component.onSubmit();

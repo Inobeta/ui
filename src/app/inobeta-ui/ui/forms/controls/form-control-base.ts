@@ -26,7 +26,7 @@ export class IbFormControlBase<T> {
   }
 }
 
-export interface IbFormControlBaseParams<T>{
+export interface IbFormControlBaseParams<T> {
   value?: T;
   key?: string;
   label?: string;

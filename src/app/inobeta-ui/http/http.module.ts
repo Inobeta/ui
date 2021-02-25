@@ -13,13 +13,13 @@ import { IbLoginComponent } from './pages/login.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
 
-const entryComponents = []
+const entryComponents = [];
 
 const components = [
   ...entryComponents,
   IbSpinnerLoadingComponent,
   IbLoginComponent
-]
+];
 
 const services = [
   IbHttpClientService,
@@ -30,7 +30,7 @@ const services = [
   CookiesStorageService,
   IbAuthGuard,
   IbLoginGuard,
-]
+];
 
 
 @NgModule({

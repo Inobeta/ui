@@ -53,13 +53,13 @@ describe('IbBreadcrumbComponent', () => {
     expect(component).toBeTruthy();
 
     const router = TestBed.get(Router);
-    router.navigate(['test-host'])
+    router.navigate(['test-host']);
   });
 
   it('should navigate with data', () => {
     expect(component).toBeTruthy();
 
     const router = TestBed.get(Router);
-    router.navigate(['test-host-with-data'])
+    router.navigate(['test-host-with-data']);
   });
 });

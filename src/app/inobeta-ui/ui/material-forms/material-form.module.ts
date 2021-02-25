@@ -6,12 +6,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule, MatFormFieldModule, MatOptionModule, MatSelectModule, MatRadioModule, MatCheckboxModule, MatInputModule } from '@angular/material';
 import { TranslateModule } from '@ngx-translate/core';
 
-const entryComponents = []
+const entryComponents = [];
 const components = [
   ...entryComponents,
   IbMaterialFormComponent,
   IbMaterialFormControlComponent,
-]
+];
 
 
 @NgModule({

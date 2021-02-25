@@ -120,7 +120,7 @@ export class IbTableHeaderPopupComponent implements OnChanges {
     this.searchSubject.next(what);
   }
 
-  ngOnChanges(changes: import('@angular/core').SimpleChanges): void {
+  ngOnChanges(changes: import ('@angular/core').SimpleChanges): void {
     if (changes.ibTable && changes.ibTable.currentValue) {
       this.alignFilterDistinct(changes.ibTable.currentValue.items);
     }

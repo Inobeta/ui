@@ -5,10 +5,10 @@ import { MatButtonModule, MatFormFieldModule, MatOptionModule, MatSelectModule, 
 import { TranslateModule } from '@ngx-translate/core';
 import { IbUploaderComponent } from './uploader.component';
 
-const entryComponents = []
+const entryComponents = [];
 const components = [
   IbUploaderComponent
-]
+];
 
 @NgModule({
   imports: [

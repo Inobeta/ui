@@ -7,14 +7,14 @@ import { MatDialogModule } from '@angular/material';
 
 const entryComponents = [
   IbModalMessageComponent
-]
+];
 const components = [
   IbModalMessageComponent
 
-]
+];
 
 const services = [
-]
+];
 
 
 @NgModule({
