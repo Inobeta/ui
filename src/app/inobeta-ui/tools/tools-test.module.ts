@@ -5,6 +5,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { translateServiceStub } from './stubs/translate.service.stub.spec';
 import { registerLocaleData } from '@angular/common';
 import localeIt from '@angular/common/locales/it';
+import { MatDialogRef } from '@angular/material';
+import { serviceDialogStub } from './stubs/dialog.stub.spec';
 
 registerLocaleData(localeIt, 'it');
 
@@ -16,6 +18,7 @@ const components = [
 
 const services = [
   { provide: TranslateService, useValue: translateServiceStub},
+  { provide: MatDialogRef, useValue: serviceDialogStub}
 ]
 
 

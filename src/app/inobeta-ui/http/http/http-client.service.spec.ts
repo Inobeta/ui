@@ -144,7 +144,7 @@ describe('http client test', () => {
       const testData = null;
       svHttpClientService[method]('/ciao/')
         .subscribe(data =>
-          expect(data).toEqual(Object({ name: 'Test Data' }))
+          expect(data).toEqual(testData)
         );
       const req = httpMock.expectOne('/ciao/');
       expect(req.request.method).toEqual(method.toUpperCase());
