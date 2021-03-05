@@ -29,7 +29,7 @@ export class IbMatRadioComponent implements IbFormControlInterface {
 export class IbMatRadioControl extends IbFormControlBase<string>{
   constructor(options: IbFormControlBaseParams<string>){
     super(options)
-    super.control = new IbFormControlBaseComponent(IbMatRadioComponent, {
+    this.control = new IbFormControlBaseComponent(IbMatRadioComponent, {
       base: this
     })
   }

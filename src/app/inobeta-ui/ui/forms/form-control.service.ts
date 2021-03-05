@@ -14,9 +14,9 @@ export class IbFormControlService {
         value: field.value || '',
         disabled: field.disabled
       }
-      const validators = []
-      if(field.validators){
-        validators.concat(field.validators)
+      let validators = []
+      if(field.validators && field.validators.length){
+        validators = validators.concat(field.validators)
       }
       if(field.required){
         validators.push(Validators.required)

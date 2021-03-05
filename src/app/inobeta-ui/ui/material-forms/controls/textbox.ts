@@ -29,7 +29,7 @@ export class IbMatTextboxComponent implements IbFormControlInterface {
 export class IbMatTextboxControl extends IbFormControlBase<string>{
   constructor(options: IbFormControlBaseParams<string>){
     super(options)
-    super.control = new IbFormControlBaseComponent(IbMatTextboxComponent, {
+    this.control = new IbFormControlBaseComponent(IbMatTextboxComponent, {
       base: this
     })
   }

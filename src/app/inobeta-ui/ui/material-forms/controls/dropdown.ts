@@ -29,7 +29,7 @@ export class IbMatDropdownComponent implements IbFormControlInterface {
 export class IbMatDropdownControl extends IbFormControlBase<string>{
   constructor(options: IbFormControlBaseParams<string>){
     super(options)
-    super.control = new IbFormControlBaseComponent(IbMatDropdownComponent, {
+    this.control = new IbFormControlBaseComponent(IbMatDropdownComponent, {
       base: this
     })
   }

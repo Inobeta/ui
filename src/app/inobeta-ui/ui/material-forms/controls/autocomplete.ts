@@ -34,6 +34,7 @@ import { Component, Input } from '@angular/core';
 export class IbMatAutocompleteComponent implements IbFormControlInterface {
   @Input() data: any;
   autocompleteFiltered = [];
+  selectedItem: any;
   multiSearchAnd = (text, searchWords) => (
     searchWords.every((el) => {
       return text.match(new RegExp(el, 'i'));
@@ -53,7 +54,7 @@ export class IbMatAutocompleteComponent implements IbFormControlInterface {
 export class IbMatAutocompleteControl extends IbFormControlBase<string>{
   constructor(options: IbFormControlBaseParams<string>){
     super(options)
-    super.control = new IbFormControlBaseComponent(IbMatAutocompleteComponent, {
+    this.control = new IbFormControlBaseComponent(IbMatAutocompleteComponent, {
       base: this
     })
   }

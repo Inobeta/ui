@@ -24,7 +24,7 @@ export class IbMatCheckboxComponent implements IbFormControlInterface {
 export class IbMatCheckboxControl extends IbFormControlBase<string>{
   constructor(options: IbFormControlBaseParams<string>){
     super(options)
-    super.control = new IbFormControlBaseComponent(IbMatCheckboxComponent, {
+    this.control = new IbFormControlBaseComponent(IbMatCheckboxComponent, {
       base: this
     })
   }

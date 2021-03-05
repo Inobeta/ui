@@ -21,7 +21,7 @@ export class IbMatLabelComponent implements IbFormControlInterface {
 export class IbMatLabelControl extends IbFormControlBase<string>{
   constructor(options: IbFormControlBaseParams<string>){
     super(options)
-    super.control = new IbFormControlBaseComponent(IbMatLabelComponent, {
+    this.control = new IbFormControlBaseComponent(IbMatLabelComponent, {
       base: this
     })
   }

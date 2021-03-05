@@ -64,7 +64,7 @@ export class IbMatDatepickerComponent implements IbFormControlInterface {
 export class IbMatDatepickerControl extends IbFormControlBase<string>{
   constructor(options: IbFormControlBaseParams<string>){
     super(options)
-    super.control = new IbFormControlBaseComponent(IbMatDatepickerComponent, {
+    this.control = new IbFormControlBaseComponent(IbMatDatepickerComponent, {
       base: this
     })
   }

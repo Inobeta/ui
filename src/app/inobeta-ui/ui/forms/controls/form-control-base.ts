@@ -3,21 +3,21 @@ import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { Type } from '@angular/core';
 
-export class IbFormControlBase<T> implements IbFormControlBaseParams<T> {
-  value: T;
-  disabled: boolean;
-  key: string;
-  label: string;
-  required: boolean;
-  order: number;
-  controlType: string;
-  type: string;
-  validators: ValidatorFn[];
-  errors: {message: string, condition: (c: FormControl) => void}[];
-  options: {key?: string, value: string}[];
-  change: (c: FormControl) => void;
-  width: string;
-  control: IbFormControlBaseComponent;
+export class IbFormControlBase<T> {
+  public value: T;
+  public disabled: boolean;
+  public key: string;
+  public label: string;
+  public required: boolean;
+  public order: number;
+  public controlType: string;
+  public type: string;
+  public validators: ValidatorFn[];
+  public errors: {message: string, condition: (c: FormControl) => void}[];
+  public options: {key?: string, value: string}[];
+  public change: (c: FormControl) => void;
+  public width: string;
+  public control: IbFormControlBaseComponent;
 
   constructor(options: IbFormControlBaseParams<T> = {}) {
 

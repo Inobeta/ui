@@ -116,6 +116,7 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
       }
     }),
     new IbMatLabelControl({
+      key: 'static',
       value: 'Static value',
       label: 'Static label',
       width: '50%'
