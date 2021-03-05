@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {AuthTypes, Session, UserLogin} from './session.model';
+import {IbAuthTypes, IbSession, IbUserLogin} from './session.model';
 import {IbHttpClientService} from '../http/http-client.service';
 import {IbAuthService} from './auth.service';
 import {catchError, map} from 'rxjs/operators';
@@ -13,7 +13,7 @@ const loginUrl = '/api/auth/login';
 
 @Injectable()
 export class IbSessionService {
-  private authType = null /*AuthTypes.BASIC_AUTH*/;
+  private authType = null /*IbAuthTypes.BASIC_AUTH*/;
 
   constructor(
     private srvAuth: IbAuthService,
@@ -22,16 +22,16 @@ export class IbSessionService {
     private srvRouter: Router,
     private snackBar: MatSnackBar) {}
 
-  public setAuthtype(type: AuthTypes) {
+  public setAuthtype(type: IbAuthTypes) {
     this.authType = type;
     this.h.setAuthtype(type);
   }
 
-  public login( u: UserLogin, postUrl = null, fieldToSave = null ) {
+  public login( u: IbUserLogin, postUrl = null, fieldToSave = null ) {
 
     if (u) {
-      this.srvAuth.activeSession = new Session();
-      if (this.authType === AuthTypes.BASIC_AUTH) {
+      this.srvAuth.activeSession = new IbSession();
+      if (this.authType === IbAuthTypes.BASIC_AUTH) {
         this.srvAuth.activeSession.authToken = window.btoa(u.username + ':' + u.password);
       }
       this.srvAuth.activeSession.valid = false;
@@ -41,13 +41,13 @@ export class IbSessionService {
     return this.h.post((postUrl) ? postUrl : loginUrl, data)
       .pipe(
         map( x => {
-          if (this.authType === AuthTypes.JWT) {
+          if (this.authType === IbAuthTypes.JWT) {
             this.srvAuth.activeSession.authToken = x['token'];
           }
           this.srvAuth.activeSession.user.password = '';
           this.srvAuth.activeSession.valid = true;
           this.srvAuth.activeSession.userData = fieldToSave ? x[fieldToSave] : x;
-          console.log('Session login ok', this.srvAuth.activeSession);
+          console.log('IbSession login ok', this.srvAuth.activeSession);
           if (this.srvAuth.activeSession.user.rememberMe) {
             this.srvAuth.storeSession();
           } else {
@@ -58,7 +58,7 @@ export class IbSessionService {
         }),
         catchError( err => {
           this.srvAuth.activeSession = null;
-          console.log('Session login error', this.srvAuth.activeSession, err);
+          console.log('IbSession login error', this.srvAuth.activeSession, err);
           return throwError(err);
         } )
       );

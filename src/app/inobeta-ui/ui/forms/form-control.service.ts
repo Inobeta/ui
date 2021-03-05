@@ -6,13 +6,23 @@ import { FormControl, Validators, FormGroup } from '@angular/forms';
 export class IbFormControlService {
   constructor() {}
 
-  toFormGroup(fields: IbFormControlBase<string>[]) {
+  toFormGroup(fields: IbFormControlBase<any>[]) {
     const group: any = {};
 
     fields.forEach(field => {
-      group[field.key] = field.required
-        ? new FormControl(field.value || '', [Validators.required, ...field.validators])
-        : new FormControl(field.value || '', field.validators);
+      const elem = {
+        value: field.value || '',
+        disabled: field.disabled
+      }
+      const validators = []
+      if(field.validators){
+        validators.concat(field.validators)
+      }
+      if(field.required){
+        validators.push(Validators.required)
+      }
+      group[field.key] = new FormControl(elem, validators);
+
     });
 
     return new FormGroup(group);

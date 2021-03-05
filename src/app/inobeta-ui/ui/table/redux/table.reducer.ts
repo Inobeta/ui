@@ -64,6 +64,6 @@ on(TableFiltersActions.addSortToTable, (state, {tableName, sortType/*, emitChang
   })
 );
 
-export function tableFiltersReducer(state: ITableFiltersState = INITIAL_TABLE_FILTERS_STATE, action: Action) {
+export function ibTableFiltersReducer(state: ITableFiltersState = INITIAL_TABLE_FILTERS_STATE, action: Action) {
   return mainTableFiltersReducer(state, action);
 }

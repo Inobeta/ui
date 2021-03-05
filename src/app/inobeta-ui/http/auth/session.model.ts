@@ -1,17 +1,17 @@
-export class Session {
-  user: UserLogin;
+export class IbSession {
+  user: IbUserLogin;
   userData: any;
   valid: boolean;
   authToken: string;
 }
 
-export class UserLogin {
+export class IbUserLogin {
   username: string;
   password: string;
   rememberMe: boolean;
 }
 
-export enum AuthTypes {
+export enum IbAuthTypes {
   BASIC_AUTH,
   JWT
 }

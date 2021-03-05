@@ -3,7 +3,7 @@ import {IbResponseHandlerService} from './response-handler.service';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError, finalize, map, tap} from 'rxjs/operators';
 import {IbAuthService} from '../auth/auth.service';
-import {AuthTypes} from '../auth/session.model';
+import {IbAuthTypes} from '../auth/session.model';
 import { HTTP } from '@ionic-native/http/ngx';
 import { from } from 'rxjs';
 
@@ -15,7 +15,7 @@ export class IbHttpClientService {
 
   public pendingRequests = 0;
   public showLoading = false;
-  private authType = AuthTypes.JWT;
+  private authType = IbAuthTypes.JWT;
   public additionalHeaders: any[] = [];
 
   private httpMode = 'NORMAL';
@@ -29,7 +29,7 @@ export class IbHttpClientService {
       this.httpMode = HttpMode || 'NORMAL';
   }
 
-  public setAuthtype(type: AuthTypes) {
+  public setAuthtype(type: IbAuthTypes) {
     this.authType = type;
   }
 
@@ -45,9 +45,9 @@ export class IbHttpClientService {
         const mobileHeaders = {};
         mobileHeaders['Content-Type'] = 'application/json';
         mobileHeaders['x-requested-with'] = 'XMLHttpRequest';
-        if (this.authType === AuthTypes.BASIC_AUTH) {
+        if (this.authType === IbAuthTypes.BASIC_AUTH) {
           mobileHeaders['Authorization'] = 'Basic ' + this.srvAuth.activeSession.authToken;
-        } else if (this.authType === AuthTypes.JWT) {
+        } else if (this.authType === IbAuthTypes.JWT) {
           mobileHeaders['Authorization'] = 'Bearer ' + this.srvAuth.activeSession.authToken;
         } else {
           if (this.additionalHeaders.length) {
@@ -61,9 +61,9 @@ export class IbHttpClientService {
         let head = (new HttpHeaders())
           .set('Content-Type', 'application/json')
           .set('x-requested-with', 'XMLHttpRequest');
-        if (this.authType === AuthTypes.BASIC_AUTH) {
+        if (this.authType === IbAuthTypes.BASIC_AUTH) {
           return head.set('Authorization', 'Basic ' + this.srvAuth.activeSession.authToken);
-        } else if (this.authType === AuthTypes.JWT) {
+        } else if (this.authType === IbAuthTypes.JWT) {
           return head.set('Authorization', 'Bearer ' + this.srvAuth.activeSession.authToken);
         } else {
           if (this.additionalHeaders.length) {

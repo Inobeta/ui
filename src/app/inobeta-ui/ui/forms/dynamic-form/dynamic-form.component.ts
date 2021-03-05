@@ -3,7 +3,7 @@ import { IbFormControlBase } from '../controls/form-control-base';
 import { FormGroup } from '@angular/forms';
 import { IbFormControlService } from '../form-control.service';
 
-interface FormAction {
+interface IbFormAction {
   key?: string;
   label: string;
   handler?: (form: FormGroup) => void;
@@ -16,7 +16,7 @@ interface FormAction {
 })
 export class IbDynamicFormComponent implements OnInit, OnChanges {
   @Input() fields: IbFormControlBase<string>[] = [];
-  @Input() actions: FormAction[] = [
+  @Input() actions: IbFormAction[] = [
     { key: 'submit', label: 'Save' }
   ];
   @Output() ibSubmit = new EventEmitter<any>();
@@ -34,13 +34,14 @@ export class IbDynamicFormComponent implements OnInit, OnChanges {
     if (fields && !fields.isFirstChange()) {
       this.form = this.cs.toFormGroup(fields.currentValue);
     }
+    console.log(this.form)
   }
 
   onSubmit() {
     this.ibSubmit.emit(this.form.getRawValue());
   }
 
-  handleActionClick(source: FormAction) {
+  handleActionClick(source: IbFormAction) {
     if (source.key === 'submit') {
       return;
     }

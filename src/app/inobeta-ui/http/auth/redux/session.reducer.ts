@@ -1,9 +1,9 @@
-import {Session} from '../session.model';
+import {IbSession} from '../session.model';
 import {Action, createReducer, on} from '@ngrx/store';
 import * as SessionActions from './session.actions';
 
 export interface ISessionState {
-  activeSession: Session;
+  activeSession: IbSession;
 }
 
 export const INITIAL_SESSION_STATE: ISessionState = {
@@ -23,6 +23,6 @@ const mainSessionReducer = createReducer(INITIAL_SESSION_STATE,
     } }))
 );
 
-export function sessionReducer(state: ISessionState = INITIAL_SESSION_STATE, action: Action) {
+export function ibSessionReducer(state: ISessionState = INITIAL_SESSION_STATE, action: Action) {
   return mainSessionReducer(state, action);
 }

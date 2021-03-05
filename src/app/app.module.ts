@@ -11,8 +11,8 @@ import { HomeComponent } from 'src/app/examples/home.component';
 import { IbTableExampleComponent } from 'src/app/examples/table-example/table-example.component';
 import { NavComponent } from './examples/nav/nav.component';
 import { DynamicFormsExampleComponent } from './examples/dynamic-forms-example/dynamic-forms-example.component';
-import { ISessionState, sessionReducer } from './inobeta-ui/http/auth/redux/session.reducer';
-import { ITableFiltersState, tableFiltersReducer } from './inobeta-ui/ui/table/redux/table.reducer';
+import { ISessionState, ibSessionReducer } from './inobeta-ui/http/auth/redux/session.reducer';
+import { ITableFiltersState, ibTableFiltersReducer } from './inobeta-ui/ui/table/redux/table.reducer';
 import { ActionReducerMap, ActionReducer, MetaReducer, StoreModule } from '@ngrx/store';
 import {localStorageSync} from 'ngrx-store-localstorage';
 import { IbTableModule } from './inobeta-ui/ui/table/table.module';
@@ -22,7 +22,7 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatCardModule } from '@angular/material';
+import { MatCardModule, MatFormFieldModule, MatInputModule, MatIconModule } from '@angular/material';
 import { IbMaterialFormModule } from './inobeta-ui/ui/material-forms/material-form.module';
 import { HttpExampleComponent } from './examples/http-example.component';
 import { MyCounterComponent } from './examples/redux-example/my-counter.component';
@@ -30,6 +30,7 @@ import { IbHttpModule } from './inobeta-ui/http/http.module';
 import { ICounterState, counterReducer } from './examples/redux-example/counter.reducer';
 import { DialogExampleComponent } from './examples/dialog-example/dialog-example.component';
 import { IbModalModule } from './inobeta-ui/ui/modal';
+import { MyCustomTextboxComponent } from './examples/dynamic-forms-example/my-custom-textbox.model';
 
 export interface IAppState {
   sessionState: ISessionState;
@@ -38,8 +39,8 @@ export interface IAppState {
 }
 
 const reducers: ActionReducerMap<IAppState> = {
-  sessionState: sessionReducer,
-  tableFiltersState: tableFiltersReducer,
+  sessionState: ibSessionReducer,
+  tableFiltersState: ibTableFiltersReducer,
   countState: counterReducer
 };
 
@@ -62,7 +63,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     DynamicFormsExampleComponent,
     HttpExampleComponent,
     MyCounterComponent,
-    DialogExampleComponent
+    DialogExampleComponent,
+    MyCustomTextboxComponent
   ],
   imports: [
     CommonModule,
@@ -77,6 +79,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     FlexLayoutModule,
     IbHttpModule,
     IbModalModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
     StoreModule.forRoot(reducers, {metaReducers}),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
@@ -98,6 +103,7 @@ export function HttpLoaderFactory(http: HttpClient) {
   providers: [
     {provide: 'HttpMode', useValue: 'NORMAL'}
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [MyCustomTextboxComponent]
 })
 export class AppModule {}

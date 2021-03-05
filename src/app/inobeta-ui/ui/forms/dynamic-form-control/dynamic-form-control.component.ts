@@ -9,6 +9,7 @@ import { FormGroup } from '@angular/forms';
     class: 'ibFormControl'
   },
 })
+//@deprecated
 export class IbDynamicFormControlComponent {
   @Input() base: IbFormControlBase<string>;
   @Input() form: FormGroup;
