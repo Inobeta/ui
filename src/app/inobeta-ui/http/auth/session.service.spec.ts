@@ -8,11 +8,11 @@ import {IbHttpClientService} from '../http/http-client.service';
 import {MockStore, provideMockStore} from '@ngrx/store/testing';
 import {Store} from '@ngrx/store';
 import {ISessionState} from './redux/session.reducer';
-import {AuthTypes} from './session.model';
+import {IbAuthTypes} from './session.model';
 import {IbResponseHandlerService} from '../http/response-handler.service';
 import {HttpClient} from '@angular/common/http';
 
-describe('Session service test', () => {
+describe('IbSession service test', () => {
   let sessionService;
   let httpClient: HttpClient;
   let httpMock: HttpTestingController;
@@ -151,7 +151,7 @@ describe('Session service test', () => {
 
     // WITH AUTH = JWT
 
-    sessionService.authType = AuthTypes.JWT;
+    sessionService.authType = IbAuthTypes.JWT;
     sessionService.login({
       username: 'Luca',
       password: 'Luca123',
@@ -192,7 +192,7 @@ describe('Session service test', () => {
 
     // WITH AUTH = BASIC AUTH
 
-    sessionService.authType = AuthTypes.BASIC_AUTH;
+    sessionService.authType = IbAuthTypes.BASIC_AUTH;
     sessionService.login({
       username: 'Luca',
       password: 'Luca123',
@@ -296,7 +296,7 @@ describe('Session service test', () => {
     svcSession.logout();
     expect(dispatchSpy).toHaveBeenCalled();
     expect(dispatchSpy).toHaveBeenCalledTimes(1);
-    expect(dispatchSpy).toHaveBeenCalledWith( Object({ type: '[Session Service] Logout' }) );
+    expect(dispatchSpy).toHaveBeenCalledWith( Object({ type: '[IbSession Service] Logout' }) );
     expect(routerSpy.navigateByUrl).toHaveBeenCalled();
     expect(routerSpy.navigateByUrl).toHaveBeenCalledWith('/login');
     expect(routerSpy.navigateByUrl).toHaveBeenCalledTimes(1);

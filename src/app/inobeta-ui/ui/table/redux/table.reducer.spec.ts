@@ -1,8 +1,8 @@
 import * as actions from './table.action';
-import { tableFiltersReducer } from './table.reducer';
+import { ibTableFiltersReducer } from './table.reducer';
 import { async } from '@angular/core/testing';
 
-describe('tableFiltersReducer', () => {
+describe('ibTableFiltersReducer', () => {
 
   let MOCK_INITIAL_STATE_EMPTY = {
     tableFilters: {}
@@ -16,19 +16,19 @@ describe('tableFiltersReducer', () => {
 
 
   it('resetFilters', () => {
-    let state = tableFiltersReducer({
+    let state = ibTableFiltersReducer({
       ...MOCK_INITIAL_STATE_EMPTY,
       tableFilters: { prova: {} }
     }, actions.resetFilters);
     expect(state.tableFilters).toEqual({});
 
 
-    state = tableFiltersReducer(undefined, actions.resetFilters);
+    state = ibTableFiltersReducer(undefined, actions.resetFilters);
     expect(state.tableFilters).toEqual({});
   });
 
   it('addFilterToTable', () => {
-    let state = tableFiltersReducer({
+    let state = ibTableFiltersReducer({
       ...MOCK_INITIAL_STATE_EMPTY
     }, actions.addFilterToTable({
       tableName: 'prova',
@@ -39,7 +39,7 @@ describe('tableFiltersReducer', () => {
       colonna: { value: 'pippo'}
     });
 
-    state = tableFiltersReducer({
+    state = ibTableFiltersReducer({
       ...state
     }, actions.addFilterToTable({
       tableName: 'prova',
@@ -51,7 +51,7 @@ describe('tableFiltersReducer', () => {
     });
 
 
-    state = tableFiltersReducer({
+    state = ibTableFiltersReducer({
       ...state
     }, actions.addFilterToTable({
       tableName: 'prova',
@@ -66,7 +66,7 @@ describe('tableFiltersReducer', () => {
 
 
   it('addSortToTable', () => {
-    let state = tableFiltersReducer({
+    let state = ibTableFiltersReducer({
       ...MOCK_INITIAL_STATE_EMPTY
     }, actions.addSortToTable({
       tableName: 'prova',
@@ -83,7 +83,7 @@ describe('tableFiltersReducer', () => {
       }
     });
 
-    state = tableFiltersReducer({
+    state = ibTableFiltersReducer({
       ...state
     }, actions.addSortToTable({
       tableName: 'prova',
@@ -104,7 +104,7 @@ describe('tableFiltersReducer', () => {
   });
 
   it('addPaginatorFiltersToTable', () => {
-    let state = tableFiltersReducer({
+    let state = ibTableFiltersReducer({
       ...MOCK_INITIAL_STATE_EMPTY
     }, actions.addPaginatorFiltersToTable({
       tableName: 'prova',
@@ -123,7 +123,7 @@ describe('tableFiltersReducer', () => {
       }
     });
 
-    state = tableFiltersReducer({
+    state = ibTableFiltersReducer({
       ...state
     }, actions.addPaginatorFiltersToTable({
       tableName: 'prova',

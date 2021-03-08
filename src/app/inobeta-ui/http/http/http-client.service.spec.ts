@@ -3,7 +3,7 @@ import {HttpClientTestingModule, HttpTestingController} from '@angular/common/ht
 import {IbAuthService} from '../auth/auth.service';
 import {IbHttpClientService} from './http-client.service';
 import {IbResponseHandlerService} from './response-handler.service';
-import {AuthTypes} from '../auth/session.model';
+import {IbAuthTypes} from '../auth/session.model';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {throwError, of} from 'rxjs';
 import { HTTP } from '@ionic-native/http/ngx';
@@ -48,23 +48,23 @@ describe('http client test', () => {
 
   it('Should be use setAuthType', () => {
     const svHttpClientService = TestBed.get(IbHttpClientService);
-    svHttpClientService.setAuthtype(AuthTypes.JWT);
+    svHttpClientService.setAuthtype(IbAuthTypes.JWT);
     expect(svHttpClientService.authType).toBe(1);
   });
 
   it('createAuthorizationHeader', () => {
     const svHttpClientService = TestBed.get(IbHttpClientService);
-    svHttpClientService.setAuthtype(AuthTypes.BASIC_AUTH);
+    svHttpClientService.setAuthtype(IbAuthTypes.BASIC_AUTH);
     svHttpClientService.createAuthorizationHeader(new HttpHeaders('prova: prova'));
-    svHttpClientService.setAuthtype(AuthTypes.JWT);
+    svHttpClientService.setAuthtype(IbAuthTypes.JWT);
     svHttpClientService.createAuthorizationHeader(new HttpHeaders('prova: prova'));
     svHttpClientService.setAuthtype(null);
     svHttpClientService.createAuthorizationHeader(new HttpHeaders('prova: prova'));
 
     svHttpClientService.httpMode = 'MOBILE';
-    svHttpClientService.setAuthtype(AuthTypes.BASIC_AUTH);
+    svHttpClientService.setAuthtype(IbAuthTypes.BASIC_AUTH);
     svHttpClientService.createAuthorizationHeader(new HttpHeaders('prova: prova'));
-    svHttpClientService.setAuthtype(AuthTypes.JWT);
+    svHttpClientService.setAuthtype(IbAuthTypes.JWT);
     svHttpClientService.createAuthorizationHeader(new HttpHeaders('prova: prova'));
     svHttpClientService.setAuthtype(null);
     svHttpClientService.createAuthorizationHeader(new HttpHeaders('prova: prova'));

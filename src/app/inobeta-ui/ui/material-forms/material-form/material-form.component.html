@@ -1,6 +1,15 @@
 <form (ngSubmit)="onSubmit()" [formGroup]="form" class="ibForm">
 
-  <ib-material-form-control *ngFor="let field of fields" class="ibFormRow" [base]="field" [form]="form"></ib-material-form-control>
+  <div fxLayout="row wrap">
+    <ib-material-form-control
+      *ngFor="let field of fields"
+      class="ibFormRow"
+      [base]="field"
+      [form]="form"
+      [fxFlex]="field.width"
+      style="padding: 5px;"
+    ></ib-material-form-control>
+  </div>
 
   <div class="ibFormRow ibFormActions">
     <button

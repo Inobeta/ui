@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnChanges } from '@angular/core';
 import { IbDynamicFormComponent } from '../../forms/dynamic-form/dynamic-form.component';
 
 /**
@@ -13,4 +13,4 @@ import { IbDynamicFormComponent } from '../../forms/dynamic-form/dynamic-form.co
   selector: 'ib-material-form',
   templateUrl: './material-form.component.html',
 })
-export class IbMaterialFormComponent extends IbDynamicFormComponent {}
+export class IbMaterialFormComponent extends IbDynamicFormComponent implements OnChanges {}

@@ -4,12 +4,19 @@ import { IbMaterialFormComponent } from './material-form.component';
 import { IbToolTestModule } from '../../../tools';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IbMaterialFormControlComponent } from '../material-form-control/material-form-control.component';
-import { IbDynamicFormsModule, IbFormControlBase, IbTextbox, IbDropdown, IbRadio, IbCheckbox } from '../../forms';
-import { MatFormFieldModule, MatOptionModule, MatSelectModule, MatRadioModule, MatCheckboxModule, MatInputModule, MatButtonModule } from '@angular/material';
+import { IbMaterialFormControlComponent, IbFormControlDirective } from '../material-form-control/material-form-control.component';
+import { IbDynamicFormsModule, IbFormControlBase } from '../../forms';
+import { MatFormFieldModule, MatOptionModule, MatSelectModule, MatRadioModule, MatCheckboxModule, MatInputModule, MatButtonModule, MatDatepickerModule, MatAutocompleteModule, MatIconModule } from '@angular/material';
 import { Component } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { IbMatTextboxControl, IbMatTextboxComponent } from '../controls/textbox';
+import { IbMatCheckboxControl, IbMatCheckboxComponent } from '../controls/checkbox';
+import { IbMatRadioControl, IbMatRadioComponent } from '../controls/radio';
+import { IbMatDropdownControl, IbMatDropdownComponent } from '../controls/dropdown';
+import { IbMatDatepickerComponent, IbMatAutocompleteComponent, IbMatLabelComponent, IbMatDatepickerControl, IbMatAutocompleteControl, IbMatLabelControl } from '..';
+import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 
 
 @Component({
@@ -31,7 +38,7 @@ export class TestHostComponent {
   ];
 
   customFormFields: IbFormControlBase<string>[] = [
-    new IbTextbox({
+    new IbMatTextboxControl({
       key: 'firstName',
       label: 'First name',
       required: true,
@@ -41,27 +48,27 @@ export class TestHostComponent {
         message: 'Email richiesta'
       }]
     }),
-    new IbTextbox({
+    new IbMatTextboxControl({
       type: 'email',
       key: 'email',
       label: 'Email',
       required: true,
       validators: [Validators.email]
     }),
-    new IbTextbox({
+    new IbMatTextboxControl({
       type: 'date',
       key: 'dateTime',
       label: 'Date',
       required: true,
     }),
-    new IbDropdown({
+    new IbMatDropdownControl({
       key: 'options',
       label: 'Options',
       options: [
         { key: 'test', value: 'value' }
       ]
     }),
-    new IbRadio({
+    new IbMatRadioControl({
       key: 'food',
       value: 'test-1',
       label: 'Scegli qualcosa',
@@ -71,10 +78,29 @@ export class TestHostComponent {
       ],
       required: true
     }),
-    new IbCheckbox({
+    new IbMatCheckboxControl({
       key: 'checked',
       label: 'check this',
-    })
+    }),
+    new IbMatAutocompleteControl({
+      key: 'autocomplete',
+      label: 'Autocomplete',
+      width: '33.3%',
+      options: [
+        { value: 'value1' },
+        { value: 'value2' },
+        { value: 'value3' },
+        { value: 'value4' }
+      ],
+      change: (control) => {
+        console.log('current value', control.value);
+      }
+    }),
+    new IbMatLabelControl({
+      value: 'Static value',
+      label: 'Static label',
+      width: '50%'
+    }),
   ];
 
   onSubmit() {}
@@ -89,7 +115,19 @@ describe('IbMaterialFormComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ IbMaterialFormComponent, IbMaterialFormControlComponent, TestHostComponent ],
+      declarations: [
+        IbMaterialFormComponent,
+        IbMaterialFormControlComponent,
+        IbFormControlDirective,
+        TestHostComponent,
+        IbMatTextboxComponent,
+        IbMatDropdownComponent,
+        IbMatRadioComponent,
+        IbMatCheckboxComponent,
+        IbMatDatepickerComponent,
+        IbMatAutocompleteComponent,
+        IbMatLabelComponent
+      ],
       imports: [
         IbToolTestModule,
         CommonModule,
@@ -103,8 +141,25 @@ describe('IbMaterialFormComponent', () => {
         MatCheckboxModule,
         MatInputModule,
         MatButtonModule,
-        NoopAnimationsModule
+        NoopAnimationsModule,
+        FlexLayoutModule,
+        MatDatepickerModule,
+        MatAutocompleteModule,
+        MatIconModule,
       ]
+    })
+    .overrideModule(BrowserDynamicTestingModule, {
+      set: {
+        entryComponents: [
+        IbMatTextboxComponent,
+        IbMatDropdownComponent,
+        IbMatRadioComponent,
+        IbMatCheckboxComponent,
+        IbMatDatepickerComponent,
+        IbMatAutocompleteComponent,
+        IbMatLabelComponent
+        ],
+      }
     })
     .compileComponents();
   }));
@@ -116,7 +171,7 @@ describe('IbMaterialFormComponent', () => {
     fixture.detectChanges();
     hostComponent.customFormFields = [
       ...hostComponent.customFormFields,
-      new IbTextbox({
+      new IbMatTextboxControl({
         type: 'email',
         key: 'email2',
         label: 'Email2',

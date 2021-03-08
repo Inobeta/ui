@@ -1,10 +1,10 @@
 import {Inject, Injectable, Optional} from '@angular/core';
-import {Session} from './session.model';
+import {IbSession} from './session.model';
 import {CookiesStorageService, LocalStorageService} from 'ngx-store';
 
 @Injectable()
 export class IbAuthService {
-  activeSession: Session = null;
+  activeSession: IbSession = null;
   sessionStorageKey = '';
 
   constructor(private srvLocalStorage: LocalStorageService,
@@ -12,9 +12,9 @@ export class IbAuthService {
               @Inject('SessionStorageKey') @Optional() public SessionStorageKey?: string
   ) {
     this.sessionStorageKey = SessionStorageKey || '';
-    this.activeSession = this.svcCookie.get(`userData-${this.sessionStorageKey}`) as Session;
+    this.activeSession = this.svcCookie.get(`userData-${this.sessionStorageKey}`) as IbSession;
     if (!this.activeSession) {
-      this.activeSession = this.srvLocalStorage.get(`userData-${this.sessionStorageKey}`) as Session;
+      this.activeSession = this.srvLocalStorage.get(`userData-${this.sessionStorageKey}`) as IbSession;
     }
   }
 

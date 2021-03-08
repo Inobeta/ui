@@ -8,7 +8,7 @@ Definire i campi del form attraverso un array di [IbFormControlBase](/classes/Ib
 
 `IbDynamicFormComponent` espongono un evento `ibSubmit` corrispondente a `ngSubmit`.
 
-Per un maggiore controllo sui forms, è possibile estendere le azioni possibili oltre al submit attraverso l'input [actions](/interfaces/FormAction.html).
+Per un maggiore controllo sui forms, è possibile estendere le azioni possibili oltre al submit attraverso l'input [actions](/interfaces/IbFormAction.html).
 Ogni azione necessita di un campo `key`, `label`, e `handler` (callback) eccetto per il bottone relativo alla submit del form. Ricorda: **Deve esistere almeno un azione con `key: 'submit'`**
 
 ```typescript

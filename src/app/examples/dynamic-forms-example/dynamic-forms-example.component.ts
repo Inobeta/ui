@@ -2,11 +2,15 @@ import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { IbFormControlBase } from 'src/app/inobeta-ui/ui/forms/controls/form-control-base';
 import { IbTextbox } from 'src/app/inobeta-ui/ui/forms/controls/textbox';
 import { Validators } from '@angular/forms';
-import { IbDropdown } from 'src/app/inobeta-ui/ui/forms/controls/dropdown';
-import { IbRadio } from 'src/app/inobeta-ui/ui/forms/controls/radio';
-import { IbCheckbox } from 'src/app/inobeta-ui/ui/forms/controls/checkbox';
 import { IbMaterialFormComponent } from 'src/app/inobeta-ui/ui/material-forms/material-form/material-form.component';
 import { MyCustomTextbox, MyCustomTextboxParams } from './my-custom-textbox.model';
+import { IbMatTextboxControl } from 'src/app/inobeta-ui/ui/material-forms/controls/textbox';
+import { IbMatDropdownControl } from 'src/app/inobeta-ui/ui/material-forms/controls/dropdown';
+import { IbMatRadioControl } from 'src/app/inobeta-ui/ui/material-forms/controls/radio';
+import { IbMatCheckboxControl } from 'src/app/inobeta-ui/ui/material-forms/controls/checkbox';
+import { IbMatDatepickerControl } from 'src/app/inobeta-ui/ui/material-forms/controls/datepicker';
+import { IbMatAutocompleteComponent, IbMatAutocompleteControl } from 'src/app/inobeta-ui/ui/material-forms/controls/autocomplete';
+import { IbMatLabelControl } from 'src/app/inobeta-ui/ui/material-forms/controls/label';
 
 @Component({
   selector: 'app-dynamic-forms-example',
@@ -22,51 +26,101 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
     })
   ];
 
-  customFormFields: IbFormControlBase<string>[] = [
-    new IbTextbox({
+  customFormFields: IbFormControlBase<any>[] = [
+    new IbMatTextboxControl({
       key: 'firstName',
       label: 'First name',
       required: true,
       validators: [Validators.minLength(3)],
+      width: '50%',
       errors: [{
         condition: (c) => c.hasError('required'),
-        message: 'Email richiesta'
+        message: 'Campo obbligatorio'
       }]
     }),
-    new IbTextbox({
+    new IbMatTextboxControl({
+      key: 'disabledField',
+      label: 'Disabled Field',
+      width: '50%',
+      disabled: true
+    }),
+
+    new IbMatTextboxControl({
+      key: 'changeValueField',
+      label: 'Change my value',
+      width: '33.3%',
+      change: (control) => {
+        console.log('current value', control.value);
+      }
+    }),
+    new IbMatTextboxControl({
       type: 'email',
       key: 'email',
       label: 'Email',
+      width: '33.3%',
       required: true,
       validators: [Validators.email]
     }),
-    new IbTextbox({
+    new IbMatDatepickerControl({
       type: 'date',
       key: 'dateTime',
+      width: '33.3%',
       label: 'Date',
       required: true,
+      change: (control) => {
+        console.log('current value', control.value);
+      }
     }),
-    new IbDropdown({
+    new IbMatDropdownControl({
       key: 'options',
       label: 'Options',
+      width: '33.3%',
       options: [
-        { key: 'test', value: 'value' }
-      ]
+        { key: 'test1', value: 'value1' },
+        { key: 'test2', value: 'value2' },
+        { key: 'test3', value: 'value3' },
+        { key: 'test4', value: 'value4' }
+      ],
+      change: (control) => {
+        console.log('current value', control.value);
+      }
     }),
-    new IbRadio({
+    new IbMatRadioControl({
       key: 'food',
       value: 'test-1',
       label: 'Scegli qualcosa',
+      width: '33.3%',
       options: [
-        { key: 'test-1', value: 'Lasagne' },
-        { key: 'test-2', value: 'Maccheroni' },
-      ],
-      required: true
+        { key: 'las-1', value: 'Lasagne' },
+        { key: 'macc-2', value: 'Maccheroni' },
+      ]
     }),
-    new IbCheckbox({
+    new IbMatCheckboxControl({
       key: 'checked',
       label: 'check this',
-    })
+      width: '100%'
+    }),
+
+    new IbMatAutocompleteControl({
+      key: 'autocomplete',
+      label: 'Autocomplete',
+      width: '33.3%',
+      options: [
+        { value: 'value1' },
+        { value: 'value2' },
+        { value: 'value3' },
+        { value: 'value4' }
+      ],
+      change: (control) => {
+        console.log('current value', control.value);
+      }
+    }),
+    new IbMatLabelControl({
+      key: 'static',
+      value: 'Static value',
+      label: 'Static label',
+      width: '50%'
+    }),
   ];
   customFormActions = [
     { key: 'submit', label: 'Search' },
@@ -86,7 +140,7 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
       testField: 'prova',
       validators: [Validators.minLength(3)]
     } as MyCustomTextboxParams),
-    new IbTextbox({
+    new IbMatTextboxControl({
       key: 'password',
       label: 'shared.login.password',
       type: 'password',
@@ -96,9 +150,10 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
   ];
 
   noFormFields = [
-    new IbTextbox({
-      key: 'old',
-      label: 'Old IbTextbox',
+    new IbMatTextboxControl({
+      key: 'existing',
+      label: 'existing IbTextbox',
+      width: '50%'
     })
   ];
 
@@ -114,9 +169,10 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       this.noFormFields = [
         ...this.noFormFields,
-        new IbTextbox({
-          key: 'new',
-          label: 'New IbTextbox',
+        new IbMatTextboxControl({
+          key: 'created',
+          label: 'created IbTextbox',
+          width: '50%'
         })
       ];
     }, 3000);

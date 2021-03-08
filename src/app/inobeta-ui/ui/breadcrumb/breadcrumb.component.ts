@@ -3,13 +3,13 @@ import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { isNullOrUndefined } from 'util';
 import { filter } from 'rxjs/operators';
 
-interface Item {
+interface IbBreadcrumbItem {
   label?: string;
   url?: string;
   icon?: string;
 }
 
-enum BreadcrumbMode {
+enum IbBreadcrumbMode {
   static = 'static',
   auto = 'auto',
 }
@@ -23,18 +23,18 @@ export class IbBreadcrumbComponent implements OnInit {
   /**
    * Modifica l'icona o label per il primo elemento.
    */
-  @Input() home: Item = {url: '/', icon: 'home'};
-  @Input() items: Item[] = [];
+  @Input() home: IbBreadcrumbItem = {url: '/', icon: 'home'};
+  @Input() items: IbBreadcrumbItem[] = [];
   /**
    * Modalità per il render delle breadcrumbs.
    * Di default, il percorso viene calcolato dalle routes. Per inserire le singole "briciole" usare la modalità `static`
    */
-  @Input() mode = BreadcrumbMode.auto;
+  @Input() mode = IbBreadcrumbMode.auto;
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
 
   ngOnInit() {
-    if (this.mode === BreadcrumbMode.static) {
+    if (this.mode === IbBreadcrumbMode.static) {
       return;
     }
     this.router.events
@@ -42,7 +42,7 @@ export class IbBreadcrumbComponent implements OnInit {
       .subscribe(() => this.items = this.createBreadcrumbs(this.activatedRoute.root));
   }
 
-  private createBreadcrumbs(route: ActivatedRoute, url = '', breadcrumbs: Item[] = []) {
+  private createBreadcrumbs(route: ActivatedRoute, url = '', breadcrumbs: IbBreadcrumbItem[] = []) {
     const children = route.children;
 
     if (children.length === 0) {

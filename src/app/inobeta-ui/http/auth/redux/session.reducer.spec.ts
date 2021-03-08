@@ -1,8 +1,8 @@
 import * as actions from './session.actions';
-import { sessionReducer } from './session.reducer';
+import { ibSessionReducer } from './session.reducer';
 import { async } from '@angular/core/testing';
 
-describe('sessionReducer', () => {
+describe('ibSessionReducer', () => {
 
   let MOCK_INITIAL_STATE_EMPTY = {
     activeSession: null
@@ -16,7 +16,7 @@ describe('sessionReducer', () => {
 
 
   it('login/logout', () => {
-    let state = sessionReducer(undefined, actions.login({
+    let state = ibSessionReducer(undefined, actions.login({
       activeSession: {
         user: null,
         authToken: '123',
@@ -32,7 +32,7 @@ describe('sessionReducer', () => {
     });
 
 
-    state = sessionReducer({
+    state = ibSessionReducer({
       ...state
     }, actions.logout);
     expect(state.activeSession).toEqual(null);
@@ -41,7 +41,7 @@ describe('sessionReducer', () => {
 
 
   it('changeNameSurname', () => {
-    const state = sessionReducer({
+    const state = ibSessionReducer({
       activeSession: {
         user: null,
         authToken: '123',

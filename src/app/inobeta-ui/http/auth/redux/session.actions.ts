@@ -1,7 +1,7 @@
 import { createAction, props } from '@ngrx/store';
-import {Session} from '../session.model';
+import {IbSession} from '../session.model';
 
-export const login = createAction('[Session Service] Login', props<{ activeSession: Session}>());
-export const logout = createAction('[Session Service] Logout');
-export const changeNameSurname = createAction('[Session Service] Change Name And Surname', props<{ name: string, surname: string}>());
+export const login = createAction('[IbSession Service] Login', props<{ activeSession: IbSession}>());
+export const logout = createAction('[IbSession Service] Logout');
+export const changeNameSurname = createAction('[IbSession Service] Change Name And Surname', props<{ name: string, surname: string}>());
 
