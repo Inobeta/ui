@@ -1,0 +1,23 @@
+<form (ngSubmit)="onSubmit()" [formGroup]="form" class="ibForm">
+
+  <div fxLayout="row wrap">
+    <ib-material-form-control
+      *ngFor="let field of fields"
+      class="ibFormRow"
+      [base]="field"
+      [form]="form"
+      [fxFlex]="field.width"
+      style="padding: 5px;"
+    ></ib-material-form-control>
+  </div>
+
+  <div class="ibFormRow ibFormActions">
+    <button
+      (click)="handleActionClick(action)"
+      [type]="action.key === 'submit' ? 'submit' : 'button'"
+      [disabled]="(action.key === 'submit' || action.options?.requireValidation) && !form.valid"
+      mat-button
+      [color]="action.options?.color || 'primary'"
+      *ngFor="let action of actions">{{action.label | translate}}</button>
+  </div>
+</form>

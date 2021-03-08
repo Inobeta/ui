@@ -22,7 +22,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
     </div>
   `,
 })
-export class TableAddComponent {
+export class IbTableAddComponent {
   @Input() hasAdd;
   @Output() add = new EventEmitter();
 }

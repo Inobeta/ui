@@ -21,7 +21,7 @@ import {Component, Input} from '@angular/core';
     </div>
   `,
 })
-export class TableMenuActionsComponent {
+export class IbTableMenuActionsComponent {
   @Input() hasActions;
   @Input() menuTableActions;
   @Input() actionsLength;

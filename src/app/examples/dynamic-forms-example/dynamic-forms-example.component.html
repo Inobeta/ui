@@ -1,0 +1,35 @@
+<h2>Dynamic Forms</h2>
+<div style="margin: 2em">
+  <h3>Default Form</h3>
+  <ib-form [fields]="defaultFormFields" (ibSubmit)="onSubmit($event)"></ib-form>
+</div>
+<mat-card style="margin: 2em">
+  <mat-card-header>
+    <mat-card-title>Custom Form</mat-card-title>
+    <mat-card-subtitle>con Angular Material</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <ib-material-form #customForm [actions]="customFormActions" [fields]="customFormFields" (ibSubmit)="onSubmit($event)"></ib-material-form>
+  </mat-card-content>
+</mat-card>
+<mat-card style="margin: 2em">
+  <mat-card-header>
+    <mat-card-title>Classic login form</mat-card-title>
+    <mat-card-subtitle>con Angular Material</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <ib-material-form
+      [fields]="loginFormFields"
+      (ibSubmit)="onSubmit($event)"></ib-material-form>
+  </mat-card-content>
+</mat-card>
+<mat-card style="margin: 2em">
+  <mat-card-header>
+    <mat-card-title>Empty Form</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <ib-material-form
+      [fields]="noFormFields"
+      (ibSubmit)="onSubmit($event)"></ib-material-form>
+  </mat-card-content>
+</mat-card>

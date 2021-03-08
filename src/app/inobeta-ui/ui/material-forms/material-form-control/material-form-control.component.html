@@ -1,0 +1,15 @@
+<ng-template formControlHost></ng-template>
+<ng-template #formControlErrors>
+  <mat-error *ngFor="let error of base.errors">
+    <span *ngIf="error.condition(self)">{{error.message | translate}}</span>
+  </mat-error>
+  <mat-error *ngIf="hasError('minlength')">
+    {{base.label | translate}} has minlength
+  </mat-error>
+  <mat-error *ngIf="hasError('required')">
+    {{base.label | translate}} is <strong>required</strong>
+  </mat-error>
+  <mat-error *ngIf="hasError('email')">
+    Please enter a valid email address
+  </mat-error>
+</ng-template>

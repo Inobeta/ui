@@ -1,0 +1,55 @@
+<ng-template #deleteTemplate let-item="item">
+  <span class="delete-button">
+      <i class="material-icons">search</i>
+  </span>
+</ng-template>
+
+<ng-template #headerClickTemplate let-ibTable="ibTable" let-col="col">
+  <ib-table-header-popup
+    [ibTable]="ibTable"
+    [col]="col">
+  </ib-table-header-popup>
+</ng-template>
+
+
+<ng-template #exportTemplate let-ibTable="ibTable" let-col="col">
+  <!--example component customization-->
+  Clicca per esportare:&nbsp;
+  <ib-table-export
+    (export)="ibTable.export($event || {})"
+    >
+  </ib-table-export>
+</ng-template>
+
+<ib-table
+  [pdfCustomStyles]="pdfCustomStyles"
+  [pdfSetup]="pdfSetup"
+  [hasExport]="true"
+  [customItemTemplate]="{ lot: lotTemplate }"
+  [selectableRows]="true"
+  (rowChecked)="prova2($event)"
+  [titles]="titles"
+  [items]="items"
+  [enableReduxStore]="true"
+  [tableName]="'pippo'"
+  [selectRowName]="'Ricevuto'"
+  [templateButtons]="[{
+    template: deleteTemplate,
+    columnName: 'Elimina'
+  }]"
+  [templateHeaders]="{
+    'lot': headerClickTemplate,
+    'sender': headerClickTemplate,
+    'date': headerClickTemplate,
+    'qt': headerClickTemplate
+  }"
+  [actions]="['test']"
+  [structureTemplates]="{
+    'exportTemplate': exportTemplate
+  }"
+
+  >
+  <ng-template #lotTemplate let-item="item">
+    <div style="font-weight: bold; color: red;">{{item.lot}}</div>
+  </ng-template>
+</ib-table>

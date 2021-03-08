@@ -1,6 +1,7 @@
 import {Action, createReducer, on} from '@ngrx/store';
-import * as CounterActions from '../redux-example/counter.action';
+import { CounterActions } from './counter.action';
 
+console.log('CounterActions.increment', CounterActions.increment);
 export interface ICounterState {
   number: number;
 }

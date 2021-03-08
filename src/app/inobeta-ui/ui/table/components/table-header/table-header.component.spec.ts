@@ -1,20 +1,44 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TableHeaderComponent } from './table-header.component';
+import { IbTableHeaderComponent } from './table-header.component';
+import { IbToolTestModule } from 'public_api';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatMenuModule, MatSortModule, MatChipsModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, MatIconModule, MatDialogModule, MatSelectModule, MatRadioModule, MatPaginatorModule, MatButtonModule, MatSnackBarModule, MatCardModule } from '@angular/material';
 
-describe('TableHeaderComponent', () => {
-  let component: TableHeaderComponent;
-  let fixture: ComponentFixture<TableHeaderComponent>;
+describe('IbTableHeaderComponent', () => {
+  let component: IbTableHeaderComponent;
+  let fixture: ComponentFixture<IbTableHeaderComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TableHeaderComponent ]
+      declarations: [ IbTableHeaderComponent ],
+      imports: [
+        IbToolTestModule,
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatMenuModule,
+        MatSortModule,
+        MatChipsModule,
+        MatCheckboxModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatIconModule,
+        MatDialogModule,
+        MatSelectModule,
+        MatRadioModule,
+        MatPaginatorModule,
+        MatButtonModule,
+        MatSnackBarModule,
+        MatCardModule
+      ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TableHeaderComponent);
+    fixture = TestBed.createComponent(IbTableHeaderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

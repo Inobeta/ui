@@ -1,5 +1,11 @@
 {
   "shared": {
+    "ui": {
+      "modalMessage": {
+        "yes": "Sì",
+        "no": "No"
+      }
+    },
     "login": {
       "email": "E-mail",
       "password": "Password",
@@ -16,7 +22,8 @@
       "search": "Cerca",
       "filterReset": "Resetta filtri",
       "delete": "Elimina",
-      "update": "Modifica"
+      "update": "Modifica",
+      "export": "Esporta"
     },
     "profile": {
       "name": "Nome",
@@ -30,6 +37,13 @@
       "errors": {
         "passwordsMatch": "Le password non coincidono!",
         "min6max32": "La password deve essere compresa tra 6 e 32 caratteri!"
+      }
+    }
+  },
+  "receiptGoods": {
+    "historyGoods": {
+      "table": {
+        "date": "Scadenza"
       }
     }
   }
