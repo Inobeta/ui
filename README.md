@@ -47,3 +47,19 @@ npm config set '//gitlab.com/api/v4/packages/npm/:_authToken' "GITLAB_TOKEN"
 npm config set '//gitlab.com/api/v4/projects/8604184/packages/npm/:_authToken' "GITLAB_TOKEN"
 echo @Inobeta:registry=https://gitlab.com/api/v4/packages/npm/ >> .npmrc
 ```
+
+
+# How to install
+
+After gitlab setup registry:
+
+```
+npm i --save @Inobeta/ui
+```
+
+then, edit angular.json in order to include css styling themes with this path:
+
+```
+./node_modules/@Inobeta/ui/themes/default.scss
+```
+
