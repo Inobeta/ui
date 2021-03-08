@@ -31,6 +31,8 @@ import { ICounterState, counterReducer } from './examples/redux-example/counter.
 import { DialogExampleComponent } from './examples/dialog-example/dialog-example.component';
 import { IbModalModule } from './inobeta-ui/ui/modal';
 import { MyCustomTextboxComponent } from './examples/dynamic-forms-example/my-custom-textbox.model';
+import { IbToastExampleComponent } from './examples/toast-example/toast-example.component';
+import { IbToastModule } from './inobeta-ui/ui/toast/toast.module';
 
 export interface IAppState {
   sessionState: ISessionState;
@@ -64,7 +66,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     HttpExampleComponent,
     MyCounterComponent,
     DialogExampleComponent,
-    MyCustomTextboxComponent
+    MyCustomTextboxComponent,
+    IbToastExampleComponent
   ],
   imports: [
     CommonModule,
@@ -82,6 +85,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
+    IbToastModule,
     StoreModule.forRoot(reducers, {metaReducers}),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
