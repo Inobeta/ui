@@ -1,0 +1,18 @@
+
+.ib-toast-success{
+  background-color: green;
+  font-weight: bold;
+  color: white;
+}
+
+.ib-toast-warning{
+  background-color: orange;
+  font-weight: bold;
+  color: white;
+}
+
+.ib-toast-error{
+  background-color: red;
+  font-weight: bold;
+  color: white;
+}

@@ -7,6 +7,7 @@ import { DynamicFormsExampleComponent } from './examples/dynamic-forms-example/d
 import { HttpExampleComponent } from './examples/http-example.component';
 import { MyCounterComponent } from './examples/redux-example/my-counter.component';
 import { DialogExampleComponent } from './examples/dialog-example/dialog-example.component';
+import { IbToastExampleComponent } from './examples/toast-example/toast-example.component';
 
 const appRoutes: Routes = [
   {
@@ -37,6 +38,11 @@ const appRoutes: Routes = [
     path: 'dialog',
     data: { breadcrumb: 'Dialog' },
     component: DialogExampleComponent,
+  },
+  {
+    path: 'toast',
+    data: { breadcrumb: 'examples.toastMenu' },
+    component: IbToastExampleComponent
   },
   {
     path: '**',

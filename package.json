@@ -10,7 +10,7 @@
     "test-with-diagnostic": "ng test --sourceMap=false",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "packagr": "ng-packagr -p ng-package.json",
+    "packagr": "ng-packagr -p ng-package.json && cp -r ./src/app/inobeta-ui/themes ./dist/",
     "release": "npm run packagr && cd dist/ && npm pack",
     "compodoc": "compodoc -p tsconfig.app.json",
     "pre-release": "npm version --no-git-tag-version prerelease",
