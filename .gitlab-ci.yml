@@ -3,6 +3,8 @@ image: node:10.11.0
 stages:
   - quality
   - deploy
+  - examples:build
+  - examples:deploy
 
 test_unit:
   image: inobeta/node-chrome:10
@@ -85,6 +87,29 @@ pages:
     - master
     - /^v[0-9]+\.[0-9]+\.[0-9]+$/
 
+examples:build:
+  image: inobeta/dind-node:10
+  stage: examples:build
+  script:
+    - npm install && npm run build && rm -rf node_modules
+    - build $IMAGE
+  tags:
+  - docker
+  when: manual
+
+examples:deploy:
+  image: inobeta/dind-node:10
+  stage: examples:deploy
+  script:
+    - prepare_staging
+    - service_pullrestart_staging $IMAGE $CURRENT_VERSION $SERVICE
+  tags:
+  - dedicated
+  environment:
+    name: examples
+    url: $STAGING_URL
+  dependencies:
+    - examples:build
 .inobeta_pkg: &inobeta_pkg |
   [[ "$TRACE" ]] && set -x
 
@@ -97,6 +122,29 @@ pages:
       sed -i "s/\"version\"\: \"$CURRENT_VERSION\"/\"version\": \"$TEMP_VERSION\"/g" ./package.json
       echo $TEMP_VERSION
   }
+
+  function build() {
+    docker build -t $1:$CURRENT_VERSION .
+    docker login -u $GITLAB_USER -p $AUTH_TOKEN registry.gitlab.com
+    docker push $1:$CURRENT_VERSION
+  }
+
+
+  function prepare_staging() {
+    mkdir -p ~/.ssh && echo "$SSH_STAGING" | tr -d '\r' > ~/.ssh/id_rsa && chmod -R 600 ~/.ssh
+    ssh-keyscan -t rsa $STAGING_HOST >> ~/.ssh/known_hosts
+    ssh $STAGING_USER@$STAGING_HOST "mkdir -p ~/Apps/$APPNAME"
+    scp docker-compose.yml $STAGING_USER@$STAGING_HOST:~/Apps/$APPNAME
+    echo "IMAGE=$IMAGE" >> ".env"
+    echo "EXTERNALPORT_HTTP=$EXTERNALPORT_HTTP" >> ".env"
+    echo "version=$CURRENT_VERSION" >> ".env"
+    scp .env $STAGING_USER@$STAGING_HOST:~/Apps/$APPNAME
+  }
+
+  function service_pullrestart_staging() {
+    ssh $STAGING_USER@$STAGING_HOST "cd ~/Apps/$APPNAME && docker login -u $GITLAB_USER -p $AUTH_TOKEN registry.gitlab.com && docker pull $1:$2 && docker-compose stop $3 && docker-compose up -d $3"
+  }
+
 
 before_script:
   - *inobeta_pkg
