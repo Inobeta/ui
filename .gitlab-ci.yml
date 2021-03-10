@@ -6,6 +6,87 @@ stages:
   - examples:build
   - examples:deploy
 
+test_unit:
+  image: inobeta/node-chrome:10
+  stage: quality
+  script:
+  - npm install && npm run test-ci
+  allow_failure: true
+  artifacts:
+    paths: [./src/coverage]
+  tags:
+  - docker
+
+deploy:
+  stage: npm:deploy
+  script:
+    - echo '//gitlab.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}'>.npmrc
+    - npm install
+    - npm run packagr
+    - npm pack dist/
+    - npm publish Inobeta-ui-$CURRENT_VERSION.tgz --tag latest
+  only:
+    - master
+
+deploy_unstable:
+  stage: npm:deploy
+  script:
+    - echo '//gitlab.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}'>.npmrc
+    - create_temp_version
+    - npm install
+    - npm run packagr
+    - npm pack dist/
+    - npm publish Inobeta-ui-$TEMP_VERSION.tgz --tag unstable
+  only:
+    - /^v[0-9]+\.[0-9]+\.[0-9]+$/
+
+deploy_manual_unstable:
+  stage: npm:deploy
+  script:
+    - echo '//gitlab.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}'>.npmrc
+    - create_temp_version
+    - npm install
+    - npm run packagr
+    - npm pack dist/
+    - npm publish Inobeta-ui-$TEMP_VERSION.tgz --tag testing
+  except:
+    - master
+    - /^v[0-9]+\.[0-9]+\.[0-9]+$/
+  when: manual
+
+test_package_creation:
+  stage: quality
+  script:
+    - echo '//gitlab.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}'>.npmrc
+    - create_temp_version
+    - npm install
+    - npm run packagr
+    - npm pack dist/
+    - npm run build
+  except:
+    - master
+    - /^v[0-9]+\.[0-9]+\.[0-9]+$/
+
+pages:
+  stage: npm:deploy
+  script:
+    - npx @compodoc/compodoc -p tsconfig.app.json --disableCoverage --disableDomTree --disableGraph --hideGenerator
+    - dir="$CURRENT_VERSION"
+    - if [ "$CI_COMMIT_REF_SLUG" == "$CI_DEFAULT_BRANCH" ]; then dir="current"; fi;
+    - mkdir -p public
+    - mkdir -p public/$dir/
+    - rm -rf public/$dir/documentation
+    - mv documentation public/$dir/
+  artifacts:
+    name: "$CI_COMMIT_REF_SLUG-$CURRENT_VERSION"
+    paths:
+      - public
+  cache:
+    paths:
+    - public
+  only:
+    - master
+    - /^v[0-9]+\.[0-9]+\.[0-9]+$/
 
 examples:build:
   image: inobeta/dind-node:10
@@ -15,6 +96,9 @@ examples:build:
     - build $IMAGE
   tags:
   - docker
+  only:
+    - master
+    - /^v[0-9]+\.[0-9]+\.[0-9]+$/
 
 examples:deploy:
   image: inobeta/dind-node:10
@@ -27,7 +111,10 @@ examples:deploy:
   environment:
     name: examples
     url: $STAGING_URL
-  when: manual
+  only:
+    - master
+    - /^v[0-9]+\.[0-9]+\.[0-9]+$/
+
 .inobeta_pkg: &inobeta_pkg |
   [[ "$TRACE" ]] && set -x
 
