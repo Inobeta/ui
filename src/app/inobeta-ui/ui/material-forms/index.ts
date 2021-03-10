@@ -9,3 +9,4 @@ export * from './controls/dropdown';
 export * from './controls/label';
 export * from './controls/radio';
 export * from './controls/textbox';
+export * from './controls/textarea';

@@ -25,6 +25,10 @@
       "update": "Modifica",
       "export": "Esporta"
     },
+    "ibDropdown": {
+      "selectAll": "Seleziona tutti",
+      "selectNone": "Deseleziona tutti"
+    },
     "profile": {
       "name": "Nome",
       "surname": "Cognome",

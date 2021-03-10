@@ -15,8 +15,9 @@ import { IbMatTextboxControl, IbMatTextboxComponent } from '../controls/textbox'
 import { IbMatCheckboxControl, IbMatCheckboxComponent } from '../controls/checkbox';
 import { IbMatRadioControl, IbMatRadioComponent } from '../controls/radio';
 import { IbMatDropdownControl, IbMatDropdownComponent } from '../controls/dropdown';
-import { IbMatDatepickerComponent, IbMatAutocompleteComponent, IbMatLabelComponent, IbMatDatepickerControl, IbMatAutocompleteControl, IbMatLabelControl } from '..';
+import { IbMatDatepickerComponent, IbMatAutocompleteComponent, IbMatLabelComponent, IbMatDatepickerControl, IbMatAutocompleteControl, IbMatLabelControl, IbMatTextareaControl } from '..';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
+import { IbMatTextareaComponent } from '../controls/textarea';
 
 
 @Component({
@@ -68,6 +69,21 @@ export class TestHostComponent {
         { key: 'test', value: 'value' }
       ]
     }),
+    new IbMatDropdownControl({
+      key: 'optionsMultiple',
+      label: 'Options Multiple',
+      width: '33.3%',
+      multiple: true,
+      options: [
+        { key: 'test1', value: 'value1' },
+        { key: 'test2', value: 'value2' },
+        { key: 'test3', value: 'value3' },
+        { key: 'test4', value: 'value4' }
+      ],
+      change: (control) => {
+        console.log('current value', control.value);
+      }
+    }),
     new IbMatRadioControl({
       key: 'food',
       value: 'test-1',
@@ -101,6 +117,12 @@ export class TestHostComponent {
       label: 'Static label',
       width: '50%'
     }),
+
+    new IbMatTextareaControl({
+      key: 'textarea',
+      label: 'Enter long text',
+      width: '100%'
+    })
   ];
 
   onSubmit() {}
@@ -126,7 +148,8 @@ describe('IbMaterialFormComponent', () => {
         IbMatCheckboxComponent,
         IbMatDatepickerComponent,
         IbMatAutocompleteComponent,
-        IbMatLabelComponent
+        IbMatLabelComponent,
+        IbMatTextareaComponent
       ],
       imports: [
         IbToolTestModule,
@@ -157,7 +180,8 @@ describe('IbMaterialFormComponent', () => {
         IbMatCheckboxComponent,
         IbMatDatepickerComponent,
         IbMatAutocompleteComponent,
-        IbMatLabelComponent
+        IbMatLabelComponent,
+        IbMatTextareaComponent
         ],
       }
     })

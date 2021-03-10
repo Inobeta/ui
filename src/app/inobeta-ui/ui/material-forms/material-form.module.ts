@@ -13,6 +13,7 @@ import { IbMatCheckboxComponent } from './controls/checkbox';
 import { IbMatDatepickerComponent } from './controls/datepicker';
 import { IbMatAutocompleteComponent } from './controls/autocomplete';
 import { IbMatLabelComponent } from './controls/label';
+import { IbMatTextareaComponent } from './controls/textarea';
 
 const entryComponents = [
   IbMatTextboxComponent,
@@ -21,7 +22,8 @@ const entryComponents = [
   IbMatCheckboxComponent,
   IbMatDatepickerComponent,
   IbMatAutocompleteComponent,
-  IbMatLabelComponent
+  IbMatLabelComponent,
+  IbMatTextareaComponent
 ];
 const components = [
   ...entryComponents,

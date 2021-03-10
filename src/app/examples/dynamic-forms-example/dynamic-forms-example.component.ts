@@ -9,8 +9,9 @@ import { IbMatDropdownControl } from 'src/app/inobeta-ui/ui/material-forms/contr
 import { IbMatRadioControl } from 'src/app/inobeta-ui/ui/material-forms/controls/radio';
 import { IbMatCheckboxControl } from 'src/app/inobeta-ui/ui/material-forms/controls/checkbox';
 import { IbMatDatepickerControl } from 'src/app/inobeta-ui/ui/material-forms/controls/datepicker';
-import { IbMatAutocompleteComponent, IbMatAutocompleteControl } from 'src/app/inobeta-ui/ui/material-forms/controls/autocomplete';
+import { IbMatAutocompleteControl } from 'src/app/inobeta-ui/ui/material-forms/controls/autocomplete';
 import { IbMatLabelControl } from 'src/app/inobeta-ui/ui/material-forms/controls/label';
+import { IbMatTextareaControl } from 'src/app/inobeta-ui/ui/material-forms/controls/textarea';
 
 @Component({
   selector: 'app-dynamic-forms-example',
@@ -85,6 +86,21 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
         console.log('current value', control.value);
       }
     }),
+    new IbMatDropdownControl({
+      key: 'optionsMultiple',
+      label: 'Options Multiple',
+      width: '33.3%',
+      multiple: true,
+      options: [
+        { key: 'test1', value: 'value1' },
+        { key: 'test2', value: 'value2' },
+        { key: 'test3', value: 'value3' },
+        { key: 'test4', value: 'value4' }
+      ],
+      change: (control) => {
+        console.log('current value', control.value);
+      }
+    }),
     new IbMatRadioControl({
       key: 'food',
       value: 'test-1',
@@ -120,6 +136,13 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
       value: 'Static value',
       label: 'Static label',
       width: '50%'
+    }),
+
+    new IbMatTextareaControl({
+      key: 'textarea',
+      label: 'Enter long text',
+      width: '100%',
+      height: '120px'
     }),
   ];
   customFormActions = [
