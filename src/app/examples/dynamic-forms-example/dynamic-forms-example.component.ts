@@ -196,6 +196,13 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
     })
   ];
 
+  noFormActions = [
+    new IbMatButtonControl({
+      key: 'submit',
+      label: 'Invia'
+    })
+  ]
+
   @ViewChild('customForm', {static: false}) customForm: IbMaterialFormComponent;
 
   constructor() {}
@@ -211,7 +218,8 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
         new IbMatTextboxControl({
           key: 'created',
           label: 'created IbTextbox',
-          width: '50%'
+          width: '50%',
+          required: true
         })
       ];
     }, 3000);
