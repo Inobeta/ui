@@ -34,7 +34,7 @@ export const APP_DATE_FORMATS: MatDateFormats = {
   selector: '[ib-mat-datepicker]',
   template: `
   <mat-form-field appearance="fill" style="width: 100%;" [formGroup]="data.form">
-    <mat-label>{{data.base.label | translate}}</mat-label>
+    <mat-label>{{data.base.label | translate}} {{(data.base.required) ? '*' : ''}}</mat-label>
     <input
       [formControlName]="data.base.key"
       matInput

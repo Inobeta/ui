@@ -5,7 +5,7 @@ import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, 
   selector: '[ib-mat-dropdown]',
   template: `
     <mat-form-field appearance="fill" style="width: 100%;"  [formGroup]="data.form">
-      <mat-label>{{data.base.label | translate}}</mat-label>
+      <mat-label>{{data.base.label | translate}} {{(data.base.required) ? '*' : ''}}</mat-label>
       <mat-select
         [formControlName]="data.base.key"
         [multiple]="data.base.multiple"
@@ -24,6 +24,18 @@ import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, 
         <ng-container *ngTemplateOutlet="data.formControlErrors;context: this"></ng-container>
       </mat-error>
     </mat-form-field>
+
+
+    <!-- TODO: example style with inline search
+
+      <mat-option class="select-all">
+        <input type="text" matInput (click)="$event.stopPropagation()"/>
+      </mat-option>
+      <mat-option class="select-all" (click)="selectAll()">{{ this.all ? 'none' : 'all'}}</mat-option>
+      <div style="overflow:auto;height:160px;">
+      <mat-option *ngFor="let t of toppingList" [value]="t.key">{{t.value}}</mat-option>
+      </div>
+-->
   `,
   styles: [`
       .ib-mat-dropdown-select-all >>> mat-pseudo-checkbox {

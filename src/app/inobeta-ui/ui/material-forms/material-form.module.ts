@@ -14,6 +14,7 @@ import { IbMatDatepickerComponent } from './controls/datepicker';
 import { IbMatAutocompleteComponent } from './controls/autocomplete';
 import { IbMatLabelComponent } from './controls/label';
 import { IbMatTextareaComponent } from './controls/textarea';
+import { IbMatButtonComponent } from './controls/button';
 
 const entryComponents = [
   IbMatTextboxComponent,
@@ -23,7 +24,8 @@ const entryComponents = [
   IbMatDatepickerComponent,
   IbMatAutocompleteComponent,
   IbMatLabelComponent,
-  IbMatTextareaComponent
+  IbMatTextareaComponent,
+  IbMatButtonComponent
 ];
 const components = [
   ...entryComponents,

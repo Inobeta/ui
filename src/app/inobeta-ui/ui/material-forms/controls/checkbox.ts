@@ -8,7 +8,7 @@ import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, 
       <mat-checkbox
         [formControlName]="data.base.key"
         (change)="data.base.change(data.self)"
-      >{{data.base.label | translate}}</mat-checkbox>
+      >{{data.base.label | translate}}{{(data.base.required) ? '*' : ''}}</mat-checkbox>
     <mat-error>
       <ng-container *ngTemplateOutlet="data.formControlErrors;context: this"></ng-container>
     </mat-error>

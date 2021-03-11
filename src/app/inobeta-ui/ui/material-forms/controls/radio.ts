@@ -5,7 +5,7 @@ import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, 
   selector: '[ib-mat-radio]',
   template: `
   <div style="width: 100%;" [formGroup]="data.form">
-    <mat-label [attr.for]="data.base.key" style="display: block">{{data.base.label | translate}}</mat-label>
+    <mat-label [attr.for]="data.base.key" style="display: block">{{data.base.label | translate}} {{(data.base.required) ? '*' : ''}}</mat-label>
         <mat-radio-group
         [formControlName]="data.base.key"
         (change)="data.base.change(data.self)"
