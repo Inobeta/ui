@@ -11,13 +11,23 @@
     ></ib-material-form-control>
   </div>
 
-  <div class="ibFormRow ibFormActions">
-    <button
-      (click)="handleActionClick(action)"
-      [type]="action.key === 'submit' ? 'submit' : 'button'"
-      [disabled]="(action.key === 'submit' || action.options?.requireValidation) && !form.valid"
-      mat-button
-      [color]="action.options?.color || 'primary'"
-      *ngFor="let action of actions">{{action.label | translate}}</button>
+  <div
+    class="ibFormRow ibFormActions"
+    fxLayout="row"
+    fxLayoutAlign="end"
+    fxLayoutGap="20px"
+    >
+    <ib-material-form-control
+      *ngFor="let action of simpleActions"
+      class="ibFormRow"
+      [base]="action"
+      [form]="form"
+    ></ib-material-form-control>
+    <ib-material-form-control
+      *ngIf="submitAction"
+      class="ibFormRow"
+      [base]="submitAction"
+      [form]="form"
+    ></ib-material-form-control>
   </div>
 </form>

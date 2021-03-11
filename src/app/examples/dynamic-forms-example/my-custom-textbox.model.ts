@@ -31,10 +31,10 @@ export class MyCustomTextbox extends IbFormControlBase<string>{
   testField = 'Questa è una prova';
   constructor(options: MyCustomTextboxParams){
     super(options)
-    super.control = new IbFormControlBaseComponent(MyCustomTextboxComponent, {
+    this.testField = options.testField;
+    this.control = new IbFormControlBaseComponent(MyCustomTextboxComponent, {
       base: this
     })
-    this.testField = options.testField;
   }
 }
 

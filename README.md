@@ -63,3 +63,5 @@ then, edit angular.json in order to include css styling themes with this path:
 ./node_modules/@Inobeta/ui/themes/default.scss
 ```
 
+Live examples at https://ui-examples.inobeta.net/
+

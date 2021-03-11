@@ -4,12 +4,15 @@
     <span *ngIf="error.condition(self)">{{error.message | translate}}</span>
   </mat-error>
   <mat-error *ngIf="hasError('minlength')">
-    {{base.label | translate}} has minlength
+    {{base.label | translate}} {{ 'shared.ibForms.errors.minlength' | translate:{v:self.errors.minlength.requiredLength} }}
+  </mat-error>
+  <mat-error *ngIf="hasError('maxlength')">
+    {{base.label | translate}} {{ 'shared.ibForms.errors.maxlength' | translate:{v:self.errors.maxlength.requiredLength} }}
   </mat-error>
   <mat-error *ngIf="hasError('required')">
-    {{base.label | translate}} is <strong>required</strong>
+    {{base.label | translate}} {{ 'shared.ibForms.errors.required' | translate }}
   </mat-error>
   <mat-error *ngIf="hasError('email')">
-    Please enter a valid email address
+    {{ 'shared.ibForms.errors.email' | translate }}
   </mat-error>
 </ng-template>

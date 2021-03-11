@@ -1,0 +1,9 @@
+version: '2'
+services:
+  examples:
+    image: ${IMAGE}:${version}
+    environment:
+    - NODE_ENV=production
+    command: /bin/bash -c "./env-start > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"
+    ports:
+    - "${EXTERNALPORT_HTTP}:80"

@@ -25,6 +25,18 @@
       "update": "Modifica",
       "export": "Esporta"
     },
+    "ibDropdown": {
+      "selectAll": "Seleziona tutti",
+      "selectNone": "Deseleziona tutti"
+    },
+    "ibForms": {
+      "errors": {
+        "minlength": "deve avere una lunghezza minima di {{v}} caratteri",
+        "maxlength": "deve avere una lunghezza massima di {{v}} caratteri",
+        "required": "è obbligatorio",
+        "email": "Indirizzo email non valido"
+      }
+    },
     "profile": {
       "name": "Nome",
       "surname": "Cognome",

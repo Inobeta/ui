@@ -9,8 +9,10 @@ import { IbMatDropdownControl } from 'src/app/inobeta-ui/ui/material-forms/contr
 import { IbMatRadioControl } from 'src/app/inobeta-ui/ui/material-forms/controls/radio';
 import { IbMatCheckboxControl } from 'src/app/inobeta-ui/ui/material-forms/controls/checkbox';
 import { IbMatDatepickerControl } from 'src/app/inobeta-ui/ui/material-forms/controls/datepicker';
-import { IbMatAutocompleteComponent, IbMatAutocompleteControl } from 'src/app/inobeta-ui/ui/material-forms/controls/autocomplete';
+import { IbMatAutocompleteControl } from 'src/app/inobeta-ui/ui/material-forms/controls/autocomplete';
 import { IbMatLabelControl } from 'src/app/inobeta-ui/ui/material-forms/controls/label';
+import { IbMatTextareaControl } from 'src/app/inobeta-ui/ui/material-forms/controls/textarea';
+import { IbMatButtonControl } from 'src/app/inobeta-ui/ui/material-forms/controls/button';
 
 @Component({
   selector: 'app-dynamic-forms-example',
@@ -29,13 +31,17 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
   customFormFields: IbFormControlBase<any>[] = [
     new IbMatTextboxControl({
       key: 'firstName',
-      label: 'First name',
-      required: true,
-      validators: [Validators.minLength(3)],
+      label: 'First name *',
       width: '50%',
       errors: [{
-        condition: (c) => c.hasError('required'),
-        message: 'Campo obbligatorio'
+        condition: (c) => {
+          if(c.value !== 'Pippo'){
+            c.setErrors({'incorrect': true})
+            return true;
+          }
+          return false;
+        },
+        message: 'Il valore di questo campo deve essere "Pippo"'
       }]
     }),
     new IbMatTextboxControl({
@@ -48,6 +54,8 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
     new IbMatTextboxControl({
       key: 'changeValueField',
       label: 'Change my value',
+      required: true,
+      validators: [Validators.minLength(3), Validators.maxLength(5)],
       width: '33.3%',
       change: (control) => {
         console.log('current value', control.value);
@@ -75,6 +83,21 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
       key: 'options',
       label: 'Options',
       width: '33.3%',
+      options: [
+        { key: 'test1', value: 'value1' },
+        { key: 'test2', value: 'value2' },
+        { key: 'test3', value: 'value3' },
+        { key: 'test4', value: 'value4' }
+      ],
+      change: (control) => {
+        console.log('current value', control.value);
+      }
+    }),
+    new IbMatDropdownControl({
+      key: 'optionsMultiple',
+      label: 'Options Multiple',
+      width: '33.3%',
+      multiple: true,
       options: [
         { key: 'test1', value: 'value1' },
         { key: 'test2', value: 'value2' },
@@ -119,17 +142,33 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
       key: 'static',
       value: 'Static value',
       label: 'Static label',
-      width: '50%'
+      width: '33.3%'
+    }),
+    new IbMatButtonControl({
+      key: 'clear',
+      label: 'Clear button inside form',
+      color: 'accent',
+      width: '33.3%',
+      handler: (form) => form.reset()
+    }),
+    new IbMatTextareaControl({
+      key: 'textarea',
+      label: 'Enter long text',
+      width: '100%',
+      height: '120px'
     }),
   ];
   customFormActions = [
-    { key: 'submit', label: 'Search' },
-    {
+    new IbMatButtonControl({
+      key: 'submit',
+      label: 'Search'
+    }),
+    new IbMatButtonControl({
       key: 'clear',
       label: 'Clear',
-      options: { color: 'accent' },
+      color: 'accent',
       handler: (form) => form.reset()
-    }
+    })
   ];
 
   loginFormFields = [
@@ -157,6 +196,13 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
     })
   ];
 
+  noFormActions = [
+    new IbMatButtonControl({
+      key: 'submit',
+      label: 'Invia'
+    })
+  ]
+
   @ViewChild('customForm', {static: false}) customForm: IbMaterialFormComponent;
 
   constructor() {}
@@ -172,7 +218,8 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
         new IbMatTextboxControl({
           key: 'created',
           label: 'created IbTextbox',
-          width: '50%'
+          width: '50%',
+          required: true
         })
       ];
     }, 3000);

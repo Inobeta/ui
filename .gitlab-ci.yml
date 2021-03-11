@@ -2,7 +2,9 @@ image: node:10.11.0
 
 stages:
   - quality
-  - deploy
+  - npm:deploy
+  - examples:build
+  - examples:deploy
 
 test_unit:
   image: inobeta/node-chrome:10
@@ -16,7 +18,7 @@ test_unit:
   - docker
 
 deploy:
-  stage: deploy
+  stage: npm:deploy
   script:
     - echo '//gitlab.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}'>.npmrc
     - npm install
@@ -27,7 +29,7 @@ deploy:
     - master
 
 deploy_unstable:
-  stage: deploy
+  stage: npm:deploy
   script:
     - echo '//gitlab.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}'>.npmrc
     - create_temp_version
@@ -39,7 +41,7 @@ deploy_unstable:
     - /^v[0-9]+\.[0-9]+\.[0-9]+$/
 
 deploy_manual_unstable:
-  stage: deploy
+  stage: npm:deploy
   script:
     - echo '//gitlab.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}'>.npmrc
     - create_temp_version
@@ -60,12 +62,13 @@ test_package_creation:
     - npm install
     - npm run packagr
     - npm pack dist/
+    - npm run build
   except:
     - master
     - /^v[0-9]+\.[0-9]+\.[0-9]+$/
 
 pages:
-  stage: deploy
+  stage: npm:deploy
   script:
     - npx @compodoc/compodoc -p tsconfig.app.json --disableCoverage --disableDomTree --disableGraph --hideGenerator
     - dir="$CURRENT_VERSION"
@@ -85,6 +88,33 @@ pages:
     - master
     - /^v[0-9]+\.[0-9]+\.[0-9]+$/
 
+examples:build:
+  image: inobeta/dind-node:10
+  stage: examples:build
+  script:
+    - npm install && npm run build && rm -rf node_modules
+    - build $IMAGE
+  tags:
+  - docker
+  only:
+    - master
+    - /^v[0-9]+\.[0-9]+\.[0-9]+$/
+
+examples:deploy:
+  image: inobeta/dind-node:10
+  stage: examples:deploy
+  script:
+    - prepare_staging
+    - service_pullrestart_staging $IMAGE $CURRENT_VERSION $SERVICE
+  tags:
+  - dedicated
+  environment:
+    name: examples
+    url: $STAGING_URL
+  only:
+    - master
+    - /^v[0-9]+\.[0-9]+\.[0-9]+$/
+
 .inobeta_pkg: &inobeta_pkg |
   [[ "$TRACE" ]] && set -x
 
@@ -97,6 +127,29 @@ pages:
       sed -i "s/\"version\"\: \"$CURRENT_VERSION\"/\"version\": \"$TEMP_VERSION\"/g" ./package.json
       echo $TEMP_VERSION
   }
+
+  function build() {
+    docker build -t $1:$CURRENT_VERSION .
+    docker login -u $GITLAB_USER -p $AUTH_TOKEN registry.gitlab.com
+    docker push $1:$CURRENT_VERSION
+  }
+
+
+  function prepare_staging() {
+    mkdir -p ~/.ssh && echo "$SSH_STAGING" | tr -d '\r' > ~/.ssh/id_rsa && chmod -R 600 ~/.ssh
+    ssh-keyscan -t rsa $STAGING_HOST >> ~/.ssh/known_hosts
+    ssh $STAGING_USER@$STAGING_HOST "mkdir -p ~/Apps/$APPNAME"
+    scp docker-compose.yml $STAGING_USER@$STAGING_HOST:~/Apps/$APPNAME
+    echo "IMAGE=$IMAGE" >> ".env"
+    echo "EXTERNALPORT_HTTP=$EXTERNALPORT_HTTP" >> ".env"
+    echo "version=$CURRENT_VERSION" >> ".env"
+    scp .env $STAGING_USER@$STAGING_HOST:~/Apps/$APPNAME
+  }
+
+  function service_pullrestart_staging() {
+    ssh $STAGING_USER@$STAGING_HOST "cd ~/Apps/$APPNAME && docker login -u $GITLAB_USER -p $AUTH_TOKEN registry.gitlab.com && docker pull $1:$2 && docker-compose stop $3 && docker-compose up -d $3"
+  }
+
 
 before_script:
   - *inobeta_pkg

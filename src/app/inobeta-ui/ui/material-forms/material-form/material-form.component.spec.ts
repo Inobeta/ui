@@ -5,7 +5,7 @@ import { IbToolTestModule } from '../../../tools';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IbMaterialFormControlComponent, IbFormControlDirective } from '../material-form-control/material-form-control.component';
-import { IbDynamicFormsModule, IbFormControlBase } from '../../forms';
+import { IbDynamicFormsModule, IbFormControlBase, IbFormControlService } from '../../forms';
 import { MatFormFieldModule, MatOptionModule, MatSelectModule, MatRadioModule, MatCheckboxModule, MatInputModule, MatButtonModule, MatDatepickerModule, MatAutocompleteModule, MatIconModule } from '@angular/material';
 import { Component } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -15,8 +15,10 @@ import { IbMatTextboxControl, IbMatTextboxComponent } from '../controls/textbox'
 import { IbMatCheckboxControl, IbMatCheckboxComponent } from '../controls/checkbox';
 import { IbMatRadioControl, IbMatRadioComponent } from '../controls/radio';
 import { IbMatDropdownControl, IbMatDropdownComponent } from '../controls/dropdown';
-import { IbMatDatepickerComponent, IbMatAutocompleteComponent, IbMatLabelComponent, IbMatDatepickerControl, IbMatAutocompleteControl, IbMatLabelControl } from '..';
+import { IbMatDatepickerComponent, IbMatAutocompleteComponent, IbMatLabelComponent, IbMatDatepickerControl, IbMatAutocompleteControl, IbMatLabelControl, IbMatTextareaControl, IbMatButtonControl } from '..';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
+import { IbMatTextareaComponent } from '../controls/textarea';
+import { IbMatButtonComponent } from '../controls/button';
 
 
 @Component({
@@ -28,13 +30,17 @@ import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/t
 
 export class TestHostComponent {
   customFormActions = [
-    { key: 'submit', label: 'Search' },
-    {
+
+    new IbMatButtonControl({
+      key: 'submit',
+      label: 'Search'
+    }),
+    new IbMatButtonControl({
       key: 'clear',
       label: 'Clear',
-      options: { color: 'accent' },
+      color: 'accent',
       handler: (form) => form.reset()
-    }
+    })
   ];
 
   customFormFields: IbFormControlBase<string>[] = [
@@ -67,6 +73,21 @@ export class TestHostComponent {
       options: [
         { key: 'test', value: 'value' }
       ]
+    }),
+    new IbMatDropdownControl({
+      key: 'optionsMultiple',
+      label: 'Options Multiple',
+      width: '33.3%',
+      multiple: true,
+      options: [
+        { key: 'test1', value: 'value1' },
+        { key: 'test2', value: 'value2' },
+        { key: 'test3', value: 'value3' },
+        { key: 'test4', value: 'value4' }
+      ],
+      change: (control) => {
+        console.log('current value', control.value);
+      }
     }),
     new IbMatRadioControl({
       key: 'food',
@@ -101,6 +122,12 @@ export class TestHostComponent {
       label: 'Static label',
       width: '50%'
     }),
+
+    new IbMatTextareaControl({
+      key: 'textarea',
+      label: 'Enter long text',
+      width: '100%'
+    })
   ];
 
   onSubmit() {}
@@ -126,7 +153,9 @@ describe('IbMaterialFormComponent', () => {
         IbMatCheckboxComponent,
         IbMatDatepickerComponent,
         IbMatAutocompleteComponent,
-        IbMatLabelComponent
+        IbMatLabelComponent,
+        IbMatTextareaComponent,
+        IbMatButtonComponent
       ],
       imports: [
         IbToolTestModule,
@@ -146,6 +175,9 @@ describe('IbMaterialFormComponent', () => {
         MatDatepickerModule,
         MatAutocompleteModule,
         MatIconModule,
+      ],
+      providers: [
+        IbFormControlService
       ]
     })
     .overrideModule(BrowserDynamicTestingModule, {
@@ -157,7 +189,9 @@ describe('IbMaterialFormComponent', () => {
         IbMatCheckboxComponent,
         IbMatDatepickerComponent,
         IbMatAutocompleteComponent,
-        IbMatLabelComponent
+        IbMatLabelComponent,
+        IbMatTextareaComponent,
+        IbMatButtonComponent
         ],
       }
     })

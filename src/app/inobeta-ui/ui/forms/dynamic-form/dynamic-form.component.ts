@@ -3,7 +3,7 @@ import { IbFormControlBase } from '../controls/form-control-base';
 import { FormGroup } from '@angular/forms';
 import { IbFormControlService } from '../form-control.service';
 
-interface IbFormAction {
+export interface IbFormAction {
   key?: string;
   label: string;
   handler?: (form: FormGroup) => void;

@@ -5,7 +5,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
   selector: 'ib-modal-message',
   template: `
     <h2 mat-dialog-title>{{ data.title | translate }}</h2>
-    <mat-dialog-content>{{ data.message | translate }}</mat-dialog-content>
+    <mat-dialog-content style="min-width:250px;">{{ data.message | translate }}</mat-dialog-content>
     <mat-dialog-actions>
       <button
         *ngIf="data.hasNo"
