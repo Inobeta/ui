@@ -3,7 +3,7 @@ import { FormGroup } from "@angular/forms";
 import { IbFormControlBase, IbFormControlBaseComponent, IbFormControlBaseParams, IbFormControlInterface } from "../../forms/controls/form-control-base";
 
 @Component({
-  selector: '[tf-button-form]',
+  selector: '[ib-mat-button]',
   template: `
 <div fxLayout="row" fxLayout="space-around center">
   <button

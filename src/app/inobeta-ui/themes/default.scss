@@ -16,3 +16,26 @@
   font-weight: bold;
   color: white;
 }
+
+.table-header {
+  background-color: #337ab7;
+}
+.filter-button{
+  color: white;
+}
+button.mat-sort-header-button,
+.table-header-title{
+  color: #ffffff !important;
+}
+ib-table .mat-sort-header-arrow, ib-table .table-sort-indicator {
+  color: #ffffff !important;
+}
+ib-table td{
+  border-bottom: 1px solid #ccc;
+  /*padding: 2px !important;*/
+}
+
+.ib-table-column-type-number{
+  text-align: right !important;
+  padding-right: 20px !important;
+}

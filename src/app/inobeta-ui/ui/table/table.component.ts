@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { Sort } from '@angular/material';
-import { IbTableCellAligns, IbTableTitles, IbTableTitlesTypes } from './models/titles.model';
+import { IbTableAction, IbTableCellAligns, IbTableTitles, IbTableTitlesTypes } from './models/titles.model';
 import { IbTemplateModel } from './models/template.model';
 import { Store } from '@ngrx/store';
 import * as TableFiltersActions from './redux/table.action';
@@ -9,39 +9,33 @@ import jsPDF, { jsPDFOptions } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { TranslateService } from '@ngx-translate/core';
+import { IbTableItem } from './models/table-item.model';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+
+
 
 @Component({
   selector: 'ib-table',
   template: `
-    <div fxLayout="column" class="ib-table">
-      <div fxLayout="row" fxLayoutAlign="left center" fxLayoutGap="20px">
-        <div fxFlex fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
-
-          <ng-container
-            *ngTemplateOutlet="((structureTemplates['exportTemplate'] != null) ? structureTemplates['exportTemplate'] : defaultExportTemplate);
-            context: { ibTable: this}"
-          ></ng-container>
-          <ng-template #defaultExportTemplate>
-            <ib-table-export
-              *ngIf="hasExport"
-              (export)="export($event || {})"
-              >
-            </ib-table-export>
-          </ng-template>
-          <ib-table-menu-actions
-            [menuTableActions]="menuTableActions"
-            [actionsLength]="actions.length"
-            [hasActions]="hasActions">
-          </ib-table-menu-actions>
-          <ib-table-add-button
-            [hasAdd]="hasAdd"
-            (add)="add.emit()">
-          </ib-table-add-button>
-          <!--<ib-table-filter-reset-button
-            (filterReset)="filterReset.emit()"
-            [hasFilterReset]="hasFilterReset">
-          </ib-table-filter-reset-button>-->
-        </div>
+    <div fxLayout="column" class="ib-table" >
+      <div
+        fxFlex
+        ib-table-actions
+        fxLayout="row"
+        fxLayoutAlign="end center"
+        fxLayoutGap="20px"
+        [structureTemplates]="structureTemplates"
+        [context]="this"
+        [hasAdd]="hasAdd"
+        [hasExport]="hasExport"
+        [selectableRows]="selectableRows"
+        [ngStyle]="{
+          'padding-bottom': (actions.length > 0 || hasAdd || hasExport) ? '5px' : '0px'
+        }"
+        [actions]="actions"
+        (add)="add.emit()"
+        (export)="export($event)"
+      >
       </div>
       <div>
         <table
@@ -53,32 +47,49 @@ import { TranslateService } from '@ngx-translate/core';
 
           <!--HEADER-->
           <thead>
-            <tr class="table-header" ib-table-header
+            <tr class="table-header"
+              ib-table-header
               [table]="this"
               [titles]="titles"
-              [selectRowName]="selectRowName"
               [selectableRows]="selectableRows"
               [templateHeaders]="templateHeaders"
               [templateButtons]="templateButtons"
               [columnFilter]="columnFilter"
+              [hasEdit]="hasEdit"
+              [hasDelete]="hasDelete"
               [currentSort]="currentSort"
               (handleSetFilter)="setFilter($event.key, $event.value, $event.indexToSet)"
             ></tr>
           </thead>
 
           <!--ROWS-->
-          <tbody ib-table-rows
-            [titles]="titles"
-            [sortedData]="sortedData"
-            [customItemTemplate]="customItemTemplate"
-            [selectableRows]="selectableRows"
-            [templateButtons]="templateButtons"
-            (rowClicked)="rowClicked.emit($event)"
-            (rowChecked)="rowChecked.emit($event)"
-          ></tbody>
+          <tbody
+          >
+            <tr
+              ib-table-row
+              class="table-row"
+              *ngFor="let item of sortedData"
+              [item]="item"
+              [titles]="titles"
+              [customItemTemplate]="customItemTemplate"
+              [selectableRows]="selectableRows"
+              [templateButtons]="templateButtons"
+              [formRow]="rowForm(item)"
+              [hasEdit]="hasEdit"
+              [hasDelete]="hasDelete"
+              (rowChecked)="rowChecked.emit($event)"
+              (click)="rowClicked.emit(item)"
+              (edit)="edit.emit($event)"
+              (delete)="delete.emit($event)"
+            >
+            </tr>
+          </tbody>
 
           <tr *ngIf="sortedData.length === 0">
-            <td [attr.colspan]="4+titles.length" style="text-align: center;">
+            <td
+              [attr.colspan]="titles.length + templateButtons.length + (selectableRows ? 1 : 0) + (hasEdit ? 1 : 0) + (hasDelete ? 1 : 0)"
+              style="text-align: center;"
+            >
               <br><br>{{ 'shared.ibTable.noData' | translate }}<br><br>
             </td>
           </tr>
@@ -97,10 +108,23 @@ import { TranslateService } from '@ngx-translate/core';
           [elemForPage]="currentPagination.pageSize">
         </ib-table-paginator>
       </ng-template>
+      <div
+        fxFlex
+        ib-table-actions
+        fxLayout="row"
+        fxLayoutAlign="end center"
+        fxLayoutGap="20px"
+        [structureTemplates]="structureTemplates"
+        [context]="this"
+        [hasAdd]="hasAdd"
+        [hasExport]="hasExport"
+        [selectableRows]="selectableRows"
+        [actions]="actions"
+        (add)="add.emit()"
+        (export)="export($event)"
+      >
+      </div>
     </div>
-    <mat-menu #menuTableActions="matMenu">
-      <button mat-menu-item *ngFor="let a of actions" (click)="actionButtonClick(a)">{{ a }}</button>
-    </mat-menu>
   `,
   styleUrls: ['./table.component.css']
 })
@@ -109,19 +133,18 @@ export class IbTableComponent implements OnChanges {
   // input necessari
   @Input() customItemTemplate: any;
   @Input() titles: IbTableTitles[] = [];
-  @Input() items: any[] = [];
+  @Input() items: IbTableItem[] = [];
   @Input() enableReduxStore = false;
   @Input() currentSort: any = {}; // this input can override redux store. Can we remove it?
   @Input() selectableRows = true;
   @Input() hasAdd = false;
-  // @Input() hasFilterReset = false; this feature is not working but it can be useful
-  @Input() hasSearch = false;
+  @Input() hasEdit = false;
+  @Input() hasDelete = false;
   @Input() hasExport = false;
   @Input() hasPaginator = true;
+  @Input() actions: IbTableAction[] = [];
 
   @Input() structureTemplates = {}; //exportTemplate, paginatorTemplate
-  @Input() hasActions = false;
-  @Input() selectRowName = 'Seleziona';
   @Input() templateButtons: IbTemplateModel[] = [];
   @Input() templateHeaders: any = {};
   /** { columnName: TemplateRef } */
@@ -133,17 +156,13 @@ export class IbTableComponent implements OnChanges {
     format: null
   };
 
-  // input non necessari
-  @Input() actions: string[] = [];
-
   // Output necessari
   @Output() filterChange: EventEmitter<any> = new EventEmitter<any>();
   @Output() sortChange: EventEmitter<any> = new EventEmitter<any>();
   @Output() add: EventEmitter<any> = new EventEmitter<any>();
-  @Output() deleteItem: EventEmitter<any> = new EventEmitter<any>();
+  @Output() edit: EventEmitter<any> = new EventEmitter<any>();
+  @Output() delete: EventEmitter<any> = new EventEmitter<any>();
 
-  @Output() arrowClick: EventEmitter<any> = new EventEmitter<any>();
-  @Output() actionsClick: EventEmitter<any> = new EventEmitter<any>();
   @Output() rowClicked: EventEmitter<any> = new EventEmitter<any>();
   @Output() rowChecked: EventEmitter<any> = new EventEmitter<any>();
 
@@ -151,12 +170,17 @@ export class IbTableComponent implements OnChanges {
   filterableTitles: IbTableTitles[] = [];
   typeEnum = IbTableTitlesTypes;
   alignEnum = IbTableCellAligns;
-  sortedData;
+  sortedData: IbTableItem[];
   currentPagination: any = {};
   columnFilter = {};
   numOfElements = 0;
+  rowForms: FormGroup[] = [];
 
-  constructor(private store: Store<any>, private translate: TranslateService) { }
+  constructor(
+    private store: Store<any>,
+    private translate: TranslateService,
+    private fb: FormBuilder
+    ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     console.log('changes', changes);
@@ -192,6 +216,11 @@ export class IbTableComponent implements OnChanges {
       this.items = changes.items.currentValue;
       this.sortedData = this.items.slice();
       triggerRefresh = true;
+      for(let i of this.items){
+        this.rowForms.push(this.fb.group({
+          isChecked: new FormControl(i.ibTableItemSelected),
+        }))
+      }
     }
 
     if (changes.titles && changes.titles.currentValue) {
@@ -213,6 +242,10 @@ export class IbTableComponent implements OnChanges {
     }
   }
 
+  rowForm(item){
+    return this.rowForms[this.items.indexOf(item)];
+  }
+
   sortData(sort: Sort, emitChange: boolean = true) {
     if (Object.keys(sort).length !== 0) {
       this.store.dispatch(TableFiltersActions.addSortToTable({
@@ -229,7 +262,7 @@ export class IbTableComponent implements OnChanges {
     this.sortedData = this.items.slice();
 
     for (const k in this.columnFilter) {
-      if (!this.columnFilter[k]) {
+      if (!this.columnFilter[k] && this.columnFilter[k] !== false) {
         delete this.columnFilter[k];
       }
     }
@@ -241,18 +274,43 @@ export class IbTableComponent implements OnChanges {
         for (const k in this.columnFilter) {
           /*TODO INSERT COLUMN TYPE HERE */
           switch (this.titles.find(t => t.key === k).type) {
+            case IbTableTitlesTypes.ANY:
+              const translated = this.translate.instant(el[k])
+              if (!(translated && translated.includes && translated.toLowerCase().includes(this.columnFilter[k].toLowerCase()))) {
+                include = false;
+              }
+              break
             case IbTableTitlesTypes.STRING:
+            case IbTableTitlesTypes.CUSTOM:
               if (!(el[k] && el[k].includes && el[k].toLowerCase().includes(this.columnFilter[k].toLowerCase()))) {
                 include = false;
               }
               break;
             case IbTableTitlesTypes.NUMBER:
-              if (!(el[k] && el[k].toString() && el[k].toString().includes(this.columnFilter[k].toString().toLowerCase()))) {
-                include = false;
+            case IbTableTitlesTypes.INPUT_NUMBER:
+              for(let cond of this.columnFilter[k]){
+                include = eval(`(${el[k]} ${cond.condition} ${cond.value})`)
+                if(!include){
+                  break;
+                }
               }
               break;
+            case IbTableTitlesTypes.DATE:
+              for(let cond of this.columnFilter[k]){
+                include = eval(`(${(new Date(el[k])).getTime()} ${cond.condition} ${(new Date(cond.value)).getTime()})`)
+                if(!include){
+                  break;
+                }
+              }
+            break;
+            case IbTableTitlesTypes.BOOLEAN:
+              include = (el[k] === this.columnFilter[k])
+            break;
             default:
               include = true;
+          }
+          if(!include){
+            break;
           }
 
         }
@@ -325,6 +383,10 @@ export class IbTableComponent implements OnChanges {
     this.sortedData = paginatedData;
   }
 
+  getSelectedRows(){
+    return this.items.filter(sd => this.rowForm(sd).controls.isChecked.value)
+  }
+
   async export({ format, dataset }) {
     const previousPagination = this.currentPagination;
     if (dataset === 'all') {
@@ -344,12 +406,9 @@ export class IbTableComponent implements OnChanges {
     const getValueFromKey = (row, key) => {
       const value = row[key];
       const h = this.titles.find(t => t.key === key);
-      if (h.type === IbTableTitlesTypes.MATERIAL_SELECT) {
-        return h.materialSelectItems.find(item => item.value === value).label;
-      }
       return value;
     };
-    const filteredData = this.sortedData
+    let filteredData = this.sortedData
       .map(
         row => Object.keys(row)
           .filter(key => keys.includes(key))
@@ -358,6 +417,10 @@ export class IbTableComponent implements OnChanges {
             [key]: getValueFromKey(row, key)
           }), {})
     );
+
+    if(dataset === 'selected'){
+      filteredData = this.getSelectedRows()
+    }
 
     const translatedHeaders = await Promise.all(this.titles.map(async t => ({
       value: await this.translate.get(t.value).toPromise(),
@@ -425,17 +488,6 @@ export class IbTableComponent implements OnChanges {
         document.body.removeChild(link);
       }
     }
-  }
-
-  actionButtonClick(a) {
-    this.actionsClick.emit({
-      action: a,
-      data: this.sortedData.filter((el) => el.checked)
-    });
-  }
-
-  emitItemAndCheckbox(item, checkbox) {
-    this.rowChecked.emit({ item, isChecked: checkbox });
   }
 }
 

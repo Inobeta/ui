@@ -4,23 +4,30 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 @Component({
   selector: 'ib-table-export',
   template: `
-    <div class="hover"
-         (click)="open()"
-         fxLayout="row"
-         fxLayoutAlign="center center"
-         style="cursor:pointer; border: 1px solid gray; border-radius: 20px; padding: 5px;padding-left: 10px;padding-right: 15px;">
-      <i class="material-icons">call_made</i> {{ 'shared.ibTable.export' | translate }}
-    </div>
+  <ib-table-button
+    (click)="open()"
+    label="shared.ibTable.export"
+    color="basic"
+  ></ib-table-button>
   `,
 })
 export class IbTableExportComponent {
+  @Input() selectableRows = false
   @Output() export = new EventEmitter();
+
+  data = {
+    base: {},
+    form: {}
+  }
 
   constructor(public dialog: MatDialog) { }
 
   open() {
     const dialog = this.dialog.open(IbTableExportDialogComponent, {
       width: '400px',
+      data: {
+        selectableRows: this.selectableRows
+      }
     });
 
     dialog.afterClosed().subscribe(result => this.export.emit(result));
@@ -44,8 +51,9 @@ export class IbTableExportComponent {
       </div>
 
       <mat-radio-group [(ngModel)]="dataset" style="display:flex;flex-direction:column;margin: 15px 0;">
-        <mat-radio-button value="current" style="margin: 4px">Pagina Corrente</mat-radio-button>
         <mat-radio-button value="all" style="margin: 4px">Tutti i dati</mat-radio-button>
+        <mat-radio-button *ngIf="this.data.selectableRows" value="selected" style="margin: 4px">Righe selezionate</mat-radio-button>
+        <mat-radio-button value="current" style="margin: 4px">Pagina Corrente</mat-radio-button>
       </mat-radio-group>
 
     </mat-dialog-content>
@@ -62,9 +70,12 @@ export class IbTableExportDialogComponent {
     { value: 'csv', viewValue: 'CSV' },
     { value: 'pdf', viewValue: 'PDF' }
   ];
-  dataset = 'current';
+  dataset = 'all';
 
-  constructor(public dialogRef: MatDialogRef<IbTableExportDialogComponent>) {}
+  constructor(
+    public dialogRef: MatDialogRef<IbTableExportDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+    ) {}
 
   onNoClick(): void {
     this.dialogRef.close();

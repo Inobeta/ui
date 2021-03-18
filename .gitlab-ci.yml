@@ -62,7 +62,6 @@ test_package_creation:
     - npm install
     - npm run packagr
     - npm pack dist/
-    - npm run build
   except:
     - master
     - /^v[0-9]+\.[0-9]+\.[0-9]+$/

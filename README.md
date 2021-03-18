@@ -63,5 +63,14 @@ then, edit angular.json in order to include css styling themes with this path:
 ./node_modules/@Inobeta/ui/themes/default.scss
 ```
 
+Last, force translate loading on app.component:
+```
+    this.translateService.use('it');
+    this.translateService.reloadLang(this.translateService.currentLang).subscribe(() => {
+      this.translateLoaded = true;
+    })
+```
+and wrap out the root top element in a *ngIf="translateLoaded" clause, in order to use translateService.instant safetly
+
 Live examples at https://ui-examples.inobeta.net/
 

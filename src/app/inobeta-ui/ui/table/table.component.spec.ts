@@ -6,19 +6,18 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IbTableComponent } from './table.component';
 import { IbTableHeaderComponent } from './components/table-header/table-header.component';
-import { IbTableRowsComponent } from './components/table-rows/table-rows.component';
-import { IbTableAddComponent } from './components/table-add.component';
 import { IbTableExportComponent, IbTableHeaderPopupComponent, IbTableExportDialogComponent, IbTableTitlesTypes } from '.';
-import { IbTableFilterResetComponent } from './components/table-filter-reset.component';
-import { IbTableMenuActionsComponent } from './components/table-menu-actions.component';
 import { IbTablePaginatorComponent } from './components/table-paginator.component';
-import { IbTableSeachComponent } from './components/table-seach.component';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
 
 import { Component, OnInit } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
+import { IbTableHeaderFilterComponent } from './components/table-header-filter-component';
+import { IbTableButtonComponent } from './components/table-button.component';
+import { IbTableActionsComponent } from './components/table-actions.component';
+import { IbTableRowComponent } from './components/table-row.component';
 
 @Component({
   selector: 'host-test',
@@ -57,7 +56,6 @@ import { Store } from '@ngrx/store';
   [items]="items"
   [enableReduxStore]="enableReduxStore"
   [tableName]="'pippo'"
-  [selectRowName]="'Ricevuto'"
   [templateButtons]="[{
     template: deleteTemplate,
     columnName: 'Elimina'
@@ -68,7 +66,6 @@ import { Store } from '@ngrx/store';
     'date': headerClickTemplate,
     'qt': headerClickTemplate
   }"
-  [actions]="['test']"
   [structureTemplates]="{
     'exportTemplate': exportTemplate
   }"
@@ -102,25 +99,16 @@ export class TestHostComponent {
     {
       key: 'date',
       value: 'receiptGoods.historyGoods.table.date',
-      type: IbTableTitlesTypes.STRING,
+      type: IbTableTitlesTypes.DATE,
       filterable: true,
       width: '10%'
     },
     {
-      key: 'userType',
-      value: 'Tipo Utente',
-      type: IbTableTitlesTypes.MATERIAL_SELECT,
-      width: '10%',
-      materialSelectItems: [
-        {
-          value: 1,
-          label: 'Op Lavoraz.'
-        },
-        {
-          value: 3,
-          label: 'Super Admin'
-        }
-      ]
+      key: 'active',
+      value: 'Active',
+      type: IbTableTitlesTypes.BOOLEAN,
+      filterable: true,
+      width: '10%'
     },
     {
       key: 'qt',
@@ -140,25 +128,27 @@ export class TestHostComponent {
   items = [
     {
       lot: 17,
-      date: '10/05/2019',
+      date: '2019-05-15',
       deadline: new Date(2019, 4, 12),
       sender: 'NocciolineTostate srl sede Cesena',
       article: 'Noccioline 200 Kg',
       created_at: new Date(),
       updated_at: new Date(),
       userType: 1,
+      active: true,
       qt: 5,
       qt2: 5
     },
     {
       lot: 2,
-      date: '07/01/2019',
+      date: '2020-04-11',
       deadline: new Date(2019, 2, 12),
       sender: 'MyNoce srl sede Forlì',
       article: 'Pistacchi crudi 150 Kg',
       created_at: new Date(),
       updated_at: new Date(),
       userType: 3,
+      active: false,
       qt: 6,
       qt2: 5
     }
@@ -208,15 +198,14 @@ describe('IbTableComponent', () => {
       declarations: [
         IbTableComponent,
         IbTableHeaderComponent,
-        IbTableRowsComponent,
-        IbTableAddComponent,
         IbTableExportComponent,
-        IbTableFilterResetComponent,
-        IbTableMenuActionsComponent,
         IbTablePaginatorComponent,
-        IbTableSeachComponent,
         IbTableHeaderPopupComponent,
         IbTableExportDialogComponent,
+        IbTableRowComponent,
+        IbTableActionsComponent,
+        IbTableButtonComponent,
+        IbTableHeaderFilterComponent,
         TestHostComponent
        ],
        providers: [
@@ -349,13 +338,15 @@ describe('IbTableComponent', () => {
   });
 
   it('should sort', () => {
+    component.columnFilter = {};
+
     component.sortData({
       active: 'qt2',
       direction: 'asc'
     }, true);
 
     component.columnFilter = {
-      qt2: 5
+      qt2: [{condition: '>', value: 5}]
     };
 
     component.sortData({
@@ -365,7 +356,7 @@ describe('IbTableComponent', () => {
 
 
     component.columnFilter = {
-      qt2: 6
+      qt2: [{condition: '<', value: 6}]
     };
 
     component.sortData({
@@ -375,7 +366,25 @@ describe('IbTableComponent', () => {
 
 
     component.columnFilter = {
-      qt: 5
+      qt: [{condition: '>', value: 5}]
+    };
+
+    component.sortData({
+      active: 'qt',
+      direction: 'asc'
+    }, true);
+
+
+    component.columnFilter = {
+      date: [{condition: '>', value: '2020-05-01'}]
+    };
+
+    component.sortData({
+      active: 'qt',
+      direction: 'asc'
+    }, true);
+    component.columnFilter = {
+      active: true
     };
 
     component.sortData({

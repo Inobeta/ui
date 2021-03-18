@@ -5,6 +5,8 @@ import { IbToolTestModule } from 'public_api';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatMenuModule, MatSortModule, MatChipsModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, MatIconModule, MatDialogModule, MatSelectModule, MatRadioModule, MatPaginatorModule, MatButtonModule, MatSnackBarModule, MatCardModule } from '@angular/material';
+import { IbTableHeaderFilterComponent } from '../table-header-filter-component';
+import { IbTableButtonComponent } from '../table-button.component';
 
 describe('IbTableHeaderComponent', () => {
   let component: IbTableHeaderComponent;
@@ -12,7 +14,11 @@ describe('IbTableHeaderComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ IbTableHeaderComponent ],
+      declarations: [
+        IbTableHeaderComponent,
+        IbTableHeaderFilterComponent,
+        IbTableButtonComponent
+      ],
       imports: [
         IbToolTestModule,
         CommonModule,
