@@ -27,12 +27,12 @@ export const sampleData = [
       },
       {
         "background": "blue",
-        "color": "gray",
+        "color": "white",
         "name": "laboris"
       },
       {
         "background": "blue",
-        "color": "black",
+        "color": "white",
         "name": "esse"
       }
     ]
@@ -60,7 +60,7 @@ export const sampleData = [
     "label": [
       {
         "background": "blue",
-        "color": "gray",
+        "color": "white",
         "name": "labore"
       }
     ]
@@ -93,7 +93,7 @@ export const sampleData = [
       },
       {
         "background": "blue",
-        "color": "black",
+        "color": "white",
         "name": "ea"
       }
     ]
@@ -121,12 +121,12 @@ export const sampleData = [
     "label": [
       {
         "background": "brown",
-        "color": "gray",
+        "color": "white",
         "name": "eiusmod"
       },
       {
         "background": "green",
-        "color": "black",
+        "color": "white",
         "name": "incididunt"
       }
     ]
@@ -154,17 +154,17 @@ export const sampleData = [
     "label": [
       {
         "background": "blue",
-        "color": "black",
+        "color": "white",
         "name": "consequat"
       },
       {
         "background": "blue",
-        "color": "gray",
+        "color": "white",
         "name": "sunt"
       },
       {
         "background": "yellow",
-        "color": "white",
+        "color": "black",
         "name": "sint"
       }
     ]
@@ -214,7 +214,7 @@ export const sampleData = [
     "label": [
       {
         "background": "yellow",
-        "color": "white",
+        "color": "black",
         "name": "ullamco"
       }
     ]
@@ -247,7 +247,7 @@ export const sampleData = [
       },
       {
         "background": "pink",
-        "color": "white",
+        "color": "black",
         "name": "deserunt"
       },
       {
@@ -280,12 +280,12 @@ export const sampleData = [
     "label": [
       {
         "background": "pink",
-        "color": "gray",
+        "color": "black",
         "name": "commodo"
       },
       {
         "background": "green",
-        "color": "gray",
+        "color": "white",
         "name": "aliqua"
       },
       {
@@ -318,7 +318,7 @@ export const sampleData = [
     "label": [
       {
         "background": "yellow",
-        "color": "gray",
+        "color": "black",
         "name": "in"
       }
     ]
@@ -346,12 +346,12 @@ export const sampleData = [
     "label": [
       {
         "background": "blue",
-        "color": "black",
+        "color": "white",
         "name": "do"
       },
       {
         "background": "pink",
-        "color": "gray",
+        "color": "black",
         "name": "dolore"
       },
       {
@@ -384,12 +384,12 @@ export const sampleData = [
     "label": [
       {
         "background": "pink",
-        "color": "gray",
+        "color": "black",
         "name": "ea"
       },
       {
         "background": "blue",
-        "color": "gray",
+        "color": "white",
         "name": "proident"
       }
     ]
@@ -461,7 +461,7 @@ export const sampleData = [
     "label": [
       {
         "background": "blue",
-        "color": "black",
+        "color": "white",
         "name": "voluptate"
       }
     ]
@@ -494,7 +494,7 @@ export const sampleData = [
       },
       {
         "background": "yellow",
-        "color": "gray",
+        "color": "black",
         "name": "id"
       },
       {
@@ -527,7 +527,7 @@ export const sampleData = [
     "label": [
       {
         "background": "blue",
-        "color": "black",
+        "color": "white",
         "name": "ea"
       },
       {
@@ -537,7 +537,7 @@ export const sampleData = [
       },
       {
         "background": "blue",
-        "color": "black",
+        "color": "white",
         "name": "sunt"
       }
     ]
@@ -565,7 +565,7 @@ export const sampleData = [
     "label": [
       {
         "background": "green",
-        "color": "black",
+        "color": "white",
         "name": "nisi"
       }
     ]
@@ -593,12 +593,12 @@ export const sampleData = [
     "label": [
       {
         "background": "blue",
-        "color": "gray",
+        "color": "white",
         "name": "dolore"
       },
       {
         "background": "pink",
-        "color": "white",
+        "color": "black",
         "name": "enim"
       }
     ]
@@ -626,7 +626,7 @@ export const sampleData = [
     "label": [
       {
         "background": "blue",
-        "color": "gray",
+        "color": "white",
         "name": "et"
       }
     ]
@@ -676,12 +676,12 @@ export const sampleData = [
     "label": [
       {
         "background": "green",
-        "color": "gray",
+        "color": "white",
         "name": "esse"
       },
       {
         "background": "green",
-        "color": "gray",
+        "color": "white",
         "name": "exercitation"
       }
     ]
@@ -786,7 +786,7 @@ export const sampleData = [
     "label": [
       {
         "background": "yellow",
-        "color": "white",
+        "color": "black",
         "name": "voluptate"
       },
       {
@@ -824,7 +824,7 @@ export const sampleData = [
       },
       {
         "background": "pink",
-        "color": "white",
+        "color": "black",
         "name": "velit"
       }
     ]
@@ -852,12 +852,12 @@ export const sampleData = [
     "label": [
       {
         "background": "yellow",
-        "color": "white",
+        "color": "black",
         "name": "fugiat"
       },
       {
         "background": "green",
-        "color": "black",
+        "color": "white",
         "name": "elit"
       }
     ]
