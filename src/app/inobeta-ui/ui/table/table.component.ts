@@ -17,7 +17,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 @Component({
   selector: 'ib-table',
   template: `
-    <div fxLayout="column" class="ib-table" fxLayoutGap="5px" >
+    <div fxLayout="column" class="ib-table" >
       <div
         fxFlex
         ib-table-actions
@@ -29,6 +29,9 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
         [hasAdd]="hasAdd"
         [hasExport]="hasExport"
         [selectableRows]="selectableRows"
+        [ngStyle]="{
+          'padding-bottom': (actions.length > 0 || hasAdd || hasExport) ? '5px' : '0px'
+        }"
         [actions]="actions"
         (add)="add.emit()"
         (export)="export($event)"
@@ -271,7 +274,12 @@ export class IbTableComponent implements OnChanges {
         for (const k in this.columnFilter) {
           /*TODO INSERT COLUMN TYPE HERE */
           switch (this.titles.find(t => t.key === k).type) {
-            case IbTableTitlesTypes.ANY: //FIXME: need translations here
+            case IbTableTitlesTypes.ANY:
+              const translated = this.translate.instant(el[k])
+              if (!(translated && translated.includes && translated.toLowerCase().includes(this.columnFilter[k].toLowerCase()))) {
+                include = false;
+              }
+              break
             case IbTableTitlesTypes.STRING:
             case IbTableTitlesTypes.CUSTOM:
               if (!(el[k] && el[k].includes && el[k].toLowerCase().includes(this.columnFilter[k].toLowerCase()))) {

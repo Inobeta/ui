@@ -11,7 +11,7 @@ export const sampleData = [
     "eyeColor": "green",
     "name": "Angela Saunders",
     "gender": "female",
-    "company": "QUIZMO",
+    "company": "shared.ibTable.noData",
     "email": "angelasaunders@quizmo.com",
     "phone": "+1 (800) 421-3866",
     "address": "808 Robert Street, Santel, Delaware, 1485",

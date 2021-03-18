@@ -1,6 +1,6 @@
 import { Subject } from '@angular-devkit/core/node_modules/rxjs';
 import { Component, ComponentFactoryResolver, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormControl } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { debounceTime } from 'rxjs/operators';
 import { IbTableTitlesTypes } from '../models/titles.model';
 
@@ -109,6 +109,7 @@ import { IbTableTitlesTypes } from '../models/titles.model';
           label="shared.ibTable.apply"
           color="primary"
           style="float:right"
+          [disabled]="!numericFormsValid()"
           (click)="searchNumeric()"
         ></ib-table-button>
         </div>
@@ -187,7 +188,7 @@ export class IbTableHeaderFilterComponent implements OnInit{
   compareClauses = [
     { value: '<', label: '<'},
     { value: '<=', label: '<='},
-    { value: '=', label: '='},
+    { value: '==', label: '='},
     { value: '>', label: '>'},
     { value: '>=', label: '>='}
   ]
@@ -244,8 +245,8 @@ export class IbTableHeaderFilterComponent implements OnInit{
   }){
     this.numericConditions.push(
       this.fb.group({
-        condition: new FormControl(filter.condition),
-        value: new FormControl(filter.value)
+        condition: new FormControl(filter.condition, Validators.required),
+        value: new FormControl(filter.value, Validators.required)
       })
     )
   }
@@ -254,4 +255,10 @@ export class IbTableHeaderFilterComponent implements OnInit{
     this.search(this.numericConditions.map(c => c.value))
   }
 
+  numericFormsValid(){
+    return this.numericConditions.reduce((acc, el) => {
+      if(!el.valid) return false
+      return acc
+    }, true)
+  }
 }
