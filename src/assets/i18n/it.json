@@ -18,12 +18,18 @@
     },
     "header": {},
     "ibTable": {
-      "noData": "Nessun elemento presente in lista",
-      "search": "Cerca",
-      "filterReset": "Resetta filtri",
-      "delete": "Elimina",
-      "update": "Modifica",
-      "export": "Esporta"
+        "noData": "Nessun elemento presente in lista",
+        "search": "Cerca",
+        "filterReset": "Resetta filtri",
+        "delete": "Elimina",
+        "edit": "Modifica",
+        "export": "Esporta",
+        "add": "Nuovo",
+        "select": "Seleziona",
+        "filter": "Filtra",
+        "apply": "Applica",
+        "true": "Si",
+        "false": "No"
     },
     "ibDropdown": {
       "selectAll": "Seleziona tutti",

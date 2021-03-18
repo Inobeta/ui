@@ -5,9 +5,6 @@ ib-table .hover:hover{
   align-items: center;
   cursor: none !important;
 }
-#select-row-name{
-  cursor: default;
-}
 th {
   color: #555;
   font-weight: normal;

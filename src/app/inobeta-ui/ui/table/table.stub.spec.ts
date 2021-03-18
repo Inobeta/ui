@@ -19,7 +19,6 @@ export class IbTableStubComponent {
   @Input() hasPaginator = true;
   @Input() structureTemplates;
   @Input() hasActions = false;
-  @Input() selectRowName = 'Seleziona';
   @Input() templateButtons: IbTemplateModel[] = [];
   @Input() templateHeaders: any = {};
   @Input() actions: string[] = [];

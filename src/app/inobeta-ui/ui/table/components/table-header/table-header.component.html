@@ -1,41 +1,116 @@
-<th id="select-row-name" width="10" *ngIf="selectableRows">{{selectRowName | translate}}</th>
+<th class="table-header-title" width="1%" *ngIf="selectableRows">{{ 'shared.ibTable.select' | translate }}</th>
+
 <ng-template *ngFor="let t of titles" [ngIf]="true">
-  <th style="white-space: nowrap;" class="table-header-title" width="{{t.width}}" [mat-sort-header]="t.key"
+  <th
+    style="white-space: nowrap;"
+    class="table-header-title"
+    width="{{t.width}}"
     *ngIf="!templateHeaders[t.key]">
-    {{ t.value | translate }}
-    <ng-template [ngIf]="columnFilter[t.key]">
-      [{{columnFilter[t.key]}}]
-      <i style="font-size: 14px;font-weight: bolder;cursor:pointer" class="material-icons"
-        (click)="$event.stopPropagation(); setFilter(t.key, null);">close</i>
-    </ng-template>
+    <table cellpadding="0" border="0" cellspacing="0" width="100%">
+      <tr>
+        <th width="99%" style="padding:0px;">
+          <span  [mat-sort-header]="t.key" fxLayoutAlign="start center">
+            <span fxLayout="column" fxLayoutAlign="center start">
+              <span class="filter-value" fxLayout="row">
+                <ng-template [ngIf]="columnFilter[t.key] || columnFilter[t.key]===false">
+                  <span *ngIf="t.type===columnTypes.BOOLEAN">
+                    &nbsp;[{{((columnFilter[t.key]) ? 'shared.ibTable.true' : 'shared.ibTable.false') | translate}}]
+                  </span>
+                  <span *ngIf="t.type===columnTypes.STRING || t.type===columnTypes.ANY">&nbsp;[{{columnFilter[t.key]}}]</span>
+                  <span  *ngIf="t.type===columnTypes.NUMBER || t.type===columnTypes.INPUT_NUMBER">
+                    &nbsp;[
+                    <span *ngFor="let cond of columnFilter[t.key]; let last=last;">
+                      {{ cond.condition }} {{ cond.value }} {{ !last ? ', ': ''}}
+                    </span>
+                    ]
+                  </span>
+                  <span  *ngIf="t.type===columnTypes.DATE">
+                    &nbsp;[
+                    <span *ngFor="let cond of columnFilter[t.key]; let last=last;">
+                      {{ cond.condition }} {{ cond.value }} {{ !last ? ', ': ''}}
+                    </span>
+                    ]
+                  </span>
+                  <i style="font-size: 14px;font-weight: bolder;cursor:pointer" class="material-icons"
+                    (click)="$event.stopPropagation(); setFilter(t.key, null);">close</i>
+                </ng-template>
+              </span>
+              <span>{{ t.value | translate }}</span>
+            </span>
+          </span>
+        </th>
+        <th width="1%">
+          <i
+            class="material-icons filter-button"
+            style="font-size: 14px;font-weight: bolder; float:right;"
+            *ngIf="t.filterable && supportedFilters.indexOf(t.type) > -1"
+            [matMenuTriggerFor]="filter"
+          >
+          filter_alt
+        </i>
+          <mat-menu #filter="matMenu">
+            <div
+            style="width:260px;height:auto; padding: 0px;"
+            mat-menu-item
+            >
+            <div
+            ib-table-header-filter
+                [ibTable]="table"
+                [col]="t"
+                [filter]="columnFilter[t.key]"
+            >
+            </div>
+            </div>
+          </mat-menu>
+        </th>
+      </tr>
+    </table>
   </th>
-  <th style="white-space: nowrap;" class="table-header-title" width="{{t.width}}" *ngIf="templateHeaders[t.key]"
-    (click)="resetCustomHeaderVisibility($event); visibleHeaders[t.key] = !visibleHeaders[t.key]">
-    {{ t.value | translate}}
-    <ng-template [ngIf]="columnFilter[t.key]">
-      [{{columnFilter[t.key]}}]
-      <i style="font-size: 14px;font-weight: bolder;cursor:pointer" class="material-icons"
-        (click)="$event.stopPropagation(); setFilter(t.key, null);">close</i>
-    </ng-template>
-    <i class="material-icons table-sort-indicator" style="font-size: 14px;font-weight: bolder;"
-      *ngIf="currentSort && currentSort.active==t.key && currentSort.direction=='asc'">
-      arrow_upward
-    </i>
-    <i class="material-icons table-sort-indicator" style="font-size: 14px;font-weight: bolder;"
-      *ngIf="currentSort && currentSort.active==t.key && currentSort.direction=='desc'">
-      arrow_downward
-    </i>
-    <ng-template [ngIf]="visibleHeaders[t.key]">
-      <ng-container *ngTemplateOutlet="templateHeaders[t.key]; context: { ibTable: table, col: t}">
-      </ng-container>
-    </ng-template>
+  <th
+    style="white-space: nowrap;"
+    class="table-header-title"
+    width="{{t.width}}"
+    *ngIf="templateHeaders[t.key]"
+    (click)="resetCustomHeaderVisibility($event); visibleHeaders[t.key] = !visibleHeaders[t.key]"
+  >
+    <span fxLayout="row" fxLayoutAlign="start center">
+      <span fxLayout="column" fxLayoutAlign="center start">
+        <span fxLayout="row" class="filter-value">
+          <ng-template [ngIf]="columnFilter[t.key]">
+            [{{columnFilter[t.key]}}]
+            <i style="font-size: 14px;font-weight: bolder;cursor:pointer" class="material-icons"
+              (click)="$event.stopPropagation(); setFilter(t.key, null);">close</i>
+          </ng-template>
+        </span>
+        <span>
+          {{ t.value | translate}}
+        </span>
+      </span>
+      <i class="material-icons table-sort-indicator" style="font-size: 14px;font-weight: bolder;"
+        *ngIf="currentSort && currentSort.active==t.key && currentSort.direction=='asc'">
+        arrow_upward
+      </i>
+      <i class="material-icons table-sort-indicator" style="font-size: 14px;font-weight: bolder;"
+        *ngIf="currentSort && currentSort.active==t.key && currentSort.direction=='desc'">
+        arrow_downward
+      </i>
+      <ng-template [ngIf]="visibleHeaders[t.key]">
+        <ng-container *ngTemplateOutlet="templateHeaders[t.key]; context: { ibTable: table, col: t}">
+        </ng-container>
+      </ng-template>
+    </span>
   </th>
 </ng-template>
 
-<th width="10" style="white-space: nowrap;" class="table-header-title-custom" [mat-sort-header]="btn.columnName"
+<th width="1%" style="white-space: nowrap;" class="table-header-title-custom" [mat-sort-header]="btn.columnName"
   disabled="true" *ngFor="let btn of templateButtons">{{btn.columnName | translate}}
 </th>
-
+<th width="1%" *ngIf="hasEdit" class="table-header-title-custom" [mat-sort-header]="'sortable_edit'" disabled="true">
+  {{ 'shared.ibTable.edit' | translate}}
+</th>
+<th width="1%" *ngIf="hasDelete" class="table-header-title-custom" [mat-sort-header]="'sortable_delete'" disabled="true">
+  {{ 'shared.ibTable.delete' | translate}}
+</th>
 <!--overlay pane for custom headers popups--->
 <div
 class="ib-table-overlay"

@@ -1,5 +1,5 @@
-<ng-template #deleteTemplate let-item="item">
-  <span class="delete-button">
+<ng-template #rowActionTemplate let-item="item" let-isChecked="isChecked">
+  <span class="delete-button" (click)="$event.stopPropagation();consolePrint({item: item, isChecked: isChecked})">
       <i class="material-icons">search</i>
   </span>
 </ng-template>
@@ -16,40 +16,44 @@
   <!--example component customization-->
   Clicca per esportare:&nbsp;
   <ib-table-export
+    [selectableRows]="selectableRows"
     (export)="ibTable.export($event || {})"
     >
   </ib-table-export>
 </ng-template>
 
 <ib-table
+  [tableName]="'pippo'"
   [pdfCustomStyles]="pdfCustomStyles"
   [pdfSetup]="pdfSetup"
-  [hasExport]="true"
-  [customItemTemplate]="{ lot: lotTemplate }"
-  [selectableRows]="true"
-  (rowChecked)="prova2($event)"
   [titles]="titles"
   [items]="items"
   [enableReduxStore]="true"
-  [tableName]="'pippo'"
-  [selectRowName]="'Ricevuto'"
+  [selectableRows]="selectableRows"
+  [hasExport]="true"
+  [hasAdd]="true"
+  [hasEdit]="true"
+  [hasDelete]="true"
+  [customItemTemplate]="{ guid: lotTemplate }"
   [templateButtons]="[{
-    template: deleteTemplate,
-    columnName: 'Elimina'
+    template: rowActionTemplate,
+    columnName: 'Action'
   }]"
   [templateHeaders]="{
-    'lot': headerClickTemplate,
-    'sender': headerClickTemplate,
-    'date': headerClickTemplate,
-    'qt': headerClickTemplate
+    'guid': headerClickTemplate
   }"
-  [actions]="['test']"
+  [actions]="actions"
   [structureTemplates]="{
     'exportTemplate': exportTemplate
   }"
+  (add)="consolePrint('clicked on new')"
+  (edit)="consolePrint({ msg: 'edit click', data: $event})"
+  (delete)="consolePrint({ msg: 'delete click', data: $event})"
+  (rowClicked)="consolePrint({ msg: 'row click', data: $event})"
+  (rowChecked)="consolePrint({ msg: 'row selection change', data: $event})"
 
   >
   <ng-template #lotTemplate let-item="item">
-    <div style="font-weight: bold; color: red;">{{item.lot}}</div>
+    <div style="font-weight: bold; color: red;">{{item.guid}}</div>
   </ng-template>
 </ib-table>
