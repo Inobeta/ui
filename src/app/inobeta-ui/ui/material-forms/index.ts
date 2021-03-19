@@ -1,7 +1,9 @@
 
 export * from './material-form/material-form.component';
+export * from './material-form/material-form.stub.spec';
 export * from './material-form-control/material-form-control.component';
 export * from './material-form.module';
+export * from './material-form-test.module';
 export * from './controls/autocomplete';
 export * from './controls/checkbox';
 export * from './controls/datepicker';
