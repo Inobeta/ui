@@ -79,7 +79,7 @@ pages:
     - ssh-keyscan -t rsa $STAGING_HOST >> ~/.ssh/known_hosts
     - ssh $STAGING_USER@$STAGING_HOST "rm -rf ~/Apps/$APPNAME/docs/$dir && mkdir -p ~/Apps/$APPNAME/docs/$dir && sh ~/Apps/$APPNAME/docs/generate.sh"
     - scp -r documentation/* $STAGING_USER@$STAGING_HOST:~/Apps/$APPNAME/docs/$dir
-    - mv documentation public/$dir/
+    #- mv documentation public/$dir/
   artifacts:
     name: "$CI_COMMIT_REF_SLUG-$CURRENT_VERSION"
     paths:
