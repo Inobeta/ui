@@ -183,12 +183,9 @@ export class IbTableComponent implements OnChanges {
     ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('changes', changes);
     if (changes.enableReduxStore && changes.enableReduxStore.currentValue) {
       this.store.select(rootState => rootState.tableFiltersState.tableFilters).subscribe(tableFilters => {
         const data = tableFilters[this.tableName];
-        console.log('data', data);
-
         if (data) {
           if (data.paginatorFilters) {
             this.currentPagination = data.paginatorFilters;
@@ -201,7 +198,7 @@ export class IbTableComponent implements OnChanges {
           }
 
           for (const prop of Object.keys(data).filter(p => ['paginatorFilters', 'sortType'].indexOf(p) === -1)) {
-            this.setFilter(prop, data[prop].value, this.currentPagination.pageIndex);
+            this.setFilter(prop, data[prop].value, this.currentPagination.pageIndex, false);
           }
           if (data.sortType) {
             this.sortData(data.sortType, false);
@@ -334,15 +331,25 @@ export class IbTableComponent implements OnChanges {
     this.paginationHandle();
   }
 
-  setFilter(key, value, indexToSet = 0) {
+  setFilter(key, value, indexToSet = 0, redux = true, tableName = null) {
     this.columnFilter[key] = value;
     this.currentPagination.pageIndex = indexToSet;
     this.pageChangeHandle(this.currentPagination);
-    this.store.dispatch(TableFiltersActions.addFilterToTable({
-      tableName: this.tableName,
-      filterName: key,
-      filterValue: value
-    }));
+    if(redux){
+      if(!tableName){
+        if(!tableName && this.tableName === 'default_table_name'){
+          console.warn('[IbTableComponent] missing table name on redux filter call')
+        }
+        tableName = this.tableName
+      }
+
+      this.store.dispatch(TableFiltersActions.addFilterToTable({
+        tableName: tableName,
+        filterName: key,
+        filterValue: value
+      }));
+    }
+
   }
 
   resetFilters() {

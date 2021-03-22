@@ -6,7 +6,7 @@ import { PercentPipe, CurrencyPipe, DecimalPipe, DatePipe } from '@angular/commo
 @Component({
   selector: '[ib-mat-label]',
   template: `
-    <mat-label fxFlex style="width:100%;"  fxLayout="row" fxFlexAlign="center" >
+    <mat-label fxFlex style="width:100%;line-height:50px;"  fxLayout="row" fxFlexAlign="center" >
       <span *ngIf="data.base.label" style="padding-right:10px;">{{data.base.label | translate}}: </span>
       <b *ngIf="data.base.value">{{ data.base.value }}</b>
     </mat-label>

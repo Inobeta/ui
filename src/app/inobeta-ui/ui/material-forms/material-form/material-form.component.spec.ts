@@ -19,6 +19,7 @@ import { IbMatDatepickerComponent, IbMatAutocompleteComponent, IbMatLabelCompone
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { IbMatTextareaComponent } from '../controls/textarea';
 import { IbMatButtonComponent } from '../controls/button';
+import { IbMatPaddingComponent, IbMatPaddingControl } from '../controls/padding';
 
 
 @Component({
@@ -123,6 +124,10 @@ export class TestHostComponent {
       width: '50%'
     }),
 
+    new IbMatPaddingControl({
+      width: '50%'
+    }),
+
     new IbMatTextareaControl({
       key: 'textarea',
       label: 'Enter long text',
@@ -155,7 +160,8 @@ describe('IbMaterialFormComponent', () => {
         IbMatAutocompleteComponent,
         IbMatLabelComponent,
         IbMatTextareaComponent,
-        IbMatButtonComponent
+        IbMatButtonComponent,
+        IbMatPaddingComponent
       ],
       imports: [
         IbToolTestModule,
@@ -191,7 +197,8 @@ describe('IbMaterialFormComponent', () => {
         IbMatAutocompleteComponent,
         IbMatLabelComponent,
         IbMatTextareaComponent,
-        IbMatButtonComponent
+        IbMatButtonComponent,
+        IbMatPaddingComponent
         ],
       }
     })

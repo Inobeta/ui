@@ -33,7 +33,7 @@ import { IbTableCellAligns, IbTableTitles, IbTableTitlesTypes } from '../models/
 
     <!--TYPE = NUMBER-->
     <span *ngIf="t.type === typeEnum.NUMBER" class="{{t.className}}">
-        {{item[t.key] | number:t.format}}
+        {{item[t.key] | number:t.format:'it'}}
     </span>
 
     <!--TYPE = DATE-->

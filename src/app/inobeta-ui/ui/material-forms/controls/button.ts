@@ -5,7 +5,7 @@ import { IbFormControlBase, IbFormControlBaseComponent, IbFormControlBaseParams,
 @Component({
   selector: '[ib-mat-button]',
   template: `
-<div fxLayout="row" fxLayout="space-around center">
+<div fxLayout="row" fxLayout="space-around center" style="padding-top:5px;padding-bottom:5px;height:45px;">
   <button
     (click)="handleActionClick()"
     [type]="(data.base.key === 'submit') ? 'submit' : 'button'"

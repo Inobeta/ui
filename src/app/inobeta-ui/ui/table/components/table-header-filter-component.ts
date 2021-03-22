@@ -201,24 +201,7 @@ export class IbTableHeaderFilterComponent implements OnInit{
     ).subscribe((value) => this.doFilter(value));
   }
   ngOnInit(): void {
-    if([
-      this.columnTypes.NUMBER,
-      this.columnTypes.INPUT_NUMBER,
-      this.columnTypes.DATE
-    ].indexOf(this.col.type) > -1){
-      if(this.filter && this.filter.length > 0){
-        this.filter.forEach(f => this.addClause(f))
-      }
-      else{
-        this.addClause();
-      }
-    }
-    else{
-      console.log('filter', this.filter, this.col)
-      this.generalForm =  this.fb.group({
-        filter: new FormControl( null)
-      })
-    }
+    this.initForm(this.col, this.filter)
   }
 
   doFilter(value) {
@@ -228,11 +211,6 @@ export class IbTableHeaderFilterComponent implements OnInit{
   search(what) {
     this.searchSubject.next(what);
   }
-
-  ngOnChanges(changes: import ('@angular/core').SimpleChanges): void {
-    console.log('filter changes', changes.filter, changes.col)
-  }
-
 
   removeClause(cond){
     const index = this.numericConditions.indexOf(cond)
@@ -260,5 +238,26 @@ export class IbTableHeaderFilterComponent implements OnInit{
       if(!el.valid) return false
       return acc
     }, true)
+  }
+
+  initForm(col, filter){
+
+    if([
+      this.columnTypes.NUMBER,
+      this.columnTypes.INPUT_NUMBER,
+      this.columnTypes.DATE
+    ].indexOf(col.type) > -1){
+      if(this.filter && filter.length > 0){
+        filter.forEach(f => this.addClause(f))
+      }
+      else{
+        this.addClause();
+      }
+    }
+    else{
+      this.generalForm =  this.fb.group({
+        filter: new FormControl( this.filter )
+      })
+    }
   }
 }

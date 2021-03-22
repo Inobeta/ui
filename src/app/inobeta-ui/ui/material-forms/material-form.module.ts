@@ -15,6 +15,7 @@ import { IbMatAutocompleteComponent } from './controls/autocomplete';
 import { IbMatLabelComponent } from './controls/label';
 import { IbMatTextareaComponent } from './controls/textarea';
 import { IbMatButtonComponent } from './controls/button';
+import { IbMatPaddingComponent } from './controls/padding';
 
 const entryComponents = [
   IbMatTextboxComponent,
@@ -25,7 +26,8 @@ const entryComponents = [
   IbMatAutocompleteComponent,
   IbMatLabelComponent,
   IbMatTextareaComponent,
-  IbMatButtonComponent
+  IbMatButtonComponent,
+  IbMatPaddingComponent
 ];
 const components = [
   ...entryComponents,
