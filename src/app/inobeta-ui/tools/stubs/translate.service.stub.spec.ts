@@ -9,5 +9,8 @@ export const translateServiceStub = {
   },
   use() {
     return of({});
-  }
+  },
+  instant(key: any): any {
+    return 'translated';
+  },
 };

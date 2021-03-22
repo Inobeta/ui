@@ -67,17 +67,17 @@ test_package_creation:
     - /^v[0-9]+\.[0-9]+\.[0-9]+$/
 
 pages:
-  stage: quality #npm:deploy
+  stage: npm:deploy
   script:
     - npx @compodoc/compodoc -p tsconfig.app.json --disableCoverage --disableDomTree --disableGraph --hideGenerator
     - dir="$CURRENT_VERSION"
     - if [ "$CI_COMMIT_REF_SLUG" == "$CI_DEFAULT_BRANCH" ]; then dir="current"; fi;
-    - mkdir -p public
-    - mkdir -p public/$dir/
-    - rm -rf public/$dir/documentation
+    #- mkdir -p public
+    #- mkdir -p public/$dir/
+    #- rm -rf public/$dir/documentation
     - mkdir -p ~/.ssh && echo "$SSH_STAGING" | tr -d '\r' > ~/.ssh/id_rsa && chmod -R 600 ~/.ssh
     - ssh-keyscan -t rsa $STAGING_HOST >> ~/.ssh/known_hosts
-    - ssh $STAGING_USER@$STAGING_HOST "mkdir -p ~/Apps/$APPNAME/docs/$dir"
+    - ssh $STAGING_USER@$STAGING_HOST "rm -rf ~/Apps/$APPNAME/docs/$dir && mkdir -p ~/Apps/$APPNAME/docs/$dir && sh ~/Apps/$APPNAME/docs/generate.sh"
     - scp -r documentation/* $STAGING_USER@$STAGING_HOST:~/Apps/$APPNAME/docs/$dir
     - mv documentation public/$dir/
   artifacts:
@@ -87,9 +87,9 @@ pages:
   cache:
     paths:
     - public
-  #only:
-  #  - master
-  #  - /^v[0-9]+\.[0-9]+\.[0-9]+$/
+  only:
+    - master
+    - /^v[0-9]+\.[0-9]+\.[0-9]+$/
 
 examples:build:
   image: inobeta/dind-node:10
