@@ -27,6 +27,7 @@ const mainTableFiltersReducer = createReducer(INITIAL_TABLE_FILTERS_STATE,
       obj[filterName] = {value: filterValue};
       state.tableFilters[tableName] = obj;
     }
+    console.log('NEW STATE', state)
     return {
       ...state
     };

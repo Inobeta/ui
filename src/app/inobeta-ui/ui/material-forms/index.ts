@@ -13,3 +13,4 @@ export * from './controls/radio';
 export * from './controls/textbox';
 export * from './controls/textarea';
 export * from './controls/button';
+export * from './controls/padding';

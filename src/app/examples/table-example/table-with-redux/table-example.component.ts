@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { IbTableItem } from 'src/app/inobeta-ui/ui/table/models/table-item.model';
 import { IbTableAction, IbTableTitlesTypes } from 'src/app/inobeta-ui/ui/table/models/titles.model';
-import { sampleData } from './json-data';
+import { IbTableComponent } from 'src/app/inobeta-ui/ui/table/table.component';
+import { sampleData } from '../json-data';
 
 @Component({
   selector: 'ib-table-example',
@@ -10,7 +11,9 @@ import { sampleData } from './json-data';
 })
 //ANY, HOUR, COMBOBOX
 export class IbTableExampleComponent implements OnInit {
+  @ViewChild('ibTable', {static: true}) ibTable: IbTableComponent
   selectableRows = true;
+  tableName = 'pippo'
   titles = [
     {
       key: 'guid',
@@ -110,6 +113,20 @@ export class IbTableExampleComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    this.ibTable.setFilter('balance', [
+      {
+        condition: '>',
+        value: '2100'
+      },
+      {
+        condition: '<=',
+        value: '3000'
+      }
+    ], 0, true, this.tableName)
+
+    //Full parameters with table name must be sent only when redux is enabled
+    this.ibTable.setFilter('picture', 'place', 0, true, this.tableName)
 
 
   }

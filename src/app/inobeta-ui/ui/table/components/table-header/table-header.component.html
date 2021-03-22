@@ -45,15 +45,20 @@
             style="font-size: 14px;font-weight: bolder; float:right;"
             *ngIf="t.filterable && supportedFilters.indexOf(t.type) > -1"
             [matMenuTriggerFor]="filter"
+            (menuClosed)="renderContextMenu[t.key] = false;"
+            (menuOpened)="renderContextMenu[t.key] = true;"
           >
           filter_alt
         </i>
-          <mat-menu #filter="matMenu">
+          <mat-menu
+            #filter="matMenu"
+          >
             <div
             style="width:260px;height:auto; padding: 0px;"
             mat-menu-item
             >
             <div
+              *ngIf="renderContextMenu[t.key]"
               ib-table-header-filter
               [ibTable]="table"
               [col]="t"

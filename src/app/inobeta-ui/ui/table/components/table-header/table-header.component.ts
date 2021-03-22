@@ -19,6 +19,7 @@ export class IbTableHeaderComponent implements OnInit {
   @Input() hasEdit = false;
   @Input() hasDelete = false;
 
+  renderContextMenu = {};
   visibleHeaders = {};
   columnTypes = IbTableTitlesTypes;
   supportedFilters = ibTableSupportedFilters;

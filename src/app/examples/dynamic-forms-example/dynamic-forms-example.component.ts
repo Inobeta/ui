@@ -13,6 +13,7 @@ import { IbMatAutocompleteControl } from 'src/app/inobeta-ui/ui/material-forms/c
 import { IbMatLabelControl } from 'src/app/inobeta-ui/ui/material-forms/controls/label';
 import { IbMatTextareaControl } from 'src/app/inobeta-ui/ui/material-forms/controls/textarea';
 import { IbMatButtonControl } from 'src/app/inobeta-ui/ui/material-forms/controls/button';
+import { IbMatPaddingControl } from 'src/app/inobeta-ui/ui/material-forms/controls/padding';
 
 @Component({
   selector: 'app-dynamic-forms-example',
@@ -121,7 +122,17 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
     new IbMatCheckboxControl({
       key: 'checked',
       label: 'check this',
-      width: '100%'
+      width: '25%'
+    }),
+
+    new IbMatTextboxControl({
+      key: 'disabledField2',
+      label: 'Disabled Field2',
+      width: '50%',
+      disabled: true
+    }),
+    new IbMatPaddingControl({
+      width: '25%'
     }),
 
     new IbMatAutocompleteControl({
@@ -139,10 +150,14 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
       }
     }),
     new IbMatLabelControl({
-      key: 'static',
       value: 'Static value',
       label: 'Static label',
-      width: '33.3%'
+      width: '16.65%'
+    }),
+    new IbMatLabelControl({
+      value: 'Static value2',
+      label: 'Static label2',
+      width: '16.65%'
     }),
     new IbMatButtonControl({
       key: 'clear',

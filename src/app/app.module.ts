@@ -8,7 +8,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { HomeComponent } from 'src/app/examples/home.component';
-import { IbTableExampleComponent } from 'src/app/examples/table-example/table-example.component';
+import { IbTableExampleComponent } from 'src/app/examples/table-example/table-with-redux/table-example.component';
 import { NavComponent } from './examples/nav/nav.component';
 import { DynamicFormsExampleComponent } from './examples/dynamic-forms-example/dynamic-forms-example.component';
 import { ISessionState, ibSessionReducer } from './inobeta-ui/http/auth/redux/session.reducer';
@@ -22,7 +22,7 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatCardModule, MatFormFieldModule, MatInputModule, MatIconModule } from '@angular/material';
+import { MatCardModule, MatFormFieldModule, MatInputModule, MatIconModule, MatMenuModule } from '@angular/material';
 import { IbMaterialFormModule } from './inobeta-ui/ui/material-forms/material-form.module';
 import { HttpExampleComponent } from './examples/http-example.component';
 import { MyCounterComponent } from './examples/redux-example/my-counter.component';
@@ -33,6 +33,8 @@ import { IbModalModule } from './inobeta-ui/ui/modal';
 import { MyCustomTextboxComponent } from './examples/dynamic-forms-example/my-custom-textbox.model';
 import { IbToastExampleComponent } from './examples/toast-example/toast-example.component';
 import { IbToastModule } from './inobeta-ui/ui/toast/toast.module';
+import { IbTableLandingComponent } from './examples/table-example/table-landing.component';
+import { IbTableExampleNoReduxComponent } from './examples/table-example/table-without-redux/table-example.component';
 
 export interface IAppState {
   sessionState: ISessionState;
@@ -67,7 +69,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     MyCounterComponent,
     DialogExampleComponent,
     MyCustomTextboxComponent,
-    IbToastExampleComponent
+    IbToastExampleComponent,
+    IbTableLandingComponent,
+    IbTableExampleNoReduxComponent
   ],
   imports: [
     CommonModule,
@@ -86,6 +90,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatInputModule,
     MatIconModule,
     IbToastModule,
+    MatMenuModule,
     StoreModule.forRoot(reducers, {metaReducers}),
     StoreDevtoolsModule.instrument({
       maxAge: 25,

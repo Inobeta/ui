@@ -10,6 +10,7 @@ export class IbFormControlService {
     const group: any = {};
 
     fields.forEach(field => {
+      if(!field.key) return;
       const elem = {
         value: field.value || '',
         disabled: field.disabled

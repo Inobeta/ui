@@ -1,0 +1,17 @@
+
+<ib-table
+  #ibTable
+  [tableName]="'pippo'"
+  [titles]="titles"
+  [items]="items"
+  [enableReduxStore]="false"
+  [selectableRows]="selectableRows"
+  [hasExport]="false"
+  [hasAdd]="false"
+  [hasEdit]="false"
+  [hasDelete]="false"
+  (rowClicked)="consolePrint({ msg: 'row click', data: $event})"
+  (rowChecked)="consolePrint({ msg: 'row selection change', data: $event})"
+
+  >
+</ib-table>
