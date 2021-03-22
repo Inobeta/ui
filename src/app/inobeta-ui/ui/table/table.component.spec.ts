@@ -55,7 +55,6 @@ import { IbTableRowComponent } from './components/table-row.component';
   [titles]="titles"
   [items]="items"
   [enableReduxStore]="enableReduxStore"
-  [tableName]="'pippo'"
   [templateButtons]="[{
     template: deleteTemplate,
     columnName: 'Elimina'
@@ -94,6 +93,12 @@ export class TestHostComponent {
       key: 'sender',
       value: 'Mittente',
       type: IbTableTitlesTypes.STRING,
+      filterable: true
+    },
+    {
+      key: 'article',
+      value: 'Articolo',
+      type: IbTableTitlesTypes.ANY,
       filterable: true
     },
     {
@@ -288,7 +293,7 @@ describe('IbTableComponent', () => {
     store.setState({
       tableFiltersState: {
         tableFilters: {
-          pippo: {
+          default_table_name: {
             paginatorFilters: {
               previousPageIndex: 0,
               pageIndex: 0,
@@ -316,7 +321,7 @@ describe('IbTableComponent', () => {
     store.setState({
       tableFiltersState: {
         tableFilters: {
-          pippo: {
+          default_table_name: {
             paginatorFilters: null,
             sortType: {
               active: 'qt2',
@@ -344,6 +349,17 @@ describe('IbTableComponent', () => {
       active: 'qt2',
       direction: 'asc'
     }, true);
+
+    component.columnFilter = {
+      article: 'test'
+    };
+
+    component.sortData({
+      active: 'qt2',
+      direction: 'asc'
+    }, true);
+
+
 
     component.columnFilter = {
       qt2: [{condition: '>', value: 5}]
@@ -393,6 +409,18 @@ describe('IbTableComponent', () => {
     }, true);
 
     component.resetFilters();
+  });
+
+
+
+
+  it('should manual set filter', () => {
+    component.columnFilter = {};
+    component.setFilter('article', 'test', 0, true)
+    expect(component.columnFilter).not.toEqual({})
+    component.resetFilters();
+    component.setFilter('article', 'test', 0, true, 'pippo')
+    expect(component.columnFilter).not.toEqual({})
   });
 
 });

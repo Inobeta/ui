@@ -72,9 +72,13 @@ pages:
     - npx @compodoc/compodoc -p tsconfig.app.json --disableCoverage --disableDomTree --disableGraph --hideGenerator
     - dir="$CURRENT_VERSION"
     - if [ "$CI_COMMIT_REF_SLUG" == "$CI_DEFAULT_BRANCH" ]; then dir="current"; fi;
-    - mkdir -p public
-    - mkdir -p public/$dir/
-    - rm -rf public/$dir/documentation
+    #- mkdir -p public
+    #- mkdir -p public/$dir/
+    #- rm -rf public/$dir/documentation
+    - mkdir -p ~/.ssh && echo "$SSH_STAGING" | tr -d '\r' > ~/.ssh/id_rsa && chmod -R 600 ~/.ssh
+    - ssh-keyscan -t rsa $STAGING_HOST >> ~/.ssh/known_hosts
+    - ssh $STAGING_USER@$STAGING_HOST "rm -rf ~/Apps/$APPNAME/docs/$dir && mkdir -p ~/Apps/$APPNAME/docs/$dir && sh ~/Apps/$APPNAME/docs/generate.sh"
+    - scp -r documentation/* $STAGING_USER@$STAGING_HOST:~/Apps/$APPNAME/docs/$dir
     - mv documentation public/$dir/
   artifacts:
     name: "$CI_COMMIT_REF_SLUG-$CURRENT_VERSION"
@@ -144,6 +148,7 @@ examples:deploy:
     echo "version=$CURRENT_VERSION" >> ".env"
     scp .env $STAGING_USER@$STAGING_HOST:~/Apps/$APPNAME
   }
+
 
   function service_pullrestart_staging() {
     ssh $STAGING_USER@$STAGING_HOST "cd ~/Apps/$APPNAME && docker login -u $GITLAB_USER -p $AUTH_TOKEN registry.gitlab.com && docker pull $1:$2 && docker-compose stop $3 && docker-compose up -d $3"
