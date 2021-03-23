@@ -19,6 +19,7 @@ export class IbDynamicFormComponent implements OnInit, OnChanges {
   @Input() actions: IbFormAction[] = [
     { key: 'submit', label: 'Save' }
   ];
+  @Input() cols: number;
   @Output() ibSubmit = new EventEmitter<any>();
   form: FormGroup;
 

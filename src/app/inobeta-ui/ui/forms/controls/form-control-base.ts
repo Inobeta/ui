@@ -18,6 +18,8 @@ export class IbFormControlBase<T> {
   public change: (c: FormControl) => void;
   public width: string;
   public control: IbFormControlBaseComponent;
+  public cols: number;
+  public rows: number;
 
   constructor(options: IbFormControlBaseParams<T> = {}) {
 
@@ -34,6 +36,8 @@ export class IbFormControlBase<T> {
     this.options = options.options || [];
     this.width = options.width || '';
     this.control = options.control || null;
+    this.cols = options.cols || 1;
+    this.rows = options.rows || 1;
     this.setupChangeEvent(options)
   }
 
@@ -71,6 +75,8 @@ export interface IbFormControlBaseParams<T> {
   change?: (c: FormControl) => void;
   width?: string;
   control?: IbFormControlBaseComponent;
+  cols?:number;
+  rows?:number;
 }
 
 export interface IbFormControlInterface {

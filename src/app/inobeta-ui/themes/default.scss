@@ -67,3 +67,17 @@ $background: map-get($theme, background);
 
 }
 
+.ib-material-form-grid ib-material-form-control{
+  max-width: 100% !important;
+  height: 100%;
+}
+
+.ib-material-form-grid div[ib-mat-label]{
+  padding-bottom: 1.34375em;
+}
+.ib-material-form-grid div[ib-mat-label],
+.ib-material-form-grid div[ib-mat-label] div{
+  height: 100% !important;
+  align-items: center;
+}
+

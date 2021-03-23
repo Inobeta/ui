@@ -34,6 +34,8 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
       key: 'firstName',
       label: 'First name *',
       width: '50%',
+      cols: 2,
+      rows: 1,
       errors: [{
         condition: (c) => {
           if(c.value !== 'Pippo'){
@@ -49,6 +51,8 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
       key: 'disabledField',
       label: 'Disabled Field',
       width: '50%',
+      cols: 2,
+      rows: 1,
       disabled: true
     }),
 
@@ -67,6 +71,8 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
       key: 'email',
       label: 'Email',
       width: '33.3%',
+      cols: 2,
+      rows: 1,
       required: true,
       validators: [Validators.email]
     }),
@@ -134,13 +140,17 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
       disabled: true
     }),
     new IbMatPaddingControl({
-      width: '25%'
+      width: '25%',
+      cols: 2,
+      rows: 1,
     }),
 
     new IbMatAutocompleteControl({
       key: 'autocomplete',
       label: 'Autocomplete',
       width: '33.3%',
+      cols: 2,
+      rows: 1,
       options: [
         { value: 'value1' },
         { value: 'value2' },
@@ -159,20 +169,26 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
     new IbMatLabelControl({
       value: 'Static value2 long text long text long text long text long text long text long text long text',
       label: 'Static label2 long text long text long text long text',
-      width: '33.3%'
+      width: '33.3%',
+      cols: 1,
+      rows: 3,
     }),
     new IbMatButtonControl({
       key: 'clear',
       label: 'Clear button inside form',
       color: 'accent',
       width: '16.65%',
+      cols: 3,
+      rows: 1,
       handler: (form) => form.reset()
     }),
     new IbMatTextareaControl({
       key: 'textarea',
       label: 'Enter long text',
       width: '100%',
-      height: '120px'
+      height: '120px',
+      cols: 3,
+      rows: 2,
     }),
   ];
   customFormActions = [

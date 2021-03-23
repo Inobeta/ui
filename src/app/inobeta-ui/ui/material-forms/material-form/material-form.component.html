@@ -1,6 +1,20 @@
 <form (ngSubmit)="onSubmit()" [formGroup]="form" class="ibForm">
+  <mat-grid-list class="ib-material-form-grid" *ngIf="cols" [cols]="cols" rowHeight="80px">
+    <mat-grid-tile
+        *ngFor="let field of fields"
+        [colspan]="field.cols"
+        [rowspan]="field.rows">
+          <ib-material-form-control
+          class="ibFormRow"
+          [base]="field"
+          [form]="form"
+          [fxFlex]="field.width"
+          style="padding: 5px;width:100%;"
+        ></ib-material-form-control>
+    </mat-grid-tile>
+  </mat-grid-list>
 
-  <div fxLayout="row wrap">
+  <div fxLayout="row wrap"  *ngIf="!cols">
     <ib-material-form-control
       *ngFor="let field of fields"
       class="ibFormRow"
