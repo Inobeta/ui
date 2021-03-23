@@ -72,7 +72,7 @@ export class IbMatDropdownComponent implements IbFormControlInterface {
 }
 
 
-export class IbMatDropdownControl extends IbFormControlBase<string>{
+export class IbMatDropdownControl extends IbFormControlBase<string | string[]>{
   multiple = false;
   constructor(options: IbMatDropdownParams){
     super(options)
@@ -85,7 +85,7 @@ export class IbMatDropdownControl extends IbFormControlBase<string>{
 
 
 
-export interface IbMatDropdownParams extends IbFormControlBaseParams<string>{
+export interface IbMatDropdownParams extends IbFormControlBaseParams<string | string[]>{
   multiple?: boolean;
 }
 

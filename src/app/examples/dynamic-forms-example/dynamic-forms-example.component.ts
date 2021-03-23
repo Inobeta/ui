@@ -84,6 +84,7 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
       key: 'options',
       label: 'Options',
       width: '33.3%',
+      value: 'test2',
       options: [
         { key: 'test1', value: 'value1' },
         { key: 'test2', value: 'value2' },
@@ -98,6 +99,7 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
       key: 'optionsMultiple',
       label: 'Options Multiple',
       width: '33.3%',
+      value: ['test1'],
       multiple: true,
       options: [
         { key: 'test1', value: 'value1' },
@@ -155,15 +157,15 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
       width: '16.65%'
     }),
     new IbMatLabelControl({
-      value: 'Static value2',
-      label: 'Static label2',
-      width: '16.65%'
+      value: 'Static value2 long text long text long text long text long text long text long text long text',
+      label: 'Static label2 long text long text long text long text',
+      width: '33.3%'
     }),
     new IbMatButtonControl({
       key: 'clear',
       label: 'Clear button inside form',
       color: 'accent',
-      width: '33.3%',
+      width: '16.65%',
       handler: (form) => form.reset()
     }),
     new IbMatTextareaControl({

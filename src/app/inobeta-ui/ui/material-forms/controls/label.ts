@@ -6,10 +6,22 @@ import { PercentPipe, CurrencyPipe, DecimalPipe, DatePipe } from '@angular/commo
 @Component({
   selector: '[ib-mat-label]',
   template: `
-    <mat-label fxFlex style="width:100%;line-height:50px;"  fxLayout="row" fxFlexAlign="center" >
-      <span *ngIf="data.base.label" style="padding-right:10px;">{{data.base.label | translate}}: </span>
-      <b *ngIf="data.base.value">{{ data.base.value }}</b>
-    </mat-label>
+    <div fxFlex style="width:100%;height:50px;;"  fxLayout="row" fxFlexAlign="center" >
+      <div
+        *ngIf="data.base.label"
+        style="padding-right:10px;"
+        fxLayout="row"
+        fxFlexAlign="center"
+        fxFlex="40%"
+      >{{data.base.label | translate}}: </div>
+      <div
+        *ngIf="data.base.value"
+        style="font-weight:bold;"
+        fxLayout="row"
+        fxFlexAlign="center"
+        fxFlex="60%"
+      >{{ data.base.value }}</div>
+</div>
   `
 })
 
