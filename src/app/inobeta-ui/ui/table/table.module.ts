@@ -2,7 +2,7 @@ import { CommonModule, registerLocaleData } from '@angular/common';
 import { Injectable, NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatMenuModule, MatSortModule, MatChipsModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, MatIconModule, MatDialogModule, MatSelectModule, MatRadioModule, MatPaginatorModule, MatButtonModule, MatSnackBarModule, MatCardModule } from '@angular/material';
+import { MatMenuModule, MatSortModule, MatChipsModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, MatIconModule, MatDialogModule, MatSelectModule, MatRadioModule, MatPaginatorModule, MatButtonModule, MatSnackBarModule, MatCardModule, MatRippleModule } from '@angular/material';
 import { TranslateModule } from '@ngx-translate/core';
 import { IbTableExportDialogComponent, IbTableExportComponent } from './components/table-export.component';
 import { IbTableHeaderComponent } from './components/table-header/table-header.component';
@@ -53,6 +53,7 @@ const COMPONENTS = [
         MatButtonModule,
         MatSnackBarModule,
         MatCardModule,
+        MatRippleModule,
         TranslateModule.forChild({
             extend: true
         })

@@ -1,6 +1,6 @@
 <ng-template #rowActionTemplate let-item="item" let-isChecked="isChecked">
   <span class="delete-button" (click)="$event.stopPropagation();consolePrint({item: item, isChecked: isChecked})">
-      <i class="material-icons">search</i>
+      <i class="material-icons ib-table-row-button" matRipple>search</i>
   </span>
 </ng-template>
 

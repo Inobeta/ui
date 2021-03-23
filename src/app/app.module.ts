@@ -22,7 +22,7 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatCardModule, MatFormFieldModule, MatInputModule, MatIconModule, MatMenuModule } from '@angular/material';
+import { MatCardModule, MatFormFieldModule, MatInputModule, MatIconModule, MatMenuModule, MatRippleModule } from '@angular/material';
 import { IbMaterialFormModule } from './inobeta-ui/ui/material-forms/material-form.module';
 import { HttpExampleComponent } from './examples/http-example.component';
 import { MyCounterComponent } from './examples/redux-example/my-counter.component';
@@ -91,6 +91,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatIconModule,
     IbToastModule,
     MatMenuModule,
+    MatRippleModule,
     StoreModule.forRoot(reducers, {metaReducers}),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
