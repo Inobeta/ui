@@ -72,6 +72,12 @@ $background: map-get($theme, background);
   height: 100%;
 }
 
+div[ib-mat-checkbox]{
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
 .ib-material-form-grid div[ib-mat-label]{
   padding-bottom: 1.34375em;
 }
