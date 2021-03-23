@@ -57,10 +57,20 @@ After gitlab setup registry:
 npm i --save @Inobeta/ui
 ```
 
-then, edit angular.json in order to include css styling themes with this path:
+then, define your theme.scss with this example (customize your palette)
 
 ```
-./node_modules/@Inobeta/ui/themes/default.scss
+@import '~@angular/material/theming';
+@import '../inobeta-ui/themes/default.scss';
+@include mat-core();
+
+$app-primary: mat-palette($mat-deep-purple);
+$app-accent: mat-palette($mat-amber, A200, A100, A400);
+$app-warning: mat-palette($mat-red);
+
+$app-theme: mat-light-theme($app-primary, $app-accent, $app-warning);
+
+@include inobeta-ui-theme($app-theme);
 ```
 
 Last, force translate loading on app.component:
