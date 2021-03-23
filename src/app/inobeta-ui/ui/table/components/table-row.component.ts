@@ -114,15 +114,15 @@ import { IbTableCellAligns, IbTableTitles, IbTableTitlesTypes } from '../models/
   </td>
   <td style="text-align:center;" *ngIf="hasEdit">
     <i
-      class="material-icons"
-      style="cursor:pointer;"
+      class="material-icons ib-table-row-button"
+      matRipple
       (click)="$event.stopPropagation(); edit.emit(objectToEmit())"
     >edit</i>
   </td>
   <td style="text-align:center;" *ngIf="hasDelete">
     <i
-      class="material-icons"
-      style="cursor:pointer;"
+      class="material-icons ib-table-row-button"
+      matRipple
       (click)="$event.stopPropagation(); delete.emit(objectToEmit())"
     >delete</i>
   </td>
