@@ -6,21 +6,21 @@
 
 
 .ib-toast-success{
-  background-color: green;
-  font-weight: bold;
-  color: white;
+  background-color: green !important;
+  font-weight: bold !important;
+  color: white !important;
 }
 
 .ib-toast-warning{
-  background-color: orange;
-  font-weight: bold;
-  color: white;
+  background-color: orange !important;
+  font-weight: bold !important;
+  color: white !important;
 }
 
 .ib-toast-error{
-  background-color: red;
-  font-weight: bold;
-  color: white;
+  background-color: red !important;
+  font-weight: bold !important;
+  color: white !important;
 }
 /*
 $background: map-get($theme, background);

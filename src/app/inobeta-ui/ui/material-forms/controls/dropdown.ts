@@ -27,7 +27,7 @@ import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, 
 
 
     <!-- TODO: example style with inline search
-
+https://stackblitz.com/edit/angular-ev8r2t?file=src%2Fapp%2Fselect-multiple-example.html
       <mat-option class="select-all">
         <input type="text" matInput (click)="$event.stopPropagation()"/>
       </mat-option>
