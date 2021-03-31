@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { IbModalMessageComponent } from './modal-message.component';
 import { CommonModule } from '@angular/common';
-import { MatDialogModule } from '@angular/material';
+import { MatButtonModule, MatDialogModule } from '@angular/material';
 
 
 const entryComponents = [
@@ -23,7 +23,8 @@ const services = [
       extend: true
     }),
     CommonModule,
-    MatDialogModule
+    MatDialogModule,
+    MatButtonModule
   ],
   exports: [
     ...components

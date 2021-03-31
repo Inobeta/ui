@@ -43,6 +43,10 @@
         "email": "Indirizzo email non valido"
       }
     },
+    "ibModal": {
+      "yes": "Si",
+      "no": "No"
+    },
     "profile": {
       "name": "Nome",
       "surname": "Cognome",

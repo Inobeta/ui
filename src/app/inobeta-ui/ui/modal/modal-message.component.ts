@@ -6,18 +6,20 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
   template: `
     <h2 mat-dialog-title>{{ data.title | translate }}</h2>
     <mat-dialog-content style="min-width:250px;">{{ data.message | translate }}</mat-dialog-content>
-    <mat-dialog-actions>
+    <mat-dialog-actions align="end">
       <button
         *ngIf="data.hasNo"
-        mat-button
+        mat-raised-button
+        color="warn"
         mat-dialog-close>
-        {{ 'shared.ui.modalMessage.no' | translate }}
+        {{ 'shared.ibModal.no' | translate }}
       </button>
       <button
         *ngIf="data.hasYes"
-        mat-button
+        mat-raised-button
+        color="primary"
         [mat-dialog-close]="true">
-        {{ 'shared.ui.modalMessage.yes' | translate }}
+        {{ 'shared.ibModal.yes' | translate }}
       </button>
     </mat-dialog-actions>`,
 })
