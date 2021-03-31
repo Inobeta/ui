@@ -20,6 +20,7 @@ export class IbFormControlBase<T> {
   public control: IbFormControlBaseComponent;
   public cols: number;
   public rows: number;
+  public debounceOnChange: number;
 
   constructor(options: IbFormControlBaseParams<T> = {}) {
 
@@ -38,6 +39,7 @@ export class IbFormControlBase<T> {
     this.control = options.control || null;
     this.cols = options.cols || 1;
     this.rows = options.rows || 1;
+    this.debounceOnChange = options.debounceOnChange || 700;
     this.setupChangeEvent(options)
   }
 
@@ -50,7 +52,7 @@ export class IbFormControlBase<T> {
       if(options.change && c.value !== previousValue) changeSubject.next(c);
     }
     changeSubject.pipe(
-      debounceTime(700)
+      debounceTime(this.debounceOnChange)
     ).subscribe((control: FormControl) => {
       previousValue = control.value;
       options.change(control);
@@ -77,6 +79,7 @@ export interface IbFormControlBaseParams<T> {
   control?: IbFormControlBaseComponent;
   cols?:number;
   rows?:number;
+  debounceOnChange?:number;
 }
 
 export interface IbFormControlInterface {
