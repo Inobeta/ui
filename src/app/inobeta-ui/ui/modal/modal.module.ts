@@ -3,6 +3,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { IbModalMessageComponent } from './modal-message.component';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule, MatDialogModule } from '@angular/material';
+import { IbModalMessageService } from './modal-message.service';
 
 
 const entryComponents = [
@@ -14,6 +15,7 @@ const components = [
 ];
 
 const services = [
+  IbModalMessageService
 ];
 
 

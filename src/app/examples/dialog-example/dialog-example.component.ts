@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material';
-import { IbModalMessageComponent } from 'src/app/inobeta-ui/ui/modal';
+import { IbModalMessageService } from 'src/app/inobeta-ui/ui/modal/modal-message.service';
 
 @Component({
   selector: 'ib-dialog-example',
@@ -14,22 +13,16 @@ export class DialogExampleComponent implements OnInit {
 
   response = '';
 
-  constructor(public dialog: MatDialog) { }
+  constructor(public dialog: IbModalMessageService) { }
 
   ngOnInit() { }
 
-
   open() {
-    const dialog = this.dialog.open(IbModalMessageComponent, {
-      data: {
+    this.dialog.show( {
         title: 'Titolo',
         message: 'Messaggio',
-        hasYes: true,
-        hasNo: true
-      }
-    });
-
-    dialog.afterClosed().subscribe(result => {
+        hasNo: false
+    }).subscribe(result => {
       this.response = `Clicked on ${result}`;
     });
   }
