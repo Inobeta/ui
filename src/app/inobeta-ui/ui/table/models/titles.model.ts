@@ -4,14 +4,14 @@ import { IbTableItem } from './table-item.model';
 export enum IbTableTitlesTypes {
   ANY = 'any',
   DATE = 'date',
-  TAG = 'tag',
+  TAG = 'tag', //#FIXME create a filter
   NUMBER = 'number',
-  HOUR = 'hour',
-  COMBOBOX = 'combobox',
+  HOUR = 'hour', //#FIXME create a filter
+  COMBOBOX = 'combobox', //#FIXME create a filter based on comboOptions
   BOOLEAN = 'boolean',
   STRING = 'string',
-  INPUT_NUMBER = 'input-number',
-  CUSTOM = 'custom'
+  INPUT_NUMBER = 'input-number', //#FIXME deprecated, this field will be removed
+  CUSTOM = 'custom' //#FIXME deprecated, this field will be removed
 }
 
 export const ibTableSupportedFilters = [
@@ -20,7 +20,7 @@ export const ibTableSupportedFilters = [
   IbTableTitlesTypes.STRING,
   IbTableTitlesTypes.BOOLEAN,
   IbTableTitlesTypes.NUMBER,
-  IbTableTitlesTypes.INPUT_NUMBER
+  IbTableTitlesTypes.INPUT_NUMBER //#FIXME deprecated, this field will be removed
 ]
 
 export enum IbTableCellAligns {
@@ -36,16 +36,16 @@ export class IbTableTitles {
   key: string;
   value: string;
   type: IbTableTitlesTypes = IbTableTitlesTypes.ANY;
-  filterable = false;
-  comboOptions?: any; // IbTableComboItem[];  <-- questa cosa è un mezzo casino da gestire con l'array
-  format?: any;
+  filterable = false; //#FIXME change default with true
+  comboOptions?: any; //#FIXME define a model for this
+  format?: any;  //#FIXME change default to 1.2-2
   align?: IbTableCellAligns;
   width = 'auto';
-  templateHeaderClick?: ElementRef;
-  className?: string;
-  placeHolderInput?: string;
-  getClassByCondition?: any;
-  change?: any;
+  templateHeaderClick?: ElementRef;  //#FIXME rename or refactor. we need to override only filters template.
+  className?: string;  //#FIXME duplicated by getClassByCondition
+  placeHolderInput?: string;  //#FIXME deprecated: related to INPUT_NUMBER, this field will be removed
+  getClassByCondition?: any;  //#FIXME duplicated by className
+  change?: any;  //#FIXME deprecated: related to INPUT_NUMBER, this field will be removed
 }
 
 export class IbTableAction {

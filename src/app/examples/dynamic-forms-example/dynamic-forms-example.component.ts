@@ -190,6 +190,13 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
       cols: 3,
       rows: 2,
     }),
+    new IbMatTextboxControl({
+      key: 'numberValue',
+      label: 'Enter a number',
+      type: 'number',
+      width: '25%',
+      validators: [Validators.min(3), Validators.max(12)]
+    })
   ];
   customFormActions = [
     new IbMatButtonControl({

@@ -88,6 +88,7 @@ import { IbTableCellAligns, IbTableTitles, IbTableTitlesTypes } from '../models/
      </span>
 
     <!--TYPE = INPUT-->
+    <!-- DEPRECATED -->
     <span *ngIf="t.type === typeEnum.INPUT_NUMBER" class="{{t.className}}">
       <mat-form-field>
         <input

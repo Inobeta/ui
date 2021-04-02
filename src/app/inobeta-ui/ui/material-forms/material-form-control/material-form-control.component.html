@@ -12,6 +12,12 @@
   <mat-error *ngIf="hasError('required')">
     {{base.label | translate}} {{ 'shared.ibForms.errors.required' | translate }}
   </mat-error>
+  <mat-error *ngIf="hasError('min')">
+    {{base.label | translate}} {{ 'shared.ibForms.errors.min' | translate:{v:self.errors.min.min} }}
+  </mat-error>
+  <mat-error *ngIf="hasError('max')">
+    {{base.label | translate}} {{ 'shared.ibForms.errors.max' | translate:{v:self.errors.max.max} }}
+  </mat-error>
   <mat-error *ngIf="hasError('email')">
     {{ 'shared.ibForms.errors.email' | translate }}
   </mat-error>
