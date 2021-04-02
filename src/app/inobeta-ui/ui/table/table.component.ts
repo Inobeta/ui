@@ -218,7 +218,7 @@ export class IbTableComponent implements OnChanges {
         const rowGroup = {
           isChecked: new FormControl(i.ibTableItemSelected),
         }
-        for(let k of Object.keys(i)){
+        for(let k of this.titles.map(h => h.key)){
           rowGroup[k] = new FormControl(i[k])
         }
         this.rowForms.push(this.fb.group(rowGroup))
