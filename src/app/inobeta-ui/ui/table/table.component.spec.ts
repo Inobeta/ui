@@ -411,9 +411,6 @@ describe('IbTableComponent', () => {
     component.resetFilters();
   });
 
-
-
-
   it('should manual set filter', () => {
     component.columnFilter = {};
     component.setFilter('article', 'test', 0, true)
@@ -421,6 +418,12 @@ describe('IbTableComponent', () => {
     component.resetFilters();
     component.setFilter('article', 'test', 0, true, 'pippo')
     expect(component.columnFilter).not.toEqual({})
+  });
+
+  it('should read form data', () => {
+    component.isValidForm()
+    component.getFormValues()
+    component.getFormValues('selected')
   });
 
 });

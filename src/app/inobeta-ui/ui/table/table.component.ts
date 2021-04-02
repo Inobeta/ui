@@ -213,6 +213,7 @@ export class IbTableComponent implements OnChanges {
       this.items = changes.items.currentValue;
       this.sortedData = this.items.slice();
       triggerRefresh = true;
+      this.rowForms = [];
       for(let i of this.items){
         const rowGroup = {
           isChecked: new FormControl(i.ibTableItemSelected),
