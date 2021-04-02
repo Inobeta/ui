@@ -1,4 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormGroup, Validators } from '@angular/forms';
+import { IbMatTextboxControl } from 'src/app/inobeta-ui/ui/material-forms/controls/textbox';
 import { IbTableItem } from 'src/app/inobeta-ui/ui/table/models/table-item.model';
 import { IbTableAction, IbTableTitlesTypes } from 'src/app/inobeta-ui/ui/table/models/titles.model';
 import { IbTableComponent } from 'src/app/inobeta-ui/ui/table/table.component';
@@ -53,7 +55,7 @@ export class IbTableExampleComponent implements OnInit {
     {
       key: 'balance',
       value: 'Qt',
-      type: IbTableTitlesTypes.INPUT_NUMBER,
+      type: IbTableTitlesTypes.CUSTOM,
       filterable: true,
       placeHolderInput: 'Inserisci qt',
       width: '10%'
@@ -114,14 +116,14 @@ export class IbTableExampleComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.ibTable.setFilter('balance', [
+    this.ibTable.setFilter('age', [
       {
         condition: '>',
-        value: '2100'
+        value: '20'
       },
       {
         condition: '<=',
-        value: '3000'
+        value: '30'
       }
     ], 0, true, this.tableName)
 
@@ -133,5 +135,21 @@ export class IbTableExampleComponent implements OnInit {
 
   consolePrint(item){
     console.log(item);
+    console.log(this.ibTable.isValidForm(), this.ibTable.getFormValues())
+  }
+
+  getBaseElem(){
+    return new IbMatTextboxControl({
+      key: 'balance',
+      label: 'qt',
+      type: 'number',
+      required: true,
+      validators: [Validators.min(0)]
+    })
+  }
+
+  setValidators(form: FormGroup){
+    form.controls.balance.setValidators([Validators.required, Validators.min(1)])
+    return form
   }
 }

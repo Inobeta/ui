@@ -149,7 +149,7 @@ export class IbTableRowComponent implements OnInit {
 
 
   objectToEmit(){
-    return { item: this.item, isChecked: this.formRow.controls.isChecked.value || false};
+    return { item: this.item, isChecked: (this.formRow.controls.isChecked.value || false), form: this.formRow};
   }
   constructor() { }
 

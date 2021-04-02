@@ -21,7 +21,14 @@
     >
   </ib-table-export>
 </ng-template>
-
+<ng-template #balanceTemplate let-item="item" let-form="form">
+  <ib-material-form-control
+    class="ibFormRow"
+    [base]="getBaseElem()"
+    [form]="setValidators(form)"
+    style="padding: 5px;width:100%;"
+  ></ib-material-form-control>
+  </ng-template>
 <ib-table
   #ibTable
   [tableName]="tableName"
@@ -35,7 +42,7 @@
   [hasAdd]="true"
   [hasEdit]="true"
   [hasDelete]="true"
-  [customItemTemplate]="{ guid: lotTemplate }"
+  [customItemTemplate]="{ guid: lotTemplate, balance: balanceTemplate }"
   [templateButtons]="[{
     template: rowActionTemplate,
     columnName: 'Action'

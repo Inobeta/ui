@@ -214,9 +214,13 @@ export class IbTableComponent implements OnChanges {
       this.sortedData = this.items.slice();
       triggerRefresh = true;
       for(let i of this.items){
-        this.rowForms.push(this.fb.group({
+        const rowGroup = {
           isChecked: new FormControl(i.ibTableItemSelected),
-        }))
+        }
+        for(let k of Object.keys(i)){
+          rowGroup[k] = new FormControl(i[k])
+        }
+        this.rowForms.push(this.fb.group(rowGroup))
       }
     }
 
@@ -241,6 +245,27 @@ export class IbTableComponent implements OnChanges {
 
   rowForm(item){
     return this.rowForms[this.items.indexOf(item)];
+  }
+
+  getFormValues(dataset = 'all'){
+    let filteredData = this.sortedData
+
+    if(dataset === 'selected'){
+      filteredData = this.getSelectedRows()
+    }
+
+    const rowData = []
+    for(let i of filteredData){
+      rowData.push(this.rowForm(i).value)
+    }
+    return rowData;
+  }
+
+  isValidForm(){
+    for(let r of this.rowForms){
+      if(!r.valid) return false;
+    }
+    return true;
   }
 
   sortData(sort: Sort, emitChange: boolean = true) {
