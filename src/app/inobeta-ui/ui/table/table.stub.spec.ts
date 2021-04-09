@@ -38,4 +38,12 @@ export class IbTableStubComponent {
   @Output() delete: EventEmitter<any> = new EventEmitter<any>();
   @Output() rowClicked: EventEmitter<any> = new EventEmitter<any>();
   @Output() rowChecked: EventEmitter<any> = new EventEmitter<any>();
+
+  getSelectedRows(){}
+  setFilter(){}
+  rowForm(){}
+  getFormValues(){}
+  isValidForm(){}
+  resetFilters(){}
+  export(){}
 }
