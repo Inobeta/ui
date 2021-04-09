@@ -3,6 +3,7 @@ import { IbTableAction, IbTableTitles } from './models/titles.model';
 import { IbTemplateModel } from './models/template.model';
 import { IbTableItem } from './models/table-item.model';
 import { jsPDFOptions } from 'jspdf';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'ib-table',
@@ -39,11 +40,11 @@ export class IbTableStubComponent {
   @Output() rowClicked: EventEmitter<any> = new EventEmitter<any>();
   @Output() rowChecked: EventEmitter<any> = new EventEmitter<any>();
 
-  getSelectedRows(){}
+  getSelectedRows(){return []}
   setFilter(){}
-  rowForm(){}
-  getFormValues(){}
-  isValidForm(){}
+  rowForm(){return new FormGroup({})}
+  getFormValues(){return {}}
+  isValidForm(){return true}
   resetFilters(){}
   export(){}
 }
