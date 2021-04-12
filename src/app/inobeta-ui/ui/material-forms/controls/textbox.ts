@@ -51,7 +51,7 @@ import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, 
       *ngIf="data.base.type === 'date'"
       [formControlName]="data.base.key"
       [id]="data.base.key"
-      type="password"
+      type="date"
       (keyup)="data.base.change(data.self)"
       (change)="data.base.change(data.self)"
     />
