@@ -35,7 +35,6 @@ export class IbDynamicFormComponent implements OnInit, OnChanges {
     if (fields && !fields.isFirstChange()) {
       this.form = this.cs.toFormGroup(fields.currentValue);
     }
-    console.log(this.form)
   }
 
   onSubmit() {

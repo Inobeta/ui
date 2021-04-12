@@ -10,9 +10,7 @@ export class IbAuthGuard implements CanActivate {
   ) {}
 
   canActivate(routeData): boolean {
-    console.log('check path', routeData);
     const isAuth = this.authService.activeSession != null;
-    console.log('this.authService.activeSession', this.authService.activeSession);
     if (!isAuth) { this.router.navigateByUrl('/login'); }
     return isAuth;
   }

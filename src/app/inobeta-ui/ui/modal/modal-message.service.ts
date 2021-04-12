@@ -11,7 +11,6 @@ export class IbModalMessageService {
     data.hasYes = (data.hasYes === undefined) ? true : data.hasYes;
     data.hasNo = (data.hasNo === undefined) ? true : data.hasNo;
 
-    console.log('component', component)
     const dialog = this.dialog.open(component, {
       data: data
     });

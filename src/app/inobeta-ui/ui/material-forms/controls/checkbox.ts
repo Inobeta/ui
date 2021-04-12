@@ -23,6 +23,7 @@ export class IbMatCheckboxComponent implements IbFormControlInterface {
 
 export class IbMatCheckboxControl extends IbFormControlBase<boolean | number | string>{
   constructor(options: IbFormControlBaseParams<boolean | number | string>){
+    if(!options.value) options.value = false;
     super(options)
     this.control = new IbFormControlBaseComponent(IbMatCheckboxComponent, {
       base: this

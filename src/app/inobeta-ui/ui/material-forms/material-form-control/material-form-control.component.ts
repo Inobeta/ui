@@ -26,7 +26,6 @@ export class IbMaterialFormControlComponent extends IbDynamicFormControlComponen
   ngOnChanges(changes: SimpleChanges): void {
     const form = changes['form']
     if(form && !form.isFirstChange()){
-      console.log('form changed')
       this.componentRef.instance.data = {
         ...this.componentRef.instance.data,
         form: form.currentValue

@@ -12,7 +12,7 @@ export class IbFormControlService {
     fields.forEach(field => {
       if(!field.key) return;
       const elem = {
-        value: field.value || '',
+        value: (field.value === undefined) ? null : field.value,
         disabled: field.disabled
       }
       let validators = []
