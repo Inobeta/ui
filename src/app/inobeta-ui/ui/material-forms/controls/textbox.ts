@@ -46,6 +46,15 @@ import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, 
       (keyup)="data.base.change(data.self)"
       (change)="data.base.change(data.self)"
     />
+    <input
+      matInput
+      *ngIf="data.base.type === 'date'"
+      [formControlName]="data.base.key"
+      [id]="data.base.key"
+      type="password"
+      (keyup)="data.base.change(data.self)"
+      (change)="data.base.change(data.self)"
+    />
     <mat-error>
       <ng-container *ngTemplateOutlet="data.formControlErrors;context: this"></ng-container>
     </mat-error>
