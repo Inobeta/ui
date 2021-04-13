@@ -17,14 +17,14 @@ export class DialogExampleComponent implements OnInit {
 
   ngOnInit() { }
 
+
   open() {
     this.dialog.show( {
         title: 'Titolo',
         message: 'Messaggio',
-        hasNo: false,
         actions: [
           { label: 'Accent action', value: 'abc', color: 'accent'},
-          { label: 'Warn action', value: 'warn', color: 'warn'}
+          { label: 'Basic action', value: 'basic'}
         ]
     }).subscribe(result => {
       this.response = `Clicked on ${result}`;

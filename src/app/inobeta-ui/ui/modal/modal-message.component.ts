@@ -19,7 +19,7 @@ import { IbModalMessage } from './modal-message.service';
         *ngIf="data.hasNo"
         mat-raised-button
         color="warn"
-        mat-dialog-close>
+        [mat-dialog-close]="false">
         {{ 'shared.ibModal.no' | translate }}
       </button>
       <button
@@ -36,8 +36,4 @@ export class IbModalMessageComponent {
   constructor(
     public dialogRef: MatDialogRef<IbModalMessageComponent>,
     @Inject(MAT_DIALOG_DATA) public data: IbModalMessage) {}
-
-  dismiss() {
-    this.dialogRef.close(false);
-  }
 }

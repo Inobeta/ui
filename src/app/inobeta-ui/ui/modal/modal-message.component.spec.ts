@@ -50,7 +50,6 @@ describe('IbModalMessageComponent', () => {
     hostComponent = fixture.componentInstance;
     component = fixture.debugElement.query(By.directive(IbModalMessageComponent)).componentInstance;
     fixture.detectChanges();
-    component.dismiss();
 
   });
 
