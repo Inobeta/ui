@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
-import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatButtonModule, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { IbModalMessageComponent } from '.';
 import { IbToolTestModule, serviceDialogStub } from '../../tools';
 
@@ -34,7 +34,8 @@ describe('IbModalMessageComponent', () => {
         IbToolTestModule,
         CommonModule,
         MatDialogModule,
-        NoopAnimationsModule
+        NoopAnimationsModule,
+        MatButtonModule
       ],
       providers: [
         { provide: MatDialogRef, useValue: serviceDialogStub},

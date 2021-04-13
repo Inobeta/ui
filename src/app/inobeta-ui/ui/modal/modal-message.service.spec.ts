@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { MatDialogModule } from '@angular/material';
+import { MatButtonModule, MatDialogModule } from '@angular/material';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IbToolTestModule } from '../../tools/tools-test.module';
@@ -10,7 +10,12 @@ import { IbModalMessageService } from './modal-message.service';
 describe('IbModalMessageService', () => {
   beforeEach(() => TestBed.configureTestingModule({
       providers: [IbModalMessageService],
-      imports: [MatDialogModule, NoopAnimationsModule, IbToolTestModule],
+      imports: [
+        MatDialogModule,
+        NoopAnimationsModule,
+        IbToolTestModule,
+        MatButtonModule
+      ],
       declarations: [IbModalMessageComponent]
     })
     .overrideModule(BrowserDynamicTestingModule, {

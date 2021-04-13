@@ -10,6 +10,7 @@ export class IbModalMessageService {
 
     data.hasYes = (data.hasYes === undefined) ? true : data.hasYes;
     data.hasNo = (data.hasNo === undefined) ? true : data.hasNo;
+    data.actions = data.actions || []
 
     const dialog = this.dialog.open(component, {
       data: data
@@ -25,4 +26,5 @@ export interface IbModalMessage{
   message: string;
   hasYes?: boolean;
   hasNo?: boolean;
+  actions?: {label: string, value: any, color?: string }[]
 }

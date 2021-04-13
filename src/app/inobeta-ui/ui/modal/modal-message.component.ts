@@ -1,5 +1,6 @@
 import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import { IbModalMessage } from './modal-message.service';
 
 @Component({
   selector: 'ib-modal-message',
@@ -7,6 +8,13 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
     <h2 mat-dialog-title>{{ data.title | translate }}</h2>
     <mat-dialog-content style="min-width:250px;">{{ data.message | translate }}</mat-dialog-content>
     <mat-dialog-actions align="end">
+      <button
+        *ngFor="let btn of data.actions"
+        mat-raised-button
+        [color]="btn.color || 'basic'"
+        [mat-dialog-close]="btn.value">
+        {{ btn.label | translate }}
+      </button>
       <button
         *ngIf="data.hasNo"
         mat-raised-button
@@ -27,9 +35,9 @@ export class IbModalMessageComponent {
 
   constructor(
     public dialogRef: MatDialogRef<IbModalMessageComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any) {}
+    @Inject(MAT_DIALOG_DATA) public data: IbModalMessage) {}
 
   dismiss() {
-    this.dialogRef.close();
+    this.dialogRef.close(false);
   }
 }
