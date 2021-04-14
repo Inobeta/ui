@@ -1,4 +1,4 @@
-import { of } from "@angular-devkit/core/node_modules/rxjs";
+import { of } from "rxjs";
 
 export class IbModalMessageServiceStub {
   show(){
