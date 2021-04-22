@@ -152,4 +152,10 @@ export class IbTableExampleComponent implements OnInit {
     form.controls.balance.setValidators([Validators.required, Validators.min(1)])
     return form
   }
+
+  rowClass(item){
+    return {
+      'evidence-row': item.guid === 'e8ab3af6-9725-4163-8706-476b5dd09dfb'
+    }
+  }
 }

@@ -54,6 +54,7 @@
   [structureTemplates]="{
     'exportTemplate': exportTemplate
   }"
+  [rowClass]="rowClass"
   (add)="consolePrint('clicked on new')"
   (edit)="consolePrint({ msg: 'edit click', data: $event})"
   (delete)="consolePrint({ msg: 'delete click', data: $event})"

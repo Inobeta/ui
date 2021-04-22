@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { MatCheckbox } from '@angular/material';
+import { FormGroup } from '@angular/forms';
+import { IbModalMessageService } from '../../modal/modal-message.service';
 import { IbTableItem } from '../models/table-item.model';
 import { IbTemplateModel } from '../models/template.model';
 import { IbTableCellAligns, IbTableTitles, IbTableTitlesTypes } from '../models/titles.model';
@@ -124,7 +124,7 @@ import { IbTableCellAligns, IbTableTitles, IbTableTitlesTypes } from '../models/
     <i
       class="material-icons ib-table-row-button"
       matRipple
-      (click)="$event.stopPropagation(); delete.emit(objectToEmit())"
+      (click)="$event.stopPropagation(); handleDelete()"
     >delete</i>
   </td>
 
@@ -140,6 +140,8 @@ export class IbTableRowComponent implements OnInit {
   @Input() formRow: FormGroup;
   @Input() hasEdit = false;
   @Input() hasDelete = false;
+  @Input() deleteConfirm = true;
+
   @Output() rowChecked: EventEmitter<any> = new EventEmitter<any>();
   @Output() edit: EventEmitter<any> = new EventEmitter<any>();
   @Output() delete: EventEmitter<any> = new EventEmitter<any>();
@@ -151,8 +153,23 @@ export class IbTableRowComponent implements OnInit {
   objectToEmit(){
     return { item: this.item, isChecked: (this.formRow.controls.isChecked.value || false), form: this.formRow};
   }
-  constructor() { }
+  constructor(private ibModal: IbModalMessageService) { }
 
   ngOnInit() {
+  }
+
+  handleDelete(){
+    if(this.deleteConfirm){
+      return this.ibModal.show({
+        title: 'shared.ibTable.confirmDeleteTitle',
+        message: 'shared.ibTable.confirmDeleteMessage'
+      }).subscribe(r => {
+        if(r){
+          this.delete.emit(this.objectToEmit())
+        }
+      })
+    }
+
+    this.delete.emit(this.objectToEmit())
   }
 }

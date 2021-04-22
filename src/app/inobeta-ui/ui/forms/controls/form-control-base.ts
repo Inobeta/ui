@@ -37,7 +37,7 @@ export class IbFormControlBase<T> {
     this.controlType = options.controlType || '';
     this.type = options.type || '';
     if(options.errors){
-      console.warn('[IbFormControlBaseParams] errors field is deprecated, please change with standard validators')
+      console.warn('[IbFormControlBaseParams] errors field is deprecated, please change it with standard validators')
     }
     this.errors = options.errors || [];
     this.options = options.options || [];
