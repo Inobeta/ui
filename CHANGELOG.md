@@ -1,7 +1,5 @@
 # Inobeta/UI Changelog
 
-## [Unreleased]
-
 ## [1.1.0]
 
 ## Base version
