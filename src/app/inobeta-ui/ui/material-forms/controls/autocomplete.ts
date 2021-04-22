@@ -1,4 +1,4 @@
-import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseParams, IbFormControlBaseComponent } from '../../forms/controls/form-control-base';
+import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseParams, IbFormControlBaseComponent, IbFormControlData } from '../../forms/controls/form-control-base';
 import { Component, Input } from '@angular/core';
 
 @Component({
@@ -39,7 +39,7 @@ import { Component, Input } from '@angular/core';
 })
 
 export class IbMatAutocompleteComponent implements IbFormControlInterface {
-  @Input() data: any;
+  @Input() data: IbFormControlData;
   autocompleteFiltered = [];
   selectedItem: any;
   multiSearchAnd = (text, searchWords) => (

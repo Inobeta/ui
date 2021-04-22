@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, IbFormControlBaseParams } from '../../forms/controls/form-control-base';
+import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, IbFormControlBaseParams, IbFormControlData } from '../../forms/controls/form-control-base';
 import { NativeDateAdapter, MatDateFormats, DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material';
 export class AppDateAdapter extends NativeDateAdapter {
   format(date: Date, displayFormat: Object): string {
@@ -57,7 +57,7 @@ export const APP_DATE_FORMATS: MatDateFormats = {
 })
 
 export class IbMatDatepickerComponent implements IbFormControlInterface {
-  @Input() data: any;
+  @Input() data: IbFormControlData;
 }
 
 

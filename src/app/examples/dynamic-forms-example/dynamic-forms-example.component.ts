@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { IbFormControlBase } from 'src/app/inobeta-ui/ui/forms/controls/form-control-base';
 import { IbTextbox } from 'src/app/inobeta-ui/ui/forms/controls/textbox';
-import { Validators } from '@angular/forms';
+import { AbstractControl, ValidatorFn, Validators } from '@angular/forms';
 import { IbMaterialFormComponent } from 'src/app/inobeta-ui/ui/material-forms/material-form/material-form.component';
 import { MyCustomTextbox, MyCustomTextboxParams } from './my-custom-textbox.model';
 import { IbMatTextboxControl } from 'src/app/inobeta-ui/ui/material-forms/controls/textbox';
@@ -21,6 +21,8 @@ import { IbMatPaddingControl } from 'src/app/inobeta-ui/ui/material-forms/contro
   styleUrls: ['./dynamic-forms-example.component.css']
 })
 export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
+  @ViewChild('customForm', {static: true}) customForm: IbMaterialFormComponent;
+
   defaultFormFields: IbFormControlBase<string>[] = [
     new IbTextbox({
       key: 'defaultTextbox',
@@ -32,20 +34,14 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
   customFormFields: IbFormControlBase<any>[] = [
     new IbMatTextboxControl({
       key: 'firstName',
-      label: 'First name *',
+      label: 'First name',
       width: '50%',
       cols: 2,
       rows: 1,
-      errors: [{
-        condition: (c) => {
-          if(c.value !== 'Pippo'){
-            c.setErrors({'incorrect': true})
-            return true;
-          }
-          return false;
-        },
-        message: 'Il valore di questo campo deve essere "Pippo"'
-      }]
+      required: true,
+      validators: [
+        forceValueValidator('Pluto', 'examples.customErrorMessageExample')
+      ]
     }),
     new IbMatTextboxControl({
       key: 'disabledField',
@@ -59,8 +55,7 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
     new IbMatTextboxControl({
       key: 'changeValueField',
       label: 'Change my value',
-      required: true,
-      validators: [Validators.minLength(3), Validators.maxLength(5)],
+      validators: [Validators.minLength(3), Validators.maxLength(5), Validators.required],
       width: '33.3%',
       change: (control) => {
         console.log('current value', control.value);
@@ -196,7 +191,25 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
       type: 'number',
       width: '25%',
       validators: [Validators.min(3), Validators.max(12)]
-    })
+    }),
+    new IbMatDatepickerControl({
+      type: 'date',
+      key: 'dateFrom',
+      width: '25%',
+      label: 'Date from',
+      debounceOnChange: 0,
+      change: (control) => {
+        const dateTo = control.parent.controls['dateTo'];
+        dateTo.updateValueAndValidity();
+      }
+    }),
+    new IbMatDatepickerControl({
+      type: 'date',
+      key: 'dateTo',
+      width: '25%',
+      label: 'Date to',
+      validators: [this.dateValidator()]
+    }),
   ];
   customFormActions = [
     new IbMatButtonControl({
@@ -243,7 +256,6 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
     })
   ]
 
-  @ViewChild('customForm', {static: false}) customForm: IbMaterialFormComponent;
 
   constructor() {}
 
@@ -268,4 +280,36 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
   onSubmit(payload) {
     console.log('example', payload);
   }
+
+  dateValidator(): ValidatorFn{
+    return (control: AbstractControl): {[key: string]: any} | null => {
+      if(!control.parent) return;
+      const dateFrom = control.parent.controls['dateFrom'];
+      const dateTo = control.parent.controls['dateTo'];
+      if(dateFrom.value && dateTo.value && dateFrom.value > dateTo.value){
+        return {
+          'customError': {
+            'message': '"Date from" non può essere maggiore di "Date to"'
+          }
+        };
+      }
+    };
+  }
+}
+
+
+
+export function forceValueValidator(forcedValue: string, errorMessage: string): ValidatorFn {
+  return (control: AbstractControl): {[key: string]: any} | null => {
+    if(control.value !== forcedValue){
+      return {
+        'customError': {
+          'message': errorMessage,
+          'params': {
+            forcedValue
+          }
+        }
+      };
+    }
+  };
 }

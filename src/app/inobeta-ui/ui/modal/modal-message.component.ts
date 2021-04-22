@@ -1,6 +1,6 @@
 import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
-import { IbModalMessage } from './modal-message.service';
+import { IbModalMessage } from './modal-message.model';
 
 @Component({
   selector: 'ib-modal-message',

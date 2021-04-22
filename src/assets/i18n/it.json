@@ -73,6 +73,7 @@
   },
   "examples": {
     "toastMenu": "Toast",
-    "toastMessage": "Messaggio toast"
+    "toastMessage": "Messaggio toast",
+    "customErrorMessageExample": "Il valore di questo campo deve essere \"{{forcedValue}}\""
   }
 }

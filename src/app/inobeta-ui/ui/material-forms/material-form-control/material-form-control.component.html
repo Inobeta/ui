@@ -1,5 +1,6 @@
 <ng-template formControlHost></ng-template>
 <ng-template #formControlErrors>
+  <!-- FIXME: remove base.errors in 1.2.0 -->
   <mat-error *ngFor="let error of base.errors">
     <span *ngIf="error.condition(self)">{{error.message | translate}}</span>
   </mat-error>
@@ -20,5 +21,8 @@
   </mat-error>
   <mat-error *ngIf="hasError('email')">
     {{ 'shared.ibForms.errors.email' | translate }}
+  </mat-error>
+  <mat-error *ngIf="hasError('customError')">
+    {{ self.errors.customError.message | translate:self.errors.customError.params }}
   </mat-error>
 </ng-template>

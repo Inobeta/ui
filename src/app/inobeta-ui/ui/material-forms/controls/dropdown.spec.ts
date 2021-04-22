@@ -2,7 +2,7 @@ import { async, TestBed } from '@angular/core/testing';
 
 import { IbToolTestModule } from '../../../tools';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IbDynamicFormsModule } from '../../forms';
 import { MatFormFieldModule, MatOptionModule, MatSelectModule } from '@angular/material';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -39,10 +39,7 @@ describe('IbMatDropdownComponent', () => {
     const componentRef = TestBed.createComponent(IbMatDropdownComponent);
     component = componentRef.componentInstance;
     component.data = {
-      self: {
-        value: [],
-        setValue: () => {}
-      },
+      self: new FormControl(),
       base: {
         options: [
           { key: 'test1', value: 'value1' },
@@ -50,7 +47,10 @@ describe('IbMatDropdownComponent', () => {
         ],
         multiple: true,
         change: () => {}
-      }
+      },
+      form: null,
+      hasError: null,
+      formControlErrors: null
     }
   });
 
