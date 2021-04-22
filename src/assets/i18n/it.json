@@ -1,5 +1,11 @@
 {
   "shared": {
+    "ui": {
+      "modalMessage": {
+        "yes": "Sì",
+        "no": "No"
+      }
+    },
     "login": {
       "email": "E-mail",
       "password": "Password",
@@ -12,11 +18,38 @@
     },
     "header": {},
     "ibTable": {
-      "noData": "Nessun elemento presente in lista",
-      "search": "Cerca",
-      "filterReset": "Resetta filtri",
-      "delete": "Elimina",
-      "update": "Modifica"
+        "noData": "Nessun elemento presente in lista",
+        "search": "Cerca",
+        "filterReset": "Resetta filtri",
+        "delete": "Elimina",
+        "edit": "Modifica",
+        "export": "Esporta",
+        "add": "Nuovo",
+        "select": "Seleziona",
+        "filter": "Filtra",
+        "apply": "Applica",
+        "true": "Si",
+        "false": "No",
+        "confirmDeleteTitle": "Attenzione",
+        "confirmDeleteMessage": "Sei sicuro di voler eliminare?"
+    },
+    "ibDropdown": {
+      "selectAll": "Seleziona tutti",
+      "selectNone": "Deseleziona tutti"
+    },
+    "ibForms": {
+      "errors": {
+        "minlength": "deve avere una lunghezza minima di {{v}} caratteri",
+        "maxlength": "deve avere una lunghezza massima di {{v}} caratteri",
+        "min": "deve avere un valore minimo di {{v}}",
+        "max": "deve avere un valore massimo di {{v}}",
+        "required": "è obbligatorio",
+        "email": "Indirizzo email non valido"
+      }
+    },
+    "ibModal": {
+      "yes": "Si",
+      "no": "No"
     },
     "profile": {
       "name": "Nome",
@@ -32,5 +65,17 @@
         "min6max32": "La password deve essere compresa tra 6 e 32 caratteri!"
       }
     }
+  },
+  "receiptGoods": {
+    "historyGoods": {
+      "table": {
+        "date": "Scadenza"
+      }
+    }
+  },
+  "examples": {
+    "toastMenu": "Toast",
+    "toastMessage": "Messaggio toast",
+    "customErrorMessageExample": "Il valore di questo campo deve essere \"{{forcedValue}}\""
   }
 }

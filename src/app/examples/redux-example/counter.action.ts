@@ -1,6 +1,9 @@
 import { createAction, props } from '@ngrx/store';
 
-export const increment = createAction('[Counter Component] Increment');
-export const decrement = createAction('[Counter Component] Decrement');
-export const reset = createAction('[Counter Component] Reset');
-export const addingNumber = createAction('[Counter Component] Adding number', props<{ numberToAdd: number}>());
+
+export const CounterActions = {
+  increment: createAction('[Counter Component] Increment'),
+  decrement: createAction('[Counter Component] Decrement'),
+  reset: createAction('[Counter Component] Reset'),
+  addingNumber: createAction('[Counter Component] Adding number', props<{ numberToAdd: number}>())
+};

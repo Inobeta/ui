@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import {Store, select} from '@ngrx/store';
 import { Observable } from 'rxjs';
-import * as CounterActions from './counter.action';
+import { CounterActions } from './counter.action';
 
 @Component({
   selector: 'ib-my-counter',

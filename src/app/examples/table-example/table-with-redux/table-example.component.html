@@ -1,0 +1,68 @@
+<ng-template #rowActionTemplate let-item="item" let-isChecked="isChecked">
+  <span class="delete-button" (click)="$event.stopPropagation();consolePrint({item: item, isChecked: isChecked})">
+      <i class="material-icons ib-table-row-button" matRipple>search</i>
+  </span>
+</ng-template>
+
+<ng-template #headerClickTemplate let-ibTable="ibTable" let-col="col">
+  <ib-table-header-popup
+    [ibTable]="ibTable"
+    [col]="col">
+  </ib-table-header-popup>
+</ng-template>
+
+
+<ng-template #exportTemplate let-ibTable="ibTable" let-col="col">
+  <!--example component customization-->
+  Clicca per esportare:&nbsp;
+  <ib-table-export
+    [selectableRows]="selectableRows"
+    (export)="ibTable.export($event || {})"
+    >
+  </ib-table-export>
+</ng-template>
+<ng-template #balanceTemplate let-item="item" let-form="form">
+  <ib-material-form-control
+    class="ibFormRow"
+    [base]="getBaseElem()"
+    [form]="setValidators(form)"
+    style="padding: 5px;width:100%;"
+  ></ib-material-form-control>
+  </ng-template>
+<ib-table
+  #ibTable
+  [tableName]="tableName"
+  [pdfCustomStyles]="pdfCustomStyles"
+  [pdfSetup]="pdfSetup"
+  [titles]="titles"
+  [items]="items"
+  [enableReduxStore]="true"
+  [selectableRows]="selectableRows"
+  [hasExport]="true"
+  [hasAdd]="true"
+  [hasEdit]="true"
+  [hasDelete]="true"
+  [customItemTemplate]="{ guid: lotTemplate, balance: balanceTemplate }"
+  [templateButtons]="[{
+    template: rowActionTemplate,
+    columnName: 'Action'
+  }]"
+  [templateHeaders]="{
+    'guid': headerClickTemplate
+  }"
+  [actions]="actions"
+  [structureTemplates]="{
+    'exportTemplate': exportTemplate
+  }"
+  [rowClass]="rowClass"
+  (add)="consolePrint('clicked on new')"
+  (edit)="consolePrint({ msg: 'edit click', data: $event})"
+  (delete)="consolePrint({ msg: 'delete click', data: $event})"
+  (rowClicked)="consolePrint({ msg: 'row click', data: $event})"
+  (rowChecked)="consolePrint({ msg: 'row selection change', data: $event})"
+
+  >
+  <ng-template #lotTemplate let-item="item">
+    <div style="font-weight: bold; color: red;">{{item.guid}}</div>
+  </ng-template>
+</ib-table>

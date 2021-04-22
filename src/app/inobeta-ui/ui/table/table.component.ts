@@ -1,39 +1,41 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, HostListener } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { Sort } from '@angular/material';
-import { TableCellAligns, TableTitles, TableTitlesTypes } from './titles.model';
-import { TemplateModel } from './template.model';
+import { IbTableAction, IbTableCellAligns, IbTableTitles, IbTableTitlesTypes } from './models/titles.model';
+import { IbTemplateModel } from './models/template.model';
 import { Store } from '@ngrx/store';
 import * as TableFiltersActions from './redux/table.action';
+import Papa from 'papaparse';
+import jsPDF, { jsPDFOptions } from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import * as XLSX from 'xlsx';
+import { TranslateService } from '@ngx-translate/core';
+import { IbTableItem } from './models/table-item.model';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+
+
 
 @Component({
   selector: 'ib-table',
   template: `
-    <div fxLayout="column" class="ib-table">
-      <div fxLayout="row" fxLayoutAlign="left center" fxLayoutGap="20px">
-        <ib-table-search
-          [filterValues]="filterValues"
-          (filterChange)="filterChange.emit($event)"
-          [hasSearch]="hasSearch">
-        </ib-table-search>
-        <div fxFlex fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="20px">
-          <ib-table-export-csv
-            (exportCsv)="csvExport()"
-            [hasCsvExport]="hasCsvExport">
-          </ib-table-export-csv>
-          <ib-table-menu-actions
-            [menuTableActions]="menuTableActions"
-            [actionsLength]="actions.length"
-            [hasActions]="hasActions">
-          </ib-table-menu-actions>
-          <ib-table-add-button
-            [hasAdd]="hasAdd"
-            (add)="add.emit()">
-          </ib-table-add-button>
-          <ib-table-filter-reset-button
-            (filterReset)="filterReset.emit()"
-            [hasFilterReset]="hasFilterReset">
-          </ib-table-filter-reset-button>
-        </div>
+    <div fxLayout="column" class="ib-table" >
+      <div
+        fxFlex
+        ib-table-actions
+        fxLayout="row"
+        fxLayoutAlign="end center"
+        fxLayoutGap="20px"
+        [structureTemplates]="structureTemplates"
+        [context]="this"
+        [hasAdd]="hasAdd"
+        [hasExport]="hasExport"
+        [selectableRows]="selectableRows"
+        [ngStyle]="{
+          'padding-bottom': (actions.length > 0 || hasAdd || hasExport) ? '5px' : '0px'
+        }"
+        [actions]="actions"
+        (add)="add.emit()"
+        (export)="export($event)"
+      >
       </div>
       <div>
         <table
@@ -45,39 +47,58 @@ import * as TableFiltersActions from './redux/table.action';
 
           <!--HEADER-->
           <thead>
-            <tr class="table-header" ib-table-header
+            <tr class="table-header"
+              ib-table-header
               [table]="this"
               [titles]="titles"
-              [selectRowName]="selectRowName"
               [selectableRows]="selectableRows"
               [templateHeaders]="templateHeaders"
               [templateButtons]="templateButtons"
               [columnFilter]="columnFilter"
+              [hasEdit]="hasEdit"
+              [hasDelete]="hasDelete"
               [currentSort]="currentSort"
               (handleSetFilter)="setFilter($event.key, $event.value, $event.indexToSet)"
             ></tr>
           </thead>
 
           <!--ROWS-->
-          <tbody ib-table-rows
-            [titles]="titles"
-            [sortedData]="sortedData"
-            [customItemTemplate]="customItemTemplate"
-            [selectableRows]="selectableRows"
-            [templateButtons]="templateButtons"
-            (rowClicked)="rowClicked.emit($event)"
-            (rowChecked)="rowChecked.emit($event)"
-          ></tbody>
+          <tbody
+          >
+            <tr
+              ib-table-row
+              class="table-row"
+              [ngClass]="rowClass(item)"
+              *ngFor="let item of sortedData"
+              [item]="item"
+              [titles]="titles"
+              [customItemTemplate]="customItemTemplate"
+              [selectableRows]="selectableRows"
+              [templateButtons]="templateButtons"
+              [formRow]="rowForm(item)"
+              [hasEdit]="hasEdit"
+              [hasDelete]="hasDelete"
+              [deleteConfirm]="deleteConfirm"
+              (rowChecked)="rowChecked.emit($event)"
+              (click)="rowClicked.emit(item)"
+              (edit)="edit.emit($event)"
+              (delete)="delete.emit($event)"
+            >
+            </tr>
+          </tbody>
 
           <tr *ngIf="sortedData.length === 0">
-            <td [attr.colspan]="4+titles.length" style="text-align: center;">
+            <td
+              [attr.colspan]="titles.length + templateButtons.length + (selectableRows ? 1 : 0) + (hasEdit ? 1 : 0) + (hasDelete ? 1 : 0)"
+              style="text-align: center;"
+            >
               <br><br>{{ 'shared.ibTable.noData' | translate }}<br><br>
             </td>
           </tr>
         </table>
       </div>
       <ng-container
-        *ngTemplateOutlet="((paginatorTemplate != null) ? paginatorTemplate : defaultPaginatorTemplate);
+        *ngTemplateOutlet="((structureTemplates['paginatorTemplate'] != null) ? structureTemplates['paginatorTemplate'] : defaultPaginatorTemplate);
         context: this"
       ></ng-container>
       <ng-template #defaultPaginatorTemplate>
@@ -89,86 +110,106 @@ import * as TableFiltersActions from './redux/table.action';
           [elemForPage]="currentPagination.pageSize">
         </ib-table-paginator>
       </ng-template>
+      <div
+        fxFlex
+        ib-table-actions
+        fxLayout="row"
+        fxLayoutAlign="end center"
+        fxLayoutGap="20px"
+        [structureTemplates]="structureTemplates"
+        [context]="this"
+        [hasAdd]="hasAdd"
+        [hasExport]="hasExport"
+        [selectableRows]="selectableRows"
+        [actions]="actions"
+        (add)="add.emit()"
+        (export)="export($event)"
+      >
+      </div>
     </div>
-    <mat-menu #menuTableActions="matMenu">
-      <button mat-menu-item *ngFor="let a of actions" (click)="actionButtonClick(a)">{{ a }}</button>
-    </mat-menu>
   `,
   styleUrls: ['./table.component.css']
 })
-export class TableComponent implements OnChanges {
+export class IbTableComponent implements OnChanges {
 
   // input necessari
   @Input() customItemTemplate: any;
-  @Input() titles: TableTitles[] = [];
-  @Input() items: any[] = [];
-  @Input() filterValues: any = {};
-  @Input() currentSort: any = {};
+  @Input() titles: IbTableTitles[] = [];
+  @Input() items: IbTableItem[] = [];
+  @Input() enableReduxStore = false;
+  @Input() currentSort: any = {}; // this input can override redux store. Can we remove it?
   @Input() selectableRows = true;
   @Input() hasAdd = false;
-  @Input() hasFilterReset = false;
-  @Input() hasSearch = false;
-  @Input() hasCsvExport = false;
+  @Input() hasEdit = false;
+  @Input() hasDelete = false;
+  @Input() hasExport = false;
   @Input() hasPaginator = true;
-  @Input() paginatorTemplate;
-  @Input() hasActions = false;
-  @Input() selectRowName = 'Seleziona';
-  @Input() templateButtons: TemplateModel[] = [];
+  @Input() actions: IbTableAction[] = [];
+
+  @Input() structureTemplates = {}; //exportTemplate, paginatorTemplate
+  @Input() templateButtons: IbTemplateModel[] = [];
   @Input() templateHeaders: any = {};
   /** { columnName: TemplateRef } */
-  @Input() tableName = 'default_table_name';
-
-  // input non necessari
-  @Input() actions: string[] = [];
+  @Input() tableName = 'default_table_name'; // change this value in order to partition redux data
+  @Input() pdfCustomStyles = {};
+  @Input() pdfSetup: jsPDFOptions = {
+    orientation: 'l',
+    unit: null,
+    format: null
+  };
+  @Input() rowClass = (item: IbTableItem) => { return {} }
+  @Input() deleteConfirm = true;
 
   // Output necessari
   @Output() filterChange: EventEmitter<any> = new EventEmitter<any>();
-  @Output() filterReset: EventEmitter<any> = new EventEmitter<any>();
   @Output() sortChange: EventEmitter<any> = new EventEmitter<any>();
   @Output() add: EventEmitter<any> = new EventEmitter<any>();
-  @Output() deleteItem: EventEmitter<any> = new EventEmitter<any>();
+  @Output() edit: EventEmitter<any> = new EventEmitter<any>();
+  @Output() delete: EventEmitter<any> = new EventEmitter<any>();
 
-  @Output() arrowClick: EventEmitter<any> = new EventEmitter<any>();
-  @Output() actionsClick: EventEmitter<any> = new EventEmitter<any>();
   @Output() rowClicked: EventEmitter<any> = new EventEmitter<any>();
   @Output() rowChecked: EventEmitter<any> = new EventEmitter<any>();
 
   /*objectKeys = Object.keys;*/
-  filterableTitles: TableTitles[] = [];
-  typeEnum = TableTitlesTypes;
-  alignEnum = TableCellAligns;
-  sortedData;
+  filterableTitles: IbTableTitles[] = [];
+  typeEnum = IbTableTitlesTypes;
+  alignEnum = IbTableCellAligns;
+  sortedData: IbTableItem[];
   currentPagination: any = {};
   columnFilter = {};
   numOfElements = 0;
+  rowForms: FormGroup[] = [];
 
-  constructor(private store: Store<any>) { }
+  constructor(
+    private store: Store<any>,
+    private translate: TranslateService,
+    private fb: FormBuilder
+    ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (changes.enableReduxStore && changes.enableReduxStore.currentValue) {
+      this.store.select(rootState => rootState.tableFiltersState.tableFilters).subscribe(tableFilters => {
+        const data = tableFilters[this.tableName];
+        if (data) {
+          if (data.paginatorFilters) {
+            this.currentPagination = data.paginatorFilters;
+          } else {
+            this.currentPagination = {
+              pageIndex: 0,
+              pageSize: 10,
+              previousPageIndex: 0
+            };
+          }
 
-    if (changes && changes.tableFilters && changes.tableFilters.currentValue) {
-      const data = changes.tableFilters.currentValue[this.tableName];
-      // questo mette a posto il paginator
-      if (data.paginatorFilters) {
-        this.currentPagination = data.paginatorFilters;
-      } else {
-        this.currentPagination = {
-          pageIndex: 0,
-          pageSize: 10,
-          previousPageIndex: 0
-        };
-      }
-      // questo mette a posto i filtri
-      for (const prop of Object.keys(data)) {
-        if (prop !== 'paginatorFilters') {
-          // filtri input
-          this.setFilter(prop, data[prop].value, this.currentPagination.pageIndex);
-          // ordinamento colonne
-          if (data[prop].columnSort) {
-            this.sortData(data[prop].columnSort.sort, data[prop].columnSort.emitChange);
+          for (const prop of Object.keys(data).filter(p => ['paginatorFilters', 'sortType'].indexOf(p) === -1)) {
+            this.setFilter(prop, data[prop].value, this.currentPagination.pageIndex, false);
+          }
+          if (data.sortType) {
+            this.sortData(data.sortType, false);
           }
         }
-      }
+
+      });
     }
 
     let triggerRefresh = false;
@@ -176,6 +217,16 @@ export class TableComponent implements OnChanges {
       this.items = changes.items.currentValue;
       this.sortedData = this.items.slice();
       triggerRefresh = true;
+      this.rowForms = [];
+      for(let i of this.items){
+        const rowGroup = {
+          isChecked: new FormControl(i.ibTableItemSelected),
+        }
+        for(let k of this.titles.map(h => h.key)){
+          rowGroup[k] = new FormControl(i[k])
+        }
+        this.rowForms.push(this.fb.group(rowGroup))
+      }
     }
 
     if (changes.titles && changes.titles.currentValue) {
@@ -197,6 +248,31 @@ export class TableComponent implements OnChanges {
     }
   }
 
+  rowForm(item){
+    return this.rowForms[this.items.indexOf(item)];
+  }
+
+  getFormValues(dataset = 'all'){
+    let filteredData = this.sortedData
+
+    if(dataset === 'selected'){
+      filteredData = this.getSelectedRows()
+    }
+
+    const rowData = []
+    for(let i of filteredData){
+      rowData.push(this.rowForm(i).value)
+    }
+    return rowData;
+  }
+
+  isValidForm(){
+    for(let r of this.rowForms){
+      if(!r.valid) return false;
+    }
+    return true;
+  }
+
   sortData(sort: Sort, emitChange: boolean = true) {
     if (Object.keys(sort).length !== 0) {
       this.store.dispatch(TableFiltersActions.addSortToTable({
@@ -213,7 +289,7 @@ export class TableComponent implements OnChanges {
     this.sortedData = this.items.slice();
 
     for (const k in this.columnFilter) {
-      if (!this.columnFilter[k]) {
+      if (!this.columnFilter[k] && this.columnFilter[k] !== false) {
         delete this.columnFilter[k];
       }
     }
@@ -225,18 +301,43 @@ export class TableComponent implements OnChanges {
         for (const k in this.columnFilter) {
           /*TODO INSERT COLUMN TYPE HERE */
           switch (this.titles.find(t => t.key === k).type) {
-            case TableTitlesTypes.STRING:
+            case IbTableTitlesTypes.ANY:
+              const translated = this.translate.instant(el[k])
+              if (!(translated && translated.includes && translated.toLowerCase().includes(this.columnFilter[k].toLowerCase()))) {
+                include = false;
+              }
+              break
+            case IbTableTitlesTypes.STRING:
+            case IbTableTitlesTypes.CUSTOM:
               if (!(el[k] && el[k].includes && el[k].toLowerCase().includes(this.columnFilter[k].toLowerCase()))) {
                 include = false;
               }
               break;
-            case TableTitlesTypes.NUMBER:
-              if (!(el[k] && el[k].toString() && el[k].toString().includes(this.columnFilter[k].toString().toLowerCase()))) {
-                include = false;
+            case IbTableTitlesTypes.NUMBER:
+            case IbTableTitlesTypes.INPUT_NUMBER:
+              for(let cond of this.columnFilter[k]){
+                include = eval(`(${el[k]} ${cond.condition} ${cond.value})`)
+                if(!include){
+                  break;
+                }
               }
               break;
+            case IbTableTitlesTypes.DATE:
+              for(let cond of this.columnFilter[k]){
+                include = eval(`(${(new Date(el[k])).getTime()} ${cond.condition} ${(new Date(cond.value)).getTime()})`)
+                if(!include){
+                  break;
+                }
+              }
+            break;
+            case IbTableTitlesTypes.BOOLEAN:
+              include = (el[k] === this.columnFilter[k])
+            break;
             default:
               include = true;
+          }
+          if(!include){
+            break;
           }
 
         }
@@ -260,15 +361,25 @@ export class TableComponent implements OnChanges {
     this.paginationHandle();
   }
 
-  setFilter(key, value, indexToSet = 0) {
+  setFilter(key, value, indexToSet = 0, redux = true, tableName = null) {
     this.columnFilter[key] = value;
     this.currentPagination.pageIndex = indexToSet;
     this.pageChangeHandle(this.currentPagination);
-    this.store.dispatch(TableFiltersActions.addFilterToTable({
-      tableName: this.tableName,
-      filterName: key,
-      filterValue: value
-    }));
+    if(redux){
+      if(!tableName){
+        if(!tableName && this.tableName === 'default_table_name'){
+          console.warn('[IbTableComponent] missing table name on redux filter call')
+        }
+        tableName = this.tableName
+      }
+
+      this.store.dispatch(TableFiltersActions.addFilterToTable({
+        tableName: tableName,
+        filterName: key,
+        filterValue: value
+      }));
+    }
+
   }
 
   resetFilters() {
@@ -309,36 +420,111 @@ export class TableComponent implements OnChanges {
     this.sortedData = paginatedData;
   }
 
-  csvExport() {
-    const headerMap = this.titles.map((el) => el.key);
-    const options = {
-      fieldSeparator: ',',
-      quoteStrings: '"',
-      decimalseparator: '.',
-      showLabels: true,
-      showTitle: false,
-      useBom: true,
-      headers: headerMap
+  getSelectedRows(){
+    return this.items.filter(sd => this.rowForm(sd).controls.isChecked.value)
+  }
+
+  async export({ format, dataset }) {
+    const previousPagination = this.currentPagination;
+    if (dataset === 'all') {
+      const pagination = {
+        tableName: this.tableName,
+        previousPageIndex: 0,
+        pageIndex: 0,
+        pageSize: this.items.length,
+        lengthP: this.items.length
+      };
+      this.store.dispatch(TableFiltersActions.addPaginatorFiltersToTable(pagination));
+      this.currentPagination = pagination;
+      this.sortData(this.currentSort, false);
+    }
+
+    const keys = this.titles.map(h => h.key);
+    const getValueFromKey = (row, key) => {
+      const value = row[key];
+      const h = this.titles.find(t => t.key === key);
+      return value;
     };
+    let filteredData = this.sortedData
+      .map(
+        row => Object.keys(row)
+          .filter(key => keys.includes(key))
+          .reduce((o, key) => ({
+            ...o,
+            [key]: getValueFromKey(row, key)
+          }), {})
+    );
 
-    /*new Angular2Csv(this.sortedData.map((el) => {
-      const retEl = {}
-      headerMap.map((h) => {
-        retEl[h] = (el[h] !== undefined) ? el[h] : ''
-      })
-      return retEl
-    }), 'Export Data', options);*/
+    if(dataset === 'selected'){
+      filteredData = this.getSelectedRows()
+    }
+
+    const translatedHeaders = await Promise.all(this.titles.map(async t => ({
+      value: await this.translate.get(t.value).toPromise(),
+      key: t.key,
+    })));
+
+    if (format === 'csv') {
+      this.csvExport(filteredData, translatedHeaders);
+    }
+
+    if (format === 'pdf') {
+      this.pdfExport(filteredData, translatedHeaders);
+    }
+
+    if (format === 'xlsx') {
+      this.xlsxExport(filteredData, translatedHeaders);
+    }
+
+    if (dataset === 'all') {
+      this.currentPagination = previousPagination;
+      this.sortData(this.currentSort, false);
+    }
   }
 
-  actionButtonClick(a) {
-    this.actionsClick.emit({
-      action: a,
-      data: this.sortedData.filter((el) => el.checked)
+  pdfExport(body, titles) {
+    const columns = titles.map(t => ({ header: t.value, dataKey: t.key }));
+    const doc = new jsPDF(this.pdfSetup.orientation, this.pdfSetup.unit, this.pdfSetup.format);
+    autoTable(doc, {
+      ...this.pdfCustomStyles,
+      body,
+      columns,
     });
+    doc.save(this.tableName + '.pdf');
   }
 
-  emitItemAndCheckbox(item, checkbox) {
-    this.rowChecked.emit({ item, isChecked: checkbox });
+  xlsxExport(filteredData, titles) {
+    const header = titles.reduce((o, t) => ({ ...o, [t.key]: t.value }), {});
+    const data = [header, ...filteredData];
+    const ws = XLSX.utils.json_to_sheet(data, { skipHeader: true });
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, this.tableName);
+    XLSX.writeFile(wb, this.tableName + '.xlsx');
+  }
+
+  csvExport(filteredData, titles) {
+    const nameFromKey = (key) =>
+      titles.find(t => t.key === key).value;
+    const data = filteredData.map(row => Object.keys(row).reduce((o, key) => ({ ...o, [nameFromKey(key)]: row[key] }), {}));
+    const csv = Papa.unparse(data, {
+      quotes: true,
+      delimiter: ';',
+    });
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    if (navigator.msSaveBlob) { // IE 10+
+      navigator.msSaveBlob(blob, this.tableName + '.csv');
+    } else {
+      const link = document.createElement('a');
+      if (link.download !== undefined) {
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', this.tableName + '.csv');
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    }
   }
 }
 

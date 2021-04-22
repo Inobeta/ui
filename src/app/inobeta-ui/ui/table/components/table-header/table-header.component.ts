@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, EventEmitter, Output, HostListener } from '@angular/core';
-import { TableTitles } from '../../titles.model';
-import { TemplateModel } from '../../template.model';
+import { ibTableSupportedFilters, IbTableTitles, IbTableTitlesTypes } from '../../models/titles.model';
+import { IbTemplateModel } from '../../models/template.model';
 
 @Component({
   // tslint:disable-next-line: component-selector
@@ -8,16 +8,21 @@ import { TemplateModel } from '../../template.model';
   templateUrl: './table-header.component.html',
   styleUrls: ['./table-header.component.css']
 })
-export class TableHeaderComponent implements OnInit {
+export class IbTableHeaderComponent implements OnInit {
   @Input() table: any;
-  @Input() titles: TableTitles[] = [];
+  @Input() titles: IbTableTitles[] = [];
   @Input() selectableRows = true;
-  @Input() selectRowName = 'Seleziona';
   @Input() currentSort: any = {};
   @Input() templateHeaders: any = {};
-  @Input() templateButtons: TemplateModel[] = [];
+  @Input() templateButtons: IbTemplateModel[] = [];
   @Input() columnFilter = {};
+  @Input() hasEdit = false;
+  @Input() hasDelete = false;
+
+  renderContextMenu = {};
   visibleHeaders = {};
+  columnTypes = IbTableTitlesTypes;
+  supportedFilters = ibTableSupportedFilters;
 
   @Output() handleSetFilter = new EventEmitter<any>();
 

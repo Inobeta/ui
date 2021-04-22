@@ -31,38 +31,13 @@ const mainTableFiltersReducer = createReducer(INITIAL_TABLE_FILTERS_STATE,
       ...state
     };
   }),
-  on(TableFiltersActions.addSortToTable, (state, {tableName, sortType, emitChange}) => {
-    let obj;
-    let obj2;
-    let obj3;
+on(TableFiltersActions.addSortToTable, (state, {tableName, sortType/*, emitChange*/}) => {
     if (state.tableFilters[tableName]) {
-      if (state.tableFilters[tableName][sortType.active]) {
-        if (state.tableFilters[tableName][sortType.active]['columnSort']) {
-          state.tableFilters[tableName][sortType.active]['columnSort'].sort = sortType;
-          state.tableFilters[tableName][sortType.active]['columnSort'].emitChange = emitChange;
-        } else {
-          obj = {};
-          obj['sort'] = sortType;
-          obj['emitChange'] = emitChange;
-          state.tableFilters[tableName][sortType.active]['columnSort'] = obj;
-        }
-      } else {
-        obj = {};
-        obj['sort'] = sortType;
-        obj['emitChange'] = emitChange;
-        obj2 = {};
-        obj2['columnSort'] = obj;
-        state.tableFilters[tableName][sortType.active] = obj2;
-      }
+      state.tableFilters[tableName].sortType = sortType;
     } else {
-      obj = {};
-      obj['sort'] = sortType;
-      obj['emitChange'] = emitChange;
-      obj2 = {};
-      obj2['columnSort'] = obj;
-      obj3 = {};
-      obj3[sortType.active] = obj2;
-      state.tableFilters[tableName] = obj3;
+      state.tableFilters[tableName] = {
+        sortType
+      };
     }
     return {
       ...state
@@ -89,6 +64,6 @@ const mainTableFiltersReducer = createReducer(INITIAL_TABLE_FILTERS_STATE,
   })
 );
 
-export function tableFiltersReducer(state: ITableFiltersState = INITIAL_TABLE_FILTERS_STATE, action: Action) {
+export function ibTableFiltersReducer(state: ITableFiltersState = INITIAL_TABLE_FILTERS_STATE, action: Action) {
   return mainTableFiltersReducer(state, action);
 }

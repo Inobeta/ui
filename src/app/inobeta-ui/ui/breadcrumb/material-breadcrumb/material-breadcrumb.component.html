@@ -1,0 +1,14 @@
+<ul class="ibBreadcrumbs">
+  <li class="ibBreadcrumbs-link">
+    <ng-container *ngIf="!home.icon; else iconTemplate">
+      <a [routerLink]="[home.url]">{{home.label | translate}}</a>
+    </ng-container>
+    <ng-template #iconTemplate>
+      <a mat-icon-button aria-label="Homepage" [routerLink]="[home.url]"><mat-icon>{{home.icon}}</mat-icon></a>
+    </ng-template>
+  </li>
+  <li *ngFor="let item of items" class="ibBreadcrumbs-link">
+    <mat-icon>chevron_right</mat-icon>
+    <a [routerLink]="[item.url]">{{item.label | translate}}</a>
+  </li>
+</ul>

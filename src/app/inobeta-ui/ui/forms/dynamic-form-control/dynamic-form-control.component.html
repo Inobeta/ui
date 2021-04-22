@@ -1,0 +1,27 @@
+<div [formGroup]="form">
+  <label [attr.for]="base.key" class="ibFormControl-label">{{base.label}}</label>
+
+  <div [ngSwitch]="base.controlType">
+
+    <input
+      [ngSwitch]="base.controlType"
+      *ngSwitchCase="'textbox'"
+      [formControlName]="base.key"
+      [id]="base.key"
+      [type]="base.type"
+      (keyup)="base.change(self)"
+    >
+
+    <select
+      [id]="base.key"
+      *ngSwitchCase="'dropdown'"
+      [formControlName]="base.key"
+      (change)="base.change(self)"
+    >
+      <option *ngFor="let opt of base.options" [value]="opt.key">{{opt.value}}</option>
+    </select>
+
+  </div>
+
+  <div class="ibFormControl-errorMessage" *ngIf="self.invalid && self.dirty">{{base.label}} is required</div>
+</div>

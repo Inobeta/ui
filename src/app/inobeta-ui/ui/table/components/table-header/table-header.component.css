@@ -2,14 +2,9 @@
   align-items: center;
   cursor: none !important;
 }
-#select-row-name{
-  cursor: default;
-}
 th {
-  color: #555;
   font-weight: normal;
-  padding: 15px;
-  margin-bottom: 20px;
+  padding: 10px;
 }
 td {
   border-bottom: 1px solid #ccc;
@@ -22,4 +17,9 @@ td {
 .table-header-title{
   text-align: left;
   cursor: pointer;
+}
+
+.filter-value{
+  font-size: 12px;
+  line-height: 15px;;
 }

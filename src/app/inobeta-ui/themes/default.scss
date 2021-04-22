@@ -1,0 +1,90 @@
+@mixin inobeta-ui-theme($theme-or-color-config){
+  @include angular-material-theme($theme-or-color-config);
+  @include ib-table($theme-or-color-config);
+}
+
+
+
+.ib-toast-success{
+  background-color: green !important;
+  font-weight: bold !important;
+  color: white !important;
+}
+
+.ib-toast-warning{
+  background-color: orange !important;
+  font-weight: bold !important;
+  color: white !important;
+}
+
+.ib-toast-error{
+  background-color: red !important;
+  font-weight: bold !important;
+  color: white !important;
+}
+/*
+$background: map-get($theme, background);
+
+.custom-class-a {
+  background-color: mat-color($background, card);
+  color: mat-color($mat-green, 700);
+}
+*/
+@mixin ib-table($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+
+  .table-header {
+    background-color:mat-color($primary, 500);
+  }
+
+  .filter-button,
+  button.mat-sort-header-button,
+  .table-header-title,
+  ib-table .mat-sort-header-arrow, ib-table .table-sort-indicator {
+    color: mat-color($primary, default-contrast);
+  }
+
+  .ib-table-row-button {
+    color: mat-color($primary, default-contrast);
+    background-color:mat-color($primary, 500);
+    padding: 8px;
+    border-radius: 5px;
+    font-size: 22px;
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+  }
+  ib-table td{
+    border-bottom: 1px solid #ccc;
+    padding: 5px 5px !important;
+  }
+
+  .ib-table-column-type-number{
+    text-align: right !important;
+    padding-right: 20px !important;
+  }
+
+}
+
+.ib-material-form-grid ib-material-form-control{
+  max-width: 100% !important;
+  height: 100%;
+}
+
+div[ib-mat-checkbox]{
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.ib-material-form-grid div[ib-mat-label]{
+  padding-bottom: 1.34375em;
+}
+.ib-material-form-grid div[ib-mat-label],
+.ib-material-form-grid div[ib-mat-label] div{
+  height: 100% !important;
+  align-items: center;
+}
+

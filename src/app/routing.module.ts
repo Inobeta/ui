@@ -1,8 +1,15 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterModule, Routes} from '@angular/router';
-import { IbTableExampleComponent } from 'src/app/examples/table-example/ib-tableExample.component';
+import { IbTableExampleComponent } from 'src/app/examples/table-example/table-with-redux/table-example.component';
 import { HomeComponent } from 'src/app/examples/home.component';
+import { DynamicFormsExampleComponent } from './examples/dynamic-forms-example/dynamic-forms-example.component';
+import { HttpExampleComponent } from './examples/http-example.component';
+import { MyCounterComponent } from './examples/redux-example/my-counter.component';
+import { DialogExampleComponent } from './examples/dialog-example/dialog-example.component';
+import { IbToastExampleComponent } from './examples/toast-example/toast-example.component';
+import { IbTableLandingComponent } from './examples/table-example/table-landing.component';
+import { IbTableExampleNoReduxComponent } from './examples/table-example/table-without-redux/table-example.component';
 
 const appRoutes: Routes = [
   {
@@ -11,7 +18,45 @@ const appRoutes: Routes = [
   },
   {
     path: 'table',
-    component: IbTableExampleComponent
+    data: { breadcrumb: 'Table' },
+    component: IbTableLandingComponent,
+    children: [
+      {
+        path: 'redux',
+        data: { breadcrumb: 'With redux' },
+        component: IbTableExampleComponent
+      },
+      {
+        path: 'noredux',
+        data: { breadcrumb: 'Without redux' },
+        component: IbTableExampleNoReduxComponent
+      }
+    ]
+  },
+  {
+    path: 'forms',
+    data: { breadcrumb: 'Forms' },
+    component: DynamicFormsExampleComponent,
+  },
+  {
+    path: 'redux',
+    data: { breadcrumb: 'Redux' },
+    component: MyCounterComponent,
+  },
+  {
+    path: 'http',
+    data: { breadcrumb: 'Http' },
+    component: HttpExampleComponent,
+  },
+  {
+    path: 'dialog',
+    data: { breadcrumb: 'Dialog' },
+    component: DialogExampleComponent,
+  },
+  {
+    path: 'toast',
+    data: { breadcrumb: 'examples.toastMenu' },
+    component: IbToastExampleComponent
   },
   {
     path: '**',
