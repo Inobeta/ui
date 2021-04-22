@@ -1,6 +1,6 @@
 import { Component, Input } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { IbFormControlBase, IbFormControlBaseComponent, IbFormControlBaseParams, IbFormControlInterface } from "../../forms/controls/form-control-base";
+import { IbFormControlBase, IbFormControlBaseComponent, IbFormControlBaseParams, IbFormControlData, IbFormControlInterface } from "../../forms/controls/form-control-base";
 
 @Component({
   selector: '[ib-mat-button]',
@@ -18,7 +18,7 @@ import { IbFormControlBase, IbFormControlBaseComponent, IbFormControlBaseParams,
 })
 
 export class IbMatButtonComponent implements IbFormControlInterface {
-  @Input() data: any;
+  @Input() data: IbMatButtonData;
   handleActionClick() {
     if (this.data.base.key === 'submit') {
       return;
@@ -51,4 +51,9 @@ export interface IbMatButtonParams extends IbFormControlBaseParams<string> {
   handler?: (form: FormGroup) => void;
 }
 
+
+
+export interface IbMatButtonData extends IbFormControlData {
+  base: IbMatButtonParams;
+}
 

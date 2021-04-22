@@ -29,7 +29,9 @@
         "filter": "Filtra",
         "apply": "Applica",
         "true": "Si",
-        "false": "No"
+        "false": "No",
+        "confirmDeleteTitle": "Attenzione",
+        "confirmDeleteMessage": "Sei sicuro di voler eliminare?"
     },
     "ibDropdown": {
       "selectAll": "Seleziona tutti",
@@ -73,6 +75,7 @@
   },
   "examples": {
     "toastMenu": "Toast",
-    "toastMessage": "Messaggio toast"
+    "toastMessage": "Messaggio toast",
+    "customErrorMessageExample": "Il valore di questo campo deve essere \"{{forcedValue}}\""
   }
 }

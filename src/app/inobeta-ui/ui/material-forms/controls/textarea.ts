@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { IbFormControlBase, IbFormControlBaseComponent, IbFormControlBaseParams, IbFormControlInterface } from '../../forms/controls/form-control-base';
+import { IbFormControlBase, IbFormControlBaseComponent, IbFormControlBaseParams, IbFormControlData, IbFormControlInterface } from '../../forms/controls/form-control-base';
 
 @Component({
   selector: '[ib-mat-textarea]',
@@ -23,7 +23,7 @@ import { IbFormControlBase, IbFormControlBaseComponent, IbFormControlBaseParams,
 })
 
 export class IbMatTextareaComponent implements IbFormControlInterface {
-  @Input() data: any;
+  @Input() data: IbMatTextareaData;
 }
 
 
@@ -41,4 +41,9 @@ export class IbMatTextareaControl extends IbFormControlBase<string>{
 
 export interface IbMatTextareaParams extends IbFormControlBaseParams<string>{
   height?: string;
+}
+
+
+export interface IbMatTextareaData extends IbFormControlData {
+  base: IbMatTextareaParams;
 }

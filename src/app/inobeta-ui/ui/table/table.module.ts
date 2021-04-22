@@ -14,6 +14,7 @@ import { IbTableActionsComponent } from './components/table-actions.component';
 import { IbTableButtonComponent } from './components/table-button.component';
 import { IbTableHeaderFilterComponent } from './components/table-header-filter-component';
 import localeIt from '@angular/common/locales/it';
+import { IbModalModule } from '../modal';
 registerLocaleData(localeIt, 'it');
 
 const COMPONENTS = [
@@ -56,7 +57,8 @@ const COMPONENTS = [
         MatRippleModule,
         TranslateModule.forChild({
             extend: true
-        })
+        }),
+        IbModalModule
     ],
     exports: [...COMPONENTS],
     entryComponents: [

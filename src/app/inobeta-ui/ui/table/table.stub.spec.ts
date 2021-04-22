@@ -32,6 +32,9 @@ export class IbTableStubComponent {
     unit: null,
     format: null
   };
+  @Input() rowClass = (item: IbTableItem) => { return {} }
+  @Input() deleteConfirm = true;
+
   @Output() filterChange: EventEmitter<any> = new EventEmitter<any>();
   @Output() sortChange: EventEmitter<any> = new EventEmitter<any>();
   @Output() add: EventEmitter<any> = new EventEmitter<any>();

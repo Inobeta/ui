@@ -11,10 +11,10 @@ import { FormGroup, FormControl } from '@angular/forms';
 })
 //@deprecated
 export class IbDynamicFormControlComponent {
-  @Input() base: IbFormControlBase<string>;
+  @Input() base: IbFormControlBase<any>;
   @Input() form: FormGroup;
 
-  get self():FormControl { return this.form.get(this.base.key) as FormControl; }
+  get self(): FormControl { return this.form.get(this.base.key) as FormControl; }
 
   hasError(e) {
     return this.self.hasError(e);

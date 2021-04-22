@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, IbFormControlBaseParams } from '../../forms/controls/form-control-base';
+import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, IbFormControlBaseParams, IbFormControlData } from '../../forms/controls/form-control-base';
 
 @Component({
   selector: '[ib-mat-dropdown]',
@@ -45,7 +45,7 @@ https://stackblitz.com/edit/angular-ev8r2t?file=src%2Fapp%2Fselect-multiple-exam
 })
 
 export class IbMatDropdownComponent implements IbFormControlInterface {
-  @Input() data: any;
+  @Input() data: IbDropdownData;
   all = false;
   selectAll() {
     let newValues: any = [];
@@ -89,3 +89,7 @@ export interface IbMatDropdownParams extends IbFormControlBaseParams<string | st
   multiple?: boolean;
 }
 
+
+export interface IbDropdownData extends IbFormControlData {
+  base: IbMatDropdownParams;
+}

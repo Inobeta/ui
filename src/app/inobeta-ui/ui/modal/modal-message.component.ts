@@ -1,12 +1,12 @@
 import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
-import { IbModalMessage } from './modal-message.service';
+import { IbModalMessage } from './modal-message.model';
 
 @Component({
   selector: 'ib-modal-message',
   template: `
     <h2 mat-dialog-title>{{ data.title | translate }}</h2>
-    <mat-dialog-content style="min-width:250px;">{{ data.message | translate }}</mat-dialog-content>
+    <mat-dialog-content style="min-width:350px;min-height: 10vh;">{{ data.message | translate }}</mat-dialog-content>
     <mat-dialog-actions align="end">
       <button
         *ngFor="let btn of data.actions"

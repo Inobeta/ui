@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, IbFormControlBaseParams } from '../../forms/controls/form-control-base';
+import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, IbFormControlBaseParams, IbFormControlData } from '../../forms/controls/form-control-base';
 import { Injector, Pipe, PipeTransform, InjectionToken } from '@angular/core';
 import { PercentPipe, CurrencyPipe, DecimalPipe, DatePipe } from '@angular/common';
 
@@ -26,7 +26,7 @@ import { PercentPipe, CurrencyPipe, DecimalPipe, DatePipe } from '@angular/commo
 })
 
 export class IbMatLabelComponent implements IbFormControlInterface {
-  @Input() data: any;
+  @Input() data: IbFormControlData;
 }
 
 

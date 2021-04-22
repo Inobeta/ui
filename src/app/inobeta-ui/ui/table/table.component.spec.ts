@@ -18,6 +18,7 @@ import { IbTableHeaderFilterComponent } from './components/table-header-filter-c
 import { IbTableButtonComponent } from './components/table-button.component';
 import { IbTableActionsComponent } from './components/table-actions.component';
 import { IbTableRowComponent } from './components/table-row.component';
+import { IbModalTestModule } from '../modal';
 
 @Component({
   selector: 'host-test',
@@ -235,7 +236,8 @@ describe('IbTableComponent', () => {
         MatButtonModule,
         MatSnackBarModule,
         MatCardModule,
-        NoopAnimationsModule
+        NoopAnimationsModule,
+        IbModalTestModule
       ]
     })
     .compileComponents();

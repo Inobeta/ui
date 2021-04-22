@@ -68,6 +68,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
             <tr
               ib-table-row
               class="table-row"
+              [ngClass]="rowClass(item)"
               *ngFor="let item of sortedData"
               [item]="item"
               [titles]="titles"
@@ -77,6 +78,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
               [formRow]="rowForm(item)"
               [hasEdit]="hasEdit"
               [hasDelete]="hasDelete"
+              [deleteConfirm]="deleteConfirm"
               (rowChecked)="rowChecked.emit($event)"
               (click)="rowClicked.emit(item)"
               (edit)="edit.emit($event)"
@@ -155,6 +157,8 @@ export class IbTableComponent implements OnChanges {
     unit: null,
     format: null
   };
+  @Input() rowClass = (item: IbTableItem) => { return {} }
+  @Input() deleteConfirm = true;
 
   // Output necessari
   @Output() filterChange: EventEmitter<any> = new EventEmitter<any>();
