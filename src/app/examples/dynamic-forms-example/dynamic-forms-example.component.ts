@@ -208,7 +208,7 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
       key: 'dateTo',
       width: '25%',
       label: 'Date to',
-      validators: [this.dateValidator()]
+      validators: [this.dateValidator(), this.multipleCustomExample()]
     }),
   ];
   customFormActions = [
@@ -295,6 +295,22 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
       }
     };
   }
+
+
+
+  multipleCustomExample(): ValidatorFn{
+    return (control: AbstractControl): {[key: string]: any} | null => {
+      console.log('control.value', control.value)
+      if(control.value && control.value.getTime() < (new Date('2021-04-15')).getTime()){
+        return {
+          'customError': {
+            'message': 'Impostare un valore successivo al 15/04/2021'
+          }
+        };
+      }
+    };
+  }
+
 }
 
 

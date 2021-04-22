@@ -23,7 +23,7 @@ import { IbFormControlBase, IbFormControlBaseComponent, IbFormControlBaseParams,
 })
 
 export class IbMatTextareaComponent implements IbFormControlInterface {
-  @Input() data: IbFormControlData;
+  @Input() data: IbMatTextareaData;
 }
 
 
@@ -41,4 +41,9 @@ export class IbMatTextareaControl extends IbFormControlBase<string>{
 
 export interface IbMatTextareaParams extends IbFormControlBaseParams<string>{
   height?: string;
+}
+
+
+export interface IbMatTextareaData extends IbFormControlData {
+  base: IbMatTextareaParams;
 }
