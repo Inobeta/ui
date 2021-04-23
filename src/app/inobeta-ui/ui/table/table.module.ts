@@ -14,7 +14,7 @@ import { IbTableActionsComponent } from './components/table-actions.component';
 import { IbTableButtonComponent } from './components/table-button.component';
 import { IbTableHeaderFilterComponent } from './components/table-header-filter-component';
 import localeIt from '@angular/common/locales/it';
-import { IbModalModule } from '../modal';
+import { IbModalModule } from '../modal/modal.module';
 registerLocaleData(localeIt, 'it');
 
 const COMPONENTS = [
