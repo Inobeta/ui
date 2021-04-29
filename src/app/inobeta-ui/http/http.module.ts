@@ -57,8 +57,9 @@ const services = [
     ...entryComponents
   ]
 })
+
 export class IbHttpModule {
-  static injector: Injector;
+  static injector: Injector = null;
 
   constructor(injector: Injector) {
     IbHttpModule.injector = injector;
