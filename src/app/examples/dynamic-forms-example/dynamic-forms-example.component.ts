@@ -112,6 +112,13 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
         console.log('current value', control.value);
       }
     }),
+
+    new IbMatCheckboxControl({
+      key: 'checked',
+      label: 'check this',
+      width: '25%'
+    }),
+
     new IbMatRadioControl({
       key: 'food',
       value: 'test-1',
@@ -121,11 +128,6 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
         { key: 'las-1', value: 'Lasagne' },
         { key: 'macc-2', value: 'Maccheroni' },
       ]
-    }),
-    new IbMatCheckboxControl({
-      key: 'checked',
-      label: 'check this',
-      width: '25%'
     }),
 
     new IbMatTextboxControl({

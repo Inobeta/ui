@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { Injector, NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { IbHttpClientService } from './http/http-client.service';
 import { CommonModule } from '@angular/common';
@@ -11,6 +11,7 @@ import { IbAuthGuard, IbLoginGuard } from './auth/guard.service';
 import { IbSpinnerLoadingComponent } from './http/spinner-loading.component';
 import { IbLoginComponent } from './pages/login.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { IbToastModule } from '../ui/toast/toast.module';
 
 
 const entryComponents = [];
@@ -40,7 +41,8 @@ const services = [
     }),
     CommonModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    IbToastModule
   ],
   exports: [
     ...components
@@ -55,4 +57,10 @@ const services = [
     ...entryComponents
   ]
 })
-export class IbHttpModule { }
+export class IbHttpModule {
+  static injector: Injector;
+
+  constructor(injector: Injector) {
+    IbHttpModule.injector = injector;
+  }
+}

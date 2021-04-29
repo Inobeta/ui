@@ -2,6 +2,7 @@
 export * from './auth/redux/session.reducer';
 export * from './auth/redux/session.actions';
 export * from './auth/session.model';
+export * from './http/messages.decorator';
 export * from './http/spinner-loading.component';
 export * from './http/http-client.service';
 export * from './http/response-handler.service';

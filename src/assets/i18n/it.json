@@ -51,6 +51,10 @@
       "yes": "Si",
       "no": "No"
     },
+    "ibCrudDetailSave": {
+      "success": "Salvataggio avvenuto con successo",
+      "error": "Errore in fase di salvataggio"
+    },
     "profile": {
       "name": "Nome",
       "surname": "Cognome",

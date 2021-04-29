@@ -1,9 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import { map } from 'rxjs/operators';
 import { IbHttpClientService } from 'src/app/inobeta-ui/http/http/http-client.service';
+import { ibCrudDetailSave } from '../inobeta-ui/http/http/messages.decorator';
 
 @Component({
   selector: 'app-test',
   template: `
+
+  <button (click)="decoratorTest()">Test decorator (success)</button>
+  <button (click)="decoratorTest('some-error')">Test decorator (error)</button>
 
   <pre>
     {{ loadedData | json }}
@@ -23,4 +28,19 @@ export class HttpExampleComponent implements OnInit {
       this.loadedData = data;
     });
   }
+
+  @ibCrudDetailSave(true)
+  serviceCall(wrong = '') {
+    return this.h.get(`assets/i18n/it.json${wrong}`).pipe(
+      map((x) => {
+        console.log('additional map', x);
+        return x;
+      })
+    );
+  }
+
+  decoratorTest(wrong = '') {
+    this.serviceCall(wrong).subscribe();
+  }
+
 }
