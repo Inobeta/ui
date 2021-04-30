@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { IbHttpClientService } from 'src/app/inobeta-ui/http/http/http-client.service';
-import { ibCrudDetailSave } from '../inobeta-ui/http/http/messages.decorator';
+import { ibCrudToast } from '../inobeta-ui/http/http/messages.decorator';
 
 @Component({
   selector: 'app-test',
@@ -29,7 +29,7 @@ export class HttpExampleComponent implements OnInit {
     });
   }
 
-  @ibCrudDetailSave(true)
+  @ibCrudToast(true)
   serviceCall(wrong = '') {
     return this.h.get(`assets/i18n/it.json${wrong}`).pipe(
       map((x) => {

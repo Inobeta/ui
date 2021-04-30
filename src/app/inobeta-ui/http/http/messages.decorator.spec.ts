@@ -4,18 +4,18 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
 import { IbToolTestModule } from '../../tools';
 import { IbHttpModule } from '../http.module';
-import { ibCrudDetailSave } from './messages.decorator';
+import { ibCrudToast } from './messages.decorator';
 
-describe('ibCrudDetailSave Decorator', () => {
+describe('ibCrudToast Decorator', () => {
   @Injectable()
   class SampleService {
-    @ibCrudDetailSave(true)
+    @ibCrudToast(true)
     serviceCall() {
       return of({});
     }
 
 
-    @ibCrudDetailSave()
+    @ibCrudToast()
     serviceCallWithDefaults() {
       return of({});
     }

@@ -2,10 +2,10 @@ import { catchError, map } from 'rxjs/operators';
 import { IbToastNotification } from '../../ui/toast/toast.service';
 import { IbHttpModule } from '../http.module';
 
-export function ibCrudDetailSave(
+export function ibCrudToast(
   disableBackCall = false,
-  successMessage = 'shared.ibCrudDetailSave.success',
-  errorMessage = 'shared.ibCrudDetailSave.error',
+  successMessage = 'shared.ibCrudToast.success',
+  errorMessage = 'shared.ibCrudToast.error',
   timeoutOnSave = 500,
   ): MethodDecorator {
   return function(target, key: string, descriptor: any) {
