@@ -1,5 +1,10 @@
 # Inobeta/UI Changelog
 
+## [1.1.2]
+
+- Fix checkbox align on material forms
+- Added a decorator for message handling on CRUD components
+
 ## [1.1.1]
 
 - Fix build prod errors caused by wrong modal module import in table module
