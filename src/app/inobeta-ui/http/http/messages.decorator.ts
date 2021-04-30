@@ -3,7 +3,7 @@ import { IbToastNotification } from '../../ui/toast/toast.service';
 import { IbHttpModule } from '../http.module';
 
 export function ibCrudToast(
-  disableBackCall = false,
+  enableBackCall = false,
   successMessage = 'shared.ibCrudToast.success',
   errorMessage = 'shared.ibCrudToast.error',
   timeoutOnSave = 500,
@@ -19,7 +19,7 @@ export function ibCrudToast(
       return result.pipe(
         map(() => {
           toast.open(successMessage);
-          if (!disableBackCall) {
+          if (enableBackCall) {
             setTimeout(() => {
               history.back();
             }, timeoutOnSave);

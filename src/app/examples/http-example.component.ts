@@ -29,7 +29,7 @@ export class HttpExampleComponent implements OnInit {
     });
   }
 
-  @ibCrudToast(true)
+  @ibCrudToast()
   serviceCall(wrong = '') {
     return this.h.get(`assets/i18n/it.json${wrong}`).pipe(
       map((x) => {
