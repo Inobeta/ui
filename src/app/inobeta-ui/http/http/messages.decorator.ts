@@ -2,10 +2,10 @@ import { catchError, map } from 'rxjs/operators';
 import { IbToastNotification } from '../../ui/toast/toast.service';
 import { IbHttpModule } from '../http.module';
 
-export function ibCrudDetailSave(
-  disableBackCall = false,
-  successMessage = 'shared.ibCrudDetailSave.success',
-  errorMessage = 'shared.ibCrudDetailSave.error',
+export function ibCrudToast(
+  enableBackCall = false,
+  successMessage = 'shared.ibCrudToast.success',
+  errorMessage = 'shared.ibCrudToast.error',
   timeoutOnSave = 500,
   ): MethodDecorator {
   return function(target, key: string, descriptor: any) {
@@ -19,7 +19,7 @@ export function ibCrudDetailSave(
       return result.pipe(
         map(() => {
           toast.open(successMessage);
-          if (!disableBackCall) {
+          if (enableBackCall) {
             setTimeout(() => {
               history.back();
             }, timeoutOnSave);
