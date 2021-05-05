@@ -61,7 +61,7 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
         console.log('current value', control.value);
       },
       hintMessage: () => {
-        return 'write something';
+        return 'write something\nanother like';
       }
     }),
     new IbMatTextboxControl({
