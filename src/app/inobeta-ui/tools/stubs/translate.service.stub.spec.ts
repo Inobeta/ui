@@ -13,4 +13,7 @@ export const translateServiceStub = {
   instant(key: any): any {
     return 'translated';
   },
+  reloadLang() {
+    return of({});
+  }
 };

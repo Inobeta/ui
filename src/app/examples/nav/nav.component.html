@@ -1,11 +1,6 @@
 <nav>
   <ul>
-    <li><a [matMenuTriggerFor]="table" routerLinkActive="active-link">Table</a>
-      <mat-menu #table="matMenu">
-        <a routerLink="table/redux" mat-menu-item routerLinkActive="active-link">With redux</a>
-        <a routerLink="table/noredux" mat-menu-item routerLinkActive="active-link">Without redux</a>
-      </mat-menu>
-    </li>
+    <li><a routerLink="table" routerLinkActive="active-link">Table</a></li>
     <li><a routerLink="forms" routerLinkActive="active-link">Dynamic Forms</a></li>
     <li><a routerLink="http" routerLinkActive="active-link">Http</a></li>
     <li><a routerLink="redux" routerLinkActive="active-link">Redux</a></li>
@@ -13,4 +8,6 @@
     <li><a routerLink="toast" routerLinkActive="active-link">Toast</a></li>
   </ul>
 </nav>
+<ib-material-breadcrumb></ib-material-breadcrumb>
+<router-outlet></router-outlet>
 
