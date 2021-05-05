@@ -40,7 +40,11 @@ export class HttpExampleComponent implements OnInit {
   }
 
   decoratorTest(wrong = '') {
-    this.serviceCall(wrong).subscribe();
+    this.serviceCall(wrong).subscribe(data => {
+      console.log('final data', data);
+    }, err => {
+      console.log('error data', err);
+    });
   }
 
 }

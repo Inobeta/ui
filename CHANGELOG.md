@@ -7,6 +7,7 @@
 - forms datepicker translated
 - breadcrumbs minor fixes & nested routes test
 - textbox hint option added
+- IbCrudToast: bug fix on return data, and null support for messages (null will disable toast)
 
 ## [1.1.2]
 

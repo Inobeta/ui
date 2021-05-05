@@ -28,24 +28,7 @@ export class IbResponseHandlerService {
   }
 
   handleKO(res: HttpEvent<object> | any) {
-    const errMsg = res.error.message ? res.error.message : 'Ci sono errori';
-    /*   if (error instanceof Response) {
-         const body = (error.status) ? error : error.json();
-         var json_body = null;
-         try {
-           json_body = JSON.parse(body._body);
-         } catch (e) {
-         }
-
-         if (json_body) {
-           body.rsp_msg = json_body.rsp_msg;
-         }
-         errMsg = `${error.status} - ${body.rsp_msg || body._body}`;
-       } else {
-         errMsg = error.message ? error.message : error.toString();
-       }
-   */
-    return throwError(errMsg);
+    return throwError(res);
   }
 
 

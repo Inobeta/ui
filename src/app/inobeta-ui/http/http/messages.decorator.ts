@@ -17,17 +17,18 @@ export function ibCrudToast(
       const result = originalMethod.apply(this, args);
       const toast = IbHttpModule.injector.get<IbToastNotification>(IbToastNotification);
       return result.pipe(
-        map(() => {
-          toast.open(successMessage);
+        map((x) => {
+          if (successMessage) { toast.open(successMessage); }
           if (enableBackCall) {
             setTimeout(() => {
               history.back();
             }, timeoutOnSave);
           }
+          return x;
         }),
         catchError(x => {
-          toast.open(errorMessage, 'error');
-          return x;
+          if (errorMessage) {toast.open(errorMessage, 'error'); }
+          throw x;
         }),
       );
     };
