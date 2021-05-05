@@ -55,6 +55,13 @@ import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, 
       (keyup)="data.base.change(data.self)"
       (change)="data.base.change(data.self)"
     />
+    <mat-icon
+      matSuffix
+      *ngIf="hintMessage"
+      [matTooltip]="hintMessage | translate"
+    >
+        help_outline
+    </mat-icon>
     <mat-error>
       <ng-container *ngTemplateOutlet="data.formControlErrors;context: this"></ng-container>
     </mat-error>
@@ -63,16 +70,32 @@ import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, 
 })
 
 export class IbMatTextboxComponent implements IbFormControlInterface {
-  @Input() data: IbFormControlData;
-}
-
-
-export class IbMatTextboxControl extends IbFormControlBase<number | string>{
-  constructor(options: IbFormControlBaseParams<number | string>){
-    if(!options.type) options.type = 'text';
-    super(options)
-    this.control = new IbFormControlBaseComponent(IbMatTextboxComponent, {
-      base: this
-    })
+  @Input() data: IbMatTextboxData;
+  get hintMessage() {
+    return (this.data.base.hintMessage) ? this.data.base.hintMessage() : null;
   }
 }
+
+
+export class IbMatTextboxControl extends IbFormControlBase<number | string> {
+  hintMessage;
+
+  constructor(options: IbMatTextboxParams) {
+    options.type = options.type || 'text';
+    super(options);
+    this.hintMessage = options.hintMessage || null;
+    this.control = new IbFormControlBaseComponent(IbMatTextboxComponent, {
+      base: this
+    });
+  }
+}
+
+
+export interface IbMatTextboxParams extends IbFormControlBaseParams<number | string> {
+  hintMessage?: () => string;
+}
+
+export interface IbMatTextboxData extends IbFormControlData {
+    base: IbMatTextboxParams;
+}
+

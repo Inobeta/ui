@@ -1,6 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
-import { isNullOrUndefined } from 'util';
 import { filter } from 'rxjs/operators';
 
 interface IbBreadcrumbItem {
@@ -37,6 +36,7 @@ export class IbBreadcrumbComponent implements OnInit {
     if (this.mode === IbBreadcrumbMode.static) {
       return;
     }
+    this.items = this.createBreadcrumbs(this.activatedRoute.root);
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => this.items = this.createBreadcrumbs(this.activatedRoute.root));
@@ -56,7 +56,7 @@ export class IbBreadcrumbComponent implements OnInit {
       }
 
       const label = child.snapshot.data[IbBreadcrumbComponent.ROUTE_DATA_BREADCRUMB];
-      if (!isNullOrUndefined(label)) {
+      if (label) {
         breadcrumbs.push({label, url});
       }
 

@@ -5,8 +5,6 @@ import {TranslateService} from '@ngx-translate/core';
 @Component({
   selector: 'ib-root',
   template: `
-    <app-nav></app-nav>
-    <ib-material-breadcrumb></ib-material-breadcrumb>
     <router-outlet *ngIf="translateLoaded"></router-outlet>
   `
 })

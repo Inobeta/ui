@@ -7,7 +7,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
-import { HomeComponent } from 'src/app/examples/home.component';
 import { IbTableExampleComponent } from 'src/app/examples/table-example/table-with-redux/table-example.component';
 import { NavComponent } from './examples/nav/nav.component';
 import { DynamicFormsExampleComponent } from './examples/dynamic-forms-example/dynamic-forms-example.component';
@@ -33,7 +32,6 @@ import { IbModalModule } from './inobeta-ui/ui/modal';
 import { MyCustomTextboxComponent } from './examples/dynamic-forms-example/my-custom-textbox.model';
 import { IbToastExampleComponent } from './examples/toast-example/toast-example.component';
 import { IbToastModule } from './inobeta-ui/ui/toast/toast.module';
-import { IbTableLandingComponent } from './examples/table-example/table-landing.component';
 import { IbTableExampleNoReduxComponent } from './examples/table-example/table-without-redux/table-example.component';
 
 export interface IAppState {
@@ -61,7 +59,6 @@ export function HttpLoaderFactory(http: HttpClient) {
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
     IbTableExampleComponent,
     NavComponent,
     DynamicFormsExampleComponent,
@@ -70,7 +67,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     DialogExampleComponent,
     MyCustomTextboxComponent,
     IbToastExampleComponent,
-    IbTableLandingComponent,
     IbTableExampleNoReduxComponent
   ],
   imports: [

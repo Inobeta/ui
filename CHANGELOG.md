@@ -1,5 +1,13 @@
 # Inobeta/UI Changelog
 
+## [1.1.3]
+
+- Translations added on ibTable paginator
+- reloadLang added on translate service stub
+- forms datepicker translated
+- breadcrumbs minor fixes & nested routes test
+- textbox hint option added
+
 ## [1.1.2]
 
 - Fix checkbox align on material forms

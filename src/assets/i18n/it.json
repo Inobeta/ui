@@ -31,7 +31,16 @@
         "true": "Si",
         "false": "No",
         "confirmDeleteTitle": "Attenzione",
-        "confirmDeleteMessage": "Sei sicuro di voler eliminare?"
+        "confirmDeleteMessage": "Sei sicuro di voler eliminare?",
+        "paginator": {
+          "itemsPerPageLabel": "Elementi per pagina",
+          "nextPageLabel": "Pagina successiva",
+          "previousPageLabel": "Pagina precedente",
+          "firstPageLabel": "Prima pagina",
+          "lastPageLabel": "Ultima pagina",
+          "rangeLabel1": "0 di {{length}}",
+          "rangeLabel2": "{{startIndex}} - {{endIndex}} di {{length}}"
+        }
     },
     "ibDropdown": {
       "selectAll": "Seleziona tutti",

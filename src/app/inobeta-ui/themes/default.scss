@@ -22,14 +22,11 @@
   font-weight: bold !important;
   color: white !important;
 }
-/*
-$background: map-get($theme, background);
 
-.custom-class-a {
-  background-color: mat-color($background, card);
-  color: mat-color($mat-green, 700);
+.mat-tooltip{
+  white-space: pre-line;
 }
-*/
+
 @mixin ib-table($theme) {
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);

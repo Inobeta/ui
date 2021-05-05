@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IbMaterialFormControlComponent, IbFormControlDirective } from '../material-form-control/material-form-control.component';
 import { IbDynamicFormsModule, IbFormControlBase, IbFormControlService } from '../../forms';
-import { MatFormFieldModule, MatOptionModule, MatSelectModule, MatRadioModule, MatCheckboxModule, MatInputModule, MatButtonModule, MatDatepickerModule, MatAutocompleteModule, MatIconModule, MatGridListModule } from '@angular/material';
+import { MatFormFieldModule, MatOptionModule, MatSelectModule, MatRadioModule, MatCheckboxModule, MatInputModule, MatButtonModule, MatDatepickerModule, MatAutocompleteModule, MatIconModule, MatGridListModule, MatTooltipModule } from '@angular/material';
 import { Component } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
@@ -181,7 +181,8 @@ describe('IbMaterialFormComponent', () => {
         MatDatepickerModule,
         MatAutocompleteModule,
         MatIconModule,
-        MatGridListModule
+        MatGridListModule,
+        MatTooltipModule
       ],
       providers: [
         IbFormControlService

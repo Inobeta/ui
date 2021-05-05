@@ -59,6 +59,9 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
       width: '33.3%',
       change: (control) => {
         console.log('current value', control.value);
+      },
+      hintMessage: () => {
+        return 'write something\nanother like';
       }
     }),
     new IbMatTextboxControl({
@@ -256,7 +259,7 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
       key: 'submit',
       label: 'Invia'
     })
-  ]
+  ];
 
 
   constructor() {}
@@ -283,15 +286,15 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
     console.log('example', payload);
   }
 
-  dateValidator(): ValidatorFn{
+  dateValidator(): ValidatorFn {
     return (control: AbstractControl): {[key: string]: any} | null => {
-      if(!control.parent) return;
+      if (!control.parent) { return; }
       const dateFrom = control.parent.controls['dateFrom'];
       const dateTo = control.parent.controls['dateTo'];
-      if(dateFrom.value && dateTo.value && dateFrom.value > dateTo.value){
+      if (dateFrom.value && dateTo.value && dateFrom.value > dateTo.value) {
         return {
-          'customError': {
-            'message': '"Date from" non può essere maggiore di "Date to"'
+          customError: {
+            message: '"Date from" non può essere maggiore di "Date to"'
           }
         };
       }
@@ -300,13 +303,13 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
 
 
 
-  multipleCustomExample(): ValidatorFn{
+  multipleCustomExample(): ValidatorFn {
     return (control: AbstractControl): {[key: string]: any} | null => {
-      console.log('control.value', control.value)
-      if(control.value && control.value.getTime() < (new Date('2021-04-15')).getTime()){
+      console.log('control.value', control.value);
+      if (control.value && control.value.getTime() < (new Date('2021-04-15')).getTime()) {
         return {
-          'customError': {
-            'message': 'Impostare un valore successivo al 15/04/2021'
+          customError: {
+            message: 'Impostare un valore successivo al 15/04/2021'
           }
         };
       }
@@ -319,11 +322,11 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
 
 export function forceValueValidator(forcedValue: string, errorMessage: string): ValidatorFn {
   return (control: AbstractControl): {[key: string]: any} | null => {
-    if(control.value !== forcedValue){
+    if (control.value !== forcedValue) {
       return {
-        'customError': {
-          'message': errorMessage,
-          'params': {
+        customError: {
+          message: errorMessage,
+          params: {
             forcedValue
           }
         }
