@@ -21,6 +21,11 @@ import { IbModalModule } from '../modal/modal.module';
 import { IbMatPaginatorI18n } from './material-intl/paginator.intl';
 registerLocaleData(localeIt, 'it');
 
+export function ibMatPaginatorTranslate(translateService: TranslateService) {
+  return new IbMatPaginatorI18n(translateService).getPaginatorIntl();
+}
+
+
 const COMPONENTS = [
     IbTableComponent,
     IbTableHeaderComponent,
@@ -71,7 +76,7 @@ const COMPONENTS = [
     providers: [
       {
         provide: MatPaginatorIntl, deps: [TranslateService],
-        useFactory: (translateService: TranslateService) => new IbMatPaginatorI18n(translateService).getPaginatorIntl()
+        useFactory: ibMatPaginatorTranslate
       }
     ]
 })
