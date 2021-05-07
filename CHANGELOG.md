@@ -1,5 +1,9 @@
 # Inobeta/UI Changelog
 
+## [1.1.4]
+
+- fix production build issue caused by moment 2.29 version
+
 ## [1.1.3]
 
 - Translations added on ibTable paginator
