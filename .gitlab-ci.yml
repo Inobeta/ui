@@ -27,6 +27,8 @@ deploy:
     - npm publish Inobeta-ui-$CURRENT_VERSION.tgz --tag latest
   only:
     - master
+  except:
+    - /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 deploy_unstable:
   stage: npm:deploy
@@ -39,6 +41,8 @@ deploy_unstable:
     - npm publish Inobeta-ui-$TEMP_VERSION.tgz --tag unstable
   only:
     - /^v[0-9]+\.[0-9]+\.[0-9]+$/
+  except:
+    - /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 deploy_manual_unstable:
   stage: npm:deploy
@@ -52,6 +56,7 @@ deploy_manual_unstable:
   except:
     - master
     - /^v[0-9]+\.[0-9]+\.[0-9]+$/
+    - /^[0-9]+\.[0-9]+\.[0-9]+$/
   when: manual
 
 test_package_creation:
@@ -65,6 +70,7 @@ test_package_creation:
   except:
     - master
     - /^v[0-9]+\.[0-9]+\.[0-9]+$/
+    - /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 docs:
   stage: npm:deploy
@@ -81,6 +87,8 @@ docs:
   only:
     - master
     - /^v[0-9]+\.[0-9]+\.[0-9]+$/
+  except:
+    - /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 examples:build:
   image: inobeta/dind-node:10
@@ -93,6 +101,8 @@ examples:build:
   only:
     - master
     - /^v[0-9]+\.[0-9]+\.[0-9]+$/
+  except:
+    - /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 examples:deploy:
   image: inobeta/dind-node:10
@@ -108,6 +118,8 @@ examples:deploy:
   only:
     - master
     - /^v[0-9]+\.[0-9]+\.[0-9]+$/
+  except:
+    - /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 .inobeta_pkg: &inobeta_pkg |
   [[ "$TRACE" ]] && set -x

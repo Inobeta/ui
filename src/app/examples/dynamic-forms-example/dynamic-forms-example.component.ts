@@ -79,15 +79,16 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
       key: 'dateTime',
       width: '33.3%',
       label: 'Date',
+      value: '2021-01-pippa',
       required: true,
       change: (control) => {
-        console.log('current value', control.value);
+        console.log('current value', control.value, control.value.getFullYear());
       }
     }),
     new IbMatDropdownControl({
       key: 'options',
       label: 'Options',
-      width: '33.3%',
+      width: '22%',
       value: 'test2',
       options: [
         { key: 'test1', value: 'value1' },
@@ -102,7 +103,7 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
     new IbMatDropdownControl({
       key: 'optionsMultiple',
       label: 'Options Multiple',
-      width: '33.3%',
+      width: '22%',
       value: ['test1'],
       multiple: true,
       options: [
@@ -116,6 +117,22 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
       }
     }),
 
+    new IbMatDropdownControl({
+      key: 'numbers',
+      label: 'With numeric keys',
+      width: '22%',
+      value: 2,
+      emptyRow: {key: null, value: 'shared.ibDropdown.nullLabel'},
+      options: [
+        { key: 1, value: 'value1' },
+        { key: 2, value: 'value2' },
+        { key: 3, value: 'value3' },
+        { key: 4, value: 'value4' }
+      ],
+      change: (control) => {
+        console.log('current value', control.value);
+      }
+    }),
     new IbMatCheckboxControl({
       key: 'checked',
       label: 'check this',
@@ -305,7 +322,6 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
 
   multipleCustomExample(): ValidatorFn {
     return (control: AbstractControl): {[key: string]: any} | null => {
-      console.log('control.value', control.value);
       if (control.value && control.value.getTime() < (new Date('2021-04-15')).getTime()) {
         return {
           customError: {

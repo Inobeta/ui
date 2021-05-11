@@ -44,7 +44,8 @@
     },
     "ibDropdown": {
       "selectAll": "Seleziona tutti",
-      "selectNone": "Deseleziona tutti"
+      "selectNone": "Deseleziona tutti",
+      "nullLabel": "Seleziona un elemento"
     },
     "ibForms": {
       "errors": {

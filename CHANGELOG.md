@@ -1,5 +1,12 @@
 # Inobeta/UI Changelog
 
+## [1.1.5]
+
+- numbers type added to IbMatDropdownControl
+- nullLabel option added to IbMatDropdownControl
+- date explicit parsing added to IbMatDatepickerControl
+- removed deps from moment and angular/material-moment-adapter
+
 ## [1.1.4]
 
 - fix production build issue caused by moment 2.29 version

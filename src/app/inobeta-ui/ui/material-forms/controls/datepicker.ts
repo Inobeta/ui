@@ -39,9 +39,13 @@ export class IbMatDatepickerComponent implements IbFormControlInterface {
 }
 
 
-export class IbMatDatepickerControl extends IbFormControlBase<string> {
-  constructor(options: IbFormControlBaseParams<string>) {
+export class IbMatDatepickerControl extends IbFormControlBase<string | Date> {
+  constructor(options: IbFormControlBaseParams<string | Date>) {
     super(options);
+    if (options.value && typeof options.value === 'string') {
+      this.value = new Date(options.value);
+    }
+
     this.control = new IbFormControlBaseComponent(IbMatDatepickerComponent, {
       base: this
     });

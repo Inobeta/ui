@@ -16,6 +16,9 @@ import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, 
           class="ib-mat-dropdown-select-all"
           (click)="selectAll()"
         >{{ (this.all ? 'shared.ibDropdown.selectNone' : 'shared.ibDropdown.selectAll') | translate}}</mat-option>
+        <mat-option *ngIf="data.base.emptyRow" [value]="data.base.emptyRow.key">
+          {{data.base.emptyRow.value | translate}}
+        </mat-option>
         <mat-option *ngFor="let opt of data.base.options" [value]="opt.key">
           {{opt.value | translate}}
         </mat-option>
@@ -54,39 +57,42 @@ export class IbMatDropdownComponent implements IbFormControlInterface {
       newValues = this.data.base.options.map(t => t.key);
     }
     this.data.self.setValue(newValues);
-    this.data.base.change(this.data.self)
+    this.data.base.change(this.data.self);
   }
 
 
 
   handleSelection(who) {
-    if(this.data.base.multiple){
-      if (who.value[0] === undefined) return;
+    if (this.data.base.multiple) {
+      if (who.value[0] === undefined) { return; }
       const currentValue = this.data.self.value;
       this.all = currentValue && currentValue.length === this.data.base.options.length;
     }
 
-    this.data.base.change(this.data.self)
+    this.data.base.change(this.data.self);
   }
 
 }
 
 
-export class IbMatDropdownControl extends IbFormControlBase<string | string[]>{
+export class IbMatDropdownControl extends IbFormControlBase<string | string[] | number | number[]> {
   multiple = false;
-  constructor(options: IbMatDropdownParams){
-    super(options)
+  emptyRow = null;
+  constructor(options: IbMatDropdownParams) {
+    super(options);
     this.multiple = options.multiple || false;
+    this.emptyRow = options.emptyRow || null;
     this.control = new IbFormControlBaseComponent(IbMatDropdownComponent, {
       base: this
-    })
+    });
   }
 }
 
 
 
-export interface IbMatDropdownParams extends IbFormControlBaseParams<string | string[]>{
+export interface IbMatDropdownParams extends IbFormControlBaseParams<string | string[] | number | number[]> {
   multiple?: boolean;
+  emptyRow?: {key?: string | number, value: string};
 }
 
 
