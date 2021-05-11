@@ -65,6 +65,10 @@
       "success": "Salvataggio avvenuto con successo",
       "error": "Errore in fase di salvataggio"
     },
+    "ibHttp": {
+      "authFailure": "Errore: autenticazione non riuscita",
+      "genericFailure": "Errore: operazione non riuscita"
+    },
     "profile": {
       "name": "Nome",
       "surname": "Cognome",

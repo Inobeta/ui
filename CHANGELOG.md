@@ -6,6 +6,7 @@
 - nullLabel option added to IbMatDropdownControl
 - date explicit parsing added to IbMatDatepickerControl
 - removed deps from moment and angular/material-moment-adapter
+- auth & error interceptors added
 
 ## [1.1.4]
 
