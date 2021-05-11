@@ -14,7 +14,7 @@ export class IbFormControlBase<T> {
   public type: string;
   public validators: ValidatorFn[];
   public errors: {message: string, condition: (c: FormControl) => void}[];
-  public options: {key?: string, value: string}[];
+  public options: {key?: string | number, value: string}[];
   public change: (c: FormControl) => void;
   public width: string;
   public control: IbFormControlBaseComponent;
@@ -79,7 +79,7 @@ export interface IbFormControlBaseParams<T> {
   type?: string;
   validators?: ValidatorFn[];
   errors?: {message: string, condition: (c: FormControl) => void}[]; //@deprecated
-  options?: {key?: string, value: string}[];
+  options?: {key?: string | number, value: string}[];
   change?: (c: FormControl) => void;
   width?: string;
   control?: IbFormControlBaseComponent;

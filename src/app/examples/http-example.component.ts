@@ -9,6 +9,7 @@ import { ibCrudToast } from '../inobeta-ui/http/http/messages.decorator';
 
   <button (click)="decoratorTest()">Test decorator (success)</button>
   <button (click)="decoratorTest('some-error')">Test decorator (error)</button>
+  <button (click)="otherTest()">Test</button>
 
   <pre>
     {{ loadedData | json }}
@@ -45,6 +46,10 @@ export class HttpExampleComponent implements OnInit {
     }, err => {
       console.log('error data', err);
     });
+  }
+
+  otherTest(){
+    this.h.get('http://ec2-54-170-145-63.eu-west-1.compute.amazonaws.com/auth/admin/users?page=1&size=300').subscribe()
   }
 
 }

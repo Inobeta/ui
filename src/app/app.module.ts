@@ -56,6 +56,8 @@ export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
+export const customErrorMessages = { 404: 'Risorsa non trovata'};
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -107,7 +109,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     FlexLayoutModule
   ],
   providers: [
-    {provide: 'HttpMode', useValue: 'NORMAL'}
+    {provide: 'HttpMode', useValue: 'NORMAL'},
+    {provide: 'ibHttpToastOnStatusCode', useValue: customErrorMessages }
   ],
   bootstrap: [AppComponent],
   entryComponents: [MyCustomTextboxComponent]

@@ -5,7 +5,6 @@ import { IbHttpModule } from '../http.module';
 export function ibCrudToast(
   enableBackCall = false,
   successMessage = 'shared.ibCrudToast.success',
-  errorMessage = 'shared.ibCrudToast.error',
   timeoutOnSave = 500,
   ): MethodDecorator {
   return function(target, key: string, descriptor: any) {
@@ -25,10 +24,6 @@ export function ibCrudToast(
             }, timeoutOnSave);
           }
           return x;
-        }),
-        catchError(x => {
-          if (errorMessage) {toast.open(errorMessage, 'error'); }
-          throw x;
         }),
       );
     };

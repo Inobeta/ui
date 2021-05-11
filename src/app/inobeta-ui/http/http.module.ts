@@ -2,7 +2,7 @@ import { Injector, NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { IbHttpClientService } from './http/http-client.service';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { IbResponseHandlerService } from './http/response-handler.service';
 import { IbAuthService } from './auth/auth.service';
 import { IbSessionService } from './auth/session.service';
@@ -12,6 +12,8 @@ import { IbSpinnerLoadingComponent } from './http/spinner-loading.component';
 import { IbLoginComponent } from './pages/login.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { IbToastModule } from '../ui/toast/toast.module';
+import { IbAuthInterceptor } from './http/auth.interceptor';
+import { IbErrorInterceptor } from './http/error.interceptor';
 
 
 const entryComponents = [];
@@ -21,19 +23,6 @@ const components = [
   IbSpinnerLoadingComponent,
   IbLoginComponent
 ];
-
-const services = [
-  IbHttpClientService,
-  IbResponseHandlerService,
-  IbAuthService,
-  IbSessionService,
-  LocalStorageService,
-  CookiesStorageService,
-  IbAuthGuard,
-  IbLoginGuard,
-];
-
-
 @NgModule({
   imports: [
     TranslateModule.forChild({
@@ -51,7 +40,17 @@ const services = [
     ...components
   ],
   providers: [
-    ...services
+    IbHttpClientService,
+    IbResponseHandlerService,
+    IbAuthService,
+    IbSessionService,
+    LocalStorageService,
+    CookiesStorageService,
+    IbAuthGuard,
+    IbLoginGuard,
+    { provide: HTTP_INTERCEPTORS, useClass: IbAuthInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: IbErrorInterceptor, multi: true },
+
   ],
   entryComponents: [
     ...entryComponents
