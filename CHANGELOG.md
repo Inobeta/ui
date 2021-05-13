@@ -1,5 +1,9 @@
 # Inobeta/UI Changelog
 
+## [1.1.6]
+
+- fix production build on wrong toast import
+
 ## [1.1.5]
 
 - numbers type added to IbMatDropdownControl

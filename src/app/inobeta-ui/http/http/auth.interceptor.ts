@@ -3,7 +3,7 @@ import { Inject, Injectable, Optional } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { IbToastNotification } from '../../ui/toast';
+import { IbToastNotification } from '../../ui/toast/toast.service';
 
 @Injectable({providedIn: 'root'})
 export class IbAuthInterceptor implements HttpInterceptor {
