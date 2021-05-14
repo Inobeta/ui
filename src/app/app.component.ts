@@ -6,6 +6,7 @@ import {TranslateService} from '@ngx-translate/core';
   selector: 'ib-root',
   template: `
     <router-outlet *ngIf="translateLoaded"></router-outlet>
+    <ib-spinner-loading></ib-spinner-loading>
   `
 })
 export class AppComponent implements OnInit {

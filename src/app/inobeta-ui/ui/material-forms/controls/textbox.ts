@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { AbstractControl, Validators } from '@angular/forms';
 import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, IbFormControlBaseParams, IbFormControlData } from '../../forms/controls/form-control-base';
 
 @Component({
@@ -15,6 +16,8 @@ import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, 
       *ngIf="data.base.type === 'number'"
       [formControlName]="data.base.key"
       [id]="data.base.key"
+      [min]="minValidator"
+      [max]="maxValidator"
       type="number"
       (keyup)="data.base.change(data.self)"
       (change)="data.base.change(data.self)"
@@ -73,6 +76,26 @@ export class IbMatTextboxComponent implements IbFormControlInterface {
   @Input() data: IbMatTextboxData;
   get hintMessage() {
     return (this.data.base.hintMessage) ? this.data.base.hintMessage() : null;
+  }
+
+  get minValidator() {
+    for (const func of this.data.base.validators) {
+      const validation = func({value: -Infinity} as AbstractControl);
+      if (validation && validation.min) {
+        return validation.min.min;
+      }
+    }
+    return null;
+  }
+
+  get maxValidator() {
+    for (const func of this.data.base.validators) {
+      const validation = func({value: Infinity} as AbstractControl);
+      if (validation && validation.max) {
+        return validation.max.max;
+      }
+    }
+    return null;
   }
 }
 

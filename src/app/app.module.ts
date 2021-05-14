@@ -110,7 +110,8 @@ export const customErrorMessages = { 404: 'Risorsa non trovata'};
   ],
   providers: [
     {provide: 'HttpMode', useValue: 'NORMAL'},
-    {provide: 'ibHttpToastOnStatusCode', useValue: customErrorMessages }
+    {provide: 'ibHttpToastOnStatusCode', useValue: customErrorMessages },
+    {provide: 'ibHttpUrlExcludedFromLoader', useValue: [{url: 'http://repubblica.it', method: 'GET'}] }
   ],
   bootstrap: [AppComponent],
   entryComponents: [MyCustomTextboxComponent]

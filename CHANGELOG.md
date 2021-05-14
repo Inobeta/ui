@@ -3,6 +3,10 @@
 ## [1.1.6]
 
 - fix production build on wrong toast import
+- IbDynamicForms: debounceOnChange default to 0
+- IbHttpModule: added ibHttpUrlExcludedFromLoader spinner loading url exclusions
+- IbMatTextboxComponent get min/max DOM validation from angular validators
+- IbMatSlideToggleComponent added
 
 ## [1.1.5]
 

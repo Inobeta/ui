@@ -6,7 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule, MatFormFieldModule, MatOptionModule,
   MatSelectModule, MatRadioModule, MatCheckboxModule, MatInputModule,
   MatDatepickerModule, MatAutocompleteModule, MatIconModule,
-  MatGridListModule, MatTooltipModule, MatNativeDateModule } from '@angular/material';
+  MatGridListModule, MatTooltipModule, MatNativeDateModule, MatSlideToggleModule } from '@angular/material';
 import { TranslateModule } from '@ngx-translate/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { IbMatTextboxComponent } from './controls/textbox';
@@ -19,6 +19,7 @@ import { IbMatLabelComponent } from './controls/label';
 import { IbMatTextareaComponent } from './controls/textarea';
 import { IbMatButtonComponent } from './controls/button';
 import { IbMatPaddingComponent } from './controls/padding';
+import { IbMatSlideToggleComponent } from './controls/slide-toggle';
 
 const entryComponents = [
   IbMatTextboxComponent,
@@ -30,7 +31,8 @@ const entryComponents = [
   IbMatLabelComponent,
   IbMatTextareaComponent,
   IbMatButtonComponent,
-  IbMatPaddingComponent
+  IbMatPaddingComponent,
+  IbMatSlideToggleComponent
 ];
 const components = [
   ...entryComponents,
@@ -60,7 +62,8 @@ const components = [
     MatGridListModule,
     FlexLayoutModule,
     MatNativeDateModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatSlideToggleModule
   ],
   exports: [
     ...components

@@ -9,7 +9,8 @@ import { ibCrudToast } from '../inobeta-ui/http/http/messages.decorator';
 
   <button (click)="decoratorTest()">Test decorator (success)</button>
   <button (click)="decoratorTest('some-error')">Test decorator (error)</button>
-  <button (click)="otherTest()">Test</button>
+  <button (click)="otherTest()">Test 401</button>
+  <button (click)="noSpinner()">No Spinner test</button>
 
   <pre>
     {{ loadedData | json }}
@@ -48,8 +49,11 @@ export class HttpExampleComponent implements OnInit {
     });
   }
 
-  otherTest(){
-    this.h.get('http://ec2-54-170-145-63.eu-west-1.compute.amazonaws.com/auth/admin/users?page=1&size=300').subscribe()
+  otherTest() {
+    this.h.get('http://ec2-54-170-145-63.eu-west-1.compute.amazonaws.com/auth/admin/users?page=1&size=300').subscribe();
+  }
+  noSpinner() {
+    this.h.get('http://repubblica.it').subscribe();
   }
 
 }

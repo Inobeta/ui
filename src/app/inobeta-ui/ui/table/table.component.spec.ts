@@ -1,12 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MatCheckboxModule, MatMenuModule, MatSortModule, MatChipsModule, MatFormFieldModule, MatInputModule, MatIconModule, MatDialogModule, MatSelectModule, MatRadioModule, MatPaginatorModule, MatButtonModule, MatSnackBarModule, MatCardModule } from '@angular/material';
+import { MatCheckboxModule, MatMenuModule, MatSortModule, MatChipsModule, MatFormFieldModule, MatInputModule, MatIconModule, MatDialogModule, MatSelectModule, MatRadioModule, MatPaginatorModule, MatButtonModule, MatSnackBarModule, MatCardModule, MatPaginatorIntl } from '@angular/material';
 import { IbToolTestModule } from 'src/app/inobeta-ui/tools';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IbTableComponent } from './table.component';
 import { IbTableHeaderComponent } from './components/table-header/table-header.component';
-import { IbTableExportComponent, IbTableHeaderPopupComponent, IbTableExportDialogComponent, IbTableTitlesTypes } from '.';
+import { IbTableExportComponent, IbTableHeaderPopupComponent, IbTableExportDialogComponent, IbTableTitlesTypes, ibMatPaginatorTranslate } from '.';
 import { IbTablePaginatorComponent } from './components/table-paginator.component';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
 
@@ -19,6 +19,7 @@ import { IbTableButtonComponent } from './components/table-button.component';
 import { IbTableActionsComponent } from './components/table-actions.component';
 import { IbTableRowComponent } from './components/table-row.component';
 import { IbModalTestModule } from '../modal';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'host-test',
@@ -216,6 +217,10 @@ describe('IbTableComponent', () => {
        ],
        providers: [
         provideMockStore({ initialState }),
+        {
+          provide: MatPaginatorIntl, deps: [TranslateService],
+          useFactory: ibMatPaginatorTranslate
+        }
        ],
       imports: [
         IbToolTestModule,

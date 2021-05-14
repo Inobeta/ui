@@ -1,12 +1,14 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { IbMaterialFormComponent } from './material-form.component';
-import { IbToolTestModule } from '../../../tools';
+import { IbToolTestModule, translateServiceStub } from '../../../tools';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IbMaterialFormControlComponent, IbFormControlDirective } from '../material-form-control/material-form-control.component';
 import { IbDynamicFormsModule, IbFormControlBase, IbFormControlService } from '../../forms';
-import { MatFormFieldModule, MatOptionModule, MatSelectModule, MatRadioModule, MatCheckboxModule, MatInputModule, MatButtonModule, MatDatepickerModule, MatAutocompleteModule, MatIconModule, MatGridListModule, MatTooltipModule } from '@angular/material';
+import { MatFormFieldModule, MatOptionModule, MatSelectModule, MatRadioModule,
+  MatCheckboxModule, MatInputModule, MatButtonModule, MatDatepickerModule,
+  MatAutocompleteModule, MatIconModule, MatGridListModule, MatTooltipModule, MatSlideToggleModule, MatNativeDateModule } from '@angular/material';
 import { Component } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
@@ -15,11 +17,14 @@ import { IbMatTextboxControl, IbMatTextboxComponent } from '../controls/textbox'
 import { IbMatCheckboxControl, IbMatCheckboxComponent } from '../controls/checkbox';
 import { IbMatRadioControl, IbMatRadioComponent } from '../controls/radio';
 import { IbMatDropdownControl, IbMatDropdownComponent } from '../controls/dropdown';
-import { IbMatDatepickerComponent, IbMatAutocompleteComponent, IbMatLabelComponent, IbMatDatepickerControl, IbMatAutocompleteControl, IbMatLabelControl, IbMatTextareaControl, IbMatButtonControl } from '..';
+import { IbMatDatepickerComponent, IbMatAutocompleteComponent, IbMatLabelComponent,
+  IbMatAutocompleteControl, IbMatLabelControl, IbMatTextareaControl, IbMatButtonControl,
+  IbMatSlideToggleControl, IbMatSlideToggleComponent, IbMatDatepickerControl } from '..';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { IbMatTextareaComponent } from '../controls/textarea';
 import { IbMatButtonComponent } from '../controls/button';
 import { IbMatPaddingComponent, IbMatPaddingControl } from '../controls/padding';
+import { TranslateService } from '@ngx-translate/core';
 
 
 @Component({
@@ -104,6 +109,20 @@ export class TestHostComponent {
       key: 'checked',
       label: 'check this',
     }),
+    new IbMatCheckboxControl({
+      key: 'checked2',
+      label: 'check this',
+      value: true
+    }),
+    new IbMatSlideToggleControl({
+      key: 'slide',
+      label: 'check this',
+    }),
+    new IbMatSlideToggleControl({
+      key: 'slide2',
+      label: 'check this',
+      value: true
+    }),
     new IbMatAutocompleteControl({
       key: 'autocomplete',
       label: 'Autocomplete',
@@ -132,7 +151,29 @@ export class TestHostComponent {
       key: 'textarea',
       label: 'Enter long text',
       width: '100%'
-    })
+    }),
+
+    new IbMatDatepickerControl({
+      type: 'date',
+      key: 'dateFrom',
+      width: '25%',
+      label: 'Date from'
+    }),
+    new IbMatDatepickerControl({
+      type: 'date2',
+      key: 'dateFrom',
+      width: '25%',
+      label: 'Date from',
+      value: '2021-01-01'
+    }),
+
+    new IbMatDatepickerControl({
+      type: 'date3',
+      key: 'dateFrom',
+      width: '25%',
+      label: 'Date from',
+      value: new Date('2021-01-01')
+    }),
   ];
 
   onSubmit() {}
@@ -161,7 +202,8 @@ describe('IbMaterialFormComponent', () => {
         IbMatLabelComponent,
         IbMatTextareaComponent,
         IbMatButtonComponent,
-        IbMatPaddingComponent
+        IbMatPaddingComponent,
+        IbMatSlideToggleComponent
       ],
       imports: [
         IbToolTestModule,
@@ -182,10 +224,13 @@ describe('IbMaterialFormComponent', () => {
         MatAutocompleteModule,
         MatIconModule,
         MatGridListModule,
-        MatTooltipModule
+        MatTooltipModule,
+        MatSlideToggleModule,
+        MatNativeDateModule
       ],
       providers: [
-        IbFormControlService
+        IbFormControlService,
+        { provide: TranslateService, useValue: translateServiceStub}
       ]
     })
     .overrideModule(BrowserDynamicTestingModule, {
@@ -200,7 +245,8 @@ describe('IbMaterialFormComponent', () => {
         IbMatLabelComponent,
         IbMatTextareaComponent,
         IbMatButtonComponent,
-        IbMatPaddingComponent
+        IbMatPaddingComponent,
+        IbMatSlideToggleComponent
         ],
       }
     })
