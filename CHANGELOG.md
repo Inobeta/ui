@@ -7,6 +7,7 @@
 - IbHttpModule: added ibHttpUrlExcludedFromLoader spinner loading url exclusions
 - IbMatTextboxComponent get min/max DOM validation from angular validators
 - IbMatSlideToggleComponent added
+- auth interceptor now force logout on 401 errors
 
 ## [1.1.5]
 
