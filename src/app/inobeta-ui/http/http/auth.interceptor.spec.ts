@@ -12,6 +12,8 @@ import { throwError } from 'rxjs';
 import { Router } from '@angular/router';
 
 import { Component, OnInit } from '@angular/core';
+import { IbSessionService } from '../auth/session.service';
+import { sessionServiceStub } from '../auth/session.stub.spec';
 
 @Component({
   selector: 'login-dummy',
@@ -45,12 +47,13 @@ describe('IbAuthInterceptor', () => {
       declarations: [LoginDummyComponent],
       providers: [
         { provide: IbAuthService, useValue: authServiceStub},
+        { provide: IbSessionService, useValue: sessionServiceStub},
         { provide: IbResponseHandlerService, useValue: responseHandlerStub},
         IbAuthInterceptor
       ]
     }).compileComponents();
     service = TestBed.get(IbAuthInterceptor);
-    routerCall = spyOn(TestBed.get(Router), 'navigateByUrl').and.callThrough();
+    routerCall = spyOn(TestBed.get(IbSessionService), 'logout').and.callThrough();
   });
 
   it('Should be created', () => {
