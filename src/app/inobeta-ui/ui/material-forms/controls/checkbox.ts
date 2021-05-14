@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, IbFormControlBaseParams, IbFormControlData } from '../../forms/controls/form-control-base';
+import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent,
+  IbFormControlBaseParams, IbFormControlData } from '../../forms/controls/form-control-base';
 
 @Component({
   selector: '[ib-mat-checkbox]',
@@ -21,12 +22,12 @@ export class IbMatCheckboxComponent implements IbFormControlInterface {
 }
 
 
-export class IbMatCheckboxControl extends IbFormControlBase<boolean | number | string>{
-  constructor(options: IbFormControlBaseParams<boolean | number | string>){
-    if(!options.value) options.value = false;
-    super(options)
+export class IbMatCheckboxControl extends IbFormControlBase<boolean | number | string> {
+  constructor(options: IbFormControlBaseParams<boolean | number | string>) {
+    if (!options.value) { options.value = false; }
+    super(options);
     this.control = new IbFormControlBaseComponent(IbMatCheckboxComponent, {
       base: this
-    })
+    });
   }
 }

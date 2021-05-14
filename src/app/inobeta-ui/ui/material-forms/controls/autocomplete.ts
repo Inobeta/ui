@@ -1,4 +1,5 @@
-import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseParams, IbFormControlBaseComponent, IbFormControlData } from '../../forms/controls/form-control-base';
+import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseParams,
+  IbFormControlBaseComponent, IbFormControlData } from '../../forms/controls/form-control-base';
 import { Component, Input } from '@angular/core';
 
 @Component({
@@ -46,7 +47,7 @@ export class IbMatAutocompleteComponent implements IbFormControlInterface {
     searchWords.every((el) => {
       return text.match(new RegExp(el, 'i'));
     })
-  );
+  )
   onSearchChange(input: string, values) {
     this.autocompleteFiltered = values.filter(el =>
       this.multiSearchAnd((el.value).toLowerCase(),
@@ -58,11 +59,11 @@ export class IbMatAutocompleteComponent implements IbFormControlInterface {
 }
 
 
-export class IbMatAutocompleteControl extends IbFormControlBase<string>{
-  constructor(options: IbFormControlBaseParams<string>){
-    super(options)
+export class IbMatAutocompleteControl extends IbFormControlBase<string> {
+  constructor(options: IbFormControlBaseParams<string>) {
+    super(options);
     this.control = new IbFormControlBaseComponent(IbMatAutocompleteComponent, {
       base: this
-    })
+    });
   }
 }

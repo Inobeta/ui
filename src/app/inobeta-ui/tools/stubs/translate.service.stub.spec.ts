@@ -15,5 +15,8 @@ export const translateServiceStub = {
   },
   reloadLang() {
     return of({});
+  },
+  get onTranslationChange() {
+    return of({ lang: 'it' });
   }
 };

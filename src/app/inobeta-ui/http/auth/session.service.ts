@@ -8,6 +8,8 @@ import {Store} from '@ngrx/store';
 import * as SessionActions from './redux/session.actions';
 import {Router} from '@angular/router';
 import {MatSnackBar} from '@angular/material';
+import { Inject } from '@angular/core';
+import { Optional } from '@angular/core';
 
 const loginUrl = '/api/auth/login';
 
@@ -20,7 +22,11 @@ export class IbSessionService {
     private h: IbHttpClientService,
     private store: Store<any>,
     private srvRouter: Router,
-    private snackBar: MatSnackBar) {}
+    private snackBar: MatSnackBar,
+    @Inject('ibHttpGUILoginUrl') @Optional() public ibHttpGUILoginUrl?: string
+    ) {
+      this.ibHttpGUILoginUrl = this.ibHttpGUILoginUrl || '/login';
+    }
 
   public setAuthtype(type: IbAuthTypes) {
     this.authType = type;
@@ -68,7 +74,7 @@ export class IbSessionService {
     this.srvAuth.activeSession = null;
     this.store.dispatch(SessionActions.logout());
     this.srvAuth.logout();
-    this.srvRouter.navigateByUrl('/login');
+    this.srvRouter.navigateByUrl(this.ibHttpGUILoginUrl);
     if (makeSnack) {
       this.snackBar.open('Logout completed', null, {duration: 2000});
     }

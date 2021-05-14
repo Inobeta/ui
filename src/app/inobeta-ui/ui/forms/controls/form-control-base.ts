@@ -45,7 +45,7 @@ export class IbFormControlBase<T> {
     this.control = options.control || null;
     this.cols = options.cols || 1;
     this.rows = options.rows || 1;
-    this.debounceOnChange = (options.debounceOnChange >= 0) ? options.debounceOnChange : 250;
+    this.debounceOnChange = (options.debounceOnChange >= 0) ? options.debounceOnChange : 0;
     this.setupChangeEvent(options);
   }
 

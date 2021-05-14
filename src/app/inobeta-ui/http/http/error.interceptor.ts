@@ -2,7 +2,7 @@ import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/c
 import { Inject, Injectable, Optional } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { IbToastNotification } from '../../ui/toast';
+import { IbToastNotification } from '../../ui/toast/toast.service';
 
 @Injectable({providedIn: 'root'})
 export class IbErrorInterceptor implements HttpInterceptor {

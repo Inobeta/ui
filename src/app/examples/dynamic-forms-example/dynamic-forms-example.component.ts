@@ -14,6 +14,7 @@ import { IbMatLabelControl } from 'src/app/inobeta-ui/ui/material-forms/controls
 import { IbMatTextareaControl } from 'src/app/inobeta-ui/ui/material-forms/controls/textarea';
 import { IbMatButtonControl } from 'src/app/inobeta-ui/ui/material-forms/controls/button';
 import { IbMatPaddingControl } from 'src/app/inobeta-ui/ui/material-forms/controls/padding';
+import { IbMatSlideToggleControl } from 'src/app/inobeta-ui/ui/material-forms/controls/slide-toggle';
 
 @Component({
   selector: 'app-dynamic-forms-example',
@@ -136,7 +137,12 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
     new IbMatCheckboxControl({
       key: 'checked',
       label: 'check this',
-      width: '25%'
+      width: '12.5%'
+    }),
+    new IbMatSlideToggleControl({
+      key: 'slide',
+      label: 'slide this',
+      width: '12.5%'
     }),
 
     new IbMatRadioControl({

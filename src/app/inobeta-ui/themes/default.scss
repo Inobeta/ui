@@ -76,6 +76,12 @@ div[ib-mat-checkbox]{
   align-items: center;
 }
 
+div[ib-mat-slide-toggle]{
+  height: 80%;
+  display: flex;
+  align-items: center;
+}
+
 .ib-material-form-grid div[ib-mat-label]{
   padding-bottom: 1.34375em;
 }
