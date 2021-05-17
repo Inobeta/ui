@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import { IbMatTextboxControl } from 'src/app/inobeta-ui/ui/material-forms/controls/textbox';
 import { IbTableItem } from 'src/app/inobeta-ui/ui/table/models/table-item.model';
-import { IbTableAction, IbTableTitlesTypes } from 'src/app/inobeta-ui/ui/table/models/titles.model';
+import { IbTableAction, IbTableActionsPosition, IbTableTitlesTypes } from 'src/app/inobeta-ui/ui/table/models/titles.model';
 import { IbTableComponent } from 'src/app/inobeta-ui/ui/table/table.component';
 import { sampleData } from '../json-data';
 
@@ -13,9 +13,10 @@ import { sampleData } from '../json-data';
 })
 //ANY, HOUR, COMBOBOX
 export class IbTableExampleComponent implements OnInit {
-  @ViewChild('ibTable', {static: true}) ibTable: IbTableComponent
+  @ViewChild('ibTable', {static: true}) ibTable: IbTableComponent;
   selectableRows = true;
-  tableName = 'pippo'
+  tableName = 'pippo';
+  ibTableActionsPosition = IbTableActionsPosition;
   titles = [
     {
       key: 'guid',
@@ -75,7 +76,7 @@ export class IbTableExampleComponent implements OnInit {
       width: '10%'
     }
   ];
-  items:IbTableItem[] = sampleData;
+  items: IbTableItem[] = sampleData;
 
   actions: IbTableAction[] = [
     {
@@ -98,7 +99,7 @@ export class IbTableExampleComponent implements OnInit {
       color: 'link',
       handler: (selectedItems) => this.consolePrint(selectedItems)
     }
-  ]
+  ];
   pdfCustomStyles = {
     headStyles: { fillColor: [232, 202, 232] },
     columnStyles: { sender: { halign: 'center' }},
@@ -125,37 +126,37 @@ export class IbTableExampleComponent implements OnInit {
         condition: '<=',
         value: '30'
       }
-    ], 0, true, this.tableName)
+    ], 0, true, this.tableName);
 
     //Full parameters with table name must be sent only when redux is enabled
-    this.ibTable.setFilter('picture', 'place', 0, true, this.tableName)
+    this.ibTable.setFilter('picture', 'place', 0, true, this.tableName);
 
 
   }
 
-  consolePrint(item){
+  consolePrint(item) {
     console.log(item);
-    console.log(this.ibTable.isValidForm(), this.ibTable.getFormValues())
+    console.log(this.ibTable.isValidForm(), this.ibTable.getFormValues());
   }
 
-  getBaseElem(){
+  getBaseElem() {
     return new IbMatTextboxControl({
       key: 'balance',
       label: 'qt',
       type: 'number',
       required: true,
       validators: [Validators.min(0)]
-    })
+    });
   }
 
-  setValidators(form: FormGroup){
-    form.controls.balance.setValidators([Validators.required, Validators.min(1)])
-    return form
+  setValidators(form: FormGroup) {
+    form.controls.balance.setValidators([Validators.required, Validators.min(1)]);
+    return form;
   }
 
-  rowClass(item){
+  rowClass(item) {
     return {
       'evidence-row': item.guid === 'e8ab3af6-9725-4163-8706-476b5dd09dfb'
-    }
+    };
   }
 }

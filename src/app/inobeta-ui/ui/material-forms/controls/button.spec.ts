@@ -8,6 +8,7 @@ import { MatButtonModule, MatFormFieldModule } from '@angular/material';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { IbMatButtonComponent } from './button';
+import { IbModalTestModule } from '../../modal/modal-test.module';
 
 
 
@@ -31,7 +32,8 @@ describe('IbMatButtonComponent', () => {
         MatFormFieldModule,
         NoopAnimationsModule,
         FlexLayoutModule,
-        MatButtonModule
+        MatButtonModule,
+        IbModalTestModule
       ]
     })
     .compileComponents();

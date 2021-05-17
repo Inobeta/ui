@@ -11,6 +11,8 @@
   <mat-card-content>
     <ib-material-form
       #customForm
+      [disabledOnInit]="true"
+      [actionsPosition]="ibMatActionsPosition.TOP"
       [actions]="customFormActions"
       [fields]="customFormFields"
       (ibSubmit)="onSubmit($event)"

@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { AbstractControl, ValidatorFn } from '@angular/forms';
 import { DateAdapter } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
 import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent,
@@ -15,6 +16,7 @@ import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent,
       [matDatepicker]="picker"
       (dateInput)="data.base.change(data.self)"
       (dateChange)="data.base.change(data.self)"
+      (change)="data.base.change(data.self)"
     >
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker></mat-datepicker>
@@ -41,13 +43,29 @@ export class IbMatDatepickerComponent implements IbFormControlInterface {
 
 export class IbMatDatepickerControl extends IbFormControlBase<string | Date> {
   constructor(options: IbFormControlBaseParams<string | Date>) {
-    super(options);
     if (options.value && typeof options.value === 'string') {
-      this.value = new Date(options.value);
+      options.value = new Date(options.value);
     }
-
+    if (!options.value) {
+      options.value = null;
+    }
+    if (options.required) {
+      options.validators = options.validators || [];
+      options.validators.push(dateRequiredValidator());
+    }
+    super(options);
     this.control = new IbFormControlBaseComponent(IbMatDatepickerComponent, {
       base: this
     });
   }
+}
+
+export function dateRequiredValidator(): ValidatorFn {
+  return (control: AbstractControl): {[key: string]: any} | null => {
+    if (!control.value || isNaN(control.value.getTime())) {
+      return {
+        required: true
+      };
+    }
+  };
 }

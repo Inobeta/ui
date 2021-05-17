@@ -56,7 +56,7 @@ export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
-export const customErrorMessages = { 404: 'Risorsa non trovata'};
+export const statusErrorMessages = { 404: 'Risorsa non trovata'};
 
 @NgModule({
   declarations: [
@@ -110,7 +110,8 @@ export const customErrorMessages = { 404: 'Risorsa non trovata'};
   ],
   providers: [
     {provide: 'HttpMode', useValue: 'NORMAL'},
-    {provide: 'ibHttpToastOnStatusCode', useValue: customErrorMessages },
+    {provide: 'ibHttpToastOnStatusCode', useValue: statusErrorMessages },
+    {provide: 'ibHttpToastErrorCode', useValue: 'code' },
     {provide: 'ibHttpUrlExcludedFromLoader', useValue: [{url: 'http://repubblica.it', method: 'GET'}] }
   ],
   bootstrap: [AppComponent],

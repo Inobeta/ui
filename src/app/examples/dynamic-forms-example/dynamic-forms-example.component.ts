@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { IbFormControlBase } from 'src/app/inobeta-ui/ui/forms/controls/form-control-base';
 import { IbTextbox } from 'src/app/inobeta-ui/ui/forms/controls/textbox';
 import { AbstractControl, ValidatorFn, Validators } from '@angular/forms';
-import { IbMaterialFormComponent } from 'src/app/inobeta-ui/ui/material-forms/material-form/material-form.component';
+import { IbMatActionsPosition, IbMaterialFormComponent } from 'src/app/inobeta-ui/ui/material-forms/material-form/material-form.component';
 import { MyCustomTextbox, MyCustomTextboxParams } from './my-custom-textbox.model';
 import { IbMatTextboxControl } from 'src/app/inobeta-ui/ui/material-forms/controls/textbox';
 import { IbMatDropdownControl } from 'src/app/inobeta-ui/ui/material-forms/controls/dropdown';
@@ -23,7 +23,7 @@ import { IbMatSlideToggleControl } from 'src/app/inobeta-ui/ui/material-forms/co
 })
 export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
   @ViewChild('customForm', {static: true}) customForm: IbMaterialFormComponent;
-
+  ibMatActionsPosition = IbMatActionsPosition;
   defaultFormFields: IbFormControlBase<string>[] = [
     new IbTextbox({
       key: 'defaultTextbox',
@@ -82,8 +82,11 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
       label: 'Date',
       value: '2021-01-pippa',
       required: true,
+      validators: [Validators.min((new Date('2021-05-12')).getTime())],
       change: (control) => {
-        console.log('current value', control.value, control.value.getFullYear());
+        if (control.value) {
+          console.log('current value', control.value, control.value.getFullYear());
+        }
       }
     }),
     new IbMatDropdownControl({
@@ -115,7 +118,8 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
       ],
       change: (control) => {
         console.log('current value', control.value);
-      }
+      },
+      hintMessage: () => 'Multiple value selection'
     }),
 
     new IbMatDropdownControl({
@@ -245,9 +249,16 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
       label: 'Search'
     }),
     new IbMatButtonControl({
+      key: 'edit',
+      label: 'Edit',
+      color: 'basic',
+      handler: (form) => form.enable()
+    }),
+    new IbMatButtonControl({
       key: 'clear',
       label: 'Clear',
       color: 'accent',
+      requireConfirmOnDirty: true,
       handler: (form) => form.reset()
     })
   ];

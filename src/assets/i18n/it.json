@@ -54,8 +54,11 @@
         "min": "deve avere un valore minimo di {{v}}",
         "max": "deve avere un valore massimo di {{v}}",
         "required": "è obbligatorio",
-        "email": "Indirizzo email non valido"
-      }
+        "email": "Indirizzo email non valido",
+        "date": "Data non valida"
+      },
+      "unsavedTitle": "Attenzione",
+      "unsavedMessage": "Questa pagina potrebbe contenere dei dati non salvati, vuoi proseguire?"
     },
     "ibModal": {
       "yes": "Si",

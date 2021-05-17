@@ -1,4 +1,25 @@
 <form (ngSubmit)="onSubmit()" [formGroup]="form" class="ibForm">
+  <div
+    class="ibFormRow ibFormActions"
+    fxLayout="row"
+    fxLayoutAlign="end"
+    fxLayoutGap="20px"
+    *ngIf="[ibMatActionsPosition.BOTH, ibMatActionsPosition.TOP].indexOf(actionsPosition) > -1"
+    >
+    <ib-material-form-control
+      *ngFor="let action of simpleActions"
+      class="ibFormRow"
+      [base]="action"
+      [form]="form"
+    ></ib-material-form-control>
+    <ib-material-form-control
+      *ngIf="submitAction"
+      class="ibFormRow"
+      [base]="submitAction"
+      [form]="form"
+    ></ib-material-form-control>
+  </div>
+
   <mat-grid-list class="ib-material-form-grid" *ngIf="cols" [cols]="cols" rowHeight="80px">
     <mat-grid-tile
         *ngFor="let field of fields"
@@ -30,6 +51,7 @@
     fxLayout="row"
     fxLayoutAlign="end"
     fxLayoutGap="20px"
+    *ngIf="[ibMatActionsPosition.BOTH, ibMatActionsPosition.BOTTOM].indexOf(actionsPosition) > -1"
     >
     <ib-material-form-control
       *ngFor="let action of simpleActions"

@@ -1,6 +1,7 @@
-import { Component, Input } from "@angular/core";
-import { FormGroup } from "@angular/forms";
-import { IbFormControlBase, IbFormControlBaseComponent, IbFormControlBaseParams, IbFormControlData, IbFormControlInterface } from "../../forms/controls/form-control-base";
+import { Component, Input } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { IbFormControlBase, IbFormControlBaseComponent, IbFormControlBaseParams, IbFormControlData, IbFormControlInterface } from '../../forms/controls/form-control-base';
+import { IbModalMessageService } from '../../modal/modal-message.service';
 
 @Component({
   selector: '[ib-mat-button]',
@@ -19,28 +20,45 @@ import { IbFormControlBase, IbFormControlBaseComponent, IbFormControlBaseParams,
 
 export class IbMatButtonComponent implements IbFormControlInterface {
   @Input() data: IbMatButtonData;
+  constructor(private dialog: IbModalMessageService) {
+
+  }
   handleActionClick() {
     if (this.data.base.key === 'submit') {
       return;
     }
+
+    if (this.data.base.requireConfirmOnDirty && this.data.form && this.data.form.dirty) {
+      return this.dialog.show( {
+        title: 'shared.ibForms.unsavedTitle',
+        message: 'shared.ibForms.unsavedMessage'
+      }).subscribe(result => {
+        if (result) {
+          this.data.base.handler(this.data.form);
+        }
+      });
+    }
+
     this.data.base.handler(this.data.form);
   }
 }
 
 
-export class IbMatButtonControl extends IbFormControlBase<string>{
+export class IbMatButtonControl extends IbFormControlBase<string> {
   color;
   handler;
   requireValidation;
-  constructor(options: IbMatButtonParams){
-    if(options.key === 'submit') options.requireValidation = true;
-    super(options)
+  requireConfirmOnDirty;
+  constructor(options: IbMatButtonParams) {
+    if (options.key === 'submit') { options.requireValidation = true; }
+    super(options);
     this.color = options.color || 'primary';
     this.handler = options.handler;
     this.requireValidation = options.requireValidation || false;
+    this.requireConfirmOnDirty = options.requireConfirmOnDirty || false;
     this.control = new IbFormControlBaseComponent(IbMatButtonComponent, {
       base: this
-    })
+    });
   }
 
 }
@@ -48,6 +66,7 @@ export class IbMatButtonControl extends IbFormControlBase<string>{
 export interface IbMatButtonParams extends IbFormControlBaseParams<string> {
   color?: string;
   requireValidation?: boolean;
+  requireConfirmOnDirty?: boolean;
   handler?: (form: FormGroup) => void;
 }
 
