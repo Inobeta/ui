@@ -12,6 +12,7 @@ export class IbMaterialFormStubComponent {
   @Input() fields: IbFormControlBase<string>[] = [];
   @Input() actions: IbFormAction[] = [];
   @Input() actionsPosition = IbMatActionsPosition.BOTTOM;
+  @Input() disabledOnInit = false;
   @Output() ibSubmit = new EventEmitter<any>();
   form: FormGroup;
 
