@@ -54,3 +54,9 @@ export class IbTableAction {
   handler: (items: IbTableItem[]) => void;
 }
 
+
+export enum IbTableActionsPosition {
+  BOTH, TOP, BOTTOM
+}
+
+

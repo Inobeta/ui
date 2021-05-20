@@ -7,6 +7,7 @@ import { FormsModule, ReactiveFormsModule, FormGroup, FormControl } from '@angul
 import { IbDynamicFormsModule, IbTextbox } from '../../forms';
 import { MatFormFieldModule, MatOptionModule, MatSelectModule, MatRadioModule, MatCheckboxModule, MatInputModule, MatButtonModule } from '@angular/material';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { IbModalTestModule } from '../../modal';
 
 describe('IbMaterialFormControlComponent', () => {
   let component: IbMaterialFormControlComponent;
@@ -29,7 +30,8 @@ describe('IbMaterialFormControlComponent', () => {
         MatCheckboxModule,
         MatInputModule,
         MatButtonModule,
-        NoopAnimationsModule
+        NoopAnimationsModule,
+        IbModalTestModule
       ]
     })
     .compileComponents();

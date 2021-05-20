@@ -8,7 +8,8 @@ import { IbMaterialFormControlComponent, IbFormControlDirective } from '../mater
 import { IbDynamicFormsModule, IbFormControlBase, IbFormControlService } from '../../forms';
 import { MatFormFieldModule, MatOptionModule, MatSelectModule, MatRadioModule,
   MatCheckboxModule, MatInputModule, MatButtonModule, MatDatepickerModule,
-  MatAutocompleteModule, MatIconModule, MatGridListModule, MatTooltipModule, MatSlideToggleModule, MatNativeDateModule } from '@angular/material';
+  MatAutocompleteModule, MatIconModule, MatGridListModule,
+  MatTooltipModule, MatSlideToggleModule, DateAdapter, MAT_DATE_FORMATS } from '@angular/material';
 import { Component } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
@@ -19,12 +20,14 @@ import { IbMatRadioControl, IbMatRadioComponent } from '../controls/radio';
 import { IbMatDropdownControl, IbMatDropdownComponent } from '../controls/dropdown';
 import { IbMatDatepickerComponent, IbMatAutocompleteComponent, IbMatLabelComponent,
   IbMatAutocompleteControl, IbMatLabelControl, IbMatTextareaControl, IbMatButtonControl,
-  IbMatSlideToggleControl, IbMatSlideToggleComponent, IbMatDatepickerControl } from '..';
+  IbMatSlideToggleControl, IbMatSlideToggleComponent, IbMatDatepickerControl, ibMatDatepickerTranslate } from '..';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { IbMatTextareaComponent } from '../controls/textarea';
 import { IbMatButtonComponent } from '../controls/button';
 import { IbMatPaddingComponent, IbMatPaddingControl } from '../controls/padding';
 import { TranslateService } from '@ngx-translate/core';
+import { IbModalTestModule } from '../../modal';
+import { IbMatDateAdapter } from '../intl/datepicker.intl';
 
 
 @Component({
@@ -226,11 +229,13 @@ describe('IbMaterialFormComponent', () => {
         MatGridListModule,
         MatTooltipModule,
         MatSlideToggleModule,
-        MatNativeDateModule
+        IbModalTestModule
       ],
       providers: [
         IbFormControlService,
-        { provide: TranslateService, useValue: translateServiceStub}
+        { provide: TranslateService, useValue: translateServiceStub},
+        { provide: DateAdapter, useClass: IbMatDateAdapter },
+        { provide: MAT_DATE_FORMATS, deps: [TranslateService], useFactory: ibMatDatepickerTranslate},
       ]
     })
     .overrideModule(BrowserDynamicTestingModule, {

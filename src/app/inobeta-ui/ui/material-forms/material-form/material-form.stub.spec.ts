@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input, Output, SimpleChanges } from "@angular/core";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { IbFormControlBase } from "../../forms/controls/form-control-base";
-import { IbFormAction } from "../../forms/dynamic-form/dynamic-form.component";
+import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { IbFormControlBase } from '../../forms/controls/form-control-base';
+import { IbFormAction } from '../../forms/dynamic-form/dynamic-form.component';
+import { IbMatActionsPosition } from './material-form.component';
 
 @Component({
   selector: 'ib-material-form',
@@ -10,6 +11,8 @@ import { IbFormAction } from "../../forms/dynamic-form/dynamic-form.component";
 export class IbMaterialFormStubComponent {
   @Input() fields: IbFormControlBase<string>[] = [];
   @Input() actions: IbFormAction[] = [];
+  @Input() actionsPosition = IbMatActionsPosition.BOTTOM;
+  @Input() disabledOnInit = false;
   @Output() ibSubmit = new EventEmitter<any>();
   form: FormGroup;
 
@@ -35,13 +38,13 @@ export class IbMaterialFormStubComponent {
       const elem = {
         value: field.value || '',
         disabled: field.disabled
+      };
+      let validators = [];
+      if (field.validators && field.validators.length) {
+        validators = validators.concat(field.validators);
       }
-      let validators = []
-      if(field.validators && field.validators.length){
-        validators = validators.concat(field.validators)
-      }
-      if(field.required){
-        validators.push(Validators.required)
+      if (field.required) {
+        validators.push(Validators.required);
       }
       group[field.key] = new FormControl(elem, validators);
 

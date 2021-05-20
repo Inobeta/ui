@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { IbTableAction, IbTableTitles } from './models/titles.model';
+import { IbTableAction, IbTableActionsPosition, IbTableTitles } from './models/titles.model';
 import { IbTemplateModel } from './models/template.model';
 import { IbTableItem } from './models/table-item.model';
 import { jsPDFOptions } from 'jspdf';
@@ -32,7 +32,11 @@ export class IbTableStubComponent {
     unit: null,
     format: null
   };
-  @Input() rowClass = (item: IbTableItem) => { return {} }
+  @Input() actionsPosition = IbTableActionsPosition.BOTH;
+  @Input() iconSet = {
+    edit: '',
+    delete: ''
+  };
   @Input() deleteConfirm = true;
 
   @Output() filterChange: EventEmitter<any> = new EventEmitter<any>();
@@ -42,12 +46,13 @@ export class IbTableStubComponent {
   @Output() delete: EventEmitter<any> = new EventEmitter<any>();
   @Output() rowClicked: EventEmitter<any> = new EventEmitter<any>();
   @Output() rowChecked: EventEmitter<any> = new EventEmitter<any>();
+  @Input() rowClass = (item: IbTableItem) => ({})
 
-  getSelectedRows(){return []}
-  setFilter(){}
-  rowForm(){return new FormGroup({})}
-  getFormValues(){return {}}
-  isValidForm(){return true}
-  resetFilters(){}
-  export(){}
+  getSelectedRows() {return [];}
+  setFilter() {}
+  rowForm() {return new FormGroup({});}
+  getFormValues() {return {};}
+  isValidForm() {return true;}
+  resetFilters() {}
+  export() {}
 }

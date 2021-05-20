@@ -8,6 +8,7 @@ export interface IbFormAction {
   label: string;
   handler?: (form: FormGroup) => void;
   options?: any;
+  requireConfirmOnDirty?: boolean;
 }
 
 @Component({
@@ -20,6 +21,7 @@ export class IbDynamicFormComponent implements OnInit, OnChanges {
     { key: 'submit', label: 'Save' }
   ];
   @Input() cols: number;
+  @Input() disabledOnInit = false;
   @Output() ibSubmit = new EventEmitter<any>();
   form: FormGroup;
 
@@ -28,6 +30,9 @@ export class IbDynamicFormComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.form = this.cs.toFormGroup(this.fields);
+    if (this.disabledOnInit) {
+      this.form.disable();
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {

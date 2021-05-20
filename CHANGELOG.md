@@ -1,5 +1,17 @@
 # Inobeta/UI Changelog
 
+## [1.1.7]
+
+- IbHttpModule: ibHttpToastErrorCode for custom error code translations
+- IbMatDropdownControl: added hintMessage option
+- IbMatDatepickerControl: fix locale bug on blur input
+- IbMatDatepickerControl: fix bug on require validation
+- IbMaterialFormComponent: added actionsPosition option & relative enum
+- IbDynamicFormComponent: added disabledOnInit option default to false
+- IbTableComponent: added iconSet option in order to override defaults mat icon
+- IbTableComponent: added actionsPosition option & relative enum
+- IbMatButtonControl: added requireConfirmOnDirty option for confirmation modal on dirty forms
+
 ## [1.1.6]
 
 - fix production build on wrong toast import

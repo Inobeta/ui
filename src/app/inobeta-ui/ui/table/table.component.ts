@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { Sort } from '@angular/material';
-import { IbTableAction, IbTableCellAligns, IbTableTitles, IbTableTitlesTypes } from './models/titles.model';
+import { IbTableAction, IbTableActionsPosition, IbTableCellAligns, IbTableTitles, IbTableTitlesTypes } from './models/titles.model';
 import { IbTemplateModel } from './models/template.model';
 import { Store } from '@ngrx/store';
 import * as TableFiltersActions from './redux/table.action';
@@ -33,6 +33,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
           'padding-bottom': (actions.length > 0 || hasAdd || hasExport) ? '5px' : '0px'
         }"
         [actions]="actions"
+        *ngIf="[ibTableActionsPosition.BOTH, ibTableActionsPosition.TOP].indexOf(actionsPosition) > -1"
         (add)="add.emit()"
         (export)="export($event)"
       >
@@ -69,6 +70,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
               ib-table-row
               class="table-row"
               [ngClass]="rowClass(item)"
+              [iconSet]="rowIconSet"
               *ngFor="let item of sortedData"
               [item]="item"
               [titles]="titles"
@@ -122,6 +124,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
         [hasExport]="hasExport"
         [selectableRows]="selectableRows"
         [actions]="actions"
+        *ngIf="[ibTableActionsPosition.BOTH, ibTableActionsPosition.BOTTOM].indexOf(actionsPosition) > -1"
         (add)="add.emit()"
         (export)="export($event)"
       >
@@ -157,9 +160,14 @@ export class IbTableComponent implements OnChanges {
     unit: null,
     format: null
   };
-  @Input() rowClass = (item: IbTableItem) => { return {} }
   @Input() deleteConfirm = true;
-
+  @Input() actionsPosition = IbTableActionsPosition.BOTH;
+  defaultIconSet = {
+    edit: 'edit',
+    delete: 'delete'
+  };
+  @Input() iconSet = this.defaultIconSet;
+  rowIconSet = Object.assign({}, this.defaultIconSet);
   // Output necessari
   @Output() filterChange: EventEmitter<any> = new EventEmitter<any>();
   @Output() sortChange: EventEmitter<any> = new EventEmitter<any>();
@@ -179,6 +187,8 @@ export class IbTableComponent implements OnChanges {
   columnFilter = {};
   numOfElements = 0;
   rowForms: FormGroup[] = [];
+  ibTableActionsPosition = IbTableActionsPosition;
+  @Input() rowClass = (item: IbTableItem) => ({});
 
   constructor(
     private store: Store<any>,
@@ -187,6 +197,9 @@ export class IbTableComponent implements OnChanges {
     ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if(changes.iconSet && changes.iconSet.currentValue){
+      this.rowIconSet = Object.assign({}, this.defaultIconSet, changes.iconSet.currentValue);
+    }
     if (changes.enableReduxStore && changes.enableReduxStore.currentValue) {
       this.store.select(rootState => rootState.tableFiltersState.tableFilters).subscribe(tableFilters => {
         const data = tableFilters[this.tableName];
@@ -218,14 +231,14 @@ export class IbTableComponent implements OnChanges {
       this.sortedData = this.items.slice();
       triggerRefresh = true;
       this.rowForms = [];
-      for(let i of this.items){
+      for (const i of this.items) {
         const rowGroup = {
           isChecked: new FormControl(i.ibTableItemSelected),
+        };
+        for (const k of this.titles.map(h => h.key)) {
+          rowGroup[k] = new FormControl(i[k]);
         }
-        for(let k of this.titles.map(h => h.key)){
-          rowGroup[k] = new FormControl(i[k])
-        }
-        this.rowForms.push(this.fb.group(rowGroup))
+        this.rowForms.push(this.fb.group(rowGroup));
       }
     }
 
@@ -248,27 +261,27 @@ export class IbTableComponent implements OnChanges {
     }
   }
 
-  rowForm(item){
+  rowForm(item) {
     return this.rowForms[this.items.indexOf(item)];
   }
 
-  getFormValues(dataset = 'all'){
-    let filteredData = this.sortedData
+  getFormValues(dataset = 'all') {
+    let filteredData = this.sortedData;
 
-    if(dataset === 'selected'){
-      filteredData = this.getSelectedRows()
+    if (dataset === 'selected') {
+      filteredData = this.getSelectedRows();
     }
 
-    const rowData = []
-    for(let i of filteredData){
-      rowData.push(this.rowForm(i).value)
+    const rowData = [];
+    for (const i of filteredData) {
+      rowData.push(this.rowForm(i).value);
     }
     return rowData;
   }
 
-  isValidForm(){
-    for(let r of this.rowForms){
-      if(!r.valid) return false;
+  isValidForm() {
+    for (const r of this.rowForms) {
+      if (!r.valid) { return false; }
     }
     return true;
   }
@@ -302,11 +315,11 @@ export class IbTableComponent implements OnChanges {
           /*TODO INSERT COLUMN TYPE HERE */
           switch (this.titles.find(t => t.key === k).type) {
             case IbTableTitlesTypes.ANY:
-              const translated = this.translate.instant(el[k])
+              const translated = this.translate.instant(el[k]);
               if (!(translated && translated.includes && translated.toLowerCase().includes(this.columnFilter[k].toLowerCase()))) {
                 include = false;
               }
-              break
+              break;
             case IbTableTitlesTypes.STRING:
             case IbTableTitlesTypes.CUSTOM:
               if (!(el[k] && el[k].includes && el[k].toLowerCase().includes(this.columnFilter[k].toLowerCase()))) {
@@ -315,28 +328,28 @@ export class IbTableComponent implements OnChanges {
               break;
             case IbTableTitlesTypes.NUMBER:
             case IbTableTitlesTypes.INPUT_NUMBER:
-              for(let cond of this.columnFilter[k]){
-                include = eval(`(${el[k]} ${cond.condition} ${cond.value})`)
-                if(!include){
+              for (const cond of this.columnFilter[k]) {
+                include = eval(`(${el[k]} ${cond.condition} ${cond.value})`);
+                if (!include) {
                   break;
                 }
               }
               break;
             case IbTableTitlesTypes.DATE:
-              for(let cond of this.columnFilter[k]){
-                include = eval(`(${(new Date(el[k])).getTime()} ${cond.condition} ${(new Date(cond.value)).getTime()})`)
-                if(!include){
+              for (const cond of this.columnFilter[k]) {
+                include = eval(`(${(new Date(el[k])).getTime()} ${cond.condition} ${(new Date(cond.value)).getTime()})`);
+                if (!include) {
                   break;
                 }
               }
-            break;
+              break;
             case IbTableTitlesTypes.BOOLEAN:
-              include = (el[k] === this.columnFilter[k])
-            break;
+              include = (el[k] === this.columnFilter[k]);
+              break;
             default:
               include = true;
           }
-          if(!include){
+          if (!include) {
             break;
           }
 
@@ -365,16 +378,16 @@ export class IbTableComponent implements OnChanges {
     this.columnFilter[key] = value;
     this.currentPagination.pageIndex = indexToSet;
     this.pageChangeHandle(this.currentPagination);
-    if(redux){
-      if(!tableName){
-        if(!tableName && this.tableName === 'default_table_name'){
-          console.warn('[IbTableComponent] missing table name on redux filter call')
+    if (redux) {
+      if (!tableName) {
+        if (!tableName && this.tableName === 'default_table_name') {
+          console.warn('[IbTableComponent] missing table name on redux filter call');
         }
-        tableName = this.tableName
+        tableName = this.tableName;
       }
 
       this.store.dispatch(TableFiltersActions.addFilterToTable({
-        tableName: tableName,
+        tableName,
         filterName: key,
         filterValue: value
       }));
@@ -420,8 +433,8 @@ export class IbTableComponent implements OnChanges {
     this.sortedData = paginatedData;
   }
 
-  getSelectedRows(){
-    return this.items.filter(sd => this.rowForm(sd).controls.isChecked.value)
+  getSelectedRows() {
+    return this.items.filter(sd => this.rowForm(sd).controls.isChecked.value);
   }
 
   async export({ format, dataset }) {
@@ -455,8 +468,8 @@ export class IbTableComponent implements OnChanges {
           }), {})
     );
 
-    if(dataset === 'selected'){
-      filteredData = this.getSelectedRows()
+    if (dataset === 'selected') {
+      filteredData = this.getSelectedRows();
     }
 
     const translatedHeaders = await Promise.all(this.titles.map(async t => ({

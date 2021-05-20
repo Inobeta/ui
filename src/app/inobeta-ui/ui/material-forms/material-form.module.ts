@@ -6,8 +6,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule, MatFormFieldModule, MatOptionModule,
   MatSelectModule, MatRadioModule, MatCheckboxModule, MatInputModule,
   MatDatepickerModule, MatAutocompleteModule, MatIconModule,
-  MatGridListModule, MatTooltipModule, MatNativeDateModule, MatSlideToggleModule } from '@angular/material';
-import { TranslateModule } from '@ngx-translate/core';
+  MatGridListModule, MatTooltipModule, MatSlideToggleModule, MAT_DATE_FORMATS, DateAdapter, MAT_DATE_LOCALE } from '@angular/material';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { IbMatTextboxComponent } from './controls/textbox';
 import { IbMatDropdownComponent } from './controls/dropdown';
@@ -20,6 +20,9 @@ import { IbMatTextareaComponent } from './controls/textarea';
 import { IbMatButtonComponent } from './controls/button';
 import { IbMatPaddingComponent } from './controls/padding';
 import { IbMatSlideToggleComponent } from './controls/slide-toggle';
+import { IbMatDateAdapter, IbMatDatepickerI18n } from './intl/datepicker.intl';
+import { IbModalModule } from '../modal/modal.module';
+import { Platform, PlatformModule } from '@angular/cdk/platform';
 
 const entryComponents = [
   IbMatTextboxComponent,
@@ -42,6 +45,11 @@ const components = [
 ];
 
 
+export function ibMatDatepickerTranslate(translateService: TranslateService) {
+  return new IbMatDatepickerI18n(translateService).getDateFormats();
+}
+
+
 @NgModule({
   imports: [
     CommonModule,
@@ -61,9 +69,10 @@ const components = [
     MatIconModule,
     MatGridListModule,
     FlexLayoutModule,
-    MatNativeDateModule,
     MatTooltipModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    IbModalModule,
+    PlatformModule
   ],
   exports: [
     ...components
@@ -71,7 +80,10 @@ const components = [
   declarations: [
     ...components
   ],
-  providers: [],
+  providers: [
+    { provide: DateAdapter, useClass: IbMatDateAdapter, deps: [MAT_DATE_LOCALE, Platform] },
+    { provide: MAT_DATE_FORMATS, deps: [TranslateService], useFactory: ibMatDatepickerTranslate},
+  ],
   entryComponents: [
     ...entryComponents
   ]

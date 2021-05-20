@@ -23,6 +23,13 @@ import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, 
           {{opt.value | translate}}
         </mat-option>
       </mat-select>
+      <mat-icon
+        matSuffix
+        *ngIf="hintMessage"
+        [matTooltip]="hintMessage | translate"
+      >
+          help_outline
+      </mat-icon>
       <mat-error>
         <ng-container *ngTemplateOutlet="data.formControlErrors;context: this"></ng-container>
       </mat-error>
@@ -50,6 +57,10 @@ https://stackblitz.com/edit/angular-ev8r2t?file=src%2Fapp%2Fselect-multiple-exam
 export class IbMatDropdownComponent implements IbFormControlInterface {
   @Input() data: IbDropdownData;
   all = false;
+  get hintMessage() {
+    return (this.data.base.hintMessage) ? this.data.base.hintMessage() : null;
+  }
+
   selectAll() {
     let newValues: any = [];
     this.all = !this.all;
@@ -78,10 +89,12 @@ export class IbMatDropdownComponent implements IbFormControlInterface {
 export class IbMatDropdownControl extends IbFormControlBase<string | string[] | number | number[]> {
   multiple = false;
   emptyRow = null;
+  hintMessage;
   constructor(options: IbMatDropdownParams) {
     super(options);
     this.multiple = options.multiple || false;
     this.emptyRow = options.emptyRow || null;
+    this.hintMessage = options.hintMessage || null;
     this.control = new IbFormControlBaseComponent(IbMatDropdownComponent, {
       base: this
     });
@@ -93,6 +106,7 @@ export class IbMatDropdownControl extends IbFormControlBase<string | string[] | 
 export interface IbMatDropdownParams extends IbFormControlBaseParams<string | string[] | number | number[]> {
   multiple?: boolean;
   emptyRow?: {key?: string | number, value: string};
+  hintMessage?: () => string;
 }
 
 

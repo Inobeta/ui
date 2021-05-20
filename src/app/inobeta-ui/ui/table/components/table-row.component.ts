@@ -118,14 +118,14 @@ import { IbTableCellAligns, IbTableTitles, IbTableTitlesTypes } from '../models/
       class="material-icons ib-table-row-button"
       matRipple
       (click)="$event.stopPropagation(); edit.emit(objectToEmit())"
-    >edit</i>
+    >{{ iconSet.edit }}</i>
   </td>
   <td style="text-align:center;" *ngIf="hasDelete">
     <i
       class="material-icons ib-table-row-button"
       matRipple
       (click)="$event.stopPropagation(); handleDelete()"
-    >delete</i>
+    >{{ iconSet.delete }}</i>
   </td>
 
   `
@@ -141,6 +141,10 @@ export class IbTableRowComponent implements OnInit {
   @Input() hasEdit = false;
   @Input() hasDelete = false;
   @Input() deleteConfirm = true;
+  @Input() iconSet = {
+    edit: 'edit',
+    delete: 'delete'
+  };
 
   @Output() rowChecked: EventEmitter<any> = new EventEmitter<any>();
   @Output() edit: EventEmitter<any> = new EventEmitter<any>();
