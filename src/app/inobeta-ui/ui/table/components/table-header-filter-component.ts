@@ -1,5 +1,5 @@
-import { Subject } from '@angular-devkit/core/node_modules/rxjs';
-import { Component, ComponentFactoryResolver, Input, OnInit } from '@angular/core';
+import { Subject } from 'rxjs';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { debounceTime } from 'rxjs/operators';
 import { IbTableTitlesTypes } from '../models/titles.model';
@@ -173,13 +173,13 @@ import { IbTableTitlesTypes } from '../models/titles.model';
 
 })
 
-export class IbTableHeaderFilterComponent implements OnInit{
+export class IbTableHeaderFilterComponent implements OnInit {
   @Input() ibTable: any;
   @Input() col: any;
   @Input() filter: any;
 
 
-  columnTypes = IbTableTitlesTypes
+  columnTypes = IbTableTitlesTypes;
 
   searchSubject = new Subject();
   filterDistinct: any[] = [];
@@ -191,9 +191,9 @@ export class IbTableHeaderFilterComponent implements OnInit{
     { value: '==', label: '='},
     { value: '>', label: '>'},
     { value: '>=', label: '>='}
-  ]
+  ];
 
-  numericConditions = []
+  numericConditions = [];
 
   constructor(private fb: FormBuilder) {
     this.searchSubject.pipe(
@@ -201,7 +201,7 @@ export class IbTableHeaderFilterComponent implements OnInit{
     ).subscribe((value) => this.doFilter(value));
   }
   ngOnInit(): void {
-    this.initForm(this.col, this.filter)
+    this.initForm(this.col, this.filter);
   }
 
   doFilter(value) {
@@ -212,52 +212,50 @@ export class IbTableHeaderFilterComponent implements OnInit{
     this.searchSubject.next(what);
   }
 
-  removeClause(cond){
-    const index = this.numericConditions.indexOf(cond)
-    this.numericConditions.splice(index, 1)
+  removeClause(cond) {
+    const index = this.numericConditions.indexOf(cond);
+    this.numericConditions.splice(index, 1);
   }
 
   addClause(filter = {
     condition: '',
     value: ''
-  }){
+  }) {
     this.numericConditions.push(
       this.fb.group({
         condition: new FormControl(filter.condition, Validators.required),
         value: new FormControl(filter.value, Validators.required)
       })
-    )
+    );
   }
 
-  searchNumeric(){
-    this.search(this.numericConditions.map(c => c.value))
+  searchNumeric() {
+    this.search(this.numericConditions.map(c => c.value));
   }
 
-  numericFormsValid(){
+  numericFormsValid() {
     return this.numericConditions.reduce((acc, el) => {
-      if(!el.valid) return false
-      return acc
-    }, true)
+      if (!el.valid) { return false }
+      return acc;
+    }, true);
   }
 
-  initForm(col, filter){
+  initForm(col, filter) {
 
-    if([
+    if ([
       this.columnTypes.NUMBER,
       this.columnTypes.INPUT_NUMBER,
       this.columnTypes.DATE
-    ].indexOf(col.type) > -1){
-      if(this.filter && filter.length > 0){
-        filter.forEach(f => this.addClause(f))
-      }
-      else{
+    ].indexOf(col.type) > -1) {
+      if (this.filter && filter.length > 0) {
+        filter.forEach(f => this.addClause(f));
+      } else {
         this.addClause();
       }
-    }
-    else{
+    } else {
       this.generalForm =  this.fb.group({
         filter: new FormControl( this.filter )
-      })
+      });
     }
   }
 }

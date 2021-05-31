@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { Subject } from 'rxjs';
-import { debounceTime } from 'rxjs/internal/operators/debounceTime';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'ib-table-header-popup',

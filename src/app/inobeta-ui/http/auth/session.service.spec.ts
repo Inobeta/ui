@@ -82,11 +82,11 @@ describe('IbSession service test', () => {
           username: 'salvo',
           name: 'Salvatore',
           surname: 'Niglio',
-          type: 2,
+          type: '2',
           is_active: true,
           email: 'salvatore.niglio@inobeta.net',
           created_at: '2019-10-23T15:35:08.500Z',
-          updated_at: '2019-10-23T1b7lT_x96yDm2x4hw13KOrfziM60'
+          updated_at: '2019-10-23T15:35:08.500Z'
         });
         expect(mockAuthService.storeSession).toHaveBeenCalled();
         expect(dispatchSpy).toHaveBeenCalledTimes(1);
@@ -99,11 +99,11 @@ describe('IbSession service test', () => {
       username: 'salvo',
       name: 'Salvatore',
       surname: 'Niglio',
-      type: 2,
+      type: '2',
       is_active: true,
       email: 'salvatore.niglio@inobeta.net',
       created_at: '2019-10-23T15:35:08.500Z',
-      updated_at: '2019-10-23T1b7lT_x96yDm2x4hw13KOrfziM60'
+      updated_at: '2019-10-23T15:35:08.500Z'
     });
     httpMock.verify();
     expect(mockAuthService.storeSession).toHaveBeenCalled();
@@ -122,11 +122,11 @@ describe('IbSession service test', () => {
           username: 'salvo',
           name: 'Salvatore',
           surname: 'Niglio',
-          type: 2,
+          type: '2',
           is_active: true,
           email: 'salvatore.niglio@inobeta.net',
           created_at: '2019-10-23T15:35:08.500Z',
-          updated_at: '2019-10-23T1b7lT_x96yDm2x4hw13KOrfziM60'
+          updated_at: '2019-10-23T15:35:08.500Z'
         });
         expect(mockAuthService.storeSession).toHaveBeenCalled();
         expect(dispatchSpy).toHaveBeenCalledTimes(2);
@@ -139,11 +139,11 @@ describe('IbSession service test', () => {
       username: 'salvo',
       name: 'Salvatore',
       surname: 'Niglio',
-      type: 2,
+      type: '2',
       is_active: true,
       email: 'salvatore.niglio@inobeta.net',
       created_at: '2019-10-23T15:35:08.500Z',
-      updated_at: '2019-10-23T1b7lT_x96yDm2x4hw13KOrfziM60'
+      updated_at: '2019-10-23T15:35:08.500Z'
     });
     httpMock.verify();
     expect(mockAuthService.storeSession).toHaveBeenCalled();
@@ -163,11 +163,11 @@ describe('IbSession service test', () => {
           username: 'salvo',
           name: 'Salvatore',
           surname: 'Niglio',
-          type: 2,
+          type: '2',
           is_active: true,
           email: 'salvatore.niglio@inobeta.net',
           created_at: '2019-10-23T15:35:08.500Z',
-          updated_at: '2019-10-23T1b7lT_x96yDm2x4hw13KOrfziM60'
+          updated_at: '2019-10-23T15:35:08.500Z'
         });
         expect(mockAuthService.storeSession).toHaveBeenCalled();
         expect(dispatchSpy).toHaveBeenCalledTimes(3);
@@ -180,11 +180,11 @@ describe('IbSession service test', () => {
       username: 'salvo',
       name: 'Salvatore',
       surname: 'Niglio',
-      type: 2,
+      type: '2',
       is_active: true,
       email: 'salvatore.niglio@inobeta.net',
       created_at: '2019-10-23T15:35:08.500Z',
-      updated_at: '2019-10-23T1b7lT_x96yDm2x4hw13KOrfziM60'
+      updated_at: '2019-10-23T15:35:08.500Z'
     });
     httpMock.verify();
     expect(mockAuthService.storeSession).toHaveBeenCalled();
@@ -204,11 +204,11 @@ describe('IbSession service test', () => {
           username: 'salvo',
           name: 'Salvatore',
           surname: 'Niglio',
-          type: 2,
+          type: '2',
           is_active: true,
           email: 'salvatore.niglio@inobeta.net',
           created_at: '2019-10-23T15:35:08.500Z',
-          updated_at: '2019-10-23T1b7lT_x96yDm2x4hw13KOrfziM60'
+          updated_at: '2019-10-23T15:35:08.500Z'
         });
         expect(mockAuthService.storeSession).toHaveBeenCalled();
         expect(dispatchSpy).toHaveBeenCalledTimes(4);
@@ -221,11 +221,11 @@ describe('IbSession service test', () => {
       username: 'salvo',
       name: 'Salvatore',
       surname: 'Niglio',
-      type: 2,
+      type: '2',
       is_active: true,
       email: 'salvatore.niglio@inobeta.net',
       created_at: '2019-10-23T15:35:08.500Z',
-      updated_at: '2019-10-23T1b7lT_x96yDm2x4hw13KOrfziM60'
+      updated_at: '2019-10-23T15:35:08.500Z'
     });
     httpMock.verify();
     expect(mockAuthService.storeSession).toHaveBeenCalled();
@@ -244,11 +244,11 @@ describe('IbSession service test', () => {
           username: 'salvo',
           name: 'Salvatore',
           surname: 'Niglio',
-          type: 2,
+          type: '2',
           is_active: true,
           email: 'salvatore.niglio@inobeta.net',
           created_at: '2019-10-23T15:35:08.500Z',
-          updated_at: '2019-10-23T1b7lT_x96yDm2x4hw13KOrfziM60'
+          updated_at: '2019-10-23T15:35:08.500Z'
         });
         expect(mockAuthService.storeSession).toHaveBeenCalled();
         expect(dispatchSpy).toHaveBeenCalledTimes(5);
@@ -261,11 +261,11 @@ describe('IbSession service test', () => {
       username: 'salvo',
       name: 'Salvatore',
       surname: 'Niglio',
-      type: 2,
+      type: '2',
       is_active: true,
       email: 'salvatore.niglio@inobeta.net',
       created_at: '2019-10-23T15:35:08.500Z',
-      updated_at: '2019-10-23T1b7lT_x96yDm2x4hw13KOrfziM60'
+      updated_at: '2019-10-23T15:35:08.500Z'
     });
     httpMock.verify();
     expect(mockAuthService.cookieSession).toHaveBeenCalled();
