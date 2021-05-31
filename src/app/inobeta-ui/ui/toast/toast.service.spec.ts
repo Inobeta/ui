@@ -21,12 +21,12 @@ describe('IbToastNotification', () => {
   });
 
   it('should be created', () => {
-    const service = TestBed.get(IbToastNotification);
+    const service = TestBed.inject(IbToastNotification);
     expect(service).toBeTruthy();
   });
 
   it('should open a toast', () => {
-    const service = TestBed.get(IbToastNotification);
+    const service = TestBed.inject(IbToastNotification);
     service.open('toastMessage')
     expect(service).toBeTruthy();
   });

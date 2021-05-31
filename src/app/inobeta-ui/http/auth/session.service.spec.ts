@@ -30,7 +30,7 @@ describe('IbSession service test', () => {
     logout: () => {}
   };
   const routerSpy = { navigateByUrl: jasmine.createSpy('navigateByUrl')};
-  let store: MockStore<{ activeSession: any }>;
+  let store: Store<ISessionState>;
   const initialState = { activeSession: 'fake' };
   let dispatchSpy;
 
@@ -49,10 +49,10 @@ describe('IbSession service test', () => {
         IbSessionService
       ]
     }).compileComponents();
-    httpClient = TestBed.get(HttpClient);
-    httpMock = TestBed.get(HttpTestingController);
-    store = TestBed.get<Store<ISessionState>>(Store);
-    sessionService = TestBed.get(IbSessionService);
+    httpClient = TestBed.inject(HttpClient);
+    httpMock = TestBed.inject(HttpTestingController);
+    store = TestBed.inject<Store<ISessionState>>(Store);
+    sessionService = TestBed.inject(IbSessionService);
   });
 
   beforeEach(() => {
@@ -60,13 +60,13 @@ describe('IbSession service test', () => {
   });
 
   it('Should be created', () => {
-    const svcSession = TestBed.get(IbSessionService);
+    const svcSession = TestBed.inject(IbSessionService);
     expect(svcSession).toBeTruthy();
   });
 
   it('Should be use correctly setAuthtype', () => {
-    const svcSession = TestBed.get(IbSessionService);
-    svcSession.setAuthtype();
+    const svcSession = TestBed.inject(IbSessionService);
+    svcSession.setAuthtype(IbAuthTypes.JWT);
   });
 
   it('should do login()', (done) => {
@@ -273,7 +273,7 @@ describe('IbSession service test', () => {
   });
 
   it('should do login() FAIL', (done) => {
-    sessionService = TestBed.get(IbSessionService);
+    sessionService = TestBed.inject(IbSessionService);
     sessionService.login({
       username: 'Luca',
       password: 'Luca123',
@@ -292,7 +292,7 @@ describe('IbSession service test', () => {
 
   it('Should be use correctly logout', () => {
     dispatchSpy = spyOn(store, 'dispatch');
-    const svcSession = TestBed.get(IbSessionService);
+    const svcSession = TestBed.inject(IbSessionService);
     svcSession.logout();
     expect(dispatchSpy).toHaveBeenCalled();
     expect(dispatchSpy).toHaveBeenCalledTimes(1);

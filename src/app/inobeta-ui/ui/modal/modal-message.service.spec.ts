@@ -19,23 +19,16 @@ describe('IbModalMessageService', () => {
       ],
       declarations: [IbModalMessageComponent]
     })
-    .overrideModule(BrowserDynamicTestingModule, {
-      set: {
-        entryComponents: [
-          IbModalMessageComponent
-        ],
-      }
-    })
   );
 
   it('should be created', () => {
-    const service: IbModalMessageService = TestBed.get(IbModalMessageService);
+    const service: IbModalMessageService = TestBed.inject(IbModalMessageService);
     expect(service).toBeTruthy();
   });
 
 
   it('should works when show', () => {
-    const service: IbModalMessageService = TestBed.get(IbModalMessageService);
+    const service: IbModalMessageService = TestBed.inject(IbModalMessageService);
     service.show({
       title: 'Test',
       message: 'Message'

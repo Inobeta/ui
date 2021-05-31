@@ -11,12 +11,12 @@ describe('response handler test', () => {
   });
 
   it('Should be created', () => {
-    const svcResponseHandler = TestBed.get(IbResponseHandlerService);
+    const svcResponseHandler = TestBed.inject(IbResponseHandlerService);
     expect(svcResponseHandler).toBeTruthy();
   });
 
   it('Should use handle Ok (else)', () => {
-    const svcResponseHandler = TestBed.get(IbResponseHandlerService);
+    const svcResponseHandler = TestBed.inject(IbResponseHandlerService);
     svcResponseHandler.handleOK({});
   });
 

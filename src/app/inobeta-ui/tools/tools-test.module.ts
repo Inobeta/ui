@@ -10,9 +10,7 @@ import { serviceDialogStub } from './stubs/dialog.stub.spec';
 
 registerLocaleData(localeIt, 'it');
 
-const entryComponents = [];
 const components = [
-  ...entryComponents,
   IbMockTranslatePipeDirective
 ];
 
@@ -34,9 +32,6 @@ const services = [
   ],
   providers: [
     ...services
-  ],
-  entryComponents: [
-    ...entryComponents
   ]
 })
 export class IbToolTestModule { }

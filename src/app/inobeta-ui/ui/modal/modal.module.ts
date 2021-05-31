@@ -7,19 +7,6 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { IbModalMessageService } from './modal-message.service';
 
 
-const entryComponents = [
-  IbModalMessageComponent
-];
-const components = [
-  IbModalMessageComponent
-
-];
-
-const services = [
-  IbModalMessageService
-];
-
-
 @NgModule({
   imports: [
     TranslateModule.forChild({
@@ -30,16 +17,13 @@ const services = [
     MatButtonModule
   ],
   exports: [
-    ...components
+    IbModalMessageComponent
   ],
   declarations: [
-    ...components
+    IbModalMessageComponent
   ],
   providers: [
-    ...services
-  ],
-  entryComponents: [
-    ...entryComponents
+    IbModalMessageService
   ]
 })
 export class IbModalModule { }

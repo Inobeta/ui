@@ -33,7 +33,7 @@ import { IbMatDateAdapter, IbMatDatepickerI18n } from './intl/datepicker.intl';
 import { IbModalModule } from '../modal/modal.module';
 import { Platform, PlatformModule } from '@angular/cdk/platform';
 
-const entryComponents = [
+const components = [
   IbMatTextboxComponent,
   IbMatDropdownComponent,
   IbMatRadioComponent,
@@ -44,10 +44,7 @@ const entryComponents = [
   IbMatTextareaComponent,
   IbMatButtonComponent,
   IbMatPaddingComponent,
-  IbMatSlideToggleComponent
-];
-const components = [
-  ...entryComponents,
+  IbMatSlideToggleComponent,
   IbMaterialFormComponent,
   IbMaterialFormControlComponent,
   IbFormControlDirective
@@ -92,9 +89,6 @@ export function ibMatDatepickerTranslate(translateService: TranslateService) {
   providers: [
     { provide: DateAdapter, useClass: IbMatDateAdapter, deps: [MAT_DATE_LOCALE, Platform] },
     { provide: MAT_DATE_FORMATS, deps: [TranslateService], useFactory: ibMatDatepickerTranslate},
-  ],
-  entryComponents: [
-    ...entryComponents
   ]
 })
 export class IbMaterialFormModule { }

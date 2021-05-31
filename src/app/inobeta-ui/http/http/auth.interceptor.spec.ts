@@ -52,8 +52,8 @@ describe('IbAuthInterceptor', () => {
         IbAuthInterceptor
       ]
     }).compileComponents();
-    service = TestBed.get(IbAuthInterceptor);
-    routerCall = spyOn(TestBed.get(IbSessionService), 'logout').and.callThrough();
+    service = TestBed.inject(IbAuthInterceptor);
+    routerCall = spyOn(TestBed.inject(IbSessionService), 'logout').and.callThrough();
   });
 
   it('Should be created', () => {

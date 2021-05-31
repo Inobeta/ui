@@ -16,10 +16,8 @@ import { IbAuthInterceptor } from './http/auth.interceptor';
 import { IbErrorInterceptor } from './http/error.interceptor';
 
 
-const entryComponents = [];
 
 const components = [
-  ...entryComponents,
   IbSpinnerLoadingComponent,
   IbLoginComponent
 ];
@@ -51,9 +49,6 @@ const components = [
     { provide: HTTP_INTERCEPTORS, useClass: IbAuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: IbErrorInterceptor, multi: true },
 
-  ],
-  entryComponents: [
-    ...entryComponents
   ]
 })
 

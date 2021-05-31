@@ -29,7 +29,7 @@ describe('IbMatDateAdapter', () => {
     })
     .compileComponents();
 
-    adapter = TestBed.get(DateAdapter);
+    adapter = TestBed.inject(DateAdapter);
   }));
 
 

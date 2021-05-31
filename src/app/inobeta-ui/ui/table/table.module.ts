@@ -81,9 +81,6 @@ const COMPONENTS = [
         IbModalModule
     ],
     exports: [...COMPONENTS],
-    entryComponents: [
-      IbTableExportDialogComponent
-    ],
     providers: [
       {
         provide: MatPaginatorIntl, deps: [TranslateService],

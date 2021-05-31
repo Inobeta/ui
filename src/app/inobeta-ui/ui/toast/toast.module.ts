@@ -10,8 +10,6 @@ import { IbToastNotification } from './toast.service';
   exports: [],
   declarations: [
   ],
-  entryComponents: [
-  ],
   providers: [IbToastNotification],
 })
 export class IbToastModule { }

@@ -39,7 +39,7 @@ describe('IbMatButtonComponent', () => {
     })
     .compileComponents();
 
-    formBuilder = TestBed.get(FormBuilder);
+    formBuilder = TestBed.inject(FormBuilder);
     control = new FormControl('control');
     form = formBuilder.group(control);
   }));

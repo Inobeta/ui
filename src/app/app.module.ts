@@ -125,7 +125,6 @@ export const statusErrorMessages = { 404: 'Risorsa non trovata'};
     {provide: 'ibHttpToastErrorCode', useValue: 'code' },
     {provide: 'ibHttpUrlExcludedFromLoader', useValue: [{url: 'http://repubblica.it', method: 'GET'}] }
   ],
-  bootstrap: [AppComponent],
-  entryComponents: [MyCustomTextboxComponent]
+  bootstrap: [AppComponent]
 })
 export class AppModule {}

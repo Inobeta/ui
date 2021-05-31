@@ -22,7 +22,6 @@ import { provideMockStore, MockStore } from '@ngrx/store/testing';
 import { Component } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
-import { Store } from '@ngrx/store';
 import { IbTableHeaderFilterComponent } from './table-header-filter-component';
 import { IbTableButtonComponent } from './table-button.component';
 import { IbTableTitlesTypes } from '../models/titles.model';
@@ -99,7 +98,7 @@ describe('IbTableHeaderFilterComponent', () => {
     })
     .compileComponents();
 
-    store = TestBed.get<Store<any>>(Store);
+    store = TestBed.inject(MockStore);
   }));
 
   beforeEach(() => {

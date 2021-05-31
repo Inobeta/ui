@@ -4,10 +4,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { IbMaterialFormStubComponent } from './material-form/material-form.stub.spec';
 
-const entryComponents = [
-];
+
 const components = [
-  ...entryComponents,
   IbMaterialFormStubComponent
 ];
 
@@ -23,9 +21,6 @@ const components = [
   declarations: [
     ...components
   ],
-  providers: [],
-  entryComponents: [
-    ...entryComponents
-  ]
+  providers: []
 })
 export class IbMaterialFormTestModule { }

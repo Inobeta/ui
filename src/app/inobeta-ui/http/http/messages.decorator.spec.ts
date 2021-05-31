@@ -35,7 +35,7 @@ describe('ibCrudToast Decorator', () => {
         SampleService
       ]
     }).compileComponents();
-    testService = TestBed.get(SampleService);
+    testService = TestBed.inject(SampleService);
   });
 
   it('Should be created', () => {

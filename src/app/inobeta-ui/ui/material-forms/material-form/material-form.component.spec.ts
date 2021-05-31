@@ -247,23 +247,6 @@ describe('IbMaterialFormComponent', () => {
         { provide: MAT_DATE_FORMATS, deps: [TranslateService], useFactory: ibMatDatepickerTranslate},
       ]
     })
-    .overrideModule(BrowserDynamicTestingModule, {
-      set: {
-        entryComponents: [
-        IbMatTextboxComponent,
-        IbMatDropdownComponent,
-        IbMatRadioComponent,
-        IbMatCheckboxComponent,
-        IbMatDatepickerComponent,
-        IbMatAutocompleteComponent,
-        IbMatLabelComponent,
-        IbMatTextareaComponent,
-        IbMatButtonComponent,
-        IbMatPaddingComponent,
-        IbMatSlideToggleComponent
-        ],
-      }
-    })
     .compileComponents();
   }));
 

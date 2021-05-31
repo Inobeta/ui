@@ -33,8 +33,8 @@ describe('IbErrorInterceptor', () => {
         IbErrorInterceptor
       ]
     }).compileComponents();
-    service = TestBed.get(IbErrorInterceptor);
-    toastCall = spyOn(TestBed.get(IbToastNotification), 'open').and.callThrough();
+    service = TestBed.inject(IbErrorInterceptor);
+    toastCall = spyOn(TestBed.inject(IbToastNotification), 'open').and.callThrough();
   });
 
   it('Should be created', () => {

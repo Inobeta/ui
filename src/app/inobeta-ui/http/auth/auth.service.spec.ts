@@ -75,32 +75,32 @@ describe('IbAuthService', () => {
   });
 
   it('should be created', () => {
-    const authService = TestBed.get(IbAuthService);
+    const authService = TestBed.inject(IbAuthService);
     expect(authService).toBeTruthy();
   });
 
   it('should be created with active session', () => {
     mockCookiesStorage.empty = false;
-    const authService = TestBed.get(IbAuthService);
+    const authService = TestBed.inject(IbAuthService);
     expect(authService).toBeTruthy();
   });
 
   it('should call local storage method', () => {
-    const authService = TestBed.get(IbAuthService);
+    const authService = TestBed.inject(IbAuthService);
     authService.storeSession();
     expect(mockLocalStorage.set).toHaveBeenCalled();
     expect(mockLocalStorage.set).toHaveBeenCalledTimes(1);
   });
 
   it('should call local cookie method', () => {
-    const authService = TestBed.get(IbAuthService);
+    const authService = TestBed.inject(IbAuthService);
     authService.cookieSession();
     expect(mockCookiesStorage.set).toHaveBeenCalled();
     expect(mockCookiesStorage.set).toHaveBeenCalledTimes(1);
   });
 
   it('should do logout', () => {
-    const authService = TestBed.get(IbAuthService);
+    const authService = TestBed.inject(IbAuthService);
     authService.logout();
     expect(mockLocalStorage.set).toHaveBeenCalled();
     expect(mockLocalStorage.set).toHaveBeenCalledTimes(1);

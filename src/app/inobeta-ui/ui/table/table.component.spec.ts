@@ -260,7 +260,7 @@ describe('IbTableComponent', () => {
     })
     .compileComponents();
 
-    store = TestBed.get<Store<any>>(Store);
+    store = TestBed.inject(MockStore);
   }));
 
   beforeEach(() => {
