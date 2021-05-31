@@ -2,7 +2,7 @@ import { async, TestBed } from '@angular/core/testing';
 
 import { IbToolTestModule } from '../../../tools';
 import { CommonModule } from '@angular/common';
-import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material';
+import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IbMatDateAdapter } from './datepicker.intl';
 import { ibMatDatepickerTranslate } from '../material-form.module';

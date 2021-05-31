@@ -5,7 +5,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {IbLoginComponent} from './login.component';
 import {TranslateModule} from '@ngx-translate/core';
 import {IbSessionService} from '../auth/session.service';
-import {MatSnackBar, MatSnackBarModule} from '@angular/material';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 describe('LoginFormComponent', () => {
 

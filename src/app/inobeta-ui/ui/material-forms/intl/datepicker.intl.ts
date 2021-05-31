@@ -1,6 +1,6 @@
 import { Platform } from '@angular/cdk/platform';
 import { Inject, Injectable, Optional } from '@angular/core';
-import { MAT_DATE_LOCALE, NativeDateAdapter } from '@angular/material';
+import { MAT_DATE_LOCALE, NativeDateAdapter } from '@angular/material/core';
 import { TranslateService } from '@ngx-translate/core';
 
 export class IbMatDatepickerI18n {

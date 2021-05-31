@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { AbstractControl, ValidatorFn } from '@angular/forms';
-import { DateAdapter } from '@angular/material';
+import { DateAdapter } from '@angular/material/core';
 import { TranslateService } from '@ngx-translate/core';
 import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent,
   IbFormControlBaseParams, IbFormControlData } from '../../forms/controls/form-control-base';
