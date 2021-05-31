@@ -95,7 +95,13 @@ export const statusErrorMessages = { 404: 'Risorsa non trovata'};
     IbToastModule,
     MatMenuModule,
     MatRippleModule,
-    StoreModule.forRoot(reducers, {metaReducers}),
+    StoreModule.forRoot(reducers, {
+      metaReducers,
+      runtimeChecks: {
+        strictStateImmutability: false,
+        strictActionImmutability: false,
+      },
+    }),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       logOnly: environment.production,
