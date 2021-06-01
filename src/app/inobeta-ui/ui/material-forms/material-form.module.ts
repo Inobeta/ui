@@ -3,10 +3,19 @@ import { IbMaterialFormComponent } from './material-form/material-form.component
 import { IbMaterialFormControlComponent, IbFormControlDirective } from './material-form-control/material-form-control.component';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule, MatFormFieldModule, MatOptionModule,
-  MatSelectModule, MatRadioModule, MatCheckboxModule, MatInputModule,
-  MatDatepickerModule, MatAutocompleteModule, MatIconModule,
-  MatGridListModule, MatTooltipModule, MatSlideToggleModule, MAT_DATE_FORMATS, DateAdapter, MAT_DATE_LOCALE } from '@angular/material';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatOptionModule, MAT_DATE_FORMATS, DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { IbMatTextboxComponent } from './controls/textbox';
@@ -24,7 +33,7 @@ import { IbMatDateAdapter, IbMatDatepickerI18n } from './intl/datepicker.intl';
 import { IbModalModule } from '../modal/modal.module';
 import { Platform, PlatformModule } from '@angular/cdk/platform';
 
-const entryComponents = [
+const components = [
   IbMatTextboxComponent,
   IbMatDropdownComponent,
   IbMatRadioComponent,
@@ -35,10 +44,7 @@ const entryComponents = [
   IbMatTextareaComponent,
   IbMatButtonComponent,
   IbMatPaddingComponent,
-  IbMatSlideToggleComponent
-];
-const components = [
-  ...entryComponents,
+  IbMatSlideToggleComponent,
   IbMaterialFormComponent,
   IbMaterialFormControlComponent,
   IbFormControlDirective
@@ -83,9 +89,6 @@ export function ibMatDatepickerTranslate(translateService: TranslateService) {
   providers: [
     { provide: DateAdapter, useClass: IbMatDateAdapter, deps: [MAT_DATE_LOCALE, Platform] },
     { provide: MAT_DATE_FORMATS, deps: [TranslateService], useFactory: ibMatDatepickerTranslate},
-  ],
-  entryComponents: [
-    ...entryComponents
   ]
 })
 export class IbMaterialFormModule { }

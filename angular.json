@@ -13,6 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "aot": true,
             "outputPath": "dist/ui",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -25,13 +26,17 @@
             "styles": [
               "src/styles.css",
               "src/app/inobeta-ui/themes/default.scss",
-              "src/app/examples/theme.scss",
-              "./node_modules/font-awesome/css/font-awesome.css",
-              "./node_modules/primeicons/primeicons.css"
+              "src/app/examples/theme.scss"
             ]
           },
           "configurations": {
             "production": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",

@@ -13,8 +13,6 @@ const COMPONENTS = [
     imports: [
         CommonModule
     ],
-    exports: [...COMPONENTS],
-    entryComponents: [
-    ]
+    exports: [...COMPONENTS]
 })
 export class IbTableTestModule { }

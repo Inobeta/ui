@@ -15,17 +15,17 @@ export class IbHttpClientService {
 
   public pendingRequests = 0;
   public showLoading = false;
-  private authType = IbAuthTypes.JWT;
+  public authType = IbAuthTypes.JWT; // FIXME: this should be private
   public additionalHeaders: any[] = [];
 
-  private httpMode = 'NORMAL';
+  public httpMode = 'NORMAL'; // FIXME: this should be private
 
   constructor(
     protected h: HttpClient,
     private srvAuth: IbAuthService,
     private srvResponse: IbResponseHandlerService,
     @Inject('HttpMode') @Optional() public HttpMode?: string,
-    @Inject('hMobile') @Optional() protected hMobile?: HTTP,
+    @Inject('hMobile') @Optional() public hMobile?: HTTP, // FIXME: this should be protected
     @Inject('ibHttpUrlExcludedFromLoader') @Optional() public ibHttpUrlExcludedFromLoader?: IbHttpRequestDefinition[],
     ) {
       this.httpMode = HttpMode || 'NORMAL';

@@ -10,7 +10,7 @@ import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@an
   `
 })
 export class IbUploaderComponent {
-  @ViewChild('uploader', {static: false}) uploader !: ElementRef;
+  @ViewChild('uploader') uploader !: ElementRef;
   @Input() textKey: string;
   @Output() onFileSelected: EventEmitter<any> = new EventEmitter<any>();
 

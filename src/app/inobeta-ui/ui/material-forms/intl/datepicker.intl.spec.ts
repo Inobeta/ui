@@ -2,12 +2,11 @@ import { async, TestBed } from '@angular/core/testing';
 
 import { IbToolTestModule } from '../../../tools';
 import { CommonModule } from '@angular/common';
-import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material';
+import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IbMatDateAdapter } from './datepicker.intl';
 import { ibMatDatepickerTranslate } from '../material-form.module';
 import { TranslateService } from '@ngx-translate/core';
-import { IbMatButtonComponent } from 'public_api';
 
 
 
@@ -30,7 +29,7 @@ describe('IbMatDateAdapter', () => {
     })
     .compileComponents();
 
-    adapter = TestBed.get(DateAdapter);
+    adapter = TestBed.inject(DateAdapter);
   }));
 
 

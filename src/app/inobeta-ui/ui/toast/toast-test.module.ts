@@ -9,8 +9,6 @@ import { toastServiceStub } from './toast.service.stub.spec';
   exports: [],
   declarations: [
   ],
-  entryComponents: [
-  ],
   providers: [
     { provide: IbToastNotification, useValue: toastServiceStub}
   ],

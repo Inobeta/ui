@@ -8,7 +8,7 @@ describe('IbFormControlService', () => {
   }));
 
   it('should be created', () => {
-    const service: IbFormControlService = TestBed.get(IbFormControlService);
+    const service: IbFormControlService = TestBed.inject(IbFormControlService);
     expect(service).toBeTruthy();
   });
 });

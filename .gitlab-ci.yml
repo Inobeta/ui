@@ -1,4 +1,4 @@
-image: node:10.11.0
+image: node:12.14.1
 
 stages:
   - quality
@@ -7,7 +7,7 @@ stages:
   - examples:deploy
 
 test_unit:
-  image: inobeta/node-chrome:10
+  image: inobeta/node-chrome:12
   stage: quality
   script:
   - npm install && npm run test-ci

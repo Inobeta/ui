@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import { MatButtonModule, MatDialogModule } from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IbToolTestModule } from '../../tools/tools-test.module';
@@ -18,23 +19,16 @@ describe('IbModalMessageService', () => {
       ],
       declarations: [IbModalMessageComponent]
     })
-    .overrideModule(BrowserDynamicTestingModule, {
-      set: {
-        entryComponents: [
-          IbModalMessageComponent
-        ],
-      }
-    })
   );
 
   it('should be created', () => {
-    const service: IbModalMessageService = TestBed.get(IbModalMessageService);
+    const service: IbModalMessageService = TestBed.inject(IbModalMessageService);
     expect(service).toBeTruthy();
   });
 
 
   it('should works when show', () => {
-    const service: IbModalMessageService = TestBed.get(IbModalMessageService);
+    const service: IbModalMessageService = TestBed.inject(IbModalMessageService);
     service.show({
       title: 'Test',
       message: 'Message'

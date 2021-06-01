@@ -2,10 +2,21 @@ import { CommonModule, registerLocaleData } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatMenuModule, MatSortModule, MatChipsModule, MatCheckboxModule,
-  MatFormFieldModule, MatInputModule, MatIconModule, MatDialogModule,
-  MatSelectModule, MatRadioModule, MatPaginatorModule, MatButtonModule,
-  MatSnackBarModule, MatCardModule, MatRippleModule, MatPaginatorIntl } from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatRippleModule } from '@angular/material/core';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatPaginatorModule, MatPaginatorIntl } from '@angular/material/paginator';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSortModule } from '@angular/material/sort';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { IbTableExportDialogComponent, IbTableExportComponent } from './components/table-export.component';
 import { IbTableHeaderComponent } from './components/table-header/table-header.component';
@@ -19,6 +30,8 @@ import { IbTableHeaderFilterComponent } from './components/table-header-filter-c
 import localeIt from '@angular/common/locales/it';
 import { IbModalModule } from '../modal/modal.module';
 import { IbMatPaginatorI18n } from './material-intl/paginator.intl';
+import { StoreModule } from '@ngrx/store';
+import { ibTableFiltersReducer } from './redux/table.reducer';
 registerLocaleData(localeIt, 'it');
 
 export function ibMatPaginatorTranslate(translateService: TranslateService) {
@@ -67,12 +80,10 @@ const COMPONENTS = [
         TranslateModule.forChild({
             extend: true
         }),
-        IbModalModule
+        IbModalModule,
+        StoreModule.forFeature('tableFiltersState', ibTableFiltersReducer),
     ],
     exports: [...COMPONENTS],
-    entryComponents: [
-      IbTableExportDialogComponent
-    ],
     providers: [
       {
         provide: MatPaginatorIntl, deps: [TranslateService],

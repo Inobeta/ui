@@ -6,10 +6,19 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IbMaterialFormControlComponent, IbFormControlDirective } from '../material-form-control/material-form-control.component';
 import { IbDynamicFormsModule, IbFormControlBase, IbFormControlService } from '../../forms';
-import { MatFormFieldModule, MatOptionModule, MatSelectModule, MatRadioModule,
-  MatCheckboxModule, MatInputModule, MatButtonModule, MatDatepickerModule,
-  MatAutocompleteModule, MatIconModule, MatGridListModule,
-  MatTooltipModule, MatSlideToggleModule, DateAdapter, MAT_DATE_FORMATS } from '@angular/material';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatOptionModule, DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { Component } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
@@ -237,23 +246,6 @@ describe('IbMaterialFormComponent', () => {
         { provide: DateAdapter, useClass: IbMatDateAdapter },
         { provide: MAT_DATE_FORMATS, deps: [TranslateService], useFactory: ibMatDatepickerTranslate},
       ]
-    })
-    .overrideModule(BrowserDynamicTestingModule, {
-      set: {
-        entryComponents: [
-        IbMatTextboxComponent,
-        IbMatDropdownComponent,
-        IbMatRadioComponent,
-        IbMatCheckboxComponent,
-        IbMatDatepickerComponent,
-        IbMatAutocompleteComponent,
-        IbMatLabelComponent,
-        IbMatTextareaComponent,
-        IbMatButtonComponent,
-        IbMatPaddingComponent,
-        IbMatSlideToggleComponent
-        ],
-      }
     })
     .compileComponents();
   }));

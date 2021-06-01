@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import 'hammerjs';
 import {TranslateService} from '@ngx-translate/core';
 
 @Component({

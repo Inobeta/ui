@@ -4,7 +4,7 @@ import { IbBreadcrumbComponent } from './breadcrumb.component';
 import { RouterModule } from '@angular/router';
 import { IbMaterialBreadcrumbComponent } from './material-breadcrumb/material-breadcrumb.component';
 import { TranslateModule } from '@ngx-translate/core';
-import { MatIconModule } from '@angular/material';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [

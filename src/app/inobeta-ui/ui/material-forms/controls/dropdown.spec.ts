@@ -4,7 +4,11 @@ import { IbToolTestModule } from '../../../tools';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IbDynamicFormsModule } from '../../forms';
-import { MatFormFieldModule, MatIconModule, MatOptionModule, MatSelectModule, MatTooltipModule } from '@angular/material';
+import { MatOptionModule } from '@angular/material/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import {  IbMatDropdownComponent } from '../controls/dropdown';
@@ -38,7 +42,7 @@ describe('IbMatDropdownComponent', () => {
       ]
     })
     .compileComponents();
-    formBuilder = TestBed.get(FormBuilder);
+    formBuilder = TestBed.inject(FormBuilder);
     control = new FormControl('control');
     form = formBuilder.group(control);
   }));

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { MatSnackBarModule } from '@angular/material';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { IbToastNotification } from './toast.service';
 
 
@@ -9,8 +9,6 @@ import { IbToastNotification } from './toast.service';
   ],
   exports: [],
   declarations: [
-  ],
-  entryComponents: [
   ],
   providers: [IbToastNotification],
 })

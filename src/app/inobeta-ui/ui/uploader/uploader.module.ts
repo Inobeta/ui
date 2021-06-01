@@ -1,11 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule, MatFormFieldModule, MatOptionModule, MatSelectModule, MatRadioModule, MatCheckboxModule, MatInputModule } from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
 import { TranslateModule } from '@ngx-translate/core';
 import { IbUploaderComponent } from './uploader.component';
 
-const entryComponents = [];
 const components = [
   IbUploaderComponent
 ];
@@ -25,9 +23,6 @@ const components = [
   declarations: [
     ...components
   ],
-  providers: [],
-  entryComponents: [
-    ...entryComponents
-  ]
+  providers: []
 })
 export class IbUploaderModule { }

@@ -2,21 +2,9 @@ import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { IbModalMessageComponent } from './modal-message.component';
 import { CommonModule } from '@angular/common';
-import { MatButtonModule, MatDialogModule } from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
 import { IbModalMessageService } from './modal-message.service';
-
-
-const entryComponents = [
-  IbModalMessageComponent
-];
-const components = [
-  IbModalMessageComponent
-
-];
-
-const services = [
-  IbModalMessageService
-];
 
 
 @NgModule({
@@ -29,16 +17,13 @@ const services = [
     MatButtonModule
   ],
   exports: [
-    ...components
+    IbModalMessageComponent
   ],
   declarations: [
-    ...components
+    IbModalMessageComponent
   ],
   providers: [
-    ...services
-  ],
-  entryComponents: [
-    ...entryComponents
+    IbModalMessageService
   ]
 })
 export class IbModalModule { }

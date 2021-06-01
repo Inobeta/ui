@@ -1,8 +1,11 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
 import { IbToolTestModule } from '../../tools';
+import { IbToastNotification } from '../../ui/toast/toast.service';
+import { toastServiceStub } from '../../ui/toast/toast.service.stub.spec';
+import { IbHttpTestModule } from '../http-test.module';
 import { IbHttpModule } from '../http.module';
 import { ibCrudToast } from './messages.decorator';
 
@@ -21,13 +24,18 @@ describe('ibCrudToast Decorator', () => {
     }
   }
   let testService: SampleService;
-
+  const initialState = { activeSession: 'fake' };
 
 
   beforeEach(async () => {
+    IbHttpModule.injector = Injector.create({
+      providers: [
+        { provide: IbToastNotification, useValue: toastServiceStub}
+      ],
+    });
     TestBed.configureTestingModule({
       imports: [
-        IbHttpModule,
+        IbHttpTestModule,
         IbToolTestModule,
         NoopAnimationsModule
       ],
@@ -35,7 +43,7 @@ describe('ibCrudToast Decorator', () => {
         SampleService
       ]
     }).compileComponents();
-    testService = TestBed.get(SampleService);
+    testService = TestBed.inject(SampleService);
   });
 
   it('Should be created', () => {

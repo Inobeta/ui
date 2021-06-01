@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { IbBreadcrumbComponent } from './breadcrumb.component';
-import { MatIconModule } from '@angular/material';
+import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -52,14 +52,14 @@ describe('IbBreadcrumbComponent', () => {
   it('should navigate without data', () => {
     expect(component).toBeTruthy();
 
-    const router = TestBed.get(Router);
+    const router = TestBed.inject(Router);
     router.navigate(['test-host']);
   });
 
   it('should navigate with data', () => {
     expect(component).toBeTruthy();
 
-    const router = TestBed.get(Router);
+    const router = TestBed.inject(Router);
     router.navigate(['test-host-with-data']);
   });
 });

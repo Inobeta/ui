@@ -10,8 +10,6 @@ import { environment } from '../environments/environment';
 import { IbTableExampleComponent } from 'src/app/examples/table-example/table-with-redux/table-example.component';
 import { NavComponent } from './examples/nav/nav.component';
 import { DynamicFormsExampleComponent } from './examples/dynamic-forms-example/dynamic-forms-example.component';
-import { ISessionState, ibSessionReducer } from './inobeta-ui/http/auth/redux/session.reducer';
-import { ITableFiltersState, ibTableFiltersReducer } from './inobeta-ui/ui/table/redux/table.reducer';
 import { ActionReducerMap, ActionReducer, MetaReducer, StoreModule } from '@ngrx/store';
 import {localStorageSync} from 'ngrx-store-localstorage';
 import { IbTableModule } from './inobeta-ui/ui/table/table.module';
@@ -21,7 +19,12 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatCardModule, MatFormFieldModule, MatInputModule, MatIconModule, MatMenuModule, MatRippleModule } from '@angular/material';
+import { MatCardModule } from '@angular/material/card';
+import { MatRippleModule } from '@angular/material/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
 import { IbMaterialFormModule } from './inobeta-ui/ui/material-forms/material-form.module';
 import { HttpExampleComponent } from './examples/http-example.component';
 import { MyCounterComponent } from './examples/redux-example/my-counter.component';
@@ -33,16 +36,16 @@ import { MyCustomTextboxComponent } from './examples/dynamic-forms-example/my-cu
 import { IbToastExampleComponent } from './examples/toast-example/toast-example.component';
 import { IbToastModule } from './inobeta-ui/ui/toast/toast.module';
 import { IbTableExampleNoReduxComponent } from './examples/table-example/table-without-redux/table-example.component';
+import { ITableFiltersState } from './inobeta-ui/ui/table/redux/table.reducer';
+import { ISessionState } from './inobeta-ui/http/auth/redux/session.reducer';
 
 export interface IAppState {
-  sessionState: ISessionState;
-  tableFiltersState: ITableFiltersState;
+  sessionState?: ISessionState;
+  tableFiltersState?: ITableFiltersState;
   countState: ICounterState;
 }
 
 const reducers: ActionReducerMap<IAppState> = {
-  sessionState: ibSessionReducer,
-  tableFiltersState: ibTableFiltersReducer,
   countState: counterReducer
 };
 
@@ -90,7 +93,13 @@ export const statusErrorMessages = { 404: 'Risorsa non trovata'};
     IbToastModule,
     MatMenuModule,
     MatRippleModule,
-    StoreModule.forRoot(reducers, {metaReducers}),
+    StoreModule.forRoot(reducers, {
+      metaReducers,
+      runtimeChecks: {
+        strictStateImmutability: false,
+        strictActionImmutability: false,
+      },
+    }),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       logOnly: environment.production,
@@ -114,7 +123,6 @@ export const statusErrorMessages = { 404: 'Risorsa non trovata'};
     {provide: 'ibHttpToastErrorCode', useValue: 'code' },
     {provide: 'ibHttpUrlExcludedFromLoader', useValue: [{url: 'http://repubblica.it', method: 'GET'}] }
   ],
-  bootstrap: [AppComponent],
-  entryComponents: [MyCustomTextboxComponent]
+  bootstrap: [AppComponent]
 })
 export class AppModule {}

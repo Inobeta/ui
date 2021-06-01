@@ -4,7 +4,8 @@ import { IbToolTestModule } from '../../../tools';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IbDynamicFormsModule } from '../../forms';
-import { MatButtonModule, MatFormFieldModule } from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { IbMatButtonComponent } from './button';
@@ -38,7 +39,7 @@ describe('IbMatButtonComponent', () => {
     })
     .compileComponents();
 
-    formBuilder = TestBed.get(FormBuilder);
+    formBuilder = TestBed.inject(FormBuilder);
     control = new FormControl('control');
     form = formBuilder.group(control);
   }));

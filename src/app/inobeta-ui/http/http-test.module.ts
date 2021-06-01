@@ -14,9 +14,7 @@ import { responseHandlerStub } from './http/response-handler.service.stub.spec';
 
 
 
-const entryComponents = [];
 const components = [
-  ...entryComponents,
   SpinnerLoadingStubComponent
 ];
 
@@ -43,9 +41,6 @@ const services = [
   ],
   providers: [
     ...services
-  ],
-  entryComponents: [
-    ...entryComponents
   ]
 })
 export class IbHttpTestModule { }

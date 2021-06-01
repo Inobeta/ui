@@ -4,7 +4,7 @@ import { IbMaterialBreadcrumbComponent } from './material-breadcrumb.component';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { MatIconModule } from '@angular/material';
+import { MatIconModule } from '@angular/material/icon';
 import { of } from 'rxjs';
 import { Component } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -55,14 +55,14 @@ describe('IbMaterialBreadcrumbComponent', () => {
   it('should navigate without data', () => {
     expect(component).toBeTruthy();
 
-    const router = TestBed.get(Router);
+    const router = TestBed.inject(Router);
     router.navigate(['test-host']);
   });
 
   it('should navigate with data', () => {
     expect(component).toBeTruthy();
 
-    const router = TestBed.get(Router);
+    const router = TestBed.inject(Router);
     router.navigate(['test-host-with-data']);
   });
 });

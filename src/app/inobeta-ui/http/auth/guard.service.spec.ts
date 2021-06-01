@@ -24,24 +24,24 @@ describe('IbAuthGuard & IbLoginGuard with activeSession null', () => {
   });
 
   it('IbAuthGuard should be created', () => {
-    const guard = TestBed.get(IbAuthGuard);
+    const guard = TestBed.inject(IbAuthGuard);
     expect(guard).toBeTruthy();
   });
 
   it('IbAuthGuard should be use canActivate ang return to login', () => {
-    const lguard = TestBed.get(IbAuthGuard);
-    lguard.canActivate();
+    const lguard = TestBed.inject(IbAuthGuard);
+    lguard.canActivate(null);
     expect(routerSpy.navigateByUrl).toHaveBeenCalledTimes(1);
     expect (routerSpy.navigateByUrl).toHaveBeenCalledWith ('/login');
   });
 
   it('IbLoginGuard should be created', () => {
-    const lguard = TestBed.get(IbLoginGuard);
+    const lguard = TestBed.inject(IbLoginGuard);
     expect(lguard).toBeTruthy();
   });
 
   it('IbLoginGuard should be use canActivate', () => {
-    const lguard = TestBed.get(IbLoginGuard);
+    const lguard = TestBed.inject(IbLoginGuard);
     lguard.canActivate();
     expect(routerSpy.navigateByUrl).toHaveBeenCalledTimes(0);
   });
@@ -69,23 +69,23 @@ describe('IbAuthGuard & IbLoginGuard with activeSession something', () => {
   });
 
   it('IbAuthGuard should be created', () => {
-    const guard = TestBed.get(IbAuthGuard);
+    const guard = TestBed.inject(IbAuthGuard);
     expect(guard).toBeTruthy();
   });
 
   it('IbAuthGuard should be use canActivate', () => {
-    const lguard = TestBed.get(IbAuthGuard);
-    lguard.canActivate();
+    const lguard = TestBed.inject(IbAuthGuard);
+    lguard.canActivate(null);
     expect(routerSpy.navigateByUrl).toHaveBeenCalledTimes(0);
   });
 
   it('IbLoginGuard should be created', () => {
-    const lguard = TestBed.get(IbLoginGuard);
+    const lguard = TestBed.inject(IbLoginGuard);
     expect(lguard).toBeTruthy();
   });
 
   it('IbLoginGuard should be use canActivate', () => {
-    const lguard = TestBed.get(IbLoginGuard);
+    const lguard = TestBed.inject(IbLoginGuard);
     lguard.canActivate();
     expect(routerSpy.navigateByUrl).toHaveBeenCalledTimes(1);
     expect (routerSpy.navigateByUrl).toHaveBeenCalledWith ('/dashboard');

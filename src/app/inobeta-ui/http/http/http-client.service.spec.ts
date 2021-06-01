@@ -34,55 +34,55 @@ describe('http client test', () => {
         IbHttpClientService
       ]
     }).compileComponents();
-    httpClient = TestBed.get(HttpClient);
-    httpMock = TestBed.get(HttpTestingController);
-    const svHttpClientService = TestBed.get(IbHttpClientService);
+    httpClient = TestBed.inject(HttpClient);
+    httpMock = TestBed.inject(HttpTestingController);
+    const svHttpClientService = TestBed.inject(IbHttpClientService);
     svHttpClientService.httpMode = 'NORMAL';
     svHttpClientService.hMobile = null;
   });
 
   it('Should be created', () => {
-    const svHttpClientService = TestBed.get(IbHttpClientService);
+    const svHttpClientService = TestBed.inject(IbHttpClientService);
     expect(svHttpClientService).toBeTruthy();
   });
 
   it('Should be use setAuthType', () => {
-    const svHttpClientService = TestBed.get(IbHttpClientService);
+    const svHttpClientService = TestBed.inject(IbHttpClientService);
     svHttpClientService.setAuthtype(IbAuthTypes.JWT);
     expect(svHttpClientService.authType).toBe(1);
   });
 
   it('createAuthorizationHeader', () => {
-    const svHttpClientService = TestBed.get(IbHttpClientService);
+    const svHttpClientService = TestBed.inject(IbHttpClientService);
     svHttpClientService.setAuthtype(IbAuthTypes.BASIC_AUTH);
-    svHttpClientService.createAuthorizationHeader(new HttpHeaders('prova: prova'));
+    svHttpClientService.createAuthorizationHeader();
     svHttpClientService.setAuthtype(IbAuthTypes.JWT);
-    svHttpClientService.createAuthorizationHeader(new HttpHeaders('prova: prova'));
+    svHttpClientService.createAuthorizationHeader();
     svHttpClientService.setAuthtype(null);
-    svHttpClientService.createAuthorizationHeader(new HttpHeaders('prova: prova'));
+    svHttpClientService.createAuthorizationHeader();
 
     svHttpClientService.httpMode = 'MOBILE';
     svHttpClientService.setAuthtype(IbAuthTypes.BASIC_AUTH);
-    svHttpClientService.createAuthorizationHeader(new HttpHeaders('prova: prova'));
+    svHttpClientService.createAuthorizationHeader();
     svHttpClientService.setAuthtype(IbAuthTypes.JWT);
-    svHttpClientService.createAuthorizationHeader(new HttpHeaders('prova: prova'));
+    svHttpClientService.createAuthorizationHeader();
     svHttpClientService.setAuthtype(null);
-    svHttpClientService.createAuthorizationHeader(new HttpHeaders('prova: prova'));
+    svHttpClientService.createAuthorizationHeader();
   });
 
   it('createAuthorizationHeader', () => {
     authServiceStub.activeSession = null;
-    const svHttpClientService = TestBed.get(IbHttpClientService);
-    svHttpClientService.createAuthorizationHeader(new HttpHeaders('prova: prova'));
+    const svHttpClientService = TestBed.inject(IbHttpClientService);
+    svHttpClientService.createAuthorizationHeader();
   });
 
   it('should use turnOffModal with pendind Request > 0', () => {
-    const svHttpClientService = TestBed.get(IbHttpClientService);
+    const svHttpClientService = TestBed.inject(IbHttpClientService);
     const spyModal = spyOn(svHttpClientService, 'turnOffModal');
     const spyHead = spyOn(svHttpClientService, 'createAuthorizationHeader');
     const testData = {name: 'Test Data'};
     svHttpClientService.pendingRequests = 10;
-    svHttpClientService.put('/ciao/put')
+    svHttpClientService.put('/ciao/put', testData)
       .subscribe(data =>
         expect(data).toEqual(testData)
       );
@@ -107,7 +107,7 @@ describe('http client test', () => {
   function runTestCase(method) {
 
     it(`should use ${method}`, (done) => {
-      const svHttpClientService = TestBed.get(IbHttpClientService);
+      const svHttpClientService = TestBed.inject(IbHttpClientService);
       const spyModal = spyOn(svHttpClientService, 'turnOffModal');
       const spyHead = spyOn(svHttpClientService, 'createAuthorizationHeader');
       const testData = {name: 'Test Data'};
@@ -125,7 +125,7 @@ describe('http client test', () => {
 
 
       svHttpClientService.httpMode = 'MOBILE';
-      const httpMobile = TestBed.get(HTTP);
+      const httpMobile = TestBed.inject(HTTP);
       svHttpClientService.hMobile = httpMobile;
       svHttpClientService[method]('/ciao/').subscribe(
         (data) => {
@@ -138,7 +138,7 @@ describe('http client test', () => {
     });
 
     it(`should use ${method} with null`, () => {
-      const svHttpClientService = TestBed.get(IbHttpClientService);
+      const svHttpClientService = TestBed.inject(IbHttpClientService);
       const spyModal = spyOn(svHttpClientService, 'turnOffModal');
       const spyHead = spyOn(svHttpClientService, 'createAuthorizationHeader');
       const testData = null;
@@ -156,7 +156,7 @@ describe('http client test', () => {
     });
 
     it(`should use ${method} FAIL`, (done) => {
-      const svHttpClientService = TestBed.get(IbHttpClientService);
+      const svHttpClientService = TestBed.inject(IbHttpClientService);
       svHttpClientService[method]('/ciao/')
         .subscribe((res: any) => {
           expect(res.failure.error.type).toBe('ERROR_' + method.toUpperCase());

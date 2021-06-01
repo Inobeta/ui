@@ -1,6 +1,6 @@
 import { Platform } from '@angular/cdk/platform';
-import { Inject, Optional } from '@angular/core';
-import { MAT_DATE_LOCALE, NativeDateAdapter } from '@angular/material';
+import { Inject, Injectable, Optional } from '@angular/core';
+import { MAT_DATE_LOCALE, NativeDateAdapter } from '@angular/material/core';
 import { TranslateService } from '@ngx-translate/core';
 
 export class IbMatDatepickerI18n {
@@ -24,6 +24,7 @@ export class IbMatDatepickerI18n {
 
 // FIXME: this adapter supports it format only but it is linked to translate service. We must support a dynamic parse and format
 
+@Injectable()
 export class IbMatDateAdapter extends NativeDateAdapter {
   constructor(@Optional() @Inject(MAT_DATE_LOCALE) matDateLocale: string, platform: Platform) {
     super(matDateLocale, platform);

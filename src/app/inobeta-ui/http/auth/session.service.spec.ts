@@ -2,7 +2,7 @@ import {TestBed} from '@angular/core/testing';
 import {Router} from '@angular/router';
 import {IbAuthService} from './auth.service';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
-import {MatSnackBar} from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import {IbSessionService} from './session.service';
 import {IbHttpClientService} from '../http/http-client.service';
 import {MockStore, provideMockStore} from '@ngrx/store/testing';
@@ -30,7 +30,7 @@ describe('IbSession service test', () => {
     logout: () => {}
   };
   const routerSpy = { navigateByUrl: jasmine.createSpy('navigateByUrl')};
-  let store: MockStore<{ activeSession: any }>;
+  let store: Store<ISessionState>;
   const initialState = { activeSession: 'fake' };
   let dispatchSpy;
 
@@ -49,10 +49,10 @@ describe('IbSession service test', () => {
         IbSessionService
       ]
     }).compileComponents();
-    httpClient = TestBed.get(HttpClient);
-    httpMock = TestBed.get(HttpTestingController);
-    store = TestBed.get<Store<ISessionState>>(Store);
-    sessionService = TestBed.get(IbSessionService);
+    httpClient = TestBed.inject(HttpClient);
+    httpMock = TestBed.inject(HttpTestingController);
+    store = TestBed.inject<Store<ISessionState>>(Store);
+    sessionService = TestBed.inject(IbSessionService);
   });
 
   beforeEach(() => {
@@ -60,13 +60,13 @@ describe('IbSession service test', () => {
   });
 
   it('Should be created', () => {
-    const svcSession = TestBed.get(IbSessionService);
+    const svcSession = TestBed.inject(IbSessionService);
     expect(svcSession).toBeTruthy();
   });
 
   it('Should be use correctly setAuthtype', () => {
-    const svcSession = TestBed.get(IbSessionService);
-    svcSession.setAuthtype();
+    const svcSession = TestBed.inject(IbSessionService);
+    svcSession.setAuthtype(IbAuthTypes.JWT);
   });
 
   it('should do login()', (done) => {
@@ -82,11 +82,11 @@ describe('IbSession service test', () => {
           username: 'salvo',
           name: 'Salvatore',
           surname: 'Niglio',
-          type: 2,
+          type: '2',
           is_active: true,
           email: 'salvatore.niglio@inobeta.net',
           created_at: '2019-10-23T15:35:08.500Z',
-          updated_at: '2019-10-23T1b7lT_x96yDm2x4hw13KOrfziM60'
+          updated_at: '2019-10-23T15:35:08.500Z'
         });
         expect(mockAuthService.storeSession).toHaveBeenCalled();
         expect(dispatchSpy).toHaveBeenCalledTimes(1);
@@ -99,11 +99,11 @@ describe('IbSession service test', () => {
       username: 'salvo',
       name: 'Salvatore',
       surname: 'Niglio',
-      type: 2,
+      type: '2',
       is_active: true,
       email: 'salvatore.niglio@inobeta.net',
       created_at: '2019-10-23T15:35:08.500Z',
-      updated_at: '2019-10-23T1b7lT_x96yDm2x4hw13KOrfziM60'
+      updated_at: '2019-10-23T15:35:08.500Z'
     });
     httpMock.verify();
     expect(mockAuthService.storeSession).toHaveBeenCalled();
@@ -122,11 +122,11 @@ describe('IbSession service test', () => {
           username: 'salvo',
           name: 'Salvatore',
           surname: 'Niglio',
-          type: 2,
+          type: '2',
           is_active: true,
           email: 'salvatore.niglio@inobeta.net',
           created_at: '2019-10-23T15:35:08.500Z',
-          updated_at: '2019-10-23T1b7lT_x96yDm2x4hw13KOrfziM60'
+          updated_at: '2019-10-23T15:35:08.500Z'
         });
         expect(mockAuthService.storeSession).toHaveBeenCalled();
         expect(dispatchSpy).toHaveBeenCalledTimes(2);
@@ -139,11 +139,11 @@ describe('IbSession service test', () => {
       username: 'salvo',
       name: 'Salvatore',
       surname: 'Niglio',
-      type: 2,
+      type: '2',
       is_active: true,
       email: 'salvatore.niglio@inobeta.net',
       created_at: '2019-10-23T15:35:08.500Z',
-      updated_at: '2019-10-23T1b7lT_x96yDm2x4hw13KOrfziM60'
+      updated_at: '2019-10-23T15:35:08.500Z'
     });
     httpMock.verify();
     expect(mockAuthService.storeSession).toHaveBeenCalled();
@@ -163,11 +163,11 @@ describe('IbSession service test', () => {
           username: 'salvo',
           name: 'Salvatore',
           surname: 'Niglio',
-          type: 2,
+          type: '2',
           is_active: true,
           email: 'salvatore.niglio@inobeta.net',
           created_at: '2019-10-23T15:35:08.500Z',
-          updated_at: '2019-10-23T1b7lT_x96yDm2x4hw13KOrfziM60'
+          updated_at: '2019-10-23T15:35:08.500Z'
         });
         expect(mockAuthService.storeSession).toHaveBeenCalled();
         expect(dispatchSpy).toHaveBeenCalledTimes(3);
@@ -180,11 +180,11 @@ describe('IbSession service test', () => {
       username: 'salvo',
       name: 'Salvatore',
       surname: 'Niglio',
-      type: 2,
+      type: '2',
       is_active: true,
       email: 'salvatore.niglio@inobeta.net',
       created_at: '2019-10-23T15:35:08.500Z',
-      updated_at: '2019-10-23T1b7lT_x96yDm2x4hw13KOrfziM60'
+      updated_at: '2019-10-23T15:35:08.500Z'
     });
     httpMock.verify();
     expect(mockAuthService.storeSession).toHaveBeenCalled();
@@ -204,11 +204,11 @@ describe('IbSession service test', () => {
           username: 'salvo',
           name: 'Salvatore',
           surname: 'Niglio',
-          type: 2,
+          type: '2',
           is_active: true,
           email: 'salvatore.niglio@inobeta.net',
           created_at: '2019-10-23T15:35:08.500Z',
-          updated_at: '2019-10-23T1b7lT_x96yDm2x4hw13KOrfziM60'
+          updated_at: '2019-10-23T15:35:08.500Z'
         });
         expect(mockAuthService.storeSession).toHaveBeenCalled();
         expect(dispatchSpy).toHaveBeenCalledTimes(4);
@@ -221,11 +221,11 @@ describe('IbSession service test', () => {
       username: 'salvo',
       name: 'Salvatore',
       surname: 'Niglio',
-      type: 2,
+      type: '2',
       is_active: true,
       email: 'salvatore.niglio@inobeta.net',
       created_at: '2019-10-23T15:35:08.500Z',
-      updated_at: '2019-10-23T1b7lT_x96yDm2x4hw13KOrfziM60'
+      updated_at: '2019-10-23T15:35:08.500Z'
     });
     httpMock.verify();
     expect(mockAuthService.storeSession).toHaveBeenCalled();
@@ -244,11 +244,11 @@ describe('IbSession service test', () => {
           username: 'salvo',
           name: 'Salvatore',
           surname: 'Niglio',
-          type: 2,
+          type: '2',
           is_active: true,
           email: 'salvatore.niglio@inobeta.net',
           created_at: '2019-10-23T15:35:08.500Z',
-          updated_at: '2019-10-23T1b7lT_x96yDm2x4hw13KOrfziM60'
+          updated_at: '2019-10-23T15:35:08.500Z'
         });
         expect(mockAuthService.storeSession).toHaveBeenCalled();
         expect(dispatchSpy).toHaveBeenCalledTimes(5);
@@ -261,11 +261,11 @@ describe('IbSession service test', () => {
       username: 'salvo',
       name: 'Salvatore',
       surname: 'Niglio',
-      type: 2,
+      type: '2',
       is_active: true,
       email: 'salvatore.niglio@inobeta.net',
       created_at: '2019-10-23T15:35:08.500Z',
-      updated_at: '2019-10-23T1b7lT_x96yDm2x4hw13KOrfziM60'
+      updated_at: '2019-10-23T15:35:08.500Z'
     });
     httpMock.verify();
     expect(mockAuthService.cookieSession).toHaveBeenCalled();
@@ -273,7 +273,7 @@ describe('IbSession service test', () => {
   });
 
   it('should do login() FAIL', (done) => {
-    sessionService = TestBed.get(IbSessionService);
+    sessionService = TestBed.inject(IbSessionService);
     sessionService.login({
       username: 'Luca',
       password: 'Luca123',
@@ -292,7 +292,7 @@ describe('IbSession service test', () => {
 
   it('Should be use correctly logout', () => {
     dispatchSpy = spyOn(store, 'dispatch');
-    const svcSession = TestBed.get(IbSessionService);
+    const svcSession = TestBed.inject(IbSessionService);
     svcSession.logout();
     expect(dispatchSpy).toHaveBeenCalled();
     expect(dispatchSpy).toHaveBeenCalledTimes(1);

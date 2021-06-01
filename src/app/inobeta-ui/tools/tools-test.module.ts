@@ -5,14 +5,12 @@ import { TranslateService } from '@ngx-translate/core';
 import { translateServiceStub } from './stubs/translate.service.stub.spec';
 import { registerLocaleData } from '@angular/common';
 import localeIt from '@angular/common/locales/it';
-import { MatDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material/dialog';
 import { serviceDialogStub } from './stubs/dialog.stub.spec';
 
 registerLocaleData(localeIt, 'it');
 
-const entryComponents = [];
 const components = [
-  ...entryComponents,
   IbMockTranslatePipeDirective
 ];
 
@@ -34,9 +32,6 @@ const services = [
   ],
   providers: [
     ...services
-  ],
-  entryComponents: [
-    ...entryComponents
   ]
 })
 export class IbToolTestModule { }
