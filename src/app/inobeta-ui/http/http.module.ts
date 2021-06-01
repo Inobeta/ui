@@ -14,6 +14,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { IbToastModule } from '../ui/toast/toast.module';
 import { IbAuthInterceptor } from './http/auth.interceptor';
 import { IbErrorInterceptor } from './http/error.interceptor';
+import { ibSessionReducer } from './auth/redux/session.reducer';
+import { StoreModule } from '@ngrx/store';
 
 
 
@@ -29,7 +31,8 @@ const components = [
     CommonModule,
     HttpClientModule,
     ReactiveFormsModule,
-    IbToastModule
+    IbToastModule,
+    StoreModule.forFeature('sessionState', ibSessionReducer),
   ],
   exports: [
     ...components

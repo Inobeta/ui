@@ -1,10 +1,10 @@
 # README
 
-1. [Naming convention](#Naming-convention)
-2. [How to version](#How-to-version)
-3. [How to install](#How-to-install)
-4. [Upgrade notes](#Upgrade-notes)
-    1. [From 1.1.x to 9.x](#From-1.1.x-to-9.x)
+1. [Naming convention](#naming-convention)
+2. [How to version](#how-to-version)
+3. [How to install](#how-to-install)
+4. [Upgrade notes](#upgrade-notes)
+    1. [From 1.1.x to 9.x](#from-1.1.x-to-9.x)
 
 ## Naming convention
 
@@ -119,4 +119,27 @@ StoreModule.forRoot(reducers, {
         strictActionImmutability: false,
       },
     }),
+```
+
+Remove any imports of ibSessionReducer and ibTableFiltersReducer, they will be import by their own module.
+
+Set sessionState and tableFiltersState as optional in IAppState
+
+Add a storageKey for storageKeySerializer in localStorageSync function call, example:
+
+```typescript
+const storageKey = 'Inotracer';
+
+export const providers = [
+  {provide: 'SessionStorageKey', useValue: storageKey},
+[...]
+];
+
+export function localStorageSyncReducer(reducer: ActionReducer<any>): ActionReducer<any> {
+  return localStorageSync({
+    keys: ['sessionState', 'tableFiltersState', 'sideMenuState', 'processingGoodsState'],
+    storageKeySerializer: (key) => `${storageKey}-${key}`,
+    rehydrate: true
+  })(reducer);
+}
 ```

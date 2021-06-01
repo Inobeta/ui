@@ -30,6 +30,8 @@ import { IbTableHeaderFilterComponent } from './components/table-header-filter-c
 import localeIt from '@angular/common/locales/it';
 import { IbModalModule } from '../modal/modal.module';
 import { IbMatPaginatorI18n } from './material-intl/paginator.intl';
+import { StoreModule } from '@ngrx/store';
+import { ibTableFiltersReducer } from './redux/table.reducer';
 registerLocaleData(localeIt, 'it');
 
 export function ibMatPaginatorTranslate(translateService: TranslateService) {
@@ -78,7 +80,8 @@ const COMPONENTS = [
         TranslateModule.forChild({
             extend: true
         }),
-        IbModalModule
+        IbModalModule,
+        StoreModule.forFeature('tableFiltersState', ibTableFiltersReducer),
     ],
     exports: [...COMPONENTS],
     providers: [

@@ -10,8 +10,6 @@ import { environment } from '../environments/environment';
 import { IbTableExampleComponent } from 'src/app/examples/table-example/table-with-redux/table-example.component';
 import { NavComponent } from './examples/nav/nav.component';
 import { DynamicFormsExampleComponent } from './examples/dynamic-forms-example/dynamic-forms-example.component';
-import { ISessionState, ibSessionReducer } from './inobeta-ui/http/auth/redux/session.reducer';
-import { ITableFiltersState, ibTableFiltersReducer } from './inobeta-ui/ui/table/redux/table.reducer';
 import { ActionReducerMap, ActionReducer, MetaReducer, StoreModule } from '@ngrx/store';
 import {localStorageSync} from 'ngrx-store-localstorage';
 import { IbTableModule } from './inobeta-ui/ui/table/table.module';
@@ -38,16 +36,16 @@ import { MyCustomTextboxComponent } from './examples/dynamic-forms-example/my-cu
 import { IbToastExampleComponent } from './examples/toast-example/toast-example.component';
 import { IbToastModule } from './inobeta-ui/ui/toast/toast.module';
 import { IbTableExampleNoReduxComponent } from './examples/table-example/table-without-redux/table-example.component';
+import { ITableFiltersState } from './inobeta-ui/ui/table/redux/table.reducer';
+import { ISessionState } from './inobeta-ui/http/auth/redux/session.reducer';
 
 export interface IAppState {
-  sessionState: ISessionState;
-  tableFiltersState: ITableFiltersState;
+  sessionState?: ISessionState;
+  tableFiltersState?: ITableFiltersState;
   countState: ICounterState;
 }
 
 const reducers: ActionReducerMap<IAppState> = {
-  sessionState: ibSessionReducer,
-  tableFiltersState: ibTableFiltersReducer,
   countState: counterReducer
 };
 
