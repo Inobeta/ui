@@ -69,10 +69,13 @@ describe('LoginFormComponent', () => {
     const password = component.form.controls['password'];
     email.setValue('salvatore.niglio@inobeta.net');
     password.setValue('password');
+    sessionServiceStub.loginSuccess = true;
     component.doLogin('/dashboard');
     expect(sessionServiceStub.login).toHaveBeenCalled();
     expect(sessionServiceStub.login).toHaveBeenCalledTimes(1);
-    expect(sessionServiceStub.login).toHaveBeenCalledWith(Object({ username: 'salvatore.niglio@inobeta.net', password: 'password', rememberMe: false }));
+    expect(sessionServiceStub.login).toHaveBeenCalledWith(
+      Object({ username: 'salvatore.niglio@inobeta.net', password: 'password', rememberMe: false })
+      );
     expect(snackBarStub.open).toHaveBeenCalled();
     expect(routerSpy.navigateByUrl).toHaveBeenCalledTimes(1);
     expect (routerSpy.navigateByUrl).toHaveBeenCalledWith ('/dashboard');

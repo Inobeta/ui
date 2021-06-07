@@ -1,5 +1,13 @@
 # Inobeta/UI Changelog
 
+## [10.0.0]
+
+- Compatibility with angular 10
+
+## [9.0.0]
+
+- Compatibility with angular 9
+
 ## [1.1.7]
 
 - IbHttpModule: ibHttpToastErrorCode for custom error code translations

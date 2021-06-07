@@ -27,7 +27,15 @@
               "src/styles.css",
               "src/app/inobeta-ui/themes/default.scss",
               "src/app/examples/theme.scss"
-            ]
+            ],
+            "allowedCommonJsDependencies": [
+              "@babel/runtime-corejs3",
+              "ngx-store",
+              "raf",
+              "papaparse",
+              "jspdf-autotable",
+              "xlsx"
+           ]
           },
           "configurations": {
             "production": {

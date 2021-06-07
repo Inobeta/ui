@@ -20,7 +20,7 @@ import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, 
       [max]="maxValidator"
       type="number"
       (keyup)="data.base.change(data.self)"
-      (change)="data.base.change(data.self)"
+      (input)="data.base.change(data.self)"
     />
     <input
       matInput

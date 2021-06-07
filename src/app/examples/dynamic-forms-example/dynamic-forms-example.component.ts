@@ -222,6 +222,9 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
       label: 'Enter a number',
       type: 'number',
       width: '25%',
+      change: (control) => {
+        console.log(control.value)
+      },
       validators: [Validators.min(3), Validators.max(12)]
     }),
     new IbMatDatepickerControl({

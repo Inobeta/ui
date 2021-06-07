@@ -1,7 +1,5 @@
 import { Component, Input } from '@angular/core';
 import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, IbFormControlBaseParams, IbFormControlData } from '../../forms/controls/form-control-base';
-import { Injector, Pipe, PipeTransform, InjectionToken } from '@angular/core';
-import { PercentPipe, CurrencyPipe, DecimalPipe, DatePipe } from '@angular/common';
 
 @Component({
   selector: '[ib-mat-label]',
