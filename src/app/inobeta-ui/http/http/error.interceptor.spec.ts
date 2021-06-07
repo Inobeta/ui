@@ -11,6 +11,7 @@ import { throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { IbErrorInterceptor } from './error.interceptor';
 import { IbToastNotification } from '../../ui/toast/toast.service';
+import { TranslateService } from '@ngx-translate/core';
 
 describe('IbErrorInterceptor', () => {
 
@@ -35,6 +36,7 @@ describe('IbErrorInterceptor', () => {
     }).compileComponents();
     service = TestBed.inject(IbErrorInterceptor);
     toastCall = spyOn(TestBed.inject(IbToastNotification), 'open').and.callThrough();
+    toastCall.calls.reset();
   });
 
   it('Should be created', () => {
@@ -115,7 +117,7 @@ describe('IbErrorInterceptor', () => {
   });
 
   it('Should override message on status code', (done) => {
-    httpHandlerSpy.handle.and.returnValue(throwError(
+    const spy = httpHandlerSpy.handle.and.returnValue(throwError(
         {
           status: 404,
           error: {
@@ -131,6 +133,33 @@ describe('IbErrorInterceptor', () => {
       done();
     }, () => {
       expect(toastCall).toHaveBeenCalledWith('Page not found', 'error');
+      done();
+    });
+  });
+
+  it('Should use a translated message for specific error codes on back end', (done) => {
+    httpHandlerSpy.handle.and.returnValue(throwError(
+        {
+          status: 404,
+          error: {
+            code: 666999,
+            customMessage: 'it does not works'
+          }
+        }
+    ));
+
+    const translate = TestBed.inject(TranslateService);
+    const spyT = spyOn(translate, 'instant').and.callFake(() => 'translated_code');
+
+    service.ibHttpToastErrorCode = 'code';
+    service.ibHttpToastOnStatusCode = {
+      404: 'Page not found'
+    };
+    service.intercept(httpRequestSpy, httpHandlerSpy).subscribe(() => {
+      done();
+    }, () => {
+      expect(spyT).toHaveBeenCalledWith('shared.ibHttp.error666999');
+      expect(toastCall).toHaveBeenCalledWith('translated_code', 'error');
       done();
     });
   });

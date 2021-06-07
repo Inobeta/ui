@@ -2,9 +2,10 @@ import {IbAuthService} from './auth.service';
 import {TestBed} from '@angular/core/testing';
 import {CookiesStorageService, LocalStorageService} from 'ngx-store';
 import {Router} from '@angular/router';
+import { IbSession } from './session.model';
 
 describe('IbAuthService', () => {
-
+  let authService: IbAuthService;
   const mockCookiesStorage = {
     empty: true,
     get: jasmine.createSpy('cook get Spy').and.callFake(() => {
@@ -64,6 +65,7 @@ describe('IbAuthService', () => {
         IbAuthService
       ]
     }).compileComponents();
+    authService = TestBed.inject(IbAuthService);
   });
 
   beforeEach(() => {
@@ -75,32 +77,29 @@ describe('IbAuthService', () => {
   });
 
   it('should be created', () => {
-    const authService = TestBed.inject(IbAuthService);
     expect(authService).toBeTruthy();
   });
 
   it('should be created with active session', () => {
     mockCookiesStorage.empty = false;
-    const authService = TestBed.inject(IbAuthService);
     expect(authService).toBeTruthy();
   });
 
   it('should call local storage method', () => {
-    const authService = TestBed.inject(IbAuthService);
+    authService.activeSession = new IbSession();
     authService.storeSession();
     expect(mockLocalStorage.set).toHaveBeenCalled();
     expect(mockLocalStorage.set).toHaveBeenCalledTimes(1);
   });
 
   it('should call local cookie method', () => {
-    const authService = TestBed.inject(IbAuthService);
+    authService.activeSession = new IbSession();
     authService.cookieSession();
     expect(mockCookiesStorage.set).toHaveBeenCalled();
     expect(mockCookiesStorage.set).toHaveBeenCalledTimes(1);
   });
 
   it('should do logout', () => {
-    const authService = TestBed.inject(IbAuthService);
     authService.logout();
     expect(mockLocalStorage.set).toHaveBeenCalled();
     expect(mockLocalStorage.set).toHaveBeenCalledTimes(1);
