@@ -41,7 +41,6 @@
     "jspdf": "^2.3.1",
     "jspdf-autotable": "^3.5.14",
     "ngx-store": "^2.1.0",
-    "npm": "^7.16.0",
     "papaparse": "^5.3.1",
     "rxjs": "6.6.7",
     "tslib": "^2.0.0",

@@ -31,7 +31,10 @@
             "allowedCommonJsDependencies": [
               "@babel/runtime-corejs3",
               "ngx-store",
-              "raf"
+              "raf",
+              "papaparse",
+              "jspdf-autotable",
+              "xlsx"
            ]
           },
           "configurations": {
