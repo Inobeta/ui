@@ -21,6 +21,9 @@ export class IbDynamicFormComponent implements OnInit, OnChanges {
     { key: 'submit', label: 'Save' }
   ];
   @Input() cols: number;
+  /**
+   * @deprecated this input will be removed in a future release
+   */
   @Input() disabledOnInit = false;
   @Output() ibSubmit = new EventEmitter<any>();
   form: FormGroup;
@@ -36,7 +39,7 @@ export class IbDynamicFormComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    const fields = changes['fields'];
+    const fields = changes.fields;
     if (fields && !fields.isFirstChange()) {
       this.form = this.cs.toFormGroup(fields.currentValue);
     }

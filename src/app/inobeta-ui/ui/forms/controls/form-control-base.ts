@@ -78,7 +78,10 @@ export interface IbFormControlBaseParams<T> {
   controlType?: string;
   type?: string;
   validators?: ValidatorFn[];
-  errors?: {message: string, condition: (c: FormControl) => void}[]; //@deprecated
+  /**
+   * @deprecated Do not use this. Use validators field instead
+   */
+  errors?: {message: string, condition: (c: FormControl) => void}[];
   options?: {key?: string | number, value: string}[];
   change?: (c: FormControl) => void;
   width?: string;
