@@ -28,6 +28,7 @@ export class IbStorageService {
     if (data){
       return JSON.parse(data);
     }
+    return null;
   }
 
   private setCookie(name: string, val: string) {
