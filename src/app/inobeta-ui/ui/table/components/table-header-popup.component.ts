@@ -99,15 +99,14 @@ import { debounceTime } from 'rxjs/operators';
   ]
 
 })
-// @deprecated
 export class IbTableHeaderPopupComponent implements OnChanges {
-
   @Input() ibTable: any;
   @Input() col: any;
 
   searchSubject = new Subject();
   filterDistinct: any[] = [];
   constructor() {
+    console.warn('ib-table-header-popup is deprecated');
     this.searchSubject.pipe(
       debounceTime(700)
     ).subscribe((text) => this.doFilter(text));

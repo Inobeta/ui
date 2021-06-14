@@ -1,4 +1,4 @@
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 
 import { IbToolTestModule } from '../../../tools';
 import { CommonModule } from '@angular/common';
@@ -13,7 +13,7 @@ import { TranslateService } from '@ngx-translate/core';
 describe('IbMatDateAdapter', () => {
   let adapter: DateAdapter<Date>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
       ],

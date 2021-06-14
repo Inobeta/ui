@@ -9,7 +9,9 @@ import { FormGroup, FormControl } from '@angular/forms';
     class: 'ibFormControl'
   },
 })
-//@deprecated
+/**
+ * @deprecated Do not use this component. It will be removed in a future release
+ */
 export class IbDynamicFormControlComponent {
   @Input() base: IbFormControlBase<any>;
   @Input() form: FormGroup;

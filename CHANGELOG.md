@@ -1,5 +1,10 @@
 # Inobeta/UI Changelog
 
+## [11.0.0]
+
+- Compatibility with angular 11
+- Added deprecation flag on some dirty and old stuff
+
 ## [10.0.0]
 
 - Compatibility with angular 10

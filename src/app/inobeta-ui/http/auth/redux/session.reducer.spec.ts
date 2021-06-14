@@ -1,6 +1,6 @@
 import * as actions from './session.actions';
 import { ibSessionReducer } from './session.reducer';
-import { async } from '@angular/core/testing';
+import { waitForAsync } from '@angular/core/testing';
 
 describe('ibSessionReducer', () => {
 
@@ -8,7 +8,7 @@ describe('ibSessionReducer', () => {
     activeSession: null
   };
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     MOCK_INITIAL_STATE_EMPTY = {
       activeSession: null
     };
