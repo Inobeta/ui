@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import {Router} from '@angular/router';
 import {ReactiveFormsModule} from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -32,7 +32,7 @@ describe('LoginFormComponent', () => {
   let fixture: ComponentFixture<IbLoginComponent>;
   const routerSpy = { navigateByUrl: jasmine.createSpy('navigateByUrl')};
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         ReactiveFormsModule,

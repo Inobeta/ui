@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { IbMaterialFormComponent } from './material-form.component';
 import { IbToolTestModule, translateServiceStub } from '../../../tools';
@@ -198,7 +198,7 @@ describe('IbMaterialFormComponent', () => {
   let fixture: ComponentFixture<TestHostComponent>;
   let component: IbMaterialFormComponent;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
         IbMaterialFormComponent,

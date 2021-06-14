@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { IbTableHeaderComponent } from './table-header.component';
 import { IbToolTestModule } from 'public_api';
@@ -25,7 +25,7 @@ describe('IbTableHeaderComponent', () => {
   let component: IbTableHeaderComponent;
   let fixture: ComponentFixture<IbTableHeaderComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
         IbTableHeaderComponent,

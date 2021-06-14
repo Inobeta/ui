@@ -1,4 +1,4 @@
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 
 import { IbToolTestModule } from '../../../tools';
 import { CommonModule } from '@angular/common';
@@ -19,7 +19,7 @@ describe('IbMatButtonComponent', () => {
   let control: FormControl;
   let form: FormGroup;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
         IbMatButtonComponent,

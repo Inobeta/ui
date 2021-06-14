@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -28,7 +28,7 @@ describe('IbModalMessageComponent', () => {
   let component: IbModalMessageComponent;
 
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ IbModalMessageComponent, TestHostComponent ],
       imports: [

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { IbBreadcrumbComponent } from './breadcrumb.component';
 import { MatIconModule } from '@angular/material/icon';
@@ -26,7 +26,7 @@ describe('IbBreadcrumbComponent', () => {
   let component: TestHostComponent;
   let fixture: ComponentFixture<TestHostComponent>;
   const routerSpy = { navigate: jasmine.createSpy('navigate')};
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ IbBreadcrumbComponent, TestHostComponent ],
       imports: [

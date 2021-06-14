@@ -1,6 +1,6 @@
 import * as actions from './table.action';
 import { ibTableFiltersReducer } from './table.reducer';
-import { async } from '@angular/core/testing';
+import { waitForAsync } from '@angular/core/testing';
 
 describe('ibTableFiltersReducer', () => {
 
@@ -8,7 +8,7 @@ describe('ibTableFiltersReducer', () => {
     tableFilters: {}
   };
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     MOCK_INITIAL_STATE_EMPTY = {
       tableFilters: {}
     };

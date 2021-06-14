@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { IbDynamicFormControlComponent } from './dynamic-form-control.component';
 import { IbFormControlService } from '..';
@@ -11,7 +11,7 @@ describe('IbDynamicFormControlComponent', () => {
   let component: IbDynamicFormControlComponent;
   let fixture: ComponentFixture<IbDynamicFormControlComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ IbDynamicFormControlComponent ],
       providers: [IbFormControlService],
