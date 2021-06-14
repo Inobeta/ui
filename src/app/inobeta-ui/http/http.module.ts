@@ -6,7 +6,6 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { IbResponseHandlerService } from './http/response-handler.service';
 import { IbAuthService } from './auth/auth.service';
 import { IbSessionService } from './auth/session.service';
-import { LocalStorageService, CookiesStorageService } from 'ngx-store';
 import { IbAuthGuard, IbLoginGuard } from './auth/guard.service';
 import { IbSpinnerLoadingComponent } from './http/spinner-loading.component';
 import { IbLoginComponent } from './pages/login.component';
@@ -16,6 +15,7 @@ import { IbAuthInterceptor } from './http/auth.interceptor';
 import { IbErrorInterceptor } from './http/error.interceptor';
 import { ibSessionReducer } from './auth/redux/session.reducer';
 import { StoreModule } from '@ngrx/store';
+import { IbStorageModule } from '../storage/storage.module';
 
 
 
@@ -32,6 +32,7 @@ const components = [
     HttpClientModule,
     ReactiveFormsModule,
     IbToastModule,
+    IbStorageModule,
     StoreModule.forFeature('sessionState', ibSessionReducer),
   ],
   exports: [
@@ -45,8 +46,6 @@ const components = [
     IbResponseHandlerService,
     IbAuthService,
     IbSessionService,
-    LocalStorageService,
-    CookiesStorageService,
     IbAuthGuard,
     IbLoginGuard,
     { provide: HTTP_INTERCEPTORS, useClass: IbAuthInterceptor, multi: true },

@@ -1,36 +1,35 @@
 import {Inject, Injectable, Optional} from '@angular/core';
+import { IbStorageService, IbStorageTypes } from '../../storage/storage.service';
 import {IbSession} from './session.model';
-import {CookiesStorageService, LocalStorageService} from 'ngx-store';
 
 @Injectable()
 export class IbAuthService {
   activeSession: IbSession = null;
   sessionStorageKey = '';
 
-  constructor(private srvLocalStorage: LocalStorageService,
-              private svcCookie: CookiesStorageService,
+  constructor(private storage: IbStorageService,
               @Inject('SessionStorageKey') @Optional() public SessionStorageKey?: string
   ) {
     this.sessionStorageKey = SessionStorageKey || '';
-    this.activeSession = this.svcCookie.get(`userData-${this.sessionStorageKey}`) as IbSession;
+    this.activeSession = this.storage.get(`userData-${this.sessionStorageKey}`, IbStorageTypes.COOKIESTORAGE) as IbSession;
     if (!this.activeSession) {
-      this.activeSession = this.srvLocalStorage.get(`userData-${this.sessionStorageKey}`) as IbSession;
+      this.activeSession = this.storage.get(`userData-${this.sessionStorageKey}`, IbStorageTypes.LOCALSTORAGE) as IbSession;
     }
   }
 
   public storeSession() {
     this.activeSession.valid = true;
-    this.srvLocalStorage.set(`userData-${this.sessionStorageKey}`, this.activeSession);
+    this.storage.set(`userData-${this.sessionStorageKey}`, this.activeSession, IbStorageTypes.LOCALSTORAGE);
   }
 
   public cookieSession() {
     this.activeSession.valid = true;
-    this.svcCookie.set(`userData-${this.sessionStorageKey}`, this.activeSession);
+    this.storage.set(`userData-${this.sessionStorageKey}`, this.activeSession, IbStorageTypes.COOKIESTORAGE);
   }
 
   public logout() {
-    this.srvLocalStorage.set(`userData-${this.sessionStorageKey}`, null);
-    this.svcCookie.set(`userData-${this.sessionStorageKey}`, null);
+    this.storage.set(`userData-${this.sessionStorageKey}`, null, IbStorageTypes.LOCALSTORAGE);
+    this.storage.set(`userData-${this.sessionStorageKey}`, null, IbStorageTypes.COOKIESTORAGE);
   }
 
   public isLoggedIn() {

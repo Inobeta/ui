@@ -3,7 +3,6 @@ import { IbHttpClientService } from './http/http-client.service';
 import { IbResponseHandlerService } from './http/response-handler.service';
 import { IbAuthService } from './auth/auth.service';
 import { IbSessionService } from './auth/session.service';
-import { LocalStorageService, CookiesStorageService } from 'ngx-store';
 import { SpinnerLoadingStubComponent } from './http/spinner-loading.stub.spec';
 import { authServiceStub } from './auth/auth.service.stub.spec';
 import { localStorageStub } from './auth/local-storage.stub.spec';
@@ -22,8 +21,6 @@ const services = [
   IbHttpClientService,
   IbResponseHandlerService,
   { provide: IbAuthService, useValue: authServiceStub},
-  { provide: LocalStorageService, useValue: localStorageStub },
-  { provide: CookiesStorageService, useValue: cookiesStorageStub },
   { provide: IbSessionService, useValue: sessionServiceStub},
   { provide: IbResponseHandlerService, useValue: responseHandlerStub}
 ];
