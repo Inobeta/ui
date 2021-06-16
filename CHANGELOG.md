@@ -1,5 +1,9 @@
 # Inobeta/UI Changelog
 
+## [12.0.0]
+
+- Compatibility with angular 12
+
 ## [11.0.0]
 
 - Compatibility with angular 11

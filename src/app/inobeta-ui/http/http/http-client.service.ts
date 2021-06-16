@@ -21,7 +21,7 @@ export class IbHttpClientService {
   public httpMode = 'NORMAL'; // FIXME: this should be private
 
   constructor(
-    protected h: HttpClient,
+    public h: HttpClient,
     private srvAuth: IbAuthService,
     private srvResponse: IbResponseHandlerService,
     @Inject('HttpMode') @Optional() public HttpMode?: string,
