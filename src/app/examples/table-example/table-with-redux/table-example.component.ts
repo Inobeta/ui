@@ -44,7 +44,8 @@ export class IbTableExampleComponent implements OnInit {
       type: IbTableTitlesTypes.NUMBER,
       format: '1.0-0',
       filterable: true,
-      width: '2%'
+      width: '2%',
+      showTotalSum: true
     },
     {
       key: 'isActive',
@@ -59,7 +60,8 @@ export class IbTableExampleComponent implements OnInit {
       type: IbTableTitlesTypes.CUSTOM,
       filterable: true,
       placeHolderInput: 'Inserisci qt',
-      width: '10%'
+      width: '10%',
+      showTotalSum: true
     },
     {
       key: 'registered',
