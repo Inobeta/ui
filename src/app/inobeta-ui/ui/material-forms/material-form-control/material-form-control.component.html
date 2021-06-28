@@ -1,9 +1,5 @@
 <ng-template formControlHost></ng-template>
 <ng-template #formControlErrors>
-  <!-- FIXME: remove base.errors in 1.2.0 -->
-  <mat-error *ngFor="let error of base.errors">
-    <span *ngIf="error.condition(self)">{{error.message | translate}}</span>
-  </mat-error>
   <mat-error *ngIf="hasError('minlength')">
     {{base.label | translate}} {{ 'shared.ibForms.errors.minlength' | translate:{v:self.errors.minlength.requiredLength} }}
   </mat-error>

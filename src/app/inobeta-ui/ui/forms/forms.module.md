@@ -24,11 +24,7 @@ export class DynamicFormsExampleComponent implements OnInit {
       key: 'firstName',
       label: 'First name',
       required: true,
-      validators: [Validators.minLength(3)],
-      errors: [{
-        condition: (control) => control.hasError('required'),
-        message: 'Email richiesta'
-      }]
+      validators: [Validators.minLength(3)]
     }),
     new IbTextbox({
       type: 'email',

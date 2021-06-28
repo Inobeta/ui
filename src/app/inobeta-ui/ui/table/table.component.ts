@@ -11,6 +11,7 @@ import * as XLSX from 'xlsx';
 import { TranslateService } from '@ngx-translate/core';
 import { IbTableItem } from './models/table-item.model';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { formatDate } from '@angular/common';
 
 
 
@@ -149,7 +150,7 @@ export class IbTableComponent implements OnChanges {
   @Input() hasPaginator = true;
   @Input() actions: IbTableAction[] = [];
 
-  @Input() structureTemplates = {}; //exportTemplate, paginatorTemplate
+  @Input() structureTemplates = {}; // exportTemplate, paginatorTemplate
   @Input() templateButtons: IbTemplateModel[] = [];
   @Input() templateHeaders: any = {};
   /** { columnName: TemplateRef } */
@@ -197,7 +198,7 @@ export class IbTableComponent implements OnChanges {
     ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes.iconSet && changes.iconSet.currentValue){
+    if (changes.iconSet && changes.iconSet.currentValue){
       this.rowIconSet = Object.assign({}, this.defaultIconSet, changes.iconSet.currentValue);
     }
     if (changes.enableReduxStore && changes.enableReduxStore.currentValue) {
@@ -337,7 +338,10 @@ export class IbTableComponent implements OnChanges {
               break;
             case IbTableTitlesTypes.DATE:
               for (const cond of this.columnFilter[k]) {
-                include = eval(`(${(new Date(el[k])).getTime()} ${cond.condition} ${(new Date(cond.value)).getTime()})`);
+                const condDate = new Date(cond.value);
+                const valueDate = new Date(el[k]);
+                // we use formatDate according to format showed on table-row component template.
+                include = eval(`('${formatDate(valueDate, 'yyyy-MM-dd', 'it')}' ${cond.condition} '${formatDate(condDate, 'yyyy-MM-dd', 'it')}')`);
                 if (!include) {
                   break;
                 }
@@ -405,7 +409,7 @@ export class IbTableComponent implements OnChanges {
       previousPageIndex: data.previousPageIndex,
       pageIndex: data.pageIndex,
       pageSize: data.pageSize,
-      lengthP: data['length']
+      lengthP: data.length
     }));
     this.currentPagination = data;
     this.sortData(this.currentSort, false);

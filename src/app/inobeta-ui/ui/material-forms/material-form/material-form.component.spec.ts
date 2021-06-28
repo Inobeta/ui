@@ -66,11 +66,7 @@ export class TestHostComponent {
       key: 'firstName',
       label: 'First name',
       required: true,
-      validators: [Validators.minLength(3)],
-      errors: [{
-        condition: (c) => c.hasError('required'),
-        message: 'Email richiesta'
-      }]
+      validators: [Validators.minLength(3)]
     }),
     new IbMatTextboxControl({
       type: 'email',

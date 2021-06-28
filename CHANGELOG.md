@@ -1,5 +1,11 @@
 # Inobeta/UI Changelog
 
+## [12.0.1]
+
+- DEVK-108 Fixed issue on date filter when using datetime data
+- DEVK-84 Removed deprecated errors field from IbFormControlBase
+- Fixed pipeline issue detected on job <https://gitlab.com/Inobeta/Interni/DevKit/inobeta-ui/-/jobs/1351671095>
+
 ## [12.0.0]
 
 - Compatibility with angular 12
