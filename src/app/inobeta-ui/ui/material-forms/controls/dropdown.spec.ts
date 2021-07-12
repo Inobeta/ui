@@ -86,7 +86,7 @@ describe('IbMatDropdownComponent', () => {
   it('should handle selection when multiple', () => {
     const spy = spyOn(component.data.base, 'change').and.callThrough();
     component.handleSelection({value: []});
-    expect(spy).not.toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
     spy.calls.reset();
     component.handleSelection({value: ['something']});
     expect(spy).toHaveBeenCalled();
