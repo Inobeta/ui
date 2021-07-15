@@ -39,7 +39,7 @@ import { formatDate } from '@angular/common';
         (export)="export($event)"
       >
       </div>
-      <div>
+      <div class="ib-table-container">
         <table
           matSort
           (matSortChange)="sortData($event)"

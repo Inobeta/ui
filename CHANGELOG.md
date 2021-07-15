@@ -7,6 +7,7 @@
 - Fixed pipeline issue detected on job <https://gitlab.com/Inobeta/Interni/DevKit/inobeta-ui/-/jobs/1351671095>
 - DEVK-127 showTotalSum option added to IbTableTitles
 - DEVK-128 fixed bug on change trigger for IbMatDropdownControl when multiple: true
+- Fixed overflow on table width for small devices or large tables
 
 ## [12.0.0]
 

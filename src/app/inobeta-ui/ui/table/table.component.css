@@ -1,6 +1,10 @@
 ib-table .hover:hover{
   opacity: .5 !important;
 }
+.ib-table-container{
+  overflow-x: auto;
+}
+
 .mat-sort-header-container {
   align-items: center;
   cursor: none !important;
