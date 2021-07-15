@@ -1,5 +1,14 @@
 # Inobeta/UI Changelog
 
+## [12.0.1]
+
+- DEVK-108 Fixed issue on date filter when using datetime data
+- DEVK-84 Removed deprecated errors field from IbFormControlBase
+- Fixed pipeline issue detected on job <https://gitlab.com/Inobeta/Interni/DevKit/inobeta-ui/-/jobs/1351671095>
+- DEVK-127 showTotalSum option added to IbTableTitles
+- DEVK-128 fixed bug on change trigger for IbMatDropdownControl when multiple: true
+- Fixed overflow on table width for small devices or large tables
+
 ## [12.0.0]
 
 - Compatibility with angular 12

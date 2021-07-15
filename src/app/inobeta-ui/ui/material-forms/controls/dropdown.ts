@@ -14,6 +14,7 @@ import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, 
         <mat-option
           *ngIf="data.base.multiple"
           class="ib-mat-dropdown-select-all"
+          disabled
           (click)="selectAll()"
         >{{ (this.all ? 'shared.ibDropdown.selectNone' : 'shared.ibDropdown.selectAll') | translate}}</mat-option>
         <mat-option *ngIf="data.base.emptyRow" [value]="data.base.emptyRow.key">
@@ -51,6 +52,11 @@ https://stackblitz.com/edit/angular-ev8r2t?file=src%2Fapp%2Fselect-multiple-exam
       .ib-mat-dropdown-select-all >>> mat-pseudo-checkbox {
         display: none;
       }
+
+      .ib-mat-dropdown-select-all >>> .mat-option-text {
+        color: rgba(0, 0, 0, 0.87) !important;
+        cursor: pointer !important;
+      }
   `]
 })
 
@@ -75,7 +81,7 @@ export class IbMatDropdownComponent implements IbFormControlInterface {
 
   handleSelection(who) {
     if (this.data.base.multiple) {
-      if (who.value[0] === undefined) { return; }
+      //if (who.value.length > 0 && who.value[0] === undefined) { return; }
       const currentValue = this.data.self.value;
       this.all = currentValue && currentValue.length === this.data.base.options.length;
     }

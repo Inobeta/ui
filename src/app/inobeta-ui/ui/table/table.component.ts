@@ -11,6 +11,7 @@ import * as XLSX from 'xlsx';
 import { TranslateService } from '@ngx-translate/core';
 import { IbTableItem } from './models/table-item.model';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { formatDate } from '@angular/common';
 
 
 
@@ -38,7 +39,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
         (export)="export($event)"
       >
       </div>
-      <div>
+      <div class="ib-table-container">
         <table
           matSort
           (matSortChange)="sortData($event)"
@@ -86,6 +87,38 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
               (edit)="edit.emit($event)"
               (delete)="delete.emit($event)"
             >
+            </tr>
+            <tr
+              class="table-row ib-table-row-totals-label"
+              *ngIf="hasTotals()"
+              >
+                <td
+                  [attr.colspan]="titles.length + templateButtons.length + (selectableRows ? 1 : 0) + (hasEdit ? 1 : 0) + (hasDelete ? 1 : 0)"
+                >
+                  {{ 'shared.ibTable.totals' | translate }}
+                </td>
+            </tr>
+            <tr
+              class="table-row ib-table-row-totals"
+              *ngIf="hasTotals()"
+              >
+              <td *ngIf="selectableRows"></td>
+              <td
+                *ngFor="let t of titles"
+                style="padding: 10px 15px;"
+                [ngStyle]="{
+                   'text-align': 'right'
+                }"
+                class="ib-table-column-type-number"
+              >
+              <span *ngIf="t.showTotalSum" style="white-space:nowrap;">
+                {{ 'shared.ibTable.totalPerPage' | translate }} {{ getTotalsOfPage(t.key) | number:t.format:'it'}}<br />
+                {{ 'shared.ibTable.totalAllPages' | translate }} {{ getTotalsAll(t.key) | number:t.format:'it'}}
+              </span>
+              </td>
+              <td *ngFor="let i of templateButtons"></td>
+              <td *ngIf="hasEdit"></td>
+              <td *ngIf="hasDelete"></td>
             </tr>
           </tbody>
 
@@ -149,7 +182,7 @@ export class IbTableComponent implements OnChanges {
   @Input() hasPaginator = true;
   @Input() actions: IbTableAction[] = [];
 
-  @Input() structureTemplates = {}; //exportTemplate, paginatorTemplate
+  @Input() structureTemplates = {}; // exportTemplate, paginatorTemplate
   @Input() templateButtons: IbTemplateModel[] = [];
   @Input() templateHeaders: any = {};
   /** { columnName: TemplateRef } */
@@ -183,6 +216,7 @@ export class IbTableComponent implements OnChanges {
   typeEnum = IbTableTitlesTypes;
   alignEnum = IbTableCellAligns;
   sortedData: IbTableItem[];
+  filteredData: IbTableItem[];
   currentPagination: any = {};
   columnFilter = {};
   numOfElements = 0;
@@ -197,7 +231,7 @@ export class IbTableComponent implements OnChanges {
     ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes.iconSet && changes.iconSet.currentValue){
+    if (changes.iconSet && changes.iconSet.currentValue){
       this.rowIconSet = Object.assign({}, this.defaultIconSet, changes.iconSet.currentValue);
     }
     if (changes.enableReduxStore && changes.enableReduxStore.currentValue) {
@@ -337,7 +371,10 @@ export class IbTableComponent implements OnChanges {
               break;
             case IbTableTitlesTypes.DATE:
               for (const cond of this.columnFilter[k]) {
-                include = eval(`(${(new Date(el[k])).getTime()} ${cond.condition} ${(new Date(cond.value)).getTime()})`);
+                const condDate = new Date(cond.value);
+                const valueDate = new Date(el[k]);
+                // we use formatDate according to format showed on table-row component template.
+                include = eval(`('${formatDate(valueDate, 'yyyy-MM-dd', 'it')}' ${cond.condition} '${formatDate(condDate, 'yyyy-MM-dd', 'it')}')`);
                 if (!include) {
                   break;
                 }
@@ -405,7 +442,7 @@ export class IbTableComponent implements OnChanges {
       previousPageIndex: data.previousPageIndex,
       pageIndex: data.pageIndex,
       pageSize: data.pageSize,
-      lengthP: data['length']
+      lengthP: data.length
     }));
     this.currentPagination = data;
     this.sortData(this.currentSort, false);
@@ -430,6 +467,7 @@ export class IbTableComponent implements OnChanges {
       }
       paginatedData.push(this.sortedData[i]);
     }
+    this.filteredData = this.sortedData.slice();
     this.sortedData = paginatedData;
   }
 
@@ -538,6 +576,26 @@ export class IbTableComponent implements OnChanges {
         document.body.removeChild(link);
       }
     }
+  }
+
+  getTotalsOfPage(key){
+    return this.sortedData.reduce((acc, el) => {
+      acc += el[key];
+      return acc;
+    }, 0);
+  }
+
+  getTotalsAll(key){
+    return this.filteredData.reduce((acc, el) => {
+      acc += el[key];
+      return acc;
+    }, 0);
+  }
+  hasTotals(){
+    for (const t of this.titles){
+      if (t.showTotalSum) { return true; }
+    }
+    return false;
   }
 }
 

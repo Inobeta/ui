@@ -94,6 +94,7 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
       label: 'Options',
       width: '22%',
       value: 'test2',
+      emptyRow: { key: null, value: 'NULL' },
       options: [
         { key: 'test1', value: 'value1' },
         { key: 'test2', value: 'value2' },

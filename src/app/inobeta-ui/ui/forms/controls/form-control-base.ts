@@ -13,7 +13,6 @@ export class IbFormControlBase<T> {
   public controlType: string;
   public type: string;
   public validators: ValidatorFn[];
-  public errors: {message: string, condition: (c: FormControl) => void}[];
   public options: {key?: string | number, value: string}[];
   public change: (c: FormControl) => void;
   public width: string;
@@ -36,10 +35,6 @@ export class IbFormControlBase<T> {
     this.order = options.order === undefined ? 1 : options.order;
     this.controlType = options.controlType || '';
     this.type = options.type || '';
-    if(options.errors){
-      console.warn('[IbFormControlBaseParams] errors field is deprecated, please change it with standard validators')
-    }
-    this.errors = options.errors || [];
     this.options = options.options || [];
     this.width = options.width || '';
     this.control = options.control || null;
@@ -78,10 +73,6 @@ export interface IbFormControlBaseParams<T> {
   controlType?: string;
   type?: string;
   validators?: ValidatorFn[];
-  /**
-   * @deprecated Do not use this. Use validators field instead
-   */
-  errors?: {message: string, condition: (c: FormControl) => void}[];
   options?: {key?: string | number, value: string}[];
   change?: (c: FormControl) => void;
   width?: string;

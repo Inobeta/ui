@@ -40,7 +40,10 @@
           "lastPageLabel": "Ultima pagina",
           "rangeLabel1": "0 di {{length}}",
           "rangeLabel2": "{{startIndex}} - {{endIndex}} di {{length}}"
-        }
+        },
+        "totals": "Totali",
+        "totalPerPage": "Totale pagina:",
+        "totalAllPages": "Totale complessivo:"
     },
     "ibDropdown": {
       "selectAll": "Seleziona tutti",
