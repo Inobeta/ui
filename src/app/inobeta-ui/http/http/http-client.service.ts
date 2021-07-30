@@ -4,7 +4,6 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError, finalize, map, tap} from 'rxjs/operators';
 import {IbAuthService} from '../auth/auth.service';
 import {IbAuthTypes} from '../auth/session.model';
-import { HTTP } from '@ionic-native/http/ngx';
 import { from } from 'rxjs';
 
 /*
@@ -31,7 +30,7 @@ export class IbHttpClientService {
     /**
    * @deprecated Mobile version deprecated
    */
-    @Inject('hMobile') @Optional() public hMobile?: HTTP, // FIXME: this should be protected
+    @Inject('hMobile') @Optional() public hMobile?, // FIXME: this should be protected
     @Inject('ibHttpUrlExcludedFromLoader') @Optional() public ibHttpUrlExcludedFromLoader?: IbHttpRequestDefinition[],
     ) {
       this.httpMode = HttpMode || 'NORMAL';
@@ -47,7 +46,7 @@ export class IbHttpClientService {
 
   /*public setAdditionalHeaders(headers: any[] = []) {}*/
 
-  createAuthorizationHeader(req: IbHttpRequestDefinition = { url: null, method: null }, responseType) {
+  createAuthorizationHeader(req: IbHttpRequestDefinition = { url: null, method: null }, responseType = null) {
     this.turnOnModal(!this.ibHttpUrlExcludedFromLoader
                           .find(u => u.url.toUpperCase() === req.url.toUpperCase() && u.method.toUpperCase() === req.method.toUpperCase())
     );
@@ -93,7 +92,7 @@ export class IbHttpClientService {
     }
   }
 
-  get(url, data, responseType = null): any {
+  get(url, data = null, responseType = null): any {
     const headers = this.createAuthorizationHeader({ url, method: 'GET' }, responseType);
     return this.getObservableFromMode('get', url, data, headers)
       .pipe(
