@@ -18,6 +18,9 @@ export class IbHttpClientService {
   public authType = IbAuthTypes.JWT; // FIXME: this should be private
   public additionalHeaders: any[] = [];
 
+  /**
+   * @deprecated Mobile version deprecated
+   */
   public httpMode = 'NORMAL'; // FIXME: this should be private
 
   constructor(
@@ -25,10 +28,16 @@ export class IbHttpClientService {
     private srvAuth: IbAuthService,
     private srvResponse: IbResponseHandlerService,
     @Inject('HttpMode') @Optional() public HttpMode?: string,
+    /**
+   * @deprecated Mobile version deprecated
+   */
     @Inject('hMobile') @Optional() public hMobile?: HTTP, // FIXME: this should be protected
     @Inject('ibHttpUrlExcludedFromLoader') @Optional() public ibHttpUrlExcludedFromLoader?: IbHttpRequestDefinition[],
     ) {
       this.httpMode = HttpMode || 'NORMAL';
+      if(HttpMode !== 'NORMAL') {
+        console.warn('Mobile version deprecated')
+      }
       this.ibHttpUrlExcludedFromLoader = this.ibHttpUrlExcludedFromLoader || [];
   }
 

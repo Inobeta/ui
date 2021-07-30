@@ -118,6 +118,7 @@ export const statusErrorMessages = { 404: 'Risorsa non trovata'};
     FlexLayoutModule
   ],
   providers: [
+
     {provide: 'HttpMode', useValue: 'NORMAL'},
     {provide: 'ibHttpToastOnStatusCode', useValue: statusErrorMessages },
     {provide: 'ibHttpToastErrorCode', useValue: 'code' },
