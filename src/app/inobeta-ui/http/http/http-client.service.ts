@@ -38,7 +38,7 @@ export class IbHttpClientService {
 
   /*public setAdditionalHeaders(headers: any[] = []) {}*/
 
-  createAuthorizationHeader(req: IbHttpRequestDefinition = { url: null, method: null}) {
+  createAuthorizationHeader(req: IbHttpRequestDefinition = { url: null, method: null }, responseType) {
     this.turnOnModal(!this.ibHttpUrlExcludedFromLoader
                           .find(u => u.url.toUpperCase() === req.url.toUpperCase() && u.method.toUpperCase() === req.method.toUpperCase())
     );
@@ -66,6 +66,9 @@ export class IbHttpClientService {
         let head = (new HttpHeaders())
           .set('Content-Type', 'application/json')
           .set('x-requested-with', 'XMLHttpRequest');
+        if (responseType) {
+          return head.set('responseType', responseType);
+        }
         if (this.authType === IbAuthTypes.BASIC_AUTH) {
           return head.set('Authorization', 'Basic ' + this.srvAuth.activeSession.authToken);
         } else if (this.authType === IbAuthTypes.JWT) {
@@ -78,12 +81,11 @@ export class IbHttpClientService {
           }
         }
         return head;
-
     }
   }
 
-  get(url, data): any {
-    const headers = this.createAuthorizationHeader({url, method: 'GET'});
+  get(url, data, responseType = null): any {
+    const headers = this.createAuthorizationHeader({ url, method: 'GET' }, responseType);
     return this.getObservableFromMode('get', url, data, headers)
       .pipe(
         map(val => {
@@ -100,8 +102,8 @@ export class IbHttpClientService {
 
   }
 
-  post(url, data): any {
-    const headers = this.createAuthorizationHeader({url, method: 'POST'});
+  post(url, data, responseType = null): any {
+    const headers = this.createAuthorizationHeader({ url, method: 'POST' }, responseType);
     return this.getObservableFromMode('post', url, data, headers)
       .pipe(
         map(val => {
@@ -117,8 +119,8 @@ export class IbHttpClientService {
       );
   }
 
-  put(url, data): any {
-    const headers = this.createAuthorizationHeader({url, method: 'PUT'});
+  put(url, data, responseType = null): any {
+    const headers = this.createAuthorizationHeader({ url, method: 'PUT' }, responseType);
     return this.getObservableFromMode('put', url, data, headers)
       .pipe(
         map(val => {
@@ -134,8 +136,8 @@ export class IbHttpClientService {
       );
   }
 
-  delete(url): any {
-    const headers = this.createAuthorizationHeader({url, method: 'DELETE'});
+  delete(url, responseType = null): any {
+    const headers = this.createAuthorizationHeader({ url, method: 'DELETE' }, responseType);
     return this.getObservableFromMode('delete', url, null, headers)
       .pipe(
         map(val => {
