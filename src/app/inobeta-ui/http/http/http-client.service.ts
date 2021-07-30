@@ -82,9 +82,9 @@ export class IbHttpClientService {
     }
   }
 
-  get(url): any {
+  get(url, data): any {
     const headers = this.createAuthorizationHeader({url, method: 'GET'});
-    return this.getObservableFromMode('get', url, null, headers)
+    return this.getObservableFromMode('get', url, data, headers)
       .pipe(
         map(val => {
           if (this.httpMode === 'MOBILE') {
@@ -156,7 +156,7 @@ export class IbHttpClientService {
     switch (this.httpMode) {
       case 'MOBILE':
         switch (method) {
-          case 'get': obs = from(this.hMobile.get(url, null, headers)); break;
+          case 'get': obs = from(this.hMobile.get(url, data, headers)); break;
           case 'post': obs = from(this.hMobile.post(url, data, headers)); break;
           case 'put': obs = from(this.hMobile.put(url, data, headers)); break;
           case 'delete': obs = from(this.hMobile.delete(url, null, headers)); break;
@@ -164,7 +164,7 @@ export class IbHttpClientService {
         break;
       default:
         switch (method) {
-          case 'get': obs = this.h.get(url, {headers}); break;
+          case 'get': obs = this.h.get(url, {headers, ...data}); break;
           case 'post': obs = this.h.post(url, data, {headers}); break;
           case 'put': obs = this.h.put(url, data, {headers}); break;
           case 'delete': obs = this.h.delete(url, {headers}); break;
