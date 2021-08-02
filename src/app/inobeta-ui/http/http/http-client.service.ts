@@ -26,11 +26,14 @@ export class IbHttpClientService {
     public h: HttpClient,
     private srvAuth: IbAuthService,
     private srvResponse: IbResponseHandlerService,
+    /**
+     * @deprecated Mobile version deprecated
+     */
     @Inject('HttpMode') @Optional() public HttpMode?: string,
     /**
-   * @deprecated Mobile version deprecated
-   */
-    @Inject('hMobile') @Optional() public hMobile?, // FIXME: this should be protected
+     * @deprecated Mobile version deprecated
+     */
+    @Inject('hMobile') @Optional() public hMobile?: any, // FIXME: this should be protected
     @Inject('ibHttpUrlExcludedFromLoader') @Optional() public ibHttpUrlExcludedFromLoader?: IbHttpRequestDefinition[],
     ) {
       this.httpMode = HttpMode || 'NORMAL';
@@ -46,7 +49,7 @@ export class IbHttpClientService {
 
   /*public setAdditionalHeaders(headers: any[] = []) {}*/
 
-  createAuthorizationHeader(req: IbHttpRequestDefinition = { url: null, method: null }, responseType = null) {
+  createAuthorizationHeader(req: IbHttpRequestDefinition = { url: null, method: null }) {
     this.turnOnModal(!this.ibHttpUrlExcludedFromLoader
                           .find(u => u.url.toUpperCase() === req.url.toUpperCase() && u.method.toUpperCase() === req.method.toUpperCase())
     );
@@ -74,9 +77,6 @@ export class IbHttpClientService {
         let head = (new HttpHeaders())
           .set('Content-Type', 'application/json')
           .set('x-requested-with', 'XMLHttpRequest');
-        if (responseType) {
-          return head.set('responseType', responseType);
-        }
         if (this.authType === IbAuthTypes.BASIC_AUTH) {
           return head.set('Authorization', 'Basic ' + this.srvAuth.activeSession.authToken);
         } else if (this.authType === IbAuthTypes.JWT) {
@@ -93,7 +93,10 @@ export class IbHttpClientService {
   }
 
   get(url, data = null, responseType = null): any {
-    const headers = this.createAuthorizationHeader({ url, method: 'GET' }, responseType);
+    const headers = this.createAuthorizationHeader({ url, method: 'GET' });
+    if (responseType != null) {
+      data.responseType = responseType;
+    }
     return this.getObservableFromMode('get', url, data, headers)
       .pipe(
         map(val => {
@@ -111,7 +114,10 @@ export class IbHttpClientService {
   }
 
   post(url, data, responseType = null): any {
-    const headers = this.createAuthorizationHeader({ url, method: 'POST' }, responseType);
+    const headers = this.createAuthorizationHeader({ url, method: 'POST' });
+    if (responseType != null) {
+      data.responseType = responseType;
+    }
     return this.getObservableFromMode('post', url, data, headers)
       .pipe(
         map(val => {
@@ -128,7 +134,10 @@ export class IbHttpClientService {
   }
 
   put(url, data, responseType = null): any {
-    const headers = this.createAuthorizationHeader({ url, method: 'PUT' }, responseType);
+    const headers = this.createAuthorizationHeader({ url, method: 'PUT' });
+    if (responseType != null) {
+      data.responseType = responseType;
+    }
     return this.getObservableFromMode('put', url, data, headers)
       .pipe(
         map(val => {
@@ -144,9 +153,12 @@ export class IbHttpClientService {
       );
   }
 
-  delete(url, responseType = null): any {
-    const headers = this.createAuthorizationHeader({ url, method: 'DELETE' }, responseType);
-    return this.getObservableFromMode('delete', url, null, headers)
+  delete(url, data, responseType = null): any {
+    const headers = this.createAuthorizationHeader({ url, method: 'DELETE' });
+    if (responseType != null) {
+      data.responseType = responseType;
+    }
+    return this.getObservableFromMode('delete', url, data, headers)
       .pipe(
         map(val => {
           if (this.httpMode === 'MOBILE') {
@@ -175,9 +187,9 @@ export class IbHttpClientService {
       default:
         switch (method) {
           case 'get': obs = this.h.get(url, {headers, ...data}); break;
-          case 'post': obs = this.h.post(url, data, {headers}); break;
-          case 'put': obs = this.h.put(url, data, {headers}); break;
-          case 'delete': obs = this.h.delete(url, {headers}); break;
+          case 'post': obs = this.h.post(url, data, {headers, ...data}); break;
+          case 'put': obs = this.h.put(url, data, {headers, ...data}); break;
+          case 'delete': obs = this.h.delete(url, {headers, ...data}); break;
         }
     }
     return obs;

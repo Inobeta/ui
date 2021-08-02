@@ -11,6 +11,8 @@ import { ibCrudToast } from '../inobeta-ui/http/http/messages.decorator';
   <button (click)="decoratorTest('some-error')">Test decorator (error)</button>
   <button (click)="otherTest()">Test 401</button>
   <button (click)="noSpinner()">No Spinner test</button>
+  <button (click)="dataParams()">Test query params sanitize</button>
+  <button (click)="dataWithResponseTypeBlob()">Test responseType 'blob'</button>
 
   <pre>
     {{ loadedData | json }}
@@ -32,8 +34,8 @@ export class HttpExampleComponent implements OnInit {
   }
 
   @ibCrudToast()
-  serviceCall(wrong = '') {
-    return this.h.get(`assets/i18n/it.json${wrong}`).pipe(
+  serviceCall(wrong = '', data = null) {
+    return this.h.get(`assets/i18n/it.json${wrong}`, data).pipe(
       map((x) => {
         console.log('additional map', x);
         return x;
@@ -43,6 +45,23 @@ export class HttpExampleComponent implements OnInit {
 
   decoratorTest(wrong = '') {
     this.serviceCall(wrong).subscribe(data => {
+      console.log('final data', data);
+    }, err => {
+      console.log('error data', err);
+    });
+  }
+
+  dataParams() {
+    const d = { params: { test1: 1, test2: 2 } };
+    this.serviceCall('', d).subscribe(data => {
+      console.log('final data', data);
+    }, err => {
+      console.log('error data', err);
+    });
+  }
+
+  dataWithResponseTypeBlob() {
+    return this.h.get('people/~jburkardt/data/csv/addresses.csv', {responseType: 'blob'}).subscribe(data => {
       console.log('final data', data);
     }, err => {
       console.log('error data', err);
