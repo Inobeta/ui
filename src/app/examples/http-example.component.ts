@@ -13,6 +13,9 @@ import { ibCrudToast } from '../inobeta-ui/http/http/messages.decorator';
   <button (click)="noSpinner()">No Spinner test</button>
   <button (click)="dataParams()">Test query params sanitize</button>
   <button (click)="dataWithResponseTypeBlob()">Test responseType 'blob'</button>
+  <button (click)="dataNullResponseTypeNotNull()">Test get with data null responseType not null</button>
+  <button (click)="dataAndResponseTypeNotNull()">Test get with data and responseType not null</button>
+  <button (click)="dataNotNullResponseTypeNll()">Test get with data not null and responseType null</button>
 
   <pre>
     {{ loadedData | json }}
@@ -54,6 +57,30 @@ export class HttpExampleComponent implements OnInit {
   dataParams() {
     const d = { params: { test1: 1, test2: 2 } };
     this.serviceCall('', d).subscribe(data => {
+      console.log('final data', data);
+    }, err => {
+      console.log('error data', err);
+    });
+  }
+
+  dataNullResponseTypeNotNull() {
+    return this.h.get(`assets/i18n/it.json`, null, 'blob').subscribe(data => {
+      console.log('final data', data);
+    }, err => {
+      console.log('error data', err);
+    });
+  }
+
+  dataAndResponseTypeNotNull() {
+    return this.h.get(`assets/i18n/it.json`, {params: {test: 'test'}}, 'blob').subscribe(data => {
+      console.log('final data', data);
+    }, err => {
+      console.log('error data', err);
+    });
+  }
+
+  dataNotNullResponseTypeNll() {
+    return this.h.get(`assets/i18n/it.json`, null, 'blob').subscribe(data => {
       console.log('final data', data);
     }, err => {
       console.log('error data', err);

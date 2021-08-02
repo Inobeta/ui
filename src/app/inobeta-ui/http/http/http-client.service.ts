@@ -94,9 +94,10 @@ export class IbHttpClientService {
 
   get(url, data = null, responseType = null): any {
     const headers = this.createAuthorizationHeader({ url, method: 'GET' });
-    if (responseType != null) {
-      data.responseType = responseType;
+    if (responseType) {
+      data = data ? {...data, responseType} : {responseType}
     }
+    console.log('data', data)
     return this.getObservableFromMode('get', url, data, headers)
       .pipe(
         map(val => {
@@ -113,10 +114,10 @@ export class IbHttpClientService {
 
   }
 
-  post(url, data, responseType = null): any {
+  post(url, data = null, responseType = null): any {
     const headers = this.createAuthorizationHeader({ url, method: 'POST' });
-    if (responseType != null) {
-      data.responseType = responseType;
+    if (responseType) {
+      data = data ? {...data, responseType} : {responseType}
     }
     return this.getObservableFromMode('post', url, data, headers)
       .pipe(
@@ -133,10 +134,10 @@ export class IbHttpClientService {
       );
   }
 
-  put(url, data, responseType = null): any {
+  put(url, data = null, responseType = null): any {
     const headers = this.createAuthorizationHeader({ url, method: 'PUT' });
-    if (responseType != null) {
-      data.responseType = responseType;
+    if (responseType) {
+      data = data ? {...data, responseType} : {responseType}
     }
     return this.getObservableFromMode('put', url, data, headers)
       .pipe(
@@ -153,10 +154,10 @@ export class IbHttpClientService {
       );
   }
 
-  delete(url, data, responseType = null): any {
+  delete(url, data = null, responseType = null): any {
     const headers = this.createAuthorizationHeader({ url, method: 'DELETE' });
-    if (responseType != null) {
-      data.responseType = responseType;
+    if (responseType) {
+      data = data ? {...data, responseType} : {responseType}
     }
     return this.getObservableFromMode('delete', url, data, headers)
       .pipe(
