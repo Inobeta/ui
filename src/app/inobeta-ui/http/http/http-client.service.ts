@@ -97,7 +97,6 @@ export class IbHttpClientService {
     if (responseType) {
       data = data ? {...data, responseType} : {responseType}
     }
-    console.log('data', data)
     return this.getObservableFromMode('get', url, data, headers)
       .pipe(
         map(val => {
