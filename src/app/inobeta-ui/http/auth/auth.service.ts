@@ -36,4 +36,8 @@ export class IbAuthService {
     return this.activeSession !== null;
   }
 
+  public haveAuthToken() {
+    return this.activeSession.authToken !== null;
+  }
+
 }
