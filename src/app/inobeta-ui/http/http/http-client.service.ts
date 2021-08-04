@@ -153,6 +153,26 @@ export class IbHttpClientService {
       );
   }
 
+  patch(url, data = null, responseType = null): any {
+    const headers = this.createAuthorizationHeader({ url, method: 'PATCH' });
+    if (responseType) {
+      data = data ? {...data, responseType} : {responseType}
+    }
+    return this.getObservableFromMode('patch', url, data, headers)
+      .pipe(
+        map(val => {
+          if (this.httpMode === 'MOBILE') {
+            return (val['data']) ? JSON.parse(val['data']) : '';
+          }
+          return val;
+        }),
+        map(x => this.srvResponse.handleOK(x)),
+        catchError(x => this.srvResponse.handleKO(x)),
+        finalize(() => this.turnOffModal()),
+        tap(x => x, err => this.srvResponse.displayErrors(err))
+      );
+  }
+
   delete(url, data = null, responseType = null): any {
     const headers = this.createAuthorizationHeader({ url, method: 'DELETE' });
     if (responseType) {
@@ -189,6 +209,7 @@ export class IbHttpClientService {
           case 'get': obs = this.h.get(url, {headers, ...data}); break;
           case 'post': obs = this.h.post(url, data, {headers, ...data}); break;
           case 'put': obs = this.h.put(url, data, {headers, ...data}); break;
+          case 'patch': obs = this.h.patch(url, data, {headers, ...data}); break;
           case 'delete': obs = this.h.delete(url, {headers, ...data}); break;
         }
     }
