@@ -101,6 +101,7 @@ import { formatDate } from '@angular/common';
                 <td *ngIf="selectableRows"></td>
                 <td
                   *ngFor="let t of titles"
+                  [ibStickyColumn]="t"
                   style="padding: 10px 15px;"
                   [ngStyle]="{
                     'text-align': 'right'

@@ -1,5 +1,4 @@
 import { Directive, ElementRef, Input, Renderer2 } from '@angular/core';
-import { element } from 'protractor';
 
 @Directive({
   selector: '[ibStickyColumn]'
@@ -9,11 +8,12 @@ export class StickyColumnDirective {
 
   constructor(private el: ElementRef, private renderer: Renderer2) { }
 
-  ngAfterContentChecked() {
+  ngAfterViewChecked() {
     if (!this.ibStickyColumn.sticky) {
       return;
     }
-    const el: Element = this.el.nativeElement;
+    
+    const el: HTMLElement = this.el.nativeElement;
 
     if (el.tagName === 'TH' && !Boolean(el.id)) {
       el.id = 'th-' + this.ibStickyColumn.key;
@@ -21,14 +21,19 @@ export class StickyColumnDirective {
     
     if (this.ibStickyColumn.sticky === 'end') {
       const elements = document.querySelectorAll('th.ib-column-sticky.ib-column-sticky-end');
+      this.renderer.setStyle(el, 'position', 'sticky');
       this.renderer.setStyle(el, 'right', this.calcOffset(Array.from(elements).reverse()) + 'px');
+      this.renderer.setStyle(el, 'z-index', el.tagName === 'TH' ? '110' : '108');
       this.renderer.addClass(el, 'ib-column-sticky');
       this.renderer.addClass(el, 'ib-column-sticky-end');
       return;
     }
     
     const elements = document.querySelectorAll('th.ib-column-sticky:not(.ib-column-sticky-end)');
-    this.renderer.setStyle(el, 'left', this.calcOffset(Array.from(elements)) + 'px');
+    const offset = this.calcOffset(Array.from(elements));
+    this.renderer.setStyle(el, 'position', 'sticky');
+    this.renderer.setStyle(el, 'left', offset + 'px');
+    this.renderer.setStyle(el, 'z-index', el.tagName === 'TH' ? '110' : '108');
     this.renderer.addClass(el, 'ib-column-sticky');
   }
 

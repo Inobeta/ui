@@ -55,7 +55,6 @@ export class IbTableStickyExampleComponent implements OnInit {
       type: IbTableTitlesTypes.BOOLEAN,
       filterable: true,
       width: '10%',
-      sticky: 'end'
     },
     {
       key: 'balance',
@@ -64,7 +63,8 @@ export class IbTableStickyExampleComponent implements OnInit {
       filterable: true,
       placeHolderInput: 'Inserisci qt',
       width: '10%',
-      showTotalSum: true
+      showTotalSum: true,
+      sticky: 'end',
     },
     {
       key: 'registered',
@@ -115,11 +115,6 @@ export class IbTableStickyExampleComponent implements OnInit {
     orientation: 'p'
   };
   constructor() { }
-
-
-  stampa(item) {
-    console.log(item);
-  }
 
   ngOnInit(): void {
 

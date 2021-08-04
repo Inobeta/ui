@@ -16,21 +16,6 @@ th {
   margin-bottom: 20px;
 }
 
-table >>> .ib-column-sticky {
-  position: sticky;
-  left: 0;
-}
-
-table >>> .ib-column-sticky-end {
-  left: unset;
-  right: 0;
-  z-index: 97 !important;
-}
-
-table >>> tr > td.ib-column-sticky {
-  z-index: 98;
-}
-
 table >>> .table-header > th.ib-column-sticky {
   z-index: 100;
   background-color: inherit;
@@ -39,13 +24,13 @@ table >>> .table-header > th.ib-column-sticky {
 thead.ib-header-sticky {
   position: sticky;
   top: 0;
-  z-index: 99;
+  z-index: 109;
 }
 
 table >>> .ib-footer-sticky {
   position:sticky;
   bottom: 0;
-  z-index: 99;
+  z-index: 109;
   background-color: #fff;
 }
 
