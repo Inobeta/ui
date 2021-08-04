@@ -43,3 +43,7 @@ ib-table >>> td {
   margin: 0 40px;
   height: 700px;
 }
+
+ib-table >>> .ib-table-container {
+  overflow: unset !important;
+}

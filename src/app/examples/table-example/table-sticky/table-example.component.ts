@@ -14,6 +14,7 @@ import { sampleData } from '../json-data';
 //ANY, HOUR, COMBOBOX
 export class IbTableStickyExampleComponent implements OnInit {
   @ViewChild('ibTable', {static: true}) ibTable: IbTableComponent;
+  stickyAreas = ['header', 'footer', 'select', 'delete', 'edit'];
   selectableRows = true;
   tableName = 'pippo';
   ibTableActionsPosition = IbTableActionsPosition;
@@ -30,7 +31,6 @@ export class IbTableStickyExampleComponent implements OnInit {
       type: IbTableTitlesTypes.STRING,
       filterable: true,
       width: '20%',
-      sticky: true,
     },
     {
       key: 'company',
@@ -38,6 +38,7 @@ export class IbTableStickyExampleComponent implements OnInit {
       type: IbTableTitlesTypes.ANY,
       filterable: true,
       width: '10%',
+      sticky: 'start'
     },
     {
       key: 'age',

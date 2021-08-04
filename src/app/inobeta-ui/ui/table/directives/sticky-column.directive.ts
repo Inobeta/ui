@@ -13,9 +13,11 @@ export class StickyColumnDirective {
     if (!this.ibStickyColumn.sticky) {
       return;
     }
-    console.log('update')
-
     const el: Element = this.el.nativeElement;
+
+    if (el.tagName === 'TH' && !Boolean(el.id)) {
+      el.id = 'th-' + this.ibStickyColumn.key;
+    }
     
     if (this.ibStickyColumn.sticky === 'end') {
       const elements = document.querySelectorAll('th.ib-column-sticky.ib-column-sticky-end');
