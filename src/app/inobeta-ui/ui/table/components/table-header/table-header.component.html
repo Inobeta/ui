@@ -1,9 +1,11 @@
-<th class="table-header-title" width="1%" *ngIf="selectableRows">{{ 'shared.ibTable.select' | translate }}</th>
+<th id="th-select" class="table-header-title" [ibStickyColumn]="{ sticky: stickyAreas.includes('select'), key: 'select'}" width="1%" *ngIf="selectableRows">{{ 'shared.ibTable.select' | translate }}</th>
 
 <ng-template *ngFor="let t of titles" [ngIf]="true">
   <th
     style="white-space: nowrap;"
     class="table-header-title"
+    [id]="'th-'+t.key"
+    [ibStickyColumn]="t"
     width="{{t.width}}"
     *ngIf="!templateHeaders[t.key]">
     <table cellpadding="0" border="0" cellspacing="0" width="100%">

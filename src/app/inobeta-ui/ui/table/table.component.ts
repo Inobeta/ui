@@ -48,7 +48,7 @@ import { formatDate } from '@angular/common';
           style="width:100%;" cellpadding="0" cellspacing="0">
 
           <!--HEADER-->
-          <thead>
+          <thead [class.ib-header-sticky]="stickyAreas.includes('header')">
             <tr class="table-header"
               ib-table-header
               [table]="this"
@@ -61,6 +61,7 @@ import { formatDate } from '@angular/common';
               [hasDelete]="hasDelete"
               [currentSort]="currentSort"
               (handleSetFilter)="setFilter($event.key, $event.value, $event.indexToSet)"
+              [stickyAreas]="stickyAreas"
             ></tr>
           </thead>
 
@@ -82,43 +83,38 @@ import { formatDate } from '@angular/common';
               [hasEdit]="hasEdit"
               [hasDelete]="hasDelete"
               [deleteConfirm]="deleteConfirm"
+              [stickyAreas]="stickyAreas"
               (rowChecked)="rowChecked.emit($event)"
               (click)="rowClicked.emit(item)"
               (edit)="edit.emit($event)"
               (delete)="delete.emit($event)"
             >
             </tr>
-            <tr
-              class="table-row ib-table-row-totals-label"
-              *ngIf="hasTotals()"
-              >
-                <td
-                  [attr.colspan]="titles.length + templateButtons.length + (selectableRows ? 1 : 0) + (hasEdit ? 1 : 0) + (hasDelete ? 1 : 0)"
-                >
+            
+            <tr *ngIf="hasTotals()"
+              class="table-row"
+              [class.ib-footer-sticky]="stickyAreas.includes('footer')">
+                <!-- td
+                  [attr.colspan]="titles.length + templateButtons.length + (selectableRows ? 1 : 0) + (hasEdit ? 1 : 0) + (hasDelete ? 1 : 0)">
                   {{ 'shared.ibTable.totals' | translate }}
+                </td -->
+                <td *ngIf="selectableRows"></td>
+                <td
+                  *ngFor="let t of titles"
+                  style="padding: 10px 15px;"
+                  [ngStyle]="{
+                    'text-align': 'right'
+                  }"
+                  class="ib-table-column-type-number"
+                >
+                  <span *ngIf="t.showTotalSum" style="white-space:nowrap;">
+                    {{ 'shared.ibTable.totalPerPage' | translate }} {{ getTotalsOfPage(t.key) | number:t.format:'it'}}<br />
+                    {{ 'shared.ibTable.totalAllPages' | translate }} {{ getTotalsAll(t.key) | number:t.format:'it'}}
+                  </span>
                 </td>
-            </tr>
-            <tr
-              class="table-row ib-table-row-totals"
-              *ngIf="hasTotals()"
-              >
-              <td *ngIf="selectableRows"></td>
-              <td
-                *ngFor="let t of titles"
-                style="padding: 10px 15px;"
-                [ngStyle]="{
-                   'text-align': 'right'
-                }"
-                class="ib-table-column-type-number"
-              >
-              <span *ngIf="t.showTotalSum" style="white-space:nowrap;">
-                {{ 'shared.ibTable.totalPerPage' | translate }} {{ getTotalsOfPage(t.key) | number:t.format:'it'}}<br />
-                {{ 'shared.ibTable.totalAllPages' | translate }} {{ getTotalsAll(t.key) | number:t.format:'it'}}
-              </span>
-              </td>
-              <td *ngFor="let i of templateButtons"></td>
-              <td *ngIf="hasEdit"></td>
-              <td *ngIf="hasDelete"></td>
+                <td *ngFor="let i of templateButtons"></td>
+                <td *ngIf="hasEdit"></td>
+                <td *ngIf="hasDelete"></td>
             </tr>
           </tbody>
 
@@ -181,6 +177,7 @@ export class IbTableComponent implements OnChanges {
   @Input() hasExport = false;
   @Input() hasPaginator = true;
   @Input() actions: IbTableAction[] = [];
+  @Input() stickyAreas = [];
 
   @Input() structureTemplates = {}; // exportTemplate, paginatorTemplate
   @Input() templateButtons: IbTemplateModel[] = [];

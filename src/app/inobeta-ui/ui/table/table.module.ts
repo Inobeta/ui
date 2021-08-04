@@ -32,6 +32,7 @@ import { IbModalModule } from '../modal/modal.module';
 import { IbMatPaginatorI18n } from './material-intl/paginator.intl';
 import { StoreModule } from '@ngrx/store';
 import { ibTableFiltersReducer } from './redux/table.reducer';
+import { StickyColumnDirective } from './directives/sticky-column.directive';
 registerLocaleData(localeIt, 'it');
 
 export function ibMatPaginatorTranslate(translateService: TranslateService) {
@@ -55,7 +56,8 @@ const COMPONENTS = [
 @NgModule({
     declarations: [
         ...COMPONENTS,
-        IbTableExportDialogComponent
+        IbTableExportDialogComponent,
+        StickyColumnDirective
     ],
     imports: [
         CommonModule,

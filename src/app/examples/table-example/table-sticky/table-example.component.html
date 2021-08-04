@@ -1,5 +1,3 @@
-See <a href="javascript:void(0);" routerLink="../noredux" routerLinkActive="active-link">Without redux</a>
-See <a href="javascript:void(0);" routerLink="../sticky" routerLinkActive="active-link">With Sticky Elements</a>
 <ng-template #rowActionTemplate let-item="item" let-isChecked="isChecked">
   <span class="delete-button" (click)="$event.stopPropagation();consolePrint({item: item, isChecked: isChecked})">
       <i class="material-icons ib-table-row-button" matRipple>search</i>
@@ -31,7 +29,8 @@ See <a href="javascript:void(0);" routerLink="../sticky" routerLinkActive="activ
     style="padding: 5px;width:100%;"
   ></ib-material-form-control>
   </ng-template>
-<ib-table
+<!-- <div class="sticky-container"> -->
+  <ib-table
   #ibTable
   [tableName]="tableName"
   [pdfCustomStyles]="pdfCustomStyles"
@@ -44,6 +43,7 @@ See <a href="javascript:void(0);" routerLink="../sticky" routerLinkActive="activ
   [hasAdd]="true"
   [hasEdit]="true"
   [hasDelete]="true"
+  [stickyAreas]="['header', 'footer', 'select', 'actions']"
   [customItemTemplate]="{ guid: lotTemplate, balance: balanceTemplate }"
   [templateButtons]="[{
     template: rowActionTemplate,
@@ -53,7 +53,7 @@ See <a href="javascript:void(0);" routerLink="../sticky" routerLinkActive="activ
     'guid': headerClickTemplate
   }"
   [actions]="actions"
-  [actionsPosition]="ibTableActionsPosition.BOTTOM"
+  [actionsPosition]="ibTableActionsPosition.BOTH"
   [structureTemplates]="{
     'exportTemplate': exportTemplate
   }"
@@ -69,3 +69,4 @@ See <a href="javascript:void(0);" routerLink="../sticky" routerLinkActive="activ
     <div style="font-weight: bold; color: red;">{{item.guid}}</div>
   </ng-template>
 </ib-table>
+<!-- </div> -->

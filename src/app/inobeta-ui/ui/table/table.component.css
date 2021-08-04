@@ -15,10 +15,40 @@ th {
   padding: 15px;
   margin-bottom: 20px;
 }
-td {
-  border-bottom: 1px solid #ccc;
-  padding: 10px;
+
+table >>> .ib-column-sticky {
+  position: sticky;
+  left: 0;
 }
+
+table >>> .ib-column-sticky-end {
+  left: unset;
+  right: 0;
+  z-index: 97 !important;
+}
+
+table >>> tr > td.ib-column-sticky {
+  z-index: 98;
+}
+
+table >>> .table-header > th.ib-column-sticky {
+  z-index: 100;
+  background-color: inherit;
+}
+
+thead.ib-header-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 99;
+}
+
+table >>> .ib-footer-sticky {
+  position:sticky;
+  bottom: 0;
+  z-index: 99;
+  background-color: #fff;
+}
+
 mat-paginator >>> .mat-paginator-container {
   justify-content: flex-start !important;
   background-color: inherit;

@@ -38,6 +38,7 @@ import { IbToastModule } from './inobeta-ui/ui/toast/toast.module';
 import { IbTableExampleNoReduxComponent } from './examples/table-example/table-without-redux/table-example.component';
 import { ITableFiltersState } from './inobeta-ui/ui/table/redux/table.reducer';
 import { ISessionState } from './inobeta-ui/http/auth/redux/session.reducer';
+import { IbTableStickyExampleComponent } from './examples/table-example/table-sticky/table-example.component';
 
 export interface IAppState {
   sessionState?: ISessionState;
@@ -72,7 +73,8 @@ export const statusErrorMessages = { 404: 'Risorsa non trovata'};
     DialogExampleComponent,
     MyCustomTextboxComponent,
     IbToastExampleComponent,
-    IbTableExampleNoReduxComponent
+    IbTableExampleNoReduxComponent,
+    IbTableStickyExampleComponent
   ],
   imports: [
     CommonModule,

@@ -65,6 +65,12 @@ export class IbTableTitles {
    * @deprecated related to INPUT_NUMBER, this field will be removed
    */
   change?: any;
+  /**
+   * @member
+   * Utilizzare `true` o `start` per "attaccare" le colonne a sinistra,
+   * `end`, invece, sulla parte destra.
+   */
+  sticky? = undefined;
 }
 
 export class IbTableAction {

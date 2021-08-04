@@ -18,6 +18,7 @@ export class IbTableHeaderComponent implements OnInit {
   @Input() columnFilter = {};
   @Input() hasEdit = false;
   @Input() hasDelete = false;
+  @Input() stickyAreas = [];
 
   renderContextMenu = {};
   visibleHeaders = {};

@@ -9,7 +9,7 @@ import { IbTableCellAligns, IbTableTitles, IbTableTitlesTypes } from '../models/
   selector: '[ib-table-row]',
   template: `
   <!--CHECKBOX-->
-  <td *ngIf="selectableRows" [formGroup]="formRow" style="text-align:center;">
+  <td *ngIf="selectableRows" [ibStickyColumn]="{ sticky: stickyAreas.includes('select'), key: 'select'}" [class.[formGroup]="formRow" style="text-align:center;">
     <mat-checkbox
       formControlName="isChecked"
       (click)="$event.stopPropagation();"
@@ -24,6 +24,7 @@ import { IbTableCellAligns, IbTableTitles, IbTableTitlesTypes } from '../models/
        'text-align': (t.align) ? t.align : alignEnum.LEFT
     }"
     class="{{ 'ib-table-column-type-' + t.type }}"
+    [ibStickyColumn]="t"
     [ngClass]="(t.getClassByCondition) ? t.getClassByCondition(item) : null">
 
     <!--TYPE = ANY-->
@@ -144,6 +145,7 @@ export class IbTableRowComponent implements OnInit {
     edit: 'edit',
     delete: 'delete'
   };
+  @Input() stickyAreas = [];
 
   @Output() rowChecked: EventEmitter<any> = new EventEmitter<any>();
   @Output() edit: EventEmitter<any> = new EventEmitter<any>();
