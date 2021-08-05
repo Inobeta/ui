@@ -41,9 +41,24 @@
           "rangeLabel1": "0 di {{length}}",
           "rangeLabel2": "{{startIndex}} - {{endIndex}} di {{length}}"
         },
-        "totals": "Totali",
-        "totalPerPage": "Totale pagina:",
-        "totalAllPages": "Totale complessivo:"
+        "func": {
+          "title": "Totali",
+          "add": "Applica Totale",
+          "dialog": {
+            "title": "Applica Totale",
+            "selectFunction": "Seleziona una funzione"
+          },
+          "sum": {
+            "name": "Somma",
+            "currentPage": "Totale pagina:",
+            "allPages": "Totale complessivo:"
+          },
+          "avg": {
+            "name": "Media",
+            "currentPage": "Media pagina:",
+            "allPages": "Media complessiva:"
+          }
+        }
     },
     "ibDropdown": {
       "selectAll": "Seleziona tutti",

@@ -92,31 +92,16 @@ import { formatDate } from '@angular/common';
             </tr>
             
             <tr *ngIf="hasTotals()"
+              ib-table-total-row
               class="table-row"
-              [class.ib-footer-sticky]="stickyAreas.includes('footer')">
-                <!-- td
-                  [attr.colspan]="titles.length + templateButtons.length + (selectableRows ? 1 : 0) + (hasEdit ? 1 : 0) + (hasDelete ? 1 : 0)">
-                  {{ 'shared.ibTable.totals' | translate }}
-                </td -->
-                <td *ngIf="selectableRows"></td>
-                <td
-                  *ngFor="let t of titles"
-                  [ibStickyColumn]="t"
-                  style="padding: 10px 15px;"
-                  [ngStyle]="{
-                    'text-align': 'right'
-                  }"
-                  class="ib-table-column-type-number"
-                >
-                  <span *ngIf="t.showTotalSum" style="white-space:nowrap;">
-                    {{ 'shared.ibTable.totalPerPage' | translate }} {{ getTotalsOfPage(t.key) | number:t.format:'it'}}<br />
-                    {{ 'shared.ibTable.totalAllPages' | translate }} {{ getTotalsAll(t.key) | number:t.format:'it'}}
-                  </span>
-                </td>
-                <td *ngFor="let i of templateButtons"></td>
-                <td *ngIf="hasEdit"></td>
-                <td *ngIf="hasDelete"></td>
-            </tr>
+              [class.ib-footer-sticky]="stickyAreas.includes('footer')"
+              [titles]="titles"
+              [selectableRows]="selectableRows"
+              [templateButtons]="templateButtons"
+              [hasEdit]="hasEdit"
+              [sortedData]="sortedData"
+              [filteredData]="filteredData"
+              [hasDelete]="hasDelete"></tr>
           </tbody>
 
           <tr *ngIf="sortedData.length === 0">
@@ -576,19 +561,6 @@ export class IbTableComponent implements OnChanges {
     }
   }
 
-  getTotalsOfPage(key){
-    return this.sortedData.reduce((acc, el) => {
-      acc += el[key];
-      return acc;
-    }, 0);
-  }
-
-  getTotalsAll(key){
-    return this.filteredData.reduce((acc, el) => {
-      acc += el[key];
-      return acc;
-    }, 0);
-  }
   hasTotals(){
     for (const t of this.titles){
       if (t.showTotalSum) { return true; }

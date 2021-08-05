@@ -3,7 +3,7 @@ import { Directive, ElementRef, Input, Renderer2 } from '@angular/core';
 @Directive({
   selector: '[ibStickyColumn]'
 })
-export class StickyColumnDirective {
+export class IbStickyColumnDirective {
   @Input() ibStickyColumn: any = {};
 
   constructor(private el: ElementRef, private renderer: Renderer2) { }
