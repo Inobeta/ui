@@ -13,18 +13,7 @@ export class IbResponseHandlerService {
   ) {}
 
   handleOK(res: Object) {
-    if (res) {
-      return res;
-      /*
-      TODO: handle resp formats
-      if (data.rsp_code != 0) {
-        throw data.rsp_msg;
-      } else {
-        return data.rsp_data;
-      }*/
-    } else {
-      throw new Error('Unable to make request with server.');
-    }
+    return res;
   }
 
   handleKO(res: HttpEvent<object> | any) {
