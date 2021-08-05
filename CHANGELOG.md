@@ -2,10 +2,9 @@
 
 ## [12.1.0]
 
-- IbHttpClientService: deprecated mobile version (HttpMode & hMobile)
-- IbHttpClientService: Added data and responseType params to methods
-- IbAuthInterceptor: added classic toast on 401 api error code
-- IbResponseHandlerService: fixed error 204 no content on handleOK()
+- DEVK-130 fix color bug on custom table columns
+- DEVK-131 Deprecated mobile version, refactor of IbHttpClientService, handleOK() and toast error 401
+- DEVK-132 removed color warn on dialog button
 
 ## [12.0.1]
 
