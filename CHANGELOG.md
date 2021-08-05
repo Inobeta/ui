@@ -1,5 +1,12 @@
 # Inobeta/UI Changelog
 
+## [12.1.0]
+
+- IbHttpClientService: deprecated mobile version (HttpMode & hMobile)
+- IbHttpClientService: Added data and responseType params to methods
+- IbAuthInterceptor: added classic toast on 401 api error code
+- IbResponseHandlerService: fixed error 204 no content on handleOK()
+
 ## [12.0.1]
 
 - DEVK-108 Fixed issue on date filter when using datetime data
