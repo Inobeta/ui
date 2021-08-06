@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { IbTableItem } from '../../../../models/table-item.model';
 import { IbTableTitles, IbTableTitlesTypes } from '../../../../models/titles.model';
 import { IbTableTotalRowApplyDialogComponent } from '../../table-total-row-apply-dialog.component';
+import { TotalRowService } from '../../total-row.service';
 import { IbTotalRowAddCellComponent } from '../ib-total-row-add-cell/ib-total-row-add-cell.component';
 import { IbTotalRowBaseCellComponent } from '../ib-total-row-base-cell/ib-total-row-base-cell.component';
 
@@ -30,7 +31,10 @@ export class IbTotalRowDefaultCellComponent {
 
   private componentRef: ComponentRef<IbTotalRowBaseCellComponent>;
 
-  constructor(public dialog: MatDialog, private componentFactoryResolver: ComponentFactoryResolver) { }
+  constructor(
+    private totalRowService: TotalRowService,
+    public dialog: MatDialog,
+    private componentFactoryResolver: ComponentFactoryResolver) { }
 
   ngOnInit(): void {
     if (this.title.type === IbTableTitlesTypes.NUMBER) {
@@ -51,17 +55,16 @@ export class IbTotalRowDefaultCellComponent {
   }
 
   loadComponent(component: Type<any>) {
-    const item = new TotalRowCellItem(component, {
-      title: this.title,
-      sortedData: this.sortedData,
-      filteredData: this.filteredData,
-    })
-    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(item.component);
+    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(component);
     const viewContainerRef = this.cellHost.viewContainerRef;
     viewContainerRef.clear();
 
     this.componentRef = viewContainerRef.createComponent<any>(componentFactory);
-    this.componentRef.instance.data = item.data;
+    this.componentRef.instance.data = {
+      title: this.title,
+      sortedData: this.sortedData,
+      filteredData: this.filteredData,
+    };
     this.componentRef.instance.addCell.subscribe(this.handleAddCell.bind(this));
   }
 
@@ -80,8 +83,4 @@ export class IbTotalRowDefaultCellComponent {
     }
     this.loadComponent(result.component);
   }
-}
-
-export class TotalRowCellItem {
-  constructor(public component: Type<any>, public data: any) {}
 }
