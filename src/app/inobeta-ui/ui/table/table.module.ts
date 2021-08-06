@@ -35,6 +35,10 @@ import { ibTableFiltersReducer } from './redux/table.reducer';
 import { IbStickyColumnDirective } from './directives/sticky-column.directive';
 import { IbTableTotalRowComponent } from './components/table-total-row/table-total-row.component';
 import { IbTableTotalRowApplyDialogComponent } from './components/table-total-row/table-total-row-apply-dialog.component';
+import { IbTotalRowSumCellComponent } from './components/table-total-row/cells/ib-total-row-sum-cell/total-row-sum-cell.component';
+import { IbTableTotalRowCellDirective, IbTotalRowDefaultCellComponent } from './components/table-total-row/cells/ib-total-row-default-cell/ib-total-row-default-cell.component';
+import { IbTotalRowAddCellComponent } from './components/table-total-row/cells/ib-total-row-add-cell/ib-total-row-add-cell.component';
+import { IbTotalRowAvgCellComponent } from './components/table-total-row/cells/ib-total-row-avg-cell/ib-total-row-avg-cell.component';
 registerLocaleData(localeIt, 'it');
 
 export function ibMatPaginatorTranslate(translateService: TranslateService) {
@@ -43,59 +47,64 @@ export function ibMatPaginatorTranslate(translateService: TranslateService) {
 
 
 const COMPONENTS = [
-    IbTableComponent,
-    IbTableHeaderComponent,
-    IbTableExportComponent,
-    IbTablePaginatorComponent,
-    IbTableHeaderPopupComponent,
-    IbTableExportDialogComponent,
-    IbTableRowComponent,
-    IbTableActionsComponent,
-    IbTableButtonComponent,
-    IbTableHeaderFilterComponent
+  IbTableComponent,
+  IbTableHeaderComponent,
+  IbTableExportComponent,
+  IbTablePaginatorComponent,
+  IbTableHeaderPopupComponent,
+  IbTableExportDialogComponent,
+  IbTableRowComponent,
+  IbTableActionsComponent,
+  IbTableButtonComponent,
+  IbTableHeaderFilterComponent
 ];
 
 @NgModule({
-    declarations: [
-      ...COMPONENTS,
-      IbTableExportDialogComponent,
-      IbStickyColumnDirective,
-      IbTableTotalRowComponent,
-      IbTableTotalRowApplyDialogComponent
-    ],
-    imports: [
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        FlexLayoutModule,
-        MatMenuModule,
-        MatSortModule,
-        MatChipsModule,
-        MatCheckboxModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatIconModule,
-        MatDialogModule,
-        MatSelectModule,
-        MatRadioModule,
-        MatPaginatorModule,
-        MatButtonModule,
-        MatSnackBarModule,
-        MatCardModule,
-        MatRippleModule,
-        TranslateModule.forChild({
-            extend: true
-        }),
-        IbModalModule,
-        StoreModule.forFeature('tableFiltersState', ibTableFiltersReducer),
-    ],
-    exports: [...COMPONENTS, IbTableTotalRowComponent, IbTableTotalRowApplyDialogComponent],
-    providers: [
-      {
-        provide: MatPaginatorIntl, deps: [TranslateService],
-        useFactory: ibMatPaginatorTranslate
-      }
-    ]
+  declarations: [
+    ...COMPONENTS,
+    IbTableExportDialogComponent,
+    IbStickyColumnDirective,
+    IbTableTotalRowComponent,
+    IbTableTotalRowApplyDialogComponent,
+    IbTableTotalRowCellDirective,
+    IbTotalRowSumCellComponent,
+    IbTotalRowDefaultCellComponent,
+    IbTotalRowAddCellComponent,
+    IbTotalRowAvgCellComponent,
+  ],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    FlexLayoutModule,
+    MatMenuModule,
+    MatSortModule,
+    MatChipsModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatDialogModule,
+    MatSelectModule,
+    MatRadioModule,
+    MatPaginatorModule,
+    MatButtonModule,
+    MatSnackBarModule,
+    MatCardModule,
+    MatRippleModule,
+    TranslateModule.forChild({
+      extend: true
+    }),
+    IbModalModule,
+    StoreModule.forFeature('tableFiltersState', ibTableFiltersReducer),
+  ],
+  exports: [...COMPONENTS, IbTableTotalRowComponent, IbTableTotalRowApplyDialogComponent, IbTableTotalRowCellDirective, IbTotalRowSumCellComponent, IbTotalRowDefaultCellComponent, IbTotalRowAddCellComponent, IbTotalRowAvgCellComponent],
+  providers: [
+    {
+      provide: MatPaginatorIntl, deps: [TranslateService],
+      useFactory: ibMatPaginatorTranslate
+    }
+  ]
 })
 export class IbTableModule { }
 

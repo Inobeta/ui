@@ -3,34 +3,14 @@
   {{ 'shared.ibTable.func.title' | translate }}
 </td -->
 <td *ngIf="selectableRows" class="ib-table-total-row-cell"></td>
-<td
+<td ib-total-row-default-cell 
   *ngFor="let t of titles"
   [ibStickyColumn]="t"
   style="padding: 10px 15px; text-align: right;"
   class="ib-table-column-type-number ib-table-total-row-cell"
->
-  <span *ngIf="totalRow.isRowTypeSupported(t) && !totalRow.shouldShowTotal(t.key)">
-    <button mat-button color="primary" (click)="open(t.key)">
-      <mat-icon>add</mat-icon>
-      {{ 'shared.ibTable.func.add' | translate }}
-    </button>
-  </span>
-
-  <div *ngIf="totalRow.isRowTypeSupported(t) && totalRow.shouldShowTotal(t.key)" style="white-space:nowrap;" >
-    <span>
-      {{ 'shared.ibTable.func.' + totalRow.columns[t.key] + '.currentPage' | translate }} 
-      {{ totalRow.apply(totalRow.columns[t.key], sortedData, t.key) | number:t.format:'it' }}
-    </span>
-    <span>
-      {{ 'shared.ibTable.func.' + totalRow.columns[t.key] + '.allPages' | translate }} 
-      {{ totalRow.apply(totalRow.columns[t.key], filteredData, t.key) | number:t.format:'it' }}
-    </span>
-    <button mat-button color="primary" (click)="open(t.key)">
-      <mat-icon>loop</mat-icon>
-      {{ 'shared.ibTable.apply' | translate }}
-    </button>
-  </div>
-</td>
+  [title]="t"
+  [sortedData]="sortedData"
+  [filteredData]="filteredData"></td>
 <td *ngFor="let i of templateButtons" class="ib-table-total-row-cell"></td>
 <td *ngIf="hasEdit" class="ib-table-total-row-cell"></td>
 <td *ngIf="hasDelete" class="ib-table-total-row-cell"></td>

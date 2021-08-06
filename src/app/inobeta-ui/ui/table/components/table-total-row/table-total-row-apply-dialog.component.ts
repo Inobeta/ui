@@ -1,5 +1,7 @@
 import { Component, Inject } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { IbTotalRowAvgCellComponent } from "./cells/ib-total-row-avg-cell/ib-total-row-avg-cell.component";
+import { IbTotalRowSumCellComponent } from "./cells/ib-total-row-sum-cell/total-row-sum-cell.component";
 
 @Component({
   selector: 'ib-table-row-apply-dialog',
@@ -16,7 +18,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
       </mat-form-field>
     </mat-dialog-content>
     <div mat-dialog-actions align="end">
-      <button mat-button [mat-dialog-close]="{ function: function }">{{ 'shared.ibTable.apply' | translate }}</button>
+      <button mat-button [mat-dialog-close]="{ component: cellsRef[function] }">{{ 'shared.ibTable.apply' | translate }}</button>
     </div>
   `,
 })
@@ -27,10 +29,14 @@ export class IbTableTotalRowApplyDialogComponent {
     { value: 'avg', viewValue: 'shared.ibTable.func.avg.name' },
   ];
 
+  cellsRef = {
+    sum: IbTotalRowSumCellComponent,
+    avg: IbTotalRowAvgCellComponent
+  }
+
   constructor(
     public dialogRef: MatDialogRef<IbTableTotalRowApplyDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
-    ) {}
+    @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   onNoClick(): void {
     this.dialogRef.close();
