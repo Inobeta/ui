@@ -47,6 +47,9 @@ export class IbTableTitles {
   format?: any;  // #FIXME change default to 1.2-2
   align?: IbTableCellAligns;
   width = 'auto';
+  /**
+   * @deprecated 
+   */
   showTotalSum? = false;
   /**
    * @deprecated do not use this field, it will be removed in a future release

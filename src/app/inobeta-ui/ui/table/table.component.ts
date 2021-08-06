@@ -91,7 +91,7 @@ import { formatDate } from '@angular/common';
             >
             </tr>
             
-            <tr *ngIf="hasTotals()"
+            <tr
               ib-table-total-row
               class="table-row"
               [class.ib-footer-sticky]="stickyAreas.includes('footer')"
@@ -559,13 +559,6 @@ export class IbTableComponent implements OnChanges {
         document.body.removeChild(link);
       }
     }
-  }
-
-  hasTotals(){
-    for (const t of this.titles){
-      if (t.showTotalSum) { return true; }
-    }
-    return false;
   }
 }
 

@@ -1,8 +1,10 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { IbTableItem, IbTableTitles, IbTemplateModel } from 'public_api';
-import { IbTableTitlesTypes } from '../../models/titles.model';
-import { IbTableRowApplyDialogComponent, TotalRow } from './total-row';
+import { IbTableItem } from '../../models/table-item.model';
+import { IbTemplateModel } from '../../models/template.model';
+import { IbTableTitles } from '../../models/titles.model';
+import { IbTableTotalRowApplyDialogComponent } from './table-total-row-apply-dialog.component';
+import { TotalRow } from './total-row';
 
 @Component({
   selector: '[ib-table-total-row]',
@@ -19,8 +21,6 @@ export class IbTableTotalRowComponent implements OnInit {
   @Input() sortedData: IbTableItem[];
   @Input() filteredData: IbTableItem[];
 
-  @Output() testEmit = new EventEmitter<any>();
-
   private totalRow: TotalRow;
   
   constructor(public dialog: MatDialog) { }
@@ -29,16 +29,12 @@ export class IbTableTotalRowComponent implements OnInit {
     this.setupTotalRow();
   }
 
-  clickedTotal(title: IbTableTitles) {
-    this.testEmit.emit({ column: title });
-  }
-
   private setupTotalRow() {
     this.totalRow = new TotalRow();
   }
 
   private open(key: string) {
-    const dialog = this.dialog.open(IbTableRowApplyDialogComponent, {
+    const dialog = this.dialog.open(IbTableTotalRowApplyDialogComponent, {
       width: '400px',
       data: { key }
     });
@@ -46,7 +42,5 @@ export class IbTableTotalRowComponent implements OnInit {
     dialog.afterClosed().subscribe(result => this.totalRow.toggle(key, result.function));
   }
 
-  private isRowTypeSupported(title: IbTableTitles) {
-    return title.type === IbTableTitlesTypes.NUMBER;
-  }
+  
 }

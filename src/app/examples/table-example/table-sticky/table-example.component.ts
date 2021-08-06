@@ -47,7 +47,6 @@ export class IbTableStickyExampleComponent implements OnInit {
       format: '1.0-0',
       filterable: true,
       width: '2%',
-      showTotalSum: true
     },
     {
       key: 'isActive',
@@ -55,16 +54,6 @@ export class IbTableStickyExampleComponent implements OnInit {
       type: IbTableTitlesTypes.BOOLEAN,
       filterable: true,
       width: '10%',
-    },
-    {
-      key: 'balance',
-      value: 'Qt',
-      type: IbTableTitlesTypes.CUSTOM,
-      filterable: true,
-      placeHolderInput: 'Inserisci qt',
-      width: '10%',
-      showTotalSum: true,
-      sticky: 'end',
     },
     {
       key: 'registered',
