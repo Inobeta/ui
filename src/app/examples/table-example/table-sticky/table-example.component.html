@@ -21,14 +21,6 @@
     >
   </ib-table-export>
 </ng-template>
-<ng-template #balanceTemplate let-item="item" let-form="form">
-  <ib-material-form-control
-    class="ibFormRow"
-    [base]="getBaseElem()"
-    [form]="setValidators(form)"
-    style="padding: 5px;width:100%;"
-  ></ib-material-form-control>
-  </ng-template>
 <!-- <div class="sticky-container"> -->
   <ib-table
   #ibTable
@@ -44,7 +36,7 @@
   [hasEdit]="true"
   [hasDelete]="true"
   [stickyAreas]="stickyAreas"
-  [customItemTemplate]="{ guid: lotTemplate, balance: balanceTemplate }"
+  [customItemTemplate]="{ guid: lotTemplate }"
   [templateButtons]="[{
     template: rowActionTemplate,
     columnName: 'Action'
