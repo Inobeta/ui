@@ -44,6 +44,7 @@
         "func": {
           "title": "Totali",
           "add": "Applica Totale",
+          "change": "Cambia",
           "dialog": {
             "title": "Applica Totale",
             "selectFunction": "Seleziona una funzione"

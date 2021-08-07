@@ -3,7 +3,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { IbTableItem } from '../../../../models/table-item.model';
 import { IbTableTitles, IbTableTitlesTypes } from '../../../../models/titles.model';
 import { IbTableTotalRowApplyDialogComponent } from '../../table-total-row-apply-dialog.component';
-import { TotalRowService } from '../../total-row.service';
 import { IbTotalRowAddCellComponent } from '../ib-total-row-add-cell/ib-total-row-add-cell.component';
 import { IbTotalRowBaseCellComponent } from '../ib-total-row-base-cell/ib-total-row-base-cell.component';
 
@@ -32,7 +31,6 @@ export class IbTotalRowDefaultCellComponent {
   private componentRef: ComponentRef<IbTotalRowBaseCellComponent>;
 
   constructor(
-    private totalRowService: TotalRowService,
     public dialog: MatDialog,
     private componentFactoryResolver: ComponentFactoryResolver) { }
 

@@ -33,12 +33,7 @@ import { IbMatPaginatorI18n } from './material-intl/paginator.intl';
 import { StoreModule } from '@ngrx/store';
 import { ibTableFiltersReducer } from './redux/table.reducer';
 import { IbStickyColumnDirective } from './directives/sticky-column.directive';
-import { IbTableTotalRowComponent } from './components/table-total-row/table-total-row.component';
-import { IbTableTotalRowApplyDialogComponent } from './components/table-total-row/table-total-row-apply-dialog.component';
-import { IbTotalRowSumCellComponent } from './components/table-total-row/cells/ib-total-row-sum-cell/total-row-sum-cell.component';
-import { IbTableTotalRowCellDirective, IbTotalRowDefaultCellComponent } from './components/table-total-row/cells/ib-total-row-default-cell/ib-total-row-default-cell.component';
-import { IbTotalRowAddCellComponent } from './components/table-total-row/cells/ib-total-row-add-cell/ib-total-row-add-cell.component';
-import { IbTotalRowAvgCellComponent } from './components/table-total-row/cells/ib-total-row-avg-cell/ib-total-row-avg-cell.component';
+import { TotalRowModule } from './components/table-total-row/total-row.module';
 registerLocaleData(localeIt, 'it');
 
 export function ibMatPaginatorTranslate(translateService: TranslateService) {
@@ -64,13 +59,6 @@ const COMPONENTS = [
     ...COMPONENTS,
     IbTableExportDialogComponent,
     IbStickyColumnDirective,
-    IbTableTotalRowComponent,
-    IbTableTotalRowApplyDialogComponent,
-    IbTableTotalRowCellDirective,
-    IbTotalRowSumCellComponent,
-    IbTotalRowDefaultCellComponent,
-    IbTotalRowAddCellComponent,
-    IbTotalRowAvgCellComponent,
   ],
   imports: [
     CommonModule,
@@ -97,8 +85,9 @@ const COMPONENTS = [
     }),
     IbModalModule,
     StoreModule.forFeature('tableFiltersState', ibTableFiltersReducer),
+    TotalRowModule,
   ],
-  exports: [...COMPONENTS, IbTableTotalRowComponent, IbTableTotalRowApplyDialogComponent, IbTableTotalRowCellDirective, IbTotalRowSumCellComponent, IbTotalRowDefaultCellComponent, IbTotalRowAddCellComponent, IbTotalRowAvgCellComponent],
+  exports: [...COMPONENTS],
   providers: [
     {
       provide: MatPaginatorIntl, deps: [TranslateService],
