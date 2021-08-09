@@ -25,11 +25,9 @@ export class IbAuthInterceptor implements HttpInterceptor {
       if (!this.ibHttpEnableInterceptors) {
         return throwError(err);
       }
-      if (err.status === 401) {
+      if (request.url !== this.ibHttpAPILoginUrl && err.status === 401) {
         this.ibToast.open(this.ibHttpToastOnLoginFailure, 'warning');
-        if (request.url !== this.ibHttpAPILoginUrl) {
-          this.session.logout(false);
-        }
+        this.session.logout(false);
       }
       return throwError(err);
     }));

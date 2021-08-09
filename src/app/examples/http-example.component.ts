@@ -6,16 +6,23 @@ import { ibCrudToast } from '../inobeta-ui/http/http/messages.decorator';
 @Component({
   selector: 'app-test',
   template: `
-
-  <button (click)="decoratorTest()">Test decorator (success)</button>
-  <button (click)="decoratorTest('some-error')">Test decorator (error)</button>
-  <button (click)="otherTest()">Test 401</button>
-  <button (click)="noSpinner()">No Spinner test</button>
-  <button (click)="dataParams()">Test query params sanitize</button>
-  <button (click)="dataWithResponseTypeBlob()">Test responseType 'blob'</button>
-  <button (click)="dataNullResponseTypeNotNull()">Test get with data null responseType not null</button>
-  <button (click)="dataAndResponseTypeNotNull()">Test get with data and responseType not null</button>
-  <button (click)="dataNotNullResponseTypeNll()">Test get with data not null and responseType null</button>
+<mat-grid-list [cols]="4"  class="ib-material-form-grid" rowHeight="60px">
+  <mat-grid-tile [colspan]="1" [rowspan]="1">
+    <button mat-raised-button color="primary" (click)="decoratorTest()">Test decorator (success)</button>
+  </mat-grid-tile>
+  <mat-grid-tile [colspan]="1" [rowspan]="1">
+    <button mat-raised-button color="primary" (click)="decoratorTest('some-error')">Test decorator (error)</button>
+  </mat-grid-tile>
+  <mat-grid-tile [colspan]="1" [rowspan]="1">
+    <button mat-raised-button color="primary" (click)="otherTest()">Test 401</button>
+  </mat-grid-tile>
+  <mat-grid-tile [colspan]="1" [rowspan]="1">
+    <button mat-raised-button color="primary" (click)="noSpinner()">No Spinner test</button>
+  </mat-grid-tile>
+  <mat-grid-tile [colspan]="1" [rowspan]="1">
+    <button mat-raised-button color="primary" (click)="getBlobData()">Test responseType 'blob'</button>
+  </mat-grid-tile>
+</mat-grid-list>
 
   <pre>
     {{ loadedData | json }}
@@ -63,35 +70,9 @@ export class HttpExampleComponent implements OnInit {
     });
   }
 
-  dataNullResponseTypeNotNull() {
-    return this.h.get(`assets/i18n/it.json`, null, 'blob').subscribe(data => {
-      console.log('final data', data);
-    }, err => {
-      console.log('error data', err);
-    });
-  }
-
-  dataAndResponseTypeNotNull() {
-    return this.h.get(`assets/i18n/it.json`, {params: {test: 'test'}}, 'blob').subscribe(data => {
-      console.log('final data', data);
-    }, err => {
-      console.log('error data', err);
-    });
-  }
-
-  dataNotNullResponseTypeNll() {
-    return this.h.get(`assets/i18n/it.json`, null, 'blob').subscribe(data => {
-      console.log('final data', data);
-    }, err => {
-      console.log('error data', err);
-    });
-  }
-
-  dataWithResponseTypeBlob() {
-    return this.h.get('people/~jburkardt/data/csv/addresses.csv', {responseType: 'blob'}).subscribe(data => {
-      console.log('final data', data);
-    }, err => {
-      console.log('error data', err);
+  getBlobData() {
+    return this.h.get('assets/i18n/it.json', null, 'blob').subscribe(data => {
+      console.log('blob data', data);
     });
   }
 

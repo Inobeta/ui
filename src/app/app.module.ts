@@ -38,6 +38,8 @@ import { IbToastModule } from './inobeta-ui/ui/toast/toast.module';
 import { IbTableExampleNoReduxComponent } from './examples/table-example/table-without-redux/table-example.component';
 import { ITableFiltersState } from './inobeta-ui/ui/table/redux/table.reducer';
 import { ISessionState } from './inobeta-ui/http/auth/redux/session.reducer';
+import { MatButtonModule } from '@angular/material/button';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 export interface IAppState {
   sessionState?: ISessionState;
@@ -93,6 +95,8 @@ export const statusErrorMessages = { 404: 'Risorsa non trovata'};
     IbToastModule,
     MatMenuModule,
     MatRippleModule,
+    MatButtonModule,
+    MatGridListModule,
     StoreModule.forRoot(reducers, {
       metaReducers,
       runtimeChecks: {
