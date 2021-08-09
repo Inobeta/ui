@@ -1,10 +1,13 @@
 import { Directive, ElementRef, Input, Renderer2 } from '@angular/core';
+import { StickyColumnData } from './sticky-area';
 
 @Directive({
   selector: '[ibStickyColumn]'
 })
 export class IbStickyColumnDirective {
-  @Input() ibStickyColumn: any = {};
+  @Input() ibStickyColumn: StickyColumnData = {
+    sticky: false
+  };
 
   constructor(private el: ElementRef, private renderer: Renderer2) { }
 

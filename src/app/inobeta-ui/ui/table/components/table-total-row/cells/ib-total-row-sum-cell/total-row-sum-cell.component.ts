@@ -1,4 +1,4 @@
-import { Component, Input, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { IbTotalRowBaseCellComponent } from '../ib-total-row-base-cell/ib-total-row-base-cell.component';
 import { TotalRowCell } from '../ib-total-row-default-cell/ib-total-row-default-cell.component';
 

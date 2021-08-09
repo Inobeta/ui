@@ -13,6 +13,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { IbStickyAreaModule } from '../../directives/sticky-area/sticky-area.module';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { MatButtonModule } from '@angular/material/button';
     MatDialogModule,
     MatSelectModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    IbStickyAreaModule
   ],
   exports: [
     IbTableTotalRowComponent,

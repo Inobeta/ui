@@ -32,8 +32,8 @@ import { IbModalModule } from '../modal/modal.module';
 import { IbMatPaginatorI18n } from './material-intl/paginator.intl';
 import { StoreModule } from '@ngrx/store';
 import { ibTableFiltersReducer } from './redux/table.reducer';
-import { IbStickyColumnDirective } from './directives/sticky-column.directive';
 import { TotalRowModule } from './components/table-total-row/total-row.module';
+import { IbStickyAreaModule } from './directives/sticky-area/sticky-area.module';
 registerLocaleData(localeIt, 'it');
 
 export function ibMatPaginatorTranslate(translateService: TranslateService) {
@@ -58,7 +58,6 @@ const COMPONENTS = [
   declarations: [
     ...COMPONENTS,
     IbTableExportDialogComponent,
-    IbStickyColumnDirective,
   ],
   imports: [
     CommonModule,
@@ -85,6 +84,7 @@ const COMPONENTS = [
     }),
     IbModalModule,
     StoreModule.forFeature('tableFiltersState', ibTableFiltersReducer),
+    IbStickyAreaModule,
     TotalRowModule,
   ],
   exports: [...COMPONENTS],
