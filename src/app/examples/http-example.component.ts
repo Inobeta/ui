@@ -61,15 +61,6 @@ export class HttpExampleComponent implements OnInit {
     });
   }
 
-  dataParams() {
-    const d = { params: { test1: 1, test2: 2 } };
-    this.serviceCall('', d).subscribe(data => {
-      console.log('final data', data);
-    }, err => {
-      console.log('error data', err);
-    });
-  }
-
   getBlobData() {
     return this.h.get('assets/i18n/it.json', null, 'blob').subscribe(data => {
       console.log('blob data', data);
