@@ -9,7 +9,7 @@ import { IbTableCellAligns, IbTableTitles, IbTableTitlesTypes } from '../models/
   selector: '[ib-table-row]',
   template: `
   <!--CHECKBOX-->
-  <td *ngIf="selectableRows" [ibStickyColumn]="{ sticky: stickyAreas.includes('select'), key: 'ib-select'}" [class.[formGroup]="formRow" style="text-align:center;">
+  <td *ngIf="selectableRows" [ibStickyColumn]="{ sticky: stickyAreas.includes('select'), key: 'ib-select'}" [formGroup]="formRow" style="text-align:center;">
     <mat-checkbox
       formControlName="isChecked"
       (click)="$event.stopPropagation();"
