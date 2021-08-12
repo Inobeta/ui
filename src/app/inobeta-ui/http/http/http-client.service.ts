@@ -18,7 +18,7 @@ export class IbHttpClientService {
   public additionalHeaders: any[] = [];
 
   /**
-   * @deprecated Mobile version deprecated
+   * @deprecated Mobile version deprecated, please delete this param
    */
   public httpMode = 'NORMAL'; // FIXME: this should be private
 
@@ -27,13 +27,13 @@ export class IbHttpClientService {
     private srvAuth: IbAuthService,
     private srvResponse: IbResponseHandlerService,
     /**
-     * @deprecated Mobile version deprecated
+     * @deprecated Mobile version deprecated, please delete this param
      */
     @Inject('HttpMode') @Optional() public HttpMode?: string,
     /**
-     * @deprecated Mobile version deprecated
+     * @deprecated Mobile version deprecated, please delete this param
      */
-    @Inject('hMobile') @Optional() public hMobile?: any, // FIXME: this should be protected
+    @Inject('hMobile') @Optional() public hMobile?: any,
     @Inject('ibHttpUrlExcludedFromLoader') @Optional() public ibHttpUrlExcludedFromLoader?: IbHttpRequestDefinition[],
     ) {
       this.httpMode = HttpMode || 'NORMAL';
