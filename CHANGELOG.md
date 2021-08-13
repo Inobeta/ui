@@ -5,6 +5,9 @@
 - DEVK-130 fix color bug on custom table columns
 - DEVK-131 IbHttpModule: added responseType & data to the http methods signature. Deprecated mobile version. http-204 format response handle
 - DEVK-132 removed color warn on dialog button
+- DEVK-86 IbTable Aggregation function added on NUMBER column
+- DEVK-86 IbTable Sticky header/footer/column added
+- DEVK-141 compodoc build fixed
 
 ## [12.0.1]
 
