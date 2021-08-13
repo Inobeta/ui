@@ -3,13 +3,13 @@ import { FormGroup } from '@angular/forms';
 import { IbModalMessageService } from '../../modal/modal-message.service';
 import { IbTableItem } from '../models/table-item.model';
 import { IbTemplateModel } from '../models/template.model';
-import { IbTableCellAligns, IbTableTitles, IbTableTitlesTypes } from '../models/titles.model';
+import { IbStickyAreas, IbTableCellAligns, IbTableTitles, IbTableTitlesTypes } from '../models/titles.model';
 
 @Component({
   selector: '[ib-table-row]',
   template: `
   <!--CHECKBOX-->
-  <td *ngIf="selectableRows" [formGroup]="formRow" style="text-align:center;">
+  <td *ngIf="selectableRows" [ibStickyColumn]="{ sticky: stickyAreas.includes(ibStickyArea.SELECT), key: 'ib-select'}" [formGroup]="formRow" style="text-align:center;">
     <mat-checkbox
       formControlName="isChecked"
       (click)="$event.stopPropagation();"
@@ -24,6 +24,7 @@ import { IbTableCellAligns, IbTableTitles, IbTableTitlesTypes } from '../models/
        'text-align': (t.align) ? t.align : alignEnum.LEFT
     }"
     class="{{ 'ib-table-column-type-' + t.type }}"
+    [ibStickyColumn]="t"
     [ngClass]="(t.getClassByCondition) ? t.getClassByCondition(item) : null">
 
     <!--TYPE = ANY-->
@@ -107,19 +108,24 @@ import { IbTableCellAligns, IbTableTitles, IbTableTitlesTypes } from '../models/
     </ng-container>
     </span>
   </td>
-  <td style="text-align: center" *ngFor="let btn of templateButtons">
+  <td [ibStickyColumn]="{ sticky: stickyAreas.includes(ibStickyArea.TEMPLATE) && 'end', key: 'ib-template-'+btn.columnName}"
+     style="text-align: center" *ngFor="let btn of templateButtons">
     <ng-container
       *ngTemplateOutlet="btn.template; context: objectToEmit()">
     </ng-container>
   </td>
-  <td style="text-align:center;" *ngIf="hasEdit">
+  <td
+    [ibStickyColumn]="{ sticky: stickyAreas.includes(ibStickyArea.EDIT) && 'end', key: 'ib-edit' }"
+    style="text-align:center;" *ngIf="hasEdit">
     <i
       class="material-icons ib-table-row-button"
       matRipple
       (click)="$event.stopPropagation(); edit.emit(objectToEmit())"
     >{{ iconSet.edit }}</i>
   </td>
-  <td style="text-align:center;" *ngIf="hasDelete">
+  <td
+    [ibStickyColumn]="{ sticky: stickyAreas.includes(ibStickyArea.DELETE) && 'end', key: 'ib-delete' }"
+    style="text-align:center;" *ngIf="hasDelete">
     <i
       class="material-icons ib-table-row-button"
       matRipple
@@ -144,6 +150,7 @@ export class IbTableRowComponent implements OnInit {
     edit: 'edit',
     delete: 'delete'
   };
+  @Input() stickyAreas = [];
 
   @Output() rowChecked: EventEmitter<any> = new EventEmitter<any>();
   @Output() edit: EventEmitter<any> = new EventEmitter<any>();
@@ -151,23 +158,24 @@ export class IbTableRowComponent implements OnInit {
 
   typeEnum = IbTableTitlesTypes;
   alignEnum = IbTableCellAligns;
+  ibStickyArea = IbStickyAreas;
 
 
-  objectToEmit(){
-    return { item: this.item, isChecked: (this.formRow.controls.isChecked.value || false), form: this.formRow};
+  objectToEmit() {
+    return { item: this.item, isChecked: (this.formRow.controls.isChecked.value || false), form: this.formRow };
   }
   constructor(private ibModal: IbModalMessageService) { }
 
   ngOnInit() {
   }
 
-  handleDelete(){
-    if(this.deleteConfirm){
+  handleDelete() {
+    if (this.deleteConfirm) {
       return this.ibModal.show({
         title: 'shared.ibTable.confirmDeleteTitle',
         message: 'shared.ibTable.confirmDeleteMessage'
       }).subscribe(r => {
-        if(r){
+        if (r) {
           this.delete.emit(this.objectToEmit())
         }
       })

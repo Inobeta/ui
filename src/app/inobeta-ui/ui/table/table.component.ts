@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { Sort } from '@angular/material/sort';
-import { IbTableAction, IbTableActionsPosition, IbTableCellAligns, IbTableTitles, IbTableTitlesTypes } from './models/titles.model';
+import { IbStickyAreas, IbTableAction, IbTableActionsPosition, IbTableCellAligns, IbTableTitles, IbTableTitlesTypes } from './models/titles.model';
 import { IbTemplateModel } from './models/template.model';
 import { Store } from '@ngrx/store';
 import * as TableFiltersActions from './redux/table.action';
@@ -39,7 +39,11 @@ import { formatDate } from '@angular/common';
         (export)="export($event)"
       >
       </div>
-      <div class="ib-table-container">
+      <div class="ib-table-container"
+        [ngStyle]="{
+          'overflow-x': (stickyAreas.length > 0) ? 'unset' : 'auto'
+        }"
+      >
         <table
           matSort
           (matSortChange)="sortData($event)"
@@ -48,7 +52,7 @@ import { formatDate } from '@angular/common';
           style="width:100%;" cellpadding="0" cellspacing="0">
 
           <!--HEADER-->
-          <thead>
+          <thead [class.ib-header-sticky]="stickyAreas.includes(ibStickyArea.HEADER)">
             <tr class="table-header"
               ib-table-header
               [table]="this"
@@ -61,6 +65,7 @@ import { formatDate } from '@angular/common';
               [hasDelete]="hasDelete"
               [currentSort]="currentSort"
               (handleSetFilter)="setFilter($event.key, $event.value, $event.indexToSet)"
+              [stickyAreas]="stickyAreas"
             ></tr>
           </thead>
 
@@ -82,44 +87,27 @@ import { formatDate } from '@angular/common';
               [hasEdit]="hasEdit"
               [hasDelete]="hasDelete"
               [deleteConfirm]="deleteConfirm"
+              [stickyAreas]="stickyAreas"
               (rowChecked)="rowChecked.emit($event)"
               (click)="rowClicked.emit(item)"
               (edit)="edit.emit($event)"
               (delete)="delete.emit($event)"
             >
             </tr>
+
             <tr
-              class="table-row ib-table-row-totals-label"
-              *ngIf="hasTotals()"
-              >
-                <td
-                  [attr.colspan]="titles.length + templateButtons.length + (selectableRows ? 1 : 0) + (hasEdit ? 1 : 0) + (hasDelete ? 1 : 0)"
-                >
-                  {{ 'shared.ibTable.totals' | translate }}
-                </td>
-            </tr>
-            <tr
-              class="table-row ib-table-row-totals"
-              *ngIf="hasTotals()"
-              >
-              <td *ngIf="selectableRows"></td>
-              <td
-                *ngFor="let t of titles"
-                style="padding: 10px 15px;"
-                [ngStyle]="{
-                   'text-align': 'right'
-                }"
-                class="ib-table-column-type-number"
-              >
-              <span *ngIf="t.showTotalSum" style="white-space:nowrap;">
-                {{ 'shared.ibTable.totalPerPage' | translate }} {{ getTotalsOfPage(t.key) | number:t.format:'it'}}<br />
-                {{ 'shared.ibTable.totalAllPages' | translate }} {{ getTotalsAll(t.key) | number:t.format:'it'}}
-              </span>
-              </td>
-              <td *ngFor="let i of templateButtons"></td>
-              <td *ngIf="hasEdit"></td>
-              <td *ngIf="hasDelete"></td>
-            </tr>
+              ib-table-total-row
+              *ngIf="hasFooter"
+              class="table-row"
+              [class.ib-footer-sticky]="stickyAreas.includes(ibStickyArea.FOOTER)"
+              [titles]="titles"
+              [selectableRows]="selectableRows"
+              [templateButtons]="templateButtons"
+              [hasEdit]="hasEdit"
+              [sortedData]="sortedData"
+              [filteredData]="filteredData"
+              [hasDelete]="hasDelete"
+              ></tr>
           </tbody>
 
           <tr *ngIf="sortedData.length === 0">
@@ -180,7 +168,9 @@ export class IbTableComponent implements OnChanges {
   @Input() hasDelete = false;
   @Input() hasExport = false;
   @Input() hasPaginator = true;
+  @Input() hasFooter = true;
   @Input() actions: IbTableAction[] = [];
+  @Input() stickyAreas = [];
 
   @Input() structureTemplates = {}; // exportTemplate, paginatorTemplate
   @Input() templateButtons: IbTemplateModel[] = [];
@@ -222,6 +212,7 @@ export class IbTableComponent implements OnChanges {
   numOfElements = 0;
   rowForms: FormGroup[] = [];
   ibTableActionsPosition = IbTableActionsPosition;
+  ibStickyArea = IbStickyAreas;
   @Input() rowClass = (item: IbTableItem) => ({});
 
   constructor(
@@ -576,26 +567,6 @@ export class IbTableComponent implements OnChanges {
         document.body.removeChild(link);
       }
     }
-  }
-
-  getTotalsOfPage(key){
-    return this.sortedData.reduce((acc, el) => {
-      acc += el[key];
-      return acc;
-    }, 0);
-  }
-
-  getTotalsAll(key){
-    return this.filteredData.reduce((acc, el) => {
-      acc += el[key];
-      return acc;
-    }, 0);
-  }
-  hasTotals(){
-    for (const t of this.titles){
-      if (t.showTotalSum) { return true; }
-    }
-    return false;
   }
 }
 

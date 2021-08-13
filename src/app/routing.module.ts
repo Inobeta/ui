@@ -8,6 +8,7 @@ import { MyCounterComponent } from './examples/redux-example/my-counter.componen
 import { DialogExampleComponent } from './examples/dialog-example/dialog-example.component';
 import { IbToastExampleComponent } from './examples/toast-example/toast-example.component';
 import { IbTableExampleNoReduxComponent } from './examples/table-example/table-without-redux/table-example.component';
+import { IbTableStickyExampleComponent } from './examples/table-example/table-sticky/table-example.component';
 import { NavComponent } from './examples/nav/nav.component';
 
 const appRoutes: Routes = [
@@ -28,6 +29,11 @@ const appRoutes: Routes = [
             path: 'noredux',
             data: { breadcrumb: 'Without redux' },
             component: IbTableExampleNoReduxComponent
+          },
+          {
+            path: 'sticky',
+            data: { breadcrumb: 'Sticky' },
+            component: IbTableStickyExampleComponent
           },
           {
             path: '',

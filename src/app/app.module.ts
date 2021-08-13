@@ -40,6 +40,7 @@ import { ITableFiltersState } from './inobeta-ui/ui/table/redux/table.reducer';
 import { ISessionState } from './inobeta-ui/http/auth/redux/session.reducer';
 import { MatButtonModule } from '@angular/material/button';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { IbTableStickyExampleComponent } from './examples/table-example/table-sticky/table-example.component';
 
 export interface IAppState {
   sessionState?: ISessionState;
@@ -74,7 +75,8 @@ export const statusErrorMessages = { 404: 'Risorsa non trovata'};
     DialogExampleComponent,
     MyCustomTextboxComponent,
     IbToastExampleComponent,
-    IbTableExampleNoReduxComponent
+    IbTableExampleNoReduxComponent,
+    IbTableStickyExampleComponent
   ],
   imports: [
     CommonModule,
