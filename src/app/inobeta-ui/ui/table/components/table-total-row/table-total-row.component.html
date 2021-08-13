@@ -1,9 +1,5 @@
-<!-- td
-  [attr.colspan]="titles.length + templateButtons.length + (selectableRows ? 1 : 0) + (hasEdit ? 1 : 0) + (hasDelete ? 1 : 0)">
-  {{ 'shared.ibTable.func.title' | translate }}
-</td -->
 <td *ngIf="selectableRows" class="ib-table-total-row-cell"></td>
-<td ib-total-row-default-cell 
+<td ib-total-row-default-cell
   *ngFor="let t of titles"
   [ibStickyColumn]="t"
   style="padding: 10px 15px; text-align: right;"

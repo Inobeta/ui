@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, EventEmitter, Output, HostListener } from '@angular/core';
-import { ibTableSupportedFilters, IbTableTitles, IbTableTitlesTypes } from '../../models/titles.model';
+import { IbStickyAreas, ibTableSupportedFilters, IbTableTitles, IbTableTitlesTypes } from '../../models/titles.model';
 import { IbTemplateModel } from '../../models/template.model';
 
 @Component({
@@ -24,6 +24,7 @@ export class IbTableHeaderComponent implements OnInit {
   visibleHeaders = {};
   columnTypes = IbTableTitlesTypes;
   supportedFilters = ibTableSupportedFilters;
+  ibStickyArea = IbStickyAreas;
 
   @Output() handleSetFilter = new EventEmitter<any>();
 

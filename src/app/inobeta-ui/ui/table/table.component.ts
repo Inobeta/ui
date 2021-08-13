@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { Sort } from '@angular/material/sort';
-import { IbTableAction, IbTableActionsPosition, IbTableCellAligns, IbTableTitles, IbTableTitlesTypes } from './models/titles.model';
+import { IbStickyAreas, IbTableAction, IbTableActionsPosition, IbTableCellAligns, IbTableTitles, IbTableTitlesTypes } from './models/titles.model';
 import { IbTemplateModel } from './models/template.model';
 import { Store } from '@ngrx/store';
 import * as TableFiltersActions from './redux/table.action';
@@ -39,7 +39,11 @@ import { formatDate } from '@angular/common';
         (export)="export($event)"
       >
       </div>
-      <div class="ib-table-container">
+      <div class="ib-table-container"
+        [ngStyle]="{
+          'overflow-x': (stickyAreas.length > 0) ? 'unset' : 'auto'
+        }"
+      >
         <table
           matSort
           (matSortChange)="sortData($event)"
@@ -48,7 +52,7 @@ import { formatDate } from '@angular/common';
           style="width:100%;" cellpadding="0" cellspacing="0">
 
           <!--HEADER-->
-          <thead [class.ib-header-sticky]="stickyAreas.includes('header')">
+          <thead [class.ib-header-sticky]="stickyAreas.includes(ibStickyArea.HEADER)">
             <tr class="table-header"
               ib-table-header
               [table]="this"
@@ -90,18 +94,20 @@ import { formatDate } from '@angular/common';
               (delete)="delete.emit($event)"
             >
             </tr>
-            
+
             <tr
               ib-table-total-row
+              *ngIf="hasFooter"
               class="table-row"
-              [class.ib-footer-sticky]="stickyAreas.includes('footer')"
+              [class.ib-footer-sticky]="stickyAreas.includes(ibStickyArea.FOOTER)"
               [titles]="titles"
               [selectableRows]="selectableRows"
               [templateButtons]="templateButtons"
               [hasEdit]="hasEdit"
               [sortedData]="sortedData"
               [filteredData]="filteredData"
-              [hasDelete]="hasDelete"></tr>
+              [hasDelete]="hasDelete"
+              ></tr>
           </tbody>
 
           <tr *ngIf="sortedData.length === 0">
@@ -162,6 +168,7 @@ export class IbTableComponent implements OnChanges {
   @Input() hasDelete = false;
   @Input() hasExport = false;
   @Input() hasPaginator = true;
+  @Input() hasFooter = true;
   @Input() actions: IbTableAction[] = [];
   @Input() stickyAreas = [];
 
@@ -205,6 +212,7 @@ export class IbTableComponent implements OnChanges {
   numOfElements = 0;
   rowForms: FormGroup[] = [];
   ibTableActionsPosition = IbTableActionsPosition;
+  ibStickyArea = IbStickyAreas;
   @Input() rowClass = (item: IbTableItem) => ({});
 
   constructor(

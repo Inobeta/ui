@@ -1,4 +1,4 @@
-<th class="table-header-title" [ibStickyColumn]="{ sticky: stickyAreas.includes('select'), key: 'ib-select'}" width="1%" *ngIf="selectableRows">{{ 'shared.ibTable.select' | translate }}</th>
+<th class="table-header-title" [ibStickyColumn]="{ sticky: stickyAreas.includes(ibStickyArea.SELECT), key: 'ib-select'}" width="1%" *ngIf="selectableRows">{{ 'shared.ibTable.select' | translate }}</th>
 
 <ng-template *ngFor="let t of titles" [ngIf]="true">
   <th
@@ -110,18 +110,18 @@
 </ng-template>
 
 <th
-  [ibStickyColumn]="{ sticky: stickyAreas.includes('template') && 'end', key: 'ib-template-'+btn.columnName}" 
+  [ibStickyColumn]="{ sticky: stickyAreas.includes(ibStickyArea.TEMPLATE) && 'end', key: 'ib-template-'+btn.columnName}"
   width="1%" style="white-space: nowrap;" class="table-header-title-custom" [mat-sort-header]="btn.columnName"
   disabled="true" *ngFor="let btn of templateButtons">
     {{btn.columnName | translate}}
 </th>
-<th 
-  [ibStickyColumn]="{ sticky: stickyAreas.includes('edit') && 'end', key: 'ib-edit' }"
+<th
+  [ibStickyColumn]="{ sticky: stickyAreas.includes(ibStickyArea.EDIT) && 'end', key: 'ib-edit' }"
   width="1%" *ngIf="hasEdit" class="table-header-title-custom" [mat-sort-header]="'sortable_edit'" disabled="true">
     {{ 'shared.ibTable.edit' | translate}}
 </th>
-<th 
-  [ibStickyColumn]="{ sticky: stickyAreas.includes('delete') && 'end', key: 'ib-delete' }"
+<th
+  [ibStickyColumn]="{ sticky: stickyAreas.includes(ibStickyArea.DELETE) && 'end', key: 'ib-delete' }"
   width="1%" *ngIf="hasDelete" class="table-header-title-custom" [mat-sort-header]="'sortable_delete'" disabled="true">
     {{ 'shared.ibTable.delete' | translate}}
 </th>

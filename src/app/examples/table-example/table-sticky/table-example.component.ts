@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import { IbMatTextboxControl } from 'src/app/inobeta-ui/ui/material-forms/controls/textbox';
 import { IbTableItem } from 'src/app/inobeta-ui/ui/table/models/table-item.model';
-import { IbTableAction, IbTableActionsPosition, IbTableTitlesTypes } from 'src/app/inobeta-ui/ui/table/models/titles.model';
+import { IbStickyAreas, IbTableAction, IbTableActionsPosition, IbTableTitlesTypes } from 'src/app/inobeta-ui/ui/table/models/titles.model';
 import { IbTableComponent } from 'src/app/inobeta-ui/ui/table/table.component';
 import { sampleData } from '../json-data';
 
@@ -14,7 +14,7 @@ import { sampleData } from '../json-data';
 //ANY, HOUR, COMBOBOX
 export class IbTableStickyExampleComponent implements OnInit {
   @ViewChild('ibTable', {static: true}) ibTable: IbTableComponent;
-  stickyAreas = ['header', 'footer', 'select', 'delete', 'edit'];
+  stickyAreas = [IbStickyAreas.HEADER, IbStickyAreas.FOOTER, IbStickyAreas.EDIT, IbStickyAreas.DELETE, IbStickyAreas.SELECT];
   selectableRows = true;
   tableName = 'pippo';
   ibTableActionsPosition = IbTableActionsPosition;

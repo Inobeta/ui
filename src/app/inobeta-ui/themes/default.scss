@@ -65,6 +65,15 @@
     padding-right: 20px !important;
   }
 
+  .ib-footer-sticky,
+  .ib-footer-sticky td,
+  .ib-table-total-row-cell,
+  .ib-total-row-avg-cell,
+  .ib-total-row-sum-cell{
+    color: mat.get-color-from-palette($accent, default-contrast);
+    background-color:mat.get-color-from-palette($accent, 500);
+  }
+
 }
 
 .ib-material-form-grid ib-material-form-control{

@@ -43,10 +43,10 @@
         },
         "func": {
           "title": "Totali",
-          "add": "Applica Totale",
+          "add": "Aggrega",
           "change": "Cambia",
           "dialog": {
-            "title": "Applica Totale",
+            "title": "Aggrega",
             "selectFunction": "Seleziona una funzione"
           },
           "sum": {

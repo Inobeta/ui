@@ -3,13 +3,13 @@ import { FormGroup } from '@angular/forms';
 import { IbModalMessageService } from '../../modal/modal-message.service';
 import { IbTableItem } from '../models/table-item.model';
 import { IbTemplateModel } from '../models/template.model';
-import { IbTableCellAligns, IbTableTitles, IbTableTitlesTypes } from '../models/titles.model';
+import { IbStickyAreas, IbTableCellAligns, IbTableTitles, IbTableTitlesTypes } from '../models/titles.model';
 
 @Component({
   selector: '[ib-table-row]',
   template: `
   <!--CHECKBOX-->
-  <td *ngIf="selectableRows" [ibStickyColumn]="{ sticky: stickyAreas.includes('select'), key: 'ib-select'}" [formGroup]="formRow" style="text-align:center;">
+  <td *ngIf="selectableRows" [ibStickyColumn]="{ sticky: stickyAreas.includes(ibStickyArea.SELECT), key: 'ib-select'}" [formGroup]="formRow" style="text-align:center;">
     <mat-checkbox
       formControlName="isChecked"
       (click)="$event.stopPropagation();"
@@ -108,14 +108,14 @@ import { IbTableCellAligns, IbTableTitles, IbTableTitlesTypes } from '../models/
     </ng-container>
     </span>
   </td>
-  <td [ibStickyColumn]="{ sticky: stickyAreas.includes('template') && 'end', key: 'ib-template-'+btn.columnName}"
+  <td [ibStickyColumn]="{ sticky: stickyAreas.includes(ibStickyArea.TEMPLATE) && 'end', key: 'ib-template-'+btn.columnName}"
      style="text-align: center" *ngFor="let btn of templateButtons">
     <ng-container
       *ngTemplateOutlet="btn.template; context: objectToEmit()">
     </ng-container>
   </td>
-  <td 
-    [ibStickyColumn]="{ sticky: stickyAreas.includes('edit') && 'end', key: 'ib-edit' }"
+  <td
+    [ibStickyColumn]="{ sticky: stickyAreas.includes(ibStickyArea.EDIT) && 'end', key: 'ib-edit' }"
     style="text-align:center;" *ngIf="hasEdit">
     <i
       class="material-icons ib-table-row-button"
@@ -124,7 +124,7 @@ import { IbTableCellAligns, IbTableTitles, IbTableTitlesTypes } from '../models/
     >{{ iconSet.edit }}</i>
   </td>
   <td
-    [ibStickyColumn]="{ sticky: stickyAreas.includes('delete') && 'end', key: 'ib-delete' }"
+    [ibStickyColumn]="{ sticky: stickyAreas.includes(ibStickyArea.DELETE) && 'end', key: 'ib-delete' }"
     style="text-align:center;" *ngIf="hasDelete">
     <i
       class="material-icons ib-table-row-button"
@@ -158,6 +158,7 @@ export class IbTableRowComponent implements OnInit {
 
   typeEnum = IbTableTitlesTypes;
   alignEnum = IbTableCellAligns;
+  ibStickyArea = IbStickyAreas;
 
 
   objectToEmit() {

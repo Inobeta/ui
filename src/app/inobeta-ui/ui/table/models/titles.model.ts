@@ -48,7 +48,7 @@ export class IbTableTitles {
   align?: IbTableCellAligns;
   width = 'auto';
   /**
-   * @deprecated 
+   * @deprecated
    */
   showTotalSum? = false;
   /**
@@ -87,4 +87,7 @@ export enum IbTableActionsPosition {
   BOTH, TOP, BOTTOM
 }
 
+export enum IbStickyAreas {
+  HEADER, FOOTER, SELECT, DELETE, EDIT, TEMPLATE
+}
 
