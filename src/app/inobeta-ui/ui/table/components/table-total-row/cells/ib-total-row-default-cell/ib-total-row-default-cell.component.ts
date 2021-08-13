@@ -1,7 +1,9 @@
 import { Component, ComponentFactoryResolver, ComponentRef, Directive, Input, SimpleChanges, Type, ViewChild, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Store } from '@ngrx/store';
 import { IbTableItem } from '../../../../models/table-item.model';
 import { IbTableTitles, IbTableTitlesTypes } from '../../../../models/titles.model';
+import { ibTableActionSetTotalRowCell } from '../../../../store/actions/table.actions';
 import { IbTableTotalRowApplyDialogComponent } from '../../table-total-row-apply-dialog.component';
 import { IbTotalRowAddCellComponent } from '../ib-total-row-add-cell/ib-total-row-add-cell.component';
 import { IbTotalRowBaseCellComponent } from '../ib-total-row-base-cell/ib-total-row-base-cell.component';
@@ -25,6 +27,7 @@ export class IbTotalRowDefaultCellComponent {
   @Input() title: IbTableTitles;
   @Input() sortedData: IbTableItem[];
   @Input() filteredData: IbTableItem[];
+  @Input() initialCell: Type<any>;
   
   @ViewChild(IbTableTotalRowCellDirective, { static: true }) cellHost: IbTableTotalRowCellDirective;
 
@@ -32,18 +35,29 @@ export class IbTotalRowDefaultCellComponent {
 
   constructor(
     public dialog: MatDialog,
+    private store: Store,
     private componentFactoryResolver: ComponentFactoryResolver) { }
 
   ngOnInit(): void {
+    if (this.initialCell) {
+      return this.loadComponent(this.initialCell);
+    }
+    
     if (this.title.type === IbTableTitlesTypes.NUMBER) {
       this.loadComponent(IbTotalRowAddCellComponent);
     }
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    const initialCellChanges = changes['initialCell'];
     const sortedDataChanges = changes['sortedData'];
-    const shouldChange = this.componentRef && !sortedDataChanges.isFirstChange()
+    
+    const shouldChange = this.componentRef && !initialCellChanges.isFirstChange();
     if (shouldChange) {
+      this.loadComponent(this.initialCell);
+    }
+    
+    if (sortedDataChanges && !sortedDataChanges.isFirstChange()) {
       this.componentRef.instance.data = {
         ...this.componentRef.instance.data,
         sortedData: this.sortedData,
@@ -79,6 +93,10 @@ export class IbTotalRowDefaultCellComponent {
     if (!result) {
       return;
     }
-    this.loadComponent(result.component);
+    // this.loadComponent(result.component);
+    this.store.dispatch(ibTableActionSetTotalRowCell({
+      columnName: this.title.key,
+      component: result.component,
+    }))
   }
 }

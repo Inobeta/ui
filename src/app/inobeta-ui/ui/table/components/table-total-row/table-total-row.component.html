@@ -6,7 +6,8 @@
   class="ib-table-column-type-number ib-table-total-row-cell"
   [title]="t"
   [sortedData]="sortedData"
-  [filteredData]="filteredData"></td>
+  [filteredData]="filteredData"
+  [initialCell]="getTotalRowCellComponent(t.key)"></td>
 <td *ngFor="let i of templateButtons" class="ib-table-total-row-cell"></td>
 <td *ngIf="hasEdit" class="ib-table-total-row-cell"></td>
 <td *ngIf="hasDelete" class="ib-table-total-row-cell"></td>

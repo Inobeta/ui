@@ -12,6 +12,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { IbTableItem } from './models/table-item.model';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { formatDate } from '@angular/common';
+import { ibTableSelectTotalRow } from './store/selectors/table.selectors';
+import { ibTableActionSaveConfig, ibTableActionSetTotalRowCell } from './store/actions/table.actions';
+import { IbTotalRowAvgCellComponent } from './components/table-total-row/cells/ib-total-row-avg-cell/ib-total-row-avg-cell.component';
+import { IbTotalRowSumCellComponent } from './components/table-total-row/cells/ib-total-row-sum-cell/total-row-sum-cell.component';
 
 
 
@@ -107,6 +111,7 @@ import { formatDate } from '@angular/common';
               [sortedData]="sortedData"
               [filteredData]="filteredData"
               [hasDelete]="hasDelete"
+              [totalRowDef] = "totalRow$ | async"
               ></tr>
           </tbody>
 
@@ -215,12 +220,18 @@ export class IbTableComponent implements OnChanges {
   ibStickyArea = IbStickyAreas;
   @Input() rowClass = (item: IbTableItem) => ({});
 
+  totalRow$ = this.store.select(ibTableSelectTotalRow);
+
   constructor(
     private store: Store<any>,
     private translate: TranslateService,
     private fb: FormBuilder
     ) { }
-
+  
+  ngOnInit() {
+    this.store.dispatch(ibTableActionSaveConfig({ name: 'test-config' }));
+  }
+  
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.iconSet && changes.iconSet.currentValue){
       this.rowIconSet = Object.assign({}, this.defaultIconSet, changes.iconSet.currentValue);
