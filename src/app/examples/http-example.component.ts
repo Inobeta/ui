@@ -62,7 +62,7 @@ export class HttpExampleComponent implements OnInit {
   }
 
   getBlobData() {
-    return this.h.get('assets/i18n/it.json', null, 'blob').subscribe(data => {
+    return this.h.get('assets/i18n/it.json', {provaTest: 'bah'}, { responseType: 'blob'}).subscribe(data => {
       console.log('blob data', data);
     });
   }

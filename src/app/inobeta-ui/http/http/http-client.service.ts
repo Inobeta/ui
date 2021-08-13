@@ -53,8 +53,17 @@ export class IbHttpClientService {
     this.turnOnModal(!this.ibHttpUrlExcludedFromLoader
                           .find(u => u.url.toUpperCase() === req.url.toUpperCase() && u.method.toUpperCase() === req.method.toUpperCase())
     );
+    let head = (new HttpHeaders())
+      .set('Content-Type', 'application/json')
+      .set('x-requested-with', 'XMLHttpRequest');
+
+    if (this.additionalHeaders.length) {
+      for (const elem of this.additionalHeaders) {
+        head = head.set(elem.key, elem.value);
+      }
+    }
     if (!this.srvAuth.activeSession) {
-      return;
+      return head;
     }
     switch (this.httpMode) {
       case 'MOBILE':
@@ -74,30 +83,18 @@ export class IbHttpClientService {
         }
         return mobileHeaders;
       default:
-        let head = (new HttpHeaders())
-          .set('Content-Type', 'application/json')
-          .set('x-requested-with', 'XMLHttpRequest');
         if (this.authType === IbAuthTypes.BASIC_AUTH) {
           return head.set('Authorization', 'Basic ' + this.srvAuth.activeSession.authToken);
         } else if (this.authType === IbAuthTypes.JWT) {
           return head.set('Authorization', 'Bearer ' + this.srvAuth.activeSession.authToken);
-        } else {
-          if (this.additionalHeaders.length) {
-            for (const elem of this.additionalHeaders) {
-              head = head.set(elem.key, elem.value);
-            }
-          }
         }
         return head;
     }
   }
 
-  get(url, data = null, responseType = null): any {
+  get(url, data = null, options = null): any {
     const headers = this.createAuthorizationHeader({ url, method: 'GET' });
-    if (responseType) {
-      data = data ? {...data, responseType} : {responseType}
-    }
-    return this.getObservableFromMode('get', url, data, headers)
+    return this.getObservableFromMode('get', url, data, headers, options)
       .pipe(
         map(val => {
           if (this.httpMode === 'MOBILE') {
@@ -113,12 +110,9 @@ export class IbHttpClientService {
 
   }
 
-  post(url, data = null, responseType = null): any {
+  post(url, data = null, options = null): any {
     const headers = this.createAuthorizationHeader({ url, method: 'POST' });
-    if (responseType) {
-      data = data ? {...data, responseType} : {responseType}
-    }
-    return this.getObservableFromMode('post', url, data, headers)
+    return this.getObservableFromMode('post', url, data, headers, options)
       .pipe(
         map(val => {
           if (this.httpMode === 'MOBILE') {
@@ -133,12 +127,9 @@ export class IbHttpClientService {
       );
   }
 
-  put(url, data = null, responseType = null): any {
+  put(url, data = null, options = null): any {
     const headers = this.createAuthorizationHeader({ url, method: 'PUT' });
-    if (responseType) {
-      data = data ? {...data, responseType} : {responseType}
-    }
-    return this.getObservableFromMode('put', url, data, headers)
+    return this.getObservableFromMode('put', url, data, headers, options)
       .pipe(
         map(val => {
           if (this.httpMode === 'MOBILE') {
@@ -153,12 +144,9 @@ export class IbHttpClientService {
       );
   }
 
-  patch(url, data = null, responseType = null): any {
+  patch(url, data = null, options = null): any {
     const headers = this.createAuthorizationHeader({ url, method: 'PATCH' });
-    if (responseType) {
-      data = data ? {...data, responseType} : {responseType}
-    }
-    return this.getObservableFromMode('patch', url, data, headers)
+    return this.getObservableFromMode('patch', url, data, headers, options)
       .pipe(
         map(val => {
           if (this.httpMode === 'MOBILE') {
@@ -173,12 +161,9 @@ export class IbHttpClientService {
       );
   }
 
-  delete(url, data = null, responseType = null): any {
+  delete(url, data = null, options = null): any {
     const headers = this.createAuthorizationHeader({ url, method: 'DELETE' });
-    if (responseType) {
-      data = data ? {...data, responseType} : {responseType}
-    }
-    return this.getObservableFromMode('delete', url, data, headers)
+    return this.getObservableFromMode('delete', url, data, headers, options)
       .pipe(
         map(val => {
           if (this.httpMode === 'MOBILE') {
@@ -193,7 +178,7 @@ export class IbHttpClientService {
       );
   }
 
-  private getObservableFromMode(method, url, data, headers) {
+  private getObservableFromMode(method, url, data, headers, options) {
     let obs = null;
     switch (this.httpMode) {
       case 'MOBILE':
@@ -206,11 +191,11 @@ export class IbHttpClientService {
         break;
       default:
         switch (method) {
-          case 'get': obs = this.h.get(url, {headers, ...data}); break;
-          case 'post': obs = this.h.post(url, data, {headers, ...data}); break;
-          case 'put': obs = this.h.put(url, data, {headers, ...data}); break;
-          case 'patch': obs = this.h.patch(url, data, {headers, ...data}); break;
-          case 'delete': obs = this.h.delete(url, {headers, ...data}); break;
+          case 'get': obs = this.h.get(url, {headers, ...options, params: data }); break;
+          case 'post': obs = this.h.post(url, data, {headers, ...options}); break;
+          case 'put': obs = this.h.put(url, data, {headers, ...options}); break;
+          case 'patch': obs = this.h.patch(url, data, {headers, ...options}); break;
+          case 'delete': obs = this.h.delete(url, {headers, ...options}); break;
         }
     }
     return obs;
