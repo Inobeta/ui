@@ -39,7 +39,7 @@
 
   .filter-button,
   button.mat-sort-header-button,
-  .table-header-title,
+  .table-header-title, .table-header-title-custom,
   ib-table .mat-sort-header-arrow, ib-table .table-sort-indicator {
     color: mat.get-color-from-palette($primary, default-contrast);
   }

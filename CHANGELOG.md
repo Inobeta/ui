@@ -1,5 +1,11 @@
 # Inobeta/UI Changelog
 
+## [12.1.0]
+
+- DEVK-130 fix color bug on custom table columns
+- DEVK-131 IbHttpModule: added responseType & data to the http methods signature. Deprecated mobile version. http-204 format response handle
+- DEVK-132 removed color warn on dialog button
+
 ## [12.0.1]
 
 - DEVK-108 Fixed issue on date filter when using datetime data

@@ -3,7 +3,7 @@
   "version": "12.1.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --host 0.0.0.0",
+    "start": "ng serve --disableHostCheck",
     "build": "ng build --prod",
     "test": "ng test  --code-coverage",
     "test-ci": "ng test  --code-coverage --sourceMap=true --watch=false",
@@ -32,8 +32,6 @@
     "@angular/platform-browser": "~12.0.4",
     "@angular/platform-browser-dynamic": "~12.0.4",
     "@angular/router": "~12.0.4",
-    "@ionic-native/core": "^5.26.0",
-    "@ionic-native/http": "^5.26.0",
     "@ngrx/store": "^12.1.0",
     "@ngrx/store-devtools": "^12.1.0",
     "@ngx-translate/core": "^13.0.0",
