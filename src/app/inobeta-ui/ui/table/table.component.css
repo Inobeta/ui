@@ -1,9 +1,6 @@
 ib-table .hover:hover{
   opacity: .5 !important;
 }
-.ib-table-container{
-  overflow-x: auto;
-}
 
 .mat-sort-header-container {
   align-items: center;
@@ -15,10 +12,24 @@ th {
   padding: 15px;
   margin-bottom: 20px;
 }
-td {
-  border-bottom: 1px solid #ccc;
-  padding: 10px;
+
+table >>> .table-header > th.ib-column-sticky {
+  z-index: 100;
+  background-color: inherit;
 }
+
+thead.ib-header-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 109;
+}
+
+table >>> .ib-footer-sticky {
+  position:sticky;
+  bottom: 0;
+  z-index: 109;
+}
+
 mat-paginator >>> .mat-paginator-container {
   justify-content: flex-start !important;
   background-color: inherit;

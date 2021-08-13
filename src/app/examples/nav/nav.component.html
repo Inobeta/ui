@@ -1,13 +1,16 @@
-<nav>
-  <ul>
-    <li><a routerLink="table" routerLinkActive="active-link">Table</a></li>
-    <li><a routerLink="forms" routerLinkActive="active-link">Dynamic Forms</a></li>
-    <li><a routerLink="http" routerLinkActive="active-link">Http</a></li>
-    <li><a routerLink="redux" routerLinkActive="active-link">Redux</a></li>
-    <li><a routerLink="dialog" routerLinkActive="active-link">Dialog</a></li>
-    <li><a routerLink="toast" routerLinkActive="active-link">Toast</a></li>
-  </ul>
-</nav>
-<ib-material-breadcrumb></ib-material-breadcrumb>
-<router-outlet></router-outlet>
-
+<div fxLayout="column">
+  <nav fxFlex="5%">
+    <ul>
+      <li><a routerLink="table" routerLinkActive="active-link">Table</a></li>
+      <li><a routerLink="forms" routerLinkActive="active-link">Dynamic Forms</a></li>
+      <li><a routerLink="http" routerLinkActive="active-link">Http</a></li>
+      <li><a routerLink="redux" routerLinkActive="active-link">Redux</a></li>
+      <li><a routerLink="dialog" routerLinkActive="active-link">Dialog</a></li>
+      <li><a routerLink="toast" routerLinkActive="active-link">Toast</a></li>
+    </ul>
+  </nav>
+  <ib-material-breadcrumb  fxFlex="5%"></ib-material-breadcrumb>
+  <div fxFlex="90%">
+    <router-outlet></router-outlet>
+  </div>
+</div>

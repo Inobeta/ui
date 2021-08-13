@@ -32,6 +32,8 @@ import { IbModalModule } from '../modal/modal.module';
 import { IbMatPaginatorI18n } from './material-intl/paginator.intl';
 import { StoreModule } from '@ngrx/store';
 import { ibTableFiltersReducer } from './redux/table.reducer';
+import { TotalRowModule } from './components/table-total-row/total-row.module';
+import { IbStickyAreaModule } from './directives/sticky-area/sticky-area.module';
 registerLocaleData(localeIt, 'it');
 
 export function ibMatPaginatorTranslate(translateService: TranslateService) {
@@ -40,56 +42,58 @@ export function ibMatPaginatorTranslate(translateService: TranslateService) {
 
 
 const COMPONENTS = [
-    IbTableComponent,
-    IbTableHeaderComponent,
-    IbTableExportComponent,
-    IbTablePaginatorComponent,
-    IbTableHeaderPopupComponent,
-    IbTableExportDialogComponent,
-    IbTableRowComponent,
-    IbTableActionsComponent,
-    IbTableButtonComponent,
-    IbTableHeaderFilterComponent
+  IbTableComponent,
+  IbTableHeaderComponent,
+  IbTableExportComponent,
+  IbTablePaginatorComponent,
+  IbTableHeaderPopupComponent,
+  IbTableExportDialogComponent,
+  IbTableRowComponent,
+  IbTableActionsComponent,
+  IbTableButtonComponent,
+  IbTableHeaderFilterComponent
 ];
 
 @NgModule({
-    declarations: [
-        ...COMPONENTS,
-        IbTableExportDialogComponent
-    ],
-    imports: [
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        FlexLayoutModule,
-        MatMenuModule,
-        MatSortModule,
-        MatChipsModule,
-        MatCheckboxModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatIconModule,
-        MatDialogModule,
-        MatSelectModule,
-        MatRadioModule,
-        MatPaginatorModule,
-        MatButtonModule,
-        MatSnackBarModule,
-        MatCardModule,
-        MatRippleModule,
-        TranslateModule.forChild({
-            extend: true
-        }),
-        IbModalModule,
-        StoreModule.forFeature('tableFiltersState', ibTableFiltersReducer),
-    ],
-    exports: [...COMPONENTS],
-    providers: [
-      {
-        provide: MatPaginatorIntl, deps: [TranslateService],
-        useFactory: ibMatPaginatorTranslate
-      }
-    ]
+  declarations: [
+    ...COMPONENTS,
+    IbTableExportDialogComponent,
+  ],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    FlexLayoutModule,
+    MatMenuModule,
+    MatSortModule,
+    MatChipsModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatDialogModule,
+    MatSelectModule,
+    MatRadioModule,
+    MatPaginatorModule,
+    MatButtonModule,
+    MatSnackBarModule,
+    MatCardModule,
+    MatRippleModule,
+    TranslateModule.forChild({
+      extend: true
+    }),
+    IbModalModule,
+    StoreModule.forFeature('tableFiltersState', ibTableFiltersReducer),
+    IbStickyAreaModule,
+    TotalRowModule,
+  ],
+  exports: [...COMPONENTS],
+  providers: [
+    {
+      provide: MatPaginatorIntl, deps: [TranslateService],
+      useFactory: ibMatPaginatorTranslate
+    }
+  ]
 })
 export class IbTableModule { }
 

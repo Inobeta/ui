@@ -1,0 +1,12 @@
+<td *ngIf="selectableRows" class="ib-table-total-row-cell"></td>
+<td ib-total-row-default-cell
+  *ngFor="let t of titles"
+  [ibStickyColumn]="t"
+  style="padding: 10px 15px; text-align: right;"
+  class="ib-table-column-type-number ib-table-total-row-cell"
+  [title]="t"
+  [sortedData]="sortedData"
+  [filteredData]="filteredData"></td>
+<td *ngFor="let i of templateButtons" class="ib-table-total-row-cell"></td>
+<td *ngIf="hasEdit" class="ib-table-total-row-cell"></td>
+<td *ngIf="hasDelete" class="ib-table-total-row-cell"></td>
