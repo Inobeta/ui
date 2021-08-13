@@ -72,7 +72,7 @@ test_package_creation:
 docs:
   stage: npm:deploy
   script:
-    - npx @compodoc/compodoc -p tsconfig.app.json --disableCoverage --disableDomTree --disableGraph --hideGenerator
+    - npx @compodoc/compodoc -p tsconfig.doc.json --disableCoverage --disableDomTree --disableGraph --hideGenerator
     - dir="$CURRENT_VERSION"
     - if [ "$CI_COMMIT_REF_SLUG" == "$CI_DEFAULT_BRANCH" ]; then dir="current"; fi;
     - mkdir -p ~/.ssh && echo "$SSH_STAGING" | tr -d '\r' > ~/.ssh/id_rsa && chmod -R 600 ~/.ssh
