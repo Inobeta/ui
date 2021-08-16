@@ -37,8 +37,8 @@ export class IbHttpClientService {
     @Inject('ibHttpUrlExcludedFromLoader') @Optional() public ibHttpUrlExcludedFromLoader?: IbHttpRequestDefinition[],
     ) {
       this.httpMode = HttpMode || 'NORMAL';
-      if(HttpMode !== 'NORMAL') {
-        console.warn('Mobile version deprecated')
+      if(this.httpMode !== 'NORMAL') {
+        console.warn('[deprecated] IbHttp Mobile support will be removed');
       }
       this.ibHttpUrlExcludedFromLoader = this.ibHttpUrlExcludedFromLoader || [];
   }
