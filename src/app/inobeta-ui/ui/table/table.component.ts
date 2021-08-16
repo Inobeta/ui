@@ -95,21 +95,6 @@ import { formatDate } from '@angular/common';
             >
             </tr>
 
-            <tr
-              ib-table-total-row
-              *ngIf="hasFooter"
-              class="table-row"
-              [class.ib-footer-sticky]="stickyAreas.includes(ibStickyArea.FOOTER)"
-              [titles]="titles"
-              [selectableRows]="selectableRows"
-              [templateButtons]="templateButtons"
-              [hasEdit]="hasEdit"
-              [sortedData]="sortedData"
-              [filteredData]="filteredData"
-              [hasDelete]="hasDelete"
-              ></tr>
-          </tbody>
-
           <tr *ngIf="sortedData.length === 0">
             <td
               [attr.colspan]="titles.length + templateButtons.length + (selectableRows ? 1 : 0) + (hasEdit ? 1 : 0) + (hasDelete ? 1 : 0)"
@@ -118,6 +103,21 @@ import { formatDate } from '@angular/common';
               <br><br>{{ 'shared.ibTable.noData' | translate }}<br><br>
             </td>
           </tr>
+
+          <tr
+            ib-table-total-row
+            *ngIf="hasFooter"
+            class="table-row"
+            [class.ib-footer-sticky]="stickyAreas.includes(ibStickyArea.FOOTER)"
+            [titles]="titles"
+            [selectableRows]="selectableRows"
+            [templateButtons]="templateButtons"
+            [hasEdit]="hasEdit"
+            [sortedData]="sortedData"
+            [filteredData]="filteredData"
+            [hasDelete]="hasDelete"
+            ></tr>
+          </tbody>
         </table>
       </div>
       <ng-container

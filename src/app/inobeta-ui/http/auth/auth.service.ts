@@ -8,9 +8,16 @@ export class IbAuthService {
   sessionStorageKey = '';
 
   constructor(private storage: IbStorageService,
-              @Inject('SessionStorageKey') @Optional() public SessionStorageKey?: string
+              /**
+               * @deprecated Rename SessionStorageKey to ibSessionStorageKey please
+               */
+              @Inject('SessionStorageKey') @Optional() public SessionStorageKey?: string,
+              @Inject('ibSessionStorageKey') @Optional() public ibSessionStorageKey?: string
   ) {
-    this.sessionStorageKey = SessionStorageKey || '';
+    if(SessionStorageKey){
+      console.warn('[deprecated] Rename SessionStorageKey to ibSessionStorageKey please');
+    }
+    this.sessionStorageKey = ibSessionStorageKey || SessionStorageKey || '';
     this.activeSession = this.storage.get(`userData-${this.sessionStorageKey}`, IbStorageTypes.COOKIESTORAGE) as IbSession;
     if (!this.activeSession) {
       this.activeSession = this.storage.get(`userData-${this.sessionStorageKey}`, IbStorageTypes.LOCALSTORAGE) as IbSession;
