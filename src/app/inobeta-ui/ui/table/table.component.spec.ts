@@ -19,20 +19,22 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IbTableComponent } from './table.component';
 import { IbTableHeaderComponent } from './components/table-header/table-header.component';
-import { IbTableExportComponent, IbTableHeaderPopupComponent, IbTableExportDialogComponent, IbTableTitlesTypes, ibMatPaginatorTranslate } from '.';
+import { IbTableExportComponent, IbTableHeaderPopupComponent,
+  IbTableExportDialogComponent, IbTableTitlesTypes, ibMatPaginatorTranslate } from '.';
 import { IbTablePaginatorComponent } from './components/table-paginator.component';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
 
 import { Component, OnInit } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
-import { Store } from '@ngrx/store';
 import { IbTableHeaderFilterComponent } from './components/table-header-filter-component';
 import { IbTableButtonComponent } from './components/table-button.component';
 import { IbTableActionsComponent } from './components/table-actions.component';
 import { IbTableRowComponent } from './components/table-row.component';
 import { IbModalTestModule } from '../modal';
 import { TranslateService } from '@ngx-translate/core';
+import {initialState} from './store/reducers/table.reducer';
+import { ibTableSelectTotalRow } from './store/selectors/table.selectors';
 
 @Component({
   selector: 'host-test',
@@ -199,10 +201,11 @@ export class TestHostComponent {
 
 
 
-const initialState = {
+const mockedInitialState = {
   tableFiltersState: {
     tableFilters: {}
-  }
+  },
+  ...initialState
 };
 
 
@@ -212,6 +215,8 @@ describe('IbTableComponent', () => {
   let hostComponent: TestHostComponent;
   let component: IbTableComponent;
   let fixture: ComponentFixture<TestHostComponent>;
+
+  let mockedTotalRowSelector;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -229,7 +234,7 @@ describe('IbTableComponent', () => {
         TestHostComponent
        ],
        providers: [
-        provideMockStore({ initialState }),
+        provideMockStore({ initialState: mockedInitialState }),
         {
           provide: MatPaginatorIntl, deps: [TranslateService],
           useFactory: ibMatPaginatorTranslate
@@ -261,6 +266,7 @@ describe('IbTableComponent', () => {
     .compileComponents();
 
     store = TestBed.inject(MockStore);
+    mockedTotalRowSelector = store.overrideSelector(ibTableSelectTotalRow, []);
   }));
 
   beforeEach(() => {

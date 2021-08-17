@@ -1,8 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
+import { provideMockStore } from '@ngrx/store/testing';
 import { Observable } from 'rxjs';
 
 import { TableEffects } from './table.effects';
+import {initialState} from '../reducers/table.reducer';
+import { IbHttpTestModule } from '../../../../http/http-test.module';
+import { IbStorageTestModule } from '../../../../storage/storage-test.module';
 
 describe('TableEffects', () => {
   let actions$: Observable<any>;
@@ -12,7 +16,10 @@ describe('TableEffects', () => {
     TestBed.configureTestingModule({
       providers: [
         TableEffects,
-        provideMockActions(() => actions$)
+        provideMockActions(() => actions$),
+        provideMockStore({ initialState }),
+        IbHttpTestModule,
+        IbStorageTestModule
       ]
     });
 

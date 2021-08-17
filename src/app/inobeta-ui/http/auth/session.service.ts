@@ -13,7 +13,9 @@ import { Optional } from '@angular/core';
 
 const loginUrl = '/api/auth/login';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class IbSessionService {
   private authType = null /*IbAuthTypes.BASIC_AUTH*/;
 

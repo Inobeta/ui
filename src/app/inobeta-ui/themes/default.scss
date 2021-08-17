@@ -39,7 +39,7 @@
 
   .filter-button,
   button.mat-sort-header-button,
-  .table-header-title,
+  .table-header-title, .table-header-title-custom,
   ib-table .mat-sort-header-arrow, ib-table .table-sort-indicator {
     color: mat.get-color-from-palette($primary, default-contrast);
   }
@@ -55,7 +55,6 @@
     position: relative;
   }
   ib-table td{
-    background-color: white;
     border-bottom: 1px solid #ccc;
     padding: 5px 5px !important;
   }
@@ -71,7 +70,7 @@
   .ib-total-row-avg-cell,
   .ib-total-row-sum-cell{
     color: mat.get-color-from-palette($accent, default-contrast);
-    background-color:mat.get-color-from-palette($accent, 500);
+    background-color:mat.get-color-from-palette($accent, 100);
   }
 
 }

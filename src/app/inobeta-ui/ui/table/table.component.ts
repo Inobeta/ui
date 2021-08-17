@@ -99,22 +99,6 @@ import { IbTotalRowSumCellComponent } from './components/table-total-row/cells/i
             >
             </tr>
 
-            <tr
-              ib-table-total-row
-              *ngIf="hasFooter"
-              class="table-row"
-              [class.ib-footer-sticky]="stickyAreas.includes(ibStickyArea.FOOTER)"
-              [titles]="titles"
-              [selectableRows]="selectableRows"
-              [templateButtons]="templateButtons"
-              [hasEdit]="hasEdit"
-              [sortedData]="sortedData"
-              [filteredData]="filteredData"
-              [hasDelete]="hasDelete"
-              [totalRowDef] = "totalRow$ | async"
-              ></tr>
-          </tbody>
-
           <tr *ngIf="sortedData.length === 0">
             <td
               [attr.colspan]="titles.length + templateButtons.length + (selectableRows ? 1 : 0) + (hasEdit ? 1 : 0) + (hasDelete ? 1 : 0)"
@@ -123,6 +107,22 @@ import { IbTotalRowSumCellComponent } from './components/table-total-row/cells/i
               <br><br>{{ 'shared.ibTable.noData' | translate }}<br><br>
             </td>
           </tr>
+
+          <tr
+            ib-table-total-row
+            *ngIf="hasFooter"
+            class="table-row"
+            [class.ib-footer-sticky]="stickyAreas.includes(ibStickyArea.FOOTER)"
+            [titles]="titles"
+            [selectableRows]="selectableRows"
+            [templateButtons]="templateButtons"
+            [hasEdit]="hasEdit"
+            [sortedData]="sortedData"
+            [filteredData]="filteredData"
+            [hasDelete]="hasDelete"
+            [totalRowDef] = "totalRow$ | async"
+            ></tr>
+          </tbody>
         </table>
       </div>
       <ng-container
@@ -218,20 +218,20 @@ export class IbTableComponent implements OnChanges {
   rowForms: FormGroup[] = [];
   ibTableActionsPosition = IbTableActionsPosition;
   ibStickyArea = IbStickyAreas;
+  totalRow$ = this.store.select(ibTableSelectTotalRow);
   @Input() rowClass = (item: IbTableItem) => ({});
 
-  totalRow$ = this.store.select(ibTableSelectTotalRow);
 
   constructor(
     private store: Store<any>,
     private translate: TranslateService,
     private fb: FormBuilder
     ) { }
-  
+
   ngOnInit() {
     this.store.dispatch(ibTableActionSaveConfig({ name: 'test-config' }));
   }
-  
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.iconSet && changes.iconSet.currentValue){
       this.rowIconSet = Object.assign({}, this.defaultIconSet, changes.iconSet.currentValue);

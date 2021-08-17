@@ -4,9 +4,7 @@ import {IbAuthService} from '../auth/auth.service';
 import {IbHttpClientService} from './http-client.service';
 import {IbResponseHandlerService} from './response-handler.service';
 import {IbAuthTypes} from '../auth/session.model';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {throwError, of} from 'rxjs';
-import { HTTP } from '@ionic-native/http/ngx';
+import {HttpClient} from '@angular/common/http';
 import { authServiceStub } from '../auth/auth.service.stub.spec';
 import { responseHandlerStub } from './response-handler.service.stub.spec';
 
@@ -14,9 +12,6 @@ describe('http client test', () => {
 
   let httpClient: HttpClient;
   let httpMock: HttpTestingController;
-  const samplePromise = (resolve, reject) => {
-    resolve({data: '' });
-  };
   beforeEach(async () => {
     TestBed.configureTestingModule({
       imports: [
@@ -25,12 +20,6 @@ describe('http client test', () => {
       providers: [
         { provide: IbAuthService, useValue: authServiceStub},
         { provide: IbResponseHandlerService, useValue: responseHandlerStub},
-        { provide: HTTP, useValue: {
-          get: () => new Promise(samplePromise),
-          put: () => new Promise(samplePromise),
-          post: () => new Promise(samplePromise),
-          delete: () => new Promise(samplePromise),
-        }},
         IbHttpClientService
       ]
     }).compileComponents();
@@ -106,7 +95,7 @@ describe('http client test', () => {
 
   function runTestCase(method) {
 
-    it(`should use ${method}`, (done) => {
+    it(`should use ${method}`, () => {
       const svHttpClientService = TestBed.inject(IbHttpClientService);
       const spyModal = spyOn(svHttpClientService, 'turnOffModal');
       const spyHead = spyOn(svHttpClientService, 'createAuthorizationHeader');
@@ -121,20 +110,6 @@ describe('http client test', () => {
       httpMock.verify();
       expect(spyModal).toHaveBeenCalled();
       expect(spyHead).toHaveBeenCalled();
-
-
-
-      svHttpClientService.httpMode = 'MOBILE';
-      const httpMobile = TestBed.inject(HTTP);
-      svHttpClientService.hMobile = httpMobile;
-      svHttpClientService[method]('/ciao/').subscribe(
-        (data) => {
-          done();
-        },
-        (data) => {
-          done();
-        }
-      );
     });
 
     it(`should use ${method} with null`, () => {

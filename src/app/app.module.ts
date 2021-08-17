@@ -38,6 +38,8 @@ import { IbToastModule } from './inobeta-ui/ui/toast/toast.module';
 import { IbTableExampleNoReduxComponent } from './examples/table-example/table-without-redux/table-example.component';
 import { ITableFiltersState } from './inobeta-ui/ui/table/redux/table.reducer';
 import { ISessionState } from './inobeta-ui/http/auth/redux/session.reducer';
+import { MatButtonModule } from '@angular/material/button';
+import { MatGridListModule } from '@angular/material/grid-list';
 import { IbTableStickyExampleComponent } from './examples/table-example/table-sticky/table-example.component';
 import { EffectsModule } from '@ngrx/effects';
 import { TableEffects } from './inobeta-ui/ui/table/store/effects/table.effects';
@@ -97,6 +99,8 @@ export const statusErrorMessages = { 404: 'Risorsa non trovata'};
     IbToastModule,
     MatMenuModule,
     MatRippleModule,
+    MatButtonModule,
+    MatGridListModule,
     StoreModule.forRoot(reducers, {
       metaReducers,
       runtimeChecks: {
@@ -123,6 +127,7 @@ export const statusErrorMessages = { 404: 'Risorsa non trovata'};
     FlexLayoutModule
   ],
   providers: [
+
     {provide: 'HttpMode', useValue: 'NORMAL'},
     {provide: 'ibHttpToastOnStatusCode', useValue: statusErrorMessages },
     {provide: 'ibHttpToastErrorCode', useValue: 'code' },

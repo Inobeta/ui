@@ -18,7 +18,6 @@ import { IbModalMessage } from './modal-message.model';
       <button
         *ngIf="data.hasNo"
         mat-raised-button
-        color="warn"
         [mat-dialog-close]="false">
         {{ 'shared.ibModal.no' | translate }}
       </button>
