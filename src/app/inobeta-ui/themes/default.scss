@@ -70,7 +70,7 @@
   .ib-total-row-avg-cell,
   .ib-total-row-sum-cell{
     color: mat.get-color-from-palette($accent, default-contrast);
-    background-color:mat.get-color-from-palette($accent, 500);
+    background-color:mat.get-color-from-palette($accent, 100);
   }
 
 }
