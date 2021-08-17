@@ -10,6 +10,7 @@ import { Store } from '@ngrx/store';
 import { selectTableState } from '../selectors/table.selectors';
 import { IbAuthService } from '../../../../http/auth/auth.service';
 import { IbStorageService } from '../../../../storage/storage.service';
+import { IbTableConfService } from '../../services/table-conf.service';
 
 const STORAGE_NAME = 'ib-table-store';
 const ANON_USER = 'ib-anon';
@@ -17,35 +18,35 @@ const ANON_USER = 'ib-anon';
 @Injectable()
 export class TableEffects {
 
-  onSetTotalRowCell$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(TableActions.ibTableActionSetTotalRowCell),
-      /** An EMPTY observable only emits completion. Replace with your own observable API request */
-      concatMap(() => EMPTY as Observable<{ type: string }>)
-    );
-  });
 
   onSaveConfig$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(TableActions.ibTableActionSaveConfig),
       concatLatestFrom(_ => this.store.select(selectTableState)),
       concatMap(([action, state]) => {
-        let user = ANON_USER;
-        if (this.auth.isLoggedIn()) {
-          user = this.auth.activeSession.user.username;
-        }
-        const key = `${STORAGE_NAME}/${user}`;
-        const stored = this.storage.get(key) || {};
-        stored[action.name] = state;
-        this.storage.set(key, stored);
-        return EMPTY as Observable<{ type: string }>
+        this.tableConf.saveConfig(action.tableName, action.configName, state.instances.find(i => i.tableName === action.tableName).config);
+        return EMPTY as Observable<{ type: string }>;
       })
-    )
-  })
+    );
+  });
+
+
+  onLoadConfig$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(TableActions.ibTableActionLoadConfig),
+      concatLatestFrom(_ => this.store.select(selectTableState)),
+      concatMap(([action, state]) => {
+        const config = this.tableConf.loadConfig(action.tableName, action.configName);
+        this.store.dispatch(TableActions.ibTableActionSetConfig({config, tableName: action.tableName}));
+        return EMPTY as Observable<{ type: string }>;
+      })
+    );
+  });
 
   constructor(
     private actions$: Actions,
     private store: Store<IbTableState>,
+    private tableConf: IbTableConfService,
     private storage: IbStorageService,
     private auth: IbAuthService) { }
 
