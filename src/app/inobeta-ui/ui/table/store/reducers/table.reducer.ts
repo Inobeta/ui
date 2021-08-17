@@ -1,7 +1,7 @@
-import { createReducer, on } from '@ngrx/store';
+import { Action, createReducer, on } from '@ngrx/store';
 import * as TableActions from '../actions/table.actions';
 
-export const tableFeatureKey = 'ibTable';
+export const ibTableFeatureKey = 'ibTable';
 
 export interface IbTableFilterState {
 
@@ -16,21 +16,21 @@ export interface IbTableTotalRowState {
   component: any;
 }
 
-export interface IbtableState {
+export interface IbTableState {
   filters: IbTableFilterState[];
   totals: IbTableTotalRowState[];
   sort: IbTableSortState;
 }
 
-export const initialState: IbtableState = {
+export const ibTableFeatureInitialState: IbTableState = {
   filters: [],
   totals: [],
   sort: {},
 };
 
 
-export const reducer = createReducer(
-  initialState,
+const reducer = createReducer(
+  ibTableFeatureInitialState,
 
   on(TableActions.ibTableActionSetTotalRowCell,
     (state, newTotalRowState) => {
@@ -39,9 +39,9 @@ export const reducer = createReducer(
         return {
           ...state,
           totals: [...state.totals, newTotalRowState]
-        }
+        };
       }
-      
+
       return {
         ...state,
         totals: state.totals.map(
@@ -49,8 +49,14 @@ export const reducer = createReducer(
             ? ({ columnName: newTotalRowState.columnName, component: newTotalRowState.component })
             : t
         ),
-      }
+      };
     }
   )
 );
+
+
+export function ibTableFeatureReducer(state: IbTableState = ibTableFeatureInitialState, action: Action) {
+  return reducer(state, action);
+}
+
 

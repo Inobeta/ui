@@ -1,13 +1,13 @@
-import { reducer, initialState } from './table.reducer';
+import { ibTableFeatureReducer, ibTableFeatureInitialState } from './table.reducer';
 
 describe('Table Reducer', () => {
   describe('an unknown action', () => {
     it('should return the previous state', () => {
       const action = {} as any;
 
-      const result = reducer(initialState, action);
+      const result = ibTableFeatureReducer(ibTableFeatureInitialState, action);
 
-      expect(result).toBe(initialState);
+      expect(result).toBe(ibTableFeatureInitialState);
     });
   });
 });

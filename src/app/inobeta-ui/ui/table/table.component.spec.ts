@@ -33,7 +33,7 @@ import { IbTableActionsComponent } from './components/table-actions.component';
 import { IbTableRowComponent } from './components/table-row.component';
 import { IbModalTestModule } from '../modal';
 import { TranslateService } from '@ngx-translate/core';
-import {initialState} from './store/reducers/table.reducer';
+import {ibTableFeatureInitialState} from './store/reducers/table.reducer';
 import { ibTableSelectTotalRow } from './store/selectors/table.selectors';
 
 @Component({
@@ -205,7 +205,7 @@ const mockedInitialState = {
   tableFiltersState: {
     tableFilters: {}
   },
-  ...initialState
+  ...ibTableFeatureInitialState
 };
 
 

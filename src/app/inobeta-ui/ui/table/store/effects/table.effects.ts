@@ -5,11 +5,11 @@ import { concatMap } from 'rxjs/operators';
 import { Observable, EMPTY } from 'rxjs';
 
 import * as TableActions from '../actions/table.actions';
-import { IbStorageService } from 'src/app/inobeta-ui/storage';
-import { IbtableState } from '../reducers/table.reducer';
+import { IbTableState } from '../reducers/table.reducer';
 import { Store } from '@ngrx/store';
 import { selectTableState } from '../selectors/table.selectors';
-import { IbAuthService } from 'src/app/inobeta-ui/http';
+import { IbAuthService } from '../../../../http/auth/auth.service';
+import { IbStorageService } from '../../../../storage/storage.service';
 
 const STORAGE_NAME = 'ib-table-store';
 const ANON_USER = 'ib-anon';
@@ -45,7 +45,7 @@ export class TableEffects {
 
   constructor(
     private actions$: Actions,
-    private store: Store<IbtableState>,
+    private store: Store<IbTableState>,
     private storage: IbStorageService,
     private auth: IbAuthService) { }
 

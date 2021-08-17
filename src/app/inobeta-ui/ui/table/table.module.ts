@@ -34,9 +34,9 @@ import { StoreModule } from '@ngrx/store';
 import { ibTableFiltersReducer } from './redux/table.reducer';
 import { TotalRowModule } from './components/table-total-row/total-row.module';
 import { IbStickyAreaModule } from './directives/sticky-area/sticky-area.module';
-import * as fromTable from './store/reducers/table.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { TableEffects } from './store/effects/table.effects';
+import { ibTableFeatureKey, ibTableFeatureReducer } from './store/reducers/table.reducer';
 registerLocaleData(localeIt, 'it');
 
 export function ibMatPaginatorTranslate(translateService: TranslateService) {
@@ -89,7 +89,7 @@ const COMPONENTS = [
     StoreModule.forFeature('tableFiltersState', ibTableFiltersReducer),
     IbStickyAreaModule,
     TotalRowModule,
-    StoreModule.forFeature(fromTable.tableFeatureKey, fromTable.reducer),
+    StoreModule.forFeature(ibTableFeatureKey, ibTableFeatureReducer),
     EffectsModule.forFeature([TableEffects]),
   ],
   exports: [...COMPONENTS],

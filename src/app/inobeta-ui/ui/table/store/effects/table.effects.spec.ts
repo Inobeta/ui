@@ -4,7 +4,7 @@ import { provideMockStore } from '@ngrx/store/testing';
 import { Observable } from 'rxjs';
 
 import { TableEffects } from './table.effects';
-import {initialState} from '../reducers/table.reducer';
+import {ibTableFeatureInitialState} from '../reducers/table.reducer';
 import { IbHttpTestModule } from '../../../../http/http-test.module';
 import { IbStorageTestModule } from '../../../../storage/storage-test.module';
 
@@ -17,7 +17,7 @@ describe('TableEffects', () => {
       providers: [
         TableEffects,
         provideMockActions(() => actions$),
-        provideMockStore({ initialState }),
+        provideMockStore({ initialState: ibTableFeatureInitialState }),
         IbHttpTestModule,
         IbStorageTestModule
       ]
