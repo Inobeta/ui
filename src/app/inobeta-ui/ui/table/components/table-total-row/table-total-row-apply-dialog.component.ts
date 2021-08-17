@@ -1,6 +1,6 @@
-import { Component, Inject } from "@angular/core";
-import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
-import { TotalRowService } from "./total-row.service";
+import { Component, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { TotalRowService } from './total-row.service';
 
 @Component({
   selector: 'ib-table-row-apply-dialog',
@@ -17,7 +17,7 @@ import { TotalRowService } from "./total-row.service";
       </mat-form-field>
     </mat-dialog-content>
     <div mat-dialog-actions align="end">
-      <button mat-button [mat-dialog-close]="{ component: trService.getComponentByFunctionName(function) }">
+      <button mat-button [mat-dialog-close]="{ component: trService.getComponentByFunctionName(function), func: function }">
         {{ 'shared.ibTable.apply' | translate }}
       </button>
     </div>
@@ -26,8 +26,8 @@ import { TotalRowService } from "./total-row.service";
 export class IbTableTotalRowApplyDialogComponent {
   function = 'sum';
   functions = Object.entries(TotalRowService.components)
-    .map(([fun]) => ({ value: fun, viewValue: `shared.ibTable.func.${fun}.name`}))
-  
+    .map(([fun]) => ({ value: fun, viewValue: `shared.ibTable.func.${fun}.name`}));
+
   constructor(
     public trService: TotalRowService,
     public dialogRef: MatDialogRef<IbTableTotalRowApplyDialogComponent>,

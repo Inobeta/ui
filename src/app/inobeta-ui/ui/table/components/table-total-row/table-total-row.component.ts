@@ -3,6 +3,7 @@ import { IbTableItem } from '../../models/table-item.model';
 import { IbTemplateModel } from '../../models/template.model';
 import { IbTableTitles } from '../../models/titles.model';
 import { IbTableTotalRowState } from '../../store/reducers/table.reducer';
+import { TotalRowService } from './total-row.service';
 
 @Component({
   selector: '[ib-table-total-row]',
@@ -19,8 +20,13 @@ export class IbTableTotalRowComponent {
   @Input() sortedData: IbTableItem[];
   @Input() filteredData: IbTableItem[];
   @Input() totalRowDef: IbTableTotalRowState[];
+  @Input() tableName: string;
+
+  constructor(
+    private totalRowService: TotalRowService
+  ){}
 
   public getTotalRowCellComponent(key) {
-    return this.totalRowDef.find(t => t.columnName === key)?.component;
+    return this.totalRowService.getComponentByFunctionName(this.totalRowDef?.find(t => t.columnName === key)?.func);
   }
 }

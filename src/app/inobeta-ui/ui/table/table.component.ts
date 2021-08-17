@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Sort } from '@angular/material/sort';
 import { IbStickyAreas, IbTableAction, IbTableActionsPosition, IbTableCellAligns, IbTableTitles, IbTableTitlesTypes } from './models/titles.model';
 import { IbTemplateModel } from './models/template.model';
@@ -13,15 +13,23 @@ import { IbTableItem } from './models/table-item.model';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { formatDate } from '@angular/common';
 import { ibTableSelectTotalRow } from './store/selectors/table.selectors';
-import { ibTableActionSaveConfig, ibTableActionSetTotalRowCell } from './store/actions/table.actions';
+import { ibTableActionLoadConfig, ibTableActionSaveConfig, ibTableActionSetTotalRowCell } from './store/actions/table.actions';
 import { IbTotalRowAvgCellComponent } from './components/table-total-row/cells/ib-total-row-avg-cell/ib-total-row-avg-cell.component';
 import { IbTotalRowSumCellComponent } from './components/table-total-row/cells/ib-total-row-sum-cell/total-row-sum-cell.component';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { IbTableConfService } from './services/table-conf.service';
 
 
 
 @Component({
   selector: 'ib-table',
   template: `
+  <pre>
+    {{ tableName }}
+    <button (click)="testSave()">save cfg</button>
+  </pre>
+
     <div fxLayout="column" class="ib-table" >
       <div
         fxFlex
@@ -120,7 +128,8 @@ import { IbTotalRowSumCellComponent } from './components/table-total-row/cells/i
             [sortedData]="sortedData"
             [filteredData]="filteredData"
             [hasDelete]="hasDelete"
-            [totalRowDef] = "totalRow$ | async"
+            [totalRowDef]="totalRow$ | async"
+            [tableName]="tableName"
             ></tr>
           </tbody>
         </table>
@@ -159,7 +168,7 @@ import { IbTotalRowSumCellComponent } from './components/table-total-row/cells/i
   `,
   styleUrls: ['./table.component.css']
 })
-export class IbTableComponent implements OnChanges {
+export class IbTableComponent implements OnChanges, OnInit {
 
   // input necessari
   @Input() customItemTemplate: any;
@@ -181,7 +190,7 @@ export class IbTableComponent implements OnChanges {
   @Input() templateButtons: IbTemplateModel[] = [];
   @Input() templateHeaders: any = {};
   /** { columnName: TemplateRef } */
-  @Input() tableName = 'default_table_name'; // change this value in order to partition redux data
+  @Input() tableName = '';
   @Input() pdfCustomStyles = {};
   @Input() pdfSetup: jsPDFOptions = {
     orientation: 'l',
@@ -218,18 +227,30 @@ export class IbTableComponent implements OnChanges {
   rowForms: FormGroup[] = [];
   ibTableActionsPosition = IbTableActionsPosition;
   ibStickyArea = IbStickyAreas;
-  totalRow$ = this.store.select(ibTableSelectTotalRow);
+  totalRow$ = new Observable();
   @Input() rowClass = (item: IbTableItem) => ({});
 
 
   constructor(
     private store: Store<any>,
     private translate: TranslateService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private router: Router,
+    private tableConf: IbTableConfService
     ) { }
 
   ngOnInit() {
-    this.store.dispatch(ibTableActionSaveConfig({ name: 'test-config' }));
+    if(!this.tableName){
+      const fullUrl = this.router['location']._platformLocation.location.pathname;
+      console.warn(`[ibTable] please set a unique tableName input value or ${fullUrl} will be used as unique key for config storage`);
+      this.tableName = fullUrl;
+    }
+    this.totalRow$ = this.store.select(ibTableSelectTotalRow(this.tableName));
+    this.store.dispatch(ibTableActionLoadConfig({ configName: null, tableName: this.tableName}));
+  }
+
+  testSave(){
+    this.store.dispatch(ibTableActionSaveConfig({ configName: 'test', tableName: this.tableName}));
   }
 
   ngOnChanges(changes: SimpleChanges): void {

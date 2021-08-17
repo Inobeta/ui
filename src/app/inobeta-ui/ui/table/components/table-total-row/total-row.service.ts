@@ -9,8 +9,8 @@ export class TotalRowService {
   static components = {
     sum: IbTotalRowSumCellComponent,
     avg: IbTotalRowAvgCellComponent
-  }
-  
+  };
+
   getComponentByFunctionName(name: string) {
     return TotalRowService.components[name];
   }

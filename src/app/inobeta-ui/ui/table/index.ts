@@ -11,4 +11,5 @@ export * from './store/actions/table.actions';
 export * from './store/effects/table.effects';
 export * from './store/reducers/table.reducer';
 export * from './store/selectors/table.selectors';
+export * from './services/table-conf.service';
 export * from './table.module';

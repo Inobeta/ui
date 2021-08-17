@@ -266,7 +266,7 @@ describe('IbTableComponent', () => {
     .compileComponents();
 
     store = TestBed.inject(MockStore);
-    mockedTotalRowSelector = store.overrideSelector(ibTableSelectTotalRow, []);
+    mockedTotalRowSelector = store.overrideSelector(('test'), []);
   }));
 
   beforeEach(() => {

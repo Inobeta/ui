@@ -46,7 +46,6 @@ import { TableEffects } from './inobeta-ui/ui/table/store/effects/table.effects'
 
 export interface IAppState {
   sessionState?: ISessionState;
-  tableFiltersState?: ITableFiltersState;
   countState: ICounterState;
 }
 
@@ -55,7 +54,7 @@ const reducers: ActionReducerMap<IAppState> = {
 };
 
 export function localStorageSyncReducer(reducer: ActionReducer<any>): ActionReducer<any> {
-  return localStorageSync({keys: ['sessionState', 'tableFiltersState'], rehydrate: true})(reducer);
+  return localStorageSync({keys: ['sessionState'], rehydrate: true})(reducer);
 }
 
 const metaReducers: Array<MetaReducer<any, any>> = [localStorageSyncReducer];
@@ -112,6 +111,11 @@ export const statusErrorMessages = { 404: 'Risorsa non trovata'};
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       logOnly: environment.production,
+      features: {
+        pause: true,
+        lock: true,
+        persist: true
+      },
     }),
     TranslateModule.forRoot({
       loader: {

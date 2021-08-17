@@ -37,6 +37,8 @@ import { IbStickyAreaModule } from './directives/sticky-area/sticky-area.module'
 import { EffectsModule } from '@ngrx/effects';
 import { TableEffects } from './store/effects/table.effects';
 import { ibTableFeatureKey, ibTableFeatureReducer } from './store/reducers/table.reducer';
+import { RouterModule } from '@angular/router';
+import { IbTableConfService } from './services/table-conf.service';
 registerLocaleData(localeIt, 'it');
 
 export function ibMatPaginatorTranslate(translateService: TranslateService) {
@@ -44,22 +46,18 @@ export function ibMatPaginatorTranslate(translateService: TranslateService) {
 }
 
 
-const COMPONENTS = [
-  IbTableComponent,
-  IbTableHeaderComponent,
-  IbTableExportComponent,
-  IbTablePaginatorComponent,
-  IbTableHeaderPopupComponent,
-  IbTableExportDialogComponent,
-  IbTableRowComponent,
-  IbTableActionsComponent,
-  IbTableButtonComponent,
-  IbTableHeaderFilterComponent
-];
-
 @NgModule({
   declarations: [
-    ...COMPONENTS,
+    IbTableComponent,
+    IbTableHeaderComponent,
+    IbTableExportComponent,
+    IbTablePaginatorComponent,
+    IbTableHeaderPopupComponent,
+    IbTableExportDialogComponent,
+    IbTableRowComponent,
+    IbTableActionsComponent,
+    IbTableButtonComponent,
+    IbTableHeaderFilterComponent,
     IbTableExportDialogComponent,
   ],
   imports: [
@@ -91,13 +89,27 @@ const COMPONENTS = [
     TotalRowModule,
     StoreModule.forFeature(ibTableFeatureKey, ibTableFeatureReducer),
     EffectsModule.forFeature([TableEffects]),
+    RouterModule
   ],
-  exports: [...COMPONENTS],
+  exports: [
+    IbTableComponent,
+    IbTableHeaderComponent,
+    IbTableExportComponent,
+    IbTablePaginatorComponent,
+    IbTableHeaderPopupComponent,
+    IbTableExportDialogComponent,
+    IbTableRowComponent,
+    IbTableActionsComponent,
+    IbTableButtonComponent,
+    IbTableHeaderFilterComponent,
+    IbTableExportDialogComponent,
+  ],
   providers: [
     {
       provide: MatPaginatorIntl, deps: [TranslateService],
       useFactory: ibMatPaginatorTranslate
-    }
+    },
+    IbTableConfService
   ]
 })
 export class IbTableModule { }
