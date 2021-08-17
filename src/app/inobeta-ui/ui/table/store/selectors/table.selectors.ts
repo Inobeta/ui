@@ -7,5 +7,5 @@ export const selectTableState = createFeatureSelector<fromTable.IbTableState>(
 
 export const ibTableSelectTotalRow = (tableName) => createSelector(
   selectTableState,
-  (state: fromTable.IbTableState) => state.instances?.find(i => i.tableName === tableName)?.config?.totals
+  (state: fromTable.IbTableState) => state?.instances?.find(i => i.tableName === tableName)?.config?.totals
 );

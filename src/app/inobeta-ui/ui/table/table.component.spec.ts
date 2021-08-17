@@ -35,6 +35,7 @@ import { IbModalTestModule } from '../modal';
 import { TranslateService } from '@ngx-translate/core';
 import {ibTableFeatureInitialState} from './store/reducers/table.reducer';
 import { ibTableSelectTotalRow } from './store/selectors/table.selectors';
+import { RouterTestingModule } from '@angular/router/testing';
 
 @Component({
   selector: 'host-test',
@@ -260,7 +261,8 @@ describe('IbTableComponent', () => {
         MatSnackBarModule,
         MatCardModule,
         NoopAnimationsModule,
-        IbModalTestModule
+        IbModalTestModule,
+        RouterTestingModule
       ]
     })
     .compileComponents();

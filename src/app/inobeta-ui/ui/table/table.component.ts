@@ -241,7 +241,7 @@ export class IbTableComponent implements OnChanges, OnInit {
 
   ngOnInit() {
     if(!this.tableName){
-      const fullUrl = this.router['location']._platformLocation.location.pathname;
+      const fullUrl = this.router['location']._platformLocation?.location.pathname;
       console.warn(`[ibTable] please set a unique tableName input value or ${fullUrl} will be used as unique key for config storage`);
       this.tableName = fullUrl;
     }
