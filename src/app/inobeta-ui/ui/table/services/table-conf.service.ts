@@ -16,8 +16,9 @@ export class IbTableConfService {
     private auth: IbAuthService
   ) { }
 
-  saveConfig(tableName, configName, config){
+  saveConfig(tableName, options, config){
     let user = IB_TABLE_ANON_USER;
+    const configName = options.data.name;
     if (this.auth.isLoggedIn()) {
       user = this.auth.activeSession.user.username;
     }
@@ -25,11 +26,22 @@ export class IbTableConfService {
     const stored = this.storage.get(key) || {};
     if (!stored[tableName]) { stored[tableName] = {}; }
     const tableInstance = stored[tableName];
+    console.log('options', options)
+    if (options.data.selector === 'edit'){
+      delete tableInstance[options.selectedConfig];
+    }
+    console.log('tableInstance', tableInstance)
+    if (options.data.default){
+      for (const name of Object.keys(tableInstance)){
+        tableInstance[name].default = false;
+      }
+    }
+    config.default = options.data.default || false;
     tableInstance[configName] = config;
     this.storage.set(key, stored);
   }
 
-  loadConfig(tableName, configName): IbTableConfigState{
+  loadConfig(tableName, configName){
     let user = IB_TABLE_ANON_USER;
     if (this.auth.isLoggedIn()) {
           user = this.auth.activeSession.user.username;
@@ -39,20 +51,16 @@ export class IbTableConfService {
     console.log('found stored config', stored);
     if (!stored[tableName]) { stored[tableName] = {}; }
     const tableInstance = stored[tableName];
-    let selectedConfig = null;
     if (tableInstance){
       console.log('looking for config:', configName, 'in instance', tableName);
       if (configName){
-        return tableInstance[configName] || null;
+        return {config: tableInstance[configName], name: configName} || null;
       }
       for (const config of Object.keys(tableInstance)){
-        selectedConfig = tableInstance[config];
         if (tableInstance[config].default){
-          break;
+          return {config: tableInstance[config], name: config};
         }
       }
-      console.log('instance', tableInstance, 'config', selectedConfig);
-      return selectedConfig;
     }
     return null;
   }

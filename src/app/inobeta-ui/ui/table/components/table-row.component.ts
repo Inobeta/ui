@@ -132,6 +132,9 @@ import { IbStickyAreas, IbTableCellAligns, IbTableTitles, IbTableTitlesTypes } f
       (click)="$event.stopPropagation(); handleDelete()"
     >{{ iconSet.delete }}</i>
   </td>
+  <td
+    [ibStickyColumn]="{ sticky: stickyAreas.includes(ibStickyArea.SETTINGS) && 'end', key: 'ib-settings' }"
+  ></td>
 
   `
 })

@@ -39,6 +39,8 @@ import { TableEffects } from './store/effects/table.effects';
 import { ibTableFeatureKey, ibTableFeatureReducer } from './store/reducers/table.reducer';
 import { RouterModule } from '@angular/router';
 import { IbTableConfService } from './services/table-conf.service';
+import { IbTableConfSaveComponent } from './components/table-conf/table-conf-save.component';
+import { IbMaterialFormModule } from '../material-forms/material-form.module';
 registerLocaleData(localeIt, 'it');
 
 export function ibMatPaginatorTranslate(translateService: TranslateService) {
@@ -59,6 +61,7 @@ export function ibMatPaginatorTranslate(translateService: TranslateService) {
     IbTableButtonComponent,
     IbTableHeaderFilterComponent,
     IbTableExportDialogComponent,
+    IbTableConfSaveComponent
   ],
   imports: [
     CommonModule,
@@ -89,7 +92,8 @@ export function ibMatPaginatorTranslate(translateService: TranslateService) {
     TotalRowModule,
     StoreModule.forFeature(ibTableFeatureKey, ibTableFeatureReducer),
     EffectsModule.forFeature([TableEffects]),
-    RouterModule
+    RouterModule,
+    IbMaterialFormModule
   ],
   exports: [
     IbTableComponent,
@@ -103,6 +107,7 @@ export function ibMatPaginatorTranslate(translateService: TranslateService) {
     IbTableButtonComponent,
     IbTableHeaderFilterComponent,
     IbTableExportDialogComponent,
+    IbTableConfSaveComponent
   ],
   providers: [
     {

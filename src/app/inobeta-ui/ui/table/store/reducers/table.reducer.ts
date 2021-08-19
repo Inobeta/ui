@@ -20,6 +20,7 @@ export interface IbTableConfigState {
   filters: IbTableFilterState[];
   totals: IbTableTotalRowState[];
   sort: IbTableSortState;
+  default?: boolean;
 }
 
 export interface IbTableState {
@@ -27,6 +28,7 @@ export interface IbTableState {
     tableName: string
     config: IbTableConfigState
   }[];
+  selectedConfig?: string;
 }
 
 export const ibTableFeatureInitialState: IbTableState = {
@@ -60,8 +62,11 @@ const reducer = createReducer(
   ),
 
   on(TableActions.ibTableActionSetConfig, (state, newConfigData) => {
+    if (!newConfigData.config){
+      return {...state};
+    }
     const instance = state.instances?.find(i => i.tableName === newConfigData.tableName);
-    if(instance){
+    if (instance){
       state.instances.splice(state.instances.indexOf(instance), 1);
     }
     return {
@@ -70,10 +75,15 @@ const reducer = createReducer(
         ...(state.instances || []),
         {
           tableName: newConfigData.tableName,
-          config: newConfigData.config
+          config: newConfigData.config.config
         }
-      ]
+      ],
+      selectedConfig: newConfigData.config.name
     };
+  }),
+
+  on(TableActions.ibTableActionSaveConfig, (state, saveConfigData) => {
+    return {...state, selectedConfig: saveConfigData.options.data.name};
   })
 );
 

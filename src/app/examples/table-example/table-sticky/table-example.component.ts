@@ -14,7 +14,14 @@ import { sampleData } from '../json-data';
 //ANY, HOUR, COMBOBOX
 export class IbTableStickyExampleComponent implements OnInit {
   @ViewChild('ibTable', {static: true}) ibTable: IbTableComponent;
-  stickyAreas = [IbStickyAreas.HEADER, IbStickyAreas.FOOTER, IbStickyAreas.EDIT, IbStickyAreas.DELETE, IbStickyAreas.SELECT];
+  stickyAreas = [
+    IbStickyAreas.HEADER,
+    IbStickyAreas.FOOTER,
+    IbStickyAreas.EDIT,
+    IbStickyAreas.DELETE,
+    IbStickyAreas.SELECT,
+    IbStickyAreas.SETTINGS
+  ];
   selectableRows = true;
   tableName = 'pippo';
   ibTableActionsPosition = IbTableActionsPosition;

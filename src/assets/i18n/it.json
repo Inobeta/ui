@@ -59,6 +59,15 @@
             "currentPage": "Media pagina:",
             "allPages": "Media complessiva:"
           }
+        },
+        "saveConf": {
+          "title": "Salvataggio configurazione tabella",
+          "message": "Salva nuova configurazione o sovrascrivi quella corrente",
+          "newConf": "Nuova",
+          "editConf": "Corrente",
+          "setAsDefault": "Predefinita",
+          "configName": "Nome",
+          "configExists": "Esiste già una configurazione con questo nome"
         }
     },
     "ibDropdown": {

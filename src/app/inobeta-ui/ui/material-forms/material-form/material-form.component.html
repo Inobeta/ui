@@ -20,7 +20,7 @@
     ></ib-material-form-control>
   </div>
 
-  <mat-grid-list class="ib-material-form-grid" *ngIf="cols" [cols]="cols" rowHeight="80px">
+  <mat-grid-list class="ib-material-form-grid" *ngIf="cols" [cols]="cols" [rowHeight]="rowHeight">
     <mat-grid-tile
         *ngFor="let field of fields"
         [colspan]="field.cols"

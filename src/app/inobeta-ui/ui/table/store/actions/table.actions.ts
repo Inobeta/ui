@@ -3,7 +3,7 @@ import { IbTableConfigState, IbTableTotalRowState } from '../reducers/table.redu
 
 export const ibTableActionSaveConfig = createAction(
   '[IbTable] IbTableAction SaveConfig',
-  props<{ configName: string, tableName: string }>()
+  props<{ options: any, tableName: string }>()
 );
 
 export const ibTableActionLoadConfig = createAction(
@@ -14,7 +14,7 @@ export const ibTableActionLoadConfig = createAction(
 
 export const ibTableActionSetConfig = createAction(
   '[IbTable] IbTableAction SetConfig',
-  props<{ config: IbTableConfigState, tableName: string }>()
+  props<{ config: {config: IbTableConfigState, name: string}, tableName: string }>()
 );
 
 export const ibTableActionSetTotalRowCell = createAction(

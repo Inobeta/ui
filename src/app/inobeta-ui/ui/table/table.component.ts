@@ -27,7 +27,6 @@ import { IbTableConfService } from './services/table-conf.service';
   template: `
   <pre>
     {{ tableName }}
-    <button (click)="testSave()">save cfg</button>
   </pre>
 
     <div fxLayout="column" class="ib-table" >
@@ -78,6 +77,7 @@ import { IbTableConfService } from './services/table-conf.service';
               [currentSort]="currentSort"
               (handleSetFilter)="setFilter($event.key, $event.value, $event.indexToSet)"
               [stickyAreas]="stickyAreas"
+              [tableName]="tableName"
             ></tr>
           </thead>
 
@@ -109,7 +109,7 @@ import { IbTableConfService } from './services/table-conf.service';
 
           <tr *ngIf="sortedData.length === 0">
             <td
-              [attr.colspan]="titles.length + templateButtons.length + (selectableRows ? 1 : 0) + (hasEdit ? 1 : 0) + (hasDelete ? 1 : 0)"
+              [attr.colspan]="titles.length + templateButtons.length + (selectableRows ? 1 : 0) + (hasEdit ? 1 : 0) + (hasDelete ? 1 : 0) + 1"
               style="text-align: center;"
             >
               <br><br>{{ 'shared.ibTable.noData' | translate }}<br><br>
@@ -235,8 +235,7 @@ export class IbTableComponent implements OnChanges, OnInit {
     private store: Store<any>,
     private translate: TranslateService,
     private fb: FormBuilder,
-    private router: Router,
-    private tableConf: IbTableConfService
+    private router: Router
     ) { }
 
   ngOnInit() {
@@ -247,10 +246,6 @@ export class IbTableComponent implements OnChanges, OnInit {
     }
     this.totalRow$ = this.store.select(ibTableSelectTotalRow(this.tableName));
     this.store.dispatch(ibTableActionLoadConfig({ configName: null, tableName: this.tableName}));
-  }
-
-  testSave(){
-    this.store.dispatch(ibTableActionSaveConfig({ configName: 'test', tableName: this.tableName}));
   }
 
   ngOnChanges(changes: SimpleChanges): void {

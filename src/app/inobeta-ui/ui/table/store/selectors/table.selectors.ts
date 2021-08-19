@@ -9,3 +9,8 @@ export const ibTableSelectTotalRow = (tableName) => createSelector(
   selectTableState,
   (state: fromTable.IbTableState) => state?.instances?.find(i => i.tableName === tableName)?.config?.totals
 );
+
+export const ibTableCurrentConfSelector = createSelector(
+  selectTableState,
+  (state: fromTable.IbTableState) => state?.selectedConfig
+);
