@@ -54,7 +54,7 @@ export class IbTableConfService {
     if (tableInstance){
       console.log('looking for config:', configName, 'in instance', tableName);
       if (configName){
-        return {config: tableInstance[configName], name: configName} || null;
+        return tableInstance[configName] ? {config: tableInstance[configName], name: configName} : null;
       }
       for (const config of Object.keys(tableInstance)){
         if (tableInstance[config].default){
