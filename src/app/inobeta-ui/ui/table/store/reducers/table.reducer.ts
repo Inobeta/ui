@@ -4,17 +4,19 @@ import * as TableActions from '../actions/table.actions';
 
 export const ibTableFeatureKey = 'ibTable';
 
-export interface IbTableFilterState {
-
+export interface IbTableColumnState {
+  columnName: string;
 }
 
-export interface IbTableSortState {
-  columnName: string;
+export interface IbTableFilterState extends IbTableColumnState {
+  value: string;
+}
+
+export interface IbTableSortState extends IbTableColumnState {
   sortDirection: string;
 }
 
-export interface IbTableTotalRowState {
-  columnName: string;
+export interface IbTableTotalRowState extends IbTableColumnState {
   func: string;
 }
 
@@ -97,7 +99,34 @@ const reducer = createReducer(
       state.instances.splice(state.instances.indexOf(instance), 1);
     }
     return formatFieldState(state, sortData.tableName, null, null, sortData.options);
-  })
+  }),
+
+  on(TableActions.ibTableActionAddFilterField,
+    (state, addFilterState) => {
+      if (!addFilterState.tableName){
+        return { ...state };
+      }
+      const instance = state.instances?.find(i => i.tableName === addFilterState.tableName);
+      if (!instance){
+        return formatFieldState(state, addFilterState.tableName, null, null, [addFilterState.state]);
+      }
+      state.instances.splice(state.instances.indexOf(instance), 1);
+      const rowExists = instance.config?.filters.find(t => t.columnName === addFilterState.state.columnName);
+      if (!rowExists) {
+        return formatFieldState(state,
+          addFilterState.tableName,
+          instance,
+          null,
+          null,
+          [...(instance.config?.filters || []), addFilterState.state]);
+      }
+      return formatFieldState(state, addFilterState.tableName, instance, null, null, instance.config.filters.map(
+        t => t.columnName === addFilterState.state.columnName
+          ? ({ columnName: addFilterState.state.columnName, value: addFilterState.state.value })
+          : t
+      ));
+    }
+  ),
 );
 
 
@@ -106,7 +135,8 @@ export function ibTableFeatureReducer(state: IbTableState = ibTableFeatureInitia
 }
 
 
-function formatFieldState(state, tableName, instance, totals?, sort?): IbTableState{
+function formatFieldState(state, tableName, instance, totals?, sort?, filters?): IbTableState{  
+
   return {
     ...state,
     instances: [
@@ -114,9 +144,11 @@ function formatFieldState(state, tableName, instance, totals?, sort?): IbTableSt
       {
         tableName,
         config: {
-          filters: instance?.config.filters || [],
-          sort: instance?.config.sort || sort || [],
-          totals: instance?.config.totals || [] }
+          // tslint:disable-next-line:max-line-length
+          filters: filters || [],
+          sort: sort || instance?.config.sort || [],
+          totals: totals || [],
+        }
       }
     ]
   };

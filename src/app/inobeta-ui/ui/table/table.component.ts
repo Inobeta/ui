@@ -13,7 +13,7 @@ import { IbTableItem } from './models/table-item.model';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { formatDate } from '@angular/common';
 import { ibTableSelectTotalRow } from './store/selectors/table.selectors';
-import { ibTableActionLoadConfig, ibTableActionSaveConfig, ibTableActionSelectSortingField, ibTableActionSetTotalRowCell } from './store/actions/table.actions';
+import { ibTableActionAddFilterField, ibTableActionLoadConfig, ibTableActionSaveConfig, ibTableActionSelectSortingField, ibTableActionSetTotalRowCell } from './store/actions/table.actions';
 import { IbTotalRowAvgCellComponent } from './components/table-total-row/cells/ib-total-row-avg-cell/ib-total-row-avg-cell.component';
 import { IbTotalRowSumCellComponent } from './components/table-total-row/cells/ib-total-row-sum-cell/total-row-sum-cell.component';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -451,10 +451,18 @@ export class IbTableComponent implements OnChanges, OnInit {
         tableName = this.tableName;
       }
 
-      this.store.dispatch(TableFiltersActions.addFilterToTable({
-        tableName,
-        filterName: key,
-        filterValue: value
+      // this.store.dispatch(TableFiltersActions.addFilterToTable({
+      //   tableName,
+      //   filterName: key,
+      //   filterValue: value
+      // }));
+
+      this.store.dispatch(ibTableActionAddFilterField({
+        state: {
+          columnName: key,
+          value,
+        },
+        tableName
       }));
     }
 
