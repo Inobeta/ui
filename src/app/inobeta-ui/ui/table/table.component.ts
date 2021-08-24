@@ -13,7 +13,7 @@ import { IbTableItem } from './models/table-item.model';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { formatDate } from '@angular/common';
 import { ibTableSelectTotalRow } from './store/selectors/table.selectors';
-import { ibTableActionAddFilterField, ibTableActionLoadConfig, ibTableActionSaveConfig, ibTableActionSelectSortingField, ibTableActionSetTotalRowCell } from './store/actions/table.actions';
+import { ibTableActionAddFilterField, ibTableActionLoadConfig, ibTableActionSaveConfig, ibTableActionSelectSortingField, ibTableActionSetPaginator, ibTableActionSetTotalRowCell } from './store/actions/table.actions';
 import { IbTotalRowAvgCellComponent } from './components/table-total-row/cells/ib-total-row-avg-cell/ib-total-row-avg-cell.component';
 import { IbTotalRowSumCellComponent } from './components/table-total-row/cells/ib-total-row-sum-cell/total-row-sum-cell.component';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -473,12 +473,21 @@ export class IbTableComponent implements OnChanges, OnInit {
   }
 
   pageChangeHandle(data) {
-    this.store.dispatch(TableFiltersActions.addPaginatorFiltersToTable({
-      tableName: this.tableName,
-      previousPageIndex: data.previousPageIndex,
-      pageIndex: data.pageIndex,
-      pageSize: data.pageSize,
-      lengthP: data.length
+    // this.store.dispatch(TableFiltersActions.addPaginatorFiltersToTable({
+    //   tableName: this.tableName,
+    //   previousPageIndex: data.previousPageIndex,
+    //   pageIndex: data.pageIndex,
+    //   pageSize: data.pageSize,
+    //   lengthP: data.length
+    // }));
+
+    this.store.dispatch(ibTableActionSetPaginator({
+      state: {
+        currentPageIndex: data.pageIndex,
+        pageSize: data.pageSize,
+        currentPageSize: data.length
+      },
+      tableName: this.tableName
     }));
     this.currentPagination = data;
     this.sortData(this.currentSort, false);
@@ -521,7 +530,18 @@ export class IbTableComponent implements OnChanges, OnInit {
         pageSize: this.items.length,
         lengthP: this.items.length
       };
-      this.store.dispatch(TableFiltersActions.addPaginatorFiltersToTable(pagination));
+      // this.store.dispatch(TableFiltersActions.addPaginatorFiltersToTable(pagination));
+
+      this.store.dispatch(ibTableActionSetPaginator({
+        state: {
+          currentPageIndex: 0,
+          pageSize: this.items.length,
+          currentPageSize: this.items.length,
+        },
+        tableName: this.tableName
+      }));
+
+
       this.currentPagination = pagination;
       this.sortData(this.currentSort, false);
     }

@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { IbTableConfigState, IbTableFilterState, IbTableSortState, IbTableTotalRowState } from '../reducers/table.reducer';
+import { IbTableConfigState, IbTableFilterState, IbTablePaginatorState, IbTableSortState, IbTableTotalRowState } from '../reducers/table.reducer';
 
 export const ibTableActionSaveConfig = createAction(
   '[IbTable] IbTableAction SaveConfig',
@@ -30,6 +30,11 @@ export const ibTableActionSelectSortingField = createAction(
 export const ibTableActionAddFilterField = createAction(
   '[IbTable] IbTableAction Add Filter Field',
   props<{state: IbTableFilterState, tableName: string}>()
+);
+
+export const ibTableActionSetPaginator = createAction(
+  '[IbTable] IbTableAction Set Paginator',
+  props<{state: IbTablePaginatorState, tableName: string}>()
 );
 
 

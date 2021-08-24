@@ -20,10 +20,17 @@ export interface IbTableTotalRowState extends IbTableColumnState {
   func: string;
 }
 
+export interface IbTablePaginatorState {
+  currentPageIndex: number;
+  pageSize: number;
+  currentPageSize: number;
+}
+
 export interface IbTableConfigState {
   filters: IbTableFilterState[];
   totals: IbTableTotalRowState[];
   sort: IbTableSortState;
+  paginator: IbTablePaginatorState;
   default?: boolean;
 }
 
@@ -98,7 +105,7 @@ const reducer = createReducer(
     if (instance){
       state.instances.splice(state.instances.indexOf(instance), 1);
     }
-    return formatFieldState(state, sortData.tableName, null, null, sortData.options);
+    return formatFieldState(state, sortData.tableName, instance, null, sortData.options);
   }),
 
   on(TableActions.ibTableActionAddFilterField,
@@ -127,6 +134,17 @@ const reducer = createReducer(
       ));
     }
   ),
+
+  on(TableActions.ibTableActionSetPaginator, (state, paginatorData) => {
+    if (!paginatorData.tableName){
+      return { ...state };
+    }
+    const instance = state.instances?.find(i => i.tableName === paginatorData.tableName);
+    if (instance){
+      state.instances.splice(state.instances.indexOf(instance), 1);
+    }
+    return formatFieldState(state, paginatorData.tableName, instance, null, null, null, paginatorData.state);
+  }),
 );
 
 
@@ -135,7 +153,7 @@ export function ibTableFeatureReducer(state: IbTableState = ibTableFeatureInitia
 }
 
 
-function formatFieldState(state, tableName, instance, totals?, sort?, filters?): IbTableState{
+function formatFieldState(state, tableName, instance, totals?, sort?, filters?, paginator?): IbTableState{
 
   return {
     ...state,
@@ -144,9 +162,10 @@ function formatFieldState(state, tableName, instance, totals?, sort?, filters?):
       {
         tableName,
         config: {
-          filters: totals || sort ? instance?.config.filters || [] : filters || [],
-          sort: totals || filters ? instance?.config.sort || [] : sort || {},
-          totals: filters || sort ? instance?.config.totals || [] : totals || [],
+          filters: totals || sort || paginator ? instance?.config.filters || [] : filters || [],
+          sort: totals || filters || paginator ? instance?.config.sort || [] : sort || {},
+          totals: filters || sort || paginator ? instance?.config.totals || [] : totals || [],
+          paginator: filters || sort || totals ? instance?.config.paginator || [] : paginator || {},
         }
       }
     ]
