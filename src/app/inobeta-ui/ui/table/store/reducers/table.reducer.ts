@@ -1,3 +1,4 @@
+import { Sort } from '@angular/material/sort';
 import { Action, createReducer, on } from '@ngrx/store';
 import * as TableActions from '../actions/table.actions';
 
@@ -8,7 +9,8 @@ export interface IbTableFilterState {
 }
 
 export interface IbTableSortState {
-
+  columnName: string;
+  sortDirection: string;
 }
 
 export interface IbTableTotalRowState {
@@ -46,14 +48,14 @@ const reducer = createReducer(
       }
       const instance = state.instances?.find(i => i.tableName === newTotalRowState.tableName);
       if (!instance){
-        return formatTotalState(state, newTotalRowState, null, [newTotalRowState.state]);
+        return formatFieldState(state, newTotalRowState.tableName, null, [newTotalRowState.state]);
       }
       state.instances.splice(state.instances.indexOf(instance), 1);
       const rowExists = instance.config?.totals.find(t => t.columnName === newTotalRowState.state.columnName);
       if (!rowExists) {
-        return formatTotalState(state, newTotalRowState, instance, [...(instance.config?.totals || []), newTotalRowState.state]);
+        return formatFieldState(state, newTotalRowState.tableName, instance, [...(instance.config?.totals || []), newTotalRowState.state]);
       }
-      return formatTotalState(state, newTotalRowState, instance, instance.config.totals.map(
+      return formatFieldState(state, newTotalRowState.tableName, instance, instance.config.totals.map(
         t => t.columnName === newTotalRowState.state.columnName
           ? ({ columnName: newTotalRowState.state.columnName, func: newTotalRowState.state.func })
           : t
@@ -84,6 +86,17 @@ const reducer = createReducer(
 
   on(TableActions.ibTableActionSaveConfig, (state, saveConfigData) => {
     return {...state, selectedConfig: saveConfigData.options.data.name};
+  }),
+
+  on(TableActions.ibTableActionSelectSortingField, (state, sortData) => {
+    if (!sortData.tableName){
+      return { ...state };
+    }
+    const instance = state.instances?.find(i => i.tableName === sortData.tableName);
+    if (instance){
+      state.instances.splice(state.instances.indexOf(instance), 1);
+    }
+    return formatFieldState(state, sortData.tableName, null, null, sortData.options);
   })
 );
 
@@ -93,14 +106,17 @@ export function ibTableFeatureReducer(state: IbTableState = ibTableFeatureInitia
 }
 
 
-function formatTotalState(state, newTotalRowState, instance, totals): IbTableState{
+function formatFieldState(state, tableName, instance, totals?, sort?): IbTableState{
   return {
     ...state,
     instances: [
       ...(state.instances || []),
       {
-        tableName: newTotalRowState.tableName,
-        config: { filters: instance?.filters || [], sort: instance?.sort || [], totals }
+        tableName,
+        config: {
+          filters: instance?.config.filters || [],
+          sort: instance?.config.sort || sort || [],
+          totals: instance?.config.totals || [] }
       }
     ]
   };

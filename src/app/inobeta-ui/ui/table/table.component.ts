@@ -13,7 +13,7 @@ import { IbTableItem } from './models/table-item.model';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { formatDate } from '@angular/common';
 import { ibTableSelectTotalRow } from './store/selectors/table.selectors';
-import { ibTableActionLoadConfig, ibTableActionSaveConfig, ibTableActionSetTotalRowCell } from './store/actions/table.actions';
+import { ibTableActionLoadConfig, ibTableActionSaveConfig, ibTableActionSelectSortingField, ibTableActionSetTotalRowCell } from './store/actions/table.actions';
 import { IbTotalRowAvgCellComponent } from './components/table-total-row/cells/ib-total-row-avg-cell/ib-total-row-avg-cell.component';
 import { IbTotalRowSumCellComponent } from './components/table-total-row/cells/ib-total-row-sum-cell/total-row-sum-cell.component';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -207,6 +207,9 @@ export class IbTableComponent implements OnChanges, OnInit {
   rowIconSet = Object.assign({}, this.defaultIconSet);
   // Output necessari
   @Output() filterChange: EventEmitter<any> = new EventEmitter<any>();
+  /** deprecated
+   * Obsolete, use effects interception instead
+   */
   @Output() sortChange: EventEmitter<any> = new EventEmitter<any>();
   @Output() add: EventEmitter<any> = new EventEmitter<any>();
   @Output() edit: EventEmitter<any> = new EventEmitter<any>();
@@ -340,11 +343,18 @@ export class IbTableComponent implements OnChanges, OnInit {
 
   sortData(sort: Sort, emitChange: boolean = true) {
     if (Object.keys(sort).length !== 0) {
-      this.store.dispatch(TableFiltersActions.addSortToTable({
+      this.store.dispatch(ibTableActionSelectSortingField({
         tableName: this.tableName,
-        sortType: sort,
-        emitChange
+        options: {
+          sortDirection: sort.direction,
+          columnName: sort.active
+        }
       }));
+      // this.store.dispatch(TableFiltersActions.addSortToTable({
+      //   tableName: this.tableName,
+      //   sortType: sort,
+      //   emitChange
+      // }));
     }
     if (emitChange) {
       this.sortChange.emit(sort);
