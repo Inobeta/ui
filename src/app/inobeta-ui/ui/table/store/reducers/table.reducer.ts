@@ -135,7 +135,7 @@ export function ibTableFeatureReducer(state: IbTableState = ibTableFeatureInitia
 }
 
 
-function formatFieldState(state, tableName, instance, totals?, sort?, filters?): IbTableState{  
+function formatFieldState(state, tableName, instance, totals?, sort?, filters?): IbTableState{
 
   return {
     ...state,
@@ -144,10 +144,9 @@ function formatFieldState(state, tableName, instance, totals?, sort?, filters?):
       {
         tableName,
         config: {
-          // tslint:disable-next-line:max-line-length
-          filters: filters || [],
-          sort: sort || instance?.config.sort || [],
-          totals: totals || [],
+          filters: totals || sort ? instance?.config.filters || [] : filters || [],
+          sort: totals || filters ? instance?.config.sort || [] : sort || {},
+          totals: filters || sort ? instance?.config.totals || [] : totals || [],
         }
       }
     ]
