@@ -485,7 +485,7 @@ export class IbTableComponent implements OnChanges, OnInit {
       state: {
         currentPageIndex: data.pageIndex,
         pageSize: data.pageSize,
-        currentPageSize: data.length
+        tableTotalRows: data.length
       },
       tableName: this.tableName
     }));
@@ -536,7 +536,7 @@ export class IbTableComponent implements OnChanges, OnInit {
         state: {
           currentPageIndex: 0,
           pageSize: this.items.length,
-          currentPageSize: this.items.length,
+          tableTotalRows: this.items.length,
         },
         tableName: this.tableName
       }));

@@ -23,7 +23,7 @@ export interface IbTableTotalRowState extends IbTableColumnState {
 export interface IbTablePaginatorState {
   currentPageIndex: number;
   pageSize: number;
-  currentPageSize: number;
+  tableTotalRows: number;
 }
 
 export interface IbTableConfigState {
