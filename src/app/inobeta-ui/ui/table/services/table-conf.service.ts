@@ -44,8 +44,8 @@ export class IbTableConfService {
   loadConfig(tableName, configName){
     let user = IB_TABLE_ANON_USER;
     if (this.auth.isLoggedIn()) {
-          user = this.auth.activeSession.user.username;
-        }
+      user = this.auth.activeSession.user.username;
+    }
     const key = `${IB_TABLE_STORAGE_NAME}/${user}`;
     const stored = this.storage.get(key) || {};
     console.log('found stored config', stored);
@@ -65,4 +65,20 @@ export class IbTableConfService {
     return null;
   }
 
+  getConfigsByTableName(tableName) {
+    let user = IB_TABLE_ANON_USER;
+    if (this.auth.isLoggedIn()) {
+      user = this.auth.activeSession.user.username;
+    }
+    const key = `${IB_TABLE_STORAGE_NAME}/${user}`;
+    const stored = this.storage.get(key) || {};
+
+    const instanceExists = (tableName in stored);
+    if (!instanceExists) {
+      return null;
+    }
+    const instance = stored[tableName];
+    return Object.keys(instance);
+  }
+  
 }

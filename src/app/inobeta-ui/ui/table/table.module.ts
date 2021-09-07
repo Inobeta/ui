@@ -41,6 +41,7 @@ import { RouterModule } from '@angular/router';
 import { IbTableConfService } from './services/table-conf.service';
 import { IbTableConfSaveComponent } from './components/table-conf/table-conf-save.component';
 import { IbMaterialFormModule } from '../material-forms/material-form.module';
+import { IbTableConfLoadComponent } from './components/table-conf/table-conf-load.component';
 registerLocaleData(localeIt, 'it');
 
 export function ibMatPaginatorTranslate(translateService: TranslateService) {
@@ -61,7 +62,8 @@ export function ibMatPaginatorTranslate(translateService: TranslateService) {
     IbTableButtonComponent,
     IbTableHeaderFilterComponent,
     IbTableExportDialogComponent,
-    IbTableConfSaveComponent
+    IbTableConfSaveComponent,
+    IbTableConfLoadComponent
   ],
   imports: [
     CommonModule,
@@ -107,7 +109,8 @@ export function ibMatPaginatorTranslate(translateService: TranslateService) {
     IbTableButtonComponent,
     IbTableHeaderFilterComponent,
     IbTableExportDialogComponent,
-    IbTableConfSaveComponent
+    IbTableConfSaveComponent,
+    IbTableConfLoadComponent
   ],
   providers: [
     {

@@ -112,24 +112,7 @@ export class IbTableStickyExampleComponent implements OnInit {
   };
   constructor() { }
 
-  ngOnInit(): void {
-
-    this.ibTable.setFilter('age', [
-      {
-        condition: '>',
-        value: '20'
-      },
-      {
-        condition: '<=',
-        value: '30'
-      }
-    ], 0, true, this.tableName);
-
-    //Full parameters with table name must be sent only when redux is enabled
-    this.ibTable.setFilter('picture', 'place', 0, true, this.tableName);
-
-
-  }
+  ngOnInit(): void {}
 
   consolePrint(item) {
     console.log(item);

@@ -13,7 +13,7 @@ export interface IbTableFilterState extends IbTableColumnState {
 }
 
 export interface IbTableSortState extends IbTableColumnState {
-  sortDirection: string;
+  direction: string;
 }
 
 export interface IbTableTotalRowState extends IbTableColumnState {
@@ -21,9 +21,9 @@ export interface IbTableTotalRowState extends IbTableColumnState {
 }
 
 export interface IbTablePaginatorState {
-  currentPageIndex: number;
-  pageSize: number;
-  tableTotalRows: number;
+  pageIndex?: number;
+  pageSize?: number;
+  length?: number;
 }
 
 export interface IbTableConfigState {

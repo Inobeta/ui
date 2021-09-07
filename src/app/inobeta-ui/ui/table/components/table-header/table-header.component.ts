@@ -4,8 +4,9 @@ import { IbTemplateModel } from '../../models/template.model';
 import { Store } from '@ngrx/store';
 import { IbModalMessageService } from '../../../modal/modal-message.service';
 import { IbTableConfSaveComponent } from '../table-conf/table-conf-save.component';
-import { ibTableActionSaveConfig } from '../../store/actions/table.actions';
+import { ibTableActionLoadConfig, ibTableActionSaveConfig } from '../../store/actions/table.actions';
 import { IbModalMessage } from '../../../modal/modal-message.model';
+import { IbTableConfLoadComponent } from '../table-conf/table-conf-load.component';
 
 @Component({
   // tslint:disable-next-line: component-selector
@@ -37,7 +38,7 @@ export class IbTableHeaderComponent implements OnInit {
   constructor(
     private store: Store<any>,
     private ibModal: IbModalMessageService
-    ) { }
+  ) { }
 
   ngOnInit() {
   }
@@ -71,7 +72,7 @@ export class IbTableHeaderComponent implements OnInit {
     return Object.keys(this.visibleHeaders).length > 0;
   }
 
-  saveConf(){
+  saveConf() {
 
     console.log('saveConf');
     this.ibModal.show({
@@ -79,13 +80,21 @@ export class IbTableHeaderComponent implements OnInit {
       message: 'shared.ibTable.saveConf.message',
       tableName: this.tableName
     } as IbTableConfDialogParams, IbTableConfSaveComponent).subscribe(data => {
-      if (data){
-        this.store.dispatch(ibTableActionSaveConfig({ options: data, tableName: this.tableName}));
+      if (data) {
+        this.store.dispatch(ibTableActionSaveConfig({ options: data, tableName: this.tableName }));
       }
     });
   }
-  editConf(){
-    console.log('editConf');
+  loadConf() {
+    this.ibModal.show({
+      title: 'shared.ibTable.loadConf.title',
+      message: 'shared.ibTable.loadConf.message',
+      tableName: this.tableName
+    } as IbTableConfDialogParams, IbTableConfLoadComponent).subscribe(data => {
+      if (data) {
+        this.store.dispatch(ibTableActionLoadConfig({ configName: data.config, tableName: this.tableName }));
+      }
+    })
   }
 }
 

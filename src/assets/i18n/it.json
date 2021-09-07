@@ -68,6 +68,12 @@
           "setAsDefault": "Predefinita",
           "configName": "Nome",
           "configExists": "Esiste già una configurazione con questo nome"
+        },
+        "loadConf": {
+          "title": "Caricamento configurazione tabella",
+          "message": "Carica una configurazione per la tabella: {{tableName}}",
+          "configName": "Nome",
+          "noConfig": "Questa configurazione non è disponibile"
         }
     },
     "ibDropdown": {

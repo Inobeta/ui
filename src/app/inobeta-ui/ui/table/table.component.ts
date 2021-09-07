@@ -1,9 +1,8 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Sort } from '@angular/material/sort';
 import { IbStickyAreas, IbTableAction, IbTableActionsPosition, IbTableCellAligns, IbTableTitles, IbTableTitlesTypes } from './models/titles.model';
 import { IbTemplateModel } from './models/template.model';
 import { Store } from '@ngrx/store';
-import * as TableFiltersActions from './redux/table.action';
 import Papa from 'papaparse';
 import jsPDF, { jsPDFOptions } from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -12,15 +11,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { IbTableItem } from './models/table-item.model';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { formatDate } from '@angular/common';
-import { ibTableSelectTotalRow } from './store/selectors/table.selectors';
-import { ibTableActionAddFilterField, ibTableActionLoadConfig, ibTableActionSaveConfig, ibTableActionSelectSortingField, ibTableActionSetPaginator, ibTableActionSetTotalRowCell } from './store/actions/table.actions';
-import { IbTotalRowAvgCellComponent } from './components/table-total-row/cells/ib-total-row-avg-cell/ib-total-row-avg-cell.component';
-import { IbTotalRowSumCellComponent } from './components/table-total-row/cells/ib-total-row-sum-cell/total-row-sum-cell.component';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { IbTableConfService } from './services/table-conf.service';
-
-
+import { ibTableSelectFilters, ibTableSelectPaginator, ibTableSelectSort, ibTableSelectTotalRow } from './store/selectors/table.selectors';
+import { ibTableActionAddFilterField, ibTableActionLoadConfig, ibTableActionSaveConfig, ibTableActionSelectSortingField, ibTableActionSetPaginator } from './store/actions/table.actions';
+import { Router } from '@angular/router';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'ib-table',
@@ -141,6 +135,7 @@ import { IbTableConfService } from './services/table-conf.service';
       <ng-template #defaultPaginatorTemplate>
         <ib-table-paginator
           *ngIf="hasPaginator"
+          [paginatorDef]="paginator$ | async"
           [numOfElements]="numOfElements"
           [paginationInfo]="currentPagination"
           (pageChangeHandle)="pageChangeHandle($event)"
@@ -168,7 +163,7 @@ import { IbTableConfService } from './services/table-conf.service';
   `,
   styleUrls: ['./table.component.css']
 })
-export class IbTableComponent implements OnChanges, OnInit {
+export class IbTableComponent implements OnChanges, OnInit, OnDestroy {
 
   // input necessari
   @Input() customItemTemplate: any;
@@ -231,6 +226,11 @@ export class IbTableComponent implements OnChanges, OnInit {
   ibTableActionsPosition = IbTableActionsPosition;
   ibStickyArea = IbStickyAreas;
   totalRow$ = new Observable();
+  // filters$ = new Observable();
+  paginator$ = new Observable();
+  private _paginatorSub: Subscription;
+  private _filterSub: Subscription;
+  private _sortSub: Subscription;
   @Input() rowClass = (item: IbTableItem) => ({});
 
 
@@ -248,36 +248,29 @@ export class IbTableComponent implements OnChanges, OnInit {
       this.tableName = fullUrl;
     }
     this.totalRow$ = this.store.select(ibTableSelectTotalRow(this.tableName));
-    this.store.dispatch(ibTableActionLoadConfig({ configName: null, tableName: this.tableName}));
+    this.store.dispatch(ibTableActionLoadConfig({ configName: null, tableName: this.tableName }));
+    
+    this._sortSub = this.store.select(ibTableSelectSort(this.tableName)).subscribe(sort => this.currentSort = {
+      active: sort?.columnName,
+      direction: sort?.direction,
+    });
+
+    this._filterSub = this.store.select(ibTableSelectFilters(this.tableName)).subscribe(data =>
+      data.forEach(f => this.setFilter(f.columnName, f.value, this.currentPagination.pageIndex || 0, false, this.tableName)));
+
+    this.paginator$ = this.store.select(ibTableSelectPaginator(this.tableName));
+    this._paginatorSub = this.paginator$.subscribe(paginator => this.currentPagination = paginator);
+  }
+
+  ngOnDestroy() {
+    this._paginatorSub.unsubscribe();
+    this._filterSub.unsubscribe();
+    this._sortSub.unsubscribe();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.iconSet && changes.iconSet.currentValue){
       this.rowIconSet = Object.assign({}, this.defaultIconSet, changes.iconSet.currentValue);
-    }
-    if (changes.enableReduxStore && changes.enableReduxStore.currentValue) {
-      this.store.select(rootState => rootState.tableFiltersState.tableFilters).subscribe(tableFilters => {
-        const data = tableFilters[this.tableName];
-        if (data) {
-          if (data.paginatorFilters) {
-            this.currentPagination = data.paginatorFilters;
-          } else {
-            this.currentPagination = {
-              pageIndex: 0,
-              pageSize: 10,
-              previousPageIndex: 0
-            };
-          }
-
-          for (const prop of Object.keys(data).filter(p => ['paginatorFilters', 'sortType'].indexOf(p) === -1)) {
-            this.setFilter(prop, data[prop].value, this.currentPagination.pageIndex, false);
-          }
-          if (data.sortType) {
-            this.sortData(data.sortType, false);
-          }
-        }
-
-      });
     }
 
     let triggerRefresh = false;
@@ -346,7 +339,7 @@ export class IbTableComponent implements OnChanges, OnInit {
       this.store.dispatch(ibTableActionSelectSortingField({
         tableName: this.tableName,
         options: {
-          sortDirection: sort.direction,
+          direction: sort.direction,
           columnName: sort.active
         }
       }));
@@ -424,6 +417,14 @@ export class IbTableComponent implements OnChanges, OnInit {
 
     }
     this.numOfElements = this.sortedData.length;
+    this.store.dispatch(ibTableActionSetPaginator({
+      state: {
+        length: this.sortedData.length,
+        pageIndex: this.currentPagination.pageIndex,
+        pageSize: this.currentPagination.pageSize
+      },
+      tableName: this.tableName
+    }));
 
     if (!sort || !sort.active || sort.direction === '') {
       this.currentSort = {};
@@ -483,9 +484,9 @@ export class IbTableComponent implements OnChanges, OnInit {
 
     this.store.dispatch(ibTableActionSetPaginator({
       state: {
-        currentPageIndex: data.pageIndex,
+        pageIndex: data.pageIndex,
         pageSize: data.pageSize,
-        tableTotalRows: data.length
+        length: data.length
       },
       tableName: this.tableName
     }));
@@ -503,6 +504,7 @@ export class IbTableComponent implements OnChanges, OnInit {
         previousPageIndex: 0
       }
     */
+    
     const data = this.currentPagination;
     const paginatedData = [];
     // scorro tutte le pagine della tabella
@@ -534,9 +536,9 @@ export class IbTableComponent implements OnChanges, OnInit {
 
       this.store.dispatch(ibTableActionSetPaginator({
         state: {
-          currentPageIndex: 0,
+          pageIndex: 0,
           pageSize: this.items.length,
-          tableTotalRows: this.items.length,
+          length: this.items.length,
         },
         tableName: this.tableName
       }));
