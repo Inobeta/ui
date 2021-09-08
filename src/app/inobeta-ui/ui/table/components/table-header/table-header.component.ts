@@ -92,7 +92,7 @@ export class IbTableHeaderComponent implements OnInit {
       tableName: this.tableName
     } as IbTableConfDialogParams, IbTableConfLoadComponent).subscribe(data => {
       if (data) {
-        this.store.dispatch(ibTableActionLoadConfig({ configName: data.config, tableName: this.tableName }));
+        this.store.dispatch(ibTableActionLoadConfig({ configName: data.name, tableName: this.tableName }));
       }
     })
   }

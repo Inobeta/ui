@@ -24,7 +24,6 @@ export class TableEffects {
       ofType(TableActions.ibTableActionSaveConfig),
       concatLatestFrom(_ => this.store.select(selectTableState)),
       concatMap(([action, state]) => {
-        console.log('instances', state.instances);
         const config = state.instances.find(i => i.tableName === action.tableName)?.config;
         this.tableConf.saveConfig(action.tableName, action.options, config);
         return EMPTY as Observable<{ type: string }>;

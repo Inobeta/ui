@@ -135,7 +135,6 @@ import { Observable, Subscription } from 'rxjs';
       <ng-template #defaultPaginatorTemplate>
         <ib-table-paginator
           *ngIf="hasPaginator"
-          [paginatorDef]="paginator$ | async"
           [numOfElements]="numOfElements"
           [paginationInfo]="currentPagination"
           (pageChangeHandle)="pageChangeHandle($event)"
@@ -226,8 +225,6 @@ export class IbTableComponent implements OnChanges, OnInit, OnDestroy {
   ibTableActionsPosition = IbTableActionsPosition;
   ibStickyArea = IbStickyAreas;
   totalRow$ = new Observable();
-  // filters$ = new Observable();
-  paginator$ = new Observable();
   private _paginatorSub: Subscription;
   private _filterSub: Subscription;
   private _sortSub: Subscription;
@@ -247,19 +244,32 @@ export class IbTableComponent implements OnChanges, OnInit, OnDestroy {
       console.warn(`[ibTable] please set a unique tableName input value or ${fullUrl} will be used as unique key for config storage`);
       this.tableName = fullUrl;
     }
-    this.totalRow$ = this.store.select(ibTableSelectTotalRow(this.tableName));
     this.store.dispatch(ibTableActionLoadConfig({ configName: null, tableName: this.tableName }));
+
+    this.totalRow$ = this.store.select(ibTableSelectTotalRow(this.tableName));
     
-    this._sortSub = this.store.select(ibTableSelectSort(this.tableName)).subscribe(sort => this.currentSort = {
-      active: sort?.columnName,
-      direction: sort?.direction,
+    this._paginatorSub = this.store.select(ibTableSelectPaginator(this.tableName)).subscribe(paginator => {
+      this.currentPagination = {
+        pageIndex: paginator?.pageIndex || 0,
+        pageSize: paginator?.pageSize || 10,
+        length: paginator?.length,
+      };
+    });
+    
+    this._sortSub = this.store.select(ibTableSelectSort(this.tableName))
+      .subscribe(sort => {
+        this.currentSort = {
+          active: sort?.columnName,
+          direction: sort?.direction,
+        };
+        this._sortData(this.currentSort);
     });
 
-    this._filterSub = this.store.select(ibTableSelectFilters(this.tableName)).subscribe(data =>
-      data.forEach(f => this.setFilter(f.columnName, f.value, this.currentPagination.pageIndex || 0, false, this.tableName)));
-
-    this.paginator$ = this.store.select(ibTableSelectPaginator(this.tableName));
-    this._paginatorSub = this.paginator$.subscribe(paginator => this.currentPagination = paginator);
+    this._filterSub = this.store.select(ibTableSelectFilters(this.tableName)).subscribe(data => {
+      this.resetFilters();
+      data.forEach(f => this.setFilter(f.columnName, f.value, this.currentPagination.pageIndex || 0, false, this.tableName));
+      this.pageChangeHandle(this.currentPagination);
+    });
   }
 
   ngOnDestroy() {
@@ -299,14 +309,14 @@ export class IbTableComponent implements OnChanges, OnInit, OnDestroy {
       triggerRefresh = true;
     }
 
-    if (triggerRefresh) {
-      this.pageChangeHandle({
-        previousPageIndex: this.currentPagination.previousPageIndex ? this.currentPagination.previousPageIndex : 0,
-        pageIndex: this.currentPagination.pageIndex ? this.currentPagination.pageIndex : 0,
-        pageSize: this.currentPagination.pageSize ? this.currentPagination.pageSize : 10,
-        length: this.sortedData.length
-      });
-    }
+    // if (triggerRefresh) {
+    //   this.pageChangeHandle({
+    //     previousPageIndex: this.currentPagination.previousPageIndex ? this.currentPagination.previousPageIndex : 0,
+    //     pageIndex: this.currentPagination.pageIndex ? this.currentPagination.pageIndex : 0,
+    //     pageSize: this.currentPagination.pageSize ? this.currentPagination.pageSize : 10,
+    //     length: this.sortedData.length
+    //   });
+    // }
   }
 
   rowForm(item) {
@@ -335,20 +345,16 @@ export class IbTableComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   sortData(sort: Sort, emitChange: boolean = true) {
-    if (Object.keys(sort).length !== 0) {
-      this.store.dispatch(ibTableActionSelectSortingField({
-        tableName: this.tableName,
-        options: {
-          direction: sort.direction,
-          columnName: sort.active
-        }
-      }));
-      // this.store.dispatch(TableFiltersActions.addSortToTable({
-      //   tableName: this.tableName,
-      //   sortType: sort,
-      //   emitChange
-      // }));
-    }
+    this.store.dispatch(ibTableActionSelectSortingField({
+      tableName: this.tableName,
+      options: {
+        direction: sort.direction,
+        columnName: sort.active
+      }
+    }));
+  }
+
+  _sortData(sort: Sort, emitChange: boolean = true) {
     if (emitChange) {
       this.sortChange.emit(sort);
     }
@@ -443,7 +449,6 @@ export class IbTableComponent implements OnChanges, OnInit, OnDestroy {
   setFilter(key, value, indexToSet = 0, redux = true, tableName = null) {
     this.columnFilter[key] = value;
     this.currentPagination.pageIndex = indexToSet;
-    this.pageChangeHandle(this.currentPagination);
     if (redux) {
       if (!tableName) {
         if (!tableName && this.tableName === 'default_table_name') {
@@ -458,6 +463,7 @@ export class IbTableComponent implements OnChanges, OnInit, OnDestroy {
       //   filterValue: value
       // }));
 
+      this.pageChangeHandle(this.currentPagination);
       this.store.dispatch(ibTableActionAddFilterField({
         state: {
           columnName: key,
@@ -490,8 +496,8 @@ export class IbTableComponent implements OnChanges, OnInit, OnDestroy {
       },
       tableName: this.tableName
     }));
-    this.currentPagination = data;
-    this.sortData(this.currentSort, false);
+    // this.currentPagination = data;
+    this._sortData(this.currentSort, false);
   }
 
   paginationHandle() {

@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { IbAuthService } from '../../../http/auth/auth.service';
 import { IbStorageService } from '../../../storage/storage.service';
-import { IbTableConfigState } from '../store/reducers/table.reducer';
-
 
 export const IB_TABLE_STORAGE_NAME = 'ib-table-store';
 export const IB_TABLE_ANON_USER = 'ib-anon';
@@ -10,6 +8,8 @@ export const IB_TABLE_ANON_USER = 'ib-anon';
 
 @Injectable({providedIn: 'root'})
 export class IbTableConfService {
+  private user = IB_TABLE_ANON_USER;
+  private key = `${IB_TABLE_STORAGE_NAME}/${this.user}`;
 
   constructor(
     private storage: IbStorageService,
@@ -17,68 +17,99 @@ export class IbTableConfService {
   ) { }
 
   saveConfig(tableName, options, config){
-    let user = IB_TABLE_ANON_USER;
     const configName = options.data.name;
-    if (this.auth.isLoggedIn()) {
-      user = this.auth.activeSession.user.username;
-    }
-    const key = `${IB_TABLE_STORAGE_NAME}/${user}`;
-    const stored = this.storage.get(key) || {};
-    if (!stored[tableName]) { stored[tableName] = {}; }
-    const tableInstance = stored[tableName];
-    console.log('options', options)
+    const [error, stored, instance] = this.loadFromStorage(tableName);
+
     if (options.data.selector === 'edit'){
-      delete tableInstance[options.selectedConfig];
+      delete instance[options.selectedConfig];
     }
-    console.log('tableInstance', tableInstance)
+
     if (options.data.default){
-      for (const name of Object.keys(tableInstance)){
-        tableInstance[name].default = false;
+      for (const name of Object.keys(instance)) {
+        console.log(instance[name])
+        instance[name].default = false;
       }
     }
     config.default = options.data.default || false;
-    tableInstance[configName] = config;
-    this.storage.set(key, stored);
+    instance[configName] = config;
+    console.log('@saveconfig', instance);
+    this.storage.set(this.key, {
+      ...stored,
+      [tableName]: instance
+    });
   }
 
   loadConfig(tableName, configName){
-    let user = IB_TABLE_ANON_USER;
-    if (this.auth.isLoggedIn()) {
-      user = this.auth.activeSession.user.username;
+    const [error, stored, instance, config] = this.loadFromStorage(tableName, configName);
+    if (error) {
+      return null;
     }
-    const key = `${IB_TABLE_STORAGE_NAME}/${user}`;
-    const stored = this.storage.get(key) || {};
-    console.log('found stored config', stored);
-    if (!stored[tableName]) { stored[tableName] = {}; }
-    const tableInstance = stored[tableName];
-    if (tableInstance){
-      console.log('looking for config:', configName, 'in instance', tableName);
-      if (configName){
-        return tableInstance[configName] ? {config: tableInstance[configName], name: configName} : null;
-      }
-      for (const config of Object.keys(tableInstance)){
-        if (tableInstance[config].default){
-          return {config: tableInstance[config], name: config};
+    
+    if (config) {
+      return { config, name: configName };
+    }
+
+    if (instance) {
+      for (const name of Object.keys(instance)){
+        if (instance[name].default) {
+          return {config: instance[name], name};
         }
       }
     }
     return null;
   }
 
-  getConfigsByTableName(tableName) {
-    let user = IB_TABLE_ANON_USER;
-    if (this.auth.isLoggedIn()) {
-      user = this.auth.activeSession.user.username;
+  deleteConfig(tableName, configName) {
+    const [error, stored, instance] = this.loadFromStorage(tableName, configName);
+    if (error) {
+      return [true, null];
     }
-    const key = `${IB_TABLE_STORAGE_NAME}/${user}`;
-    const stored = this.storage.get(key) || {};
 
+    delete instance[configName];
+    this.storage.set(this.key, stored);
+    return [false, instance];
+  }
+
+  toggleDefault(tableName, configName) {
+    const [error, stored, instance, config] = this.loadFromStorage(tableName, configName);
+    if (error) {
+      return [true, null];
+    }
+
+    Object.values<any>(instance).some(c => c.default && (c.default = false));
+    config.default = !config.default;
+
+    this.storage.set(this.key, stored);
+    return [false, instance];
+  }
+
+  getConfigsByTableName(tableName) {
+    return this.loadFromStorage(tableName);
+  }
+
+  private loadFromStorage(tableName: string, configName?: string) {
+    if (this.auth.isLoggedIn()) {
+      this.user = this.auth.activeSession.user.username;
+    }
+    const stored = this.storage.get(this.key) || {};
+    
     const instanceExists = (tableName in stored);
     if (!instanceExists) {
-      return null;
+      return [true, stored, {}, null];
     }
+
     const instance = stored[tableName];
-    return Object.keys(instance);
+
+    if (!configName) {
+      return [false, stored, instance, null];
+    }
+    
+    const configExists = (configName in instance);
+    if (!configExists) {
+      return [true, stored, instance, null];
+    }
+    
+    const config = instance[configName];
+    return [false, stored, instance, config];
   }
-  
 }

@@ -1,9 +1,6 @@
-import { Component, Inject, ViewChild } from '@angular/core';
-import { AbstractControl, ValidatorFn } from '@angular/forms';
+import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
-import { IbFormControlBase } from '../../../forms';
-import { IbMaterialFormComponent, IbMatAutocompleteControl } from '../../../material-forms';
 import { IbTableConfService } from '../../services/table-conf.service';
 
 @Component({
@@ -12,14 +9,27 @@ import { IbTableConfService } from '../../services/table-conf.service';
     <h2 mat-dialog-title>{{ data.title | translate }}</h2>
     <mat-dialog-content style="min-width:350px;min-height: 10vh;">
       <div>{{ data.message | translate:{tableName: data.tableName} }}</div>
-      <ib-material-form
-        #loadConfForm
-        [fields]="fields"
-        rowHeight="85px"
-        (ibSubmit)="handleSubmit()"
-      ></ib-material-form>
+      <mat-list>
+        <mat-list-item *ngFor="let config of configs">
+          <div mat-line>
+            <button (click)="toggleDefault(config)" mat-icon-button>
+              <mat-icon *ngIf="config.isDefault; else notDefault">star</mat-icon>
+              <ng-template #notDefault><mat-icon>star_outline</mat-icon></ng-template>
+            </button>
+            {{config.name}}
+          </div>
+          <div>
+            <button (click)="loadConfig(config)" color="accent" mat-icon-button>
+              <mat-icon>upload</mat-icon>
+            </button>
+            <button (click)="deleteConfig(config)" color="warn" mat-icon-button>
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </mat-list-item>
+      </mat-list>
     </mat-dialog-content>
-    <mat-dialog-actions align="end">
+    <!--mat-dialog-actions align="end">
       <button
         *ngFor="let btn of data.actions"
         mat-raised-button
@@ -41,49 +51,48 @@ import { IbTableConfService } from '../../services/table-conf.service';
         [mat-dialog-close]="handleSubmit()">
         {{ 'shared.ibModal.yes' | translate }}
       </button>
-    </mat-dialog-actions>`,
+    </mat-dialog-actions -->
+    `,
 })
 export class IbTableConfLoadComponent {
-  fields: IbFormControlBase<any>[] = [];
-  @ViewChild('loadConfForm', { static: true }) loadConfForm: IbMaterialFormComponent;
+  configs;
 
   constructor(
     public dialogRef: MatDialogRef<IbTableConfLoadComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private tableConf: IbTableConfService,
     private store: Store<any>,
-    // private translate: TranslateService
   ) {
-    const configs = this.tableConf.getConfigsByTableName(this.data.tableName);
-    if (!configs) {
+    const [error, _, configs] = this.tableConf.getConfigsByTableName(this.data.tableName);
+    if (error) {
       return;
     }
-    const options = configs.map(c => ({value: c}))
-    this.fields = [
-      new IbMatAutocompleteControl({
-        key: 'config',
-        options: options,
-        width: '100%',
-        label: 'shared.ibTable.saveConf.configName',
-        required: true,
-        validators: [this.forceConfigName(configs)]
-      })
-    ]
+    this.mapConfigs(configs);
   }
 
-  forceConfigName(configs: string[]): ValidatorFn {
-    return (control: AbstractControl): {[key: string]: any} | null => {
-      if (!configs.includes(control.value)) {
-         return {
-           customError: {
-             message: 'shared.ibTable.loadConf.noConfig'
-           }
-         };
-       }
-     };
+  mapConfigs(configs) {
+    this.configs = Object.entries<any>(configs)
+      .map(([name, config]) => ({ name, isDefault: config?.default }))
+      .sort((a, b) => a.name.localeCompare(b.name));
   }
 
-  handleSubmit() {
-    return this.loadConfForm.form.getRawValue();
+  loadConfig(config) {
+    this.dialogRef.close(config);
+  }
+
+  deleteConfig(config) {
+    const [error, configs] = this.tableConf.deleteConfig(this.data.tableName, config.name);
+    if (error) {
+      return;
+    }
+    this.mapConfigs(configs);
+  }
+
+  toggleDefault(config) {
+    const [error, configs] = this.tableConf.toggleDefault(this.data.tableName, config.name);
+    if (error) {
+      return;
+    }
+    this.mapConfigs(configs);
   }
 }

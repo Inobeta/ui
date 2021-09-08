@@ -38,10 +38,8 @@ import { EffectsModule } from '@ngrx/effects';
 import { TableEffects } from './store/effects/table.effects';
 import { ibTableFeatureKey, ibTableFeatureReducer } from './store/reducers/table.reducer';
 import { RouterModule } from '@angular/router';
-import { IbTableConfService } from './services/table-conf.service';
-import { IbTableConfSaveComponent } from './components/table-conf/table-conf-save.component';
 import { IbMaterialFormModule } from '../material-forms/material-form.module';
-import { IbTableConfLoadComponent } from './components/table-conf/table-conf-load.component';
+import { IbTableConfigModule } from './components/table-conf/table-config.module';
 registerLocaleData(localeIt, 'it');
 
 export function ibMatPaginatorTranslate(translateService: TranslateService) {
@@ -62,8 +60,6 @@ export function ibMatPaginatorTranslate(translateService: TranslateService) {
     IbTableButtonComponent,
     IbTableHeaderFilterComponent,
     IbTableExportDialogComponent,
-    IbTableConfSaveComponent,
-    IbTableConfLoadComponent
   ],
   imports: [
     CommonModule,
@@ -95,7 +91,8 @@ export function ibMatPaginatorTranslate(translateService: TranslateService) {
     StoreModule.forFeature(ibTableFeatureKey, ibTableFeatureReducer),
     EffectsModule.forFeature([TableEffects]),
     RouterModule,
-    IbMaterialFormModule
+    IbMaterialFormModule,
+    IbTableConfigModule,
   ],
   exports: [
     IbTableComponent,
@@ -109,15 +106,12 @@ export function ibMatPaginatorTranslate(translateService: TranslateService) {
     IbTableButtonComponent,
     IbTableHeaderFilterComponent,
     IbTableExportDialogComponent,
-    IbTableConfSaveComponent,
-    IbTableConfLoadComponent
   ],
   providers: [
     {
       provide: MatPaginatorIntl, deps: [TranslateService],
       useFactory: ibMatPaginatorTranslate
-    },
-    IbTableConfService
+    }
   ]
 })
 export class IbTableModule { }
