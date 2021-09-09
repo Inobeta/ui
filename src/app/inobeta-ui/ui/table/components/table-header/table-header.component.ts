@@ -24,6 +24,7 @@ export class IbTableHeaderComponent implements OnInit {
   @Input() columnFilter = {};
   @Input() hasEdit = false;
   @Input() hasDelete = false;
+  @Input() hasConfig = true;
   @Input() stickyAreas = [];
   @Input() tableName: string;
 
@@ -94,7 +95,7 @@ export class IbTableHeaderComponent implements OnInit {
       if (data) {
         this.store.dispatch(ibTableActionLoadConfig({ configName: data.name, tableName: this.tableName }));
       }
-    })
+    });
   }
 }
 

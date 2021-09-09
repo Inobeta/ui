@@ -82,7 +82,10 @@ export class IbTotalRowDefaultCellComponent implements OnInit, OnChanges {
   }
 
   openDialog() {
-    const dialog = this.dialog.open(IbTableTotalRowApplyDialogComponent, { width: '380px' });
+    const dialog = this.dialog.open(IbTableTotalRowApplyDialogComponent, {
+      width: '380px',
+      data: { isSet: Boolean(this.initialCell) }
+    });
     dialog.afterClosed().subscribe(this.handleDialogClosed.bind(this));
   }
 

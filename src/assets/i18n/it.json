@@ -70,10 +70,9 @@
           "configExists": "Esiste già una configurazione con questo nome"
         },
         "loadConf": {
-          "title": "Caricamento configurazione tabella",
-          "message": "Carica una configurazione per la tabella: {{tableName}}",
+          "title": "Carica una configurazione",
           "configName": "Nome",
-          "noConfig": "Questa configurazione non è disponibile"
+          "noConfig": "Non esistono configurazioni per questa tabella"
         }
     },
     "ibDropdown": {

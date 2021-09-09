@@ -129,6 +129,7 @@
 [ibStickyColumn]="{ sticky: stickyAreas.includes(ibStickyArea.SETTINGS) && 'end', key: 'ib-settings' }"
 fxLayout="row"
 class="table-header-title-custom" disabled="true"
+*ngIf="hasConfig"
   >
   <i
     class="material-icons ib-table-header-button"

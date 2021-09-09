@@ -19,10 +19,6 @@ import { Observable, Subscription } from 'rxjs';
 @Component({
   selector: 'ib-table',
   template: `
-  <pre>
-    {{ tableName }}
-  </pre>
-
     <div fxLayout="column" class="ib-table" >
       <div
         fxFlex
@@ -68,6 +64,7 @@ import { Observable, Subscription } from 'rxjs';
               [columnFilter]="columnFilter"
               [hasEdit]="hasEdit"
               [hasDelete]="hasDelete"
+              [hasConfig]="hasConfig"
               [currentSort]="currentSort"
               (handleSetFilter)="setFilter($event.key, $event.value, $event.indexToSet)"
               [stickyAreas]="stickyAreas"
@@ -177,6 +174,7 @@ export class IbTableComponent implements OnChanges, OnInit, OnDestroy {
   @Input() hasExport = false;
   @Input() hasPaginator = true;
   @Input() hasFooter = true;
+  @Input() hasConfig = true;
   @Input() actions: IbTableAction[] = [];
   @Input() stickyAreas = [];
 

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { IbTableConfigState } from 'public_api';
 import { IbAuthService } from '../../../http/auth/auth.service';
 import { IbStorageService } from '../../../storage/storage.service';
 
@@ -31,8 +32,9 @@ export class IbTableConfService {
       }
     }
     config.default = options.data.default || false;
+    config.paginator.pageIndex = 0;
+
     instance[configName] = config;
-    console.log('@saveconfig', instance);
     this.storage.set(this.key, {
       ...stored,
       [tableName]: instance
@@ -76,8 +78,9 @@ export class IbTableConfService {
       return [true, null];
     }
 
+    const previousValue = config.default;
     Object.values<any>(instance).some(c => c.default && (c.default = false));
-    config.default = !config.default;
+    config.default = !previousValue;
 
     this.storage.set(this.key, stored);
     return [false, instance];

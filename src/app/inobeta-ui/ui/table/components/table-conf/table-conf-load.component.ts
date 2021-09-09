@@ -8,7 +8,6 @@ import { IbTableConfService } from '../../services/table-conf.service';
   template: `
     <h2 mat-dialog-title>{{ data.title | translate }}</h2>
     <mat-dialog-content style="min-width:350px;min-height: 10vh;">
-      <div>{{ data.message | translate:{tableName: data.tableName} }}</div>
       <mat-list>
         <mat-list-item *ngFor="let config of configs">
           <div mat-line>
@@ -26,6 +25,10 @@ import { IbTableConfService } from '../../services/table-conf.service';
               <mat-icon>delete</mat-icon>
             </button>
           </div>
+        </mat-list-item>
+
+        <mat-list-item *ngIf="!configs.length">
+          {{ 'shared.ibTable.loadConf.noConfig' | translate }}
         </mat-list-item>
       </mat-list>
     </mat-dialog-content>
@@ -52,7 +55,12 @@ import { IbTableConfService } from '../../services/table-conf.service';
         {{ 'shared.ibModal.yes' | translate }}
       </button>
     </mat-dialog-actions -->
-    `,
+  `,
+  styles: [`
+    mat-list-item >>> .mat-list-item-content {
+      padding: 0 !important;
+    }
+  `]
 })
 export class IbTableConfLoadComponent {
   configs;
