@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { IbTableConfigState } from 'public_api';
 import { IbAuthService } from '../../../http/auth/auth.service';
 import { IbStorageService } from '../../../storage/storage.service';
 
