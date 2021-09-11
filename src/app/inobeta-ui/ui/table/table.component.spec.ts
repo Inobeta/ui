@@ -19,8 +19,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IbTableComponent } from './table.component';
 import { IbTableHeaderComponent } from './components/table-header/table-header.component';
-import { IbTableExportComponent, IbTableHeaderPopupComponent,
-  IbTableExportDialogComponent, IbTableTitlesTypes, ibMatPaginatorTranslate } from '.';
+import {
+  IbTableExportComponent, IbTableHeaderPopupComponent,
+  IbTableExportDialogComponent, IbTableTitlesTypes, ibMatPaginatorTranslate
+} from '.';
 import { IbTablePaginatorComponent } from './components/table-paginator.component';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
 
@@ -32,9 +34,12 @@ import { IbTableButtonComponent } from './components/table-button.component';
 import { IbTableActionsComponent } from './components/table-actions.component';
 import { IbTableRowComponent } from './components/table-row.component';
 import { IbModalTestModule } from '../modal';
-import { TranslateService } from '@ngx-translate/core';
-import {ibTableFeatureInitialState} from './store/reducers/table.reducer';
+import { TranslateFakeLoader, TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
+import { ibTableFeatureInitialState } from './store/reducers/table.reducer';
 import { RouterTestingModule } from '@angular/router/testing';
+import { IbTableConfigModule } from './components/table-conf/table-config.module';
+import { TotalRowModule } from './components/table-total-row/total-row.module';
+import { IbStickyAreaModule } from './directives/sticky-area/sticky-area.module';
 
 @Component({
   selector: 'host-test',
@@ -63,6 +68,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 </ng-template>
 
 <ib-table
+  tableName="table_for_tests"
   [pdfCustomStyles]="pdfCustomStyles"
   [pdfSetup]="pdfSetup"
   [hasExport]="true"
@@ -178,7 +184,7 @@ export class TestHostComponent {
 
   pdfCustomStyles = {
     headStyles: { fillColor: [232, 202, 232] },
-    columnStyles: { sender: { halign: 'center' }},
+    columnStyles: { sender: { halign: 'center' } },
   };
 
   pdfSetup = {
@@ -232,14 +238,15 @@ describe('IbTableComponent', () => {
         IbTableButtonComponent,
         IbTableHeaderFilterComponent,
         TestHostComponent
-       ],
-       providers: [
+      ],
+      providers: [
         provideMockStore({ initialState: mockedInitialState }),
         {
           provide: MatPaginatorIntl, deps: [TranslateService],
           useFactory: ibMatPaginatorTranslate
-        }
-       ],
+        },
+        TranslateService
+      ],
       imports: [
         IbToolTestModule,
         CommonModule,
@@ -261,10 +268,19 @@ describe('IbTableComponent', () => {
         MatCardModule,
         NoopAnimationsModule,
         IbModalTestModule,
-        RouterTestingModule
+        RouterTestingModule,
+        TranslateModule.forRoot({
+          loader: {
+            provide: TranslateLoader,
+            useClass: TranslateFakeLoader
+          }
+        }),
+        IbStickyAreaModule,
+        TotalRowModule,
+        IbTableConfigModule
       ]
     })
-    .compileComponents();
+      .compileComponents();
 
     store = TestBed.inject(MockStore);
     mockedTotalRowSelector = store.overrideSelector(('test'), []);
@@ -389,7 +405,7 @@ describe('IbTableComponent', () => {
 
 
     component.columnFilter = {
-      qt2: [{condition: '>', value: 5}]
+      qt2: [{ condition: '>', value: 5 }]
     };
 
     component.sortData({
@@ -399,7 +415,7 @@ describe('IbTableComponent', () => {
 
 
     component.columnFilter = {
-      qt2: [{condition: '<', value: 6}]
+      qt2: [{ condition: '<', value: 6 }]
     };
 
     component.sortData({
@@ -409,7 +425,7 @@ describe('IbTableComponent', () => {
 
 
     component.columnFilter = {
-      qt: [{condition: '>', value: 5}]
+      qt: [{ condition: '>', value: 5 }]
     };
 
     component.sortData({
@@ -419,7 +435,7 @@ describe('IbTableComponent', () => {
 
 
     component.columnFilter = {
-      date: [{condition: '>', value: '2020-05-01'}]
+      date: [{ condition: '>', value: '2020-05-01' }]
     };
 
     component.sortData({

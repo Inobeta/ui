@@ -47,7 +47,8 @@
           "change": "Cambia",
           "dialog": {
             "title": "Aggrega",
-            "selectFunction": "Seleziona una funzione"
+            "selectFunction": "Seleziona una funzione",
+            "remove": "Rimuovi"
           },
           "sum": {
             "name": "Somma",
@@ -73,6 +74,14 @@
           "title": "Carica una configurazione",
           "configName": "Nome",
           "noConfig": "Non esistono configurazioni per questa tabella"
+        },
+        "exportData": {
+          "title": "Esporta Dati",
+          "export": "Esporta",
+          "format": "Formato",
+          "all": "Tutti i dati",
+          "currentPage": "Pagina corrente",
+          "selectedRows": "Righe selezionate"
         }
     },
     "ibDropdown": {
@@ -95,7 +104,8 @@
     },
     "ibModal": {
       "yes": "Si",
-      "no": "No"
+      "no": "No",
+      "close": "Chiudi"
     },
     "ibCrudToast": {
       "success": "Salvataggio avvenuto con successo",

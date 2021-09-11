@@ -19,7 +19,7 @@ import { TotalRowService } from './total-row.service';
     <div mat-dialog-actions align="end">
       <button mat-button color="warn" [mat-dialog-close]="{
         func: '_default'
-      }" *ngIf="data.isSet">Remove</button>
+      }" *ngIf="data.isSet">{{ 'shared.ibTable.func.dialog.remove' | translate }}</button>
       <button mat-button color="primary" [mat-dialog-close]="{
         func: function
       }">

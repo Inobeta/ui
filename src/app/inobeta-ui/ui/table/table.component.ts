@@ -264,6 +264,9 @@ export class IbTableComponent implements OnChanges, OnInit, OnDestroy {
     });
 
     this._filterSub = this.store.select(ibTableSelectFilters(this.tableName)).subscribe(data => {
+      if (!data) {
+        return;
+      }
       this.resetFilters();
       data.forEach(f => this.setFilter(f.columnName, f.value, this.currentPagination.pageIndex || 0, false, this.tableName));
       this.pageChangeHandle(this.currentPagination);

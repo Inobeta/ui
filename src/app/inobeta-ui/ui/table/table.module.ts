@@ -91,7 +91,6 @@ export function ibMatPaginatorTranslate(translateService: TranslateService) {
     StoreModule.forFeature(ibTableFeatureKey, ibTableFeatureReducer),
     EffectsModule.forFeature([TableEffects]),
     RouterModule,
-    IbMaterialFormModule,
     IbTableConfigModule,
   ],
   exports: [

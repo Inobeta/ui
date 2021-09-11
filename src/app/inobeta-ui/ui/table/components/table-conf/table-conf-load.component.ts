@@ -32,29 +32,13 @@ import { IbTableConfService } from '../../services/table-conf.service';
         </mat-list-item>
       </mat-list>
     </mat-dialog-content>
-    <!--mat-dialog-actions align="end">
+    <mat-dialog-actions align="end">
       <button
-        *ngFor="let btn of data.actions"
-        mat-raised-button
-        [color]="btn.color || 'basic'"
-        [mat-dialog-close]="btn.value">
-        {{ btn.label | translate }}
-      </button>
-      <button
-        *ngIf="data.hasNo"
-        mat-raised-button
+        mat-button
         [mat-dialog-close]="false">
-        {{ 'shared.ibModal.no' | translate }}
+        {{ 'shared.ibModal.close' | translate }}
       </button>
-      <button
-        *ngIf="data.hasYes"
-        mat-raised-button
-        color="primary"
-        [disabled]="!loadConfForm.form.valid"
-        [mat-dialog-close]="handleSubmit()">
-        {{ 'shared.ibModal.yes' | translate }}
-      </button>
-    </mat-dialog-actions -->
+    </mat-dialog-actions>
   `,
   styles: [`
     mat-list-item >>> .mat-list-item-content {
