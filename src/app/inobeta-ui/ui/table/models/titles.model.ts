@@ -88,6 +88,6 @@ export enum IbTableActionsPosition {
 }
 
 export enum IbStickyAreas {
-  HEADER, FOOTER, SELECT, DELETE, EDIT, TEMPLATE
+  HEADER, FOOTER, SELECT, DELETE, EDIT, TEMPLATE, SETTINGS
 }
 

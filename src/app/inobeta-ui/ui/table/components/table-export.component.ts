@@ -37,11 +37,11 @@ export class IbTableExportComponent {
 @Component({
   selector: 'ib-table-export-dialog',
   template: `
-    <h1 mat-dialog-title>Export</h1>
+    <h2 mat-dialog-title>{{ 'shared.ibTable.exportData.title' | translate }}</h2>
     <mat-dialog-content>
       <div>
         <mat-form-field>
-          <mat-label>Formato</mat-label>
+          <mat-label>{{ 'shared.ibTable.exportData.format' | translate }}</mat-label>
           <mat-select [(ngModel)]="format">
             <mat-option *ngFor="let format of formats" [value]="format.value">
               {{format.viewValue}}
@@ -51,16 +51,20 @@ export class IbTableExportComponent {
       </div>
 
       <mat-radio-group [(ngModel)]="dataset" style="display:flex;flex-direction:column;margin: 15px 0;">
-        <mat-radio-button value="all" style="margin: 4px">Tutti i dati</mat-radio-button>
-        <mat-radio-button *ngIf="this.data.selectableRows" value="selected" style="margin: 4px">Righe selezionate</mat-radio-button>
-        <mat-radio-button value="current" style="margin: 4px">Pagina Corrente</mat-radio-button>
+        <mat-radio-button value="all" style="margin: 4px">{{ 'shared.ibTable.exportData.all' | translate }}</mat-radio-button>
+        <mat-radio-button *ngIf="this.data.selectableRows" value="selected" style="margin: 4px">
+          {{ 'shared.ibTable.exportData.selectedRows' | translate }}
+        </mat-radio-button>
+        <mat-radio-button value="current" style="margin: 4px">{{ 'shared.ibTable.exportData.currentPage' | translate }}</mat-radio-button>
       </mat-radio-group>
 
     </mat-dialog-content>
-    <div mat-dialog-actions>
-      <button mat-button (click)="onNoClick()">Cancel</button>
-      <button mat-button [mat-dialog-close]="{ format: format, dataset: dataset }">Export</button>
-    </div>
+    <mat-dialog-actions align="end">
+      <button mat-button (click)="onNoClick()">{{ 'shared.ibModal.close' | translate }}</button>
+      <button mat-button color="primary" [mat-dialog-close]="{ format: format, dataset: dataset }">
+        {{ 'shared.ibTable.export' | translate }}
+      </button>
+    </mat-dialog-actions>
   `,
 })
 export class IbTableExportDialogComponent {

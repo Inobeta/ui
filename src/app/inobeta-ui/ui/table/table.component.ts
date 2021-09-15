@@ -1,9 +1,8 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Sort } from '@angular/material/sort';
 import { IbStickyAreas, IbTableAction, IbTableActionsPosition, IbTableCellAligns, IbTableTitles, IbTableTitlesTypes } from './models/titles.model';
 import { IbTemplateModel } from './models/template.model';
 import { Store } from '@ngrx/store';
-import * as TableFiltersActions from './redux/table.action';
 import Papa from 'papaparse';
 import jsPDF, { jsPDFOptions } from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -12,8 +11,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { IbTableItem } from './models/table-item.model';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { formatDate } from '@angular/common';
-
-
+import { ibTableSelectFilters, ibTableSelectPaginator, ibTableSelectSort, ibTableSelectTotalRow } from './store/selectors/table.selectors';
+import { ibTableActionAddFilterField, ibTableActionLoadConfig, ibTableActionSaveConfig, ibTableActionSelectSortingField, ibTableActionSetPaginator } from './store/actions/table.actions';
+import { Router } from '@angular/router';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'ib-table',
@@ -63,9 +64,11 @@ import { formatDate } from '@angular/common';
               [columnFilter]="columnFilter"
               [hasEdit]="hasEdit"
               [hasDelete]="hasDelete"
+              [hasConfig]="hasConfig"
               [currentSort]="currentSort"
               (handleSetFilter)="setFilter($event.key, $event.value, $event.indexToSet)"
               [stickyAreas]="stickyAreas"
+              [tableName]="tableName"
             ></tr>
           </thead>
 
@@ -97,7 +100,7 @@ import { formatDate } from '@angular/common';
 
           <tr *ngIf="sortedData.length === 0">
             <td
-              [attr.colspan]="titles.length + templateButtons.length + (selectableRows ? 1 : 0) + (hasEdit ? 1 : 0) + (hasDelete ? 1 : 0)"
+              [attr.colspan]="titles.length + templateButtons.length + (selectableRows ? 1 : 0) + (hasEdit ? 1 : 0) + (hasDelete ? 1 : 0) + 1"
               style="text-align: center;"
             >
               <br><br>{{ 'shared.ibTable.noData' | translate }}<br><br>
@@ -116,6 +119,8 @@ import { formatDate } from '@angular/common';
             [sortedData]="sortedData"
             [filteredData]="filteredData"
             [hasDelete]="hasDelete"
+            [totalRowDef]="totalRow$ | async"
+            [tableName]="tableName"
             ></tr>
           </tbody>
         </table>
@@ -154,7 +159,7 @@ import { formatDate } from '@angular/common';
   `,
   styleUrls: ['./table.component.css']
 })
-export class IbTableComponent implements OnChanges {
+export class IbTableComponent implements OnChanges, OnInit, OnDestroy {
 
   // input necessari
   @Input() customItemTemplate: any;
@@ -169,6 +174,7 @@ export class IbTableComponent implements OnChanges {
   @Input() hasExport = false;
   @Input() hasPaginator = true;
   @Input() hasFooter = true;
+  @Input() hasConfig = true;
   @Input() actions: IbTableAction[] = [];
   @Input() stickyAreas = [];
 
@@ -176,7 +182,7 @@ export class IbTableComponent implements OnChanges {
   @Input() templateButtons: IbTemplateModel[] = [];
   @Input() templateHeaders: any = {};
   /** { columnName: TemplateRef } */
-  @Input() tableName = 'default_table_name'; // change this value in order to partition redux data
+  @Input() tableName = '';
   @Input() pdfCustomStyles = {};
   @Input() pdfSetup: jsPDFOptions = {
     orientation: 'l',
@@ -193,6 +199,9 @@ export class IbTableComponent implements OnChanges {
   rowIconSet = Object.assign({}, this.defaultIconSet);
   // Output necessari
   @Output() filterChange: EventEmitter<any> = new EventEmitter<any>();
+  /** deprecated
+   * Obsolete, use effects interception instead
+   */
   @Output() sortChange: EventEmitter<any> = new EventEmitter<any>();
   @Output() add: EventEmitter<any> = new EventEmitter<any>();
   @Output() edit: EventEmitter<any> = new EventEmitter<any>();
@@ -213,41 +222,66 @@ export class IbTableComponent implements OnChanges {
   rowForms: FormGroup[] = [];
   ibTableActionsPosition = IbTableActionsPosition;
   ibStickyArea = IbStickyAreas;
+  totalRow$ = new Observable();
+  private _paginatorSub: Subscription;
+  private _filterSub: Subscription;
+  private _sortSub: Subscription;
   @Input() rowClass = (item: IbTableItem) => ({});
+
 
   constructor(
     private store: Store<any>,
     private translate: TranslateService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private router: Router
     ) { }
+
+  ngOnInit() {
+    if(!this.tableName){
+      const fullUrl = this.router['location']._platformLocation?.location.pathname;
+      console.warn(`[ibTable] please set a unique tableName input value or ${fullUrl} will be used as unique key for config storage`);
+      this.tableName = fullUrl;
+    }
+    this.store.dispatch(ibTableActionLoadConfig({ configName: null, tableName: this.tableName }));
+
+    this.totalRow$ = this.store.select(ibTableSelectTotalRow(this.tableName));
+    
+    this._paginatorSub = this.store.select(ibTableSelectPaginator(this.tableName)).subscribe(paginator => {
+      this.currentPagination = {
+        pageIndex: paginator?.pageIndex || 0,
+        pageSize: paginator?.pageSize || 10,
+        length: paginator?.length,
+      };
+    });
+    
+    this._sortSub = this.store.select(ibTableSelectSort(this.tableName))
+      .subscribe(sort => {
+        this.currentSort = {
+          active: sort?.columnName,
+          direction: sort?.direction,
+        };
+        this._sortData(this.currentSort);
+    });
+
+    this._filterSub = this.store.select(ibTableSelectFilters(this.tableName)).subscribe(data => {
+      if (!data) {
+        return;
+      }
+      this.resetFilters();
+      data.forEach(f => this.setFilter(f.columnName, f.value, this.currentPagination.pageIndex || 0, false, this.tableName));
+      this.pageChangeHandle(this.currentPagination);
+    });
+  }
+
+  ngOnDestroy() {
+    this._paginatorSub.unsubscribe();
+    this._filterSub.unsubscribe();
+    this._sortSub.unsubscribe();
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.iconSet && changes.iconSet.currentValue){
       this.rowIconSet = Object.assign({}, this.defaultIconSet, changes.iconSet.currentValue);
-    }
-    if (changes.enableReduxStore && changes.enableReduxStore.currentValue) {
-      this.store.select(rootState => rootState.tableFiltersState.tableFilters).subscribe(tableFilters => {
-        const data = tableFilters[this.tableName];
-        if (data) {
-          if (data.paginatorFilters) {
-            this.currentPagination = data.paginatorFilters;
-          } else {
-            this.currentPagination = {
-              pageIndex: 0,
-              pageSize: 10,
-              previousPageIndex: 0
-            };
-          }
-
-          for (const prop of Object.keys(data).filter(p => ['paginatorFilters', 'sortType'].indexOf(p) === -1)) {
-            this.setFilter(prop, data[prop].value, this.currentPagination.pageIndex, false);
-          }
-          if (data.sortType) {
-            this.sortData(data.sortType, false);
-          }
-        }
-
-      });
     }
 
     let triggerRefresh = false;
@@ -276,14 +310,14 @@ export class IbTableComponent implements OnChanges {
       triggerRefresh = true;
     }
 
-    if (triggerRefresh) {
-      this.pageChangeHandle({
-        previousPageIndex: this.currentPagination.previousPageIndex ? this.currentPagination.previousPageIndex : 0,
-        pageIndex: this.currentPagination.pageIndex ? this.currentPagination.pageIndex : 0,
-        pageSize: this.currentPagination.pageSize ? this.currentPagination.pageSize : 10,
-        length: this.sortedData.length
-      });
-    }
+    // if (triggerRefresh) {
+    //   this.pageChangeHandle({
+    //     previousPageIndex: this.currentPagination.previousPageIndex ? this.currentPagination.previousPageIndex : 0,
+    //     pageIndex: this.currentPagination.pageIndex ? this.currentPagination.pageIndex : 0,
+    //     pageSize: this.currentPagination.pageSize ? this.currentPagination.pageSize : 10,
+    //     length: this.sortedData.length
+    //   });
+    // }
   }
 
   rowForm(item) {
@@ -312,13 +346,16 @@ export class IbTableComponent implements OnChanges {
   }
 
   sortData(sort: Sort, emitChange: boolean = true) {
-    if (Object.keys(sort).length !== 0) {
-      this.store.dispatch(TableFiltersActions.addSortToTable({
-        tableName: this.tableName,
-        sortType: sort,
-        emitChange
-      }));
-    }
+    this.store.dispatch(ibTableActionSelectSortingField({
+      tableName: this.tableName,
+      options: {
+        direction: sort.direction,
+        columnName: sort.active
+      }
+    }));
+  }
+
+  _sortData(sort: Sort, emitChange: boolean = true) {
     if (emitChange) {
       this.sortChange.emit(sort);
     }
@@ -387,6 +424,14 @@ export class IbTableComponent implements OnChanges {
 
     }
     this.numOfElements = this.sortedData.length;
+    this.store.dispatch(ibTableActionSetPaginator({
+      state: {
+        length: this.sortedData.length,
+        pageIndex: this.currentPagination.pageIndex,
+        pageSize: this.currentPagination.pageSize
+      },
+      tableName: this.tableName
+    }));
 
     if (!sort || !sort.active || sort.direction === '') {
       this.currentSort = {};
@@ -405,7 +450,6 @@ export class IbTableComponent implements OnChanges {
   setFilter(key, value, indexToSet = 0, redux = true, tableName = null) {
     this.columnFilter[key] = value;
     this.currentPagination.pageIndex = indexToSet;
-    this.pageChangeHandle(this.currentPagination);
     if (redux) {
       if (!tableName) {
         if (!tableName && this.tableName === 'default_table_name') {
@@ -414,10 +458,19 @@ export class IbTableComponent implements OnChanges {
         tableName = this.tableName;
       }
 
-      this.store.dispatch(TableFiltersActions.addFilterToTable({
-        tableName,
-        filterName: key,
-        filterValue: value
+      // this.store.dispatch(TableFiltersActions.addFilterToTable({
+      //   tableName,
+      //   filterName: key,
+      //   filterValue: value
+      // }));
+
+      this.pageChangeHandle(this.currentPagination);
+      this.store.dispatch(ibTableActionAddFilterField({
+        state: {
+          columnName: key,
+          value,
+        },
+        tableName
       }));
     }
 
@@ -428,15 +481,24 @@ export class IbTableComponent implements OnChanges {
   }
 
   pageChangeHandle(data) {
-    this.store.dispatch(TableFiltersActions.addPaginatorFiltersToTable({
-      tableName: this.tableName,
-      previousPageIndex: data.previousPageIndex,
-      pageIndex: data.pageIndex,
-      pageSize: data.pageSize,
-      lengthP: data.length
+    // this.store.dispatch(TableFiltersActions.addPaginatorFiltersToTable({
+    //   tableName: this.tableName,
+    //   previousPageIndex: data.previousPageIndex,
+    //   pageIndex: data.pageIndex,
+    //   pageSize: data.pageSize,
+    //   lengthP: data.length
+    // }));
+
+    this.store.dispatch(ibTableActionSetPaginator({
+      state: {
+        pageIndex: data.pageIndex,
+        pageSize: data.pageSize,
+        length: data.length
+      },
+      tableName: this.tableName
     }));
-    this.currentPagination = data;
-    this.sortData(this.currentSort, false);
+    // this.currentPagination = data;
+    this._sortData(this.currentSort, false);
   }
 
   paginationHandle() {
@@ -449,6 +511,7 @@ export class IbTableComponent implements OnChanges {
         previousPageIndex: 0
       }
     */
+    
     const data = this.currentPagination;
     const paginatedData = [];
     // scorro tutte le pagine della tabella
@@ -476,7 +539,18 @@ export class IbTableComponent implements OnChanges {
         pageSize: this.items.length,
         lengthP: this.items.length
       };
-      this.store.dispatch(TableFiltersActions.addPaginatorFiltersToTable(pagination));
+      // this.store.dispatch(TableFiltersActions.addPaginatorFiltersToTable(pagination));
+
+      this.store.dispatch(ibTableActionSetPaginator({
+        state: {
+          pageIndex: 0,
+          pageSize: this.items.length,
+          length: this.items.length,
+        },
+        tableName: this.tableName
+      }));
+
+
       this.currentPagination = pagination;
       this.sortData(this.currentSort, false);
     }

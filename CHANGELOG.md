@@ -8,6 +8,7 @@
 - DEVK-86 IbTable Aggregation function added on NUMBER column
 - DEVK-86 IbTable Sticky header/footer/column added
 - DEVK-141 compodoc build fixed
+- DEVK-126 IbTable filters, sort and aggregation save config added
 
 ## [12.0.1]
 

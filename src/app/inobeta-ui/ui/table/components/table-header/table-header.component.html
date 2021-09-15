@@ -125,6 +125,23 @@
   width="1%" *ngIf="hasDelete" class="table-header-title-custom" [mat-sort-header]="'sortable_delete'" disabled="true">
     {{ 'shared.ibTable.delete' | translate}}
 </th>
+<th
+[ibStickyColumn]="{ sticky: stickyAreas.includes(ibStickyArea.SETTINGS) && 'end', key: 'ib-settings' }"
+fxLayout="row"
+class="table-header-title-custom" disabled="true"
+*ngIf="hasConfig"
+  >
+  <i
+    class="material-icons ib-table-header-button"
+    matRipple
+    (click)="$event.stopPropagation();saveConf();"
+  >save</i>&nbsp;
+  <i
+    class="material-icons ib-table-header-button"
+    matRipple
+    (click)="$event.stopPropagation();loadConf();"
+  >settings</i>
+</th>
 <!--overlay pane for custom headers popups--->
 <div
 class="ib-table-overlay"

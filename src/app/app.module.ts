@@ -41,10 +41,11 @@ import { ISessionState } from './inobeta-ui/http/auth/redux/session.reducer';
 import { MatButtonModule } from '@angular/material/button';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { IbTableStickyExampleComponent } from './examples/table-example/table-sticky/table-example.component';
+import { EffectsModule } from '@ngrx/effects';
+import { TableEffects } from './inobeta-ui/ui/table/store/effects/table.effects';
 
 export interface IAppState {
   sessionState?: ISessionState;
-  tableFiltersState?: ITableFiltersState;
   countState: ICounterState;
 }
 
@@ -53,7 +54,7 @@ const reducers: ActionReducerMap<IAppState> = {
 };
 
 export function localStorageSyncReducer(reducer: ActionReducer<any>): ActionReducer<any> {
-  return localStorageSync({keys: ['sessionState', 'tableFiltersState'], rehydrate: true})(reducer);
+  return localStorageSync({keys: ['sessionState'], rehydrate: true})(reducer);
 }
 
 const metaReducers: Array<MetaReducer<any, any>> = [localStorageSyncReducer];
@@ -106,9 +107,15 @@ export const statusErrorMessages = { 404: 'Risorsa non trovata'};
         strictActionImmutability: false,
       },
     }),
+    EffectsModule.forRoot([TableEffects]),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       logOnly: environment.production,
+      features: {
+        pause: true,
+        lock: true,
+        persist: true
+      },
     }),
     TranslateModule.forRoot({
       loader: {

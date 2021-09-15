@@ -6,24 +6,10 @@ import { IbSessionService } from './auth/session.service';
 import { SpinnerLoadingStubComponent } from './http/spinner-loading.stub.spec';
 import { authServiceStub } from './auth/auth.service.stub.spec';
 import { localStorageStub } from './auth/local-storage.stub.spec';
-import { cookiesStorageStub } from './auth/cookies-storage.stub.spec';
 import { sessionServiceStub } from './auth/session.stub.spec';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { responseHandlerStub } from './http/response-handler.service.stub.spec';
 
-
-
-const components = [
-  SpinnerLoadingStubComponent
-];
-
-const services = [
-  IbHttpClientService,
-  IbResponseHandlerService,
-  { provide: IbAuthService, useValue: authServiceStub},
-  { provide: IbSessionService, useValue: sessionServiceStub},
-  { provide: IbResponseHandlerService, useValue: responseHandlerStub}
-];
 
 
 @NgModule({
@@ -31,13 +17,17 @@ const services = [
     HttpClientTestingModule
   ],
   exports: [
-    ...components
+    SpinnerLoadingStubComponent
   ],
   declarations: [
-    ...components
+    SpinnerLoadingStubComponent
   ],
   providers: [
-    ...services
+    IbHttpClientService,
+    IbResponseHandlerService,
+    { provide: IbAuthService, useValue: authServiceStub},
+    { provide: IbSessionService, useValue: sessionServiceStub},
+    { provide: IbResponseHandlerService, useValue: responseHandlerStub}
   ]
 })
 export class IbHttpTestModule { }

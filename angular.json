@@ -34,7 +34,7 @@
               "papaparse",
               "jspdf-autotable",
               "xlsx"
-           ],
+            ],
             "vendorChunk": true,
             "extractLicenses": false,
             "buildOptimizer": false,
@@ -145,5 +145,8 @@
       }
     }
   },
-  "defaultProject": "ui"
+  "defaultProject": "ui",
+  "cli": {
+    "defaultCollection": "@ngrx/schematics"
+  }
 }

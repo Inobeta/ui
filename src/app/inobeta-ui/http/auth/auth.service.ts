@@ -2,7 +2,9 @@ import {Inject, Injectable, Optional} from '@angular/core';
 import { IbStorageService, IbStorageTypes } from '../../storage/storage.service';
 import {IbSession} from './session.model';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class IbAuthService {
   activeSession: IbSession = null;
   sessionStorageKey = '';
