@@ -310,14 +310,9 @@ export class IbTableComponent implements OnChanges, OnInit, OnDestroy {
       triggerRefresh = true;
     }
 
-    // if (triggerRefresh) {
-    //   this.pageChangeHandle({
-    //     previousPageIndex: this.currentPagination.previousPageIndex ? this.currentPagination.previousPageIndex : 0,
-    //     pageIndex: this.currentPagination.pageIndex ? this.currentPagination.pageIndex : 0,
-    //     pageSize: this.currentPagination.pageSize ? this.currentPagination.pageSize : 10,
-    //     length: this.sortedData.length
-    //   });
-    // }
+    if (triggerRefresh) {
+      this.pageChangeHandle(this.currentPagination);
+    }
   }
 
   rowForm(item) {
