@@ -23,7 +23,7 @@ export class IbTableStickyExampleComponent implements OnInit {
     IbStickyAreas.SETTINGS
   ];
   selectableRows = true;
-  tableName = 'pippo';
+  tableName = 'sticky';
   ibTableActionsPosition = IbTableActionsPosition;
   titles = [
     {
