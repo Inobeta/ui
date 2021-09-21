@@ -43,6 +43,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { IbTableStickyExampleComponent } from './examples/table-example/table-sticky/table-example.component';
 import { EffectsModule } from '@ngrx/effects';
 import { TableEffects } from './inobeta-ui/ui/table/store/effects/table.effects';
+import { IbMainMenuModule } from './inobeta-ui/ui/main-menu/main-menu.module';
 
 export interface IAppState {
   sessionState?: ISessionState;
@@ -82,6 +83,7 @@ export const statusErrorMessages = { 404: 'Risorsa non trovata'};
   imports: [
     CommonModule,
     IbTableModule,
+    IbMainMenuModule,
     IbBreadcrumbModule,
     IbDynamicFormsModule,
     IbMaterialFormModule,

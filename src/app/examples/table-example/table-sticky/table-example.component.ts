@@ -112,7 +112,7 @@ export class IbTableStickyExampleComponent implements OnInit {
   };
   constructor() { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { console.log(this.ibTable)}
 
   consolePrint(item) {
     console.log(item);
