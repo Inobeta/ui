@@ -1,0 +1,59 @@
+:root {
+  --color-bckgrnd-box: #5C5C5C;
+  --color-border-box: #909090;
+  --color-text: #FFFFFF;
+}
+#ib-main-menu-expanded-header-wrapper {
+  height: 90px;
+  border: 1px solid green;
+}
+#ib-main-menu-expanded-header-title-wrapper p,
+#ib-main-menu-expanded-header-closeButton-wrapper button {
+  /*font-family: Hibana;*/
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px;
+}
+
+#ib-main-menu-expanded-header-closeButton-wrapper button {
+  font-size: 14px;
+}
+
+#ib-main-menu-expanded-header-title-wrapper,
+#ib-main-menu-expanded-header-settingsLogout-wrapper {
+  min-width:250px;
+  height: 40px;
+  margin: 0 auto;
+  border: 1px solid red;
+}
+#ib-main-menu-expanded-header-title-wrapper p {
+  height: 24px;
+  font-size: 36px;
+  border: 1px solid white;
+}
+#ib-main-menu-expanded-header-closeButton-wrapper {
+  width: 100%;
+  margin: 0 auto;
+  border: 1px solid yellow;
+
+}
+#ib-main-menu-expanded-header-closeButton-wrapper button {
+  min-width: 256px;
+  max-width: 453px;
+  height: 40px;
+  border-radius: 20px;
+}
+#ib-main-menu-expanded-header-closeButton-wrapper button div{
+  height: 40px;
+}
+#ib-main-menu-expanded-header-closeButton-wrapper button p {
+  margin: 0;
+}
+#ib-main-menu-expanded-header-settingsLogout-wrapper {
+  padding-right: 20px;
+}
+#ib-main-menu-expanded-header-settingsLogout-box {
+  width: 76px;
+  height: 40px;
+  border: 1px solid white;
+}

@@ -1,0 +1,10 @@
+::ng-deep mat-dialog-container {
+  background: #40404040 !important;
+  backdrop-filter: blur(10px);
+  animation: open .2s linear 0s;
+
+}
+@keyframes open {
+  from { backdrop-filter: blur(0px)}
+  to { backdrop-filter: blur(10px)}
+}

@@ -1,4 +1,33 @@
-<p>main-menu-expanded</p>
-<button mat-button (click)="closeDialog()">Ritorna alla Dashboard</button>
+  <!--header-->
+  <div id="ib-main-menu-expanded-header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
+    <div id="ib-main-menu-expanded-header-title-wrapper" fxLayout="row" fxLayoutAlign="space-around center">
+      <p>Inomanager</p>
+    </div>
+    <div id="ib-main-menu-expanded-header-closeButton-wrapper" fxLayout="row" fxLayoutAlign="space-around center">
+      <button id="ib-main-menu-expanded-header-close-button" mat-button (click)="closeDialog()">
+        <div fxLayout="row" fxLayoutAlign="space-evenly center" >
+          <mat-icon>dashboard</mat-icon>
+          <p>Ritorna alla Dashboard</p>
+        </div>
+      </button>
+    </div>
+    <div id="ib-main-menu-expanded-header-settingsLogout-wrapper" fxLayout="row" fxLayoutAlign="end center">
+      <div id="ib-main-menu-expanded-header-settingsLogout-box" fxLayout="row" fxLayoutAlign="space-evenly center">
+        <mat-icon>settings</mat-icon>
+        <mat-icon>logout</mat-icon>
+      </div>
+    </div>
+  </div>
 
+  <!--body-->
+  <div id="ib-main-menu-expanded-body-wrapper" fxLayout="row">
+    <div id="ib-main-menu-expanded-body-box" fxFlex="33" *ngFor="let firstLevel of navData">
+      <p> {{firstLevel.label}} : {{firstLevel.link}} </p>
+      <p *ngFor="let secondLevel of firstLevel.paths">
+          {{secondLevel.label}} : {{secondLevel.link}}
+      </p>
+
+    </div>
+
+  </div>
 <!-- MENU CONTENT-->

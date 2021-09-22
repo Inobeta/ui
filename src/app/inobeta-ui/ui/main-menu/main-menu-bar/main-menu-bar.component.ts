@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { IbMainMenuData } from '../main-menu-data.model';
 import { IbMainMenuDialogComponent } from '../main-menu-dialog/main-menu-dialog.component';
 
 @Component({
@@ -9,7 +10,7 @@ import { IbMainMenuDialogComponent } from '../main-menu-dialog/main-menu-dialog.
 })
 export class IbMainMenuBarComponent implements OnInit {
 
-  @Input() navData = [];
+  @Input() navData : IbMainMenuData [] = [];
 
   constructor(public dialog: MatDialog) {}
 

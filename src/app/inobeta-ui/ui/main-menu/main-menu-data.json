@@ -1,0 +1,143 @@
+[ {
+    "label": "Inomanager",
+    "link": "/welcome",
+    "paths": []
+  },
+  {
+    "label": "Scarico Ore",
+    "link": "/scarico",
+    "paths": [
+      {
+        "label": "Scarico ore",
+        "link":  "/oggi",
+        "paths": []
+      },
+      {
+        "label": "Storico" ,
+        "link":  "/storico",
+        "paths": [
+          {
+            "label": "Ferie",
+            "link": "/ferie"
+          },
+          {
+            "link": "Straordinari",
+            "label": "/strardinari"
+          },
+          {
+            "link": "Strumenti",
+            "label": "/strumenti"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "label": "Controllo di gestione",
+    "link": "/dashboard_azienda",
+    "paths": [
+      {
+        "label": "Controllo di gestione",
+        "link": "/riepilogo_risorsa",
+        "paths": []
+      },
+      {
+        "label": "Allocazione",
+        "link": "/allocazione_risorsa",
+        "paths": []
+      },
+      {
+        "label": "Pianificazioe risorsa",
+        "link": "/nuova_allocazione_risorsa",
+        "paths": []
+      },
+      {
+        "label": "Budget",
+        "link": "/budget",
+        "paths": []
+      },
+      {
+        "label": "KPI",
+        "link": "/kpi_stima",
+        "paths": []
+      }
+    ]
+  },
+  {
+    "label": "Flussi di cassa",
+    "link": "/flussi_cassa",
+    "paths": [
+      {
+        "label": "Mensile",
+        "link": "/mensile",
+        "paths": []
+      },
+      {
+        "label": "Annuale",
+        "link": "/annuale",
+        "paths": []
+      },
+      {
+        "label": "riepilogo Iva",
+        "link": "/riepilogo_iva",
+        "paths": []
+      },
+      {
+        "label": "fatture del mese",
+        "link": "/fatture_mese",
+        "paths": []
+      },
+      {
+        "label": "Verifica movimenti",
+        "link": "/verifica_movimenti/storico_csv",
+        "paths": []
+      }
+    ]
+  },
+  {
+    "label": "Anagrafiche",
+    "link": "/anagrafiche",
+    "paths": [
+      {
+        "label": "Companies",
+        "link": "/companies",
+        "paths": []
+      },
+      {
+        "label": "Jobs",
+        "link": "/jobs",
+        "paths": []
+      },
+      {
+        "label": "Activities",
+        "link": "/activities",
+        "paths": []
+      },
+      {
+        "label": "Centri di costo",
+        "link": "/centri_costo",
+        "paths": []
+      },
+      {
+        "label": "Conti correnti",
+        "link": "/conti_correnti",
+        "paths": []
+      },
+      {
+        "label": "Users",
+        "link": "/users",
+        "paths": []
+      },
+      {
+        "label": "Settings",
+        "link": "/settings",
+        "paths": []
+      },
+      {
+        "label": "Autorizzazioni utenti",
+        "link": "/user_permissions",
+        "paths": []
+      }
+    ]
+  }
+]
