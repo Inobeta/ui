@@ -1,63 +1,79 @@
-[ {
+[
+   {
     "label": "Inomanager",
+    "icon": "settings",
     "link": "/welcome",
     "paths": []
   },
   {
     "label": "Scarico Ore",
+    "icon": "settings",
     "link": "/scarico",
     "paths": [
       {
         "label": "Scarico ore",
+        "icon": "settings",
         "link":  "/oggi",
         "paths": []
       },
       {
         "label": "Storico" ,
+        "icon": "settings",
         "link":  "/storico",
-        "paths": [
-          {
-            "label": "Ferie",
-            "link": "/ferie"
-          },
-          {
-            "link": "Straordinari",
-            "label": "/strardinari"
-          },
-          {
-            "link": "Strumenti",
-            "label": "/strumenti"
-          }
-        ]
+        "paths": []
+      },
+      {
+        "label": "Ferie",
+        "icon": "settings",
+        "link": "/ferie",
+        "paths": []
+      },
+      {
+        "label": "Straordinari",
+        "icon": "settings",
+        "link": "/strardinari",
+        "paths": []
+      },
+      {
+        "label": "Strumenti",
+        "icon": "settings",
+        "link": "/strumenti",
+        "paths": []
       }
     ]
   },
   {
     "label": "Controllo di gestione",
+    "icon": "settings",
     "link": "/dashboard_azienda",
     "paths": [
       {
         "label": "Controllo di gestione",
+        "icon": "settings",
         "link": "/riepilogo_risorsa",
         "paths": []
       },
       {
         "label": "Allocazione",
+        "icon": "settings",
         "link": "/allocazione_risorsa",
         "paths": []
       },
       {
         "label": "Pianificazioe risorsa",
+        "icon": "settings",
         "link": "/nuova_allocazione_risorsa",
         "paths": []
       },
       {
         "label": "Budget",
+        "icon": "settings",
         "link": "/budget",
         "paths": []
       },
       {
         "label": "KPI",
+        "icon": "settings",
         "link": "/kpi_stima",
         "paths": []
       }
@@ -65,30 +81,36 @@
   },
   {
     "label": "Flussi di cassa",
+    "icon": "settings",
     "link": "/flussi_cassa",
     "paths": [
       {
         "label": "Mensile",
+        "icon": "settings",
         "link": "/mensile",
         "paths": []
       },
       {
         "label": "Annuale",
+        "icon": "settings",
         "link": "/annuale",
         "paths": []
       },
       {
         "label": "riepilogo Iva",
+        "icon": "settings",
         "link": "/riepilogo_iva",
         "paths": []
       },
       {
         "label": "fatture del mese",
+        "icon": "settings",
         "link": "/fatture_mese",
         "paths": []
       },
       {
         "label": "Verifica movimenti",
+        "icon": "settings",
         "link": "/verifica_movimenti/storico_csv",
         "paths": []
       }
@@ -96,45 +118,54 @@
   },
   {
     "label": "Anagrafiche",
+    "icon": "settings",
     "link": "/anagrafiche",
     "paths": [
       {
         "label": "Companies",
+        "icon": "settings",
         "link": "/companies",
         "paths": []
       },
       {
         "label": "Jobs",
+        "icon": "settings",
         "link": "/jobs",
         "paths": []
       },
       {
         "label": "Activities",
+        "icon": "settings",
         "link": "/activities",
         "paths": []
       },
       {
         "label": "Centri di costo",
+        "icon": "settings",
         "link": "/centri_costo",
         "paths": []
       },
       {
         "label": "Conti correnti",
+        "icon": "settings",
         "link": "/conti_correnti",
         "paths": []
       },
       {
         "label": "Users",
+        "icon": "settings",
         "link": "/users",
         "paths": []
       },
       {
         "label": "Settings",
+        "icon": "settings",
         "link": "/settings",
         "paths": []
       },
       {
         "label": "Autorizzazioni utenti",
+        "icon": "settings",
         "link": "/user_permissions",
         "paths": []
       }
