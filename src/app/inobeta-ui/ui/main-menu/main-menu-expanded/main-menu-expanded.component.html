@@ -1,4 +1,4 @@
-  <!--header-->
+  <!--header---------------------------------------------------------------------->
   <div id="ib-main-menu-expanded-header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
     <div id="ib-main-menu-expanded-header-title-wrapper" fxLayout="row" fxLayoutAlign="space-around center">
       <p>Inomanager</p>
@@ -13,13 +13,21 @@
     </div>
     <div id="ib-main-menu-expanded-header-settingsLogout-wrapper" fxLayout="row" fxLayoutAlign="end center">
       <div id="ib-main-menu-expanded-header-settingsLogout-box" fxLayout="row" fxLayoutAlign="space-evenly center">
-        <mat-icon>settings</mat-icon>
-        <mat-icon>logout</mat-icon>
+        <button mat-button>
+          <mat-icon>
+            settings
+          </mat-icon>
+        </button>
+        <button mat-button>
+          <mat-icon>
+            logout
+          </mat-icon>
+        </button>
       </div>
     </div>
   </div>
 
-  <!--body-->
+  <!--body---------------------------------------------------------------------->
   <div id="ib-main-menu-expanded-body">
     <div id="ib-main-menu-expanded-body-wrapper" fxLayout="row wrap"  fxLayoutAlign="space-evenly center">
 
@@ -38,9 +46,11 @@
             </div>
           <!--secondLevel-->
           <div class="ib-main-menu-expanded-body-box-secondLevel" fxLayout="column" fxLayoutAlign="start start">
-          <p *ngFor="let secondLevel of firstLevel.paths">
-            {{secondLevel.label}}
-          </p>
+            <button mat-button *ngFor="let secondLevel of firstLevel.paths">
+              <p>
+                {{secondLevel.label}}
+              </p>
+            </button>
           </div>
         </div>
 
@@ -61,9 +71,11 @@
             <div class="ib-main-menu-expanded-body-box-secondLevel" fxLayout="column" fxLayoutAlign="start start">
               <ng-container *ngFor="let secondLevel of firstLevel.paths; let i = index">
                 <ng-container *ngIf="i < 5">
-                  <p>
-                  {{secondLevel.label}} 1st col
-                  </p>
+                  <button mat-button>
+                    <p>
+                      {{secondLevel.label}}
+                    </p>
+                  </button>
                 </ng-container>
               </ng-container>
             </div>
@@ -71,9 +83,11 @@
             <div class="ib-main-menu-expanded-body-box-secondLevel" fxLayout="column" fxLayoutAlign="start start">
               <ng-container *ngFor="let secondLevel of firstLevel.paths; let i = index">
                 <ng-container *ngIf="i >=5">
-                  <p>
-                  {{secondLevel.label}} 2nd col
-                  </p>
+                  <button mat-button>
+                    <p>
+                      {{secondLevel.label}}
+                    </p>
+                  </button>
                 </ng-container>
               </ng-container>
             </div>
