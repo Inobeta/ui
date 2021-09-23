@@ -44,6 +44,7 @@ import { IbTableStickyExampleComponent } from './examples/table-example/table-st
 import { EffectsModule } from '@ngrx/effects';
 import { TableEffects } from './inobeta-ui/ui/table/store/effects/table.effects';
 import { IbMainMenuModule } from './inobeta-ui/ui/main-menu/main-menu.module';
+import { IbMainMenuExampleComponent } from './examples/main-menu-example/main-menu-example.component';
 
 export interface IAppState {
   sessionState?: ISessionState;
@@ -78,7 +79,8 @@ export const statusErrorMessages = { 404: 'Risorsa non trovata'};
     MyCustomTextboxComponent,
     IbToastExampleComponent,
     IbTableExampleNoReduxComponent,
-    IbTableStickyExampleComponent
+    IbTableStickyExampleComponent,
+    IbMainMenuExampleComponent
   ],
   imports: [
     CommonModule,

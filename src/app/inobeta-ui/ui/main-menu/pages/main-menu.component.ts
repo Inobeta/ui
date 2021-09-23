@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { IbMainMenuData } from '../models/main-menu-data.model';
-import  * as mainMenudata from '../main-menu-data.json'
+//EXAMPLE_DATA
+//import  * as mainMenudata from '../main-menu-data.json'
 import { IbMainMenuButton } from '../models/main-menu-button.model';
 
 
@@ -18,25 +19,11 @@ import { IbMainMenuButton } from '../models/main-menu-button.model';
 })
 export class IbMainMenuComponent {
 
-  @Input() navData: IbMainMenuData[] = (mainMenudata as any).default;
-  @Input() appTitle: string = 'DevKit';
-  @Input() navUpRight: IbMainMenuButton [] = [{
-      label: "settings",
-      icon: "settings",
-      link: ""
-    },
-    {
-      label: "logout",
-      icon: "logout",
-      link: ""
-    }
-  ];
-  @Input() navBottomLeft: IbMainMenuButton = {
-    label: "Richiedi assistenza",
-    icon: "help_outline",
-    link: ""
-  };
-  @Input() navBottomRight: string = '© Inobeta 2021'
+  @Input() navData: IbMainMenuData[]; //EXAMPLE_DATA -> = (mainMenudata as any).default;
+  @Input() appTitle: string;
+  @Input() navUpRight: IbMainMenuButton[];
+  @Input() navBottomLeft: IbMainMenuButton;
+  @Input() navBottomRight: string;
 
   constructor() {}
 

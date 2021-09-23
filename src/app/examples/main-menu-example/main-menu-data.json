@@ -1,0 +1,303 @@
+[
+  {
+    "label": "Table",
+    "icon": "table_rows",
+    "link": "/table",
+    "paths": [
+      {
+        "label": "With redux",
+        "icon": "",
+        "link":  "/redux",
+        "paths": []
+      },
+      {
+        "label": "Without redux" ,
+        "icon": "",
+        "link":  "/noredux",
+        "paths": []
+      },
+      {
+        "label": "Sticky",
+        "icon": "",
+        "link": "/sticky",
+        "paths": []
+      }
+    ]
+  },
+  {
+    "label": "Dynamic forms",
+    "icon": "view_list",
+    "link": "/forms",
+    "paths": [
+      {
+        "label": "Controllo di gestione",
+        "icon": "",
+        "link": "/none",
+        "paths": []
+      },
+      {
+        "label": "Allocazione",
+        "icon": "",
+        "link": "/none",
+        "paths": []
+      },
+      {
+        "label": "Pianificazioe risorsa",
+        "icon": "",
+        "link": "/none",
+        "paths": []
+      },
+      {
+        "label": "Budget",
+        "icon": "",
+        "link": "/none",
+        "paths": []
+      },
+      {
+        "label": "KPI",
+        "icon": "",
+        "link": "/none",
+        "paths": []
+      }
+    ]
+  },
+  {
+    "label": "Http",
+    "icon": "http",
+    "link": "/http",
+    "paths": [
+      {
+        "label": "Mensile",
+        "icon": "",
+        "link": "/none",
+        "paths": []
+      },
+      {
+        "label": "Annuale",
+        "icon": "",
+        "link": "/none",
+        "paths": []
+      },
+      {
+        "label": "Riepilogo Iva",
+        "icon": "",
+        "link": "/none",
+        "paths": []
+      },
+      {
+        "label": "Fatture del mese",
+        "icon": "",
+        "link": "/none",
+        "paths": []
+      },
+      {
+        "label": "Verifica movimenti",
+        "icon": "",
+        "link": "/none",
+        "paths": []
+      }
+    ]
+  },
+  {
+    "label": "Redux",
+    "icon": "archive",
+    "link": "/redux",
+    "paths": [
+      {
+        "label": "Companies",
+        "icon": "",
+        "link": "/none",
+        "paths": []
+      },
+      {
+        "label": "Jobs",
+        "icon": "",
+        "link": "/none",
+        "paths": []
+      },
+      {
+        "label": "Activities",
+        "icon": "",
+        "link": "/none",
+        "paths": []
+      },
+      {
+        "label": "Centri di costo",
+        "icon": "",
+        "link": "/none",
+        "paths": []
+      },
+      {
+        "label": "Conti correnti",
+        "icon": "",
+        "link": "/none",
+        "paths": []
+      },
+      {
+        "label": "Users",
+        "icon": "",
+        "link": "/none",
+        "paths": []
+      },
+      {
+        "label": "Settings",
+        "icon": "",
+        "link": "/none",
+        "paths": []
+      },
+      {
+        "label": "Autorizzazioni utenti",
+        "icon": "",
+        "link": "/none",
+        "paths": []
+      }
+    ]
+  },
+  {
+    "label": "Dialog",
+    "icon": "announcement",
+    "link": "/dialog",
+    "paths": [
+      {
+        "label": "Companies",
+        "icon": "",
+        "link": "/none",
+        "paths": []
+      },
+      {
+        "label": "Jobs",
+        "icon": "",
+        "link": "/none",
+        "paths": []
+      },
+      {
+        "label": "Activities",
+        "icon": "",
+        "link": "/none",
+        "paths": []
+      },
+      {
+        "label": "Centri di costo",
+        "icon": "",
+        "link": "/none",
+        "paths": []
+      },
+      {
+        "label": "Conti correnti",
+        "icon": "",
+        "link": "/none",
+        "paths": []
+      },
+      {
+        "label": "Users",
+        "icon": "",
+        "link": "/none",
+        "paths": []
+      },
+      {
+        "label": "Settings",
+        "icon": "",
+        "link": "/none",
+        "paths": []
+      },
+      {
+        "label": "Autorizzazioni utenti",
+        "icon": "",
+        "link": "/none",
+        "paths": []
+      }
+    ]
+  },
+  {
+    "label": "Toast",
+    "icon": "breakfast_dining",
+    "link": "/toast",
+    "paths": [
+      {
+        "label": "Companies",
+        "icon": "",
+        "link": "/none",
+        "paths": []
+      },
+      {
+        "label": "Jobs",
+        "icon": "",
+        "link": "/none",
+        "paths": []
+      },
+      {
+        "label": "Activities",
+        "icon": "",
+        "link": "/none",
+        "paths": []
+      },
+      {
+        "label": "Centri di costo",
+        "icon": "",
+        "link": "/none",
+        "paths": []
+      },
+      {
+        "label": "Conti correnti",
+        "icon": "",
+        "link": "/none",
+        "paths": []
+      },
+      {
+        "label": "Users",
+        "icon": "",
+        "link": "/none",
+        "paths": []
+      },
+      {
+        "label": "Settings",
+        "icon": "",
+        "link": "/none",
+        "paths": []
+      },
+      {
+        "label": "Autorizzazioni utenti",
+        "icon": "",
+        "link": "/none",
+        "paths": []
+      }
+    ]
+  },
+   {
+    "label": "Team",
+    "icon": "groups",
+    "link": "/none",
+    "paths": [
+      {
+        "label": "Luca P.",
+        "icon": "",
+        "link": "/none",
+        "paths": []
+      },
+      {
+        "label": "Salvatore",
+        "icon": "",
+        "link": "/none",
+        "paths": []
+      },
+      {
+        "label": "Jacopo",
+        "icon": "",
+        "link": "/none",
+        "paths": []
+      },
+      {
+        "label": "Luca C.",
+        "icon": "",
+        "link": "/none",
+        "paths": []
+      },
+      {
+        "label": "Roberto",
+        "icon": "",
+        "link": "/none",
+        "paths": []
+      }
+    ]
+  }
+]
