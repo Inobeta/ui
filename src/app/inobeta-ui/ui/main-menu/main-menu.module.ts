@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { IbMainMenuBarComponent } from './main-menu-bar/main-menu-bar.component';
 import { IbMainMenuExpandedComponent } from './main-menu-expanded/main-menu-expanded.component';
 import { IbMainMenuDialogComponent } from './main-menu-dialog/main-menu-dialog.component';
+import { RouterModule } from '@angular/router';
 
 
 
@@ -23,7 +24,8 @@ import { IbMainMenuDialogComponent } from './main-menu-dialog/main-menu-dialog.c
     MatIconModule,
     MatDialogModule,
     MatButtonModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    RouterModule
   ],
   exports: [
     IbMainMenuComponent,

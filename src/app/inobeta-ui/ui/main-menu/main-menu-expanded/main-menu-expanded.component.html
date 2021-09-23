@@ -32,12 +32,16 @@
     <div id="ib-main-menu-expanded-body-wrapper" fxLayout="row wrap"  fxLayoutAlign="space-evenly center">
 
       <ng-container *ngFor="let firstLevel of navData">
-
         <!--default-box-->
-        <div class="ib-main-menu-expanded-body-box default-box" *ngIf="firstLevel.paths.length <= 5">
+        <div
+          *ngIf="firstLevel.paths.length <= 5"
+          routerLink="{{'home'+firstLevel.link}}"
+          routerLinkActive #rlas="routerLinkActive"
+          class="{{rlas.isActive? 'ib-main-menu-expanded-body-box default-box active-section':  'ib-main-menu-expanded-body-box default-box' }}"
+        >
           <!--firstLevel-->
             <div class="ib-main-menu-expanded-body-box-firstLevel">
-              <button mat-button>
+              <button mat-button routerLink="{{'home'+firstLevel.link}}">
                 <div class="ib-main-menu-expanded-body-box-firstLevel-box" fxLayout="row" fxLayoutAlign="start center">
                   <mat-icon>{{firstLevel.icon}}</mat-icon>
                   <p> {{firstLevel.label}} </p>
@@ -46,7 +50,11 @@
             </div>
           <!--secondLevel-->
           <div class="ib-main-menu-expanded-body-box-secondLevel" fxLayout="column" fxLayoutAlign="start start">
-            <button mat-button *ngFor="let secondLevel of firstLevel.paths">
+            <button mat-button
+              *ngFor="let secondLevel of firstLevel.paths"
+              [routerLink]="['home'+firstLevel.link+secondLevel.link]"
+              routerLinkActive="active-link" #rla="routerLinkActive"
+              color="{{rla.isActive? 'primary' : null}}">
               <p>
                 {{secondLevel.label}}
               </p>
@@ -55,10 +63,15 @@
         </div>
 
         <!--big-box-->
-        <div class="ib-main-menu-expanded-body-box big-box" *ngIf="firstLevel.paths.length > 5">
+        <div
+          *ngIf="firstLevel.paths.length > 5"
+          routerLink="{{'home'+firstLevel.link}}"
+          routerLinkActive #rlas="routerLinkActive"
+          class="{{rlas.isActive? 'ib-main-menu-expanded-body-box big-box active-section':  'ib-main-menu-expanded-body-box big-box' }}"
+        >
           <!--firstLevel-->
           <div class="ib-main-menu-expanded-body-box-firstLevel">
-            <button mat-button>
+            <button mat-button routerLink="{{'home'+firstLevel.link}}">
               <div class="ib-main-menu-expanded-body-box-firstLevel-box" fxLayout="row" fxLayoutAlign="start center">
                 <mat-icon>{{firstLevel.icon}}</mat-icon>
                 <p> {{firstLevel.label}} </p>
@@ -71,7 +84,10 @@
             <div class="ib-main-menu-expanded-body-box-secondLevel" fxLayout="column" fxLayoutAlign="start start">
               <ng-container *ngFor="let secondLevel of firstLevel.paths; let i = index">
                 <ng-container *ngIf="i < 5">
-                  <button mat-button>
+                  <button mat-button
+                    [routerLink]="['home'+firstLevel.link+secondLevel.link]"
+                    routerLinkActive="active-link" #rla="routerLinkActive"
+                    color="{{rla.isActive? 'primary' : null}}">
                     <p>
                       {{secondLevel.label}}
                     </p>
@@ -83,7 +99,10 @@
             <div class="ib-main-menu-expanded-body-box-secondLevel" fxLayout="column" fxLayoutAlign="start start">
               <ng-container *ngFor="let secondLevel of firstLevel.paths; let i = index">
                 <ng-container *ngIf="i >=5">
-                  <button mat-button>
+                  <button mat-button
+                    [routerLink]="['home'+firstLevel.link+secondLevel.link]"
+                    routerLinkActive="active-link" #rla="routerLinkActive"
+                    color="{{rla.isActive? 'primary' : null}}">
                     <p>
                       {{secondLevel.label}}
                     </p>
@@ -95,6 +114,6 @@
         </div>
 
       </ng-container>
+
     </div>
   </div>
-<!-- MENU CONTENT-->

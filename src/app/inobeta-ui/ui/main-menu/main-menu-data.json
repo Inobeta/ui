@@ -8,12 +8,12 @@
   {
     "label": "Scarico Ore",
     "icon": "settings",
-    "link": "/scarico",
+    "link": "/table",
     "paths": [
       {
         "label": "Scarico ore",
         "icon": "settings",
-        "link":  "/oggi",
+        "link":  "/redux",
         "paths": []
       },
       {
@@ -119,12 +119,12 @@
   {
     "label": "Anagrafiche",
     "icon": "settings",
-    "link": "/anagrafiche",
+    "link": "/table",
     "paths": [
       {
         "label": "Companies",
         "icon": "settings",
-        "link": "/companies",
+        "link": "/redux",
         "paths": []
       },
       {
@@ -160,7 +160,7 @@
       {
         "label": "Settings",
         "icon": "settings",
-        "link": "/settings",
+        "link": "/redux",
         "paths": []
       },
       {
