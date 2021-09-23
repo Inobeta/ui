@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { IbMainMenuData } from '../main-menu-data.model';
+import { Router } from '@angular/router';
+import { IbMainMenuDataSet } from '../../models/main-menu-data-set.model';
 import { IbMainMenuDialogComponent } from '../main-menu-dialog/main-menu-dialog.component';
 
 @Component({
@@ -9,14 +10,15 @@ import { IbMainMenuDialogComponent } from '../main-menu-dialog/main-menu-dialog.
   styleUrls: ['./main-menu-expanded.component.css']
 })
 export class IbMainMenuExpandedComponent implements OnInit{
-  @Input() navData : IbMainMenuData [] = [];
+  @Input() navDataSet : IbMainMenuDataSet;
 
   constructor(
-    public dialogRef: MatDialogRef<IbMainMenuDialogComponent>
+    public dialogRef: MatDialogRef<IbMainMenuDialogComponent>,
+    private route: Router
     ) {}
 
   ngOnInit() {
-    console.log("navData", this.navData)
+    console.log("navData", this.navDataSet)
   }
 
   closeDialog() { this.dialogRef.close();}

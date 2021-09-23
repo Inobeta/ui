@@ -19,7 +19,7 @@
       {
         "label": "Storico" ,
         "icon": "settings",
-        "link":  "/storico",
+        "link":  "/noredux",
         "paths": []
       },
       {
@@ -45,7 +45,7 @@
   {
     "label": "Controllo di gestione",
     "icon": "settings",
-    "link": "/dashboard_azienda",
+    "link": "/forms",
     "paths": [
       {
         "label": "Controllo di gestione",
@@ -82,7 +82,7 @@
   {
     "label": "Flussi di cassa",
     "icon": "settings",
-    "link": "/flussi_cassa",
+    "link": "/dialog",
     "paths": [
       {
         "label": "Mensile",
@@ -117,6 +117,171 @@
     ]
   },
   {
+    "label": "Anagrafiche",
+    "icon": "settings",
+    "link": "/table",
+    "paths": [
+      {
+        "label": "Companies",
+        "icon": "settings",
+        "link": "/redux",
+        "paths": []
+      },
+      {
+        "label": "Jobs",
+        "icon": "settings",
+        "link": "/jobs",
+        "paths": []
+      },
+      {
+        "label": "Activities",
+        "icon": "settings",
+        "link": "/activities",
+        "paths": []
+      },
+      {
+        "label": "Centri di costo",
+        "icon": "settings",
+        "link": "/centri_costo",
+        "paths": []
+      },
+      {
+        "label": "Conti correnti",
+        "icon": "settings",
+        "link": "/conti_correnti",
+        "paths": []
+      },
+      {
+        "label": "Users",
+        "icon": "settings",
+        "link": "/users",
+        "paths": []
+      },
+      {
+        "label": "Settings",
+        "icon": "settings",
+        "link": "/redux",
+        "paths": []
+      },
+      {
+        "label": "Autorizzazioni utenti",
+        "icon": "settings",
+        "link": "/user_permissions",
+        "paths": []
+      }
+    ]
+  },
+  {
+    "label": "Anagrafiche",
+    "icon": "settings",
+    "link": "/table",
+    "paths": [
+      {
+        "label": "Companies",
+        "icon": "settings",
+        "link": "/redux",
+        "paths": []
+      },
+      {
+        "label": "Jobs",
+        "icon": "settings",
+        "link": "/jobs",
+        "paths": []
+      },
+      {
+        "label": "Activities",
+        "icon": "settings",
+        "link": "/activities",
+        "paths": []
+      },
+      {
+        "label": "Centri di costo",
+        "icon": "settings",
+        "link": "/centri_costo",
+        "paths": []
+      },
+      {
+        "label": "Conti correnti",
+        "icon": "settings",
+        "link": "/conti_correnti",
+        "paths": []
+      },
+      {
+        "label": "Users",
+        "icon": "settings",
+        "link": "/users",
+        "paths": []
+      },
+      {
+        "label": "Settings",
+        "icon": "settings",
+        "link": "/redux",
+        "paths": []
+      },
+      {
+        "label": "Autorizzazioni utenti",
+        "icon": "settings",
+        "link": "/user_permissions",
+        "paths": []
+      }
+    ]
+  },
+  {
+    "label": "Anagrafiche",
+    "icon": "settings",
+    "link": "/table",
+    "paths": [
+      {
+        "label": "Companies",
+        "icon": "settings",
+        "link": "/redux",
+        "paths": []
+      },
+      {
+        "label": "Jobs",
+        "icon": "settings",
+        "link": "/jobs",
+        "paths": []
+      },
+      {
+        "label": "Activities",
+        "icon": "settings",
+        "link": "/activities",
+        "paths": []
+      },
+      {
+        "label": "Centri di costo",
+        "icon": "settings",
+        "link": "/centri_costo",
+        "paths": []
+      },
+      {
+        "label": "Conti correnti",
+        "icon": "settings",
+        "link": "/conti_correnti",
+        "paths": []
+      },
+      {
+        "label": "Users",
+        "icon": "settings",
+        "link": "/users",
+        "paths": []
+      },
+      {
+        "label": "Settings",
+        "icon": "settings",
+        "link": "/redux",
+        "paths": []
+      },
+      {
+        "label": "Autorizzazioni utenti",
+        "icon": "settings",
+        "link": "/user_permissions",
+        "paths": []
+      }
+    ]
+  },
+   {
     "label": "Anagrafiche",
     "icon": "settings",
     "link": "/table",
