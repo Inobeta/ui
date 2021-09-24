@@ -114,3 +114,21 @@ div[ib-mat-slide-toggle]{
   align-items: center;
 }
 
+/* ib-main-menu dialog custom class */
+.mat-dialog-container-for-ib-main-menu .mat-dialog-container {
+  background: #4040408c;
+  backdrop-filter: blur(10px);
+  animation: open .2s linear 0s;
+  height: 100%;
+  padding: 0px !important;
+}
+@keyframes open {
+  from { backdrop-filter: blur(0px)}
+  to { backdrop-filter: blur(10px)}
+}
+.mat-dialog-container-for-ib-main-menu .mat-dialog-container .mat-dialog-content {
+  min-height: 100%;
+  max-width: 100%;
+  margin: 0px;
+  padding: 0px;
+}

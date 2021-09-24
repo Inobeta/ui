@@ -14,9 +14,9 @@ import { IbMainMenuDialogComponent } from '../main-menu-dialog/main-menu-dialog.
 })
 export class IbMainMenuBarComponent implements OnInit {
 
-  @Input() navData : IbMainMenuData [];
+  @Input() navData : IbMainMenuData[];
   @Input() navTitle: string;
-  @Input() navButtonsUpRight: IbMainMenuButton [];
+  @Input() navButtonsUpRight: IbMainMenuButton[];
   @Input() navButtonBottomRight: string;
   @Input() navBottomLeft: IbMainMenuButton;
 
@@ -30,7 +30,7 @@ export class IbMainMenuBarComponent implements OnInit {
       upRight: this.navButtonsUpRight,
       navData: this.navData,
       bottomLeft: this.navBottomLeft,
-      bottomRight: this.navButtonBottomRight,
+      bottomRight: this.navButtonBottomRight
     }
   }
 
@@ -41,6 +41,8 @@ export class IbMainMenuBarComponent implements OnInit {
       height: '100%',
       width: '100%',
       data: this.dataSet,
+      panelClass: 'mat-dialog-container-for-ib-main-menu'
+      //panelClass here => C:\Users\rober\Desktop\Inobeta\Projects\devKit\inobeta-ui\src\app\inobeta-ui\themes\default.scss
     });
 
   }

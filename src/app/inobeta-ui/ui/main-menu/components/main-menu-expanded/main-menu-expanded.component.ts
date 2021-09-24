@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 import { IbMainMenuDataSet } from '../../models/main-menu-data-set.model';
 import { IbMainMenuDialogComponent } from '../main-menu-dialog/main-menu-dialog.component';
 
@@ -14,11 +13,9 @@ export class IbMainMenuExpandedComponent implements OnInit{
 
   constructor(
     public dialogRef: MatDialogRef<IbMainMenuDialogComponent>,
-    private route: Router
     ) {}
 
   ngOnInit() {
-    console.log("navData", this.navDataSet)
   }
 
   closeDialog() { this.dialogRef.close();}

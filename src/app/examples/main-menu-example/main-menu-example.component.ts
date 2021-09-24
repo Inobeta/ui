@@ -20,18 +20,18 @@ export class IbMainMenuExampleComponent implements OnInit {
    exNavUpRight: IbMainMenuButton[] = [{
       label: "settings",
       icon: "settings",
-      link: ""
+      link: "/forms"
     },
     {
       label: "logout",
       icon: "logout",
-      link: ""
+      link: "/table"
     }
   ];
    exNavBottomLeft: IbMainMenuButton = {
     label: "Richiedi assistenza",
     icon: "help_outline",
-    link: ""
+    link: "/table"
   };
    exNavBottomRight: string = '© Inobeta 2021'
   constructor() { }

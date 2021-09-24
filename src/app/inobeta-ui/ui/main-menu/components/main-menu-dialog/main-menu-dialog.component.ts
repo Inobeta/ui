@@ -1,6 +1,6 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, _closeDialogVia } from '@angular/material/dialog';
-import { IbMainMenuData } from '../../models/main-menu-data.model';
+import { IbMainMenuDataSet } from '../../models/main-menu-data-set.model';
 
 @Component({
   selector: 'ib-main-menu-dialog',
@@ -16,5 +16,5 @@ import { IbMainMenuData } from '../../models/main-menu-data.model';
 export class IbMainMenuDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<IbMainMenuDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: IbMainMenuData []) {}
+    @Inject(MAT_DIALOG_DATA) public data: IbMainMenuDataSet) {}
 }

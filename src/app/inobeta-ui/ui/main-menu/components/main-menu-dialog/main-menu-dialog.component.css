@@ -1,21 +1,5 @@
 
-::ng-deep mat-dialog-container {
-  background: #4040408c !important;
-  backdrop-filter: blur(10px);
-  animation: open .2s linear 0s;
-  height: 100%;
-  padding: 0px !important;
-}
-@keyframes open {
-  from { backdrop-filter: blur(0px)}
-  to { backdrop-filter: blur(10px)}
-}
-.mat-dialog-content {
-  min-height: 100%;
-  max-width: 100%;
-  margin: 0px;
-  padding: 0px;
-}
+
 ::-webkit-scrollbar {
   width: 10px;
 }

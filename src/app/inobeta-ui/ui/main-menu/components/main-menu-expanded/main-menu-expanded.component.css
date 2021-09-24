@@ -5,28 +5,6 @@
   --color-text: #FFFFFF;
 }
 
-/* general */
-#ib-main-menu-expanded-header-title-wrapper p,
-#ib-main-menu-expanded-header-closeButton-wrapper button,
-.ib-main-menu-expanded-body-box-firstLevel-box p,
-.ib-main-menu-expanded-body-box-secondLevel button p,
-#ib-main-menu-expanded-footer-support-button-wrapper p,
-#ib-main-menu-expanded-footer-copyright-wrapper p {
-  font-family: 'Montserrat', sans-serif;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 24px;
-  color: #FFFFFF;
-}
-mat-icon {
-  color: #FFFFFF;
-  font-size: 24px
-}
-#ib-main-menu-expanded-header-closeButton-wrapper button p,
-.ib-main-menu-expanded-body-box-firstLevel-box p,
-.ib-main-menu-expanded-body-box-secondLevel button p {
-  font-size: 14px;
-}
 
 /* header */
 #ib-main-menu-expanded-header {
@@ -67,11 +45,13 @@ mat-icon {
   border-radius: 20px;
   border: 1px solid rgba(144, 144, 144, 0.75);
   background: rgba(64, 64, 64, 0.25);
+  transition: border-color .2s, box-shadow .2s;
 }
+
 #ib-main-menu-expanded-header-closeButton-wrapper button div{
   height: 40px;
 }
-#ib-main-menu-expanded-header-closeButton-wrapper button p {
+#ib-main-menu-expanded-header-closeButton-wrapper button div p {
   margin: 0;
 }
 #ib-main-menu-expanded-header-settingsLogout-wrapper {
@@ -92,16 +72,21 @@ mat-icon {
   max-height: 32px;
   padding: 0px;
   border-radius: 8px;
+  transition: background-color .2s;
 }
+
 #ib-main-menu-expanded-header-settingsLogout-box .mat-button:nth-child(1) {
   background: rgba(144, 144, 144, 0.25);
+}
+#ib-main-menu-expanded-header-settingsLogout-box .mat-button:hover {
+  background-color: rgba(92, 105, 253, 0.802);
 }
 #ib-main-menu-expanded-header-settingsLogout-box .mat-button mat-icon{
   min-width: 23px;
   max-width:23px;
   min-height: 25px;
   max-height: 25px;
-  margin: 0px 2px 5px 0px;
+  margin: 0px 2px 7px 0px;
 }
 
 /* body */
@@ -120,10 +105,17 @@ mat-icon {
 .ib-main-menu-expanded-body-box {
   height: 244px;
   padding: 16px;
-  background: rgba(64, 64, 64, 0.25);
+  background: rgba(78, 76, 76, 0.25);
   border: 1px solid rgba(144, 144, 144, 0.75);
   border-radius: 8px;
   margin-top: 15px;
+  transition:  background-color .2s, box-shadow .2s;
+}
+.ib-main-menu-expanded-body-box:hover {
+  background: rgb(92,105,253);
+  background: linear-gradient(351deg, rgba(92,105,253,0.28925073447347693) 31%, rgba(92, 105, 253, 0.517) 71%);
+  -webkit-box-shadow:0px 0px 10px -2px rgba(92, 105, 253, 0.755);
+  box-shadow: 0px 0px 10px -2px rgba(92, 105, 253, 0.809);
 }
 .default-box {
   width: 232px;
@@ -151,6 +143,10 @@ mat-icon {
   width:100%;
   margin-top:10px;
 }
+.ib-main-menu-expanded-body-box-secondLevel-bigWrapper {
+  width:100%;
+  margin-top:0px;
+}
 .ib-main-menu-expanded-body-box-secondLevel button {
   width:100%;
   height: 32px;
@@ -161,9 +157,7 @@ mat-icon {
   margin: 1px 0px 0px 0px;
   text-align: left;
 }
-.active-link {
-  background-color:rgba(61, 92, 245, 0.75);
-}
+
 .active-section {
   border: 1px solid rgba(61, 92, 245, 0.75);
 }
@@ -198,6 +192,7 @@ mat-icon {
   background: rgba(144, 144, 144, 0.25);
   border-radius: 8px;
   padding:0px;
+  transition: border-color .2s, box-shadow .2s;
 }
 #ib-main-menu-expanded-footer-support-button-wrapper p {
   font-size: 12px;
@@ -216,3 +211,37 @@ mat-icon {
   color: #FFFFFF;
 }
 
+/* general */
+#ib-main-menu-expanded-header-title-wrapper p,
+#ib-main-menu-expanded-header-closeButton-wrapper button,
+.ib-main-menu-expanded-body-box-firstLevel-box p,
+.ib-main-menu-expanded-body-box-secondLevel button p,
+#ib-main-menu-expanded-footer-support-button-wrapper p,
+#ib-main-menu-expanded-footer-copyright-wrapper p {
+  font-family: 'Montserrat', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px;
+  color: #FFFFFF;
+}
+mat-icon {
+  color: #FFFFFF;
+  font-size: 24px
+}
+#ib-main-menu-expanded-header-closeButton-wrapper button p,
+.ib-main-menu-expanded-body-box-firstLevel-box p,
+.ib-main-menu-expanded-body-box-secondLevel button p {
+  font-size: 14px;
+}
+#ib-main-menu-expanded-header-closeButton-wrapper button:hover,
+#ib-main-menu-expanded-footer-support-button:hover {
+  border-color: rgba(61, 92, 245, 0.75);
+  -webkit-box-shadow:0px 0px 10px -2px rgba(92, 105, 253, 0.755);
+  box-shadow: 0px 0px 10px -2px rgba(92, 105, 253, 0.809);
+}
+.active-link /*
+  secondLevel OR
+  headerRight Buttons OR
+  footerLeft Button */{
+  background-color:rgba(61, 92, 245, 0.75) !important;
+}

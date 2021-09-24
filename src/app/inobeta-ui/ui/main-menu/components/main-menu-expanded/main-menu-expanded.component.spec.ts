@@ -1,14 +1,39 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { RouterTestingModule } from '@angular/router/testing';
+import { IbMainMenuDataSet } from '../../models/main-menu-data-set.model';
 
 import { IbMainMenuExpandedComponent } from './main-menu-expanded.component';
 
 describe('IbMainMenuExpandedComponent', () => {
   let component: IbMainMenuExpandedComponent;
   let fixture: ComponentFixture<IbMainMenuExpandedComponent>;
+  let data: IbMainMenuDataSet = {
+    title: '',
+    upRight: [],
+    navData: [],
+    bottomRight: '',
+    bottomLeft: { link: '', label: '', icon: ''}
+  };
+
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ IbMainMenuExpandedComponent ]
+      declarations: [ IbMainMenuExpandedComponent ],
+      imports: [
+        RouterTestingModule,
+        MatDialogModule
+      ],
+      providers: [
+        {
+          provide: MatDialogRef,
+          useValue: {}
+        },
+        {
+          provide: MAT_DIALOG_DATA,
+          useValue: {}
+        }
+      ]
     })
     .compileComponents();
   });
@@ -16,6 +41,7 @@ describe('IbMainMenuExpandedComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(IbMainMenuExpandedComponent);
     component = fixture.componentInstance;
+    component.navDataSet = data;
     fixture.detectChanges();
   });
 

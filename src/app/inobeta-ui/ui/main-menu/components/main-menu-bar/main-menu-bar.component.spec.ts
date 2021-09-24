@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { IbMainMenuDataSet } from '../../models/main-menu-data-set.model';
 
 import { IbMainMenuBarComponent } from './main-menu-bar.component';
 
@@ -8,7 +10,16 @@ describe('IbMainMenuBarComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ IbMainMenuBarComponent ]
+      declarations: [ IbMainMenuBarComponent ],
+      imports: [
+        MatDialogModule
+      ],
+      providers: [
+        {
+          provide: MatDialogRef,
+          useValue: {}
+        }
+     ],
     })
     .compileComponents();
   });
