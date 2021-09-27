@@ -1,10 +1,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,900&display=swap');
-:root {
-  --color-bckgrnd-box: #5C5C5C;
-  --color-border-box: #909090;
-  --color-text: #FFFFFF;
-}
 
+/* general */
+#ib-main-menu-expanded-header-title-wrapper p,
+#ib-main-menu-expanded-header-closeButton-wrapper button,
+.ib-main-menu-expanded-body-box-firstLevel-box p,
+.ib-main-menu-expanded-body-box-secondLevel button p,
+#ib-main-menu-expanded-footer-support-button-wrapper p,
+#ib-main-menu-expanded-footer-copyright-wrapper p {
+  font-family: 'Montserrat', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px;
+}
+mat-icon {
+  font-size: 24px
+}
+#ib-main-menu-expanded-header-closeButton-wrapper button p,
+.ib-main-menu-expanded-body-box-firstLevel-box p,
+.ib-main-menu-expanded-body-box-secondLevel button p {
+  font-size: 14px;
+}
 
 /* header */
 #ib-main-menu-expanded-header {
@@ -13,8 +28,6 @@
   position: fixed;
   margin: 0 auto;
   z-index: 1;
-  background: rgb(64,64,64);
-  background: linear-gradient(0deg, rgba(64,64,64,0) 0%, rgba(93,93,93,0.8074580173866421) 32%, rgba(64,64,64,0.8074580173866421) 58%);
 }
 #ib-main-menu-expanded-header-wrapper {
   height: 90px;
@@ -27,6 +40,9 @@
   min-width:250px;
   height: 40px;
   margin: 0 auto;
+}
+#ib-main-menu-expanded-header-title-wrapper {
+  padding-left: 10px;
 }
 #ib-main-menu-expanded-header-title-wrapper p {
   height: 32px;
@@ -43,8 +59,8 @@
   max-width: 453px;
   height: 40px;
   border-radius: 20px;
-  border: 1px solid rgba(144, 144, 144, 0.75);
-  background: rgba(64, 64, 64, 0.25);
+  border-width: 1px;
+  border-style: solid;
   transition: border-color .2s, box-shadow .2s;
 }
 
@@ -56,14 +72,13 @@
 }
 #ib-main-menu-expanded-header-settingsLogout-wrapper {
   padding-right: 10px;
-
 }
 #ib-main-menu-expanded-header-settingsLogout-box {
   width: 76px;
   height: 40px;
-  background: rgba(64, 64, 64, 0.25);
-  border: 1px solid rgba(144, 144, 144, 0.75);
   border-radius: 8px;
+  border-width: 1px;
+  border-style: solid;
 }
 #ib-main-menu-expanded-header-settingsLogout-box .mat-button {
   min-width: 32px;
@@ -75,23 +90,17 @@
   transition: background-color .2s;
 }
 
-#ib-main-menu-expanded-header-settingsLogout-box .mat-button:nth-child(1) {
-  background: rgba(144, 144, 144, 0.25);
-}
-#ib-main-menu-expanded-header-settingsLogout-box .mat-button:hover {
-  background-color: rgba(92, 105, 253, 0.802);
-}
 #ib-main-menu-expanded-header-settingsLogout-box .mat-button mat-icon{
   min-width: 23px;
   max-width:23px;
   min-height: 25px;
   max-height: 25px;
-  margin: 0px 2px 7px 0px;
+  margin: 0px 2px 4px 0px;
 }
 
 /* body */
 #ib-main-menu-expanded-body {
-  max-width:999px;
+  max-width: 1010px;
   height:100%;
   margin: 0 auto;
   margin-top:90px;
@@ -105,32 +114,27 @@
 .ib-main-menu-expanded-body-box {
   height: 244px;
   padding: 16px;
-  background: rgba(78, 76, 76, 0.25);
-  border: 1px solid rgba(144, 144, 144, 0.75);
   border-radius: 8px;
+  border-width: 1px;
+  border-style: solid;
   margin-top: 15px;
   transition:  background-color .2s, box-shadow .2s;
 }
-.ib-main-menu-expanded-body-box:hover {
-  background: rgb(92,105,253);
-  background: linear-gradient(351deg, rgba(92,105,253,0.28925073447347693) 31%, rgba(92, 105, 253, 0.517) 71%);
-  -webkit-box-shadow:0px 0px 10px -2px rgba(92, 105, 253, 0.755);
-  box-shadow: 0px 0px 10px -2px rgba(92, 105, 253, 0.809);
-}
-.default-box {
-  width: 232px;
-}
-.big-box {
-  width: 474px;
-}
 .ib-main-menu-expanded-body-box-firstLevel {
   height: 34px;
-  border-bottom: 1.5px solid rgba(255, 255, 255, 0.4);
+  border-bottom-width: 1.5px;
+  border-bottom-style: solid;
+}
+.active-section {
+  border-width: 1px;
+  border-style: solid;
 }
 .ib-main-menu-expanded-body-box-firstLevel button {
   width:100%;
-  height: 34px;
+  height: 32px;
   padding-left: 5px;
+  border-radius: 8px 8px 0px 0px;
+  margin-bottom: 5px;
 }
 .ib-main-menu-expanded-body-box-firstLevel-box mat-icon {
   margin-right: 10px;
@@ -148,7 +152,6 @@
   margin-top:0px;
 }
 .ib-main-menu-expanded-body-box-secondLevel button {
-  width:100%;
   height: 32px;
   border-radius: 8px;
 }
@@ -157,21 +160,18 @@
   margin: 1px 0px 0px 0px;
   text-align: left;
 }
-
-.active-section {
-  border: 1px solid rgba(61, 92, 245, 0.75);
+.ib-main-menu-expanded-body-box-firstLevel button,
+.ib-main-menu-expanded-body-box-secondLevel button {
+  transition: background-color .2s;
 }
-
 /*footer*/
 #ib-main-menu-expanded-footer {
   width: 100%;
-  height: 60px;
+  height: 70px;
   position: fixed;
   margin: 0 auto;
   z-index: 1;
   bottom: 0;
-  background: rgb(64,64,64);
-  background: linear-gradient(0deg, rgba(64,64,64,0.8074580173866421) 28%, rgba(93,93,93,0.8074580173866421) 67%, rgba(64,64,64,0) 100%);
 }
 #ib-main-menu-expanded-footer-wrapper {
   height: 60px;
@@ -188,9 +188,9 @@
 
 #ib-main-menu-expanded-footer-support-button
 {
-  border: 1px solid rgba(144, 144, 144, 0.75);
-  background: rgba(144, 144, 144, 0.25);
   border-radius: 8px;
+  border-width: 1px;
+  border-style: solid;
   padding:0px;
   transition: border-color .2s, box-shadow .2s;
 }
@@ -208,40 +208,4 @@
 #ib-main-menu-expanded-footer-copyright-wrapper p {
   margin: 8px 0px 0px 0px;
   font-weight: 200;
-  color: #FFFFFF;
-}
-
-/* general */
-#ib-main-menu-expanded-header-title-wrapper p,
-#ib-main-menu-expanded-header-closeButton-wrapper button,
-.ib-main-menu-expanded-body-box-firstLevel-box p,
-.ib-main-menu-expanded-body-box-secondLevel button p,
-#ib-main-menu-expanded-footer-support-button-wrapper p,
-#ib-main-menu-expanded-footer-copyright-wrapper p {
-  font-family: 'Montserrat', sans-serif;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 24px;
-  color: #FFFFFF;
-}
-mat-icon {
-  color: #FFFFFF;
-  font-size: 24px
-}
-#ib-main-menu-expanded-header-closeButton-wrapper button p,
-.ib-main-menu-expanded-body-box-firstLevel-box p,
-.ib-main-menu-expanded-body-box-secondLevel button p {
-  font-size: 14px;
-}
-#ib-main-menu-expanded-header-closeButton-wrapper button:hover,
-#ib-main-menu-expanded-footer-support-button:hover {
-  border-color: rgba(61, 92, 245, 0.75);
-  -webkit-box-shadow:0px 0px 10px -2px rgba(92, 105, 253, 0.755);
-  box-shadow: 0px 0px 10px -2px rgba(92, 105, 253, 0.809);
-}
-.active-link /*
-  secondLevel OR
-  headerRight Buttons OR
-  footerLeft Button */{
-  background-color:rgba(61, 92, 245, 0.75) !important;
 }

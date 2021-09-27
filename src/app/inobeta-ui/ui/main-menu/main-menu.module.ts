@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IbMainMenuComponent } from './pages/main-menu.component';
 import { MatIconModule } from '@angular/material/icon';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -9,10 +8,10 @@ import { IbMainMenuBarComponent } from './components/main-menu-bar/main-menu-bar
 import { IbMainMenuExpandedComponent } from './components/main-menu-expanded/main-menu-expanded.component';
 import { IbMainMenuDialogComponent } from './components/main-menu-dialog/main-menu-dialog.component';
 import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [
-    IbMainMenuComponent,
     IbMainMenuBarComponent,
     IbMainMenuDialogComponent,
     IbMainMenuExpandedComponent
@@ -23,10 +22,12 @@ import { RouterModule } from '@angular/router';
     MatDialogModule,
     MatButtonModule,
     FlexLayoutModule,
-    RouterModule
+    RouterModule,
+    TranslateModule.forChild({
+      extend: true
+    }),
   ],
   exports: [
-    IbMainMenuComponent,
     IbMainMenuBarComponent,
     IbMainMenuDialogComponent,
     IbMainMenuExpandedComponent

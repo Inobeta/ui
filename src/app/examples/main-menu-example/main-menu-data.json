@@ -1,302 +1,248 @@
 [
   {
-    "label": "Table",
+    "label": "examples.ibMainMenu.tableMain",
     "icon": "table_rows",
-    "link": "/table",
+    "link": "home/table",
     "paths": [
       {
-        "label": "With redux",
+        "label": "examples.ibMainMenu.tableRedux",
         "icon": "",
-        "link":  "/redux",
-        "paths": []
+        "link":  "/redux"
       },
       {
-        "label": "Without redux" ,
+        "label": "examples.ibMainMenu.tableNoRedux" ,
         "icon": "",
-        "link":  "/noredux",
-        "paths": []
+        "link":  "/noredux"
       },
       {
-        "label": "Sticky",
+        "label": "examples.ibMainMenu.tableSticky",
         "icon": "",
-        "link": "/sticky",
-        "paths": []
+        "link": "/sticky"
       }
     ]
   },
   {
-    "label": "Dynamic forms",
+    "label": "examples.ibMainMenu.dynamicFormsMain",
     "icon": "view_list",
     "link": "/forms",
     "paths": [
       {
-        "label": "Controllo di gestione",
+        "label": "examples.ibMainMenu.dynamicFormsMock1",
         "icon": "",
-        "link": "/none",
-        "paths": []
+        "link": "/none"
       },
       {
-        "label": "Allocazione",
+        "label": "examples.ibMainMenu.dynamicFormsMock2",
         "icon": "",
-        "link": "/none",
-        "paths": []
+        "link": "/none"
       },
       {
-        "label": "Pianificazioe risorsa",
+        "label": "examples.ibMainMenu.dynamicFormsMock3",
         "icon": "",
-        "link": "/none",
-        "paths": []
+        "link": "/none"
       },
       {
-        "label": "Budget",
+        "label": "examples.ibMainMenu.dynamicFormsMock4",
         "icon": "",
-        "link": "/none",
-        "paths": []
+        "link": "/none"
       },
       {
-        "label": "KPI",
+        "label": "examples.ibMainMenu.dynamicFormsMock5",
         "icon": "",
-        "link": "/none",
-        "paths": []
+        "link": "/none"
       }
     ]
   },
   {
-    "label": "Http",
+    "label": "examples.ibMainMenu.httpMain",
     "icon": "http",
     "link": "/http",
     "paths": [
       {
-        "label": "Mensile",
+        "label": "examples.ibMainMenu.httpMock1",
         "icon": "",
-        "link": "/none",
-        "paths": []
+        "link": "/none"
       },
       {
-        "label": "Annuale",
+        "label": "examples.ibMainMenu.httpMock2",
         "icon": "",
-        "link": "/none",
-        "paths": []
+        "link": "/none"
       },
       {
-        "label": "Riepilogo Iva",
+        "label": "examples.ibMainMenu.httpMock3",
         "icon": "",
-        "link": "/none",
-        "paths": []
+        "link": "/none"
       },
       {
-        "label": "Fatture del mese",
+        "label": "examples.ibMainMenu.httpMock4",
         "icon": "",
-        "link": "/none",
-        "paths": []
+        "link": "/none"
       },
       {
-        "label": "Verifica movimenti",
+        "label": "examples.ibMainMenu.httpMock5",
         "icon": "",
-        "link": "/none",
-        "paths": []
+        "link": "/none"
+      },
+      {
+        "label": "examples.ibMainMenu.httpMock6",
+        "icon": "",
+        "link": "/none"
+      },
+      {
+        "label": "examples.ibMainMenu.httpMock7",
+        "icon": "",
+        "link": "/none"
+      },
+      {
+        "label": "examples.ibMainMenu.httpMock8",
+        "icon": "",
+        "link": "/none"
       }
     ]
   },
   {
-    "label": "Redux",
+    "label": "examples.ibMainMenu.reduxMain",
     "icon": "archive",
     "link": "/redux",
     "paths": [
       {
-        "label": "Companies",
+        "label": "examples.ibMainMenu.reduxMock1",
         "icon": "",
-        "link": "/none",
-        "paths": []
+        "link": "/none"
       },
       {
-        "label": "Jobs",
+        "label": "examples.ibMainMenu.reduxMock2",
         "icon": "",
-        "link": "/none",
-        "paths": []
+        "link": "/none"
       },
       {
-        "label": "Activities",
+        "label": "examples.ibMainMenu.reduxMock3",
         "icon": "",
-        "link": "/none",
-        "paths": []
+        "link": "/none"
       },
       {
-        "label": "Centri di costo",
+        "label": "examples.ibMainMenu.reduxMock4",
         "icon": "",
-        "link": "/none",
-        "paths": []
+        "link": "/none"
       },
       {
-        "label": "Conti correnti",
+        "label": "examples.ibMainMenu.reduxMock5",
         "icon": "",
-        "link": "/none",
-        "paths": []
-      },
-      {
-        "label": "Users",
-        "icon": "",
-        "link": "/none",
-        "paths": []
-      },
-      {
-        "label": "Settings",
-        "icon": "",
-        "link": "/none",
-        "paths": []
-      },
-      {
-        "label": "Autorizzazioni utenti",
-        "icon": "",
-        "link": "/none",
-        "paths": []
+        "link": "/none"
       }
     ]
   },
   {
-    "label": "Dialog",
+    "label": "examples.ibMainMenu.dialogMain",
     "icon": "announcement",
     "link": "/dialog",
     "paths": [
       {
-        "label": "Companies",
+        "label": "examples.ibMainMenu.dialogMock1",
         "icon": "",
-        "link": "/none",
-        "paths": []
+        "link": "/none"
       },
       {
-        "label": "Jobs",
+        "label": "examples.ibMainMenu.dialogMock2",
         "icon": "",
-        "link": "/none",
-        "paths": []
+        "link": "/none"
       },
       {
-        "label": "Activities",
+        "label": "examples.ibMainMenu.dialogMock3",
         "icon": "",
-        "link": "/none",
-        "paths": []
+        "link": "/none"
       },
       {
-        "label": "Centri di costo",
+        "label": "examples.ibMainMenu.dialogMock4",
         "icon": "",
-        "link": "/none",
-        "paths": []
-      },
-      {
-        "label": "Conti correnti",
-        "icon": "",
-        "link": "/none",
-        "paths": []
-      },
-      {
-        "label": "Users",
-        "icon": "",
-        "link": "/none",
-        "paths": []
-      },
-      {
-        "label": "Settings",
-        "icon": "",
-        "link": "/none",
-        "paths": []
-      },
-      {
-        "label": "Autorizzazioni utenti",
-        "icon": "",
-        "link": "/none",
-        "paths": []
+        "link": "/none"
       }
     ]
   },
   {
-    "label": "Toast",
+    "label": "examples.ibMainMenu.toastMain",
     "icon": "breakfast_dining",
-    "link": "/toast",
-    "paths": [
-      {
-        "label": "Companies",
-        "icon": "",
-        "link": "/none",
-        "paths": []
-      },
-      {
-        "label": "Jobs",
-        "icon": "",
-        "link": "/none",
-        "paths": []
-      },
-      {
-        "label": "Activities",
-        "icon": "",
-        "link": "/none",
-        "paths": []
-      },
-      {
-        "label": "Centri di costo",
-        "icon": "",
-        "link": "/none",
-        "paths": []
-      },
-      {
-        "label": "Conti correnti",
-        "icon": "",
-        "link": "/none",
-        "paths": []
-      },
-      {
-        "label": "Users",
-        "icon": "",
-        "link": "/none",
-        "paths": []
-      },
-      {
-        "label": "Settings",
-        "icon": "",
-        "link": "/none",
-        "paths": []
-      },
-      {
-        "label": "Autorizzazioni utenti",
-        "icon": "",
-        "link": "/none",
-        "paths": []
-      }
-    ]
-  },
-   {
-    "label": "Team",
-    "icon": "groups",
     "link": "/none",
     "paths": [
       {
-        "label": "Luca P.",
+        "label": "examples.ibMainMenu.toastMock1",
         "icon": "",
-        "link": "/none",
-        "paths": []
+        "link": "/none"
       },
       {
-        "label": "Salvatore",
+        "label": "examples.ibMainMenu.toastMock2",
         "icon": "",
-        "link": "/none",
-        "paths": []
+        "link": "/none"
       },
       {
-        "label": "Jacopo",
+        "label": "examples.ibMainMenu.toastMock3",
         "icon": "",
-        "link": "/none",
-        "paths": []
+        "link": "/none"
       },
       {
-        "label": "Luca C.",
+        "label": "examples.ibMainMenu.toastMock4",
         "icon": "",
-        "link": "/none",
-        "paths": []
+        "link": "/none"
       },
       {
-        "label": "Roberto",
+        "label": "examples.ibMainMenu.toastMock5",
         "icon": "",
-        "link": "/none",
-        "paths": []
+        "link": "/none"
+      },
+      {
+        "label": "examples.ibMainMenu.toastMock6",
+        "icon": "",
+        "link": "/none"
+      },
+      {
+        "label": "examples.ibMainMenu.toastMock7",
+        "icon": "",
+        "link": "/none"
+      },
+      {
+        "label": "examples.ibMainMenu.toastMock8",
+        "icon": "",
+        "link": "/none"
+      },
+      {
+        "label": "examples.ibMainMenu.toastMock8",
+        "icon": "",
+        "link": "/none"
+      },
+      {
+        "label": "examples.ibMainMenu.toastMock8",
+        "icon": "",
+        "link": "/none"
+      },
+      {
+        "label": "examples.ibMainMenu.toastMock8",
+        "icon": "",
+        "link": "/none"
+      },
+      {
+        "label": "examples.ibMainMenu.toastMock8",
+        "icon": "",
+        "link": "/none"
+      },
+      {
+        "label": "examples.ibMainMenu.toastMock8",
+        "icon": "",
+        "link": "/none"
+      },
+      {
+        "label": "examples.ibMainMenu.toastMock8",
+        "icon": "",
+        "link": "/none"
+      },
+      {
+        "label": "examples.ibMainMenu.toastMock8",
+        "icon": "",
+        "link": "/none"
+      },
+      {
+        "label": "examples.ibMainMenu.toastMock8",
+        "icon": "",
+        "link": "/none"
       }
     ]
   }

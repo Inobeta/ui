@@ -2,8 +2,7 @@
    {
     "label": "Inomanager",
     "icon": "settings",
-    "link": "/welcome",
-    "paths": []
+    "link": "/welcome"
   },
   {
     "label": "Scarico Ore",
@@ -13,32 +12,27 @@
       {
         "label": "Scarico ore",
         "icon": "settings",
-        "link":  "/redux",
-        "paths": []
+        "link":  "/redux"
       },
       {
         "label": "Storico" ,
         "icon": "settings",
-        "link":  "/noredux",
-        "paths": []
+        "link":  "/noredux"
       },
       {
         "label": "Ferie",
         "icon": "settings",
-        "link": "/ferie",
-        "paths": []
+        "link": "/ferie"
       },
       {
         "label": "Straordinari",
         "icon": "settings",
-        "link": "/strardinari",
-        "paths": []
+        "link": "/strardinari"
       },
       {
         "label": "Strumenti",
         "icon": "settings",
-        "link": "/strumenti",
-        "paths": []
+        "link": "/strumenti"
       }
     ]
   },
@@ -50,32 +44,27 @@
       {
         "label": "Controllo di gestione",
         "icon": "settings",
-        "link": "/riepilogo_risorsa",
-        "paths": []
+        "link": "/riepilogo_risorsa"
       },
       {
         "label": "Allocazione",
         "icon": "settings",
-        "link": "/allocazione_risorsa",
-        "paths": []
+        "link": "/allocazione_risorsa"
       },
       {
         "label": "Pianificazioe risorsa",
         "icon": "settings",
-        "link": "/nuova_allocazione_risorsa",
-        "paths": []
+        "link": "/nuova_allocazione_risorsa"
       },
       {
         "label": "Budget",
         "icon": "settings",
-        "link": "/budget",
-        "paths": []
+        "link": "/budget"
       },
       {
         "label": "KPI",
         "icon": "settings",
-        "link": "/kpi_stima",
-        "paths": []
+        "link": "/kpi_stima"
       }
     ]
   },
@@ -87,32 +76,27 @@
       {
         "label": "Mensile",
         "icon": "settings",
-        "link": "/mensile",
-        "paths": []
+        "link": "/mensile"
       },
       {
         "label": "Annuale",
         "icon": "settings",
-        "link": "/annuale",
-        "paths": []
+        "link": "/annuale"
       },
       {
         "label": "riepilogo Iva",
         "icon": "settings",
-        "link": "/riepilogo_iva",
-        "paths": []
+        "link": "/riepilogo_iva"
       },
       {
         "label": "fatture del mese",
         "icon": "settings",
-        "link": "/fatture_mese",
-        "paths": []
+        "link": "/fatture_mese"
       },
       {
         "label": "Verifica movimenti",
         "icon": "settings",
-        "link": "/verifica_movimenti/storico_csv",
-        "paths": []
+        "link": "/verifica_movimenti/storico_csv"
       }
     ]
   },
@@ -124,50 +108,42 @@
       {
         "label": "Companies",
         "icon": "settings",
-        "link": "/redux",
-        "paths": []
+        "link": "/redux"
       },
       {
         "label": "Jobs",
         "icon": "settings",
-        "link": "/jobs",
-        "paths": []
+        "link": "/jobs"
       },
       {
         "label": "Activities",
         "icon": "settings",
-        "link": "/activities",
-        "paths": []
+        "link": "/activities"
       },
       {
         "label": "Centri di costo",
         "icon": "settings",
-        "link": "/centri_costo",
-        "paths": []
+        "link": "/centri_costo"
       },
       {
         "label": "Conti correnti",
         "icon": "settings",
-        "link": "/conti_correnti",
-        "paths": []
+        "link": "/conti_correnti"
       },
       {
         "label": "Users",
         "icon": "settings",
-        "link": "/users",
-        "paths": []
+        "link": "/users"
       },
       {
         "label": "Settings",
         "icon": "settings",
-        "link": "/redux",
-        "paths": []
+        "link": "/redux"
       },
       {
         "label": "Autorizzazioni utenti",
         "icon": "settings",
-        "link": "/user_permissions",
-        "paths": []
+        "link": "/user_permissions"
       }
     ]
   },
@@ -179,50 +155,42 @@
       {
         "label": "Companies",
         "icon": "settings",
-        "link": "/redux",
-        "paths": []
+        "link": "/redux"
       },
       {
         "label": "Jobs",
         "icon": "settings",
-        "link": "/jobs",
-        "paths": []
+        "link": "/jobs"
       },
       {
         "label": "Activities",
         "icon": "settings",
-        "link": "/activities",
-        "paths": []
+        "link": "/activities"
       },
       {
         "label": "Centri di costo",
         "icon": "settings",
-        "link": "/centri_costo",
-        "paths": []
+        "link": "/centri_costo"
       },
       {
         "label": "Conti correnti",
         "icon": "settings",
-        "link": "/conti_correnti",
-        "paths": []
+        "link": "/conti_correnti"
       },
       {
         "label": "Users",
         "icon": "settings",
-        "link": "/users",
-        "paths": []
+        "link": "/users"
       },
       {
         "label": "Settings",
         "icon": "settings",
-        "link": "/redux",
-        "paths": []
+        "link": "/redux"
       },
       {
         "label": "Autorizzazioni utenti",
         "icon": "settings",
-        "link": "/user_permissions",
-        "paths": []
+        "link": "/user_permissions"
       }
     ]
   },
@@ -234,50 +202,42 @@
       {
         "label": "Companies",
         "icon": "settings",
-        "link": "/redux",
-        "paths": []
+        "link": "/redux"
       },
       {
         "label": "Jobs",
         "icon": "settings",
-        "link": "/jobs",
-        "paths": []
+        "link": "/jobs"
       },
       {
         "label": "Activities",
         "icon": "settings",
-        "link": "/activities",
-        "paths": []
+        "link": "/activities"
       },
       {
         "label": "Centri di costo",
         "icon": "settings",
-        "link": "/centri_costo",
-        "paths": []
+        "link": "/centri_costo"
       },
       {
         "label": "Conti correnti",
         "icon": "settings",
-        "link": "/conti_correnti",
-        "paths": []
+        "link": "/conti_correnti"
       },
       {
         "label": "Users",
         "icon": "settings",
-        "link": "/users",
-        "paths": []
+        "link": "/users"
       },
       {
         "label": "Settings",
         "icon": "settings",
-        "link": "/redux",
-        "paths": []
+        "link": "/redux"
       },
       {
         "label": "Autorizzazioni utenti",
         "icon": "settings",
-        "link": "/user_permissions",
-        "paths": []
+        "link": "/user_permissions"
       }
     ]
   },
@@ -289,50 +249,42 @@
       {
         "label": "Companies",
         "icon": "settings",
-        "link": "/redux",
-        "paths": []
+        "link": "/redux"
       },
       {
         "label": "Jobs",
         "icon": "settings",
-        "link": "/jobs",
-        "paths": []
+        "link": "/jobs"
       },
       {
         "label": "Activities",
         "icon": "settings",
-        "link": "/activities",
-        "paths": []
+        "link": "/activities"
       },
       {
         "label": "Centri di costo",
         "icon": "settings",
-        "link": "/centri_costo",
-        "paths": []
+        "link": "/centri_costo"
       },
       {
         "label": "Conti correnti",
         "icon": "settings",
-        "link": "/conti_correnti",
-        "paths": []
+        "link": "/conti_correnti"
       },
       {
         "label": "Users",
         "icon": "settings",
-        "link": "/users",
-        "paths": []
+        "link": "/users"
       },
       {
         "label": "Settings",
         "icon": "settings",
-        "link": "/redux",
-        "paths": []
+        "link": "/redux"
       },
       {
         "label": "Autorizzazioni utenti",
         "icon": "settings",
-        "link": "/user_permissions",
-        "paths": []
+        "link": "/user_permissions"
       }
     ]
   }

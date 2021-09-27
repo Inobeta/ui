@@ -14,7 +14,8 @@ import { IbMainMenuDialogComponent } from '../main-menu-dialog/main-menu-dialog.
 })
 export class IbMainMenuBarComponent implements OnInit {
 
-  @Input() navData : IbMainMenuData[];
+  @Input() barIcon: string;
+  @Input() navData: IbMainMenuData[];
   @Input() navTitle: string;
   @Input() navButtonsUpRight: IbMainMenuButton[];
   @Input() navButtonBottomRight: string;

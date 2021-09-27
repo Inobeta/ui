@@ -20,4 +20,16 @@ export class IbMainMenuExpandedComponent implements OnInit{
 
   closeDialog() { this.dialogRef.close();}
 
+  calcBoxWidth(numElements) {
+    let cost = Math.ceil(numElements/5);
+    let width = cost * 232;
+    numElements > 5 ? width = width + 10*cost*0.75 : null;
+    return width + 'px';
+
+  }
+
+  calcSecondLevelWidth(numElements){
+    return 100/Math.ceil(numElements/5) + '%';
+  }
+
 }

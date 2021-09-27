@@ -2,6 +2,7 @@
 @mixin inobeta-ui-theme($theme-or-color-config){
   @include mat.all-component-themes($theme-or-color-config);
   @include ib-table($theme-or-color-config);
+  @include ib-main-menu();
 }
 
 
@@ -114,21 +115,198 @@ div[ib-mat-slide-toggle]{
   align-items: center;
 }
 
+
+@mixin ib-main-menu() {
+  $ib-main-menu-main: (
+    50 : #e7e7e7,
+    100 : #c3c3c3,
+    200 : #9c9c9c,
+    300 : #747474,
+    400 : #565656,
+    500 : #383838,
+    600 : #323232,
+    700 : #2b2b2b,
+    800 : #242424,
+    900 : #171717,
+    A100 : #ef7171,
+    A200 : #ea4343,
+    A400 : #fa0000,
+    A700 : #FFFFFF,
+    contrast: (
+      50 : #000000,
+      100 : #000000,
+      200 : #000000,
+      300 : #ffffff,
+      400 : #ffffff,
+      500 : #ffffff,
+      600 : #ffffff,
+      700 : #ffffff,
+      800 : #ffffff,
+      900 : #ffffff,
+      A100 : #000000,
+      A200 : #ffffff,
+      A400 : #ffffff,
+      A700 : #ffffff,
+    )
+  );
+  $ib-main-menu-active: (
+    50 : #e8ebfe,
+    100 : #c5cefc,
+    200 : #9eaefa,
+    300 : #778df8,
+    400 : #5a74f7,
+    500 : #3d5cf5,
+    600 : #3754f4,
+    700 : #2f4af2,
+    800 : #2741f0,
+    900 : #1a30ee,
+    A100 : #ffffff,
+    A200 : #edefff,
+    A400 : #bac0ff,
+    A700 : #a1a9ff,
+    contrast: (
+      50 : #000000,
+      100 : #000000,
+      200 : #000000,
+      300 : #000000,
+      400 : #ffffff,
+      500 : #ffffff,
+      600 : #ffffff,
+      700 : #ffffff,
+      800 : #ffffff,
+      900 : #ffffff,
+      A100 : #000000,
+      A200 : #000000,
+      A400 : #000000,
+      A700 : #000000,
+    )
+);
+
 /* ib-main-menu dialog custom class */
+
 .mat-dialog-container-for-ib-main-menu .mat-dialog-container {
-  background: #4040408c;
+  background: rgba(mat.get-color-from-palette($ib-main-menu-main, 500), .50);
   backdrop-filter: blur(10px);
   animation: open .2s linear 0s;
   height: 100%;
   padding: 0px !important;
 }
+
 @keyframes open {
   from { backdrop-filter: blur(0px)}
   to { backdrop-filter: blur(10px)}
 }
+
 .mat-dialog-container-for-ib-main-menu .mat-dialog-container .mat-dialog-content {
   min-height: 100%;
   max-width: 100%;
   margin: 0px;
   padding: 0px;
+}
+
+/* Header */
+
+#ib-main-menu-expanded-header {
+  background: mat.get-color-from-palette($ib-main-menu-main, 700);
+  background:
+    linear-gradient(0deg, rgba(mat.get-color-from-palette($ib-main-menu-main, 500), 0) 0%,
+    rgba(mat.get-color-from-palette($ib-main-menu-main, 400), .807) 32%,
+    rgba(mat.get-color-from-palette($ib-main-menu-main, 500), .707) 58%);
+}
+
+#ib-main-menu-expanded-header-closeButton-wrapper button {
+  border-color: rgba(mat.get-color-from-palette($ib-main-menu-main, 200), .75);
+  background: rgba(mat.get-color-from-palette($ib-main-menu-main, 700), .25);
+}
+
+#ib-main-menu-expanded-header-settingsLogout-box {
+  background: rgba(mat.get-color-from-palette($ib-main-menu-main, 500), .25);
+  border-color: rgba(mat.get-color-from-palette($ib-main-menu-main, 200), .75);
+}
+
+#ib-main-menu-expanded-header-settingsLogout-box .mat-button:nth-child(1) {
+  background: rgba(mat.get-color-from-palette($ib-main-menu-main, 300), .7);
+}
+
+#ib-main-menu-expanded-header-settingsLogout-box .mat-button:hover {
+  background-color: mat.get-color-from-palette($ib-main-menu-active, 500);
+}
+
+/* Body */
+
+.ib-main-menu-expanded-body-box {
+  background:  rgba(mat.get-color-from-palette($ib-main-menu-main, 700), .25);
+  border-color: rgba(mat.get-color-from-palette($ib-main-menu-main, 200), .75);
+}
+
+.ib-main-menu-expanded-body-box:hover {
+  -moz-box-shadow: 0px 0px 10px -2px
+  rgba(mat.get-color-from-palette($ib-main-menu-active, 400), .755);
+  -webkit-box-shadow: 0px 0px 10px -2px
+    rgba(mat.get-color-from-palette($ib-main-menu-active, 400), .755);
+  box-shadow: 0px 0px 10px -2px
+    rgba(mat.get-color-from-palette($ib-main-menu-active, 400), .755);
+}
+
+.ib-main-menu-expanded-body-box-firstLevel {
+  border-bottom-color: rgba(mat.get-color-from-palette($ib-main-menu-main, 200), .75);
+}
+
+.ib-main-menu-expanded-body-box-firstLevel button:hover,
+.inactive-row:hover {
+  background:  rgba(mat.get-color-from-palette($ib-main-menu-main, 700), .25);
+}
+
+.active-section {
+  border-color: rgba(mat.get-color-from-palette($ib-main-menu-active, 500), .75);
+  -moz-box-shadow: 0px 0px 6px -2px
+    rgba(mat.get-color-from-palette($ib-main-menu-active, 400), .755);
+  -webkit-box-shadow: 0px 0px 6px -2px
+    rgba(mat.get-color-from-palette($ib-main-menu-active, 400), .755);
+  box-shadow: 0px 0px 6px -2px
+    rgba(mat.get-color-from-palette($ib-main-menu-active, 400), .755);
+}
+
+.active-row {
+  background-color: mat.get-color-from-palette($ib-main-menu-active, 500);
+}
+
+/* Footer */
+
+#ib-main-menu-expanded-footer {
+  background: mat.get-color-from-palette($ib-main-menu-main, 700);
+  background:
+    linear-gradient(180deg, rgba(mat.get-color-from-palette($ib-main-menu-main, 500), 0) 0%,
+    rgba(mat.get-color-from-palette($ib-main-menu-main, 400), .907) 75%,
+    rgba(mat.get-color-from-palette($ib-main-menu-main, 500), .907) 100%);
+}
+
+#ib-main-menu-expanded-footer-support-button {
+  border-color: rgba(mat.get-color-from-palette($ib-main-menu-main, 200), .75);
+  background: rgba(mat.get-color-from-palette($ib-main-menu-main, 500), .55);
+}
+
+/* Common */
+
+#ib-main-menu-expanded-header-title-wrapper p,
+#ib-main-menu-expanded-header-closeButton-wrapper button,
+.ib-main-menu-expanded-body-box-firstLevel-box p,
+.ib-main-menu-expanded-body-box-secondLevel button p,
+#ib-main-menu-expanded-footer-support-button-wrapper p,
+#ib-main-menu-expanded-footer-copyright-wrapper p,
+mat-icon {
+  color: mat.get-color-from-palette($ib-main-menu-main, A700);
+}
+
+#ib-main-menu-expanded-header-closeButton-wrapper button:hover,
+#ib-main-menu-expanded-footer-support-button:hover {
+  border-color: rgba(mat.get-color-from-palette($ib-main-menu-active, 400), .755);
+  -moz-box-shadow: 0px 0px 6px -2px
+    rgba(mat.get-color-from-palette($ib-main-menu-active, 400), .755);
+  -webkit-box-shadow: 0px 0px 6px -2px
+    rgba(mat.get-color-from-palette($ib-main-menu-active, 400), .755);
+  box-shadow: 0px 0px 6px -2px
+    rgba(mat.get-color-from-palette($ib-main-menu-active, 400), .755);
+}
+
 }

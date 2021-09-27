@@ -1,14 +1,8 @@
-#ib-main-menu-wrapper {
-  height:50px;
-  border-bottom: 1px solid grey;
-  border-top: 1px solid grey;
-}
 .ib-main-menu-box {
   height:36px;
   margin: 7px 0px 7px 0px;
   padding-left: 5px;
 }
-.ib-main-menu-box h3,
 .ib-main-menu-box button,
 .ib-main-menu-box button mat-icon {
   height:36px;
@@ -24,9 +18,5 @@
 }
 .ib-main-menu-box mat-icon {
   font-size: 36px;
-}
-.ib-main-menu-box h3 {
-  font-size: 24px;
-  font-weight: 500;
 }
 

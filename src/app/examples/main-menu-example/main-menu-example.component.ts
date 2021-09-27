@@ -6,34 +6,36 @@ import * as mainMenuData from './main-menu-data.json';
 @Component({
   selector: 'ib-main-menu-example',
   template: `
-    <ib-main-menu
+    <ib-main-menu-bar
+      [barIcon]="exMenuIconBar"
       [navData]="exNavData"
-      [appTitle]="exAppTitle"
-      [navUpRight]="exNavUpRight"
+      [navTitle]="exAppTitle"
+      [navButtonsUpRight]="exNavUpRight"
       [navBottomLeft]="exNavBottomLeft"
-      [navBottomRight]="exNavBottomRight"
-    ></ib-main-menu>`
+      [navButtonBottomRight]="exNavBottomRight"
+    ></ib-main-menu-bar>`
 })
 export class IbMainMenuExampleComponent implements OnInit {
-   exNavData: IbMainMenuData[] = (mainMenuData as any).default;
-   exAppTitle: string = 'DevKit';
-   exNavUpRight: IbMainMenuButton[] = [{
-      label: "settings",
+  exMenuIconBar: string = 'apps';
+  exNavData: IbMainMenuData[] = (mainMenuData as any).default;
+  exAppTitle: string = 'examples.ibMainMenu.title';
+  exNavUpRight: IbMainMenuButton[] = [{
+      label: "examples.ibMainMenu.settings",
       icon: "settings",
       link: "/forms"
     },
     {
-      label: "logout",
+      label: "examples.ibMainMenu.logout",
       icon: "logout",
       link: "/table"
     }
   ];
    exNavBottomLeft: IbMainMenuButton = {
-    label: "Richiedi assistenza",
+    label: "examples.ibMainMenu.getHelp",
     icon: "help_outline",
     link: "/table"
   };
-   exNavBottomRight: string = '© Inobeta 2021'
+   exNavBottomRight: string = 'examples.ibMainMenu.copyright'
   constructor() { }
 
   ngOnInit() {

@@ -115,6 +115,9 @@
       "authFailure": "Errore: autenticazione non riuscita",
       "genericFailure": "Errore: operazione non riuscita"
     },
+    "ibMainMenu": {
+      "returnToDash": "Ritorna alla Dashboard"
+    },
     "profile": {
       "name": "Nome",
       "surname": "Cognome",
@@ -140,6 +143,58 @@
   "examples": {
     "toastMenu": "Toast",
     "toastMessage": "Messaggio toast",
-    "customErrorMessageExample": "Il valore di questo campo deve essere \"{{forcedValue}}\""
+    "customErrorMessageExample": "Il valore di questo campo deve essere \"{{forcedValue}}\"",
+    "ibMainMenu":{
+      "title": "DevKit",
+      "copyright": "© Inobeta 2021",
+      "getHelp": "Richiedi assistenza",
+      "settings": "Settings",
+      "logout": "Logout",
+
+      "tableMain": "Table",
+      "tableRedux": "With redux",
+      "tableNoRedux": "Without redux",
+      "tableSticky": "Sticky",
+
+      "dynamicFormsMain": "Dynamic forms",
+      "dynamicFormsMock1": "DF Mock 1",
+      "dynamicFormsMock2": "DF Mock 2",
+      "dynamicFormsMock3": "DF Mock 3",
+      "dynamicFormsMock4": "DF Mock 4",
+      "dynamicFormsMock5": "DF Mock 5",
+
+      "httpMain": "Http",
+      "httpMock1": "Http Mock 1",
+      "httpMock2": "Http Mock 2",
+      "httpMock3": "Http Mock 3",
+      "httpMock4": "Http Mock 4",
+      "httpMock5": "Http Mock 5",
+      "httpMock6": "Http Mock 6",
+      "httpMock7": "Http Mock 7",
+      "httpMock8": "Http Mock 8",
+
+      "reduxMain": "Redux",
+      "reduxMock1": "Redux Mock 1",
+      "reduxMock2": "Redux Mock 2",
+      "reduxMock3": "Redux Mock 3",
+      "reduxMock4": "Redux Mock 4",
+      "reduxMock5": "Redux Mock 5",
+
+      "dialogMain": "Dialog",
+      "dialogMock1": "Dialog Mock 1",
+      "dialogMock2": "Dialog Mock 2",
+      "dialogMock3": "Dialog Mock 3",
+      "dialogMock4": "Dialog Mock 4",
+
+      "toastMain": "Toast",
+      "toastMock1": "Toast Mock 1",
+      "toastMock2": "Toast Mock 2",
+      "toastMock3": "Toast Mock 3",
+      "toastMock4": "Toast Mock 4",
+      "toastMock5": "Toast Mock 5",
+      "toastMock6": "Toast Mock 6",
+      "toastMock7": "Toast Mock 7",
+      "toastMock8": "Toast Mock 8"
+    }
   }
 }
