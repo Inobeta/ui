@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,900&display=swap');
 
 /* general */
+
 #ib-main-menu-expanded-header-title-wrapper p,
 #ib-main-menu-expanded-header-closeButton-wrapper button,
 .ib-main-menu-expanded-body-box-firstLevel-box p,
@@ -12,9 +13,11 @@
   font-weight: 500;
   line-height: 24px;
 }
+
 mat-icon {
   font-size: 24px
 }
+
 #ib-main-menu-expanded-header-closeButton-wrapper button p,
 .ib-main-menu-expanded-body-box-firstLevel-box p,
 .ib-main-menu-expanded-body-box-secondLevel button p {
@@ -22,6 +25,7 @@ mat-icon {
 }
 
 /* header */
+
 #ib-main-menu-expanded-header {
   width: 100%;
   height: 90px;
@@ -29,31 +33,37 @@ mat-icon {
   margin: 0 auto;
   z-index: 1;
 }
+
 #ib-main-menu-expanded-header-wrapper {
   height: 90px;
   width: 100%;
   max-width: 1100px;
   margin: 0 auto;
 }
+
 #ib-main-menu-expanded-header-title-wrapper,
 #ib-main-menu-expanded-header-settingsLogout-wrapper {
   min-width:250px;
   height: 40px;
   margin: 0 auto;
 }
+
 #ib-main-menu-expanded-header-title-wrapper {
   padding-left: 10px;
 }
+
 #ib-main-menu-expanded-header-title-wrapper p {
   height: 32px;
   font-size: 36px;
   margin: 0;
 }
+
 #ib-main-menu-expanded-header-closeButton-wrapper {
   width: 100%;
   margin: 0 auto;
 
 }
+
 #ib-main-menu-expanded-header-closeButton-wrapper button {
   min-width: 256px;
   max-width: 453px;
@@ -65,14 +75,17 @@ mat-icon {
 }
 
 #ib-main-menu-expanded-header-closeButton-wrapper button div{
-  height: 40px;
+  height: 38px;
 }
+
 #ib-main-menu-expanded-header-closeButton-wrapper button div p {
   margin: 0;
 }
+
 #ib-main-menu-expanded-header-settingsLogout-wrapper {
   padding-right: 10px;
 }
+
 #ib-main-menu-expanded-header-settingsLogout-box {
   width: 76px;
   height: 40px;
@@ -80,6 +93,7 @@ mat-icon {
   border-width: 1px;
   border-style: solid;
 }
+
 #ib-main-menu-expanded-header-settingsLogout-box .mat-button {
   min-width: 32px;
   max-width:32px;
@@ -95,10 +109,11 @@ mat-icon {
   max-width:23px;
   min-height: 25px;
   max-height: 25px;
-  margin: 0px 2px 4px 0px;
+  margin: 0px 1px 5px 0px;
 }
 
 /* body */
+
 #ib-main-menu-expanded-body {
   max-width: 1010px;
   height:100%;
@@ -106,11 +121,13 @@ mat-icon {
   margin-top:90px;
   padding-bottom: 90px;
 }
+
 #ib-main-menu-expanded-body-wrapper {
   max-width: 99%;
   height:100%;
   margin: 0 auto;
 }
+
 .ib-main-menu-expanded-body-box {
   height: 244px;
   padding: 16px;
@@ -120,15 +137,18 @@ mat-icon {
   margin-top: 15px;
   transition:  background-color .2s, box-shadow .2s;
 }
+
 .ib-main-menu-expanded-body-box-firstLevel {
   height: 34px;
   border-bottom-width: 1.5px;
   border-bottom-style: solid;
 }
+
 .active-section {
   border-width: 1px;
   border-style: solid;
 }
+
 .ib-main-menu-expanded-body-box-firstLevel button {
   width:100%;
   height: 32px;
@@ -136,54 +156,70 @@ mat-icon {
   border-radius: 8px 8px 0px 0px;
   margin-bottom: 5px;
 }
+
 .ib-main-menu-expanded-body-box-firstLevel-box mat-icon {
   margin-right: 10px;
 }
+
 .ib-main-menu-expanded-body-box-firstLevel-box p {
   height: 24px;
   margin: 0;
 }
+
 .ib-main-menu-expanded-body-box-secondLevel {
   width:100%;
   margin-top:10px;
 }
+
 .ib-main-menu-expanded-body-box-secondLevel-bigWrapper {
   width:100%;
   margin-top:0px;
 }
+
 .ib-main-menu-expanded-body-box-secondLevel button {
   height: 32px;
   border-radius: 8px;
 }
+
 .ib-main-menu-expanded-body-box-secondLevel button p {
   height: 24px;
   margin: 1px 0px 0px 0px;
   text-align: left;
 }
+
 .ib-main-menu-expanded-body-box-firstLevel button,
 .ib-main-menu-expanded-body-box-secondLevel button {
   transition: background-color .2s;
 }
+
 /*footer*/
+
 #ib-main-menu-expanded-footer {
   width: 100%;
   height: 70px;
   position: fixed;
   margin: 0 auto;
+  padding: 0px 10px 0px 10px;
   z-index: 1;
   bottom: 0;
 }
+
 #ib-main-menu-expanded-footer-wrapper {
   height: 60px;
   width: 100%;
   max-width: 1100px;
   margin: 0 auto;
 }
+
 #ib-main-menu-expanded-footer-support-button,
-#ib-main-menu-expanded-footer-support-button-wrapper,
 #ib-main-menu-expanded-footer-copyright-wrapper {
   width: 166px;
   height: 32px;
+}
+
+#ib-main-menu-expanded-footer-support-button-wrapper {
+  width: 164px;
+  height: 28px;
 }
 
 #ib-main-menu-expanded-footer-support-button
@@ -194,18 +230,22 @@ mat-icon {
   padding:0px;
   transition: border-color .2s, box-shadow .2s;
 }
+
 #ib-main-menu-expanded-footer-support-button-wrapper p {
   font-size: 12px;
-  margin: 0;
-  height: 22px;
+  margin: 0px 0px 4px 0px;
+  height: 20px;
 }
+
 #ib-main-menu-expanded-footer-support-button-wrapper mat-icon {
   font-size: 18px;
   width: 18px;
   height: 18px;
-  margin: 3px 10px 0px 0px;
+  margin: 0px 10px 0px 0px;
 }
+
 #ib-main-menu-expanded-footer-copyright-wrapper p {
   margin: 8px 0px 0px 0px;
   font-weight: 200;
+  text-align: right;
 }

@@ -1,4 +1,5 @@
-  <!--header---------------------------------------------------------------------->
+<!--header---------------------------------------------------------------------->
+
 <div id="ib-main-menu-expanded-header" fxLayout="row" fxLayoutAlign="space-between center">
   <div id="ib-main-menu-expanded-header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
     <div id="ib-main-menu-expanded-header-title-wrapper" fxLayout="row" fxLayoutAlign="start center">
@@ -17,7 +18,7 @@
         <button mat-button *ngFor="let upRight of navDataSet.upRight"
           [routerLink]="[upRight.link]"
           routerLinkActive #rla="routerLinkActive"
-          class="{{rla.isActive? 'active-link' : null}}"
+          class="{{rla.isActive? 'active-header-footer-button' : null}}"
           (click)="closeDialog()"
         >
           <mat-icon>
@@ -28,23 +29,26 @@
     </div>
   </div>
 </div>
-  <!--body---------------------------------------------------------------------->
+
+<!--body---------------------------------------------------------------------->
+
 <div id="ib-main-menu-expanded-body">
   <div id="ib-main-menu-expanded-body-wrapper" fxLayout="row wrap"  fxLayoutAlign="space-evenly center" >
     <ng-container *ngFor="let firstLevel of navDataSet.navData">
-      <!--box-->
+  <!--box-->
       <div
-        [routerLink]="[firstLevel.link]"
-        routerLinkActive #rlas="routerLinkActive"
-        class="{{rlas.isActive? 'ib-main-menu-expanded-body-box big-box active-section':  'ib-main-menu-expanded-body-box big-box' }}"
+        routerLinkActive
+        #rlaSection="routerLinkActive"
+        class="{{rlaSection.isActive? 'ib-main-menu-expanded-body-box active-box-ie-firstLevel':  'ib-main-menu-expanded-body-box' }}"
         [ngStyle]="{
           'width': calcBoxWidth(firstLevel.paths.length)
         }"
       >
-        <!--firstLevel-->
+
+    <!--firstLevel-->
         <div class="ib-main-menu-expanded-body-box-firstLevel">
           <button mat-button
-            [routerLink]="[firstLevel.link]"
+            routerLink="{{firstLevel.link}}"
             (click)="closeDialog()"
           >
             <div class="ib-main-menu-expanded-body-box-firstLevel-box" fxLayout="row" fxLayoutAlign="start center">
@@ -53,13 +57,15 @@
             </div>
           </button>
         </div>
-        <!--secondLevel-->
+
+    <!--secondLevel-->
         <div class="ib-main-menu-expanded-body-box-secondLevel" fxLayout="column wrap" fxLayoutAlign="start start" style="height: 85%;">
               <button mat-button
                 *ngFor="let secondLevel of firstLevel.paths; let i = index"
-                [routerLink]="[firstLevel.link+secondLevel.link]"
-                routerLinkActive="active-link" #rla="routerLinkActive"
-                class="{{rla.isActive? 'active-row' : 'inactive-row'}}"
+                routerLink="{{firstLevel.link + secondLevel.link}}"
+                routerLinkActive
+                #rla="routerLinkActive"
+                class="{{rla.isActive? 'active-row-ie-secondLevel' : 'inactive-row-ie-secondLevel'}}"
                 (click)="closeDialog()"
                 fxFlex="18"
                 [ngStyle]="{
@@ -75,13 +81,17 @@
     </ng-container>
   </div>
 </div>
+
 <!--footer---------------------------------------------------------------------->
+
 <div id="ib-main-menu-expanded-footer">
   <div id="ib-main-menu-expanded-footer-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
     <button mat-button id="ib-main-menu-expanded-footer-support-button"
       [routerLink]="[navDataSet.bottomLeft.link]"
       routerLinkActive #rla="routerLinkActive"
-      class="{{rla.isActive? 'active-link':  null }}">
+      class="{{rla.isActive? 'active-header-footer-button':  null }}"
+      (click)="closeDialog()"
+    >
       <div id="ib-main-menu-expanded-footer-support-button-wrapper" fxLayout="row" fxLayoutAlign="center center">
         <mat-icon>{{navDataSet.bottomLeft.icon}}</mat-icon>
         <p>{{navDataSet.bottomLeft.label | translate}}</p>

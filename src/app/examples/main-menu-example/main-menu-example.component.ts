@@ -22,18 +22,18 @@ export class IbMainMenuExampleComponent implements OnInit {
   exNavUpRight: IbMainMenuButton[] = [{
       label: "examples.ibMainMenu.settings",
       icon: "settings",
-      link: "/forms"
+      link: "home/forms"
     },
     {
       label: "examples.ibMainMenu.logout",
       icon: "logout",
-      link: "/table"
+      link: "home/table"
     }
   ];
    exNavBottomLeft: IbMainMenuButton = {
     label: "examples.ibMainMenu.getHelp",
     icon: "help_outline",
-    link: "/table"
+    link: "home/table"
   };
    exNavBottomRight: string = 'examples.ibMainMenu.copyright'
   constructor() { }

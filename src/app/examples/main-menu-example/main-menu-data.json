@@ -2,7 +2,7 @@
   {
     "label": "examples.ibMainMenu.tableMain",
     "icon": "table_rows",
-    "link": "home/table",
+    "link": "/home/table",
     "paths": [
       {
         "label": "examples.ibMainMenu.tableRedux",
@@ -24,225 +24,60 @@
   {
     "label": "examples.ibMainMenu.dynamicFormsMain",
     "icon": "view_list",
-    "link": "/forms",
+    "link": "/home/forms",
     "paths": [
       {
-        "label": "examples.ibMainMenu.dynamicFormsMock1",
+        "label": "examples.ibMainMenu.dynamicFormsDynamicForms",
         "icon": "",
-        "link": "/none"
-      },
-      {
-        "label": "examples.ibMainMenu.dynamicFormsMock2",
-        "icon": "",
-        "link": "/none"
-      },
-      {
-        "label": "examples.ibMainMenu.dynamicFormsMock3",
-        "icon": "",
-        "link": "/none"
-      },
-      {
-        "label": "examples.ibMainMenu.dynamicFormsMock4",
-        "icon": "",
-        "link": "/none"
-      },
-      {
-        "label": "examples.ibMainMenu.dynamicFormsMock5",
-        "icon": "",
-        "link": "/none"
+        "link": ""
       }
     ]
   },
   {
     "label": "examples.ibMainMenu.httpMain",
     "icon": "http",
-    "link": "/http",
+    "link": "/home/http",
     "paths": [
       {
-        "label": "examples.ibMainMenu.httpMock1",
+        "label": "examples.ibMainMenu.httpHttp",
         "icon": "",
-        "link": "/none"
-      },
-      {
-        "label": "examples.ibMainMenu.httpMock2",
-        "icon": "",
-        "link": "/none"
-      },
-      {
-        "label": "examples.ibMainMenu.httpMock3",
-        "icon": "",
-        "link": "/none"
-      },
-      {
-        "label": "examples.ibMainMenu.httpMock4",
-        "icon": "",
-        "link": "/none"
-      },
-      {
-        "label": "examples.ibMainMenu.httpMock5",
-        "icon": "",
-        "link": "/none"
-      },
-      {
-        "label": "examples.ibMainMenu.httpMock6",
-        "icon": "",
-        "link": "/none"
-      },
-      {
-        "label": "examples.ibMainMenu.httpMock7",
-        "icon": "",
-        "link": "/none"
-      },
-      {
-        "label": "examples.ibMainMenu.httpMock8",
-        "icon": "",
-        "link": "/none"
+        "link": ""
       }
     ]
   },
   {
     "label": "examples.ibMainMenu.reduxMain",
     "icon": "archive",
-    "link": "/redux",
+    "link": "/home/redux",
     "paths": [
       {
-        "label": "examples.ibMainMenu.reduxMock1",
+        "label": "examples.ibMainMenu.reduxRedux",
         "icon": "",
-        "link": "/none"
-      },
-      {
-        "label": "examples.ibMainMenu.reduxMock2",
-        "icon": "",
-        "link": "/none"
-      },
-      {
-        "label": "examples.ibMainMenu.reduxMock3",
-        "icon": "",
-        "link": "/none"
-      },
-      {
-        "label": "examples.ibMainMenu.reduxMock4",
-        "icon": "",
-        "link": "/none"
-      },
-      {
-        "label": "examples.ibMainMenu.reduxMock5",
-        "icon": "",
-        "link": "/none"
+        "link": ""
       }
     ]
   },
   {
     "label": "examples.ibMainMenu.dialogMain",
     "icon": "announcement",
-    "link": "/dialog",
+    "link": "/home/dialog",
     "paths": [
       {
-        "label": "examples.ibMainMenu.dialogMock1",
+        "label": "examples.ibMainMenu.dialogDialog",
         "icon": "",
-        "link": "/none"
-      },
-      {
-        "label": "examples.ibMainMenu.dialogMock2",
-        "icon": "",
-        "link": "/none"
-      },
-      {
-        "label": "examples.ibMainMenu.dialogMock3",
-        "icon": "",
-        "link": "/none"
-      },
-      {
-        "label": "examples.ibMainMenu.dialogMock4",
-        "icon": "",
-        "link": "/none"
+        "link": ""
       }
     ]
   },
   {
     "label": "examples.ibMainMenu.toastMain",
     "icon": "breakfast_dining",
-    "link": "/none",
+    "link": "/home/toast",
     "paths": [
       {
-        "label": "examples.ibMainMenu.toastMock1",
+        "label": "examples.ibMainMenu.toastToast",
         "icon": "",
-        "link": "/none"
-      },
-      {
-        "label": "examples.ibMainMenu.toastMock2",
-        "icon": "",
-        "link": "/none"
-      },
-      {
-        "label": "examples.ibMainMenu.toastMock3",
-        "icon": "",
-        "link": "/none"
-      },
-      {
-        "label": "examples.ibMainMenu.toastMock4",
-        "icon": "",
-        "link": "/none"
-      },
-      {
-        "label": "examples.ibMainMenu.toastMock5",
-        "icon": "",
-        "link": "/none"
-      },
-      {
-        "label": "examples.ibMainMenu.toastMock6",
-        "icon": "",
-        "link": "/none"
-      },
-      {
-        "label": "examples.ibMainMenu.toastMock7",
-        "icon": "",
-        "link": "/none"
-      },
-      {
-        "label": "examples.ibMainMenu.toastMock8",
-        "icon": "",
-        "link": "/none"
-      },
-      {
-        "label": "examples.ibMainMenu.toastMock8",
-        "icon": "",
-        "link": "/none"
-      },
-      {
-        "label": "examples.ibMainMenu.toastMock8",
-        "icon": "",
-        "link": "/none"
-      },
-      {
-        "label": "examples.ibMainMenu.toastMock8",
-        "icon": "",
-        "link": "/none"
-      },
-      {
-        "label": "examples.ibMainMenu.toastMock8",
-        "icon": "",
-        "link": "/none"
-      },
-      {
-        "label": "examples.ibMainMenu.toastMock8",
-        "icon": "",
-        "link": "/none"
-      },
-      {
-        "label": "examples.ibMainMenu.toastMock8",
-        "icon": "",
-        "link": "/none"
-      },
-      {
-        "label": "examples.ibMainMenu.toastMock8",
-        "icon": "",
-        "link": "/none"
-      },
-      {
-        "label": "examples.ibMainMenu.toastMock8",
-        "icon": "",
-        "link": "/none"
+        "link": ""
       }
     ]
   }

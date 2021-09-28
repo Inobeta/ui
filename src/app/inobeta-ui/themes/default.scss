@@ -2,7 +2,7 @@
 @mixin inobeta-ui-theme($theme-or-color-config){
   @include mat.all-component-themes($theme-or-color-config);
   @include ib-table($theme-or-color-config);
-  @include ib-main-menu();
+  @include ib-main-menu($theme-or-color-config);
 }
 
 
@@ -116,7 +116,9 @@ div[ib-mat-slide-toggle]{
 }
 
 
-@mixin ib-main-menu() {
+@mixin ib-main-menu($theme) {
+
+  $ib-main-menu-active: map-get($theme, primary);
   $ib-main-menu-main: (
     50 : #e7e7e7,
     100 : #c3c3c3,
@@ -149,52 +151,20 @@ div[ib-mat-slide-toggle]{
       A700 : #ffffff,
     )
   );
-  $ib-main-menu-active: (
-    50 : #e8ebfe,
-    100 : #c5cefc,
-    200 : #9eaefa,
-    300 : #778df8,
-    400 : #5a74f7,
-    500 : #3d5cf5,
-    600 : #3754f4,
-    700 : #2f4af2,
-    800 : #2741f0,
-    900 : #1a30ee,
-    A100 : #ffffff,
-    A200 : #edefff,
-    A400 : #bac0ff,
-    A700 : #a1a9ff,
-    contrast: (
-      50 : #000000,
-      100 : #000000,
-      200 : #000000,
-      300 : #000000,
-      400 : #ffffff,
-      500 : #ffffff,
-      600 : #ffffff,
-      700 : #ffffff,
-      800 : #ffffff,
-      900 : #ffffff,
-      A100 : #000000,
-      A200 : #000000,
-      A400 : #000000,
-      A700 : #000000,
-    )
-);
 
 /* ib-main-menu dialog custom class */
 
 .mat-dialog-container-for-ib-main-menu .mat-dialog-container {
   background: rgba(mat.get-color-from-palette($ib-main-menu-main, 500), .50);
-  backdrop-filter: blur(10px);
-  animation: open .2s linear 0s;
+  backdrop-filter: blur(24px);
+  animation: open .3s linear 0s;
   height: 100%;
   padding: 0px !important;
 }
 
 @keyframes open {
   from { backdrop-filter: blur(0px)}
-  to { backdrop-filter: blur(10px)}
+  to { backdrop-filter: blur(24px)}
 }
 
 .mat-dialog-container-for-ib-main-menu .mat-dialog-container .mat-dialog-content {
@@ -203,6 +173,7 @@ div[ib-mat-slide-toggle]{
   margin: 0px;
   padding: 0px;
 }
+
 
 /* Header */
 
@@ -253,11 +224,11 @@ div[ib-mat-slide-toggle]{
 }
 
 .ib-main-menu-expanded-body-box-firstLevel button:hover,
-.inactive-row:hover {
+.inactive-row-ie-secondLevel:hover {
   background:  rgba(mat.get-color-from-palette($ib-main-menu-main, 700), .25);
 }
 
-.active-section {
+.active-box-ie-firstLevel {
   border-color: rgba(mat.get-color-from-palette($ib-main-menu-active, 500), .75);
   -moz-box-shadow: 0px 0px 6px -2px
     rgba(mat.get-color-from-palette($ib-main-menu-active, 400), .755);
@@ -265,10 +236,6 @@ div[ib-mat-slide-toggle]{
     rgba(mat.get-color-from-palette($ib-main-menu-active, 400), .755);
   box-shadow: 0px 0px 6px -2px
     rgba(mat.get-color-from-palette($ib-main-menu-active, 400), .755);
-}
-
-.active-row {
-  background-color: mat.get-color-from-palette($ib-main-menu-active, 500);
 }
 
 /* Footer */
@@ -288,13 +255,12 @@ div[ib-mat-slide-toggle]{
 
 /* Common */
 
-#ib-main-menu-expanded-header-title-wrapper p,
-#ib-main-menu-expanded-header-closeButton-wrapper button,
-.ib-main-menu-expanded-body-box-firstLevel-box p,
-.ib-main-menu-expanded-body-box-secondLevel button p,
-#ib-main-menu-expanded-footer-support-button-wrapper p,
-#ib-main-menu-expanded-footer-copyright-wrapper p,
-mat-icon {
+#ib-main-menu-expanded-header p,
+#ib-main-menu-expanded-header mat-icon,
+#ib-main-menu-expanded-body p,
+#ib-main-menu-expanded-body mat-icon,
+#ib-main-menu-expanded-footer p,
+#ib-main-menu-expanded-footer mat-icon{
   color: mat.get-color-from-palette($ib-main-menu-main, A700);
 }
 
@@ -307,6 +273,11 @@ mat-icon {
     rgba(mat.get-color-from-palette($ib-main-menu-active, 400), .755);
   box-shadow: 0px 0px 6px -2px
     rgba(mat.get-color-from-palette($ib-main-menu-active, 400), .755);
+}
+
+.active-row-ie-secondLevel,
+.active-header-footer-button {
+  background: mat.get-color-from-palette($ib-main-menu-active, 500) !important;
 }
 
 }

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { IbMainMenuDataSet } from '../../models/main-menu-data-set.model';
 import { IbMainMenuDialogComponent } from '../main-menu-dialog/main-menu-dialog.component';
@@ -8,17 +8,16 @@ import { IbMainMenuDialogComponent } from '../main-menu-dialog/main-menu-dialog.
   templateUrl: './main-menu-expanded.component.html',
   styleUrls: ['./main-menu-expanded.component.css']
 })
-export class IbMainMenuExpandedComponent implements OnInit{
+export class IbMainMenuExpandedComponent {
   @Input() navDataSet : IbMainMenuDataSet;
 
   constructor(
     public dialogRef: MatDialogRef<IbMainMenuDialogComponent>,
     ) {}
 
-  ngOnInit() {
+  closeDialog() {
+    this.dialogRef.close();
   }
-
-  closeDialog() { this.dialogRef.close();}
 
   calcBoxWidth(numElements) {
     let cost = Math.ceil(numElements/5);
