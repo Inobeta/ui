@@ -95,12 +95,12 @@ const reducer = createReducer(
           config: newConfigData.config.config
         }
       ],
-      selectedConfig: newConfigData.config.name
+      selectedConfig: `${newConfigData.tableName}/${newConfigData.config.name}`
     };
   }),
 
   on(TableActions.ibTableActionSaveConfig, (state, saveConfigData) => {
-    return { ...state, selectedConfig: saveConfigData.options.data.name };
+    return { ...state, selectedConfig: `${saveConfigData.tableName}/${saveConfigData.options.data.name}` };
   }),
 
   on(TableActions.ibTableActionSelectSortingField, (state, sortData) => {

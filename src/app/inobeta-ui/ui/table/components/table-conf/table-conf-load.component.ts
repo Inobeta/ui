@@ -47,7 +47,7 @@ import { IbTableConfService } from '../../services/table-conf.service';
   `]
 })
 export class IbTableConfLoadComponent {
-  configs;
+  configs = [];
 
   constructor(
     public dialogRef: MatDialogRef<IbTableConfLoadComponent>,

@@ -58,13 +58,15 @@ export class IbTableConfSaveComponent {
     private store: Store<any>,
     private translate: TranslateService
     ) {
-      this.store.select(ibTableCurrentConfSelector).pipe(take(1)).subscribe(selectedConfig => {
+      this.store.select(ibTableCurrentConfSelector).pipe(take(1)).subscribe((selectedConfig = '') => {
+        this.selectedConfig = '';
         const options = [{ key: 'new', value: 'shared.ibTable.saveConf.newConf'}];
         let value = 'new';
-        if (selectedConfig){
-          options.push({ key: 'edit', value: `${this.translate.instant('shared.ibTable.saveConf.editConf')} (${selectedConfig})`});
+        const [table, configName] = selectedConfig.split('/') || [null, null];
+        if (selectedConfig.startsWith(this.data.tableName)){
+          options.push({ key: 'edit', value: `${this.translate.instant('shared.ibTable.saveConf.editConf')} (${configName})`});
           value = 'edit';
-          this.selectedConfig = selectedConfig;
+          this.selectedConfig = configName;
         }
         this.fields = [
           new IbMatRadioControl({
@@ -78,7 +80,7 @@ export class IbTableConfSaveComponent {
                 control?.parent?.controls['name'].setValue('');
               }
               if(control?.value === 'edit'){
-                control?.parent?.controls['name'].setValue(selectedConfig);
+                control?.parent?.controls['name'].setValue(this.selectedConfig);
               }
             }
           }),
@@ -86,7 +88,7 @@ export class IbTableConfSaveComponent {
           new IbMatTextboxControl({
             key: 'name',
             width: '70%',
-            value: selectedConfig || '',
+            value: this.selectedConfig || '',
             label: 'shared.ibTable.saveConf.configName',
             required: true,
             validators: [this.checkConfigExists()]
