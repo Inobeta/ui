@@ -152,3 +152,16 @@ This data model is designed so you can set a first level menu section with secon
 ```
 Here, the `routeLink` referred to 'Second level section 1' will become
 `/home/first-level-1/second-level-1`.
+### IbMainMenuDataSet
+
+#### Interface
+```typescript
+export interface IbMainMenuDataSet {
+  title: string,
+  upRight: IbMainMenuButton[],
+  navData: IbMainMenuData[],
+  bottomRight: string,
+  bottomLeft: IbMainMenuButton
+}
+```
+ This data model is the composition of the data models the `<ib-main-menu-bar>` receives, so that they can be sent to the `<ib-main-menu-dialog>` as a unique variable.
