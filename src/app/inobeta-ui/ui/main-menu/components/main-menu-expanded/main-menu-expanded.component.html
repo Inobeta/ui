@@ -33,13 +33,11 @@
 <!--body---------------------------------------------------------------------->
 
 <div id="ib-main-menu-expanded-body">
-  <div id="ib-main-menu-expanded-body-wrapper" fxLayout="row wrap"  fxLayoutAlign="space-evenly center" >
+  <div id="ib-main-menu-expanded-body-wrapper" fxLayout="row wrap" fxLayoutGap="16px" fxLayoutAlign="start center" >
     <ng-container *ngFor="let firstLevel of navDataSet.navData">
   <!--box-->
       <div
-        routerLinkActive
-        #rlaSection="routerLinkActive"
-        class="{{rlaSection.isActive? 'ib-main-menu-expanded-body-box active-box-ie-firstLevel':  'ib-main-menu-expanded-body-box' }}"
+        class="ib-main-menu-expanded-body-box"
         [ngStyle]="{
           'width': calcBoxWidth(firstLevel.paths.length)
         }"
@@ -47,15 +45,10 @@
 
     <!--firstLevel-->
         <div class="ib-main-menu-expanded-body-box-firstLevel">
-          <button mat-button
-            routerLink="{{firstLevel.link}}"
-            (click)="closeDialog()"
-          >
             <div class="ib-main-menu-expanded-body-box-firstLevel-box" fxLayout="row" fxLayoutAlign="start center">
               <mat-icon>{{firstLevel.icon}}</mat-icon>
               <p> {{firstLevel.label |translate}} </p>
             </div>
-          </button>
         </div>
 
     <!--secondLevel-->
@@ -65,7 +58,7 @@
                 routerLink="{{firstLevel.link + secondLevel.link}}"
                 routerLinkActive
                 #rla="routerLinkActive"
-                class="{{rla.isActive? 'active-row-ie-secondLevel' : 'inactive-row-ie-secondLevel'}}"
+                class="{{rla.isActive? 'active-row-ie-secondLevel' : null}}"
                 (click)="closeDialog()"
                 fxFlex="18"
                 [ngStyle]="{

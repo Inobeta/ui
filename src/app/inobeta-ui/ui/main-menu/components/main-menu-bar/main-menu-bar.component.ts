@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { IbMainMenuButton } from '../../models/main-menu-button.model';
 import { IbMainMenuDataSet } from '../../models/main-menu-data-set.model';
@@ -12,7 +12,7 @@ import { IbMainMenuDialogComponent } from '../main-menu-dialog/main-menu-dialog.
   templateUrl: './main-menu-bar.component.html',
   styleUrls: ['./main-menu-bar.component.css']
 })
-export class IbMainMenuBarComponent implements OnInit {
+export class IbMainMenuBarComponent  {
 /**
  * Dichiara l'icona da utilizzare per la menu bar principale, ovvero quella che al click apre il menu in forma estesa.
  * Used to declare the icon that must be used for the main menu bar, i.e the one that on click event opens the actual menu.
@@ -48,7 +48,7 @@ export class IbMainMenuBarComponent implements OnInit {
 
   constructor(public dialog: MatDialog) {}
 
-  ngOnInit(): void {
+  ngOnChanges(changes: SimpleChanges): void {
     this.dataSet = {
       title: this.navTitle,
       upRight: this.navButtonsUpRight,
