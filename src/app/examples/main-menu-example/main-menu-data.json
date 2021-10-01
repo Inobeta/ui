@@ -7,17 +7,17 @@
       {
         "label": "examples.ibMainMenu.tableRedux",
         "icon": "",
-        "link":  "/home/table/redux"
+        "link":  "/redux"
       },
       {
         "label": "examples.ibMainMenu.tableNoRedux" ,
         "icon": "",
-        "link":  "/home/table/noredux"
+        "link":  "/noredux"
       },
       {
         "label": "examples.ibMainMenu.tableSticky",
         "icon": "",
-        "link": "/home/table/sticky"
+        "link": "/sticky"
       }
     ]
   },
@@ -29,7 +29,7 @@
       {
         "label": "examples.ibMainMenu.dynamicFormsDynamicForms",
         "icon": "",
-        "link": "/home/forms"
+        "link": ""
       }
     ]
   },
@@ -41,7 +41,7 @@
       {
         "label": "examples.ibMainMenu.httpHttp",
         "icon": "",
-        "link": "/home/http"
+        "link": ""
       }
     ]
   },
@@ -53,7 +53,7 @@
       {
         "label": "examples.ibMainMenu.reduxRedux",
         "icon": "",
-        "link": "/home/redux"
+        "link": ""
       }
     ]
   },
@@ -65,7 +65,7 @@
       {
         "label": "examples.ibMainMenu.dialogDialog",
         "icon": "",
-        "link": "/home/dialog"
+        "link": ""
       }
     ]
   },
@@ -77,7 +77,7 @@
       {
         "label": "examples.ibMainMenu.toastToast",
         "icon": "",
-        "link": "/home/toast"
+        "link": ""
       }
     ]
   }

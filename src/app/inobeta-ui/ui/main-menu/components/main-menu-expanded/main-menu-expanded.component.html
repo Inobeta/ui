@@ -68,7 +68,7 @@
             <button
               mat-button
               *ngFor="let secondLevel of firstLevel.paths; let i = index"
-              routerLink="{{secondLevel.link}}"
+              routerLink="{{firstLevel.link + secondLevel.link}}"
               routerLinkActive
               #rla="routerLinkActive"
               class="{{rla.isActive? 'active-row-ie-secondLevel' : null}}"
