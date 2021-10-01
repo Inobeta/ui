@@ -1,7 +1,6 @@
-import { Component, Input, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { IbMainMenuButton } from '../../models/main-menu-button.model';
-import { IbMainMenuDataSet } from '../../models/main-menu-data-set.model';
 import { IbMainMenuData } from '../../models/main-menu-data.model';
 import { IbMainMenuDialogComponent } from '../main-menu-dialog/main-menu-dialog.component';
 
@@ -18,16 +17,22 @@ export class IbMainMenuBarComponent  {
  * Used to declare the icon that must be used for the main menu bar, i.e the one that on click event opens the actual menu.
  */
   @Input() barIcon: string;
-/**
- * Dichiara i dati per popolare le sezioni dei menu di primo livello e di secondo livello.
- * Used to declare data to initialize the first and second level menu sections.
- */
-  @Input() navData: IbMainMenuData[];
+
   /**
    * Dichiara il titolo dell'applicazione che viene visualizzato in alto a sinistra.
-   * Used to declare the application title displayed on the up left of the manu.
+   * Used to declare the application title displayed on the up left of the menu.
    */
   @Input() navTitle: string;
+  /**
+   * Dichiara i dati per il bottone del menu che viene visualizzato in alto al centro, e che viene utilizzato per il ritorno alla pagina principale (home)
+   * Used to declare data for the button displayed in the top center of the menu, which is used to go to the home page.
+   */
+  @Input() navButtonTopCenter: IbMainMenuButton;
+  /**
+   * Dichiara i dati per popolare le sezioni dei menu di primo livello e di secondo livello.
+   * Used to declare data to initialize the first and second level menu sections.
+   */
+   @Input() navData: IbMainMenuData[];
   /**
    * Dichiara i dati per i 2 bottoni del menu che vengono visualizzati in alto a destra.
    * Used to declare data for the 2 buttons displayed on the up right of the menu.
@@ -43,33 +48,39 @@ export class IbMainMenuBarComponent  {
    * Used to declare data for the button displayed on the bottom left  of the menu, which can be used as a 'get help' button.
    */
   @Input() navBottomLeft: IbMainMenuButton;
+  /**
+   * Segnala il click avvenuto su un pulsante di menu che non ha l'attributo link definito.
+   * Reports any click event happened on a menu button that doesn't have the link attribute set.
+  */
+  @Output() action: EventEmitter<IbMainMenuButton> = new EventEmitter<IbMainMenuButton>();
 
-  dataSet: IbMainMenuDataSet;
 
   constructor(public dialog: MatDialog) {}
 
-  ngOnChanges(changes: SimpleChanges): void {
-    this.dataSet = {
-      title: this.navTitle,
-      upRight: this.navButtonsUpRight,
-      navData: this.navData,
-      bottomLeft: this.navBottomLeft,
-      bottomRight: this.navButtonBottomRight
-    }
-  }
-
   openDialog() {
-    this.dialog.open(IbMainMenuDialogComponent, {
+    const dialogOpened = this.dialog.open(IbMainMenuDialogComponent, {
       maxWidth: '100vw',
       maxHeight: '100vh',
       height: '100%',
       width: '100%',
-      data: this.dataSet,
+      data: {
+        title: this.navTitle,
+        topCenter: this.navButtonTopCenter,
+        upRight: this.navButtonsUpRight,
+        navData: this.navData,
+        bottomLeft: this.navBottomLeft,
+        bottomRight: this.navButtonBottomRight
+      },
       panelClass: 'mat-dialog-container-for-ib-main-menu'
     });
 
-  }
 
+    dialogOpened.afterClosed().subscribe(result => {
+      if(result) {
+        this.action.emit(result);
+      }
+    })
+  }
 }
 
 

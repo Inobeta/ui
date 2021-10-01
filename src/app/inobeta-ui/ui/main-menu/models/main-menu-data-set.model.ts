@@ -5,6 +5,7 @@ import { IbMainMenuData } from "./main-menu-data.model";
  */
 export interface IbMainMenuDataSet {
   title: string,
+  topCenter: IbMainMenuButton,
   upRight: IbMainMenuButton[],
   navData: IbMainMenuData[],
   bottomRight: string,

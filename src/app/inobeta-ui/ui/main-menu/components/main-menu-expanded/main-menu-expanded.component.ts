@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { IbMainMenuDataSet } from '../../models/main-menu-data-set.model';
 import { IbMainMenuDialogComponent } from '../main-menu-dialog/main-menu-dialog.component';
 
@@ -13,10 +14,18 @@ export class IbMainMenuExpandedComponent {
 
   constructor(
     public dialogRef: MatDialogRef<IbMainMenuDialogComponent>,
+    private router: Router
     ) {}
 
-  closeDialog() {
-    this.dialogRef.close();
+  emitAction(event, element) {
+    event.stopPropagation();
+    if(element.link === undefined) {
+      this.dialogRef.close(element);
+    }
+    else {
+      this.router.navigate([element.link]);
+      this.dialogRef.close();
+    }
   }
 
   calcBoxWidth(numElements) {
@@ -24,10 +33,9 @@ export class IbMainMenuExpandedComponent {
     let width = cost * 232;
     numElements > 5 ? width = width + 10*cost*0.75 : null;
     return width + 'px';
-
   }
 
-  calcSecondLevelWidth(numElements){
+  calcSecondLevelWidth(numElements) {
     return 100/Math.ceil(numElements/5) + '%';
   }
 
