@@ -10,6 +10,7 @@ describe('IbMainMenuDialogComponent', () => {
   let data: IbMainMenuDataSet = {
     title: '',
     upRight: [],
+    topCenter: { link: '', label: '', icon: ''},
     navData: [],
     bottomRight: '',
     bottomLeft: { link: '', label: '', icon: ''}
