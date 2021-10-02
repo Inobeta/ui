@@ -133,7 +133,6 @@ mat-icon {
   border-width: 1px;
   border-style: solid;
   margin-top: 15px;
-  transition:  background-color .2s, box-shadow .2s;
 }
 
 .ib-main-menu-expanded-body-box-firstLevel {
@@ -185,7 +184,6 @@ mat-icon {
   text-align: left;
 }
 
-.ib-main-menu-expanded-body-box-firstLevel button,
 .ib-main-menu-expanded-body-box-secondLevel button {
   transition: background-color .2s;
 }

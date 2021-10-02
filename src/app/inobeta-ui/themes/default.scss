@@ -156,6 +156,14 @@ div[ib-mat-slide-toggle]{
 
 
 /* Header */
+#ib-main-menu-expanded-header {
+  background: mat.get-color-from-palette($ib-main-menu-main, 700);
+  background:
+    linear-gradient(0deg,
+    rgba(mat.get-color-from-palette($ib-main-menu-main, 500), 0) 0%,
+    rgba(mat.get-color-from-palette($ib-main-menu-main, 400), .907) 75%,
+    rgba(mat.get-color-from-palette($ib-main-menu-main, 600), .907) 100%);
+}
 
 #ib-main-menu-expanded-header-closeButton-wrapper button {
   border-color: rgba(mat.get-color-from-palette($ib-main-menu-main, 200), .75);
@@ -167,7 +175,7 @@ div[ib-mat-slide-toggle]{
   border-color: rgba(mat.get-color-from-palette($ib-main-menu-main, 200), .75);
 }
 
-#ib-main-menu-expanded-header-settingsLogout-box .mat-button:nth-child(1) {
+#ib-main-menu-expanded-header-settingsLogout-box .mat-button:nth-child(2) {
   background: rgba(mat.get-color-from-palette($ib-main-menu-main, 300), .7);
 }
 
@@ -187,6 +195,15 @@ div[ib-mat-slide-toggle]{
 }
 
 /* Footer */
+
+#ib-main-menu-expanded-footer {
+  background: mat.get-color-from-palette($ib-main-menu-main, 700);
+  background:
+    linear-gradient(180deg,
+    rgba(mat.get-color-from-palette($ib-main-menu-main, 500), 0) 0%,
+    rgba(mat.get-color-from-palette($ib-main-menu-main, 400), .907) 75%,
+    rgba(mat.get-color-from-palette($ib-main-menu-main, 600), .907) 100%);
+}
 
 #ib-main-menu-expanded-footer-support-button {
   border-color: rgba(mat.get-color-from-palette($ib-main-menu-main, 200), .75);
@@ -224,8 +241,7 @@ div[ib-mat-slide-toggle]{
 /* ib-main-menu dialog custom class */
 
 .mat-dialog-container-for-ib-main-menu .mat-dialog-container {
-  background: rgba(mat.get-color-from-palette($ib-main-menu-main, 400), .97);
-  height: 100%;
+  background: rgba(mat.get-color-from-palette($ib-main-menu-main, 500), .50);
   padding: 0px !important;
 }
 
@@ -237,38 +253,19 @@ div[ib-mat-slide-toggle]{
   padding: 0px;
 }
 
-/* backdrop-filter settings */
-@supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
+.blur-effect {
 
-  .mat-dialog-container-for-ib-main-menu .mat-dialog-container {
-    background: rgba(mat.get-color-from-palette($ib-main-menu-main, 500), .50);
-    -webkit-backdrop-filter: blur(24px);
-    backdrop-filter: blur(24px);
-    animation: open .3s linear 0s;
+  filter: blur(24px);
+  animation: open .3s linear 0s;  height: 100%;
+
+}
+@keyframes open {
+  from {
+   filter: blur(0px);
   }
-  @keyframes open {
-    from {
-      backdrop-filter: blur(0px);
-      -webkit-backdrop-filter: blur(0px)
-    }
-    to {
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px)
-    }
-  }
-  #ib-main-menu-expanded-header {
-    background: mat.get-color-from-palette($ib-main-menu-main, 700);
-    background:
-      linear-gradient(0deg, rgba(mat.get-color-from-palette($ib-main-menu-main, 500), 0) 0%,
-      rgba(mat.get-color-from-palette($ib-main-menu-main, 400), .807) 32%,
-      rgba(mat.get-color-from-palette($ib-main-menu-main, 500), .707) 58%);
-  }
-  #ib-main-menu-expanded-footer {
-    background: mat.get-color-from-palette($ib-main-menu-main, 700);
-    background:
-      linear-gradient(180deg, rgba(mat.get-color-from-palette($ib-main-menu-main, 500), 0) 0%,
-      rgba(mat.get-color-from-palette($ib-main-menu-main, 400), .907) 75%,
-      rgba(mat.get-color-from-palette($ib-main-menu-main, 500), .907) 100%);
+  to {
+    filter: blur(24px);
   }
 }
+
 }

@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, Renderer2 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { IbMainMenuButton } from '../../models/main-menu-button.model';
 import { IbMainMenuData } from '../../models/main-menu-data.model';
@@ -54,8 +54,14 @@ export class IbMainMenuBarComponent  {
   */
   @Output() action: EventEmitter<IbMainMenuButton> = new EventEmitter<IbMainMenuButton>();
 
+  temporaryWrapper: HTMLElement = this.renderer.createElement('div');
 
-  constructor(public dialog: MatDialog) {}
+
+  constructor(
+    public dialog: MatDialog,
+    private renderer: Renderer2) {
+      this.renderer.addClass(this.temporaryWrapper, 'blur-effect');
+    }
 
   openDialog() {
     const dialogOpened = this.dialog.open(IbMainMenuDialogComponent, {
@@ -75,11 +81,33 @@ export class IbMainMenuBarComponent  {
     });
 
 
-    dialogOpened.afterClosed().subscribe(result => {
+    this.addBlur();
+
+    dialogOpened.afterClosed()
+    .subscribe(result => {
       if(result) {
         this.action.emit(result);
       }
+      this.removeBlur();
     })
+  }
+
+  addBlur() {
+    this.temporaryWrapper.style.display = 'block';
+    Array.prototype.slice.call(document.body.children).map( x => {
+      x.classList.value === 'cdk-overlay-container' ||
+      x.classList.value === 'blur-effect' ?
+      null : this.renderer.appendChild(this.temporaryWrapper,x);
+    });
+    this.renderer.appendChild(document.body, this.temporaryWrapper);
+  }
+
+  removeBlur() {
+    this.temporaryWrapper.style.display = 'none';
+    Array.prototype.slice.call(this.temporaryWrapper.children).map( x => {
+      this.renderer.appendChild(document.body,x);
+      })
+
   }
 }
 
