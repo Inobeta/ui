@@ -61,6 +61,7 @@ export class IbMainMenuBarComponent  {
     public dialog: MatDialog,
     private renderer: Renderer2) {
       this.renderer.addClass(this.temporaryWrapper, 'blur-effect');
+      this.renderer.appendChild(document.body, this.temporaryWrapper);
     }
 
   openDialog() {
@@ -99,7 +100,6 @@ export class IbMainMenuBarComponent  {
       x.classList.value === 'blur-effect' ?
       null : this.renderer.appendChild(this.temporaryWrapper,x);
     });
-    this.renderer.appendChild(document.body, this.temporaryWrapper);
   }
 
   removeBlur() {
@@ -107,7 +107,6 @@ export class IbMainMenuBarComponent  {
     Array.prototype.slice.call(this.temporaryWrapper.children).map( x => {
       this.renderer.appendChild(document.body,x);
       })
-
   }
 }
 

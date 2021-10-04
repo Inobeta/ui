@@ -11,8 +11,7 @@
     <div id="ib-main-menu-expanded-header-closeButton-wrapper" fxLayout="row" fxLayoutAlign="space-around center">
       <button
         mat-button
-        routerLink="{{navDataSet.topCenter.link}}"
-        (click)="this.dialogRef.close()"
+        (click)="emitAction($event, navDataSet.topCenter)"
       >
         <div fxLayout="row" fxLayoutAlign="space-evenly center">
           <mat-icon>{{navDataSet.topCenter.icon}}</mat-icon>
@@ -65,21 +64,26 @@
 
         <!-- body > box > secondLevel ------------------>
         <div class="ib-main-menu-expanded-body-box-secondLevel" fxLayout="column wrap" fxLayoutAlign="start start" style="height: 85%;">
-            <button
-              mat-button
-              *ngFor="let secondLevel of firstLevel.paths; let i = index"
-              routerLink="{{firstLevel.link + secondLevel.link}}"
+          <ng-container *ngFor="let secondLevel of firstLevel.paths; let i = index">
+            <div
+              routerLink="{{ ( secondLevel.link === undefined) ? null : secondLevel.link }}"
               routerLinkActive
               #rla="routerLinkActive"
-              class="{{rla.isActive? 'active-row-ie-secondLevel' : null}}"
+              style="display: none;"
+            >
+            </div>
+            <button
+              mat-button
+              class="{{(rla.isActive && secondLevel.link !== undefined)? 'active-row-ie-secondLevel' : null}}"
               fxFlex="18"
               [ngStyle]="{'width': calcSecondLevelWidth(firstLevel.paths.length)}"
-              (click)="this.dialogRef.close()"
+              (click)="emitAction($event, secondLevel)"
             >
               <p>
                 {{secondLevel.label | translate}}
               </p>
             </button>
+          </ng-container>
         </div>
 
       </div>
