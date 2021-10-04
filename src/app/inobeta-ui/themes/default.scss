@@ -175,7 +175,7 @@ div[ib-mat-slide-toggle]{
   border-color: rgba(mat.get-color-from-palette($ib-main-menu-main, 200), .75);
 }
 
-#ib-main-menu-expanded-header-settingsLogout-box .mat-button:nth-child(2) {
+.ib-main-menu-upRight-item:nth-child(1) .mat-button {
   background: rgba(mat.get-color-from-palette($ib-main-menu-main, 300), .7);
 }
 
@@ -189,7 +189,9 @@ div[ib-mat-slide-toggle]{
   background:  rgba(mat.get-color-from-palette($ib-main-menu-main, 700), .25);
   border-color: rgba(mat.get-color-from-palette($ib-main-menu-main, 200), .75);
 }
-
+.ib-main-menu-box-active-box {
+  border-color: rgba(mat.get-color-from-palette($ib-main-menu-active, 500), .75);
+}
 .ib-main-menu-expanded-body-box-firstLevel {
   border-bottom-color: rgba(mat.get-color-from-palette($ib-main-menu-main, 200), .75);
 }

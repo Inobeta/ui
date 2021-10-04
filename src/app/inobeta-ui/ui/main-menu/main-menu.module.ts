@@ -9,12 +9,14 @@ import { IbMainMenuExpandedComponent } from './components/main-menu-expanded/mai
 import { IbMainMenuDialogComponent } from './components/main-menu-dialog/main-menu-dialog.component';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { IbMainMenuHeaderFooterButtonsComponent } from './components/main-menu-expanded/header-footer-buttons.component';
 
 @NgModule({
   declarations: [
     IbMainMenuBarComponent,
     IbMainMenuDialogComponent,
-    IbMainMenuExpandedComponent
+    IbMainMenuExpandedComponent,
+    IbMainMenuHeaderFooterButtonsComponent
   ],
   imports: [
     CommonModule,
@@ -30,7 +32,8 @@ import { TranslateModule } from '@ngx-translate/core';
   exports: [
     IbMainMenuBarComponent,
     IbMainMenuDialogComponent,
-    IbMainMenuExpandedComponent
+    IbMainMenuExpandedComponent,
+    IbMainMenuHeaderFooterButtonsComponent
   ]
 })
 export class IbMainMenuModule { }

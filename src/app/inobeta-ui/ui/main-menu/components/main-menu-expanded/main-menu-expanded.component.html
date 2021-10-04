@@ -8,37 +8,23 @@
     </div>
 
     <!-- header > dashboard button --------------------------->
-    <div id="ib-main-menu-expanded-header-closeButton-wrapper" fxLayout="row" fxLayoutAlign="space-around center">
-      <button
-        mat-button
-        (click)="emitAction($event, navDataSet.topCenter)"
-      >
-        <div fxLayout="row" fxLayoutAlign="space-evenly center">
-          <mat-icon>{{navDataSet.topCenter.icon}}</mat-icon>
-          <p>{{ navDataSet.topCenter.label | translate }}</p>
-        </div>
-      </button>
-    </div>
+    <ib-main-menu-header-footer-buttons
+      [type]="'topCenter'"
+      [element]="navDataSet.topCenter"
+      (click)="emitAction($event, navDataSet.topCenter)">
+    </ib-main-menu-header-footer-buttons>
 
     <!-- header > upRight buttons ------------------------------>
     <div id="ib-main-menu-expanded-header-settingsLogout-wrapper" fxLayout="row" fxLayoutAlign="end center">
       <div id="ib-main-menu-expanded-header-settingsLogout-box" fxLayout="row" fxLayoutAlign="space-evenly center">
         <ng-container *ngFor="let upRight of navDataSet.upRight">
-          <div
-            routerLink="{{ (upRight.link === undefined) ? null : upRight.link }}"
-            routerLinkActive
-            #rla="routerLinkActive"
-            style="display: none;"
-          >
-          </div>
-          <button mat-button
-            class="{{(rla.isActive && upRight.link !== undefined)? 'active-header-footer-button' : null}}"
-            (click)="emitAction($event, upRight)"
-          >
-            <mat-icon>
-              {{upRight.icon}}
-            </mat-icon>
-          </button>
+          <ib-main-menu-header-footer-buttons
+          class="ib-main-menu-upRight-item"
+          [type]="'upRight'"
+          [element]="upRight"
+          (click)="emitAction($event,upRight)">
+        </ib-main-menu-header-footer-buttons>
+
         </ng-container>
       </div>
     </div>
@@ -52,7 +38,14 @@
     <ng-container *ngFor="let firstLevel of navDataSet.navData">
 
       <!-- body > box ----------------------------------------->
-      <div class="ib-main-menu-expanded-body-box" [ngStyle]="{'width': calcBoxWidth(firstLevel.paths.length)}">
+      <div
+      routerLink="{{ ( firstLevel.link === undefined) ? null : firstLevel.link }}"
+      routerLinkActive
+      #rla="routerLinkActive"
+      style="display: none;"
+      ></div>
+
+      <div class="{{rla.isActive? 'ib-main-menu-expanded-body-box ib-main-menu-box-active-box': 'ib-main-menu-expanded-body-box'}}" [ngStyle]="{'width': calcBoxWidth(firstLevel.paths.length)}">
 
         <!-- body > box > firstLevel -------------------->
         <div class="ib-main-menu-expanded-body-box-firstLevel">
@@ -96,22 +89,11 @@
   <div id="ib-main-menu-expanded-footer-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
 
       <!-- footer > bottomLeft button ------------------------>
-      <div
-        routerLink="{{ (navDataSet.bottomLeft.link === undefined) ? null : navDataSet.bottomLeft.link }}"
-        routerLinkActive
-        #rla="routerLinkActive"
-        style="display: none;"
-      >
-      </div>
-      <button mat-button id="ib-main-menu-expanded-footer-support-button"
-        class="{{ (rla.isActive && navDataSet.bottomLeft.link !== undefined) ? 'active-header-footer-button':  null }}"
-        (click)="emitAction($event, navDataSet.bottomLeft)"
-      >
-        <div id="ib-main-menu-expanded-footer-support-button-wrapper" fxLayout="row" fxLayoutAlign="center center">
-          <mat-icon>{{navDataSet.bottomLeft.icon}}</mat-icon>
-          <p>{{navDataSet.bottomLeft.label | translate}}</p>
-        </div>
-      </button>
+      <ib-main-menu-header-footer-buttons
+          [type]="'bottomLeft'"
+          [element]="navDataSet.bottomLeft"
+          (click)="emitAction($event,navDataSet.bottomLeft)">
+      </ib-main-menu-header-footer-buttons>
 
     <!-- footer > bottomRight copyright ---------------------->
     <div id="ib-main-menu-expanded-footer-copyright-wrapper">

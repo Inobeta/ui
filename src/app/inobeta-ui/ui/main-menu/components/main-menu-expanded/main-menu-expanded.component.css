@@ -5,7 +5,6 @@
 #ib-main-menu-expanded-header-closeButton-wrapper button,
 .ib-main-menu-expanded-body-box-firstLevel-box p,
 .ib-main-menu-expanded-body-box-secondLevel button p,
-#ib-main-menu-expanded-footer-support-button-wrapper p,
 #ib-main-menu-expanded-footer-copyright-wrapper p {
   font-style: normal;
   font-weight: 500;
@@ -56,29 +55,7 @@ mat-icon {
   margin: 0;
 }
 
-#ib-main-menu-expanded-header-closeButton-wrapper {
-  width: 100%;
-  margin: 0 auto;
 
-}
-
-#ib-main-menu-expanded-header-closeButton-wrapper button {
-  min-width: 256px;
-  max-width: 453px;
-  height: 40px;
-  border-radius: 20px;
-  border-width: 1px;
-  border-style: solid;
-  transition: border-color .2s, box-shadow .2s;
-}
-
-#ib-main-menu-expanded-header-closeButton-wrapper button div{
-  height: 38px;
-}
-
-#ib-main-menu-expanded-header-closeButton-wrapper button div p {
-  margin: 0;
-}
 
 #ib-main-menu-expanded-header-settingsLogout-wrapper {
   padding-right: 10px;
@@ -90,24 +67,6 @@ mat-icon {
   border-radius: 8px;
   border-width: 1px;
   border-style: solid;
-}
-
-#ib-main-menu-expanded-header-settingsLogout-box .mat-button {
-  min-width: 32px;
-  max-width:32px;
-  min-height: 32px;
-  max-height: 32px;
-  padding: 0px;
-  border-radius: 8px;
-  transition: background-color .2s;
-}
-
-#ib-main-menu-expanded-header-settingsLogout-box .mat-button mat-icon{
-  min-width: 23px;
-  max-width:23px;
-  min-height: 25px;
-  max-height: 25px;
-  margin: 0px 1px 5px 0px;
 }
 
 /* body */
@@ -207,37 +166,9 @@ mat-icon {
   margin: 0 auto;
 }
 
-#ib-main-menu-expanded-footer-support-button,
 #ib-main-menu-expanded-footer-copyright-wrapper {
   width: 166px;
   height: 32px;
-}
-
-#ib-main-menu-expanded-footer-support-button-wrapper {
-  width: 164px;
-  height: 28px;
-}
-
-#ib-main-menu-expanded-footer-support-button
-{
-  border-radius: 8px;
-  border-width: 1px;
-  border-style: solid;
-  padding:0px;
-  transition: border-color .2s, box-shadow .2s;
-}
-
-#ib-main-menu-expanded-footer-support-button-wrapper p {
-  font-size: 12px;
-  margin: 0px 0px 4px 0px;
-  height: 20px;
-}
-
-#ib-main-menu-expanded-footer-support-button-wrapper mat-icon {
-  font-size: 18px;
-  width: 18px;
-  height: 18px;
-  margin: 0px 10px 0px 0px;
 }
 
 #ib-main-menu-expanded-footer-copyright-wrapper p {

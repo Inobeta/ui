@@ -25,8 +25,8 @@ export class IbMainMenuExampleComponent {
 
   exNavTopCenter: IbMainMenuButton = {
     label: 'shared.ibMainMenu.returnToDash',
-    link: 'home',
-    icon: 'dashboard'
+    link: 'home/table/redux',
+    icon: 'home'
   };
 
   exNavData: IbMainMenuData[] = (mainMenuData as any).default;
@@ -44,7 +44,9 @@ export class IbMainMenuExampleComponent {
 
   exNavBottomLeft: IbMainMenuButton = {
     label: "examples.ibMainMenu.getHelp",
-    icon: "help_outline"
+    icon: "help_outline",
+    link: "home/forms"
+
   };
 
   exNavBottomRight: string = 'examples.ibMainMenu.copyright'
