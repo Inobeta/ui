@@ -16,16 +16,13 @@ export class IbMainMenuExpandedComponent {
     public dialogRef: MatDialogRef<IbMainMenuDialogComponent>,
     private router: Router
     ) {}
-
+/**
+ * For UpRight  e bottomLeft buttons
+ */
   emitAction(event, element) {
     event.stopPropagation();
-    if(element.link === undefined) {
-      this.dialogRef.close(element);
-    }
-    else {
-      this.router.navigate([element.link]);
-      this.dialogRef.close();
-    }
+    this.dialogRef.close(element);
+    if(element.link !== undefined) this.router.navigate([element.link]);
   }
 
   calcBoxWidth(numElements) {

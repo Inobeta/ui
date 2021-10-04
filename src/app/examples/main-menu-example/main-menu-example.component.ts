@@ -54,8 +54,9 @@ export class IbMainMenuExampleComponent {
   handleMenuClick(who){
     switch(who.label){
       case 'examples.ibMainMenu.logout': console.log('Emitted logout OK'); break;
-      case 'examples.ibMainMenu.settings': console.log('Emitted settings WRONG'); break;
       case 'examples.ibMainMenu.getHelp': console.log(' Emitted getHelp OK'); break;
     }
+    console.log('Emitted', who.label);
+
   }
 }

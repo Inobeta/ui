@@ -14,6 +14,7 @@ export class IbMainMenuBarStubComponent {
   @Input() barIcon: string;
   @Input() navData: IbMainMenuData[];
   @Input() navTitle: string;
+  @Input() navButtonTopCenter: IbMainMenuButton;
   @Input() navButtonsUpRight: IbMainMenuButton[];
   @Input() navButtonBottomRight: string;
   @Input() navBottomLeft: IbMainMenuButton;
