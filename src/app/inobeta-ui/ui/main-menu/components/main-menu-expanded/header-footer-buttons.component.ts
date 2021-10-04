@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { IbMainMenuButton } from 'public_api';
+import { IbMainMenuButton } from '../../models/main-menu-button.model'
 
 @Component({
   selector: 'ib-main-menu-header-footer-buttons',
