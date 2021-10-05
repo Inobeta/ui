@@ -245,7 +245,7 @@ export class IbTableComponent implements OnChanges, OnInit, OnDestroy {
     this.store.dispatch(ibTableActionLoadConfig({ configName: null, tableName: this.tableName }));
 
     this.totalRow$ = this.store.select(ibTableSelectTotalRow(this.tableName));
-    
+
     this._paginatorSub = this.store.select(ibTableSelectPaginator(this.tableName)).subscribe(paginator => {
       this.currentPagination = {
         pageIndex: paginator?.pageIndex || 0,
@@ -253,7 +253,7 @@ export class IbTableComponent implements OnChanges, OnInit, OnDestroy {
         length: paginator?.length,
       };
     });
-    
+
     this._sortSub = this.store.select(ibTableSelectSort(this.tableName))
       .subscribe(sort => {
         this.currentSort = {
@@ -506,7 +506,7 @@ export class IbTableComponent implements OnChanges, OnInit, OnDestroy {
         previousPageIndex: 0
       }
     */
-    
+
     const data = this.currentPagination;
     const paginatedData = [];
     // scorro tutte le pagine della tabella

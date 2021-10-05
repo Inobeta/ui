@@ -1,0 +1,84 @@
+[
+  {
+    "label": "examples.ibMainMenu.tableMain",
+    "icon": "table_rows",
+    "link": "/home/table",
+    "paths": [
+      {
+        "label": "examples.ibMainMenu.tableRedux",
+        "icon": "",
+        "link":  "/home/table/redux"
+      },
+      {
+        "label": "examples.ibMainMenu.tableNoRedux" ,
+        "icon": "",
+        "link":  "/home/table/noredux"
+      },
+      {
+        "label": "examples.ibMainMenu.tableSticky",
+        "icon": "",
+        "link": "/home/table/sticky"
+      }
+    ]
+  },
+  {
+    "label": "examples.ibMainMenu.dynamicFormsMain",
+    "icon": "view_list",
+    "link": "/home/forms",
+    "paths": [
+      {
+        "label": "examples.ibMainMenu.dynamicFormsDynamicForms",
+        "icon": "",
+        "link": "/home/forms"
+      }
+    ]
+  },
+  {
+    "label": "examples.ibMainMenu.httpMain",
+    "icon": "http",
+    "link": "/home/http",
+    "paths": [
+      {
+        "label": "examples.ibMainMenu.httpHttp",
+        "icon": "",
+        "link": "/home/http"
+      }
+    ]
+  },
+  {
+    "label": "examples.ibMainMenu.reduxMain",
+    "icon": "archive",
+    "link": "/home/redux",
+    "paths": [
+      {
+        "label": "examples.ibMainMenu.reduxRedux",
+        "icon": "",
+        "link": "/home/redux"
+      }
+    ]
+  },
+  {
+    "label": "examples.ibMainMenu.dialogMain",
+    "icon": "announcement",
+    "link": "/home/dialog",
+    "paths": [
+      {
+        "label": "examples.ibMainMenu.dialogDialog",
+        "icon": "",
+        "link": "/home/dialog"
+      }
+    ]
+  },
+  {
+    "label": "examples.ibMainMenu.toastMain",
+    "icon": "breakfast_dining",
+    "link": "/home/toast",
+    "paths": [
+      {
+        "label": "examples.ibMainMenu.toastToast",
+        "icon": "",
+        "link": "/home/toast"
+      }
+    ]
+  }
+]

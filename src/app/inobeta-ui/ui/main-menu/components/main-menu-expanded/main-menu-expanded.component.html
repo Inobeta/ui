@@ -1,0 +1,104 @@
+<!--header---------------------------------------------------------------------->
+<div id="ib-main-menu-expanded-header" fxLayout="row" fxLayoutAlign="space-between center">
+  <div id="ib-main-menu-expanded-header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
+
+    <!-- header > title --------------------------------------->
+    <div id="ib-main-menu-expanded-header-title-wrapper" fxLayout="row" fxLayoutAlign="start center">
+      <p>{{navDataSet.title | translate }}</p>
+    </div>
+
+    <!-- header > dashboard button --------------------------->
+    <ib-main-menu-header-footer-buttons
+      [type]="'topCenter'"
+      [element]="navDataSet.topCenter"
+      (click)="emitAction($event, navDataSet.topCenter)">
+    </ib-main-menu-header-footer-buttons>
+
+    <!-- header > upRight buttons ------------------------------>
+    <div id="ib-main-menu-expanded-header-settingsLogout-wrapper" fxLayout="row" fxLayoutAlign="end center">
+      <div id="ib-main-menu-expanded-header-settingsLogout-box" fxLayout="row" fxLayoutAlign="space-evenly center">
+        <ng-container *ngFor="let upRight of navDataSet.upRight">
+          <ib-main-menu-header-footer-buttons
+          class="ib-main-menu-upRight-item"
+          [type]="'upRight'"
+          [element]="upRight"
+          (click)="emitAction($event,upRight)">
+        </ib-main-menu-header-footer-buttons>
+
+        </ng-container>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!--body---------------------------------------------------------------------->
+<div id="ib-main-menu-expanded-body">
+  <div id="ib-main-menu-expanded-body-wrapper" fxLayout="row wrap" fxLayoutGap="16px" fxLayoutAlign="start center" >
+    <ng-container *ngFor="let firstLevel of navDataSet.navData">
+
+      <!-- body > box ----------------------------------------->
+      <div
+      routerLink="{{ ( firstLevel.link === undefined) ? null : firstLevel.link }}"
+      routerLinkActive
+      #rla="routerLinkActive"
+      style="display: none;"
+      ></div>
+
+      <div class="{{rla.isActive? 'ib-main-menu-expanded-body-box ib-main-menu-box-active-box': 'ib-main-menu-expanded-body-box'}}" [ngStyle]="{'width': calcBoxWidth(firstLevel.paths.length)}">
+
+        <!-- body > box > firstLevel -------------------->
+        <div class="ib-main-menu-expanded-body-box-firstLevel">
+            <div class="ib-main-menu-expanded-body-box-firstLevel-box" fxLayout="row" fxLayoutAlign="start center">
+              <mat-icon>{{firstLevel.icon}}</mat-icon>
+              <p> {{firstLevel.label |translate}} </p>
+            </div>
+        </div>
+
+        <!-- body > box > secondLevel ------------------>
+        <div class="ib-main-menu-expanded-body-box-secondLevel" fxLayout="column wrap" fxLayoutAlign="start start" style="height: 85%;">
+          <ng-container *ngFor="let secondLevel of firstLevel.paths; let i = index">
+            <div
+              routerLink="{{ ( secondLevel.link === undefined) ? null : secondLevel.link }}"
+              routerLinkActive
+              #rla="routerLinkActive"
+              style="display: none;"
+            >
+            </div>
+            <button
+              mat-button
+              class="{{(rla.isActive && secondLevel.link !== undefined)? 'active-row-ie-secondLevel' : null}}"
+              fxFlex="18"
+              [ngStyle]="{'width': calcSecondLevelWidth(firstLevel.paths.length)}"
+              (click)="emitAction($event, secondLevel)"
+            >
+              <p>
+                {{secondLevel.label | translate}}
+              </p>
+            </button>
+          </ng-container>
+        </div>
+
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+<!--footer--------------------------------------------------------------------------------------------->
+<div id="ib-main-menu-expanded-footer">
+  <div id="ib-main-menu-expanded-footer-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
+
+      <!-- footer > bottomLeft button ------------------------>
+      <ib-main-menu-header-footer-buttons
+          [type]="'bottomLeft'"
+          [element]="navDataSet.bottomLeft"
+          (click)="emitAction($event,navDataSet.bottomLeft)">
+      </ib-main-menu-header-footer-buttons>
+
+    <!-- footer > bottomRight copyright ---------------------->
+    <div id="ib-main-menu-expanded-footer-copyright-wrapper">
+      <p>{{navDataSet.bottomRight | translate}}</p>
+    </div>
+
+  </div>
+</div>

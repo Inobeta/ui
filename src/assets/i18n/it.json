@@ -115,6 +115,9 @@
       "authFailure": "Errore: autenticazione non riuscita",
       "genericFailure": "Errore: operazione non riuscita"
     },
+    "ibMainMenu": {
+      "returnToDash": "Ritorna alla Dashboard"
+    },
     "profile": {
       "name": "Nome",
       "surname": "Cognome",
@@ -140,6 +143,33 @@
   "examples": {
     "toastMenu": "Toast",
     "toastMessage": "Messaggio toast",
-    "customErrorMessageExample": "Il valore di questo campo deve essere \"{{forcedValue}}\""
+    "customErrorMessageExample": "Il valore di questo campo deve essere \"{{forcedValue}}\"",
+    "ibMainMenu":{
+      "title": "DevKit",
+      "copyright": "© Inobeta 2021",
+      "getHelp": "Richiedi assistenza",
+      "settings": "Settings",
+      "logout": "Logout",
+
+      "tableMain": "Table",
+      "tableRedux": "With redux",
+      "tableNoRedux": "Without redux",
+      "tableSticky": "Sticky",
+
+      "dynamicFormsMain": "Dynamic forms",
+      "dynamicFormsDynamicForms": "Dynamic forms",
+
+      "httpMain": "Http",
+      "httpHttp": "Http",
+
+      "reduxMain": "Redux",
+      "reduxRedux": "Redux",
+
+      "dialogMain": "Dialog",
+      "dialogDialog": "Dialog",
+
+      "toastMain": "Toast",
+      "toastToast": "Toast"
+    }
   }
 }
