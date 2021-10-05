@@ -9,6 +9,8 @@
 - DEVK-86 IbTable Sticky header/footer/column added
 - DEVK-141 compodoc build fixed
 - DEVK-126 IbTable filters, sort and aggregation save config added
+- DEVK-153 IbDynamicForm: subscription on "form ready" added, disabledOnInit input will be removed in next major
+- DEVK-149 IbMainMenu module added
 
 ## [12.0.1]
 
