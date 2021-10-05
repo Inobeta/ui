@@ -23,6 +23,7 @@ import { IbMatSlideToggleControl } from 'src/app/inobeta-ui/ui/material-forms/co
 })
 export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
   @ViewChild('customForm', {static: true}) customForm: IbMaterialFormComponent;
+  @ViewChild('emptyForm', {static: true}) emptyForm: IbMaterialFormComponent;
   ibMatActionsPosition = IbMatActionsPosition;
   defaultFormFields: IbFormControlBase<string>[] = [
     new IbTextbox({
@@ -303,6 +304,13 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
   constructor() {}
 
   ngOnInit() {
+    this.customForm.afterInit().subscribe((form) => {
+      form.disable();
+    });
+    this.emptyForm.afterChanges().subscribe(({ changes, form }) => {
+      console.log('#emptyForm afterChanges()');
+      console.log(changes);
+    });
   }
 
   ngAfterViewInit(): void {
