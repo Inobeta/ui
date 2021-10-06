@@ -11,11 +11,11 @@ describe('IbMainMenuExpandedComponent', () => {
   let fixture: ComponentFixture<IbMainMenuExpandedComponent>;
   let data: IbMainMenuDataSet = {
     title: '',
-    topCenter: { link: '', label: '', icon: ''},
+    topCenter: { link: '', label: '', icon: { label:'', type:''}},
     upRight: [],
     navData: [],
     bottomRight: '',
-    bottomLeft: { link: '', label: '', icon: ''}
+    bottomLeft: { link: '', label: '', icon: { label:'', type:''}}
   };
 
 
