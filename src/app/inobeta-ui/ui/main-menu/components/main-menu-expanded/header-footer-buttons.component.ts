@@ -23,8 +23,8 @@ import { IbMainMenuButton } from '../../models/main-menu-button.model'
         <div
           fxLayout="row"
           fxLayoutAlign="space-evenly center">
-          <mat-icon>
-            {{element.icon}}
+          <mat-icon class="{{element.icon.type?'material-icons-' + element.icon.type + ' ' + element.icon.type : null}}">
+            {{element.icon.label}}
           </mat-icon>
           <p>
             {{ element.label | translate }}
@@ -39,8 +39,8 @@ import { IbMainMenuButton } from '../../models/main-menu-button.model'
       mat-button
       class="{{(rla.isActive && element.link !== undefined)? 'active-header-footer-button upRight-button': 'upRight-button'}}"
     >
-      <mat-icon>
-        {{element.icon}}
+      <mat-icon class="{{element.icon.type?'material-icons-' + element.icon.type: null}}">
+        {{element.icon.label}}
       </mat-icon>
     </button>
 
@@ -56,8 +56,8 @@ import { IbMainMenuButton } from '../../models/main-menu-button.model'
         fxLayout="row"
         fxLayoutAlign="center center"
       >
-        <mat-icon>
-          {{element.icon}}
+        <mat-icon class="{{element.icon.type?'material-icons-' + element.icon.type: null}}">
+          {{element.icon.label}}
         </mat-icon>
         <p>
           {{element.label | translate}}
