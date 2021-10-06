@@ -1,82 +1,74 @@
 [
   {
     "label": "examples.ibMainMenu.tableMain",
-    "icon": "table_rows",
+    "icon": {"label": "table_rows", "type": "two-tone"},
     "link": "/home/table",
     "paths": [
       {
         "label": "examples.ibMainMenu.tableRedux",
-        "icon": "",
         "link":  "/home/table/redux"
       },
       {
         "label": "examples.ibMainMenu.tableNoRedux" ,
-        "icon": "",
         "link":  "/home/table/noredux"
       },
       {
         "label": "examples.ibMainMenu.tableSticky",
-        "icon": "",
         "link": "/home/table/sticky"
       }
     ]
   },
   {
     "label": "examples.ibMainMenu.dynamicFormsMain",
-    "icon": "view_list",
+    "icon": {"label": "view_list", "type": "two-tone"},
     "link": "/home/forms",
     "paths": [
       {
         "label": "examples.ibMainMenu.dynamicFormsDynamicForms",
-        "icon": "",
         "link": "/home/forms"
       }
     ]
   },
   {
     "label": "examples.ibMainMenu.httpMain",
-    "icon": "http",
+    "icon": {"label": "http", "type": "two-tone"},
     "link": "/home/http",
     "paths": [
       {
         "label": "examples.ibMainMenu.httpHttp",
-        "icon": "",
         "link": "/home/http"
       }
     ]
   },
   {
     "label": "examples.ibMainMenu.reduxMain",
-    "icon": "archive",
+    "icon": {"label": "archive", "type": "two-tone"},
     "link": "/home/redux",
     "paths": [
       {
         "label": "examples.ibMainMenu.reduxRedux",
-        "icon": "",
         "link": "/home/redux"
       }
     ]
   },
   {
     "label": "examples.ibMainMenu.dialogMain",
-    "icon": "announcement",
+    "icon": {"label": "announcement", "type": "two-tone"},
     "link": "/home/dialog",
     "paths": [
       {
         "label": "examples.ibMainMenu.dialogDialog",
-        "icon": "",
         "link": "/home/dialog"
       }
     ]
   },
   {
     "label": "examples.ibMainMenu.toastMain",
-    "icon": "breakfast_dining",
+    "icon": {"label": "breakfast_dining", "type": "two-tone"},
     "link": "/home/toast",
     "paths": [
       {
         "label": "examples.ibMainMenu.toastToast",
-        "icon": "",
         "link": "/home/toast"
       }
     ]

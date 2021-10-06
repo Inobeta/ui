@@ -1,5 +1,5 @@
 export interface IbMainMenuButton {
   label: string,
-  icon: string,
+  icon?: { label: string, type?: string },
   link?: string
 }

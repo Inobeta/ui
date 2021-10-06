@@ -26,25 +26,25 @@ export class IbMainMenuExampleComponent {
   exNavTopCenter: IbMainMenuButton = {
     label: 'shared.ibMainMenu.returnToDash',
     link: 'home/table/redux',
-    icon: 'home'
+    icon: {label:'dashboard',type:'filled'}
   };
 
   exNavData: IbMainMenuData[] = (mainMenuData as any).default;
 
   exNavUpRight: IbMainMenuButton[] = [{
       label: "examples.ibMainMenu.settings",
-      icon: "settings",
+      icon: {label: "settings", type:"two-tone"},
       link: "home/forms"
     },
     {
       label: "examples.ibMainMenu.logout",
-      icon: "logout"
+      icon: {label:"exit_to_app", type: "two-tone"}
     }
   ];
 
   exNavBottomLeft: IbMainMenuButton = {
     label: "examples.ibMainMenu.getHelp",
-    icon: "help_outline",
+    icon: {label:"help_outline", type:""},
     link: "home/forms"
 
   };

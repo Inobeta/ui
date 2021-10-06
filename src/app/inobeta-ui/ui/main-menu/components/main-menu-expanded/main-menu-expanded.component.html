@@ -45,12 +45,14 @@
       style="display: none;"
       ></div>
 
-      <div class="{{rla.isActive? 'ib-main-menu-expanded-body-box ib-main-menu-box-active-box': 'ib-main-menu-expanded-body-box'}}" [ngStyle]="{'width': calcBoxWidth(firstLevel.paths.length)}">
+      <div class="{{(rla.isActive && firstLevel.link !== undefined)? 'ib-main-menu-expanded-body-box ib-main-menu-box-active-box': 'ib-main-menu-expanded-body-box'}}"
+        [ngStyle]="{'width': calcBoxWidth(firstLevel.paths.length)}"
+        (click)="$event.stopPropagation()">
 
         <!-- body > box > firstLevel -------------------->
         <div class="ib-main-menu-expanded-body-box-firstLevel">
             <div class="ib-main-menu-expanded-body-box-firstLevel-box" fxLayout="row" fxLayoutAlign="start center">
-              <mat-icon>{{firstLevel.icon}}</mat-icon>
+              <mat-icon class="{{firstLevel.icon.type?'material-icons-' + firstLevel.icon.type: null}}">{{firstLevel.icon.label}}</mat-icon>
               <p> {{firstLevel.label |translate}} </p>
             </div>
         </div>

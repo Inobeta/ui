@@ -164,23 +164,13 @@ div[ib-mat-slide-toggle]{
     rgba(mat.get-color-from-palette($ib-main-menu-main, 400), .907) 75%,
     rgba(mat.get-color-from-palette($ib-main-menu-main, 600), .907) 100%);
 }
-
 #ib-main-menu-expanded-header-closeButton-wrapper button {
   border-color: rgba(mat.get-color-from-palette($ib-main-menu-main, 200), .75);
-  background: rgba(mat.get-color-from-palette($ib-main-menu-main, 700), .25);
 }
 
 #ib-main-menu-expanded-header-settingsLogout-box {
   background: rgba(mat.get-color-from-palette($ib-main-menu-main, 500), .25);
   border-color: rgba(mat.get-color-from-palette($ib-main-menu-main, 200), .75);
-}
-
-.ib-main-menu-upRight-item:nth-child(1) .mat-button {
-  background: rgba(mat.get-color-from-palette($ib-main-menu-main, 300), .7);
-}
-
-#ib-main-menu-expanded-header-settingsLogout-box .mat-button:hover {
-  background-color: mat.get-color-from-palette($ib-main-menu-active, 500);
 }
 
 /* Body */
@@ -214,25 +204,30 @@ div[ib-mat-slide-toggle]{
 
 /* Common */
 
+#ib-main-menu-expanded-header-closeButton-wrapper button:hover,
+#ib-main-menu-expanded-header-settingsLogout-box .mat-button:hover,
+.ib-main-menu-expanded-body-box-secondLevel button:hover,
+#ib-main-menu-expanded-footer-support-button:hover {
+  background: rgba(mat.get-color-from-palette($ib-main-menu-main, 300), .7);
+}
+
 #ib-main-menu-expanded-header p,
-#ib-main-menu-expanded-header mat-icon,
 #ib-main-menu-expanded-body p,
-#ib-main-menu-expanded-body mat-icon,
-#ib-main-menu-expanded-footer p,
-#ib-main-menu-expanded-footer mat-icon{
+#ib-main-menu-expanded-footer p
+{
   color: mat.get-color-from-palette($ib-main-menu-main, A700);
 }
 
-#ib-main-menu-expanded-header-closeButton-wrapper button:hover,
-#ib-main-menu-expanded-footer-support-button:hover {
-  border-color: rgba(mat.get-color-from-palette($ib-main-menu-active, 400), .755);
-  -moz-box-shadow: 0px 0px 6px -2px
-    rgba(mat.get-color-from-palette($ib-main-menu-active, 400), .755);
-  -webkit-box-shadow: 0px 0px 6px -2px
-    rgba(mat.get-color-from-palette($ib-main-menu-active, 400), .755);
-  box-shadow: 0px 0px 6px -2px
-    rgba(mat.get-color-from-palette($ib-main-menu-active, 400), .755);
+ib-main-menu-expanded mat-icon {
+  color: white;
 }
+ib-main-menu-expanded .material-icons-two-tone {
+  color: black !important;
+  -webkit-filter: contrast(4) invert(1);
+  filter: contrast(4) invert(1);
+}
+
+
 
 .active-row-ie-secondLevel,
 .active-header-footer-button {
@@ -257,7 +252,7 @@ div[ib-mat-slide-toggle]{
 
 .blur-effect {
 
-  filter: blur(24px);
+  filter: blur(15px);
   animation: open .3s linear 0s;  height: 100%;
 
 }
@@ -266,7 +261,7 @@ div[ib-mat-slide-toggle]{
    filter: blur(0px);
   }
   to {
-    filter: blur(24px);
+    filter: blur(15px);
   }
 }
 
