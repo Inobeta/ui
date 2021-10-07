@@ -122,6 +122,8 @@ mat-icon {
 .ib-main-menu-expanded-body-box-firstLevel-box p {
   height: 24px;
   margin: 0;
+  line-height: 26px;
+
 }
 
 .ib-main-menu-expanded-body-box-secondLevel {
