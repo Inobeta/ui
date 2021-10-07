@@ -12,7 +12,8 @@
 }
 
 mat-icon {
-  font-size: 24px
+  font-size: 24px;
+  line-height: 24px;
 }
 
 #ib-main-menu-expanded-header-closeButton-wrapper button p,
@@ -96,7 +97,7 @@ mat-icon {
 
 .ib-main-menu-expanded-body-box-firstLevel {
   height: 34px;
-  border-bottom-width: 1.5px;
+  border-bottom-width: 2px;
   border-bottom-style: solid;
 }
 
@@ -115,6 +116,7 @@ mat-icon {
 
 .ib-main-menu-expanded-body-box-firstLevel-box mat-icon {
   margin-right: 10px;
+  line-height: 24px;
 }
 
 .ib-main-menu-expanded-body-box-firstLevel-box p {
@@ -138,9 +140,10 @@ mat-icon {
 }
 
 .ib-main-menu-expanded-body-box-secondLevel button p {
-  height: 24px;
-  margin: 1px 0px 0px 0px;
+  height: 32px;
+  margin: 0px;
   text-align: left;
+  line-height: 32px;
 }
 
 .ib-main-menu-expanded-body-box-secondLevel button {
@@ -168,11 +171,13 @@ mat-icon {
 
 #ib-main-menu-expanded-footer-copyright-wrapper {
   width: 166px;
-  height: 32px;
+  height: 60px;
 }
 
 #ib-main-menu-expanded-footer-copyright-wrapper p {
-  margin: 8px 0px 0px 0px;
+  height: 60px;
+  line-height: 60px;
+  margin: 0px;
   font-weight: 200;
   text-align: right;
 }

@@ -90,6 +90,11 @@ import { IbMainMenuButton } from '../../models/main-menu-button.model'
 
     #ib-main-menu-expanded-header-closeButton-wrapper button div p {
       margin: 0;
+      line-height: 36px;
+    }
+    #ib-main-menu-expanded-header-closeButton-wrapper button div mat-icon {
+      height: 36px;
+      line-height: 36px;
     }
     .upRight-button {
       min-width: 32px;
@@ -99,25 +104,28 @@ import { IbMainMenuButton } from '../../models/main-menu-button.model'
       padding: 0px;
       border-radius: 8px;
       transition: background-color .2s;
+      line-height: 32px;
     }
 
     .upRight-button mat-icon{
       font-size: 24px;
       min-width: 23px;
       max-width:23px;
-      min-height: 25px;
-      max-height: 25px;
-      margin: 0px 1px 5px 0px;
+      min-height: 23px;
+      max-height: 23px;
+      margin: 0px 1px 0px 0px;
+      line-height: 23px;
     }
 
     #ib-main-menu-expanded-footer-support-button {
       width: 166px;
       height: 32px;
+      line-height: 32px;
       border-radius: 8px;
       border-width: 1px;
       border-style: solid;
       padding:0px;
-      transition: border-color .2s, box-shadow .2s;
+      transition: background-color .2s;
     }
 
     #ib-main-menu-expanded-footer-support-button-wrapper {
@@ -127,18 +135,19 @@ import { IbMainMenuButton } from '../../models/main-menu-button.model'
 
     #ib-main-menu-expanded-footer-support-button-wrapper p {
       font-size: 12px;
-      margin: 0px 0px 4px 0px;
-      height: 20px;
+      margin: 0px;
+      height: 28px;
       font-style: normal;
       font-weight: 500;
-      line-height: 24px;
+      line-height: 28px;
     }
 
     #ib-main-menu-expanded-footer-support-button-wrapper mat-icon {
       font-size: 18px;
       width: 18px;
-      height: 18px;
+      height: 28px;
       margin: 0px 10px 0px 0px;
+      line-height: 28px;
     }
     `]
 })
