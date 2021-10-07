@@ -90,7 +90,7 @@ import { IbMainMenuButton } from '../../models/main-menu-button.model'
 
     #ib-main-menu-expanded-header-closeButton-wrapper button div p {
       margin: 0;
-      line-height: 36px;
+      line-height: 37px;
     }
     #ib-main-menu-expanded-header-closeButton-wrapper button div mat-icon {
       height: 36px;
