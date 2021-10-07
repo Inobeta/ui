@@ -20,6 +20,13 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSortModule } from '@angular/material/sort';
 import { IbTableHeaderFilterComponent } from '../table-header-filter-component';
 import { IbTableButtonComponent } from '../table-button.component';
+import { provideMockStore } from '@ngrx/store/testing';
+import {ibTableFeatureInitialState} from '../../store/reducers/table.reducer';
+import { IbModalTestModule } from '../../../modal';
+
+const mockedInitialState = {
+  ...ibTableFeatureInitialState
+};
 
 describe('IbTableHeaderComponent', () => {
   let component: IbTableHeaderComponent;
@@ -50,7 +57,11 @@ describe('IbTableHeaderComponent', () => {
         MatPaginatorModule,
         MatButtonModule,
         MatSnackBarModule,
-        MatCardModule
+        MatCardModule,
+        IbModalTestModule
+      ],
+      providers: [
+        provideMockStore({ initialState: mockedInitialState }),
       ]
     })
     .compileComponents();

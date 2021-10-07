@@ -18,6 +18,6 @@ html, body {
   box-sizing: border-box;
 }
 
-.evidence-row{
-  background-color: lightgreen;
+.evidence-row td {
+  background-color: lightgreen !important;
 }

@@ -21,6 +21,7 @@ export class IbTableStubComponent {
   @Input() hasDelete = false;
   @Input() hasExport = false;
   @Input() hasPaginator = true;
+  @Input() hasFooter = true;
   @Input() actions: IbTableAction[] = [];
   @Input() structureTemplates = {};
   @Input() templateButtons: IbTemplateModel[] = [];
@@ -38,6 +39,7 @@ export class IbTableStubComponent {
     delete: ''
   };
   @Input() deleteConfirm = true;
+  @Input() stickyAreas = [];
 
   @Output() filterChange: EventEmitter<any> = new EventEmitter<any>();
   @Output() sortChange: EventEmitter<any> = new EventEmitter<any>();

@@ -1,0 +1,46 @@
+<ng-template #rowActionTemplate let-item="item" let-isChecked="isChecked">
+  <span class="delete-button" (click)="$event.stopPropagation();consolePrint({item: item, isChecked: isChecked})">
+      <i class="material-icons ib-table-row-button" matRipple>search</i>
+  </span>
+</ng-template>
+
+<div fxLayout="row">
+  <div fxFlex="10%">example content on the left</div>
+  <div fxFlex="90%">
+    <ib-table
+      #ibTable
+      [tableName]="tableName"
+      [pdfCustomStyles]="pdfCustomStyles"
+      [pdfSetup]="pdfSetup"
+      [titles]="titles"
+      [items]="items"
+      [enableReduxStore]="true"
+      [selectableRows]="selectableRows"
+      [hasExport]="true"
+      [hasAdd]="true"
+      [hasEdit]="true"
+      [hasDelete]="true"
+      [stickyAreas]="stickyAreas"
+      [customItemTemplate]="{ guid: lotTemplate }"
+      [templateButtons]="[{
+        template: rowActionTemplate,
+        columnName: 'Action'
+      }]"
+      [actions]="actions"
+      [actionsPosition]="ibTableActionsPosition.BOTH"
+      [rowClass]="rowClass"
+      (add)="consolePrint('clicked on new')"
+      (edit)="consolePrint({ msg: 'edit click', data: $event})"
+      (delete)="consolePrint({ msg: 'delete click', data: $event})"
+      (rowClicked)="consolePrint({ msg: 'row click', data: $event})"
+      (rowChecked)="consolePrint({ msg: 'row selection change', data: $event})"
+      >
+    <ng-template #lotTemplate let-item="item">
+      <div style="font-weight: bold; color: red;">{{item.guid}}</div>
+    </ng-template>
+  </ib-table>
+  </div>
+</div>
+
+
+

@@ -41,9 +41,48 @@
           "rangeLabel1": "0 di {{length}}",
           "rangeLabel2": "{{startIndex}} - {{endIndex}} di {{length}}"
         },
-        "totals": "Totali",
-        "totalPerPage": "Totale pagina:",
-        "totalAllPages": "Totale complessivo:"
+        "func": {
+          "title": "Totali",
+          "add": "Aggrega",
+          "change": "Cambia",
+          "dialog": {
+            "title": "Aggrega",
+            "selectFunction": "Seleziona una funzione",
+            "remove": "Rimuovi"
+          },
+          "sum": {
+            "name": "Somma",
+            "currentPage": "Totale pagina:",
+            "allPages": "Totale complessivo:"
+          },
+          "avg": {
+            "name": "Media",
+            "currentPage": "Media pagina:",
+            "allPages": "Media complessiva:"
+          }
+        },
+        "saveConf": {
+          "title": "Salvataggio configurazione tabella",
+          "message": "Salva nuova configurazione o sovrascrivi quella corrente",
+          "newConf": "Nuova",
+          "editConf": "Corrente",
+          "setAsDefault": "Predefinita",
+          "configName": "Nome",
+          "configExists": "Esiste già una configurazione con questo nome"
+        },
+        "loadConf": {
+          "title": "Carica una configurazione",
+          "configName": "Nome",
+          "noConfig": "Non esistono configurazioni per questa tabella"
+        },
+        "exportData": {
+          "title": "Esporta Dati",
+          "export": "Esporta",
+          "format": "Formato",
+          "all": "Tutti i dati",
+          "currentPage": "Pagina corrente",
+          "selectedRows": "Righe selezionate"
+        }
     },
     "ibDropdown": {
       "selectAll": "Seleziona tutti",
@@ -65,7 +104,8 @@
     },
     "ibModal": {
       "yes": "Si",
-      "no": "No"
+      "no": "No",
+      "close": "Chiudi"
     },
     "ibCrudToast": {
       "success": "Salvataggio avvenuto con successo",
@@ -74,6 +114,9 @@
     "ibHttp": {
       "authFailure": "Errore: autenticazione non riuscita",
       "genericFailure": "Errore: operazione non riuscita"
+    },
+    "ibMainMenu": {
+      "returnToDash": "Ritorna alla Dashboard"
     },
     "profile": {
       "name": "Nome",
@@ -100,6 +143,33 @@
   "examples": {
     "toastMenu": "Toast",
     "toastMessage": "Messaggio toast",
-    "customErrorMessageExample": "Il valore di questo campo deve essere \"{{forcedValue}}\""
+    "customErrorMessageExample": "Il valore di questo campo deve essere \"{{forcedValue}}\"",
+    "ibMainMenu":{
+      "title": "DevKit",
+      "copyright": "© Inobeta 2021",
+      "getHelp": "Richiedi assistenza",
+      "settings": "Settings",
+      "logout": "Logout",
+
+      "tableMain": "Table",
+      "tableRedux": "With redux",
+      "tableNoRedux": "Without redux",
+      "tableSticky": "Sticky",
+
+      "dynamicFormsMain": "Dynamic forms",
+      "dynamicFormsDynamicForms": "Dynamic forms",
+
+      "httpMain": "Http",
+      "httpHttp": "Http",
+
+      "reduxMain": "Redux",
+      "reduxRedux": "Redux",
+
+      "dialogMain": "Dialog",
+      "dialogDialog": "Dialog",
+
+      "toastMain": "Toast",
+      "toastToast": "Toast"
+    }
   }
 }

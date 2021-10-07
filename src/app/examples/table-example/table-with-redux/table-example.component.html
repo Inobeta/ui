@@ -1,4 +1,3 @@
-See <a href="javascript:void(0);" routerLink="../noredux" routerLinkActive="active-link">Without redux</a>
 <ng-template #rowActionTemplate let-item="item" let-isChecked="isChecked">
   <span class="delete-button" (click)="$event.stopPropagation();consolePrint({item: item, isChecked: isChecked})">
       <i class="material-icons ib-table-row-button" matRipple>search</i>
@@ -43,6 +42,7 @@ See <a href="javascript:void(0);" routerLink="../noredux" routerLinkActive="acti
   [hasAdd]="true"
   [hasEdit]="true"
   [hasDelete]="true"
+  [hasFooter]="true"
   [customItemTemplate]="{ guid: lotTemplate, balance: balanceTemplate }"
   [templateButtons]="[{
     template: rowActionTemplate,

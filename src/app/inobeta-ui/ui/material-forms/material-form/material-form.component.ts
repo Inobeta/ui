@@ -21,6 +21,7 @@ export enum IbMatActionsPosition {
 })
 export class IbMaterialFormComponent extends IbDynamicFormComponent implements OnChanges {
   @Input() actionsPosition = IbMatActionsPosition.BOTTOM;
+  @Input() rowHeight = '80px';
   simpleActions = [];
   submitAction = null;
   ibMatActionsPosition = IbMatActionsPosition;

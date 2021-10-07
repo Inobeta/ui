@@ -47,6 +47,9 @@ export class IbTableTitles {
   format?: any;  // #FIXME change default to 1.2-2
   align?: IbTableCellAligns;
   width = 'auto';
+  /**
+   * @deprecated
+   */
   showTotalSum? = false;
   /**
    * @deprecated do not use this field, it will be removed in a future release
@@ -65,6 +68,12 @@ export class IbTableTitles {
    * @deprecated related to INPUT_NUMBER, this field will be removed
    */
   change?: any;
+  /**
+   * @member
+   * Utilizzare `true` o `start` per "attaccare" le colonne a sinistra,
+   * `end`, invece, sulla parte destra.
+   */
+  sticky? = undefined;
 }
 
 export class IbTableAction {
@@ -78,4 +87,7 @@ export enum IbTableActionsPosition {
   BOTH, TOP, BOTTOM
 }
 
+export enum IbStickyAreas {
+  HEADER, FOOTER, SELECT, DELETE, EDIT, TEMPLATE, SETTINGS
+}
 
