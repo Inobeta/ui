@@ -1,10 +1,10 @@
 # Main Menu Module
 
-Module that generates the main menu (desktop version). 
+This module generates the main menu (desktop version). 
 
 ## Introduction
 
-This module can be used to easily create a navigation menu for an application, and can support an unlimited number of first level and second level menu sections.
+It can be used to easily create a navigation menu for an application, and can support an unlimited number of first level and second level menu sections.
 
 ## How it works
 
@@ -21,22 +21,24 @@ It consists of a component `<ib-main-menu-bar>` that should be put on the header
 
 @Component({
   selector: 'ib-main-menu-example',
-  templateUrl: './ib-main-menu-example.component.html'
+  templateUrl: 'ib-main-menu-example.html'  
 })
-
 export class IbMainMenuExampleComponent  {
 
   // declare icon for <ib-main-menu-bar> button
   exampleMenuIconBar: string = 'apps';
 
-  // declare data for first and second levels menu navigation
-  exampleNavData: IbMainMenuData[] = navData;
-
   // declare string for app title you want to display in the menu
   exampleAppTitle: string = 'My App';
   
-  // declare data for up right buttons  
+  // declare data for top center button 
+  exampleNavTopCenter: IbMainMenuButton = navTopCenter;
+
+  // declare data for top right buttons  
   exampleNavUpRight: IbMainMenuButton[] = navUpRightData;
+
+  // declare data for first and second levels menu navigation
+  exampleNavData: IbMainMenuData[] = navData;
 
   // decalre data for bottom left button
   exampleNavBottomLeft: IbMainMenuButton = navBottomLeftData;
@@ -45,13 +47,18 @@ export class IbMainMenuExampleComponent  {
   exampleNavBottomRight: string = '© Acme 2021'
   
   constructor() { }
+  ...
+  handleMenuClick(whoHasBeenEmitted){
+    //handling event example
+    console.log('Emitted', whoHasBeenEmitted);
+  }
   
   ...
 
 ```
 
 In your component, you just need to declare these variables in order to set up the required data. To know how to set the data correctly with some examples, please visit the interfaces section below.
-After doing that, you need to declare the `<ib-main-menu-bar>` in the template and send to it these data as inputs.
+After doing that, you need to declare the `<ib-main-menu-bar>` in the template and send to it these data as inputs. As you can see from the example below, this component has an output `(action)` that emits the data related to the component who triggers the event. In this way, you are free to decide what to do when the user clicks on each button of the menu. In our example, the method that manages the click events is `handleMenuClick(whoHasBeenEmitted)`.
 
 ### Template 
 #### ib-main-menu-example.component.html
@@ -59,19 +66,21 @@ After doing that, you need to declare the `<ib-main-menu-bar>` in the template a
 ```html
 <ib-main-menu-bar
       [barIcon]="exampleMenuIconBar"
-      [navData]="exampleNavData"
       [navTitle]="exampleAppTitle"
+      [navButtonTopCenter]="exampleNavTopCenter"
       [navButtonsUpRight]="exampleNavUpRight"
+      [navData]="exampleNavData"
       [navBottomLeft]="exampleNavBottomLeft"
       [navButtonBottomRight]="exampleNavBottomRight"
-    ></ib-main-menu-bar>
+      (action)="handleMenuClick($event)"
+    ></ib-main-menu-bar>`
 ```
 That's it! Your menu is ready to be used for navigation.
 
 ## Interfaces
 
 Here's the section about customized data models, whose rules must be followed in order to properly set the menu's required data.
-Please note that the `icon` string field will display an actual icon only if it refers to the material icons list you can find [here](https://fonts.google.com/icons). 
+Please note that the `icon` field will display an actual icon only if it refers to the material icons list you can find [here](https://fonts.google.com/icons), and if it follows the rules explained below in the IbMainMenuData section.
 
 ### IbMainMenuButton
 
@@ -80,26 +89,23 @@ Please note that the `icon` string field will display an actual icon only if it 
 ```typescript
 export interface IbMainMenuButton {
   label: string,
-  icon: string,
-  link: string
+  icon?: { label: string, type?: string },
+  link?: string
 }
 ```
 #### Example
 ```typescript
 {
-      label: "Settings",
-      icon: "settings",
-      link: "home/settings"
+    label: 'Return to dashboard',
+    link: 'home/dashboard',
+    icon: {label:'dashboard',type:'filled'}
     },
 ```
 ### IbMainMenuData
 
 #### Interface
 ```typescript
-export interface IbMainMenuData {
-  label: string,
-  icon: string,
-  link: string,
+export interface IbMainMenuData extends IbMainMenuButton {
   paths?: IbMainMenuData []
 }
 ```
@@ -108,56 +114,42 @@ export interface IbMainMenuData {
 ```json
   {
     "label": "First level section 1",
-    "icon": "science",
-    "link": "/home/first-level-1",
+    "icon": {"label": "view_list", "type": "two-tone"},
+    "link": "home/first-level-1",
     "paths": [
       {
         "label": "Second level section 1",
-        "icon": "science",
-        "link":  "/second-level-1"
+        "link":  "home/first-level-1/second-level-1"
       },
       {
          "label": "Second level section 2",
-        "icon": "science",
-        "link":  "/second-level-2"
+        "link":  "/home/first-level-1/second-level-2"
       }
     ]
   },
   {
     "label": "First level section 2",
-    "icon": "sports_soccer",
+    "icon": {"label": "http", "type": "two-tone"},
     "link": "/home/first-level-2",
     "paths": [
       {
          "label": "Second level section 1",
         "icon": "sports_soccer",
-        "link":  "/second-level-1"
+        "link":  "/home/first-level-2/second-level-1"
       }
     ]
   }
 ```
-This data model is designed so you can set a first level menu section with second level menu sections connected to it, so when the menu is rendered, the `routeLink` referred to the second level will be the composition of its first level parent link plus its link. For example:
-```json
-{
-    "label": "First level section 1",
-    "icon": "science",
-    "link": "/home/first-level-1",
-    "paths": [
-      {
-        "label": "Second level section 1",
-        "icon": "science",
-        "link":  "/second-level-1"
-      },
-      ...
-```
-Here, the `routeLink` referred to 'Second level section 1' will become
-`/home/first-level-1/second-level-1`.
+This data model is designed so you can set a first level menu section with second level menu sections connected to it. The design requires the icon field set for the first levels, where the label refers to the material icon name, and the type to the different styles material icons offers: outlined, two-tone, filled, rounded and sharp. In order to be able to use this variants you must set also your `index.html` file, providing the right link element. For example, to be able to use all the variants, you must add this code:   
+`<link href="https://fonts.googleapis.com/icon?family=Material+Icons%7CMaterial+Icons+Outlined%7CMaterial+Icons+Two+Tone%7CMaterial+Icons+Round%7CMaterial+Icons+Sharp" rel="stylesheet">`
+
 ### IbMainMenuDataSet
 
 #### Interface
 ```typescript
 export interface IbMainMenuDataSet {
   title: string,
+  topCenter: IbMainMenuButton,
   upRight: IbMainMenuButton[],
   navData: IbMainMenuData[],
   bottomRight: string,
