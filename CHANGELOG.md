@@ -1,5 +1,9 @@
 # Inobeta/UI Changelog
 
+## [12.1.1]
+
+- DEVK-149 IbMainMenu doc reviewed
+
 ## [12.1.0]
 
 - DEVK-130 fix color bug on custom table columns
