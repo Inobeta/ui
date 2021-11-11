@@ -1,5 +1,10 @@
 # Inobeta/UI Changelog
 
+## [12.1.1]
+
+- DEVK-149 IbMainMenu doc reviewed
+- INOM-303 during bootstrap package removal from inomanager, a "class='hidden'" was found in the ib-uploader component, so it has been replaced with "style='display: none;'"
+
 ## [12.1.0]
 
 - DEVK-130 fix color bug on custom table columns
