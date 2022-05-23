@@ -1,24 +1,24 @@
-/*ib-table >>> .table-header{
+/*ib-table ::ng-deep .table-header{
   background-color: #FF4931;
 }
-ib-table >>> button.mat-sort-header-button,
-ib-table >>> #select-row-name,
-ib-table >>> #delete-row-name,
-ib-table >>> .table-header-title{
+ib-table ::ng-deep button.mat-sort-header-button,
+ib-table ::ng-deep #select-row-name,
+ib-table ::ng-deep #delete-row-name,
+ib-table ::ng-deep .table-header-title{
   font-family: 'Roboto', 'Regular', sans-serif;
   color: #ffffff !important;
 }
-ib-table >>> .table-row td, ib-table-header >>> .table-header-title {
+ib-table ::ng-deep .table-row td, ib-table-header ::ng-deep .table-header-title {
   border: none !important;
 }
-ib-table >>> .mat-sort-header-arrow, ib-table >>> .table-sort-indicator {
+ib-table ::ng-deep .mat-sort-header-arrow, ib-table ::ng-deep .table-sort-indicator {
   color: #FCEE21 !important;
 }
-ib-table >>> .table-row:hover > td{
+ib-table ::ng-deep .table-row:hover > td{
   color: #515151;
   background-color: #F7F7F7;
 }
-ib-table >>> td {
+ib-table ::ng-deep td {
   background-color: #ffffff;
 }
 */

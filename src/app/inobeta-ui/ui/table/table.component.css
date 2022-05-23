@@ -13,7 +13,7 @@ th {
   margin-bottom: 20px;
 }
 
-table >>> .table-header > th.ib-column-sticky {
+table ::ng-deep .table-header > th.ib-column-sticky {
   z-index: 100;
   background-color: inherit;
 }
@@ -24,23 +24,23 @@ thead.ib-header-sticky {
   z-index: 109;
 }
 
-table >>> .ib-footer-sticky {
+table ::ng-deep .ib-footer-sticky {
   position:sticky;
   bottom: 0;
   z-index: 109;
 }
 
-mat-paginator >>> .mat-paginator-container {
+mat-paginator ::ng-deep .mat-paginator-container {
   justify-content: flex-start !important;
   background-color: inherit;
 }
-mat-paginator >>> button {
+mat-paginator ::ng-deep button {
   transform: scale(0.8);
 }
-mat-paginator >>> .mat-form-field-underline {
+mat-paginator ::ng-deep .mat-form-field-underline {
   display: none;
 }
-mat-paginator >>> .mat-input-flex {
+mat-paginator ::ng-deep .mat-input-flex {
   background-color: gray;
   border-radius: 10px;
   padding-left: 15px;
@@ -48,10 +48,10 @@ mat-paginator >>> .mat-input-flex {
   padding-bottom: 0;
   margin-top: 10px;
 }
-mat-paginator >>> .mat-input-infix {
+mat-paginator ::ng-deep .mat-input-infix {
   border-top: 0 !important;
 }
-.table-header-title-custom >>> button{
+.table-header-title-custom ::ng-deep button{
   cursor: default;
 }
 

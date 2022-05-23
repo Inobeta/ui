@@ -49,11 +49,11 @@ https://stackblitz.com/edit/angular-ev8r2t?file=src%2Fapp%2Fselect-multiple-exam
 -->
   `,
   styles: [`
-      .ib-mat-dropdown-select-all >>> mat-pseudo-checkbox {
+      .ib-mat-dropdown-select-all ::ng-deep mat-pseudo-checkbox {
         display: none;
       }
 
-      .ib-mat-dropdown-select-all >>> .mat-option-text {
+      .ib-mat-dropdown-select-all ::ng-deep .mat-option-text {
         color: rgba(0, 0, 0, 0.87) !important;
         cursor: pointer !important;
       }
