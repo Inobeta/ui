@@ -95,7 +95,7 @@ import { IbStickyAreas, IbTableCellAligns, IbTableTitles, IbTableTitlesTypes } f
           [(ngModel)]="item[t.key]"
           matInput
           type="number"
-          (change)="t.change ? t.change(item, $event.value) : null"
+          (change)="t.change ? t.change(item, $event['value']) : null"
           placeholder="{{ t.placeHolderInput | translate }}"
           value="{{item[t.key]}}">
         </mat-form-field>
