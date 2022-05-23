@@ -11,7 +11,7 @@
 
 ### [13.0.0] - breaks
 
-no breaking changes in this version
+- node versions <= 12.20.0 are unsupported from this version, please install v16.14.0 for a better support
 
 ## Changelog types
 
