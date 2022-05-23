@@ -10,7 +10,7 @@ td {
   border-bottom: 1px solid #ccc;
   padding: 10px;
 }
-.table-header-title-custom >>> button{
+.table-header-title-custom ::ng-deep button{
   cursor: default;
 }
 

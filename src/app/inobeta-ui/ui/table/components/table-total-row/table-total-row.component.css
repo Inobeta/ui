@@ -2,7 +2,7 @@
   box-shadow: 0 -1px #ccc;
 }
 
-.ib-table-total-row-cell >>> div {
+.ib-table-total-row-cell ::ng-deep div {
   display: flex;
   flex-direction: column;
 }
