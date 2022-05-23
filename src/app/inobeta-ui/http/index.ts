@@ -20,3 +20,8 @@ export * from './http/response-handler.service.stub.spec';
 export * from './http-test.module';
 
 export * from './pages/login.component';
+
+
+// FIXME error NG3001
+export * from './http/spinner-loading.stub.spec';
+// END FIXME error NG3001

@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { RouterTestingModule } from '@angular/router/testing';
 import { IbMainMenuDataSet } from '../../models/main-menu-data-set.model';
 
 import { IbMainMenuDialogComponent } from './main-menu-dialog.component';
@@ -23,7 +24,7 @@ describe('IbMainMenuDialogComponent', () => {
       declarations: [ IbMainMenuDialogComponent ],
       imports: [
         MatDialogModule,
-
+        RouterTestingModule
       ],
       providers: [
         {
