@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { of } from 'rxjs';
 import { IbFormControlBase } from '../../forms/controls/form-control-base';
 import { IbFormAction } from '../../forms/dynamic-form/dynamic-form.component';
 import { IbMatActionsPosition } from './material-form.component';
@@ -30,6 +31,9 @@ export class IbMaterialFormStubComponent {
     }
   }
 
+  afterChanges(){
+    return of(this.toFormGroup(this.fields))
+  }
 
   toFormGroup(fields: IbFormControlBase<any>[]) {
     const group: any = {};
