@@ -1,5 +1,9 @@
 # Inobeta/UI Changelog
 
+## [12.1.2]
+
+- Fix missing method stub on forms testing stuff
+
 ## [12.1.1]
 
 - DEVK-149 IbMainMenu doc reviewed
