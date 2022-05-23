@@ -14,8 +14,8 @@ import { Component, Input } from '@angular/core';
       #searchBox
       (keyup)="data.base.change(data.self)"
       (change)="data.base.change(data.self)"
-      (input)="onSearchChange($event.target.value, data.base.options)"
-      (focus)="onSearchChange($event.target.value, data.base.options)"
+      (input)="onSearchChange($event.target['value'], data.base.options)"
+      (focus)="onSearchChange($event.target['value'], data.base.options)"
       [matAutocomplete]="auto"
       />
       <mat-icon

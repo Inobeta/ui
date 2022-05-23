@@ -13,3 +13,14 @@ export * from './store/reducers/table.reducer';
 export * from './store/selectors/table.selectors';
 export * from './services/table-conf.service';
 export * from './table.module';
+
+
+// FIXME error NG3001
+export * from './components/table-header/table-header.component';
+export * from './components/table-paginator.component';
+export * from './components/table-row.component';
+export * from './components/table-actions.component';
+export * from './components/table-button.component';
+export * from './components/table-header-filter-component';
+export * from './table.stub.spec';
+// END FIXME error NG3001

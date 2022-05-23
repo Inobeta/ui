@@ -1,6 +1,29 @@
 # Inobeta/UI Changelog
 
-## [12.1.2]
+## [13.0.0] (2022-05-23)
+
+### [13.0.0] - changes
+
+| Issue ID | Type | Section | Description |
+| -- | -- | -- | -- |
+|CASM-7|feat|Angular Core|Angular code and deps upgraded to 13.3|
+|none|docs|Changelog|New format changelog|
+
+### [13.0.0] - breaks
+
+no breaking changes in this version
+
+## Changelog types
+
+- ci: Changes to our CI configuration files and scripts
+- docs: Documentation only changes
+- feat: A new feature
+- fix: A bug fix
+- perf: A code change that improves performance
+- refactor: A code change that neither fixes a bug nor adds a feature
+- style: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
+
+## [12.1.2] (2022-05-23)
 
 - Fix missing method stub on forms testing stuff
 

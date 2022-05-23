@@ -1,3 +1,10 @@
+// https://github.com/microsoft/TypeScript-DOM-lib-generator/issues/1029
+declare global{
+  interface Navigator {
+    msSaveBlob: (blob: Blob, filename: string) => void
+  }
+}
+
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Sort } from '@angular/material/sort';
 import { IbStickyAreas, IbTableAction, IbTableActionsPosition, IbTableCellAligns, IbTableTitles, IbTableTitlesTypes } from './models/titles.model';
@@ -12,9 +19,10 @@ import { IbTableItem } from './models/table-item.model';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { formatDate } from '@angular/common';
 import { ibTableSelectFilters, ibTableSelectPaginator, ibTableSelectSort, ibTableSelectTotalRow } from './store/selectors/table.selectors';
-import { ibTableActionAddFilterField, ibTableActionLoadConfig, ibTableActionSaveConfig, ibTableActionSelectSortingField, ibTableActionSetPaginator } from './store/actions/table.actions';
+import { ibTableActionAddFilterField, ibTableActionLoadConfig, ibTableActionSelectSortingField, ibTableActionSetPaginator } from './store/actions/table.actions';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
+import { IbTableTotalRowState } from './store/reducers/table.reducer';
 
 @Component({
   selector: 'ib-table',
@@ -222,7 +230,7 @@ export class IbTableComponent implements OnChanges, OnInit, OnDestroy {
   rowForms: FormGroup[] = [];
   ibTableActionsPosition = IbTableActionsPosition;
   ibStickyArea = IbStickyAreas;
-  totalRow$ = new Observable();
+  totalRow$ = new Observable<IbTableTotalRowState[]>();
   private _paginatorSub: Subscription;
   private _filterSub: Subscription;
   private _sortSub: Subscription;
@@ -622,6 +630,7 @@ export class IbTableComponent implements OnChanges, OnInit, OnDestroy {
       delimiter: ';',
     });
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+
     if (navigator.msSaveBlob) { // IE 10+
       navigator.msSaveBlob(blob, this.tableName + '.csv');
     } else {
