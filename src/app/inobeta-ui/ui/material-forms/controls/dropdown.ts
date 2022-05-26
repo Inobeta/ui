@@ -5,7 +5,7 @@ import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, 
   selector: '[ib-mat-dropdown]',
   template: `
     <mat-form-field appearance="fill" style="width: 100%;"  [formGroup]="data.form">
-      <mat-label>{{data.base.label | translate}} {{(data.base.required) ? '*' : ''}}</mat-label>
+      <mat-label>{{data.base.label | translate}}</mat-label>
       <mat-select
         [formControlName]="data.base.key"
         [multiple]="data.base.multiple"

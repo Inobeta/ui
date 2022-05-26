@@ -6,7 +6,7 @@ import { Component, Input } from '@angular/core';
   selector: '[ib-mat-autocomplete]',
   template: `
   <mat-form-field appearance="fill" style="width: 100%;" [formGroup]="data.form">
-    <mat-label>{{data.base.label | translate}} {{(data.base.required) ? '*' : ''}}</mat-label>
+    <mat-label>{{data.base.label | translate}}</mat-label>
     <input
       matInput
       type="text"
