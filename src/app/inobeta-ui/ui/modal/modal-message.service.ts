@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { IbModalMessageComponent } from './modal-message.component';
 import { IbModalMessage } from './modal-message.model';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class IbModalMessageService {
   constructor(public dialog: MatDialog) { }
 

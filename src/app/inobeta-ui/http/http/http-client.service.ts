@@ -9,7 +9,7 @@ import { from } from 'rxjs';
 /*
   HttpClient with Bearer authentication
  */
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class IbHttpClientService {
 
   public pendingRequests = 0;

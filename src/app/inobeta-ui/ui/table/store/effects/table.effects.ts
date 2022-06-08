@@ -15,7 +15,7 @@ import { IbTableConfService } from '../../services/table-conf.service';
 const STORAGE_NAME = 'ib-table-store';
 const ANON_USER = 'ib-anon';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class TableEffects {
 
 

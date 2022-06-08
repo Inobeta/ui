@@ -3,7 +3,7 @@ import {Injectable} from '@angular/core';
 import {Observable, throwError} from 'rxjs';
 import {HttpEvent} from '@angular/common/http';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class IbResponseHandlerService {
 
   disableGlobalErrors = false;

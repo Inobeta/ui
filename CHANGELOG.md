@@ -7,6 +7,7 @@
 | Issue ID | Type | Section | Description |
 | -- | -- | -- | -- |
 |CASM-7|feat|Angular Core|Angular code and deps upgraded to 13.3|
+|CASM-13|fix|IbHttpModule|Set providedIn root for all services, in order to avoid "non sigleton" side effects in lazy loaded modules|
 |none|docs|Changelog|New format changelog|
 
 ### [13.0.0] - breaks
