@@ -1,4 +1,4 @@
-import { Injector, NgModule } from '@angular/core';
+import { Injector, ModuleWithProviders, NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { IbHttpClientService } from './http/http-client.service';
 import { CommonModule } from '@angular/common';
@@ -44,10 +44,6 @@ const components = [
   providers: [
     IbHttpClientService,
     IbResponseHandlerService,
-    IbAuthService,
-    IbSessionService,
-    IbAuthGuard,
-    IbLoginGuard,
     { provide: HTTP_INTERCEPTORS, useClass: IbAuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: IbErrorInterceptor, multi: true },
 
@@ -59,5 +55,17 @@ export class IbHttpModule {
 
   constructor(injector: Injector) {
     IbHttpModule.injector = injector;
+  }
+
+  static forRoot(): ModuleWithProviders<IbHttpModule> {
+    return {
+      ngModule: IbHttpModule,
+      providers: [
+        IbAuthService,
+        IbSessionService,
+        IbAuthGuard,
+        IbLoginGuard,
+      ]
+    };
   }
 }
