@@ -12,7 +12,10 @@
 
 ### [13.0.0] - breaks
 
-- node versions <= 12.20.0 are unsupported from this version, please install v16.14.0 for a better support
+- Node versions <= 12.20.0 are unsupported from this version, please install v16.14.0 for a better support
+- Angular Core version must be 13.3.9
+- IbHttpModule must be imported in app.module.ts via forRoot method
+
 
 ## Changelog types
 
