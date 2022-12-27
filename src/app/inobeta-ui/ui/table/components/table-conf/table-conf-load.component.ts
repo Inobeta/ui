@@ -41,7 +41,7 @@ import { IbTableConfService } from '../../services/table-conf.service';
     </mat-dialog-actions>
   `,
   styles: [`
-    mat-list-item >>> .mat-list-item-content {
+    mat-list-item ::ng-deep .mat-list-item-content {
       padding: 0 !important;
     }
   `]

@@ -6,7 +6,7 @@ import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, 
   selector: '[ib-mat-textbox]',
   template: `
   <mat-form-field appearance="fill" style="width: 100%;" [formGroup]="data.form">
-    <mat-label>{{data.base.label | translate}} {{(data.base.required) ? '*' : ''}}</mat-label>
+    <mat-label>{{data.base.label | translate}}</mat-label>
     <!--
       https://github.com/angular/angular/issues/13243
       type is not dynamic (see angular issue)

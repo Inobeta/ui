@@ -1,17 +1,21 @@
 # Inobeta/UI Changelog
 
-## [13.0.0] (2022-05-23)
+## [13.0.0] (2022-12-27)
 
 ### [13.0.0] - changes
 
 | Issue ID | Type | Section | Description |
 | -- | -- | -- | -- |
 |CASM-7|feat|Angular Core|Angular code and deps upgraded to 13.3|
+|CASM-13|fix|IbHttpModule|Set providedIn root for all services, in order to avoid "non sigleton" side effects in lazy loaded modules|
 |none|docs|Changelog|New format changelog|
 
 ### [13.0.0] - breaks
 
-- node versions <= 12.20.0 are unsupported from this version, please install v16.14.0 for a better support
+- Node versions <= 12.20.0 are unsupported from this version, please install v16.14.0 for a better support
+- Angular Core version must be 13.3.9
+- IbHttpModule must be imported in app.module.ts via forRoot method
+
 
 ## Changelog types
 

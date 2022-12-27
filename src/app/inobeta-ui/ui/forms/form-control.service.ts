@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { IbFormControlBase } from './controls/form-control-base';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class IbFormControlService {
   constructor() {}
 

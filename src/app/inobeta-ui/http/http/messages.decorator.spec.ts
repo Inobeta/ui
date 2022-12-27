@@ -10,7 +10,7 @@ import { IbHttpModule } from '../http.module';
 import { ibCrudToast } from './messages.decorator';
 
 describe('ibCrudToast Decorator', () => {
-  @Injectable()
+  @Injectable({providedIn: 'root'})
   class SampleService {
     @ibCrudToast(true)
     serviceCall() {

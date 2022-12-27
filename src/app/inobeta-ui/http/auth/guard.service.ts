@@ -2,7 +2,7 @@ import { Inject, Injectable, Optional } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { IbAuthService } from './auth.service';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class IbAuthGuard implements CanActivate {
   constructor(
     private authService: IbAuthService,
@@ -19,7 +19,7 @@ export class IbAuthGuard implements CanActivate {
   }
 }
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class IbLoginGuard implements CanActivate {
   public path = '';
   constructor(
