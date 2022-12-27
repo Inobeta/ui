@@ -1,6 +1,6 @@
 # Inobeta/UI Changelog
 
-## [13.0.0] (unreleased)
+## [13.0.0] (2022-12-27)
 
 ### [13.0.0] - changes
 
