@@ -18,7 +18,7 @@ import { MatLegacySelectModule as MatSelectModule } from '@angular/material/lega
 import { MatLegacySlideToggleModule as MatSlideToggleModule } from '@angular/material/legacy-slide-toggle';
 import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { FlexLayoutModule } from '@Inobeta/flex-layout';
 import { IbMatTextboxComponent } from './controls/textbox';
 import { IbMatDropdownComponent } from './controls/dropdown';
 import { IbMatRadioComponent } from './controls/radio';

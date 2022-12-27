@@ -1,5 +1,14 @@
 # Inobeta/UI Changelog
 
+## [15.0.0]
+
+- Compatibility with angular 15
+
+### [15.0.0] - breaks
+
+- ngrx-store-localstorage support end, please remove any usage and replace it with hydration metareducer provided
+- @angular/flex-layout support end, please replace any usage with @Inobeta/flex-layout provided by @Inobeta/flex-layout@15.0.0-inobeta and move away from this lib ASAP
+
 ## [14.0.0]
 
 - Compatibility with angular 14

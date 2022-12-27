@@ -7,7 +7,7 @@ import { IbDynamicFormsModule } from '../../forms';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { FlexLayoutModule } from '@Inobeta/flex-layout';
 import { IbMatButtonComponent } from './button';
 import { IbModalTestModule } from '../../modal/modal-test.module';
 
