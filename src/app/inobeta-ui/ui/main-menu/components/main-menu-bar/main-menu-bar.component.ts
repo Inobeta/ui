@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, Renderer2 } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { IbMainMenuButton } from '../../models/main-menu-button.model';
 import { IbMainMenuData } from '../../models/main-menu-data.model';
 import { IbMainMenuDialogComponent } from '../main-menu-dialog/main-menu-dialog.component';

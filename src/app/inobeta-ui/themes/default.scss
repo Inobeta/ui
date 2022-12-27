@@ -1,6 +1,6 @@
 @use '@angular/material' as mat;
 @mixin inobeta-ui-theme($theme-or-color-config){
-  @include mat.all-component-themes($theme-or-color-config);
+  @include mat.all-legacy-component-themes($theme-or-color-config);
   @include ib-table($theme-or-color-config);
   @include ib-main-menu($theme-or-color-config);
 }

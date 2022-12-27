@@ -8,11 +8,11 @@ import { IbTotalRowAvgCellComponent } from './cells/ib-total-row-avg-cell/ib-tot
 import { IbTotalRowBaseCellComponent } from './cells/ib-total-row-base-cell/ib-total-row-base-cell.component';
 import { IbTotalRowSumCellComponent } from './cells/ib-total-row-sum-cell/total-row-sum-cell.component';
 import { TranslateModule } from '@ngx-translate/core';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatSelectModule } from '@angular/material/select';
+import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
 import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { IbStickyAreaModule } from '../../directives/sticky-area/sticky-area.module';
 
 @NgModule({

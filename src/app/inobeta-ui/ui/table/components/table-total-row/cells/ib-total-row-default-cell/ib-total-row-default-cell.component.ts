@@ -1,5 +1,5 @@
 import { Component, ComponentFactoryResolver, ComponentRef, Directive, Input, OnChanges, OnInit, SimpleChanges, Type, ViewChild, ViewContainerRef } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { Store } from '@ngrx/store';
 import { IbTableItem } from '../../../../models/table-item.model';
 import { IbTableTitles, IbTableTitlesTypes } from '../../../../models/titles.model';
