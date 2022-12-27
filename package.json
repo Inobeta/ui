@@ -6,7 +6,7 @@
     "start": "ng serve --disable-host-check",
     "build": "ng build --configuration production",
     "test": "ng test  --code-coverage",
-    "test-ci": "ng test  --code-coverage --sourceMap=true --watch=false",
+    "test-ci": "ng test  --code-coverage --watch=false",
     "test-with-diagnostic": "ng test --sourceMap=false",
     "lint": "ng lint",
     "e2e": "ng e2e",
