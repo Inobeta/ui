@@ -1,5 +1,9 @@
 # Inobeta/UI Changelog
 
+## [14.0.0]
+
+- Compatibility with angular 14
+
 ## [13.0.0] (2022-12-27)
 
 ### [13.0.0] - changes
@@ -15,17 +19,6 @@
 - Node versions <= 12.20.0 are unsupported from this version, please install v16.14.0 for a better support
 - Angular Core version must be 13.3.9
 - IbHttpModule must be imported in app.module.ts via forRoot method
-
-
-## Changelog types
-
-- ci: Changes to our CI configuration files and scripts
-- docs: Documentation only changes
-- feat: A new feature
-- fix: A bug fix
-- perf: A code change that improves performance
-- refactor: A code change that neither fixes a bug nor adds a feature
-- style: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
 
 ## [12.1.2] (2022-05-23)
 
@@ -143,3 +136,13 @@
 - IbBreadcrumbs
 - IbUploader
 - Themes & CSS
+
+## Changelog types
+
+- ci: Changes to our CI configuration files and scripts
+- docs: Documentation only changes
+- feat: A new feature
+- fix: A bug fix
+- perf: A code change that improves performance
+- refactor: A code change that neither fixes a bug nor adds a feature
+- style: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
