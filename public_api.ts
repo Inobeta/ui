@@ -9,5 +9,6 @@ export * from './src/app/inobeta-ui/ui/uploader/index';
 export * from './src/app/inobeta-ui/http/index';
 export * from './src/app/inobeta-ui/storage/index';
 export * from './src/app/inobeta-ui/tools/index';
+export * from './src/app/inobeta-ui/hydration/index';
 
 
