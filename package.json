@@ -73,7 +73,7 @@
     "@Inobeta:registry": "https://gitlab.com/api/v4/projects/8604184/packages/npm/"
   },
   "exports": {
-    "default": {
+    ".": {
       "sass": "./src/app/inobeta-ui/themes/default.scss"
     }
   }
