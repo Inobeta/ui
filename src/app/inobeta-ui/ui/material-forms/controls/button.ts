@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { IbFormControlBase, IbFormControlBaseComponent, IbFormControlBaseParams, IbFormControlData, IbFormControlInterface } from '../../forms/controls/form-control-base';
 import { IbModalMessageService } from '../../modal/modal-message.service';
 
@@ -67,7 +67,7 @@ export interface IbMatButtonParams extends IbFormControlBaseParams<string> {
   color?: string;
   requireValidation?: boolean;
   requireConfirmOnDirty?: boolean;
-  handler?: (form: FormGroup) => void;
+  handler?: (form: UntypedFormGroup) => void;
 }
 
 

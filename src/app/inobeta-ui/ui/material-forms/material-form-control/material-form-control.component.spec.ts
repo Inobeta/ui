@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IbMaterialFormControlComponent } from './material-form-control.component';
 import { IbToolTestModule } from '../../../tools';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, UntypedFormGroup, UntypedFormControl } from '@angular/forms';
 import { IbDynamicFormsModule, IbTextbox } from '../../forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -46,8 +46,8 @@ describe('IbMaterialFormControlComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(IbMaterialFormControlComponent);
     component = fixture.componentInstance;
-    component.form = new FormGroup({
-      test: new FormControl()
+    component.form = new UntypedFormGroup({
+      test: new UntypedFormControl()
     });
 
     component.base = new IbTextbox({

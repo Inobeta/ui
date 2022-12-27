@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { IbModalMessageService } from '../../modal/modal-message.service';
 import { IbTableItem } from '../models/table-item.model';
 import { IbTemplateModel } from '../models/template.model';
@@ -145,7 +145,7 @@ export class IbTableRowComponent implements OnInit {
   @Input() customItemTemplate: any;
   @Input() selectableRows = true;
   @Input() templateButtons: IbTemplateModel[] = [];
-  @Input() formRow: FormGroup;
+  @Input() formRow: UntypedFormGroup;
   @Input() hasEdit = false;
   @Input() hasDelete = false;
   @Input() deleteConfirm = true;

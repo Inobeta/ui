@@ -3,7 +3,7 @@ import { IbTableAction, IbTableActionsPosition, IbTableTitles } from './models/t
 import { IbTemplateModel } from './models/template.model';
 import { IbTableItem } from './models/table-item.model';
 import { jsPDFOptions } from 'jspdf';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, UntypedFormGroup } from '@angular/forms';
 
 @Component({
   selector: 'ib-table',
@@ -52,7 +52,7 @@ export class IbTableStubComponent {
 
   getSelectedRows() {return [];}
   setFilter() {}
-  rowForm() {return new FormGroup({});}
+  rowForm() {return new UntypedFormGroup({});}
   getFormValues() {return {};}
   isValidForm() {return true;}
   resetFilters() {}

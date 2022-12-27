@@ -1,20 +1,20 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
 import { IbFormControlBase } from '../controls/form-control-base';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { IbFormControlService } from '../form-control.service';
 import { Observable, Subject } from 'rxjs';
 
 export interface IbFormAction {
   key?: string;
   label: string;
-  handler?: (form: FormGroup) => void;
+  handler?: (form: UntypedFormGroup) => void;
   options?: any;
   requireConfirmOnDirty?: boolean;
 }
 
 interface IbFormOnChanges {
   changes: SimpleChanges;
-  form: FormGroup;
+  form: UntypedFormGroup;
 }
 
 @Component({
@@ -35,9 +35,9 @@ export class IbDynamicFormComponent implements OnInit, OnChanges, OnDestroy {
    */
   @Input() disabledOnInit = false;
   @Output() ibSubmit = new EventEmitter<any>();
-  form: FormGroup;
+  form: UntypedFormGroup;
 
-  private readonly onInitSubject = new Subject<FormGroup>();
+  private readonly onInitSubject = new Subject<UntypedFormGroup>();
 
   private readonly onChangesSubject = new Subject<IbFormOnChanges>();
 
@@ -80,7 +80,7 @@ export class IbDynamicFormComponent implements OnInit, OnChanges, OnDestroy {
     source.handler(this.form);
   }
 
-  afterInit(): Observable<FormGroup> {
+  afterInit(): Observable<UntypedFormGroup> {
     return this.onInitSubject;
   }
 

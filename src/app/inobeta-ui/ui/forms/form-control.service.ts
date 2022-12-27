@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { IbFormControlBase } from './controls/form-control-base';
-import { FormControl, Validators, FormGroup } from '@angular/forms';
+import { UntypedFormControl, Validators, UntypedFormGroup } from '@angular/forms';
 
 @Injectable({providedIn: 'root'})
 export class IbFormControlService {
@@ -22,10 +22,10 @@ export class IbFormControlService {
       if(field.required){
         validators.push(Validators.required)
       }
-      group[field.key] = new FormControl(elem, validators);
+      group[field.key] = new UntypedFormControl(elem, validators);
 
     });
 
-    return new FormGroup(group);
+    return new UntypedFormGroup(group);
   }
 }

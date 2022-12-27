@@ -1,6 +1,6 @@
 import { Subject } from 'rxjs';
 import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, Validators } from '@angular/forms';
 import { debounceTime } from 'rxjs/operators';
 import { IbTableTitlesTypes } from '../models/titles.model';
 
@@ -195,7 +195,7 @@ export class IbTableHeaderFilterComponent implements OnInit {
 
   numericConditions = [];
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: UntypedFormBuilder) {
     this.searchSubject.pipe(
       debounceTime(700)
     ).subscribe((value) => this.doFilter(value));
@@ -223,8 +223,8 @@ export class IbTableHeaderFilterComponent implements OnInit {
   }) {
     this.numericConditions.push(
       this.fb.group({
-        condition: new FormControl(filter.condition, Validators.required),
-        value: new FormControl(filter.value, Validators.required)
+        condition: new UntypedFormControl(filter.condition, Validators.required),
+        value: new UntypedFormControl(filter.value, Validators.required)
       })
     );
   }
@@ -254,7 +254,7 @@ export class IbTableHeaderFilterComponent implements OnInit {
       }
     } else {
       this.generalForm =  this.fb.group({
-        filter: new FormControl( this.filter )
+        filter: new UntypedFormControl( this.filter )
       });
     }
   }
