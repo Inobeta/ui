@@ -64,7 +64,6 @@
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "^1.6.0",
     "ng-packagr": "^15.0.3",
-    "ngrx-store-localstorage": "^14.0.0",
     "protractor": "~7.0.0",
     "ts-node": "~4.1.0",
     "tslint": "~6.1.0",
@@ -74,7 +73,7 @@
     "@Inobeta:registry": "https://gitlab.com/api/v4/projects/8604184/packages/npm/"
   },
   "exports": {
-    ".": {
+    "default": {
       "sass": "./src/app/inobeta-ui/themes/default.scss"
     }
   }
