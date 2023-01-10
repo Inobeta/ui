@@ -102,9 +102,24 @@ export class IbMatTextboxComponent implements IbFormControlInterface {
 
   get maxLengthValidator() {
     for (const func of this.data.base.validators) {
-      const validation = func({value: {
-        length: Infinity
-      }} as AbstractControl);
+      const getMethods = (obj) => {
+        let properties = new Set()
+        let currentObj = obj
+        do {
+          Object.getOwnPropertyNames(currentObj).map(item => properties.add(item))
+        } while ((currentObj = Object.getPrototypeOf(currentObj)))
+        return [...properties.keys()].filter((item: any) => typeof obj[item] === 'function') as string[]
+      }
+      const sampleString = this.data.self.value
+      if(!sampleString) return Infinity
+
+      const methods: string[] = getMethods(sampleString)
+      const fakeString: any = {}
+      for(let m of methods){
+        fakeString[m] = sampleString[m].bind(sampleString)
+      }
+      fakeString['length'] = Infinity
+      const validation = func({value: fakeString} as AbstractControl);
       if (validation && validation.maxlength) {
         return validation.maxlength.requiredLength;
       }
