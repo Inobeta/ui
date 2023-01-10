@@ -27,6 +27,7 @@ import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, 
       *ngIf="data.base.type === 'text'"
       [formControlName]="data.base.key"
       [id]="data.base.key"
+      [maxlength]="maxLengthValidator"
       type="text"
       (keyup)="data.base.change(data.self)"
       (change)="data.base.change(data.self)"
@@ -97,6 +98,20 @@ export class IbMatTextboxComponent implements IbFormControlInterface {
     }
     return null;
   }
+
+
+  get maxLengthValidator() {
+    for (const func of this.data.base.validators) {
+      const validation = func({value: {
+        length: Infinity
+      }} as AbstractControl);
+      if (validation && validation.maxlength) {
+        return validation.maxlength.requiredLength;
+      }
+    }
+    return Infinity;
+  }
+
 }
 
 

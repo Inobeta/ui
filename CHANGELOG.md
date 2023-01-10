@@ -1,6 +1,12 @@
 # Inobeta/UI Changelog
 
-## [12.1.2]
+## [12.1.3] (2023-01-10)
+
+| Issue ID | Type | Section | Description |
+| -- | -- | -- | -- |
+|DEVK-169|fix|IbMaterialFormModule|Support of maxLength validator on template fix|
+
+## [12.1.2] (2022-05-23)
 
 - Fix missing method stub on forms testing stuff
 
