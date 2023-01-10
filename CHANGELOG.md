@@ -12,6 +12,12 @@
 - ngrx-store-localstorage support end, please remove any usage and replace it with hydration metareducer provided
 - @angular/flex-layout support end, please replace any usage with @Inobeta/flex-layout provided by @Inobeta/flex-layout@15.0.0-inobeta and move away from this lib ASAP
 
+## [12.1.3] (2023-01-10)
+
+| Issue ID | Type | Section | Description |
+| -- | -- | -- | -- |
+|DEVK-169|fix|IbMaterialFormModule|Support of maxLength validator on template fix|
+
 ## [14.0.0] (2022-12-27)
 
 - Compatibility with angular 14
@@ -31,12 +37,6 @@
 - Node versions <= 12.20.0 are unsupported from this version, please install v16.14.0 for a better support
 - Angular Core version must be 13.3.9
 - IbHttpModule must be imported in app.module.ts via forRoot method
-
-## [12.1.3] (2023-01-10)
-
-| Issue ID | Type | Section | Description |
-| -- | -- | -- | -- |
-|DEVK-169|fix|IbMaterialFormModule|Support of maxLength validator on template fix|
 
 ## [12.1.2] (2022-05-23)
 
