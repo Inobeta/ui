@@ -76,8 +76,8 @@ mat-icon {
   max-width: 1010px;
   height:100%;
   margin: 0 auto;
-  margin-top:90px;
-  padding-bottom: 90px;
+  margin-top:80px;
+  /*padding-bottom: 90px;*/
 }
 
 #ib-main-menu-expanded-body-wrapper {
@@ -146,6 +146,7 @@ mat-icon {
   margin: 0px;
   text-align: left;
   line-height: 32px;
+  width: 100%;
 }
 
 .ib-main-menu-expanded-body-box-secondLevel button {

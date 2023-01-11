@@ -55,18 +55,17 @@ import { IbStickyAreas, IbTableCellAligns, IbTableTitles, IbTableTitlesTypes } f
 
     <!--TYPE = TAG-->
     <span *ngIf="t.type === typeEnum.TAG" class="{{t.className}}">
-       <mat-chip-list>
-         <mat-chip
+       <mat-chip-listbox>
+         <mat-chip-option
            *ngFor="let tag of item[t.key]"
            [ngStyle]="{
              'background-color': tag.background || '#f2536e',
-             'color': tag.color
+             '--mdc-chip-label-text-color': tag.color
            }"
-           style="
-              text-transform: uppercase;">
-           {{ tag.name | translate }}
-         </mat-chip>
-       </mat-chip-list>
+           >
+           {{ (tag.name | translate)?.toUpperCase() }}
+         </mat-chip-option>
+       </mat-chip-listbox>
      </span>
 
     <!--TYPE = COMBOBOX-->

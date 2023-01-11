@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, _closeLegacyDialogVia as _closeDialogVia } from '@angular/material/legacy-dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, _closeDialogVia } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { IbMainMenuDataSet } from '../../models/main-menu-data-set.model';
 

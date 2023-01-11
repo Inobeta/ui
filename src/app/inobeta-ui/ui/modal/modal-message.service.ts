@@ -1,5 +1,5 @@
 import { Injectable, Type } from '@angular/core';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { IbModalMessageComponent } from './modal-message.component';
 import { IbModalMessage } from './modal-message.model';
 

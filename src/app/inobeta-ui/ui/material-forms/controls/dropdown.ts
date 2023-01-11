@@ -53,6 +53,7 @@ https://stackblitz.com/edit/angular-ev8r2t?file=src%2Fapp%2Fselect-multiple-exam
         display: none;
       }
 
+      /* TODO(mdc-migration): The following rule targets internal classes of option that may no longer apply for the MDC version. */
       .ib-mat-dropdown-select-all ::ng-deep .mat-option-text {
         color: rgba(0, 0, 0, 0.87) !important;
         cursor: pointer !important;

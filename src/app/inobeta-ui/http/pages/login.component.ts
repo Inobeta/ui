@@ -2,7 +2,7 @@ import {Component, Input} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormGroup, UntypedFormControl, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {IbSessionService} from '../auth/session.service';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 // TODO angular2-toaster eliminato da package.json, quindi qui ci sono vari commenti per far partire l'app
 

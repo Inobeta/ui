@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { IbTableConfService } from '../../services/table-conf.service';
 
@@ -8,29 +8,31 @@ import { IbTableConfService } from '../../services/table-conf.service';
   template: `
     <h2 mat-dialog-title>{{ data.title | translate }}</h2>
     <mat-dialog-content style="min-width:350px;min-height: 10vh;">
-      <mat-list>
-        <mat-list-item *ngFor="let config of configs">
-          <div mat-line>
-            <button (click)="toggleDefault(config)" mat-icon-button>
-              <mat-icon *ngIf="config.isDefault; else notDefault">star</mat-icon>
-              <ng-template #notDefault><mat-icon>star_outline</mat-icon></ng-template>
-            </button>
-            {{config.name}}
+      <div>
+        <div *ngFor="let config of configs">
+          <div class="table-conf-line">
+            <div class="table-conf-first">
+              <button (click)="toggleDefault(config)" mat-icon-button>
+                <mat-icon *ngIf="config.isDefault; else notDefault">star</mat-icon>
+                <ng-template #notDefault><mat-icon>star_outline</mat-icon></ng-template>
+              </button>
+              {{config.name}}
+            </div>
+            <div class="table-conf-second">
+              <button (click)="loadConfig(config)" color="accent" mat-icon-button>
+                <mat-icon>upload</mat-icon>
+              </button>
+              <button (click)="deleteConfig(config)" color="warn" mat-icon-button>
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
           </div>
-          <div>
-            <button (click)="loadConfig(config)" color="accent" mat-icon-button>
-              <mat-icon>upload</mat-icon>
-            </button>
-            <button (click)="deleteConfig(config)" color="warn" mat-icon-button>
-              <mat-icon>delete</mat-icon>
-            </button>
-          </div>
-        </mat-list-item>
+        </div>
 
-        <mat-list-item *ngIf="!configs.length">
+        <div *ngIf="!configs.length">
           {{ 'shared.ibTable.loadConf.noConfig' | translate }}
-        </mat-list-item>
-      </mat-list>
+        </div>
+      </div>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
       <button
@@ -41,8 +43,13 @@ import { IbTableConfService } from '../../services/table-conf.service';
     </mat-dialog-actions>
   `,
   styles: [`
-    mat-list-item ::ng-deep .mat-list-item-content {
-      padding: 0 !important;
+    .table-conf-line{
+      display: flex;
+    }
+    .table-conf-first{
+      flex: 1;
+      display: flex;
+      align-items: center;
     }
   `]
 })

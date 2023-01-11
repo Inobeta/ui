@@ -73,7 +73,7 @@ import { IbTableTitlesTypes } from '../models/titles.model';
           *ngFor="let cond of numericConditions; let last = last"
           [formGroup]="cond"
           >
-          <mat-form-field style="width:70px;">
+          <mat-form-field style="width:140px;">
             <mat-label>Condizione</mat-label>
             <mat-select formControlName="condition">
               <mat-option
@@ -83,7 +83,7 @@ import { IbTableTitlesTypes } from '../models/titles.model';
               >{{op.label}}</mat-option>
             </mat-select>
           </mat-form-field>
-          <mat-form-field style="width:130px;">
+          <mat-form-field style="width:200px;">
             <mat-label>Valore</mat-label>
             <input
               formControlName="value"
@@ -119,55 +119,55 @@ import { IbTableTitlesTypes } from '../models/titles.model';
   `,
   styles: [
     `
-      .modal-selector {
-        width: 260px;
-        min-height: 200px;
-        max-height: 300px;
-        overflow-y: auto;
-        background-color: white;
-        -webkit-box-shadow: 40px 20px 70px 0 rgba(0, 0, 0, 0.49);
-        -moz-box-shadow: 40px 20px 70px 0 rgba(0, 0, 0, 0.49);
-        box-shadow: 40px 20px 70px 0 rgba(0, 0, 0, 0.49);
-        color: black;
-        z-index: 100;
-      }
+          .modal-selector {
+            /*width: 260px;*/
+            min-height: 200px;
+            max-height: 300px;
+            overflow-y: auto;
+            background-color: white;
+            -webkit-box-shadow: 40px 20px 70px 0 rgba(0, 0, 0, 0.49);
+            -moz-box-shadow: 40px 20px 70px 0 rgba(0, 0, 0, 0.49);
+            box-shadow: 40px 20px 70px 0 rgba(0, 0, 0, 0.49);
+            color: black;
+            z-index: 100;
+          }
 
-      .modal-row {
-        font-family: 'Red Hat Text';
-        font-weight: bold;
-        size: 18px;
-        color: #999999;
-        padding: 10px;
-        padding-right: 20px;
-        padding-left: 20px;
-      }
+          .modal-row {
+            font-family: 'Red Hat Text';
+            font-weight: bold;
+            size: 18px;
+            color: #999999;
+            padding: 10px;
+            padding-right: 20px;
+            padding-left: 20px;
+          }
 
-      .mat-input-element {
-        font-family: 'Red Hat Text' !important;
-      }
+          .mat-mdc-input-element {
+            font-family: 'Red Hat Text' !important;
+          }
+          /*
+          .modal-row:hover, .modal-row-active {
+            background-color: #F7F7F7;
+          }*/
 
-      .modal-row:hover, .modal-row-active {
-        background-color: #F7F7F7;
-      }
+          .modal-icons {
+            float: right;
+            size: 10px;
+            font-weight: normal;
+          }
 
-      .modal-icons {
-        float: right;
-        size: 10px;
-        font-weight: normal;
-      }
+          .inner-modal {
+            margin-left: 200px;
+            margin-top: 125px;
+            width: 300px;
+          }
 
-      .inner-modal {
-        margin-left: 200px;
-        margin-top: 125px;
-        width: 300px;
-      }
+          .inner-modal .modal-row {
+            overflow-x: hidden;
+            text-overflow: ellipsis;
+          }
 
-      .inner-modal .modal-row {
-        overflow-x: hidden;
-        text-overflow: ellipsis;
-      }
-
-    `
+        `
 
   ]
 
@@ -177,6 +177,8 @@ export class IbTableHeaderFilterComponent implements OnInit {
   @Input() ibTable: any;
   @Input() col: any;
   @Input() filter: any;
+  @Input() cmList: any;
+  @Input() key: string;
 
 
   columnTypes = IbTableTitlesTypes;
@@ -231,6 +233,7 @@ export class IbTableHeaderFilterComponent implements OnInit {
 
   searchNumeric() {
     this.search(this.numericConditions.map(c => c.value));
+    this.cmList[this.key] = false;
   }
 
   numericFormsValid() {

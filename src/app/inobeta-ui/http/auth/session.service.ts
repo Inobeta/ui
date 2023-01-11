@@ -7,7 +7,7 @@ import {throwError} from 'rxjs';
 import {Store} from '@ngrx/store';
 import * as SessionActions from './redux/session.actions';
 import {Router} from '@angular/router';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Inject } from '@angular/core';
 import { Optional } from '@angular/core';
 
