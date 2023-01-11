@@ -40,6 +40,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { IbTableConfigModule } from './components/table-conf/table-config.module';
 import { TotalRowModule } from './components/table-total-row/total-row.module';
 import { IbStickyAreaModule } from './directives/sticky-area/sticky-area.module';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'host-test',
@@ -277,7 +278,8 @@ describe('IbTableComponent', () => {
         }),
         IbStickyAreaModule,
         TotalRowModule,
-        IbTableConfigModule
+        IbTableConfigModule,
+        OverlayModule
       ]
     })
       .compileComponents();
