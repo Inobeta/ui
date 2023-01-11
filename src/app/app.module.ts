@@ -4,14 +4,13 @@ import { AppComponent } from './app.component';
 import { RoutingModule } from './routing.module';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { FlexLayoutModule } from '@Inobeta/flex-layout';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { IbTableExampleComponent } from 'src/app/examples/table-example/table-with-redux/table-example.component';
 import { NavComponent } from './examples/nav/nav.component';
 import { DynamicFormsExampleComponent } from './examples/dynamic-forms-example/dynamic-forms-example.component';
-import { ActionReducerMap, ActionReducer, MetaReducer, StoreModule } from '@ngrx/store';
-import {localStorageSync} from 'ngrx-store-localstorage';
+import { ActionReducerMap, StoreModule } from '@ngrx/store';
 import { IbTableModule } from './inobeta-ui/ui/table/table.module';
 import { IbDynamicFormsModule } from './inobeta-ui/ui/forms/forms.module';
 import { IbBreadcrumbModule } from './inobeta-ui/ui/breadcrumb/breadcrumb.module';
@@ -45,6 +44,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { TableEffects } from './inobeta-ui/ui/table/store/effects/table.effects';
 import { IbMainMenuModule } from './inobeta-ui/ui/main-menu/main-menu.module';
 import { IbMainMenuExampleComponent } from './examples/main-menu-example/main-menu-example.component';
+import { ibEffects, ibMetaReducers } from './inobeta-ui/hydration';
 
 export interface IAppState {
   sessionState?: ISessionState;
@@ -54,12 +54,6 @@ export interface IAppState {
 const reducers: ActionReducerMap<IAppState> = {
   countState: counterReducer
 };
-
-export function localStorageSyncReducer(reducer: ActionReducer<any>): ActionReducer<any> {
-  return localStorageSync({keys: ['sessionState'], rehydrate: true})(reducer);
-}
-
-const metaReducers: Array<MetaReducer<any, any>> = [localStorageSyncReducer];
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -105,13 +99,13 @@ export const statusErrorMessages = { 404: 'Risorsa non trovata'};
     MatButtonModule,
     MatGridListModule,
     StoreModule.forRoot(reducers, {
-      metaReducers,
+      metaReducers: ibMetaReducers,
       runtimeChecks: {
         strictStateImmutability: false,
         strictActionImmutability: false,
       },
     }),
-    EffectsModule.forRoot([TableEffects]),
+    EffectsModule.forRoot([TableEffects, ...ibEffects]),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       logOnly: environment.production,
@@ -135,7 +129,8 @@ export const statusErrorMessages = { 404: 'Risorsa non trovata'};
     FlexLayoutModule
   ],
   providers: [
-
+    {provide: 'ibSessionStorageKey', useValue: '__redux-store-inobeta-ui__'},
+    {provide: 'ibReduxPersistKeys', useValue: ['sessionState', 'ibTable']},
     {provide: 'HttpMode', useValue: 'NORMAL'},
     {provide: 'ibHttpToastOnStatusCode', useValue: statusErrorMessages },
     {provide: 'ibHttpToastErrorCode', useValue: 'code' },

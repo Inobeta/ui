@@ -42,32 +42,37 @@
         </th>
         <th width="1%" style="padding:0px;">
           <i
+            [hidden]="!(t.filterable && supportedFilters.indexOf(t.type) > -1)"
             class="material-icons filter-button"
             style="font-size: 14px;font-weight: bolder; float:right;"
-            *ngIf="t.filterable && supportedFilters.indexOf(t.type) > -1"
-            [matMenuTriggerFor]="filter"
-            (menuClosed)="renderContextMenu[t.key] = false;"
-            (menuOpened)="renderContextMenu[t.key] = true;"
+            (click)="renderContextMenu[t.key] = true;"
+            cdkOverlayOrigin
+            #trigger="cdkOverlayOrigin"
           >
           filter_alt
         </i>
-          <mat-menu
-            #filter="matMenu"
+        <ng-template
+          *ngIf="t.filterable && supportedFilters.indexOf(t.type) > -1"
+          cdkConnectedOverlay
+          [cdkConnectedOverlayOrigin]="trigger"
+          [cdkConnectedOverlayOpen]="renderContextMenu[t.key]"
+          (overlayOutsideClick)="renderContextMenu[t.key] = false"
+        >
+          <div
+          style="width:100%;height:auto; padding: 0px;"
           >
-            <div
-            style="width:260px;height:auto; padding: 0px;"
-            mat-menu-item
-            >
-            <div
-              *ngIf="renderContextMenu[t.key]"
-              ib-table-header-filter
-              [ibTable]="table"
-              [col]="t"
-              [filter]="columnFilter[t.key]"
-            >
-            </div>
-            </div>
-          </mat-menu>
+          <div
+            *ngIf="renderContextMenu[t.key]"
+            ib-table-header-filter
+            [ibTable]="table"
+            [col]="t"
+            [filter]="columnFilter[t.key]"
+            [cmList]="renderContextMenu"
+            [key]="t.key"
+          >
+          </div>
+          </div>
+        </ng-template>
         </th>
       </tr>
     </table>

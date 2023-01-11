@@ -1,6 +1,6 @@
 import { CommonModule, registerLocaleData } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { FlexLayoutModule } from '@Inobeta/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -40,6 +40,7 @@ import { ibTableFeatureKey, ibTableFeatureReducer } from './store/reducers/table
 import { RouterModule } from '@angular/router';
 import { IbMaterialFormModule } from '../material-forms/material-form.module';
 import { IbTableConfigModule } from './components/table-conf/table-config.module';
+import { OverlayModule } from '@angular/cdk/overlay';
 registerLocaleData(localeIt, 'it');
 
 export function ibMatPaginatorTranslate(translateService: TranslateService) {
@@ -92,6 +93,7 @@ export function ibMatPaginatorTranslate(translateService: TranslateService) {
     EffectsModule.forFeature([TableEffects]),
     RouterModule,
     IbTableConfigModule,
+    OverlayModule
   ],
   exports: [
     IbTableComponent,

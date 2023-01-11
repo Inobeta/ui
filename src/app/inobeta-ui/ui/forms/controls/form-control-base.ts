@@ -1,4 +1,4 @@
-import { FormControl, ValidatorFn, Form, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, ValidatorFn, Form, UntypedFormGroup, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { TemplateRef, Type } from '@angular/core';
@@ -14,7 +14,7 @@ export class IbFormControlBase<T> {
   public type: string;
   public validators: ValidatorFn[];
   public options: {key?: string | number, value: string}[];
-  public change: (c: FormControl) => void;
+  public change: (c: UntypedFormControl) => void;
   public width: string;
   public control: IbFormControlBaseComponent;
   public cols: number;
@@ -49,12 +49,12 @@ export class IbFormControlBase<T> {
 
     let previousValue = this.value;
     const changeSubject = new Subject();
-    this.change = (c: FormControl) => {
+    this.change = (c: UntypedFormControl) => {
       if (options.change && c.value !== previousValue) { changeSubject.next(c); }
     };
     changeSubject.pipe(
       debounceTime(this.debounceOnChange)
-    ).subscribe((control: FormControl) => {
+    ).subscribe((control: UntypedFormControl) => {
       previousValue = control.value;
       options.change(control);
     });
@@ -74,7 +74,7 @@ export interface IbFormControlBaseParams<T> {
   type?: string;
   validators?: ValidatorFn[];
   options?: {key?: string | number, value: string}[];
-  change?: (c: FormControl) => void;
+  change?: (c: UntypedFormControl) => void;
   width?: string;
   control?: IbFormControlBaseComponent;
   cols?: number;
@@ -93,8 +93,8 @@ export class IbFormControlBaseComponent {
 
 export interface IbFormControlData {
   base: IbFormControlBaseParams<any>;
-  self?: FormControl;
-  form?: FormGroup;
+  self?: UntypedFormControl;
+  form?: UntypedFormGroup;
   hasError?: (errorCode: string) => boolean;
   formControlErrors?: TemplateRef<any>;
 }

@@ -2,7 +2,7 @@ import { TestBed, waitForAsync } from '@angular/core/testing';
 
 import { IbToolTestModule } from '../../../tools';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IbDynamicFormsModule } from '../../forms';
 import { MatOptionModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -10,16 +10,16 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { FlexLayoutModule } from '@Inobeta/flex-layout';
 import {  IbMatDropdownComponent } from '../controls/dropdown';
 
 
 
 describe('IbMatDropdownComponent', () => {
   let component: IbMatDropdownComponent;
-  let formBuilder: FormBuilder;
-  let control: FormControl;
-  let form: FormGroup;
+  let formBuilder: UntypedFormBuilder;
+  let control: UntypedFormControl;
+  let form: UntypedFormGroup;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -42,8 +42,8 @@ describe('IbMatDropdownComponent', () => {
       ]
     })
     .compileComponents();
-    formBuilder = TestBed.inject(FormBuilder);
-    control = new FormControl('control');
+    formBuilder = TestBed.inject(UntypedFormBuilder);
+    control = new UntypedFormControl('control');
     form = formBuilder.group(control);
   }));
 

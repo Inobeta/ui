@@ -16,7 +16,7 @@ import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { TranslateService } from '@ngx-translate/core';
 import { IbTableItem } from './models/table-item.model';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { formatDate } from '@angular/common';
 import { ibTableSelectFilters, ibTableSelectPaginator, ibTableSelectSort, ibTableSelectTotalRow } from './store/selectors/table.selectors';
 import { ibTableActionAddFilterField, ibTableActionLoadConfig, ibTableActionSelectSortingField, ibTableActionSetPaginator } from './store/actions/table.actions';
@@ -227,7 +227,7 @@ export class IbTableComponent implements OnChanges, OnInit, OnDestroy {
   currentPagination: any = {};
   columnFilter = {};
   numOfElements = 0;
-  rowForms: FormGroup[] = [];
+  rowForms: UntypedFormGroup[] = [];
   ibTableActionsPosition = IbTableActionsPosition;
   ibStickyArea = IbStickyAreas;
   totalRow$ = new Observable<IbTableTotalRowState[]>();
@@ -240,7 +240,7 @@ export class IbTableComponent implements OnChanges, OnInit, OnDestroy {
   constructor(
     private store: Store<any>,
     private translate: TranslateService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private router: Router
     ) { }
 
@@ -300,10 +300,10 @@ export class IbTableComponent implements OnChanges, OnInit, OnDestroy {
       this.rowForms = [];
       for (const i of this.items) {
         const rowGroup = {
-          isChecked: new FormControl(i.ibTableItemSelected),
+          isChecked: new UntypedFormControl(i.ibTableItemSelected),
         };
         for (const k of this.titles.map(h => h.key)) {
-          rowGroup[k] = new FormControl(i[k]);
+          rowGroup[k] = new UntypedFormControl(i[k]);
         }
         this.rowForms.push(this.fb.group(rowGroup));
       }

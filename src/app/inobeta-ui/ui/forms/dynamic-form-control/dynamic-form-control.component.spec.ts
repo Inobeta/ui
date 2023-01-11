@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { IbDynamicFormControlComponent } from './dynamic-form-control.component';
 import { IbFormControlService } from '..';
-import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
+import { ReactiveFormsModule, UntypedFormGroup, UntypedFormControl } from '@angular/forms';
 import { IbFormControlBase } from '../controls/form-control-base';
 import { IbTextbox } from '../controls/textbox';
 import { CommonModule } from '@angular/common';
@@ -23,8 +23,8 @@ describe('IbDynamicFormControlComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(IbDynamicFormControlComponent);
     component = fixture.componentInstance;
-    component.form = new FormGroup({
-      test: new FormControl()
+    component.form = new UntypedFormGroup({
+      test: new UntypedFormControl()
     });
 
     component.base = new IbTextbox({

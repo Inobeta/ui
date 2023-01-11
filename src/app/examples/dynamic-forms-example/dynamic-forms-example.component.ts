@@ -58,7 +58,7 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
       key: 'changeValueField',
       label: 'Change my value',
       validators: [Validators.minLength(3), Validators.maxLength(5), Validators.required],
-      width: '33.3%',
+      width: '15%',
       change: (control) => {
         console.log('current value', control.value);
       },
@@ -70,16 +70,25 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
       type: 'email',
       key: 'email',
       label: 'Email',
-      width: '33.3%',
+      width: '15%',
       cols: 2,
       rows: 1,
       required: true,
       validators: [Validators.email]
     }),
+    new IbMatTextboxControl({
+      key: 'length',
+      label: 'MinLength=3, MaxLength=12',
+      width: '35%',
+      cols: 4,
+      rows: 1,
+      required: false,
+      validators: [Validators.minLength(3), Validators.maxLength(12)]
+    }),
     new IbMatDatepickerControl({
       type: 'date',
       key: 'dateTime',
-      width: '33.3%',
+      width: '35%',
       label: 'Date',
       value: '2021-01-pippa',
       required: true,

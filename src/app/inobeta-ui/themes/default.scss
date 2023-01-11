@@ -5,27 +5,65 @@
   @include ib-main-menu($theme-or-color-config);
 }
 
+/*global patches for material breaks on v15**/
+@include mat.checkbox-density(-1);
+@include mat.radio-density(-1);
 
+:root {
+  --mdc-typography-button-letter-spacing: normal;
+  --mdc-typography-button-font-family: sans-serif;
+  --mdc-typography-body1-font-size: 14px;
+  .mat-mdc-input-element::-webkit-calendar-picker-indicator {
+    display: block;
+  }
+  [hidden] { display: none !important;}
+  ib-material-form .mdc-button {
+    padding: 0 8px 0 8px !important;
+  }
+  .mat-mdc-form-field-bottom-align::before{
+    content: none;
+  }
+  .mat-mdc-form-field {
+    padding-bottom: 22px;
+    overflow-y: hidden;
+  }
+  .mat-mdc-form-field-error {
+    line-height: 12px;
+  }
 
-.ib-toast-success{
-  background-color: green !important;
-  font-weight: bold !important;
-  color: white !important;
+  ib-material-form-control{
+    padding: 0px 5px;
+  }
+
+  .mat-mdc-paginator-page-size{
+    align-items: center;
+    .mat-mdc-form-field{
+      padding-bottom: 0px;
+    }
+  }
+
+  .ib-toast-success{
+    --mdc-snackbar-container-color: green;
+    --mdc-snackbar-supporting-text-color: white;
+    --mdc-snackbar-supporting-text-weight: bold;
+  }
+
+  .ib-toast-warning{
+    --mdc-snackbar-container-color: orange;
+    --mdc-snackbar-supporting-text-color: white;
+    --mdc-snackbar-supporting-text-weight: bold;
+  }
+
+  .ib-toast-error{
+    --mdc-snackbar-container-color: red;
+    --mdc-snackbar-supporting-text-color: white;
+    --mdc-snackbar-supporting-text-weight: bold;
+  }
 }
 
-.ib-toast-warning{
-  background-color: orange !important;
-  font-weight: bold !important;
-  color: white !important;
-}
+/*global patches end**/
 
-.ib-toast-error{
-  background-color: red !important;
-  font-weight: bold !important;
-  color: white !important;
-}
-
-.mat-tooltip{
+.mat-mdc-tooltip{
   white-space: pre-line;
 }
 
@@ -205,7 +243,7 @@ div[ib-mat-slide-toggle]{
 /* Common */
 
 #ib-main-menu-expanded-header-closeButton-wrapper button:hover,
-#ib-main-menu-expanded-header-settingsLogout-box .mat-button:hover,
+#ib-main-menu-expanded-header-settingsLogout-box .mat-mdc-button:hover,
 .ib-main-menu-expanded-body-box-secondLevel button:hover,
 #ib-main-menu-expanded-footer-support-button:hover {
   background: rgba(mat.get-color-from-palette($ib-main-menu-main, 300), .7);
@@ -237,17 +275,27 @@ ib-main-menu-expanded .material-icons-two-tone {
 
 /* ib-main-menu dialog custom class */
 
-.mat-dialog-container-for-ib-main-menu .mat-dialog-container {
+.mat-dialog-container-for-ib-main-menu .mat-mdc-dialog-container {
   background: rgba(mat.get-color-from-palette($ib-main-menu-main, 500), .50);
   padding: 0px !important;
 }
+.mat-dialog-container-for-ib-main-menu .mat-mdc-dialog-container .mdc-dialog__surface{
+  background-color: transparent !important;
+}
 
+.mat-dialog-container-for-ib-main-menu .mdc-dialog .mdc-dialog__content{
+  padding: 0px !important;
+}
 
-.mat-dialog-container-for-ib-main-menu .mat-dialog-container .mat-dialog-content {
+.mat-dialog-container-for-ib-main-menu .mat-dialog-container .mat-mdc-dialog-content {
   min-height: 100%;
   max-width: 100%;
   margin: 0px;
   padding: 0px;
+}
+
+.mat-dialog-container-for-ib-main-menu .mdc-button__label{
+  width: 100%;
 }
 
 .blur-effect {

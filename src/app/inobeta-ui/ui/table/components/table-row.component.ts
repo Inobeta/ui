@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { IbModalMessageService } from '../../modal/modal-message.service';
 import { IbTableItem } from '../models/table-item.model';
 import { IbTemplateModel } from '../models/template.model';
@@ -55,18 +55,17 @@ import { IbStickyAreas, IbTableCellAligns, IbTableTitles, IbTableTitlesTypes } f
 
     <!--TYPE = TAG-->
     <span *ngIf="t.type === typeEnum.TAG" class="{{t.className}}">
-       <mat-chip-list>
-         <mat-chip
+       <mat-chip-listbox>
+         <mat-chip-option
            *ngFor="let tag of item[t.key]"
            [ngStyle]="{
              'background-color': tag.background || '#f2536e',
-             'color': tag.color
+             '--mdc-chip-label-text-color': tag.color
            }"
-           style="
-              text-transform: uppercase;">
-           {{ tag.name | translate }}
-         </mat-chip>
-       </mat-chip-list>
+           >
+           {{ (tag.name | translate)?.toUpperCase() }}
+         </mat-chip-option>
+       </mat-chip-listbox>
      </span>
 
     <!--TYPE = COMBOBOX-->
@@ -145,7 +144,7 @@ export class IbTableRowComponent implements OnInit {
   @Input() customItemTemplate: any;
   @Input() selectableRows = true;
   @Input() templateButtons: IbTemplateModel[] = [];
-  @Input() formRow: FormGroup;
+  @Input() formRow: UntypedFormGroup;
   @Input() hasEdit = false;
   @Input() hasDelete = false;
   @Input() deleteConfirm = true;

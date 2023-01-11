@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { of } from 'rxjs';
 import { IbFormControlBase } from '../../forms/controls/form-control-base';
 import { IbFormAction } from '../../forms/dynamic-form/dynamic-form.component';
@@ -15,7 +15,7 @@ export class IbMaterialFormStubComponent {
   @Input() actionsPosition = IbMatActionsPosition.BOTTOM;
   @Input() disabledOnInit = false;
   @Output() ibSubmit = new EventEmitter<any>();
-  form: FormGroup;
+  form: UntypedFormGroup;
 
   constructor() {
   }
@@ -50,10 +50,10 @@ export class IbMaterialFormStubComponent {
       if (field.required) {
         validators.push(Validators.required);
       }
-      group[field.key] = new FormControl(elem, validators);
+      group[field.key] = new UntypedFormControl(elem, validators);
 
     });
 
-    return new FormGroup(group);
+    return new UntypedFormGroup(group);
   }
 }

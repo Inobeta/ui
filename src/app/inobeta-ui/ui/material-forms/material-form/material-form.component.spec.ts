@@ -9,7 +9,8 @@ import { IbDynamicFormsModule, IbFormControlBase, IbFormControlService } from '.
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatOptionModule, DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
+import { MatOptionModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -22,7 +23,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { Component } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { FlexLayoutModule } from '@Inobeta/flex-layout';
 import { IbMatTextboxControl, IbMatTextboxComponent } from '../controls/textbox';
 import { IbMatCheckboxControl, IbMatCheckboxComponent } from '../controls/checkbox';
 import { IbMatRadioControl, IbMatRadioComponent } from '../controls/radio';

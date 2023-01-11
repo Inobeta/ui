@@ -36,7 +36,6 @@ import { IbMainMenuButton } from '../../models/main-menu-button.model'
     <!-- upRight button ------------->
     <button
       *ngIf="type === 'upRight'"
-      mat-button
       class="{{(rla.isActive && element.link !== undefined)? 'active-header-footer-button upRight-button': 'upRight-button'}}"
     >
       <mat-icon class="{{element.icon.type?'material-icons-' + element.icon.type: null}}">
@@ -47,7 +46,6 @@ import { IbMainMenuButton } from '../../models/main-menu-button.model'
     <!-- bottomLeft button --------->
     <button
       *ngIf="type === 'bottomLeft'"
-      mat-button
       id="ib-main-menu-expanded-footer-support-button"
       class="{{(rla.isActive && element.link !== undefined)? 'active-header-footer-button': null}}"
     >
@@ -105,6 +103,14 @@ import { IbMainMenuButton } from '../../models/main-menu-button.model'
       border-radius: 8px;
       transition: background-color .2s;
       line-height: 32px;
+
+      background-color: transparent;
+      border: 0px;
+      margin-top: 5px;
+      padding-top: 5px;
+    }
+    .upRight-button:hover {
+      background: hsla(0,0%,45%,.7)
     }
 
     .upRight-button mat-icon{

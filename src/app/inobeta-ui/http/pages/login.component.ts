@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {FormBuilder, FormGroup, FormControl, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, UntypedFormControl, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {IbSessionService} from '../auth/session.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -37,17 +37,17 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class IbLoginComponent {
 
   @Input() path;
-  form: FormGroup;
+  form: UntypedFormGroup;
 
   constructor(
     private srvSession: IbSessionService,
-    private srvFormBuilder: FormBuilder,
+    private srvFormBuilder: UntypedFormBuilder,
     private srvRouter: Router,
     private snackBar: MatSnackBar) {
     this.form = this.srvFormBuilder.group({
-      username: new FormControl('', Validators.required),
-      password: new FormControl('', Validators.required),
-      rememberMe: new FormControl(false)
+      username: new UntypedFormControl('', Validators.required),
+      password: new UntypedFormControl('', Validators.required),
+      rememberMe: new UntypedFormControl(false)
     });
   }
 

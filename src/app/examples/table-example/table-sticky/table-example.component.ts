@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, Validators } from '@angular/forms';
+import { UntypedFormGroup, Validators } from '@angular/forms';
 import { IbMatTextboxControl } from 'src/app/inobeta-ui/ui/material-forms/controls/textbox';
 import { IbTableItem } from 'src/app/inobeta-ui/ui/table/models/table-item.model';
 import { IbStickyAreas, IbTableAction, IbTableActionsPosition, IbTableTitlesTypes } from 'src/app/inobeta-ui/ui/table/models/titles.model';
@@ -129,7 +129,7 @@ export class IbTableStickyExampleComponent implements OnInit {
     });
   }
 
-  setValidators(form: FormGroup) {
+  setValidators(form: UntypedFormGroup) {
     form.controls.balance.setValidators([Validators.required, Validators.min(1)]);
     return form;
   }

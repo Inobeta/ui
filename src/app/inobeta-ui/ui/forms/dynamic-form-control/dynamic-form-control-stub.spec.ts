@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { IbFormControlBase } from '..';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 
 @Component({
   selector: 'ib-dynamic-form-control',
@@ -9,5 +9,5 @@ import { FormGroup } from '@angular/forms';
 
 export class DynamicFormControlStubComponent {
   @Input() base: IbFormControlBase<string>;
-  @Input() form: FormGroup;
+  @Input() form: UntypedFormGroup;
 }

@@ -30,16 +30,20 @@ table ::ng-deep .ib-footer-sticky {
   z-index: 109;
 }
 
-mat-paginator ::ng-deep .mat-paginator-container {
+/* TODO(mdc-migration): The following rule targets internal classes of paginator that may no longer apply for the MDC version. */
+mat-paginator ::ng-deep .mat-mdc-paginator-container {
   justify-content: flex-start !important;
   background-color: inherit;
 }
+/* TODO(mdc-migration): The following rule targets internal classes of paginator that may no longer apply for the MDC version. */
 mat-paginator ::ng-deep button {
   transform: scale(0.8);
 }
+/* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
 mat-paginator ::ng-deep .mat-form-field-underline {
   display: none;
 }
+/* TODO(mdc-migration): The following rule targets internal classes of input that may no longer apply for the MDC version. */
 mat-paginator ::ng-deep .mat-input-flex {
   background-color: gray;
   border-radius: 10px;
@@ -48,6 +52,7 @@ mat-paginator ::ng-deep .mat-input-flex {
   padding-bottom: 0;
   margin-top: 10px;
 }
+/* TODO(mdc-migration): The following rule targets internal classes of input that may no longer apply for the MDC version. */
 mat-paginator ::ng-deep .mat-input-infix {
   border-top: 0 !important;
 }
