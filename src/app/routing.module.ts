@@ -10,6 +10,9 @@ import { IbToastExampleComponent } from './examples/toast-example/toast-example.
 import { IbTableExampleNoReduxComponent } from './examples/table-example/table-without-redux/table-example.component';
 import { IbTableStickyExampleComponent } from './examples/table-example/table-sticky/table-example.component';
 import { NavComponent } from './examples/nav/nav.component';
+import { IbKaiTableExamplePage } from './examples/kai-table-example/kai-table-example';
+import { IbKaiTableContextActionExamplePage } from './examples/kai-table-example/kai-table-context-action-example';
+import { IbKaiTableFullExamplePage } from './examples/kai-table-example/kai-table-full-example';
 
 const appRoutes: Routes = [
   {
@@ -66,6 +69,27 @@ const appRoutes: Routes = [
         path: 'toast',
         data: { breadcrumb: 'examples.toastMenu' },
         component: IbToastExampleComponent
+      },
+      {
+        path: 'kai-table',
+        data: { breadcrumb: 'Table' },
+        children: [
+          {
+            path: 'simple',
+            data: { breadcrumb: 'Simple' },
+            component: IbKaiTableExamplePage
+          },
+          {
+            path: 'context-action',
+            data: { breadcrumb: 'Context Action' },
+            component: IbKaiTableContextActionExamplePage
+          },
+          {
+            path: 'full',
+            data: { breadcrumb: 'Full' },
+            component: IbKaiTableFullExamplePage
+          }
+        ]
       },
       {
         path: '',

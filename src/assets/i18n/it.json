@@ -156,6 +156,11 @@
       "tableNoRedux": "Without redux",
       "tableSticky": "Sticky",
 
+      "kaiTable": "New Table",
+      "kaiTableSimple": "Simple",
+      "kaiTableContextAction": "Row Context Actions",
+      "kaiTableFull": "Full",
+      
       "dynamicFormsMain": "Dynamic forms",
       "dynamicFormsDynamicForms": "Dynamic forms",
 

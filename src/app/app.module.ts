@@ -45,6 +45,11 @@ import { TableEffects } from './inobeta-ui/ui/table/store/effects/table.effects'
 import { IbMainMenuModule } from './inobeta-ui/ui/main-menu/main-menu.module';
 import { IbMainMenuExampleComponent } from './examples/main-menu-example/main-menu-example.component';
 import { ibEffects, ibMetaReducers } from './inobeta-ui/hydration';
+import { IbKaiTableExamplePage } from './examples/kai-table-example/kai-table-example';
+import { IbKaiTableModule } from './inobeta-ui/ui/kai-table/table.module';
+import { IbFilterModule } from './inobeta-ui/ui/kai-filters/filters.module';
+import { IbKaiTableContextActionExamplePage } from './examples/kai-table-example/kai-table-context-action-example';
+import { IbKaiTableFullExamplePage } from './examples/kai-table-example/kai-table-full-example';
 
 export interface IAppState {
   sessionState?: ISessionState;
@@ -74,7 +79,10 @@ export const statusErrorMessages = { 404: 'Risorsa non trovata'};
     IbToastExampleComponent,
     IbTableExampleNoReduxComponent,
     IbTableStickyExampleComponent,
-    IbMainMenuExampleComponent
+    IbMainMenuExampleComponent,
+    IbKaiTableExamplePage,
+    IbKaiTableContextActionExamplePage,
+    IbKaiTableFullExamplePage
   ],
   imports: [
     CommonModule,
@@ -98,6 +106,8 @@ export const statusErrorMessages = { 404: 'Risorsa non trovata'};
     MatRippleModule,
     MatButtonModule,
     MatGridListModule,
+    IbKaiTableModule,
+    IbFilterModule,
     StoreModule.forRoot(reducers, {
       metaReducers: ibMetaReducers,
       runtimeChecks: {

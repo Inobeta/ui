@@ -19,6 +19,25 @@
     ]
   },
   {
+    "label": "examples.ibMainMenu.kaiTable",
+    "icon": {"label": "table_rows", "type": "two-tone"},
+    "link": "/home/kai-table",
+    "paths": [
+      {
+        "label": "examples.ibMainMenu.kaiTableSimple",
+        "link":  "/home/kai-table/simple"
+      },
+      {
+        "label": "examples.ibMainMenu.kaiTableContextAction",
+        "link":  "/home/kai-table/context-action"
+      },
+      {
+        "label": "examples.ibMainMenu.kaiTableFull",
+        "link":  "/home/kai-table/full"
+      }
+    ]
+  },
+  {
     "label": "examples.ibMainMenu.dynamicFormsMain",
     "icon": {"label": "view_list", "type": "two-tone"},
     "link": "/home/forms",
