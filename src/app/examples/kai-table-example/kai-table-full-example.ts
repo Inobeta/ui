@@ -6,10 +6,16 @@ import { createNewUser } from './users';
 @Component({
   selector: 'ib-kai-table-full-example',
   template: `
-  <ib-filter [ibTable]="table"></ib-filter>
   <ib-kai-table
+    tableName="fullExample"
     [dataSource]="dataSource"
-    [columns]="columns" #table>
+    [columns]="columns"
+  >
+    <ib-table-view></ib-table-view>
+    <ib-filter>
+      <ib-filter-classic ibTableColumnName="name">Name</ib-filter-classic>
+      <ib-filter-tag ibTableColumnName="fruit">Fruit</ib-filter-tag>
+    </ib-filter>
   </ib-kai-table>
   `,
   styles: [`
@@ -17,6 +23,11 @@ import { createNewUser } from './users';
     display: flex;
     flex-direction: column;
     padding: 30px;
+  }
+
+  ib-kai-table .ib-table {
+    --ib-table-header-cell-color: lightgrey;
+    --ib-table-header-cell-background-color: #309933;
   }
   `]
 })
@@ -32,6 +43,7 @@ export class IbKaiTableFullExamplePage implements OnInit {
 
   ngOnInit() {
     const users = Array.from({ length: 1000 }, (_, k) => createNewUser(k + 1))
-    this.dataSource.data = users
+    this.dataSource.data = users;
+    console.log(new Set(users.map(u => u.fruit)))
   }
 }

@@ -1,0 +1,20 @@
+@use "@angular/material" as mat;
+
+ib-filter-list.ib-filter-list {
+  display: flex;
+  gap: 0.4em;
+  padding: 1rem 0 2rem 0;
+  @include mat.button-density(-2);
+
+  .ib-filter-button,
+  .ib-add-filter-button {
+    font-size: 12px;
+    border-radius: 20px;
+  }
+
+  .ib-add-column-filter-button
+    .mdc-evolution-chip__cell--primary
+    .mdc-evolution-chip__action {
+    padding-left: 0;
+  }
+}

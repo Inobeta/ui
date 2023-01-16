@@ -1,8 +1,10 @@
 @use '@angular/material' as mat;
+@use '../ui/kai-table/table-theme' as ib-kai-table;
 @mixin inobeta-ui-theme($theme-or-color-config){
   @include mat.all-component-themes($theme-or-color-config);
   @include ib-table($theme-or-color-config);
   @include ib-main-menu($theme-or-color-config);
+  @include ib-kai-table.theme($theme-or-color-config);
 }
 
 /*global patches for material breaks on v15**/

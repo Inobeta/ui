@@ -1,19 +1,31 @@
-import { CdkPortalOutletAttachedRef, ComponentPortal } from '@angular/cdk/portal';
+import {
+  CdkPortalOutletAttachedRef,
+  ComponentPortal,
+} from '@angular/cdk/portal';
 import {
   ChangeDetectionStrategy,
   Component,
   ComponentRef,
+  ContentChild,
   EventEmitter,
   InjectionToken,
   Input,
+  OnDestroy,
   Output,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { IbFilter } from '../kai-filter/filter.component';
+import { IbTableViewGroup } from '../kai-table-view/table-view.component';
 import { IbCell } from './cells';
-import { IbCellData, IbColumnDef, IbTableDef, IbTableRowEvent } from './table.types';
+import {
+  IbCellData,
+  IbColumnDef,
+  IbTableDef,
+  IbTableRowEvent,
+} from './table.types';
 
 export const IB_CELL_DATA = new InjectionToken<IbCellData>('IbCellData');
 
@@ -22,7 +34,7 @@ const defaultTableDef: IbTableDef = {
     pageSizeOptions: [5, 10, 25, 100],
     showFirstLastButtons: true,
     pageSize: 10,
-  }
+  },
 };
 
 function* generateTableName() {
@@ -36,14 +48,20 @@ const tableNameGen = generateTableName();
 @Component({
   selector: 'ib-kai-table',
   templateUrl: './table.component.html',
-  styleUrls: ['./table.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class IbTable {
+export class IbTable implements OnDestroy {
+  // tslint:disable-next-line: variable-name
   private _dataSource!: MatTableDataSource<any>;
+  // tslint:disable-next-line: variable-name
   private _tableDef: IbTableDef = defaultTableDef;
+  // tslint:disable-next-line: variable-name
   private _columns!: IbColumnDef<any>[];
+  // tslint:disable-next-line: variable-name
   private _componentCache: any = {};
+
+  @ContentChild(IbFilter, {descendants: true}) filter: IbFilter;
+  @ContentChild(IbTableViewGroup) views: IbTableViewGroup;
 
   @ViewChild(MatSort)
   set sort(value) {
@@ -71,7 +89,7 @@ export class IbTable {
   set tableDef(value) {
     this._tableDef = {
       ...defaultTableDef,
-      ...value
+      ...value,
     };
   }
   get tableDef() {
@@ -82,7 +100,7 @@ export class IbTable {
   @Input()
   set columns(value) {
     this._columns = value;
-    this.displayedColumns = this.columns.map(c => c.columnDef);
+    this.displayedColumns = this.columns.map((c) => c.columnDef);
     // tslint:disable-next-line: prefer-for-of
     for (let i = 0; i < this._columns.length; i++) {
       this.getCell(this._columns[i]);
@@ -104,7 +122,7 @@ export class IbTable {
 
   private sendRowEvent = (event: Partial<IbTableRowEvent>) =>
     this.ibRowClicked.emit({
-      ...event as IbTableRowEvent,
+      ...(event as IbTableRowEvent),
       tableName: this.tableName || '',
     })
 
@@ -112,15 +130,20 @@ export class IbTable {
     if (column.columnDef in this._componentCache) {
       return this._componentCache[column.columnDef];
     }
-    this._componentCache[column.columnDef] = new ComponentPortal(column.component ?? IbCell);
+    this._componentCache[column.columnDef] = new ComponentPortal(
+      column.component ?? IbCell
+    );
   }
 
-  handleAttached(ref: CdkPortalOutletAttachedRef, column: IbColumnDef, row: any) {
+  handleAttached(
+    ref: CdkPortalOutletAttachedRef,
+    column: IbColumnDef,
+    row: any
+  ) {
     (ref as ComponentRef<IbCell>).instance.data = {
       send: this.sendRowEvent,
       column,
-      row
+      row,
     };
   }
 }
-

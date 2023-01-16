@@ -1,0 +1,13 @@
+<button class="ib-filter-button" [matMenuTriggerFor]="menu" mat-stroked-button>
+  <span #ibFilterName>
+    <ng-content select="[ib-filter-name]"></ng-content>
+  </span>
+  <ng-container *ngIf="!ibFilterName?.children.length">
+    <ng-content></ng-content>
+  </ng-container>
+  <mat-icon iconPositionEnd>arrow_drop_down</mat-icon>
+
+  <mat-menu #menu="matMenu">
+    tags here
+  </mat-menu>
+</button>
