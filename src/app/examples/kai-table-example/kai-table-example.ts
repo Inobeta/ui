@@ -17,7 +17,7 @@ import { createNewUser } from './users';
 export class IbKaiTableExamplePage {
   dataSource = new MatTableDataSource<any>();
   columns = [
-    useColumn('name'),
+    useColumn('name', 'name'),
     useColumn('fruit'),
     useColumn('number', 'number', true),
   ];

@@ -173,13 +173,31 @@ export class IbTableComponent implements OnChanges, OnInit, OnDestroy {
   @Input() customItemTemplate: any;
   @Input() titles: IbTableTitles[] = [];
   @Input() items: IbTableItem[] = [];
+
+  /**
+   * @deprecated enableReduxStore will be removed, please use hasConfig instead
+   */
   @Input() enableReduxStore = false;
   @Input() currentSort: any = {}; // this input can override redux store. Can we remove it?
   @Input() selectableRows = true;
+
+  /**
+   * @deprecated hasAdd will be removed, please use actions instead
+   */
   @Input() hasAdd = false;
+  /**
+   * @deprecated hasEdit will be removed, please use useContextColumn instead
+   */
   @Input() hasEdit = false;
+  /**
+   * @deprecated hasDelete will be removed, please use useContextColumn instead
+   */
   @Input() hasDelete = false;
   @Input() hasExport = false;
+
+  /**
+   * @deprecated hasPaginator will be removed, please use tableDef.paginator.hide instead
+   */
   @Input() hasPaginator = true;
   @Input() hasFooter = true;
   @Input() hasConfig = true;
@@ -187,6 +205,9 @@ export class IbTableComponent implements OnChanges, OnInit, OnDestroy {
   @Input() stickyAreas = [];
 
   @Input() structureTemplates = {}; // exportTemplate, paginatorTemplate
+  /**
+   * @deprecated templateButtons will be removed, please use useContextColumn instead
+   */
   @Input() templateButtons: IbTemplateModel[] = [];
   @Input() templateHeaders: any = {};
   /** { columnName: TemplateRef } */
@@ -197,12 +218,20 @@ export class IbTableComponent implements OnChanges, OnInit, OnDestroy {
     unit: null,
     format: null
   };
+
+  /**
+   * @deprecated deleteConfirm will be removed, please use useContextColumn instead
+   */
   @Input() deleteConfirm = true;
   @Input() actionsPosition = IbTableActionsPosition.BOTH;
   defaultIconSet = {
     edit: 'edit',
     delete: 'delete'
   };
+
+  /**
+   * @deprecated iconSet will be removed, please use useContextColumn instead
+   */
   @Input() iconSet = this.defaultIconSet;
   rowIconSet = Object.assign({}, this.defaultIconSet);
   // Output necessari
@@ -211,10 +240,24 @@ export class IbTableComponent implements OnChanges, OnInit, OnDestroy {
    * Obsolete, use effects interception instead
    */
   @Output() sortChange: EventEmitter<any> = new EventEmitter<any>();
+
+
+  /**
+   * @deprecated add will be removed, please use actions instead
+   */
   @Output() add: EventEmitter<any> = new EventEmitter<any>();
+  /**
+   * @deprecated edit will be removed, please use useContextColumn instead
+   */
   @Output() edit: EventEmitter<any> = new EventEmitter<any>();
+  /**
+   * @deprecated delete will be removed, please use useContextColumn instead
+   */
   @Output() delete: EventEmitter<any> = new EventEmitter<any>();
 
+  /**
+   * @deprecated rowClicked will be removed, please use ibRowClicked instead
+   */
   @Output() rowClicked: EventEmitter<any> = new EventEmitter<any>();
   @Output() rowChecked: EventEmitter<any> = new EventEmitter<any>();
 

@@ -44,7 +44,13 @@ export class IbTableTitles {
   type: IbTableTitlesTypes = IbTableTitlesTypes.ANY;
   filterable = false; // #FIXME change default with true
   comboOptions?: any; // #FIXME define a model for this
+  /**
+   * @deprecated format will be removed, use cell rendering instead
+   */
   format?: any;  // #FIXME change default to 1.2-2
+  /**
+   * @deprecated align will be removed, use cell rendering instead
+   */
   align?: IbTableCellAligns;
   width = 'auto';
   /**
@@ -56,13 +62,16 @@ export class IbTableTitles {
    */
   templateHeaderClick?: ElementRef;
   /**
-   * @deprecated use getClassByCondition please
+   * @deprecated className will be removed, use cell rendering instead
    */
   className?: string;
   /**
    * @deprecated related to INPUT_NUMBER, this field will be removed
    */
   placeHolderInput?: string;
+  /**
+   * @deprecated getClassByCondition will be removed, use cell rendering instead
+   */
   getClassByCondition?: any;
   /**
    * @deprecated related to INPUT_NUMBER, this field will be removed
