@@ -6,17 +6,7 @@ import { createNewUser } from './users';
 @Component({
   selector: 'ib-kai-table-full-example',
   template: `
-  <ib-kai-table
-    tableName="fullExample"
-    [dataSource]="dataSource"
-    [columns]="columns"
-  >
-    <ib-table-view></ib-table-view>
-    <ib-filter>
-      <ib-filter-classic ibTableColumnName="name">Name</ib-filter-classic>
-      <ib-filter-tag ibTableColumnName="fruit">Fruit</ib-filter-tag>
-    </ib-filter>
-  </ib-kai-table>
+
   `,
   styles: [`
   :host {

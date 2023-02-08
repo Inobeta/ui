@@ -46,8 +46,6 @@ import { IbMainMenuModule } from './inobeta-ui/ui/main-menu/main-menu.module';
 import { IbMainMenuExampleComponent } from './examples/main-menu-example/main-menu-example.component';
 import { ibEffects, ibMetaReducers } from './inobeta-ui/hydration';
 import { IbKaiTableExamplePage } from './examples/kai-table-example/kai-table-example';
-import { IbKaiTableModule } from './inobeta-ui/ui/kai-table/table.module';
-import { IbFilterModule } from './inobeta-ui/ui/kai-filter/filters.module';
 import { IbKaiTableContextActionExamplePage } from './examples/kai-table-example/kai-table-context-action-example';
 import { IbKaiTableFullExamplePage } from './examples/kai-table-example/kai-table-full-example';
 import { IbTableViewModule } from './inobeta-ui/ui/kai-table-view/table-view.module';
@@ -107,8 +105,6 @@ export const statusErrorMessages = { 404: 'Risorsa non trovata'};
     MatRippleModule,
     MatButtonModule,
     MatGridListModule,
-    IbKaiTableModule,
-    IbFilterModule,
     IbTableViewModule,
     StoreModule.forRoot(reducers, {
       metaReducers: ibMetaReducers,

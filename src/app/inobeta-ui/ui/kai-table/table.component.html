@@ -1,6 +1,4 @@
-<ng-content select="ib-table-view"></ng-content>
 <section>
-  <ng-content select="ib-filter"></ng-content>
   <table class="ib-table" mat-table matSort [matSortActive]="this.tableDef.initialSort?.active" [matSortDirection]="this.tableDef.initialSort?.direction" [dataSource]="dataSource" *ngIf="dataSource && dataSource.paginator">
     <ng-container *ngFor="let column of columns" [matColumnDef]="column.columnDef">
       <th class="ib-table__header-cell" mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!column.sort">

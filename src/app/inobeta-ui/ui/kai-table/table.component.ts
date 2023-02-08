@@ -17,8 +17,6 @@ import {
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { IbFilter } from '../kai-filter/filter.component';
-import { IbTableViewGroup } from '../kai-table-view/table-view.component';
 import { IbCell } from './cells';
 import {
   IbCellData,
@@ -59,9 +57,6 @@ export class IbTable implements OnDestroy {
   private _columns!: IbColumnDef<any>[];
   // tslint:disable-next-line: variable-name
   private _componentCache: any = {};
-
-  @ContentChild(IbFilter, {descendants: true}) filter: IbFilter;
-  @ContentChild(IbTableViewGroup) views: IbTableViewGroup;
 
   @ViewChild(MatSort)
   set sort(value) {

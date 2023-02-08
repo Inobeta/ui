@@ -10,7 +10,7 @@
     "test-with-diagnostic": "ng test --sourceMap=false",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "packagr": "ng-packagr -p ng-package.json && cp -r ./src/app/inobeta-ui/themes ./dist/",
+    "packagr": "ng-packagr -p ng-package.json && cp -r ./src/app/inobeta-ui/themes ./dist/ && cp ./src/app/inobeta-ui/ui/kai-table/_table-theme.scss ./dist/src/app/inobeta-ui/ui/kai-table/_table-theme.scss",
     "release": "npm run packagr && cd dist/ && npm pack",
     "doc": "compodoc -p tsconfig.doc.json --disableCoverage --disableDomTree --disableGraph --hideGenerator",
     "pre-release": "npm version --no-git-tag-version prerelease",
