@@ -15,7 +15,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { IbFilter } from '../kai-filter/filter.component';
 import { IbTableViewGroup } from '../kai-table-view/table-view.component';

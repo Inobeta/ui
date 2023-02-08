@@ -1,4 +1,4 @@
-import { formatDate } from "@angular/common";
+import { formatDate, formatNumber } from "@angular/common";
 import { Component, ChangeDetectionStrategy, Inject, Optional } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { IB_CELL_DATA } from "./table.component";
@@ -6,7 +6,7 @@ import { IbCellData, IbColumnDef } from "./table.types";
 
 @Component({
   selector: 'ib-cell',
-  template: '{{column.cell(row)}}',
+  template: '<div class="ib-cell-{{this.column.columnDef}}">{{column.cell(row)}}</div>',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IbCell {
@@ -27,7 +27,7 @@ interface IbContextAction {
 
 @Component({
   selector: 'ib-cell-ctx',
-  template: `<div *ngFor="let action of actions" class="action-section">
+  template: `<div *ngFor="let action of actions" class="action-section ib-action-{{action.type}}">
     <button mat-icon-button (click)="send({ type: action.type, row: row })">
       <mat-icon>{{ action?.icon ?? action.type }}</mat-icon>
     </button>
@@ -38,7 +38,7 @@ interface IbContextAction {
     gap: 4px;
     justify-content: flex-end;
   }
-  
+
   .button-infos {
     cursor: pointer;
     user-select: none;
@@ -64,10 +64,10 @@ export class IbTranslateCell extends IbCell {
 }
 
 /**
- * 
+ *
  * @param {cell} cell - Data accessor. Same as `IbColumnDef.cell`, but returns
  *  an {IbContextAction} array.
- * @returns 
+ * @returns
  */
 export const useContextCell = <T>(cell: (e: T) => IbContextAction[]): IbColumnDef => ({
   component: IbContextActionCell,
@@ -88,11 +88,26 @@ export const useDateColumn = <T>(
   columnName: string,
   propertyName?: string,
   sort?: boolean,
-  format: string = 'dd/MM/yyyy, HH:mm z',
+  format: string = 'dd/MM/yyyy HH:mm z',
+  locale: string = 'it'
 ): IbColumnDef => ({
   columnDef: propertyName ?? columnName,
   header: columnName,
-  cell: (e) => `${formatDate(e[propertyName ?? columnName], format, 'en')}`,
+  cell: (e) => `${formatDate(e[propertyName ?? columnName], format, locale)}`,
+  sort
+});
+
+
+export const useNumberColumn = <T>(
+  columnName: string,
+  propertyName?: string,
+  sort?: boolean,
+  format: string = '1.2-2',
+  locale: string = 'it'
+): IbColumnDef => ({
+  columnDef: propertyName ?? columnName,
+  header: columnName,
+  cell: (e) => `${formatNumber(e[propertyName ?? columnName], locale, format)}`,
   sort
 });
 

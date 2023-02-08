@@ -7,12 +7,14 @@ import { IbTableView } from './types';
 @Component({
   selector: 'ib-table-view',
   template: `
-  <section style="display: flex;">
+ <!-- <section style="display: flex;">
     <mat-tab-group animationDuration="0ms" (selectedTabChange)="changeView($event)">
       <mat-tab *ngFor="let view of views" [label]="view.displayName"></mat-tab>
     </mat-tab-group>
     <button mat-icon-button color="primary"><mat-icon>add</mat-icon></button>
-  </section>`
+  </section>
+-->
+  `
 })
 
 export class IbTableViewGroup {

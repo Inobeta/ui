@@ -3,6 +3,8 @@ export interface IbUserExample {
   name: string;
   fruit: string;
   number: number;
+  aDate?: Date;
+  aDateString?: string;
 }
 
 const FRUITS: string[] = [
@@ -53,6 +55,8 @@ export function createNewUser(id: number): IbUserExample {
     id: id.toString(),
     name,
     fruit: FRUITS[Math.round(Math.random() * (FRUITS.length - 1))],
-    number: Math.round(Math.random() * 22) + 1
+    number: Math.round(Math.random() * 22) + 1,
+    aDate: new Date(new Date().getTime() + Math.random() * 100000),
+    aDateString: '2023-01-01T12:53:12.000Z'
   };
 }

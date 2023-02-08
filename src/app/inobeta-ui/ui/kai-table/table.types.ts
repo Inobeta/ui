@@ -1,5 +1,6 @@
 import { ComponentType } from "@angular/cdk/portal";
 import { MatPaginatorDefaultOptions } from "@angular/material/paginator";
+import { Sort } from "@angular/material/sort";
 import { IbCell } from "./cells";
 
 export interface IbColumnDef<T = any> {
@@ -64,7 +65,8 @@ export interface IbPaginatorOptions extends MatPaginatorDefaultOptions {
 }
 
 export interface IbTableDef {
-  paginator: IbPaginatorOptions;
+  paginator?: IbPaginatorOptions;
+  initialSort?: Sort
 }
 
 export interface IbCellData<T = any> {

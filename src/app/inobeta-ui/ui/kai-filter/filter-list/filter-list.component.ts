@@ -1,6 +1,5 @@
 import { Component, EventEmitter, HostBinding, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { IbFilter } from '../filter.component';
 import { contains, eq, gt, lt } from '../filters';
 
 @Component({
@@ -42,7 +41,6 @@ export class IbFilterList implements OnInit {
   ]
 
   constructor(
-    private ibFilter: IbFilter,
     private fb: FormBuilder) {}
 
   ngOnInit() {
