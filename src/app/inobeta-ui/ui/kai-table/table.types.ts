@@ -67,7 +67,6 @@ export interface IbPaginatorOptions extends MatPaginatorDefaultOptions {
 export interface IbTableDef {
   paginator?: IbPaginatorOptions;
   initialSort?: Sort;
-  stickyHeader?: boolean;
 }
 
 export interface IbCellData<T = any> {

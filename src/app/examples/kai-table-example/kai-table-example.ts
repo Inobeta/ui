@@ -31,6 +31,9 @@ import { createNewUser } from './users';
   ib-kai-table >>> table th:last-of-type{
     border-top-right-radius: 20px;
   }
+  ib-kai-table >>> .ib-table-scrollable{
+    height: 450px;
+  }
   `]
 })
 export class IbKaiTableExamplePage {
@@ -51,8 +54,7 @@ export class IbKaiTableExamplePage {
     initialSort: {
       active: 'fruit',
       direction: 'asc'
-    },
-    stickyHeader: true
+    }
   }
 
   ngOnInit() {

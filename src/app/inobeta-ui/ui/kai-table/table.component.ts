@@ -32,8 +32,7 @@ const defaultTableDef: IbTableDef = {
     pageSizeOptions: [5, 10, 25, 100],
     showFirstLastButtons: true,
     pageSize: 10,
-  },
-  stickyHeader: false
+  }
 };
 
 function* generateTableName() {
@@ -47,6 +46,11 @@ const tableNameGen = generateTableName();
 @Component({
   selector: 'ib-kai-table',
   templateUrl: './table.component.html',
+  styles:[`
+  .ib-table-scrollable{
+    overflow-y: auto;
+  }
+  `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IbTable implements OnDestroy {
