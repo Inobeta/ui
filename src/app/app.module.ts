@@ -48,7 +48,8 @@ import { ibEffects, ibMetaReducers } from './inobeta-ui/hydration';
 import { IbKaiTableExamplePage } from './examples/kai-table-example/kai-table-example';
 import { IbKaiTableContextActionExamplePage } from './examples/kai-table-example/kai-table-context-action-example';
 import { IbKaiTableFullExamplePage } from './examples/kai-table-example/kai-table-full-example';
-import { IbTableViewModule } from './inobeta-ui/ui/kai-table-view/table-view.module';
+import { IbKaiTableModule } from './inobeta-ui/ui/kai-table';
+//import { IbTableViewModule } from './inobeta-ui/ui/kai-table-view/table-view.module';
 
 export interface IAppState {
   sessionState?: ISessionState;
@@ -105,7 +106,8 @@ export const statusErrorMessages = { 404: 'Risorsa non trovata'};
     MatRippleModule,
     MatButtonModule,
     MatGridListModule,
-    IbTableViewModule,
+    IbKaiTableModule,
+    //IbTableViewModule,
     StoreModule.forRoot(reducers, {
       metaReducers: ibMetaReducers,
       runtimeChecks: {

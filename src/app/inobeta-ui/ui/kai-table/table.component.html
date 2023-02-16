@@ -1,4 +1,4 @@
-<section>
+<div class="ib-table-scrollable">
   <table class="ib-table" mat-table matSort [matSortActive]="this.tableDef.initialSort?.active" [matSortDirection]="this.tableDef.initialSort?.direction" [dataSource]="dataSource" *ngIf="dataSource && dataSource.paginator">
     <ng-container *ngFor="let column of columns" [matColumnDef]="column.columnDef">
       <th class="ib-table__header-cell" mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!column.sort">
@@ -9,7 +9,7 @@
       </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: tableDef.stickyHeader;"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     <tr *matNoDataRow>
       <td [attr.colspan]="columns.length">
@@ -20,9 +20,12 @@
       </td>
     </tr>
   </table>
+</div>
+<div class="ib-table-paginator">
   <mat-paginator
     [style.display]="tableDef.paginator.hide ? 'none' : 'block'"
     [pageSize]="tableDef.paginator.pageSize"
     [showFirstLastButtons]="tableDef.paginator.showFirstLastButtons"
-    [pageSizeOptions]="tableDef.paginator.pageSizeOptions"></mat-paginator>
-</section>
+    [pageSizeOptions]="tableDef.paginator.pageSizeOptions">
+  </mat-paginator>
+</div>

@@ -33,6 +33,7 @@ const defaultTableDef: IbTableDef = {
     showFirstLastButtons: true,
     pageSize: 10,
   },
+  stickyHeader: false
 };
 
 function* generateTableName() {
@@ -66,6 +67,7 @@ export class IbTable implements OnDestroy {
   }
   @ViewChild(MatPaginator)
   set paginator(value) {
+    console.log('set paginator', value)
     if (this._dataSource) {
       this._dataSource.paginator = value;
     }

@@ -45,13 +45,14 @@ export class IbKaiTableExamplePage {
   ];
 
   tableDef: IbTableDef = {
-    paginator: {
+    /*paginator: {
       hide: true
-    },
+    },*/
     initialSort: {
       active: 'fruit',
       direction: 'asc'
-    }
+    },
+    stickyHeader: true
   }
 
   ngOnInit() {
