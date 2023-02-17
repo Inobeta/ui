@@ -36,7 +36,17 @@ export class HydrationEffects implements OnInitEffects {
         switchMap(() => this.store),
         distinctUntilChanged(),
         tap(state => {
-          const toSerialize = {...state}
+          const storageValue = localStorage.getItem(this.ibSessionStorageKey);
+          let oldState = {}
+          try {
+            oldState = JSON.parse(storageValue);
+          } catch {
+            console.log('no previous state to resume')
+          }
+          const toSerialize = {
+            ...oldState,
+            ...state
+          }
           for(let k in toSerialize){
             if(this.ibReduxPersistKeys?.indexOf(k) < 0){
               delete toSerialize[k]
