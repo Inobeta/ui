@@ -1,4 +1,4 @@
-import { Inject, Injectable, Optional } from "@angular/core";
+import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType, OnInitEffects } from "@ngrx/effects";
 import { Action, Store } from "@ngrx/store";
 import { distinctUntilChanged, map, switchMap, tap } from "rxjs/operators";
@@ -6,66 +6,52 @@ import * as HydrationActions from "./actions";
 
 @Injectable()
 export class HydrationEffects implements OnInitEffects {
-  ibHydrate$ = createEffect(() =>
-    this.action$.pipe(
-      ofType(HydrationActions.ibHydrate),
-      map(() => {
-        //TODO: put here SQLite storage save when we will move to app
-        const storageValue = localStorage.getItem(this.ibSessionStorageKey);
-        if (storageValue) {
-          try {
-            const state = JSON.parse(storageValue);
-            console.log('hydrating from local storage', state)
-            return HydrationActions.ibHydrateSuccess({ state });
-          } catch {
-            localStorage.removeItem(this.ibSessionStorageKey);
-          }
-        }
-        return HydrationActions.ibHydrateFailure();
-      })
-    )
-  );
+  static ibSessionStorageKey: string
+  static ibReduxPersistKeys: string[]
 
   serialize$ = createEffect(
     () =>
       this.action$.pipe(
         ofType(
-          HydrationActions.ibHydrateSuccess,
-          HydrationActions.ibHydrateFailure
+          HydrationActions.ibHydrate
         ),
         switchMap(() => this.store),
         distinctUntilChanged(),
-        tap(state => {
-          const storageValue = localStorage.getItem(this.ibSessionStorageKey);
-          let oldState = {}
-          try {
-            oldState = JSON.parse(storageValue);
-          } catch {
-            console.log('no previous state to resume')
-          }
-          const toSerialize = {
-            ...oldState,
-            ...state
-          }
-          for(let k in toSerialize){
-            if(this.ibReduxPersistKeys?.indexOf(k) < 0){
-              delete toSerialize[k]
-            }
-          }
-          return localStorage.setItem(this.ibSessionStorageKey, JSON.stringify(toSerialize))
+        tap((state) => {
+          saveState(HydrationEffects.ibSessionStorageKey, HydrationEffects.ibReduxPersistKeys, state)
+          return state
         })
-      ),
-    { dispatch: false }
-  );
+      )
+  , {dispatch: false});
 
   constructor(
     private action$: Actions,
-    private store: Store<any>,
-    @Inject('ibSessionStorageKey') @Optional() public ibSessionStorageKey?: string,
-    @Inject('ibReduxPersistKeys') @Optional() public ibReduxPersistKeys?: string[],
+    private store: Store<any>
     ) {}
 
   ngrxOnInitEffects(): Action {
     return HydrationActions.ibHydrate();
   }
+}
+
+
+
+function saveState(ibSessionStorageKey: string, ibReduxPersistKeys: string[], state: any){
+  const storageValue = localStorage.getItem(ibSessionStorageKey);
+  let oldState = {}
+  try {
+    oldState = JSON.parse(storageValue);
+  } catch {
+    console.log('no previous state to resume')
+  }
+  const toSerialize = {
+    ...oldState,
+    ...state
+  }
+  for(let k in toSerialize){
+    if(ibReduxPersistKeys?.indexOf(k) < 0){
+      delete toSerialize[k]
+    }
+  }
+  return localStorage.setItem(ibSessionStorageKey, JSON.stringify(toSerialize))
 }

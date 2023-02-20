@@ -44,7 +44,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { TableEffects } from './inobeta-ui/ui/table/store/effects/table.effects';
 import { IbMainMenuModule } from './inobeta-ui/ui/main-menu/main-menu.module';
 import { IbMainMenuExampleComponent } from './examples/main-menu-example/main-menu-example.component';
-import { ibEffects, ibMetaReducers } from './inobeta-ui/hydration';
+import { ibSetupHydration } from './inobeta-ui/hydration';
 import { IbKaiTableExamplePage } from './examples/kai-table-example/kai-table-example';
 import { IbKaiTableContextActionExamplePage } from './examples/kai-table-example/kai-table-context-action-example';
 import { IbKaiTableFullExamplePage } from './examples/kai-table-example/kai-table-full-example';
@@ -65,6 +65,9 @@ export function HttpLoaderFactory(http: HttpClient) {
 }
 
 export const statusErrorMessages = { 404: 'Risorsa non trovata'};
+
+
+const reduxStorageSave = ibSetupHydration('__redux-store-inobeta-ui__', ['sessionState', 'ibTable', 'lazyLoaded']);
 
 @NgModule({
   declarations: [
@@ -109,13 +112,13 @@ export const statusErrorMessages = { 404: 'Risorsa non trovata'};
     IbKaiTableModule,
     //IbTableViewModule,
     StoreModule.forRoot(reducers, {
-      metaReducers: ibMetaReducers,
+      metaReducers: reduxStorageSave.metareducers,
       runtimeChecks: {
         strictStateImmutability: false,
         strictActionImmutability: false,
       },
     }),
-    EffectsModule.forRoot([TableEffects, ...ibEffects]),
+    EffectsModule.forRoot([TableEffects, ...reduxStorageSave.effects]),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       logOnly: environment.production,
@@ -139,8 +142,8 @@ export const statusErrorMessages = { 404: 'Risorsa non trovata'};
     FlexLayoutModule
   ],
   providers: [
-    {provide: 'ibSessionStorageKey', useValue: '__redux-store-inobeta-ui__'},
-    {provide: 'ibReduxPersistKeys', useValue: ['sessionState', 'ibTable']},
+    //{provide: 'ibSessionStorageKey', useValue: '__redux-store-inobeta-ui__'},
+    //{provide: 'ibReduxPersistKeys', useValue: ['sessionState', 'ibTable', 'lazyLoaded']},
     {provide: 'HttpMode', useValue: 'NORMAL'},
     {provide: 'ibHttpToastOnStatusCode', useValue: statusErrorMessages },
     {provide: 'ibHttpToastErrorCode', useValue: 'code' },

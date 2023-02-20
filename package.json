@@ -51,6 +51,7 @@
     "@angular/language-service": "^15.0.4",
     "@babel/preset-env": "^7.15.0",
     "@compodoc/compodoc": "^1.1.11",
+    "@Inobeta/cli": "^15.0.1",
     "@ngrx/schematics": "^15.1.0",
     "@types/jasmine": "~3.6.0",
     "@types/jasminewd2": "~2.0.2",

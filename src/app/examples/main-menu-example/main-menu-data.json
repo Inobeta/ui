@@ -62,11 +62,15 @@
   {
     "label": "examples.ibMainMenu.reduxMain",
     "icon": {"label": "archive", "type": "two-tone"},
-    "link": "/home/redux",
+    "link": "/home/redux/base",
     "paths": [
       {
         "label": "examples.ibMainMenu.reduxRedux",
-        "link": "/home/redux"
+        "link": "/home/redux/base"
+      },
+      {
+        "label": "Lazy loaded hydration",
+        "link": "/home/redux/lazy"
       }
     ]
   },

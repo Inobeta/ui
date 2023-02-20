@@ -53,7 +53,16 @@ const appRoutes: Routes = [
       {
         path: 'redux',
         data: { breadcrumb: 'Redux' },
-        component: MyCounterComponent,
+        children: [{
+          path: 'base',
+          component: MyCounterComponent,
+          data: { breadcrumb: 'Base' },
+         },
+         {
+          path: 'lazy',
+          data: { breadcrumb: 'Lazy loaded' },
+          loadChildren: () => import('./examples/lazy-loaded/lazy-loaded.module').then(m => m.LazyLoadedModule)
+        }]
       },
       {
         path: 'http',

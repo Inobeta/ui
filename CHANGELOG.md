@@ -1,5 +1,12 @@
 # Inobeta/UI Changelog
 
+## [15.1.0] (unreleased)
+
+| Issue ID | Type | Section | Description |
+| -- | -- | -- | -- |
+|DEVK-183|feat|IbTable|Created a new table that will replace old IbTableModule|
+|STOR-98|fix|IbHydration|**Breaking change** on hydration metareducer provided. Please use ibSetupHydration|
+
 ## [15.0.0] (2023-01-11)
 
 | Issue ID | Type | Section | Description |
