@@ -1,5 +1,14 @@
 <div class="ib-table-scrollable">
-  <table class="ib-table" mat-table matSort [matSortActive]="this.tableDef.initialSort?.active" [matSortDirection]="this.tableDef.initialSort?.direction" [dataSource]="dataSource" *ngIf="dataSource && dataSource.paginator">
+  <table
+    class="ib-table"
+    mat-table
+    matSort
+    multiTemplateDataRows
+    [matSortActive]="this.tableDef.initialSort?.active"
+    [matSortDirection]="this.tableDef.initialSort?.direction"
+    [dataSource]="dataSource"
+    *ngIf="dataSource && dataSource.paginator"
+  >
     <ng-container *ngFor="let column of columns" [matColumnDef]="column.columnDef">
       <th class="ib-table__header-cell" mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!column.sort">
         {{column.header | translate}}
@@ -8,9 +17,26 @@
         <ng-template [cdkPortalOutlet]="portals[column.columnDef]" (attached)="handleAttached($event, column, row)"></ng-template>
       </td>
     </ng-container>
+    <ng-container matColumnDef="expandedDetail" *ngIf="rowGroup">
+      <td mat-cell *matCellDef="let element" [attr.colspan]="columns.length">
+        <div class="ib-table-element-detail"
+             [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+          <ng-container *ngTemplateOutlet="rowGroup.templateRef; context: {'row': element}" ></ng-container>
+        </div>
+      </td>
+    </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true;"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayedColumns;"
+      class="ib-table-element-row"
+      [class.ib-table-expanded-row]="expandedElement === row"
+      (click)="expandedElement = expandedElement === row ? null : row"
+    ></tr>
+    <ng-container *ngIf="rowGroup">
+      <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="ib-table-group-detail-row"></tr>
+    </ng-container>
     <tr *matNoDataRow>
       <td [attr.colspan]="columns.length">
         <div style="display: flex; flex-direction: column; align-items: center; padding: 12px;">

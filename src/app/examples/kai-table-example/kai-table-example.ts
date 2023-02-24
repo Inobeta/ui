@@ -61,4 +61,8 @@ export class IbKaiTableExamplePage {
     const users = Array.from({ length: 1000 }, (_, k) => createNewUser(k + 1))
     this.dataSource.data = users
   }
+
+  testClick(ev){
+    console.log('ev', ev)
+  }
 }

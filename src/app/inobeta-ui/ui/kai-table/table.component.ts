@@ -1,3 +1,4 @@
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import {
   CdkPortalOutletAttachedRef,
   ComponentPortal,
@@ -18,6 +19,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { IbCell } from './cells';
+import { IbKaiRowGroupDirective } from './rowgroup';
 import {
   IbCellData,
   IbColumnDef,
@@ -50,8 +52,38 @@ const tableNameGen = generateTableName();
   .ib-table-scrollable{
     overflow-y: auto;
   }
+
+  tr.ib-table-group-detail-row {
+    height: 0;
+  }
+
+  tr.ib-table-element-row:not(.ib-table-expanded-row):hover {
+    background: whitesmoke;
+  }
+
+  tr.ib-table-element-row:not(.ib-table-expanded-row):active {
+    background: #efefef;
+  }
+
+  .ib-table-element-row td {
+    border-bottom-width: 0;
+  }
+
+  .ib-table-element-detail {
+    overflow: hidden;
+    display: flex;
+  }
+
+
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({height: '0px', minHeight: '0'})),
+      state('expanded', style({height: '*'})),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ],
 })
 export class IbTable implements OnDestroy {
   // tslint:disable-next-line: variable-name
@@ -62,6 +94,8 @@ export class IbTable implements OnDestroy {
   private _columns!: IbColumnDef<any>[];
   // tslint:disable-next-line: variable-name
   private _componentCache: any = {};
+  @ContentChild(IbKaiRowGroupDirective) rowGroup!: IbKaiRowGroupDirective;
+  expandedElement: any;
 
   @ViewChild(MatSort)
   set sort(value) {

@@ -2,5 +2,9 @@
   [dataSource]="dataSource"
   [columns]="columns"
   [tableDef]="tableDef"
+  (ibRowClicked)="testClick($event)"
   >
+  <ng-template ibKaiRowGroup let-row="row">
+    row data: {{row | json}}
+  </ng-template>
 </ib-kai-table>

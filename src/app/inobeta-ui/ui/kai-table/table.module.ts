@@ -11,14 +11,17 @@ import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 //FIXME: please move this into kai-table
 import { ibMatPaginatorTranslate } from '../table';
+import { IbKaiRowGroupDirective } from './rowgroup';
 
 @NgModule({
   exports: [
     IbTable,
+    IbKaiRowGroupDirective
   ],
   declarations: [
     IbTable,
     IbContextActionCell,
+    IbKaiRowGroupDirective
   ],
   imports: [
     CommonModule,

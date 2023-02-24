@@ -28,7 +28,7 @@ interface IbContextAction {
 @Component({
   selector: 'ib-cell-ctx',
   template: `<div *ngFor="let action of actions" class="action-section ib-action-{{action.type}}">
-    <button mat-icon-button (click)="send({ type: action.type, row: row })">
+    <button mat-icon-button (click)="send({ type: action.type, row: row }); $event.stopPropagation();">
       <mat-icon>{{ action?.icon ?? action.type }}</mat-icon>
     </button>
 </div>`,
