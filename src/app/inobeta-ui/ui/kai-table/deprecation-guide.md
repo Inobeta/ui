@@ -9,7 +9,7 @@ titles|definizione colonne|usa `columns`
 items|data|usa `MatTableDataSource` o compatibile
 enableReduxStore|salva stato tabella su redux|**non supportato** deprecato, va sostituito con hasConfig
 currentSort|inizializza sort|**non supportato**, serve
-selectableRows|righe selezionabili|**non supportato**, serve
+selectableRows|righe selezionabili| supportato, input: ibRowSelectionChange evento cambio selezione: ibRowSelectionChange
 hasAdd|rende visibile pulsante per aggiungere righe|**non supportato** deprecato, va sostituito con action
 hasEdit|aggiunge azione contestuale alle singole righe|usa `useContextColumn` per implementare azioni per le singole righe
 hasDelete|idem|vedi sopra

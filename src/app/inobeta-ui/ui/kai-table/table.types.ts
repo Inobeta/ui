@@ -80,3 +80,9 @@ export interface IbTableRowEvent<T = any> {
   type: string;
   row: T;
 }
+
+export interface IbTableRowSelectionChange<T = any> {
+  tableName: string;
+  selection: boolean;
+  row: T;
+}

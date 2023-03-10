@@ -12,6 +12,7 @@ import { MatButtonModule } from '@angular/material/button';
 //FIXME: please move this into kai-table
 import { ibMatPaginatorTranslate } from '../table';
 import { IbKaiRowGroupDirective } from './rowgroup';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   exports: [
@@ -31,6 +32,7 @@ import { IbKaiRowGroupDirective } from './rowgroup';
     MatPaginatorModule,
     MatIconModule,
     MatButtonModule,
+    MatCheckboxModule,
     TranslateModule.forChild({
       extend: true
     })

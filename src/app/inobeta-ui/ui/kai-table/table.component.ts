@@ -1,4 +1,5 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { SelectionModel } from '@angular/cdk/collections';
 import {
   CdkPortalOutletAttachedRef,
   ComponentPortal,
@@ -25,6 +26,7 @@ import {
   IbColumnDef,
   IbTableDef,
   IbTableRowEvent,
+  IbTableRowSelectionChange,
 } from './table.types';
 
 export const IB_CELL_DATA = new InjectionToken<IbCellData>('IbCellData');
@@ -131,11 +133,9 @@ export class IbTable implements OnDestroy {
     return this._tableDef;
   }
 
-  displayedColumns;
   @Input()
   set columns(value) {
     this._columns = value;
-    this.displayedColumns = this.columns.map((c) => c.columnDef);
     // tslint:disable-next-line: prefer-for-of
     for (let i = 0; i < this._columns.length; i++) {
       this.getCell(this._columns[i]);
@@ -145,12 +145,24 @@ export class IbTable implements OnDestroy {
     return this._columns;
   }
 
+  get displayedColumns(){
+    const displayedColumns = []
+    if(this.selectableRows){
+      displayedColumns.push('ibSelectColumn')
+    }
+    return displayedColumns.concat(this.columns.map((c) => c.columnDef))
+  }
+
   get portals() {
     return this._componentCache;
   }
 
-  @Output() ibRowClicked = new EventEmitter<IbTableRowEvent>();
+  @Input() selectableRows = false;
 
+  @Output() ibRowClicked = new EventEmitter<IbTableRowEvent>();
+  @Output() ibRowSelectionChange = new EventEmitter<IbTableRowSelectionChange[]>();
+
+  selection = new SelectionModel<any>(true, []);
   ngOnDestroy() {
     this._componentCache = null;
   }
@@ -180,5 +192,38 @@ export class IbTable implements OnDestroy {
       column,
       row,
     };
+  }
+
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected == numRows;
+  }
+
+  toggleAllRows() {
+    this.isAllSelected() ?
+        this.selection.clear() :
+        this.dataSource.data.forEach(row => this.selection.select(row));
+
+    const selectionAfterToggle = this.isAllSelected()
+    this.ibRowSelectionChange.emit(
+      this.dataSource.data.map(row => ({
+        tableName: this.tableName || '',
+        row,
+        selection: selectionAfterToggle
+      }))
+    )
+  }
+
+  toggleRowSelection(ev, row){
+    if(ev){
+      this.selection.toggle(row)
+
+      this.ibRowSelectionChange.emit([{
+        tableName: this.tableName || '',
+        row,
+        selection: ev.checked
+      }])
+    }
   }
 }
