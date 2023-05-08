@@ -1,5 +1,6 @@
 <div class="ib-table-scrollable">
   <table
+    #table
     class="ib-table"
     mat-table
     matSort
@@ -7,22 +8,8 @@
     [matSortActive]="this.tableDef.initialSort?.active"
     [matSortDirection]="this.tableDef.initialSort?.direction"
     [dataSource]="dataSource"
-    *ngIf="dataSource && dataSource.paginator"
   >
-    <ng-container matColumnDef="ibSelectColumn" >
-      <th  class="ib-table__header-cell"  mat-header-cell *matHeaderCellDef>
-        <mat-checkbox (change)="$event ? toggleAllRows() : null"
-                      [checked]="selection.hasValue() && isAllSelected()"
-                      [indeterminate]="selection.hasValue() && !isAllSelected()">
-        </mat-checkbox>
-      </th>
-      <td mat-cell *matCellDef="let row">
-        <mat-checkbox (click)="$event.stopPropagation()"
-                      (change)="toggleRowSelection($event, row)"
-                      [checked]="selection.isSelected(row)">
-        </mat-checkbox>
-      </td>
-    </ng-container>
+    <ng-content select="ib-selection-column"></ng-content>
     <ng-container *ngFor="let column of columns" [matColumnDef]="column.columnDef">
       <th class="ib-table__header-cell" mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!column.sort">
         {{column.header | translate}}

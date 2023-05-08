@@ -13,16 +13,19 @@ import { MatButtonModule } from '@angular/material/button';
 import { ibMatPaginatorTranslate } from '../table';
 import { IbKaiRowGroupDirective } from './rowgroup';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { IbSelectionColumn } from './selection-column';
 
 @NgModule({
   exports: [
     IbTable,
-    IbKaiRowGroupDirective
+    IbKaiRowGroupDirective,
+    IbSelectionColumn,
   ],
   declarations: [
     IbTable,
     IbContextActionCell,
-    IbKaiRowGroupDirective
+    IbKaiRowGroupDirective,
+    IbSelectionColumn
   ],
   imports: [
     CommonModule,
