@@ -141,12 +141,12 @@ export class IbTable implements OnDestroy {
   }
 
   isSelectionColumnAdded = false;
-  get displayedColumns(){
-    const displayedColumns = []
-    if(this.isSelectionColumnAdded) {
-      displayedColumns.push('ibSelectColumn')
+  get displayedColumns() {
+    const displayedColumns = [];
+    if (this.isSelectionColumnAdded) {
+      displayedColumns.push("ibSelectColumn");
     }
-    return displayedColumns.concat(this.columns.map((c) => c.columnDef))
+    return displayedColumns.concat(this.columns.map((c) => c.columnDef));
   }
 
   get portals() {
