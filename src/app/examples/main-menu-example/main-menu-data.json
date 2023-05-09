@@ -34,6 +34,10 @@
       {
         "label": "examples.ibMainMenu.kaiTableFull",
         "link":  "/home/kai-table/full"
+      },
+      {
+        "label": "examples.ibMainMenu.kaiTableApi",
+        "link":  "/home/kai-table/api"
       }
     ]
   },

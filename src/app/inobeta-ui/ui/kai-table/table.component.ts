@@ -10,7 +10,6 @@ import {
   ComponentPortal,
 } from "@angular/cdk/portal";
 import {
-  ChangeDetectionStrategy,
   Component,
   ComponentRef,
   ContentChild,
@@ -22,7 +21,7 @@ import {
   ViewChild,
 } from "@angular/core";
 import { MatPaginator } from "@angular/material/paginator";
-import { MatSort, Sort } from "@angular/material/sort";
+import { MatSort } from "@angular/material/sort";
 import { MatTable, MatTableDataSource } from "@angular/material/table";
 import { IbCell } from "./cells";
 import { IbKaiRowGroupDirective } from "./rowgroup";
@@ -31,8 +30,10 @@ import {
   IbColumnDef,
   IbTableDef,
   IbTableRowEvent,
+  IbTableState,
 } from "./table.types";
 import { IbSelectionColumn } from "./selection-column";
+import { IbDataSource } from "./table-data-source";
 
 export const IB_CELL_DATA = new InjectionToken<IbCellData>("IbCellData");
 
@@ -55,30 +56,7 @@ const tableNameGen = generateTableName();
 @Component({
   selector: "ib-kai-table",
   templateUrl: "./table.component.html",
-  styles: [
-    `
-      .ib-table-scrollable {
-        overflow-y: auto;
-      }
-
-      tr.ib-table-group-detail-row {
-        height: 0;
-      }
-
-      tr.ib-table-element-row:not(.ib-table-expanded-row):hover {
-        background: whitesmoke;
-      }
-
-      ::ng-deep .ib-table-expanded-row > td {
-        border-bottom-width: 0;
-      }
-
-      .ib-table-element-detail {
-        overflow: hidden;
-        display: flex;
-      }
-    `,
-  ],
+  styleUrls: ["./table.component.scss"],
   animations: [
     trigger("detailExpand", [
       state("collapsed", style({ height: "0px", minHeight: "0" })),
@@ -92,24 +70,29 @@ const tableNameGen = generateTableName();
 })
 export class IbTable implements OnDestroy {
   // tslint:disable-next-line: variable-name
-  private _dataSource: MatTableDataSource<any> = new MatTableDataSource([]);
+  private _dataSource: MatTableDataSource<any> | IbDataSource<any> =
+    new MatTableDataSource([]);
   // tslint:disable-next-line: variable-name
   private _tableDef: IbTableDef = defaultTableDef;
   // tslint:disable-next-line: variable-name
   private _columns!: IbColumnDef<any>[];
   // tslint:disable-next-line: variable-name
   private _componentCache: any = {};
+
   @ContentChild(IbSelectionColumn) selectionColumn!: IbSelectionColumn;
   @ContentChild(IbKaiRowGroupDirective) rowGroup!: IbKaiRowGroupDirective;
+
   @ViewChild(MatTable, { static: true }) table: MatTable<any>;
-
-  expandedElement: any;
-
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
+  expandedElement: any;
+
+  states = IbTableState;
+  state = IbTableState.IDLE;
+
   @Input()
-  set dataSource(value: MatTableDataSource<any>) {
+  set dataSource(value: MatTableDataSource<any> | IbDataSource<any>) {
     this._dataSource = value;
   }
   get dataSource() {
@@ -119,10 +102,7 @@ export class IbTable implements OnDestroy {
   @Input() tableName = tableNameGen.next().value;
   @Input()
   set tableDef(value) {
-    this._tableDef = {
-      ...defaultTableDef,
-      ...value,
-    };
+    this._tableDef = value;
   }
   get tableDef() {
     return this._tableDef;
@@ -158,6 +138,10 @@ export class IbTable implements OnDestroy {
   ngOnInit() {
     this._dataSource.paginator = this.paginator;
     this._dataSource.sort = this.sort;
+
+    if (this._dataSource instanceof IbDataSource) {
+      this._dataSource._state.subscribe((s) => (this.state = s));
+    }
   }
 
   ngAfterViewInit() {
@@ -201,5 +185,9 @@ export class IbTable implements OnDestroy {
       column,
       row,
     };
+  }
+
+  isState(state: IbTableState) {
+    return this.state === state;
   }
 }

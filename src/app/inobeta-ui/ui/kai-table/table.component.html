@@ -1,6 +1,8 @@
-<div class="ib-table-scrollable">
+<div class="ib-table-scrollable" [class.ib-table-scrollable__loading]="isState(states.LOADING)">
+  <div class="ib-table-progress-bar" *ngIf="isState(states.LOADING)">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  </div>
   <table
-    #table
     class="ib-table"
     mat-table
     matSort
@@ -33,7 +35,7 @@
       *matRowDef="let row; columns: displayedColumns;"
       class="ib-table-element-row"
       [class.ib-table-expanded-row]="expandedElement === row"
-      (click)="expandedElement = expandedElement === row ? null : row"
+      (click)="rowGroup && (expandedElement = expandedElement === row ? null : row)"
     ></tr>
     <ng-container *ngIf="rowGroup">
       <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="ib-table-group-detail-row"></tr>
@@ -41,8 +43,16 @@
     <tr *matNoDataRow>
       <td [attr.colspan]="columns.length">
         <div style="display: flex; flex-direction: column; align-items: center; padding: 12px;">
-          <mat-icon style="color: #888">inbox</mat-icon>
-          {{ "common.noItems" | translate }}
+          <ng-container *ngIf="isState(states.IDLE)">
+            <mat-icon style="color: #888">inbox</mat-icon>
+            {{ "common.noItems" | translate }}
+            {{ state }}
+          </ng-container>
+
+          <ng-container *ngIf="isState(states.HTTP_ERROR)">
+            <mat-icon style="color: #888">error</mat-icon>
+            {{ "common.httpError" | translate }}
+          </ng-container>
         </div>
       </td>
     </tr>

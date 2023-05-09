@@ -86,3 +86,10 @@ export interface IbTableRowSelectionChange<T = any> {
   selection: boolean;
   row: T;
 }
+
+export enum IbTableState {
+  IDLE,
+  LOADING,
+  NO_DATA,
+  HTTP_ERROR,
+}

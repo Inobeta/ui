@@ -49,6 +49,7 @@ import { IbKaiTableExamplePage } from './examples/kai-table-example/kai-table-ex
 import { IbKaiTableContextActionExamplePage } from './examples/kai-table-example/kai-table-context-action-example';
 import { IbKaiTableFullExamplePage } from './examples/kai-table-example/kai-table-full-example';
 import { IbKaiTableModule } from './inobeta-ui/ui/kai-table';
+import { IbKaiTableApiExamplePage } from './examples/kai-table-example/kai-table-api-example';
 //import { IbTableViewModule } from './inobeta-ui/ui/kai-table-view/table-view.module';
 
 export interface IAppState {
@@ -85,7 +86,8 @@ const reduxStorageSave = ibSetupHydration('__redux-store-inobeta-ui__', ['sessio
     IbMainMenuExampleComponent,
     IbKaiTableExamplePage,
     IbKaiTableContextActionExamplePage,
-    IbKaiTableFullExamplePage
+    IbKaiTableFullExamplePage,
+    IbKaiTableApiExamplePage
   ],
   imports: [
     CommonModule,

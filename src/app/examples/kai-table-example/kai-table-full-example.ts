@@ -11,6 +11,7 @@ import { IbSelectionColumn } from "src/app/inobeta-ui/ui/kai-table/selection-col
 @Component({
   selector: "ib-kai-table-full-example",
   template: `
+  <div style="display: flex; gap: 12px">
     <button
       (click)="getSelection()"
       [disabled]="selectionColumn.selection.selected.length === 0"
@@ -18,6 +19,7 @@ import { IbSelectionColumn } from "src/app/inobeta-ui/ui/kai-table/selection-col
     >
       get selection
     </button>
+  </div>
     <ib-kai-table #table [dataSource]="dataSource" [columns]="columns">
       <ib-selection-column
         (ibRowSelectionChange)="selectionChange($event)"
@@ -30,6 +32,7 @@ import { IbSelectionColumn } from "src/app/inobeta-ui/ui/kai-table/selection-col
         display: flex;
         flex-direction: column;
         padding: 30px;
+        gap: 3em;
       }
 
       ib-kai-table .ib-table {

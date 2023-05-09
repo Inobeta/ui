@@ -8,17 +8,18 @@ import {
 } from "@angular/core";
 import { IbTable } from "./table.component";
 import { MatColumnDef } from "@angular/material/table";
-import { IbTableRowSelectionChange } from "./table.types";
+import { IbTableRowSelectionChange, IbTableState } from "./table.types";
 
 @Component({
   selector: "ib-selection-column",
   template: `
     <ng-container matColumnDef="ibSelectColumn">
-      <th class="ib-table__header-cell" mat-header-cell *matHeaderCellDef>
+      <th style="width: 80px" class="ib-table__header-cell" mat-header-cell *matHeaderCellDef>
         <mat-checkbox
           (change)="$event ? toggleAllRows() : null"
           [checked]="selection.hasValue() && isAllSelected()"
           [indeterminate]="selection.hasValue() && !isAllSelected()"
+          [disabled]="isDisabled()"
         >
         </mat-checkbox>
       </th>
@@ -27,6 +28,7 @@ import { IbTableRowSelectionChange } from "./table.types";
           (click)="$event.stopPropagation()"
           (change)="toggleRowSelection($event, row)"
           [checked]="selection.isSelected(row)"
+          [disabled]="isDisabled()"
         >
         </mat-checkbox>
       </td>
@@ -78,5 +80,9 @@ export class IbSelectionColumn implements OnInit {
         },
       ]);
     }
+  }
+
+  isDisabled() {
+    return !this.table.isState(IbTableState.IDLE);
   }
 }
