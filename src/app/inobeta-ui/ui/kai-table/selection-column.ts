@@ -8,7 +8,7 @@ import {
 } from "@angular/core";
 import { IbTable } from "./table.component";
 import { MatColumnDef } from "@angular/material/table";
-import { IbTableRowSelectionChange, IbTableState } from "./table.types";
+import { IbTableRowSelectionChange, IbKaiTableState } from "./table.types";
 
 @Component({
   selector: "ib-selection-column",
@@ -83,6 +83,6 @@ export class IbSelectionColumn implements OnInit {
   }
 
   isDisabled() {
-    return !this.table.isState(IbTableState.IDLE);
+    return !this.table.isState(IbKaiTableState.IDLE);
   }
 }

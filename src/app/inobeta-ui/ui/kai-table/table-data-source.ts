@@ -20,7 +20,7 @@ import {
   startWith,
   switchMap,
 } from "rxjs/operators";
-import { IbTableState } from "./table.types";
+import { IbKaiTableState } from "./table.types";
 
 export class IbDataSource<
   T,
@@ -81,7 +81,7 @@ export class IbDataSource<
     this._state.next(value);
   }
 
-  _state = new BehaviorSubject<IbTableState>(IbTableState.IDLE);
+  _state = new BehaviorSubject<IbKaiTableState>(IbKaiTableState.IDLE);
 
   constructor(initialData: T[] = []) {
     super();
@@ -117,14 +117,14 @@ export class IbDataSource<
       ),
       debounceTime(0),
       switchMap(() => {
-        this.state = IbTableState.LOADING;
+        this.state = IbKaiTableState.LOADING;
         return this.fetchData(
           this._sort.active,
           this._sort.direction,
           this._paginator.pageIndex
         ).pipe(
           catchError(() => {
-            this.state = IbTableState.HTTP_ERROR;
+            this.state = IbKaiTableState.HTTP_ERROR;
             return of(null);
           })
         );
@@ -134,7 +134,7 @@ export class IbDataSource<
           return [];
         }
 
-        this.state = IbTableState.IDLE;
+        this.state = IbKaiTableState.IDLE;
         this._paginator.length = this.updatePaginator(data);
         return this.mapData(data);
       })

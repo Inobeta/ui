@@ -5,7 +5,7 @@ import { IbSelectionColumn } from "src/app/inobeta-ui/ui/kai-table/selection-col
 import {
   IbColumnDef,
   IbTableDef,
-  IbTableState,
+  IbKaiTableState,
 } from "src/app/inobeta-ui/ui/kai-table";
 import { HttpClient } from "@angular/common/http";
 import { SortDirection } from "@angular/material/sort";
@@ -115,10 +115,10 @@ export class IbKaiTableApiExamplePage {
 
   setState(state: string) {
     if (state === "loading") {
-      return (this.kaiTable.state = IbTableState.LOADING);
+      return (this.kaiTable.state = IbKaiTableState.LOADING);
     }
 
-    this.kaiTable.state = IbTableState.IDLE;
+    this.kaiTable.state = IbKaiTableState.IDLE;
   }
 
   refresh() {

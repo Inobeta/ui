@@ -30,7 +30,7 @@ import {
   IbColumnDef,
   IbTableDef,
   IbTableRowEvent,
-  IbTableState,
+  IbKaiTableState,
 } from "./table.types";
 import { IbSelectionColumn } from "./selection-column";
 import { IbDataSource } from "./table-data-source";
@@ -88,8 +88,8 @@ export class IbTable implements OnDestroy {
 
   expandedElement: any;
 
-  states = IbTableState;
-  state = IbTableState.IDLE;
+  states = IbKaiTableState;
+  state = IbKaiTableState.IDLE;
 
   @Input()
   set dataSource(value: MatTableDataSource<any> | IbDataSource<any>) {
@@ -187,7 +187,7 @@ export class IbTable implements OnDestroy {
     };
   }
 
-  isState(state: IbTableState) {
+  isState(state: IbKaiTableState) {
     return this.state === state;
   }
 }

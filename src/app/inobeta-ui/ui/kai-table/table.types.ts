@@ -87,7 +87,7 @@ export interface IbTableRowSelectionChange<T = any> {
   row: T;
 }
 
-export enum IbTableState {
+export enum IbKaiTableState {
   IDLE,
   LOADING,
   NO_DATA,
