@@ -1,17 +1,14 @@
 import { Directive, Input, ViewChild } from "@angular/core";
 import { IbFilter } from "../../filter.component";
 import { FormControl, FormGroup } from "@angular/forms";
-import { IbFilterDef, _IbFilterBase } from "../../filter.types";
+import { IbFilterDef } from "../../filter.types";
 import { IbFilterButton } from "../../filter-button/filter-button.component";
 
-@Directive({
-  selector: "ib-filter-base",
-})
-export abstract class IbFilterBase implements _IbFilterBase {
-  @ViewChild(IbFilterButton) button: IbFilterButton;
+export abstract class _IbFilterBase {
+  button: IbFilterButton;
 
-  @Input() name: string;
-  @Input() set ibTableColumnName(value) {
+  name: string;
+  set ibTableColumnName(value) {
     this.name = value;
   }
 
@@ -22,14 +19,6 @@ export abstract class IbFilterBase implements _IbFilterBase {
   searchCriteria: FormGroup | FormControl;
 
   constructor(public filter: IbFilter) {}
-
-  ngOnInit() {
-    if (!this.name) {
-      return;
-    }
-
-    this.filter.form.addControl(this.name, this.searchCriteria);
-  }
 
   applyFilter() {
     if (!this.searchCriteria.valid) {
@@ -52,4 +41,30 @@ export abstract class IbFilterBase implements _IbFilterBase {
   }
 
   abstract build: () => IbFilterDef;
+}
+
+@Directive({
+  selector: "ib-filter-base",
+})
+export class IbFilterBase extends _IbFilterBase {
+  @ViewChild(IbFilterButton) button: IbFilterButton;
+
+  @Input() name: string;
+  @Input() set ibTableColumnName(value) {
+    this.name = value;
+  }
+
+  constructor(public filter: IbFilter) {
+    super(filter);
+  }
+
+  ngOnInit() {
+    if (!this.name) {
+      return;
+    }
+
+    this.filter.form.addControl(this.name, this.searchCriteria);
+  }
+
+  build: () => IbFilterDef;
 }

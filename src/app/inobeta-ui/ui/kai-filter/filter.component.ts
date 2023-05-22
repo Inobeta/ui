@@ -7,6 +7,7 @@ import {
   Output,
   QueryList,
   ViewEncapsulation,
+  forwardRef,
 } from "@angular/core";
 import { applyFilter, contains } from "./filters";
 import { FormGroup } from "@angular/forms";
@@ -39,14 +40,15 @@ import { IbFilterBase } from "./filters/base/filter-base";
   encapsulation: ViewEncapsulation.None,
 })
 export class IbFilter {
-  @ContentChildren(IbFilterBase) filters: QueryList<IbFilterBase>;
+  @ContentChildren(forwardRef(() => IbFilterBase))
+  filters: QueryList<IbFilterBase>;
 
   @Input()
   set value(value) {
     // as indicated in NG01000
     setTimeout(() => {
       this.form.patchValue(value);
-      Object.keys(value).forEach(key => this.form.get(key).markAsDirty());
+      Object.keys(value).forEach((key) => this.form.get(key).markAsDirty());
       this.update();
     });
   }

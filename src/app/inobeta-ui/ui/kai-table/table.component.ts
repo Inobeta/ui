@@ -160,7 +160,6 @@ export class IbTable implements OnDestroy {
     if (this.filter) {
       this.dataSource.filterPredicate = this.filter.filterPredicate;
       this.filter.ibFilterUpdated.subscribe(filter => {
-        console.log('kai-table', filter);
         this.selectionColumn?.selection?.clear();
         this.dataSource.filter = filter as any;
       });

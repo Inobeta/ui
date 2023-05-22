@@ -24,6 +24,7 @@ import { IbFilterActions } from "./filter-actions/filter-actions.component";
 import { IbApplyFilterButton } from "./filter-actions/apply-filter-button.component";
 import { IbFilterDate } from "./filters/date/filter-date.component";
 import { MatDatepickerModule } from "@angular/material/datepicker";
+import { IbFilterBase } from "./filters/base/filter-base";
 
 @NgModule({
   imports: [
@@ -50,6 +51,7 @@ import { MatDatepickerModule } from "@angular/material/datepicker";
   ],
   exports: [
     IbFilter,
+    IbFilterBase,
     IbFilterButton,
     IbFilterText,
     IbFilterTag,
@@ -60,6 +62,7 @@ import { MatDatepickerModule } from "@angular/material/datepicker";
   ],
   declarations: [
     IbFilter,
+    IbFilterBase,
     IbFilterButton,
     IbFilterText,
     IbFilterTag,
@@ -67,7 +70,6 @@ import { MatDatepickerModule } from "@angular/material/datepicker";
     IbFilterDate,
     IbFilterActions,
     IbApplyFilterButton,
-  ],
-  providers: [],
+  ]
 })
 export class IbFilterModule {}

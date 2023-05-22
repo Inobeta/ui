@@ -1,7 +1,7 @@
 import { Component, Input, ViewEncapsulation, forwardRef } from "@angular/core";
 import { IbFilterBase } from "../base/filter-base";
 import { FormControl, FormGroup } from "@angular/forms";
-import { IbFilterDef, _IbFilterBase } from "../../filter.types";
+import { IbFilterDef } from "../../filter.types";
 import { and, gte, lte } from "../../filters";
 
 @Component({
