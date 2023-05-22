@@ -87,19 +87,63 @@ export class IbFilterDate extends IbFilterBase {
     [IbDateFilterPeriod.DAYS]: 60_000 * 60 * 24,
     [IbDateFilterPeriod.WEEKS]: 60_000 * 60 * 24 * 7,
   };
+  
+  get displayValue() {
+    if (this.isSelected(IbDateFilterCriteriaCategory.WITHIN)) {
+      return this.searchCriteria.value.within.value;
+    }
+
+    if (this.isSelected(IbDateFilterCriteriaCategory.MORE_THAN)) {
+      return this.searchCriteria.value.within.value;
+    }
+
+    if (this.isSelected(IbDateFilterCriteriaCategory.RANGE)) {
+      return `${this.searchCriteria.value.range.start} - ${this.searchCriteria.value.range.end}`;
+    }
+
+    return;
+  }
+
+  get displayPeriod() {    
+    if (this.isSelected(IbDateFilterCriteriaCategory.WITHIN)) {
+      return this.withinPeriodOptions.find(
+        (o) => o.value === this.searchCriteria.value.within.period
+      )?.displayValue;
+    }
+
+    if (this.isSelected(IbDateFilterCriteriaCategory.MORE_THAN)) {
+      return this.moreThanPeriodOptions.find(
+        (o) => o.value === this.searchCriteria.value.within.period
+      )?.displayValue;
+    }
+
+    return;
+  }
+
+  get displayCondition() {
+    if (this.isSelected(IbDateFilterCriteriaCategory.WITHIN)) {
+      return "shared.ibFilter.date.withinTheLast";
+    }
+
+    if (this.isSelected(IbDateFilterCriteriaCategory.MORE_THAN)) {
+      return "shared.ibFilter.date.moreThan";
+    }
+
+    if (this.isSelected(IbDateFilterCriteriaCategory.RANGE)) {
+      return "shared.ibFilter.date.between";
+    }
+  }
 
   isSelected(category) {
     return this.searchCriteria.value.categorySelected === category;
   }
 
   applyFilter(): void {
-    this.isDirty = true;
     this.filter.update();
     this.button.closeMenu();
   }
 
   clear(): void {
-    this.isDirty = false;
     const defaultPeriod = {
       period: IbDateFilterPeriod.MINUTES,
       value: null,

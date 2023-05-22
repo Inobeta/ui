@@ -35,6 +35,10 @@ export class IbFilterText extends IbFilterBase {
     },
   ];
 
+  get isDirty() {
+    return this.searchCriteria.valid;
+  }
+  
   get displayCondition() {
     const operator = this.searchCriteria.value.operator;
     return this.operators.find((o) => o.value === operator)?.displayValue ?? "";
@@ -50,7 +54,6 @@ export class IbFilterText extends IbFilterBase {
   });
 
   clear() {
-    this.isDirty = false;
     this.searchCriteria.markAsPristine();
     this.searchCriteria.clearValidators();
     this.searchCriteria.reset();

@@ -22,7 +22,7 @@ import { IbSelectionColumn } from "src/app/inobeta-ui/ui/kai-table/selection-col
       </button>
     </div>
     <ib-kai-table #table [dataSource]="dataSource" [columns]="columns">
-      <ib-filter>
+      <ib-filter [value]="initialValue">
         <ib-filter-text ibTableColumnName="name">Name</ib-filter-text>
         <ib-filter-tag ibTableColumnName="fruit">Fruit</ib-filter-tag>
         <ib-filter-number ibTableColumnName="number">Amount</ib-filter-number>
@@ -54,6 +54,7 @@ export class IbKaiTableFullExamplePage {
   @ViewChild(IbSelectionColumn, { static: true })
   selectionColumn: IbSelectionColumn;
 
+  initialValue = { fruit: ['apple', 'banana'], number: { min: 5, max: 10 } }
   dataSource = new MatTableDataSource<any>();
   columns = [
     useColumn("Name", "name"),

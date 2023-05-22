@@ -2,6 +2,7 @@ import {
   Component,
   ContentChildren,
   EventEmitter,
+  Input,
   Optional,
   Output,
   QueryList,
@@ -39,6 +40,16 @@ import { IbFilterBase } from "./filters/base/filter-base";
 })
 export class IbFilter {
   @ContentChildren(IbFilterBase) filters: QueryList<IbFilterBase>;
+
+  @Input()
+  set value(value) {
+    // as indicated in NG01000
+    setTimeout(() => {
+      this.form.patchValue(value);
+      Object.keys(value).forEach(key => this.form.get(key).markAsDirty());
+      this.update();
+    });
+  }
   @Output() ibFilterUpdated = new EventEmitter<any>();
 
   form: FormGroup = new FormGroup<Record<string, any>>({});
@@ -48,10 +59,6 @@ export class IbFilter {
 
   rawFilter = {};
   filter = {};
-
-  get activeFilters() {
-    return this.filters.filter((f) => f.isDirty).length;
-  }
 
   constructor(@Optional() public ibTable: IbTable) {}
 

@@ -1,6 +1,8 @@
 <ib-filter-button>
   <span ib-filter-name><ng-content></ng-content></span>
-  <span ib-filter-value></span>
+  <span ib-filter-value>
+    {{ displayCondition | translate | lowercase }} {{ displayValue }} {{ displayPeriod | translate }}
+  </span>
 
   <section [formGroup]="filter?.form" style="padding: 0.5em 1em 0 1em">
     <section [formGroupName]="name" class="ib-filter-date">

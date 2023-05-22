@@ -22,6 +22,13 @@ export class IbFilterNumber extends IbFilterBase {
     max: new FormControl(),
   });
 
+  get isDirty() {
+    return (
+      this.searchCriteria.value.min !== this.min ||
+      this.searchCriteria.value.max !== this.max
+    );
+  }
+
   ngOnInit() {
     super.ngOnInit();
     if (this.filter?.ibTable) {
@@ -33,12 +40,9 @@ export class IbFilterNumber extends IbFilterBase {
     const values = this.filter.ibTable.dataSource.data.map((x) => x[this.name]);
     this.min = Math.min(...values);
     this.max = Math.max(...values);
-
-    this.clearRange();
   }
 
   clear() {
-    this.isDirty = false;
     this.clearRange();
     this.filter.update();
   }

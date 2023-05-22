@@ -67,11 +67,7 @@ export class IbFilterTag extends IbFilterBase {
   }
 
   applyFilter() {
-    this.isDirty = true;
-
     if (!this.selected.length) {
-      console.log("aaaaa");
-      this.isDirty = false;
       this.searchCriteria.patchValue(null);
     }
 

@@ -1,8 +1,4 @@
-import {
-  Directive,
-  Input,
-  ViewChild,
-} from "@angular/core";
+import { Directive, Input, ViewChild } from "@angular/core";
 import { IbFilter } from "../../filter.component";
 import { FormControl, FormGroup } from "@angular/forms";
 import { IbFilterDef, _IbFilterBase } from "../../filter.types";
@@ -19,7 +15,10 @@ export abstract class IbFilterBase implements _IbFilterBase {
     this.name = value;
   }
 
-  isDirty = false;
+  get isDirty() {
+    return this.searchCriteria.dirty;
+  }
+
   searchCriteria: FormGroup | FormControl;
 
   constructor(public filter: IbFilter) {}
@@ -37,14 +36,11 @@ export abstract class IbFilterBase implements _IbFilterBase {
       this.searchCriteria.markAllAsTouched();
       return;
     }
-    this.isDirty = true;
     this.filter.update();
     this.closeMenu();
   }
 
   clear() {
-    this.isDirty = false;
-
     this.searchCriteria.markAsPristine();
     this.searchCriteria.clearValidators();
     this.searchCriteria.reset();
@@ -54,6 +50,6 @@ export abstract class IbFilterBase implements _IbFilterBase {
   closeMenu() {
     this.button.closeMenu();
   }
-  
+
   abstract build: () => IbFilterDef;
 }
