@@ -4,6 +4,7 @@
 
 | Issue ID | Type | Section | Description |
 | -- | -- | -- | -- |
+|DEVK-181|fix|Package|Updated `package.json`; Moved `dependencies` in `peerDependencies`|
 |DEVK-183|feat|IbTable|Created a new table that will replace old IbTableModule|
 |DEVK-184|feat|IbFilter|Created filters for the new IbTable|
 |DEVK-189|feat|IbTable|Created IbDataSource for server side interaction|
