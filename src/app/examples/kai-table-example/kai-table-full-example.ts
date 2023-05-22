@@ -54,7 +54,7 @@ export class IbKaiTableFullExamplePage {
   @ViewChild(IbSelectionColumn, { static: true })
   selectionColumn: IbSelectionColumn;
 
-  initialValue = { fruit: ['apple', 'banana'], number: { min: 5, max: 10 } }
+  initialValue = { fruit: ["apple", "banana"], number: { min: 5, max: 10 } };
   dataSource = new MatTableDataSource<any>();
   columns = [
     useColumn("Name", "name"),
