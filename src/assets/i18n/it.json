@@ -157,7 +157,8 @@
         "hoursAgo": "ore fa",
         "daysAgo": "giorni fa",
         "weeksAgo": "settimane fa",
-        "dateRangeLabel": "Inserisci un intervallo"
+        "dateRangeLabel": "Inserisci un intervallo",
+        "dateRangeInvalid": "Intervallo non valido"
       }
     }
   },

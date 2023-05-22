@@ -3,6 +3,7 @@ import { IbFilterBase } from "../base/filter-base";
 import { IbFilterDef } from "../../filter.types";
 import { FormGroup, FormControl } from "@angular/forms";
 import { and, gte, lte, none } from "../../filters";
+import { formatDate } from "@angular/common";
 
 enum IbDateFilterCriteriaCategory {
   WITHIN = 1,
@@ -98,7 +99,12 @@ export class IbFilterDate extends IbFilterBase {
     }
 
     if (this.isSelected(IbDateFilterCriteriaCategory.RANGE)) {
-      return `${this.searchCriteria.value.range.start} - ${this.searchCriteria.value.range.end}`;
+      if (!this.searchCriteria.value.range.start || !this.searchCriteria.value.range.end) {
+        return
+      }
+      const start = formatDate(this.searchCriteria.value.range.start, 'dd/MM/YYYY', 'en');
+      const end = formatDate(this.searchCriteria.value.range.end, 'dd/MM/YYYY', 'en');
+      return `${start} - ${end}`;
     }
 
     return;
@@ -139,6 +145,9 @@ export class IbFilterDate extends IbFilterBase {
   }
 
   applyFilter(): void {
+    if (this.searchCriteria.invalid) {
+      return;
+    }
     this.filter.update();
     this.button.closeMenu();
   }
