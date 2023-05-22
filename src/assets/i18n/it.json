@@ -131,6 +131,34 @@
         "passwordsMatch": "Le password non coincidono!",
         "min6max32": "La password deve essere compresa tra 6 e 32 caratteri!"
       }
+    },
+    "ibFilter": {
+      "search": "Cerca",
+      "condition": "Condizione",
+      "eq": "Uguale a",
+      "contains": "Contiene",
+      "startsWith": "Inizia con",
+      "endsWith": "Finisce con",
+      "update": "Aggiorna",
+      "clear": "Cancella",
+      "value": "Valore",
+      "min": "Min",
+      "max": "Max",
+      "between": "Tra {{min}} e {{max}}",
+      "date": {
+        "withinTheLast": "Nell'arco di",
+        "moreThan": "Da oltre",
+        "between": "Tra",
+        "minutes": "minuti",
+        "hours": "ore",
+        "days": "giorni",
+        "weeks": "settimane",
+        "minutesAgo": "minuti fa",
+        "hoursAgo": "ore fa",
+        "daysAgo": "giorni fa",
+        "weeksAgo": "settimane fa",
+        "dateRangeLabel": "Inserisci un intervallo"
+      }
     }
   },
   "receiptGoods": {

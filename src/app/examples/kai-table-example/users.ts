@@ -44,6 +44,8 @@ const NAMES: string[] = [
   'Alice'
 ];
 
+const minDate = new Date().setMonth(new Date().getMonth() - 2)
+const maxDate = new Date().setMonth(new Date().getMonth() + 2)
 export function createNewUser(id: number): IbUserExample {
   const name =
     NAMES[Math.round(Math.random() * (NAMES.length - 1))] +
@@ -56,7 +58,21 @@ export function createNewUser(id: number): IbUserExample {
     name,
     fruit: FRUITS[Math.round(Math.random() * (FRUITS.length - 1))],
     number: Math.round(Math.random() * 22) + 1,
-    aDate: new Date(new Date().getTime() + Math.random() * 100000),
+    aDate: getRandomDate(minDate, maxDate),
     aDateString: '2023-01-01T12:53:12.000Z'
   };
+}
+
+function getRandomDate(startDate, endDate) {
+  // Convert the start and end dates to milliseconds
+  const startMs = startDate;
+  const endMs = endDate;
+
+  // Generate a random number between startMs and endMs
+  const randomMs = Math.random() * (endMs - startMs) + startMs;
+
+  // Create a new Date object using the random milliseconds
+  const randomDate = new Date(randomMs);
+
+  return randomDate;
 }

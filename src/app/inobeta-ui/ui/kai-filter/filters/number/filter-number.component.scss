@@ -1,0 +1,25 @@
+@use "@angular/material" as mat;
+
+.ib-filter-number {
+  padding: 0 0.5em;
+  display: flex;
+  flex-direction: column;
+}
+
+.ib-filter-number__input-range {
+  display: flex;
+  justify-content: space-between;
+  @include mat.form-field-density(-4);
+
+  input[type=number] {
+    appearance: textfield;
+  }
+
+  .mat-mdc-form-field {
+    overflow-y: inherit;
+  }
+  .mdc-notched-outline__notch {
+    width: auto !important;
+  }
+}
+

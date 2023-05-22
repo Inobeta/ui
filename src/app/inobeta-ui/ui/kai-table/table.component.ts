@@ -34,6 +34,7 @@ import {
 } from "./table.types";
 import { IbSelectionColumn } from "./selection-column";
 import { IbDataSource } from "./table-data-source";
+import { IbFilter } from "../kai-filter";
 
 export const IB_CELL_DATA = new InjectionToken<IbCellData>("IbCellData");
 
@@ -81,6 +82,7 @@ export class IbTable implements OnDestroy {
 
   @ContentChild(IbSelectionColumn) selectionColumn!: IbSelectionColumn;
   @ContentChild(IbKaiRowGroupDirective) rowGroup!: IbKaiRowGroupDirective;
+  @ContentChild(IbFilter) filter!: IbFilter;
 
   @ViewChild(MatTable, { static: true }) table: MatTable<any>;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -153,6 +155,15 @@ export class IbTable implements OnDestroy {
   ngAfterContentInit() {
     if (this.table && this.selectionColumn) {
       this.table.addColumnDef(this.selectionColumn.columnDef);
+    }
+
+    if (this.filter) {
+      this.dataSource.filterPredicate = this.filter.filterPredicate;
+      this.filter.ibFilterUpdated.subscribe(filter => {
+        console.log('kai-table', filter);
+        this.selectionColumn?.selection?.clear();
+        this.dataSource.filter = filter as any;
+      });
     }
   }
 

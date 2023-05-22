@@ -1,0 +1,19 @@
+<button class="ib-filter-button" [matMenuTriggerFor]="menu" mat-stroked-button>
+  <section>
+    <span class="ib-filter-name" *ngIf="!filter.isDirty || !filter.searchCriteria.value?.length">
+      <ng-content select="[ib-filter-name]"></ng-content>
+      <!-- <span *ngIf="filter.isDirty">:</span> -->
+    </span>
+    <span *ngIf="filter.isDirty">
+      <ng-content select="[ib-filter-value]"></ng-content>
+    </span>
+  </section>
+  <mat-icon  iconPositionEnd>arrow_drop_down</mat-icon>
+</button>
+
+<mat-menu #menu="matMenu">
+  <section (click)="$event.stopPropagation();" style="width: 280px">
+    <ng-content></ng-content>
+    <ng-content select="ib-filter-actions"></ng-content>
+  </section>
+</mat-menu>

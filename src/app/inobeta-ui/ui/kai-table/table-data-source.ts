@@ -33,7 +33,7 @@ export class IbDataSource<
   // private readonly _renderData = new BehaviorSubject<T[]>([]);
 
   /** Stream that emits when a new filter string is set on the data source. */
-  // private readonly _filter = new BehaviorSubject<string>('');
+  private readonly _filter = new BehaviorSubject<any>({});
 
   /** Used to react to internal changes of the paginator that are made by the data source itself. */
   // private readonly _internalPageChanges = new Subject<void>();
@@ -51,6 +51,11 @@ export class IbDataSource<
     this._data.next(data);
   }
 
+  /** MatTableDataSource compat */
+  get filteredData() {
+    return this._data.value;
+  }
+  
   get sort(): MatSort | null {
     return this._sort;
   }
@@ -82,6 +87,14 @@ export class IbDataSource<
   }
 
   _state = new BehaviorSubject<IbKaiTableState>(IbKaiTableState.IDLE);
+
+  get filter() {
+    return this._filter.value;
+  }
+
+  set filter(value) {
+    this._filter.next(value);
+  }
 
   constructor(initialData: T[] = []) {
     super();
@@ -158,6 +171,8 @@ export class IbDataSource<
     this._data?.unsubscribe();
     this._renderChangesSubscription?.unsubscribe();
   }
+
+  filterPredicate() {}
 
   fetchData(sort: string, order: SortDirection, page: number): Observable<any> {
     return of(this.data);

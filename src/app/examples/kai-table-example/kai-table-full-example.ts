@@ -3,6 +3,7 @@ import { MatTableDataSource } from "@angular/material/table";
 import {
   useColumn,
   useContextColumn,
+  useDateColumn,
 } from "src/app/inobeta-ui/ui/kai-table/cells";
 import { IbTable } from "src/app/inobeta-ui/ui/kai-table/table.component";
 import { createNewUser } from "./users";
@@ -11,16 +12,22 @@ import { IbSelectionColumn } from "src/app/inobeta-ui/ui/kai-table/selection-col
 @Component({
   selector: "ib-kai-table-full-example",
   template: `
-  <div style="display: flex; gap: 12px">
-    <button
-      (click)="getSelection()"
-      [disabled]="selectionColumn.selection.selected.length === 0"
-      mat-raised-button
-    >
-      get selection
-    </button>
-  </div>
+    <div style="display: flex; gap: 12px">
+      <button
+        (click)="getSelection()"
+        [disabled]="selectionColumn.selection.selected.length === 0"
+        mat-raised-button
+      >
+        get selection
+      </button>
+    </div>
     <ib-kai-table #table [dataSource]="dataSource" [columns]="columns">
+      <ib-filter>
+        <ib-filter-text ibTableColumnName="name">Name</ib-filter-text>
+        <ib-filter-tag ibTableColumnName="fruit">Fruit</ib-filter-tag>
+        <ib-filter-number ibTableColumnName="number">Amount</ib-filter-number>
+        <ib-filter-date ibTableColumnName="aDate">Purchased</ib-filter-date>
+      </ib-filter>
       <ib-selection-column
         (ibRowSelectionChange)="selectionChange($event)"
       ></ib-selection-column>
@@ -49,9 +56,10 @@ export class IbKaiTableFullExamplePage {
 
   dataSource = new MatTableDataSource<any>();
   columns = [
-    useColumn("name"),
-    useColumn("fruit"),
-    useColumn("number", "number", true),
+    useColumn("Name", "name"),
+    useColumn("Fruit", "fruit"),
+    useColumn("Amount", "number", true),
+    useDateColumn("Purchased", "aDate", true),
     useContextColumn(() => [{ type: "view", icon: "chevron_right" }]),
   ];
 
@@ -60,7 +68,6 @@ export class IbKaiTableFullExamplePage {
       createNewUser(k + 1)
     ).map((u) => ({ ...u, select: false }));
     this.dataSource.data = users;
-    console.log(new Set(users.map((u) => u.fruit)));
   }
 
   selectionChange(data) {

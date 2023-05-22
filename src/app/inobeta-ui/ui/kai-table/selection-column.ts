@@ -49,18 +49,18 @@ export class IbSelectionColumn implements OnInit {
 
   isAllSelected() {
     const numSelected = this.selection.selected.length;
-    const numRows = this.table.dataSource.data.length;
+    const numRows = this.table.dataSource.filteredData.length;
     return numSelected == numRows;
   }
 
   toggleAllRows() {
     this.isAllSelected()
       ? this.selection.clear()
-      : this.table.dataSource.data.forEach((row) => this.selection.select(row));
+      : this.selection.select(...this.table.dataSource.filteredData);
 
     const selectionAfterToggle = this.isAllSelected();
     this.ibRowSelectionChange.emit(
-      this.table.dataSource.data.map((row) => ({
+      this.table.dataSource.filteredData.map((row) => ({
         tableName: this.table.tableName || "",
         row,
         selection: selectionAfterToggle,
