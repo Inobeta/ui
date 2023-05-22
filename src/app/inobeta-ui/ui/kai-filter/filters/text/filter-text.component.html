@@ -1,6 +1,6 @@
 <ib-filter-button>
   <span ib-filter-name><ng-content></ng-content></span>
-  <span ib-filter-value>
+  <span ib-filter-value *ngIf="isDirty">
     {{ displayCondition | translate | lowercase }} "{{ displayValue }}"
   </span>
 

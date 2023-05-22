@@ -1,5 +1,4 @@
 import { Component, ViewChild } from "@angular/core";
-import { IbFilterBase } from "../filters/base/filter-base";
 import { MatMenuTrigger } from "@angular/material/menu";
 
 @Component({
@@ -8,8 +7,6 @@ import { MatMenuTrigger } from "@angular/material/menu";
 })
 export class IbFilterButton {
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
-
-  constructor(public filter: IbFilterBase) {}
 
   closeMenu() {
     this.trigger.closeMenu();

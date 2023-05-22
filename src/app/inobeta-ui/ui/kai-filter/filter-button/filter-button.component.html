@@ -1,12 +1,7 @@
 <button class="ib-filter-button" [matMenuTriggerFor]="menu" mat-stroked-button>
   <section>
-    <span class="ib-filter-name" *ngIf="!filter.isDirty || !filter.searchCriteria.value?.length">
-      <ng-content select="[ib-filter-name]"></ng-content>
-      <!-- <span *ngIf="filter.isDirty">:</span> -->
-    </span>
-    <span *ngIf="filter.isDirty">
-      <ng-content select="[ib-filter-value]"></ng-content>
-    </span>
+    <ng-content select="[ib-filter-name]"></ng-content>
+    <ng-content select="[ib-filter-value]"></ng-content>
   </section>
   <mat-icon  iconPositionEnd>arrow_drop_down</mat-icon>
 </button>
