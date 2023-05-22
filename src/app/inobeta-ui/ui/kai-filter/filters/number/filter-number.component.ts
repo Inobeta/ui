@@ -1,6 +1,5 @@
 import { Component, Input, ViewEncapsulation, forwardRef } from "@angular/core";
 import { IbFilterBase } from "../base/filter-base";
-import { IbFilter } from "../../filter.component";
 import { FormControl, FormGroup } from "@angular/forms";
 import { IbFilterDef, _IbFilterBase } from "../../filter.types";
 import { and, gte, lte } from "../../filters";
@@ -41,9 +40,9 @@ export class IbFilterNumber extends IbFilterBase {
   clear() {
     this.isDirty = false;
     this.clearRange();
-    this.filter.update()
+    this.filter.update();
   }
-  
+
   clearRange() {
     this.searchCriteria.setValue({
       min: this.min,

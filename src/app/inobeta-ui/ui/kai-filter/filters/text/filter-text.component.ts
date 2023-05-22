@@ -1,6 +1,5 @@
 import { Component, forwardRef } from "@angular/core";
 import { IbFilterBase } from "../base/filter-base";
-import { IbFilter } from "../../filter.component";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { IbFilterDef, IbFilterOperator } from "../../filter.types";
 

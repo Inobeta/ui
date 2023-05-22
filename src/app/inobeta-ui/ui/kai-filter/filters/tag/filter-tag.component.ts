@@ -6,7 +6,6 @@ import {
   ViewEncapsulation,
 } from "@angular/core";
 import { IbFilterBase } from "../base/filter-base";
-import { IbFilter } from "../../filter.component";
 import { MatSelectionList } from "@angular/material/list";
 import { FormControl } from "@angular/forms";
 import { IbFilterDef } from "../../filter.types";
@@ -71,7 +70,7 @@ export class IbFilterTag extends IbFilterBase {
     this.isDirty = true;
 
     if (!this.selected.length) {
-      console.log('aaaaa')
+      console.log("aaaaa");
       this.isDirty = false;
       this.searchCriteria.patchValue(null);
     }
