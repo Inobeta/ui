@@ -88,29 +88,57 @@ export class IbFilterDate extends IbFilterBase {
     [IbDateFilterPeriod.DAYS]: 60_000 * 60 * 24,
     [IbDateFilterPeriod.WEEKS]: 60_000 * 60 * 24 * 7,
   };
-  
+
+  get isDirty() {
+    if (this.isSelected(IbDateFilterCriteriaCategory.WITHIN)) {
+      return !!this.searchCriteria.value.within.value;
+    }
+
+    if (this.isSelected(IbDateFilterCriteriaCategory.MORE_THAN)) {
+      return !!this.searchCriteria.value.moreThan.value;
+    }
+
+    if (this.isSelected(IbDateFilterCriteriaCategory.RANGE)) {
+      return (
+        this.searchCriteria.value.range.start &&
+        this.searchCriteria.value.range.end
+      );
+    }
+  }
+
   get displayValue() {
     if (this.isSelected(IbDateFilterCriteriaCategory.WITHIN)) {
       return this.searchCriteria.value.within.value;
     }
 
     if (this.isSelected(IbDateFilterCriteriaCategory.MORE_THAN)) {
-      return this.searchCriteria.value.within.value;
+      return this.searchCriteria.value.moreThan.value;
     }
 
     if (this.isSelected(IbDateFilterCriteriaCategory.RANGE)) {
-      if (!this.searchCriteria.value.range.start || !this.searchCriteria.value.range.end) {
-        return
+      if (
+        !this.searchCriteria.value.range.start ||
+        !this.searchCriteria.value.range.end
+      ) {
+        return;
       }
-      const start = formatDate(this.searchCriteria.value.range.start, 'dd/MM/YYYY', 'en');
-      const end = formatDate(this.searchCriteria.value.range.end, 'dd/MM/YYYY', 'en');
+      const start = formatDate(
+        this.searchCriteria.value.range.start,
+        "dd/MM/YYYY",
+        "en"
+      );
+      const end = formatDate(
+        this.searchCriteria.value.range.end,
+        "dd/MM/YYYY",
+        "en"
+      );
       return `${start} - ${end}`;
     }
 
     return;
   }
 
-  get displayPeriod() {    
+  get displayPeriod() {
     if (this.isSelected(IbDateFilterCriteriaCategory.WITHIN)) {
       return this.withinPeriodOptions.find(
         (o) => o.value === this.searchCriteria.value.within.period
@@ -119,7 +147,7 @@ export class IbFilterDate extends IbFilterBase {
 
     if (this.isSelected(IbDateFilterCriteriaCategory.MORE_THAN)) {
       return this.moreThanPeriodOptions.find(
-        (o) => o.value === this.searchCriteria.value.within.period
+        (o) => o.value === this.searchCriteria.value.moreThan.period
       )?.displayValue;
     }
 
