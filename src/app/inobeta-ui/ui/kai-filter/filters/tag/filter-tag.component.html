@@ -1,12 +1,19 @@
 <ib-filter-button>
-  <span ib-filter-name *ngIf="!isDirty || !searchCriteria.value?.length"><ng-content></ng-content></span>
+  <span ib-filter-name *ngIf="!isDirty || !searchCriteria.value?.length"
+    ><ng-content></ng-content
+  ></span>
   <span ib-filter-value>
-    {{ displayValue }}
+    <span class="ib-filter-value">{{ displayValue }}</span
+    >{{ displayLength }}
   </span>
 
   <section [formGroup]="filter?.form">
     <section class="ib-filter-tag" cdkVirtualScrollingElement>
-      <mat-selection-list [multiple]="multiple" [formControlName]="name" disableRipple="true">
+      <mat-selection-list
+        [multiple]="multiple"
+        [formControlName]="name"
+        disableRipple="true"
+      >
         <cdk-virtual-scroll-viewport
           appendOnly
           itemSize="40"

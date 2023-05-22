@@ -5,6 +5,15 @@ section.ib-filter-tag {
   @include mat.list-density(-4);
 }
 
+span.ib-filter-value {
+  display: table-cell;
+
+  max-width: 32ch;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
 :host cdk-virtual-scroll-viewport {
   height: max-content;
 }
