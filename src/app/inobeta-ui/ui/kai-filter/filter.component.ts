@@ -13,6 +13,7 @@ import { applyFilter, contains } from "./filters";
 import { FormGroup } from "@angular/forms";
 import { IbTable } from "../kai-table/table.component";
 import { IbFilterBase } from "./filters/base/filter-base";
+import { IbFilterSyntax } from "./filter.types";
 
 @Component({
   selector: "ib-filter",
@@ -52,21 +53,21 @@ export class IbFilter {
       this.update();
     });
   }
-  @Output() ibFilterUpdated = new EventEmitter<any>();
+  @Output() ibFilterUpdated = new EventEmitter<IbFilterSyntax>();
 
   form: FormGroup = new FormGroup<Record<string, any>>({});
 
   showFilters = true;
   searchBar = "";
 
-  rawFilter = {};
-  filter = {};
+  rawFilter: Record<string, any> = {};
+  filter: IbFilterSyntax = {};
 
   constructor(@Optional() public ibTable: IbTable) {}
 
   update() {
     this.rawFilter = this.form.value;
-    this.buildFilter();
+    this.filter = this.buildFilter();
     this.ibFilterUpdated.emit(this.filter);
   }
 
@@ -75,7 +76,7 @@ export class IbFilter {
   }
 
   // where the **** should i put this...
-  filterPredicate = (data: any, filter: any) => {
+  filterPredicate = (data: any, filter: IbFilterSyntax | any) => {
     return Object.entries(data).every(([key, value]) => {
       const condition = filter[key];
       return (
@@ -85,20 +86,22 @@ export class IbFilter {
     });
   };
 
-  // and this...
   buildFilter() {
+    let output = {};
     const filters = this.filters.toArray();
 
     if (this.searchBar) {
-      this.filter = {
+      output = {
         __crossColumnFilter: contains(this.searchBar),
       };
     }
 
     for (const [key, value] of Object.entries(this.rawFilter)) {
       const filter = filters.find((f) => f.name === key);
-      this.filter = { ...this.filter, [key]: filter.build() };
+      output = { ...output, [key]: filter.build() };
     }
+
+    return output;
   }
 
   private evaluateCrossColumnFilter = (

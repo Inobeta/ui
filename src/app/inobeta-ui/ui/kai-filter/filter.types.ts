@@ -18,3 +18,7 @@ export interface IbFilterDef {
   operator: IbFilterOperator;
   value: IbFilterDef[] | string | number;
 }
+
+export interface IbFilterSyntax {
+  [key: string]: IbFilterDef;
+}
