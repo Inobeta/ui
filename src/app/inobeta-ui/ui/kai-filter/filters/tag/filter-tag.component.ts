@@ -30,11 +30,12 @@ export class IbFilterTag extends IbFilterBase {
   @Input() multiple = true;
   @Input()
   set options(value: string[]) {
+    value = value.sort((a, b) => (a.toLowerCase() > b.toLowerCase() ? 1 : -1));
     this._options = new Set(value);
   }
 
   get options() {
-    return Array.from(this._options.values());
+    return Array.from(this._options);
   }
 
   get displayValue() {
@@ -43,10 +44,11 @@ export class IbFilterTag extends IbFilterBase {
       return "";
     }
 
-    if (items.length == 1) {
-      return items[0].value;
-    }
-    return `${items[0].value} +${items.length}`;
+    return items[0].value;
+  }
+
+  get displayLength() {
+    return this.selected?.length > 1 ? ` +${this.selected.length - 1}` : "";
   }
 
   get selected() {
@@ -61,9 +63,7 @@ export class IbFilterTag extends IbFilterBase {
   }
 
   populateOptionsFromColumn() {
-    this.options = this.filter.ibTable.dataSource.data
-      .map((x) => x[this.name])
-      .sort((a, b) => (a > b ? 1 : -1));
+    this.options = this.filter.ibTable.dataSource.data.map((x) => x[this.name]);
   }
 
   applyFilter() {
