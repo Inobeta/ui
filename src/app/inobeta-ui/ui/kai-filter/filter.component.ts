@@ -96,8 +96,12 @@ export class IbFilter {
       };
     }
 
-    for (const [key, value] of Object.entries(this.rawFilter)) {
+    for (const key of Object.keys(this.rawFilter)) {
       const filter = filters.find((f) => f.name === key);
+      // if (filter.searchCriteria.invalid) {
+      //   filter.clear(false);
+      //   continue;
+      // }
       output = { ...output, [key]: filter.build() };
     }
 

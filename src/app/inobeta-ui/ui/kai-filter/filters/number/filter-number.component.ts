@@ -42,9 +42,9 @@ export class IbFilterNumber extends IbFilterBase {
     this.max = Math.max(...values);
   }
 
-  clear() {
+  clear(update = true) {
     this.clearRange();
-    this.filter.update();
+    update && this.filter.update();
   }
 
   clearRange() {

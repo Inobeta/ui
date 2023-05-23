@@ -21,8 +21,16 @@
     .mat-mdc-form-field {
       padding-bottom: 0;
     }
+
+    input[type=number] {
+      appearance: textfield;
+    }
   }
 
+  .ib-filter-date__form--hidden {
+    display: none;
+  }
+  
   .ib-filter-date__range {
     input {
       font-size: 12px;

@@ -38,7 +38,7 @@ export class IbFilterText extends IbFilterBase {
   get isDirty() {
     return this.searchCriteria.valid;
   }
-  
+
   get displayCondition() {
     const operator = this.searchCriteria.value.operator;
     return this.operators.find((o) => o.value === operator)?.displayValue ?? "";
@@ -52,11 +52,4 @@ export class IbFilterText extends IbFilterBase {
     operator: this.searchCriteria.value.operator,
     value: this.searchCriteria.value.value,
   });
-
-  clear() {
-    this.searchCriteria.markAsPristine();
-    this.searchCriteria.clearValidators();
-    this.searchCriteria.reset();
-    this.filter.update();
-  }
 }

@@ -1,14 +1,14 @@
 import { Component, ViewEncapsulation, forwardRef } from "@angular/core";
 import { IbFilterBase } from "../base/filter-base";
 import { IbFilterDef } from "../../filter.types";
-import { FormGroup, FormControl } from "@angular/forms";
+import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { and, gte, lte, none } from "../../filters";
 import { formatDate } from "@angular/common";
 
 enum IbDateFilterCriteriaCategory {
-  WITHIN = 1,
-  MORE_THAN,
-  RANGE,
+  WITHIN = "within",
+  MORE_THAN = "moreThan",
+  RANGE = "range",
 }
 
 enum IbDateFilterPeriod {
@@ -29,13 +29,13 @@ enum IbDateFilterPeriod {
 })
 export class IbFilterDate extends IbFilterBase {
   searchCriteria = new FormGroup({
-    categorySelected: new FormControl(0),
+    categorySelected: new FormControl(null, [Validators.required]),
     within: new FormGroup({
-      value: new FormControl(),
+      value: new FormControl(null, [Validators.min(1)]),
       period: new FormControl(IbDateFilterPeriod.MINUTES),
     }),
     moreThan: new FormGroup({
-      value: new FormControl(),
+      value: new FormControl(null, [Validators.min(1)]),
       period: new FormControl(IbDateFilterPeriod.MINUTES),
     }),
     range: new FormGroup({
@@ -90,6 +90,10 @@ export class IbFilterDate extends IbFilterBase {
   };
 
   get isDirty() {
+    if (this.getSelected()?.invalid) {
+      return false;
+    }
+
     if (this.isSelected(IbDateFilterCriteriaCategory.WITHIN)) {
       return !!this.searchCriteria.value.within.value;
     }
@@ -172,15 +176,29 @@ export class IbFilterDate extends IbFilterBase {
     return this.searchCriteria.value.categorySelected === category;
   }
 
+  getSelected() {
+    return this.searchCriteria.get(this.searchCriteria.value.categorySelected);
+  }
+
   applyFilter(): void {
-    if (this.searchCriteria.invalid) {
+    this.searchCriteria.updateValueAndValidity();
+    if (this.getSelected().invalid) {
+      this.searchCriteria.markAllAsTouched();
       return;
     }
+
+    const categorySelected = this.searchCriteria.value.categorySelected;
+    const patch = {
+      [categorySelected]: this.getSelected().value,
+      categorySelected,
+    };
+
+    this.clearFilter(patch);
     this.filter.update();
     this.button.closeMenu();
   }
 
-  clear(): void {
+  clearFilter(patchValue = {}) {
     const defaultPeriod = {
       period: IbDateFilterPeriod.MINUTES,
       value: null,
@@ -188,8 +206,13 @@ export class IbFilterDate extends IbFilterBase {
     this.searchCriteria.reset({
       within: defaultPeriod,
       moreThan: defaultPeriod,
+      ...patchValue,
     });
-    this.filter.update();
+  }
+
+  clear(update = true): void {
+    this.clearFilter();
+    update && this.filter.update();
   }
 
   private getOffsetTime(value: number, category) {
@@ -240,6 +263,10 @@ export class IbFilterDate extends IbFilterBase {
   }
 
   build = (): IbFilterDef => {
+    if (this.getSelected().invalid) {
+      return none();
+    }
+    
     if (this.isSelected(IbDateFilterCriteriaCategory.WITHIN)) {
       return this.buildWithinCategory();
     }
