@@ -2,6 +2,7 @@ import { Component, forwardRef } from "@angular/core";
 import { IbFilterBase } from "../base/filter-base";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { IbFilterDef, IbFilterOperator } from "../../filter.types";
+import { none } from "../../filters";
 
 @Component({
   selector: "ib-text-filter",
@@ -48,8 +49,14 @@ export class IbTextFilter extends IbFilterBase {
     return this.searchCriteria.value.value;
   }
 
-  build = (): IbFilterDef => ({
-    operator: this.searchCriteria.value.operator,
-    value: this.searchCriteria.value.value,
-  });
+  build = (): IbFilterDef => {
+    if (this.searchCriteria.invalid) {
+      return none();
+    }
+    
+    return ({
+      operator: this.searchCriteria.value.operator,
+      value: this.searchCriteria.value.value,
+    });
+  };
 }

@@ -182,14 +182,14 @@ export class IbDateFilter extends IbFilterBase {
 
   applyFilter(): void {
     this.searchCriteria.updateValueAndValidity();
-    if (this.getSelected().invalid) {
+    if (this.getSelected()?.invalid) {
       this.searchCriteria.markAllAsTouched();
       return;
     }
 
-    const categorySelected = this.searchCriteria.value.categorySelected;
+    const categorySelected = this.searchCriteria?.value.categorySelected;
     const patch = {
-      [categorySelected]: this.getSelected().value,
+      [categorySelected]: this.getSelected()?.value,
       categorySelected,
     };
 
