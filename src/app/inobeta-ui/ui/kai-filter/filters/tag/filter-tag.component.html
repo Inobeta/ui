@@ -8,7 +8,7 @@
   </span>
 
   <section [formGroup]="filter?.form">
-    <section class="ib-filter-tag" cdkVirtualScrollingElement>
+    <section class="ib-tag-filter" cdkVirtualScrollingElement>
       <mat-selection-list
         [multiple]="multiple"
         [formControlName]="name"
@@ -22,6 +22,7 @@
         >
           <mat-list-option
             togglePosition="before"
+            checkboxPosition="before"
             *cdkVirtualFor="let option of options"
             [value]="option"
           >

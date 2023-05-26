@@ -1,12 +1,12 @@
 @use "@angular/material" as mat;
 
-.ib-filter-number {
+.ib-number-filter {
   padding: 0 0.5em;
   display: flex;
   flex-direction: column;
 }
 
-.ib-filter-number__input-range {
+.ib-number-filter__input-range {
   display: flex;
   justify-content: space-between;
   @include mat.form-field-density(-4);

@@ -76,7 +76,7 @@ export class IbTable implements OnDestroy {
   // tslint:disable-next-line: variable-name
   private _tableDef: IbTableDef = defaultTableDef;
   // tslint:disable-next-line: variable-name
-  private _columns!: IbColumnDef<any>[];
+  private _columns: IbColumnDef<any>[] = [];
   // tslint:disable-next-line: variable-name
   private _componentCache: any = {};
 
@@ -124,9 +124,9 @@ export class IbTable implements OnDestroy {
 
   isSelectionColumnAdded = false;
   get displayedColumns() {
-    const displayedColumns = [];
+    let displayedColumns = [];
     if (this.isSelectionColumnAdded) {
-      displayedColumns.push("ibSelectColumn");
+      displayedColumns = displayedColumns.concat(["ibSelectColumn"]);
     }
     return displayedColumns.concat(this.columns.map((c) => c.columnDef));
   }
@@ -148,15 +148,11 @@ export class IbTable implements OnDestroy {
 
   ngAfterViewInit() {
     if (this.table && this.selectionColumn) {
-      this.isSelectionColumnAdded = true;
+      setTimeout(() => this.isSelectionColumnAdded = true)
     }
   }
 
   ngAfterContentInit() {
-    if (this.table && this.selectionColumn) {
-      this.table.addColumnDef(this.selectionColumn.columnDef);
-    }
-
     if (this.filter) {
       this.dataSource.filterPredicate = this.filter.filterPredicate;
       this.filter.ibFilterUpdated.subscribe(filter => {

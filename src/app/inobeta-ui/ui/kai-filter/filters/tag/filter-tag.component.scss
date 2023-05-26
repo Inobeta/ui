@@ -1,5 +1,5 @@
 @use "@angular/material" as mat;
-section.ib-filter-tag {
+section.ib-tag-filter {
   overflow-y: auto;
   height: 300px;
   @include mat.list-density(-4);

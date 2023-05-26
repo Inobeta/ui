@@ -4,13 +4,13 @@ import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { IbFilterDef, IbFilterOperator } from "../../filter.types";
 
 @Component({
-  selector: "ib-filter-text",
+  selector: "ib-text-filter",
   templateUrl: "filter-text.component.html",
   providers: [
-    { provide: IbFilterBase, useExisting: forwardRef(() => IbFilterText) },
+    { provide: IbFilterBase, useExisting: forwardRef(() => IbTextFilter) },
   ],
 })
-export class IbFilterText extends IbFilterBase {
+export class IbTextFilter extends IbFilterBase {
   searchCriteria = new FormGroup({
     operator: new FormControl(null, [Validators.required]),
     value: new FormControl("", [Validators.required]),

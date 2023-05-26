@@ -14,7 +14,7 @@ import { IbTableRowSelectionChange, IbKaiTableState } from "./table.types";
   selector: "ib-selection-column",
   template: `
     <ng-container matColumnDef="ibSelectColumn">
-      <th style="width: 80px" class="ib-table__header-cell" mat-header-cell *matHeaderCellDef>
+      <th style="width: 40px" class="ib-table__header-cell" mat-header-cell *matHeaderCellDef>
         <mat-checkbox
           (change)="$event ? toggleAllRows() : null"
           [checked]="selection.hasValue() && isAllSelected()"
@@ -45,7 +45,9 @@ export class IbSelectionColumn implements OnInit {
 
   constructor(public table: IbTable) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.table.table.addColumnDef(this.columnDef);
+  }
 
   isAllSelected() {
     const numSelected = this.selection.selected.length;

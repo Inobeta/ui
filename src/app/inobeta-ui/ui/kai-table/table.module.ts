@@ -1,22 +1,22 @@
-import { NgModule } from "@angular/core";
-import { CommonModule } from "@angular/common";
-import { IbTable } from "./table.component";
 import { PortalModule } from "@angular/cdk/portal";
-import { MatSortModule } from "@angular/material/sort";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { CommonModule } from "@angular/common";
+import { NgModule } from "@angular/core";
+import { MatButtonModule } from "@angular/material/button";
+import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatIconModule } from "@angular/material/icon";
 import {
   MatPaginatorIntl,
-  MatPaginatorModule,
+  MatPaginatorModule
 } from "@angular/material/paginator";
-import { IbContextActionCell } from "./cells";
-import { MatTableModule } from "@angular/material/table";
-import { MatButtonModule } from "@angular/material/button";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { MatSortModule } from "@angular/material/sort";
+import { MatTableModule } from "@angular/material/table";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { ibMatPaginatorTranslate } from "../table";
+import { IbContextActionCell } from "./cells";
 import { IbKaiRowGroupDirective } from "./rowgroup";
-import { MatCheckboxModule } from "@angular/material/checkbox";
 import { IbSelectionColumn } from "./selection-column";
+import { IbTable } from "./table.component";
 
 @NgModule({
   exports: [IbTable, IbKaiRowGroupDirective, IbSelectionColumn],
@@ -48,4 +48,4 @@ import { IbSelectionColumn } from "./selection-column";
     },
   ],
 })
-export class IbKaiTableModule {}
+export class IbKaiTableModule { }

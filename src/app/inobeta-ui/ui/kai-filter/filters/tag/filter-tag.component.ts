@@ -12,15 +12,15 @@ import { IbFilterDef } from "../../filter.types";
 import { eq, or } from "../../filters";
 
 @Component({
-  selector: "ib-filter-tag",
+  selector: "ib-tag-filter",
   templateUrl: "./filter-tag.component.html",
   styleUrls: ["./filter-tag.component.scss"],
   providers: [
-    { provide: IbFilterBase, useExisting: forwardRef(() => IbFilterTag) },
+    { provide: IbFilterBase, useExisting: forwardRef(() => IbTagFilter) },
   ],
   encapsulation: ViewEncapsulation.None,
 })
-export class IbFilterTag extends IbFilterBase {
+export class IbTagFilter extends IbFilterBase {
   @ViewChild(MatSelectionList) matSelectionList: MatSelectionList;
 
   private _options: Set<string> = new Set();
@@ -76,5 +76,5 @@ export class IbFilterTag extends IbFilterBase {
   }
 
   build = (): IbFilterDef =>
-    this.selected.length ? or(this.selected.map((s) => eq(s.value))) : null;
+    this.selected?.length ? or(this.selected.map((s) => eq(s.value))) : null;
 }

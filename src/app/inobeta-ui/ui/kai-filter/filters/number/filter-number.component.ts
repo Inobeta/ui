@@ -5,15 +5,15 @@ import { IbFilterDef } from "../../filter.types";
 import { and, gte, lte } from "../../filters";
 
 @Component({
-  selector: "ib-filter-number",
+  selector: "ib-number-filter",
   templateUrl: "filter-number.component.html",
   styleUrls: ["./filter-number.component.scss"],
   encapsulation: ViewEncapsulation.None,
   providers: [
-    { provide: IbFilterBase, useExisting: forwardRef(() => IbFilterNumber) },
+    { provide: IbFilterBase, useExisting: forwardRef(() => IbNumberFilter) },
   ],
 })
-export class IbFilterNumber extends IbFilterBase {
+export class IbNumberFilter extends IbFilterBase {
   @Input() min: number = 0;
   @Input() max: number = 100;
 

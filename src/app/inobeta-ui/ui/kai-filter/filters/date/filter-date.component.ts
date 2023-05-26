@@ -1,9 +1,9 @@
-import { Component, ViewEncapsulation, forwardRef } from "@angular/core";
-import { IbFilterBase } from "../base/filter-base";
-import { IbFilterDef } from "../../filter.types";
-import { FormGroup, FormControl, Validators } from "@angular/forms";
-import { and, gte, lte, none } from "../../filters";
 import { formatDate } from "@angular/common";
+import { Component, forwardRef, ViewEncapsulation } from "@angular/core";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { IbFilterDef } from "../../filter.types";
+import { and, gte, lte, none } from "../../filters";
+import { IbFilterBase } from "../base/filter-base";
 
 enum IbDateFilterCriteriaCategory {
   WITHIN = "within",
@@ -23,11 +23,11 @@ enum IbDateFilterPeriod {
   templateUrl: "filter-date.component.html",
   styleUrls: ["./filter-date.component.scss"],
   providers: [
-    { provide: IbFilterBase, useExisting: forwardRef(() => IbFilterDate) },
+    { provide: IbFilterBase, useExisting: forwardRef(() => IbDateFilter) },
   ],
   encapsulation: ViewEncapsulation.None,
 })
-export class IbFilterDate extends IbFilterBase {
+export class IbDateFilter extends IbFilterBase {
   searchCriteria = new FormGroup({
     categorySelected: new FormControl(null, [Validators.required]),
     within: new FormGroup({
@@ -177,7 +177,7 @@ export class IbFilterDate extends IbFilterBase {
   }
 
   getSelected() {
-    return this.searchCriteria.get(this.searchCriteria.value.categorySelected);
+    return this.searchCriteria?.get(this.searchCriteria.value.categorySelected);
   }
 
   applyFilter(): void {
@@ -263,10 +263,10 @@ export class IbFilterDate extends IbFilterBase {
   }
 
   build = (): IbFilterDef => {
-    if (this.getSelected().invalid) {
+    if (this.getSelected()?.invalid) {
       return none();
     }
-    
+
     if (this.isSelected(IbDateFilterCriteriaCategory.WITHIN)) {
       return this.buildWithinCategory();
     }

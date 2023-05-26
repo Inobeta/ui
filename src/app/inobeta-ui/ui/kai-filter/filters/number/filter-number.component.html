@@ -9,7 +9,7 @@
   </span>
 
   <section [formGroup]="filter?.form" style="padding: 0 1em">
-    <section class="ib-filter-number" [formGroupName]="name">
+    <section class="ib-number-filter" [formGroupName]="name">
       <section style="display: flex">
         <mat-slider style="flex: 1" [max]="max" [min]="min">
           <input
@@ -25,7 +25,7 @@
         </mat-slider>
       </section>
 
-      <section class="ib-filter-number__input-range">
+      <section class="ib-number-filter__input-range">
         <mat-form-field appearance="outline" style="width: 12ch">
           <mat-label>{{ "shared.ibFilter.min" | translate }}</mat-label>
           <input

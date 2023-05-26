@@ -15,17 +15,17 @@ import { IbSelectionColumn } from "src/app/inobeta-ui/ui/kai-table/selection-col
     <div style="display: flex; gap: 12px">
       <button
         (click)="getSelection()"
-        [disabled]="selectionColumn.selection.selected.length === 0"
+        [disabled]="selectionColumn?.selection.selected.length === 0"
         mat-raised-button
       >
         get selection
       </button>
     </div>
-    <ib-kai-table #table [dataSource]="dataSource" [columns]="columns">
+    <ib-kai-table #table [columns]="columns" [dataSource]="dataSource">
       <ib-filter [value]="initialValue">
-        <ib-filter-text ibTableColumnName="name">Name</ib-filter-text>
-        <ib-filter-tag ibTableColumnName="fruit">Fruit</ib-filter-tag>
-        <ib-filter-number ibTableColumnName="number">Amount</ib-filter-number>
+        <ib-text-filter ibTableColumnName="name">Name</ib-text-filter>
+        <ib-tag-filter ibTableColumnName="fruit">Fruit</ib-tag-filter>
+        <ib-number-filter ibTableColumnName="number">Amount</ib-number-filter>
         <ib-filter-date ibTableColumnName="aDate">Purchased</ib-filter-date>
       </ib-filter>
       <ib-selection-column
@@ -76,6 +76,6 @@ export class IbKaiTableFullExamplePage {
   }
 
   getSelection() {
-    console.log("selection", this.selectionColumn.selection.selected);
+    console.log("selection", this.selectionColumn?.selection.selected);
   }
 }
