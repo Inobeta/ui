@@ -1,3 +1,5 @@
+import { InjectionToken } from "@angular/core";
+
 export enum IbFilterOperator {
   NONE,
   EQUALS,
@@ -22,3 +24,5 @@ export interface IbFilterDef {
 export interface IbFilterSyntax {
   [key: string]: IbFilterDef;
 }
+
+export const IB_FILTER = new InjectionToken<string>("IbFilter");

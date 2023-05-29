@@ -34,8 +34,10 @@ import {
 } from "./table.types";
 import { IbSelectionColumn } from "./selection-column";
 import { IbDataSource } from "./table-data-source";
+import { IB_FILTER } from "../kai-filter/filter.types";
 import { IbFilter } from "../kai-filter";
 
+export const IB_TABLE = new InjectionToken<any>("IbTable");
 export const IB_CELL_DATA = new InjectionToken<IbCellData>("IbCellData");
 
 const defaultTableDef: IbTableDef = {
@@ -82,7 +84,7 @@ export class IbTable implements OnDestroy {
 
   @ContentChild(IbSelectionColumn) selectionColumn!: IbSelectionColumn;
   @ContentChild(IbKaiRowGroupDirective) rowGroup!: IbKaiRowGroupDirective;
-  @ContentChild(IbFilter) filter!: IbFilter;
+  @ContentChild(IB_FILTER) filter!: IbFilter;
 
   @ViewChild(MatTable, { static: true }) table: MatTable<any>;
   @ViewChild(MatSort, { static: true }) sort: MatSort;

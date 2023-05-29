@@ -13,7 +13,7 @@ import { applyFilter, contains } from "./filters";
 import { FormGroup } from "@angular/forms";
 import { IbTable } from "../kai-table/table.component";
 import { IbFilterBase } from "./filters/base/filter-base";
-import { IbFilterSyntax } from "./filter.types";
+import { IB_FILTER, IbFilterSyntax } from "./filter.types";
 
 @Component({
   selector: "ib-filter",
@@ -39,6 +39,12 @@ import { IbFilterSyntax } from "./filter.types";
   `,
   styleUrls: ["./filter.component.scss"],
   encapsulation: ViewEncapsulation.None,
+  providers: [
+    {
+      provide: IB_FILTER,
+      useExisting: IbFilter,
+    },
+  ],
 })
 export class IbFilter {
   @ContentChildren(forwardRef(() => IbFilterBase))

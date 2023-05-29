@@ -34,6 +34,8 @@ export class IbNumberFilter extends IbFilterBase {
     if (this.filter?.ibTable) {
       this.defineRangeFromColumn();
     }
+
+    this.clearRange();
   }
 
   defineRangeFromColumn() {
