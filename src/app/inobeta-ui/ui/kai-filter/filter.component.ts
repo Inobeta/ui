@@ -47,11 +47,18 @@ import { IB_FILTER, IbFilterSyntax } from "./filter.types";
   ],
 })
 export class IbFilter {
+  /** @ignore */
   @ContentChildren(forwardRef(() => IbFilterBase))
-  filters: QueryList<IbFilterBase>;
+  private filters: QueryList<IbFilterBase>;
 
+  /** 
+   * Manually sets a filter
+   * 
+   * @example
+   * { category: ["pants"] }
+   * */
   @Input()
-  set value(value) {
+  set value(value: Record<string, any>) {
     // as indicated in NG01000
     setTimeout(() => {
       this.form.patchValue(value);
@@ -61,6 +68,7 @@ export class IbFilter {
   }
   @Output() ibFilterUpdated = new EventEmitter<IbFilterSyntax>();
 
+  /** @ignore */
   form: FormGroup = new FormGroup<Record<string, any>>({});
 
   showFilters = true;
@@ -81,7 +89,7 @@ export class IbFilter {
     this.ibFilterUpdated.emit({});
   }
 
-  // where the **** should i put this...
+  /** @ignore */
   filterPredicate = (data: any, filter: IbFilterSyntax | any) => {
     return Object.entries(data).every(([key, value]) => {
       const condition = filter[key];
@@ -92,7 +100,8 @@ export class IbFilter {
     });
   };
 
-  buildFilter() {
+  /** @ignore */
+  private buildFilter(): IbFilterSyntax {
     let output = {};
     const filters = this.filters.toArray();
 
