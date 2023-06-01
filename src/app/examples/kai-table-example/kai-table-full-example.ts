@@ -1,13 +1,13 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
 import {
   useColumn,
   useContextColumn,
   useDateColumn,
 } from "src/app/inobeta-ui/ui/kai-table/cells";
+import { IbSelectionColumn } from "src/app/inobeta-ui/ui/kai-table/selection-column";
 import { IbTable } from "src/app/inobeta-ui/ui/kai-table/table.component";
 import { createNewUser } from "./users";
-import { IbSelectionColumn } from "src/app/inobeta-ui/ui/kai-table/selection-column";
 
 @Component({
   selector: "ib-kai-table-full-example",
@@ -22,7 +22,9 @@ import { IbSelectionColumn } from "src/app/inobeta-ui/ui/kai-table/selection-col
       </button>
     </div>
     <ib-kai-table #table [columns]="columns" [dataSource]="dataSource">
-      <ib-filter [value]="initialValue">
+      <ib-filter [value]="filterValue">
+        <ib-search-bar></ib-search-bar>
+
         <ib-text-filter ibTableColumnName="name">Name</ib-text-filter>
         <ib-tag-filter ibTableColumnName="fruit">Fruit</ib-tag-filter>
         <ib-number-filter ibTableColumnName="number">Amount</ib-number-filter>
@@ -54,7 +56,7 @@ export class IbKaiTableFullExamplePage {
   @ViewChild(IbSelectionColumn, { static: true })
   selectionColumn: IbSelectionColumn;
 
-  initialValue = { fruit: ["apple", "banana"], number: { min: 5, max: 10 } };
+  filterValue = { fruit: ["apple", "banana"], number: { min: 5, max: 10 } };
   dataSource = new MatTableDataSource<any>();
   columns = [
     useColumn("Name", "name"),

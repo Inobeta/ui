@@ -146,7 +146,7 @@
       "max": "Max",
       "between": "Tra {{min}} e {{max}}",
       "date": {
-        "withinTheLast": "Nell'arco di",
+        "withinTheLast": "A partire da",
         "moreThan": "Da oltre",
         "between": "Tra",
         "minutes": "minuti",

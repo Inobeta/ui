@@ -26,7 +26,17 @@ const meta: Meta<IbFilter> = {
 export default meta;
 type Story = StoryObj<IbFilter>;
 
-export const Default: Story = {};
+const renderWithSearchBar = (args) => ({
+  props: args,
+  template: `
+  <ib-filter (ibFilterUpdated)="ibFilterUpdated($event)">
+    <ib-search-bar></ib-search-bar>
+  </ib-filter>`,
+});
+
+export const WithSearchBar: Story = {
+  render: renderWithSearchBar,
+};
 
 const renderWithFilters = (args) => ({
   props: args,

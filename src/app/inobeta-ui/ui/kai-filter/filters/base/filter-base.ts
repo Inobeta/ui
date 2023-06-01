@@ -1,11 +1,11 @@
 import { Directive, Input, ViewChild } from "@angular/core";
-import { IbFilter } from "../../filter.component";
 import { FormControl, FormGroup } from "@angular/forms";
-import { IbFilterDef } from "../../filter.types";
 import { IbFilterButton } from "../../filter-button/filter-button.component";
+import { IbFilter } from "../../filter.component";
+import { IbFilterDef } from "../../filter.types";
 
 export abstract class _IbFilterBase {
-  button: IbFilterButton;
+  button?: IbFilterButton;
 
   name: string;
   set ibTableColumnName(value) {
@@ -25,7 +25,7 @@ export abstract class _IbFilterBase {
       this.searchCriteria.markAllAsTouched();
       return;
     }
-    this.filter.update();
+    this.filter?.update();
     this.closeMenu();
   }
 
@@ -33,11 +33,11 @@ export abstract class _IbFilterBase {
     this.searchCriteria.markAsPristine();
     this.searchCriteria.clearValidators();
     this.searchCriteria.reset();
-    update && this.filter.update();
+    update && this.filter?.update();
   }
 
   closeMenu() {
-    this.button.closeMenu();
+    this.button?.closeMenu();
   }
 
   abstract build: () => IbFilterDef;

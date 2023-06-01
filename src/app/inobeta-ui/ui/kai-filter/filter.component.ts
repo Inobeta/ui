@@ -9,31 +9,17 @@ import {
   ViewEncapsulation,
   forwardRef,
 } from "@angular/core";
-import { applyFilter, contains } from "./filters";
 import { FormGroup } from "@angular/forms";
 import { IbTable } from "../kai-table/table.component";
+import { IB_FILTER, IbFilterDef, IbFilterSyntax } from "./filter.types";
+import { applyFilter } from "./filters";
 import { IbFilterBase } from "./filters/base/filter-base";
-import { IB_FILTER, IbFilterSyntax } from "./filter.types";
 
 @Component({
   selector: "ib-filter",
   template: `
-    <mat-form-field style="width: 100%; padding-bottom: 0">
-      <mat-icon matPrefix>search</mat-icon>
-      <input
-        matInput
-        [(ngModel)]="searchBar"
-        (ngModelChange)="update()"
-        [placeholder]="'shared.ibFilter.search' | translate"
-      />
-      <mat-icon
-        matSuffix
-        matBadgeSize="small"
-        (click)="showFilters = !showFilters; $event.stopPropagation()"
-        >filter_list</mat-icon
-      >
-    </mat-form-field>
-    <section class="ib-filter-list" [class.ib-filter-list__show]="showFilters">
+    <ng-content select="ib-search-bar"></ng-content>
+    <section class="ib-filter-list ib-filter-list__show">
       <ng-content></ng-content>
     </section>
   `,
@@ -51,11 +37,11 @@ export class IbFilter {
   @ContentChildren(forwardRef(() => IbFilterBase))
   private filters: QueryList<IbFilterBase>;
 
-  /** 
+  /**
    * Manually sets a filter
-   * 
+   *
    * @example
-   * { category: ["pants"] }
+   * { category: ['pants'] }
    * */
   @Input()
   set value(value: Record<string, any>) {
@@ -71,13 +57,10 @@ export class IbFilter {
   /** @ignore */
   form: FormGroup = new FormGroup<Record<string, any>>({});
 
-  showFilters = true;
-  searchBar = "";
-
   rawFilter: Record<string, any> = {};
   filter: IbFilterSyntax = {};
 
-  constructor(@Optional() public ibTable: IbTable) {}
+  constructor(/** @ignore */ @Optional() public ibTable: IbTable) {}
 
   update() {
     this.rawFilter = this.form.value;
@@ -85,18 +68,21 @@ export class IbFilter {
     this.ibFilterUpdated.emit(this.filter);
   }
 
-  private reset() {
+  reset() {
+    this.rawFilter = {};
+    this.filter = {};
     this.ibFilterUpdated.emit({});
   }
 
   /** @ignore */
   filterPredicate = (data: any, filter: IbFilterSyntax | any) => {
+    const matchesSearchBar = this.applySearchBarFilter(
+      data,
+      filter?.__ibSearchBar
+    );
     return Object.entries(data).every(([key, value]) => {
       const condition = filter[key];
-      return (
-        applyFilter(condition, value) &&
-        this.evaluateCrossColumnFilter(data, filter)
-      );
+      return applyFilter(condition, value) && matchesSearchBar;
     });
   };
 
@@ -105,33 +91,17 @@ export class IbFilter {
     let output = {};
     const filters = this.filters.toArray();
 
-    if (this.searchBar) {
-      output = {
-        __crossColumnFilter: contains(this.searchBar),
-      };
-    }
-
     for (const key of Object.keys(this.rawFilter)) {
       const filter = filters.find((f) => f.name === key);
-      // if (filter.searchCriteria.invalid) {
-      //   filter.clear(false);
-      //   continue;
-      // }
       output = { ...output, [key]: filter.build() };
     }
 
     return output;
   }
 
-  private evaluateCrossColumnFilter = (
-    data: any,
-    filter: Record<string, any>
-  ) => {
-    if (!("__crossColumnFilter" in filter)) {
-      return true;
-    }
-
-    if (!filter?.__crossColumnFilter) {
+  /** @ignore */
+  private applySearchBarFilter = (data: any, filter: IbFilterDef) => {
+    if (!filter) {
       return true;
     }
 
@@ -144,6 +114,6 @@ export class IbFilter {
       }, "")
       .toLowerCase();
 
-    return applyFilter(filter.__crossColumnFilter, dataStr);
+    return applyFilter(filter, dataStr);
   };
 }
