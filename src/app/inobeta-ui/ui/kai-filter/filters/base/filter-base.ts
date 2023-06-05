@@ -12,8 +12,12 @@ export abstract class _IbFilterBase {
     this.name = value;
   }
 
+  get rawValue() {
+    return this.filter.rawFilter[this.name];
+  }
+
   get isDirty() {
-    return this.searchCriteria.dirty;
+    return !!this.filter.filter[this.name]?.value;
   }
 
   searchCriteria: FormGroup | FormControl;
@@ -64,6 +68,16 @@ export class IbFilterBase extends _IbFilterBase {
     }
 
     this.filter.form.addControl(this.name, this.searchCriteria);
+  }
+
+  ngAfterViewInit() {
+    this.button?.trigger.menuClosed.subscribe(() => {
+      this.revertFilter();
+    })
+  }
+
+  revertFilter() {
+    this.searchCriteria.patchValue(this.rawValue);
   }
 
   build: () => IbFilterDef;

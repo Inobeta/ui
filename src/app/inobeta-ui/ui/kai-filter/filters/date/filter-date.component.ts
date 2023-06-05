@@ -1,6 +1,9 @@
 import { formatDate } from "@angular/common";
 import { Component, forwardRef, ViewEncapsulation } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { DateAdapter } from "@angular/material/core";
+import { TranslateService } from "@ngx-translate/core";
+import { IbFilter } from "../../filter.component";
 import { IbFilterDef } from "../../filter.types";
 import { and, gte, lte, none } from "../../filters";
 import { IbFilterBase } from "../base/filter-base";
@@ -95,47 +98,33 @@ export class IbDateFilter extends IbFilterBase {
     }
 
     if (this.isSelected(IbDateFilterCriteriaCategory.WITHIN)) {
-      return !!this.searchCriteria.value.within.value;
+      return !!this.rawValue.within.value;
     }
 
     if (this.isSelected(IbDateFilterCriteriaCategory.MORE_THAN)) {
-      return !!this.searchCriteria.value.moreThan.value;
+      return !!this.rawValue.moreThan.value;
     }
 
     if (this.isSelected(IbDateFilterCriteriaCategory.RANGE)) {
-      return (
-        this.searchCriteria.value.range.start &&
-        this.searchCriteria.value.range.end
-      );
+      return this.rawValue.range.start && this.rawValue.range.end;
     }
   }
 
   get displayValue() {
     if (this.isSelected(IbDateFilterCriteriaCategory.WITHIN)) {
-      return this.searchCriteria.value.within.value;
+      return this.rawValue.within.value;
     }
 
     if (this.isSelected(IbDateFilterCriteriaCategory.MORE_THAN)) {
-      return this.searchCriteria.value.moreThan.value;
+      return this.rawValue.moreThan.value;
     }
 
     if (this.isSelected(IbDateFilterCriteriaCategory.RANGE)) {
-      if (
-        !this.searchCriteria.value.range.start ||
-        !this.searchCriteria.value.range.end
-      ) {
+      if (!this.rawValue.range.start || !this.rawValue.range.end) {
         return;
       }
-      const start = formatDate(
-        this.searchCriteria.value.range.start,
-        "dd/MM/YYYY",
-        "en"
-      );
-      const end = formatDate(
-        this.searchCriteria.value.range.end,
-        "dd/MM/YYYY",
-        "en"
-      );
+      const start = formatDate(this.rawValue.range.start, "dd/MM/YYYY", "en");
+      const end = formatDate(this.rawValue.range.end, "dd/MM/YYYY", "en");
       return `${start} - ${end}`;
     }
 
@@ -145,13 +134,13 @@ export class IbDateFilter extends IbFilterBase {
   get displayPeriod() {
     if (this.isSelected(IbDateFilterCriteriaCategory.WITHIN)) {
       return this.withinPeriodOptions.find(
-        (o) => o.value === this.searchCriteria.value.within.period
+        (o) => o.value === this.rawValue.within.period
       )?.displayValue;
     }
 
     if (this.isSelected(IbDateFilterCriteriaCategory.MORE_THAN)) {
       return this.moreThanPeriodOptions.find(
-        (o) => o.value === this.searchCriteria.value.moreThan.period
+        (o) => o.value === this.rawValue.moreThan.period
       )?.displayValue;
     }
 
@@ -170,6 +159,18 @@ export class IbDateFilter extends IbFilterBase {
     if (this.isSelected(IbDateFilterCriteriaCategory.RANGE)) {
       return "shared.ibFilter.date.between";
     }
+  }
+
+  constructor(
+    public filter: IbFilter,
+    private adapter: DateAdapter<any>,
+    private translate: TranslateService
+  ) {
+    super(filter);
+    this.adapter.setLocale(this.translate.currentLang);
+    this.translate.onTranslationChange.subscribe((ev) => {
+      this.adapter.setLocale(ev.lang);
+    });
   }
 
   isSelected(category) {

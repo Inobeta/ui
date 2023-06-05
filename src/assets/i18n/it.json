@@ -159,6 +159,15 @@
         "weeksAgo": "settimane fa",
         "dateRangeLabel": "Inserisci un intervallo",
         "dateRangeInvalid": "Intervallo non valido"
+      },
+      "label": {
+        "text": "{{condition}} \"{{value}}\"",
+        "tag": {
+          "default": "{{name}}",
+          "singleItem": "{{item}}",
+          "multipleItems": "{{item}} +{{length}}"
+        },
+        "number": "tra {{min}} e {{max}}"
       }
     }
   },

@@ -5,11 +5,11 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from "@angular/core";
-import { IbFilterBase } from "../base/filter-base";
-import { MatSelectionList } from "@angular/material/list";
 import { FormControl } from "@angular/forms";
+import { MatSelectionList } from "@angular/material/list";
 import { IbFilterDef } from "../../filter.types";
 import { eq, or } from "../../filters";
+import { IbFilterBase } from "../base/filter-base";
 
 @Component({
   selector: "ib-tag-filter",
@@ -38,17 +38,27 @@ export class IbTagFilter extends IbFilterBase {
     return Array.from(this._options);
   }
 
-  get displayValue() {
-    const items = this.selected;
-    if (!items || items?.length == 0) {
-      return "";
+  get displayLabel() {
+    if (this.rawValue?.length == 1) {
+      return "shared.ibFilter.label.tag.singleItem";
     }
 
-    return items[0].value;
+    if (this.rawValue?.length > 1) {
+      return "shared.ibFilter.label.tag.multipleItems";
+    }
+
+    return "";
   }
 
-  get displayLength() {
-    return this.selected?.length > 1 ? ` +${this.selected.length - 1}` : "";
+  get displayLabelParams() {
+    return {
+      item: this.displayValue,
+      length: this.rawValue?.length - 1,
+    };
+  }
+
+  get displayValue() {
+    return this.rawValue?.length && this.rawValue[0];
   }
 
   get selected() {

@@ -7,7 +7,7 @@
   <section [formGroup]="filter?.form" style="padding: 0.5em 1em 0 1em">
     <section [formGroupName]="name" class="ib-filter-date">
       <mat-radio-group formControlName="categorySelected">
-        <mat-radio-button [value]="'within'">{{ 'shared.ibFilter.date.withinTheLast' | translate }}</mat-radio-button>
+        <mat-radio-button value="within">{{ 'shared.ibFilter.date.withinTheLast' | translate }}</mat-radio-button>
         <section [class.ib-filter-date__form--hidden]="!isSelected('within')" formGroupName="within" class="ib-filter-date__form">
           <mat-form-field style="width: 100%" appearance="outline">
             <input type="number" matInput formControlName="value" />
@@ -24,7 +24,7 @@
           </mat-form-field>
         </section>
 
-        <mat-radio-button [value]="'moreThan'">{{ 'shared.ibFilter.date.moreThan' | translate }}</mat-radio-button>
+        <mat-radio-button value="moreThan">{{ 'shared.ibFilter.date.moreThan' | translate }}</mat-radio-button>
         <section [class.ib-filter-date__form--hidden]="!isSelected('moreThan')" formGroupName="moreThan" class="ib-filter-date__form">
           <mat-form-field style="width: 100%" appearance="outline">
             <input type="number" matInput formControlName="value" />
@@ -41,7 +41,7 @@
           </mat-form-field>
         </section>
         
-        <mat-radio-button [value]="'range'">{{ 'shared.ibFilter.date.between' | translate }}</mat-radio-button>
+        <mat-radio-button value="range">{{ 'shared.ibFilter.date.between' | translate }}</mat-radio-button>
         <section [class.ib-filter-date__form--hidden]="!isSelected('range')" formGroupName="range" class="ib-filter-date__range">
           <mat-form-field style="width: 100%">
             <mat-label>{{ 'shared.ibFilter.date.dateRangeLabel' | translate }}</mat-label>

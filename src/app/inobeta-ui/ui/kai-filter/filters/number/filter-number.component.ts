@@ -1,8 +1,8 @@
 import { Component, Input, ViewEncapsulation, forwardRef } from "@angular/core";
-import { IbFilterBase } from "../base/filter-base";
 import { FormControl, FormGroup } from "@angular/forms";
 import { IbFilterDef } from "../../filter.types";
-import { and, gte, lte } from "../../filters";
+import { and, gte, lte, none } from "../../filters";
+import { IbFilterBase } from "../base/filter-base";
 
 @Component({
   selector: "ib-number-filter",
@@ -22,11 +22,11 @@ export class IbNumberFilter extends IbFilterBase {
     max: new FormControl(),
   });
 
-  get isDirty() {
-    return (
-      this.searchCriteria.value.min !== this.min ||
-      this.searchCriteria.value.max !== this.max
-    );
+  get displayLabelParams() {
+    return {
+      min: this.rawValue.min,
+      max: this.rawValue.max,
+    };
   }
 
   ngOnInit() {
@@ -56,9 +56,17 @@ export class IbNumberFilter extends IbFilterBase {
     });
   }
 
-  build = (): IbFilterDef =>
-    and([
+  build = (): IbFilterDef => {
+    if (
+      this.searchCriteria.value.min === this.min &&
+      this.searchCriteria.value.max === this.max
+    ) {
+      return none();
+    }
+
+    return and([
       gte(this.searchCriteria.value.min),
       lte(this.searchCriteria.value.max),
     ]);
+  };
 }

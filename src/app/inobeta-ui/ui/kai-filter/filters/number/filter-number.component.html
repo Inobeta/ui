@@ -2,9 +2,9 @@
   <span ib-filter-name><ng-content></ng-content></span>
   <span ib-filter-value *ngIf="isDirty">
     {{
-      "shared.ibFilter.between"
-        | translate
-          : { min: searchCriteria.value.min, max: searchCriteria.value.max } | lowercase
+      "shared.ibFilter.label.number"
+        | translate : displayLabelParams
+        | lowercase
     }}
   </span>
 
