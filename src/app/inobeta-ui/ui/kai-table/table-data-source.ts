@@ -94,6 +94,7 @@ export class IbDataSource<
 
   set filter(value) {
     this._filter.next(value);
+    this._refresh.next();
   }
 
   constructor(initialData: T[] = []) {
@@ -134,7 +135,8 @@ export class IbDataSource<
         return this.fetchData(
           this._sort.active,
           this._sort.direction,
-          this._paginator.pageIndex
+          this._paginator.pageIndex,
+          this.filter
         ).pipe(
           catchError(() => {
             this.state = IbKaiTableState.HTTP_ERROR;
@@ -174,7 +176,7 @@ export class IbDataSource<
 
   filterPredicate() {}
 
-  fetchData(sort: string, order: SortDirection, page: number): Observable<any> {
+  fetchData(sort: string, order: SortDirection, page: number, filter: Record<string, any>): Observable<any> {
     return of(this.data);
   }
 

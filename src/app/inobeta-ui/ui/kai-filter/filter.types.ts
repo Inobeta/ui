@@ -26,3 +26,45 @@ export interface IbFilterSyntax {
 }
 
 export const IB_FILTER = new InjectionToken<string>("IbFilter");
+
+export interface IbTextFilterCritera {
+  operator: IbFilterOperator;
+  value: string;
+}
+
+export type IbTagFilterCriteria<T = string> = T[];
+
+export interface IbNumberFilterCriteria {
+  min: number;
+  max: number;
+}
+
+export enum IbDateFilterCategory {
+  WITHIN = "within",
+  MORE_THAN = "moreThan",
+  RANGE = "range",
+}
+
+export enum IbDateFilterPeriod {
+  MINUTES = 1,
+  HOURS,
+  DAYS,
+  WEEKS,
+}
+
+export interface IbDateFilterPeriodCriteria {
+  period: IbDateFilterPeriod;
+  value: number;
+}
+
+export interface IbDateFilterRangeCriteria {
+  start: Date;
+  end: Date;
+}
+
+export interface IbDateFilterCriteria {
+  categorySelected: IbDateFilterCategory;
+  moreThan: IbDateFilterPeriodCriteria;
+  within: IbDateFilterPeriodCriteria;
+  range: IbDateFilterRangeCriteria;
+}

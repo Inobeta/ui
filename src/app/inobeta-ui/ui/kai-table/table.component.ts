@@ -156,11 +156,17 @@ export class IbTable implements OnDestroy {
 
   ngAfterContentInit() {
     if (this.filter) {
-      this.dataSource.filterPredicate = this.filter.filterPredicate;
-      this.filter.ibFilterUpdated.subscribe(filter => {
+      const updateFilter = (filter) => {
         this.selectionColumn?.selection?.clear();
         this.dataSource.filter = filter as any;
-      });
+      }
+      this.dataSource.filterPredicate = this.filter.filterPredicate;
+      if (this._dataSource instanceof IbDataSource) {
+        this.filter.ibRawFilterUpdated.subscribe(updateFilter);
+        return
+      }
+
+      this.filter.ibFilterUpdated.subscribe(updateFilter);
     }
   }
 

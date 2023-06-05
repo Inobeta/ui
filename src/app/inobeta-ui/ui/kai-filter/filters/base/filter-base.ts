@@ -13,7 +13,7 @@ export abstract class _IbFilterBase {
   }
 
   get rawValue() {
-    return this.filter.rawFilter[this.name];
+    return this.filter?.rawFilter[this.name];
   }
 
   get isDirty() {

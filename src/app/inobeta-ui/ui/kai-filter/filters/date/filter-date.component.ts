@@ -4,22 +4,13 @@ import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { DateAdapter } from "@angular/material/core";
 import { TranslateService } from "@ngx-translate/core";
 import { IbFilter } from "../../filter.component";
-import { IbFilterDef } from "../../filter.types";
+import {
+  IbDateFilterCategory,
+  IbDateFilterPeriod,
+  IbFilterDef,
+} from "../../filter.types";
 import { and, gte, lte, none } from "../../filters";
 import { IbFilterBase } from "../base/filter-base";
-
-enum IbDateFilterCriteriaCategory {
-  WITHIN = "within",
-  MORE_THAN = "moreThan",
-  RANGE = "range",
-}
-
-enum IbDateFilterPeriod {
-  MINUTES = 1,
-  HOURS,
-  DAYS,
-  WEEKS,
-}
 
 @Component({
   selector: "ib-filter-date, ib-date-filter",
@@ -97,34 +88,34 @@ export class IbDateFilter extends IbFilterBase {
       return false;
     }
 
-    if (this.isSelected(IbDateFilterCriteriaCategory.WITHIN)) {
-      return !!this.rawValue.within.value;
+    if (this.isSelected(IbDateFilterCategory.WITHIN)) {
+      return !!this.rawValue?.within?.value;
     }
 
-    if (this.isSelected(IbDateFilterCriteriaCategory.MORE_THAN)) {
-      return !!this.rawValue.moreThan.value;
+    if (this.isSelected(IbDateFilterCategory.MORE_THAN)) {
+      return !!this.rawValue?.moreThan?.value;
     }
 
-    if (this.isSelected(IbDateFilterCriteriaCategory.RANGE)) {
-      return this.rawValue.range.start && this.rawValue.range.end;
+    if (this.isSelected(IbDateFilterCategory.RANGE)) {
+      return this.rawValue?.range?.start && this.rawValue?.range?.end;
     }
   }
 
   get displayValue() {
-    if (this.isSelected(IbDateFilterCriteriaCategory.WITHIN)) {
-      return this.rawValue.within.value;
+    if (this.isSelected(IbDateFilterCategory.WITHIN)) {
+      return this.rawValue?.within?.value;
     }
 
-    if (this.isSelected(IbDateFilterCriteriaCategory.MORE_THAN)) {
-      return this.rawValue.moreThan.value;
+    if (this.isSelected(IbDateFilterCategory.MORE_THAN)) {
+      return this.rawValue?.moreThan?.value;
     }
 
-    if (this.isSelected(IbDateFilterCriteriaCategory.RANGE)) {
-      if (!this.rawValue.range.start || !this.rawValue.range.end) {
+    if (this.isSelected(IbDateFilterCategory.RANGE)) {
+      if (!this.rawValue?.range?.start || !this.rawValue?.range?.end) {
         return;
       }
-      const start = formatDate(this.rawValue.range.start, "dd/MM/YYYY", "en");
-      const end = formatDate(this.rawValue.range.end, "dd/MM/YYYY", "en");
+      const start = formatDate(this.rawValue?.range?.start, "dd/MM/YYYY", "en");
+      const end = formatDate(this.rawValue?.range?.end, "dd/MM/YYYY", "en");
       return `${start} - ${end}`;
     }
 
@@ -132,15 +123,15 @@ export class IbDateFilter extends IbFilterBase {
   }
 
   get displayPeriod() {
-    if (this.isSelected(IbDateFilterCriteriaCategory.WITHIN)) {
+    if (this.isSelected(IbDateFilterCategory.WITHIN)) {
       return this.withinPeriodOptions.find(
-        (o) => o.value === this.rawValue.within.period
+        (o) => o.value === this.rawValue?.within?.period
       )?.displayValue;
     }
 
-    if (this.isSelected(IbDateFilterCriteriaCategory.MORE_THAN)) {
+    if (this.isSelected(IbDateFilterCategory.MORE_THAN)) {
       return this.moreThanPeriodOptions.find(
-        (o) => o.value === this.rawValue.moreThan.period
+        (o) => o.value === this.rawValue?.moreThan?.period
       )?.displayValue;
     }
 
@@ -148,15 +139,15 @@ export class IbDateFilter extends IbFilterBase {
   }
 
   get displayCondition() {
-    if (this.isSelected(IbDateFilterCriteriaCategory.WITHIN)) {
+    if (this.isSelected(IbDateFilterCategory.WITHIN)) {
       return "shared.ibFilter.date.withinTheLast";
     }
 
-    if (this.isSelected(IbDateFilterCriteriaCategory.MORE_THAN)) {
+    if (this.isSelected(IbDateFilterCategory.MORE_THAN)) {
       return "shared.ibFilter.date.moreThan";
     }
 
-    if (this.isSelected(IbDateFilterCriteriaCategory.RANGE)) {
+    if (this.isSelected(IbDateFilterCategory.RANGE)) {
       return "shared.ibFilter.date.between";
     }
   }
@@ -268,15 +259,15 @@ export class IbDateFilter extends IbFilterBase {
       return none();
     }
 
-    if (this.isSelected(IbDateFilterCriteriaCategory.WITHIN)) {
+    if (this.isSelected(IbDateFilterCategory.WITHIN)) {
       return this.buildWithinCategory();
     }
 
-    if (this.isSelected(IbDateFilterCriteriaCategory.MORE_THAN)) {
+    if (this.isSelected(IbDateFilterCategory.MORE_THAN)) {
       return this.buildMoreThanCategory();
     }
 
-    if (this.isSelected(IbDateFilterCriteriaCategory.RANGE)) {
+    if (this.isSelected(IbDateFilterCategory.RANGE)) {
       return this.buildRangeCategory();
     }
 

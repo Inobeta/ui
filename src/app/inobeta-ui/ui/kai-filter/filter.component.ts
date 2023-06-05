@@ -53,6 +53,7 @@ export class IbFilter {
     });
   }
   @Output() ibFilterUpdated = new EventEmitter<IbFilterSyntax>();
+  @Output() ibRawFilterUpdated = new EventEmitter<Record<string, any>>();
 
   /** @ignore */
   form: FormGroup = new FormGroup<Record<string, any>>({});
@@ -66,12 +67,14 @@ export class IbFilter {
     this.rawFilter = this.form.value;
     this.filter = this.buildFilter();
     this.ibFilterUpdated.emit(this.filter);
+    this.ibRawFilterUpdated.emit(this.rawFilter);
   }
 
   reset() {
     this.rawFilter = {};
     this.filter = {};
     this.ibFilterUpdated.emit({});
+    this.ibRawFilterUpdated.emit(this.rawFilter);
   }
 
   /** @ignore */
