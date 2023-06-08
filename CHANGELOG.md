@@ -8,7 +8,7 @@
 |DEVK-183|feat|IbTable|Created a new table that will replace old IbTableModule|
 |DEVK-184|feat|IbFilter|Created filters for the new IbTable|
 |DEVK-192|fix|IbTable|Removed `selectableRows` input. Added `ib-selection-column`|
-|STOR-98|fix|IbHydration|**Breaking change** on hydration metareducer provided. Please use ibSetupHydration|
+|STOR-98|feat|IbHydration|**Breaking change** on hydration metareducer provided. Please use ibSetupHydration with full support on lazy loaded modules|
 
 ## [15.0.0] (2023-01-11)
 
@@ -19,7 +19,7 @@
 
 ### [15.0.0] - breaks
 
-- ngrx-store-localstorage support end, please remove any usage and replace it with hydration metareducer provided
+- ngrx-store-localstorage support end, please remove any usage and replace it with hydration metareducer provided. **no support on lazy loaded modules**: please install 15.1.x if you need it.
 - @angular/flex-layout support end, please replace any usage with @Inobeta/flex-layout provided by @Inobeta/flex-layout@15.0.0-inobeta and move away from this lib ASAP
 - @angular/material deprecates old styled component so take care of this, this version is now supporting new styled components
 
