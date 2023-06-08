@@ -1,0 +1,14 @@
+<button class="ib-filter-button" [matMenuTriggerFor]="menu" mat-stroked-button>
+  <section>
+    <ng-content select="[ib-filter-name]"></ng-content>
+    <ng-content select="[ib-filter-value]"></ng-content>
+  </section>
+  <mat-icon  iconPositionEnd>arrow_drop_down</mat-icon>
+</button>
+
+<mat-menu #menu="matMenu">
+  <section (click)="$event.stopPropagation();" style="width: 280px">
+    <ng-content></ng-content>
+    <ng-content select="ib-filter-actions"></ng-content>
+  </section>
+</mat-menu>

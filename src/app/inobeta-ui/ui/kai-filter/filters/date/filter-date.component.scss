@@ -1,0 +1,39 @@
+@use "@angular/material" as mat;
+
+.ib-filter-date {  
+  mat-radio-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  section {
+    margin-left: 32px;
+    margin-bottom: 8px;
+
+  }
+
+  .ib-filter-date__form {
+    @include mat.form-field-density(-5);
+    display: grid;
+    gap: 16px;
+    grid-template-columns: 8ch auto;
+
+    .mat-mdc-form-field {
+      padding-bottom: 0;
+    }
+
+    input[type=number] {
+      appearance: textfield;
+    }
+  }
+
+  .ib-filter-date__form--hidden {
+    display: none;
+  }
+  
+  .ib-filter-date__range {
+    input {
+      font-size: 12px;
+    }
+  }
+}

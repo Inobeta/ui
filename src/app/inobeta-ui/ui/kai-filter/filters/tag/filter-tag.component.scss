@@ -1,0 +1,19 @@
+@use "@angular/material" as mat;
+section.ib-tag-filter {
+  overflow-y: auto;
+  height: 300px;
+  @include mat.list-density(-4);
+}
+
+span.ib-filter-value {
+  display: table-cell;
+
+  max-width: 32ch;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+:host cdk-virtual-scroll-viewport {
+  height: max-content;
+}

@@ -131,6 +131,44 @@
         "passwordsMatch": "Le password non coincidono!",
         "min6max32": "La password deve essere compresa tra 6 e 32 caratteri!"
       }
+    },
+    "ibFilter": {
+      "search": "Cerca",
+      "condition": "Condizione",
+      "eq": "Uguale a",
+      "contains": "Contiene",
+      "startsWith": "Inizia con",
+      "endsWith": "Finisce con",
+      "update": "Aggiorna",
+      "clear": "Cancella",
+      "value": "Valore",
+      "min": "Min",
+      "max": "Max",
+      "between": "Tra {{min}} e {{max}}",
+      "date": {
+        "withinTheLast": "A partire da",
+        "moreThan": "Da oltre",
+        "between": "Tra",
+        "minutes": "minuti",
+        "hours": "ore",
+        "days": "giorni",
+        "weeks": "settimane",
+        "minutesAgo": "minuti fa",
+        "hoursAgo": "ore fa",
+        "daysAgo": "giorni fa",
+        "weeksAgo": "settimane fa",
+        "dateRangeLabel": "Inserisci un intervallo",
+        "dateRangeInvalid": "Intervallo non valido"
+      },
+      "label": {
+        "text": "{{condition}} \"{{value}}\"",
+        "tag": {
+          "default": "{{name}}",
+          "singleItem": "{{item}}",
+          "multipleItems": "{{item}} +{{length}}"
+        },
+        "number": "tra {{min}} e {{max}}"
+      }
     }
   },
   "receiptGoods": {
@@ -156,6 +194,12 @@
       "tableNoRedux": "Without redux",
       "tableSticky": "Sticky",
 
+      "kaiTable": "New Table",
+      "kaiTableSimple": "Simple",
+      "kaiTableContextAction": "Row Context Actions",
+      "kaiTableFull": "Full Example",
+      "kaiTableApi": "Data from API",
+      
       "dynamicFormsMain": "Dynamic forms",
       "dynamicFormsDynamicForms": "Dynamic forms",
 

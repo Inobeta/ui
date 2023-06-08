@@ -1,8 +1,10 @@
+@use "sass:map";
 @use '@angular/material' as mat;
 @mixin inobeta-ui-theme($theme-or-color-config){
   @include mat.all-component-themes($theme-or-color-config);
   @include ib-table($theme-or-color-config);
   @include ib-main-menu($theme-or-color-config);
+  @include ib-kai-table($theme-or-color-config);
 }
 
 /*global patches for material breaks on v15**/
@@ -313,4 +315,29 @@ ib-main-menu-expanded .material-icons-two-tone {
   }
 }
 
+}
+
+@mixin color($theme) {
+  // Get the color config from the theme.
+  $color-config: mat.get-color-config($theme);
+
+  // Get the primary color palette from the color-config.
+  $primary-palette: map.get($color-config, "primary");
+
+
+  .ib-table__header-cell,
+  .mat-sort-header-arrow {
+    color: var(--ib-table-header-color, mat.get-color-from-palette($primary-palette, darker-contrast));
+  }
+
+  .ib-table__header-cell {
+    background: var(--ib-table-header-bg-color, mat.get-color-from-palette($primary-palette, 500)) !important;
+  }
+}
+
+@mixin ib-kai-table($theme) {
+  $color-config: mat.get-color-config($theme);
+  @if $color-config != null {
+    @include color($theme);
+  }
 }

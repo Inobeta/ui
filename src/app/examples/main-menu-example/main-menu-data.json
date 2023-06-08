@@ -19,6 +19,29 @@
     ]
   },
   {
+    "label": "examples.ibMainMenu.kaiTable",
+    "icon": {"label": "table_rows", "type": "two-tone"},
+    "link": "/home/kai-table",
+    "paths": [
+      {
+        "label": "examples.ibMainMenu.kaiTableSimple",
+        "link":  "/home/kai-table/simple"
+      },
+      {
+        "label": "examples.ibMainMenu.kaiTableContextAction",
+        "link":  "/home/kai-table/context-action"
+      },
+      {
+        "label": "examples.ibMainMenu.kaiTableFull",
+        "link":  "/home/kai-table/full"
+      },
+      {
+        "label": "examples.ibMainMenu.kaiTableApi",
+        "link":  "/home/kai-table/api"
+      }
+    ]
+  },
+  {
     "label": "examples.ibMainMenu.dynamicFormsMain",
     "icon": {"label": "view_list", "type": "two-tone"},
     "link": "/home/forms",
@@ -43,11 +66,15 @@
   {
     "label": "examples.ibMainMenu.reduxMain",
     "icon": {"label": "archive", "type": "two-tone"},
-    "link": "/home/redux",
+    "link": "/home/redux/base",
     "paths": [
       {
         "label": "examples.ibMainMenu.reduxRedux",
-        "link": "/home/redux"
+        "link": "/home/redux/base"
+      },
+      {
+        "label": "Lazy loaded hydration",
+        "link": "/home/redux/lazy"
       }
     ]
   },
