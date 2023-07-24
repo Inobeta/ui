@@ -1,32 +1,45 @@
 import { PortalModule } from "@angular/cdk/portal";
+import { HarnessLoader } from "@angular/cdk/testing";
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { CommonModule } from "@angular/common";
-import { Component, Provider, Type } from "@angular/core";
-import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from "@angular/core/testing";
+import { Component, Type } from "@angular/core";
+import {
+  ComponentFixture,
+  fakeAsync,
+  TestBed,
+  tick,
+  waitForAsync
+} from "@angular/core/testing";
+import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatIconModule } from "@angular/material/icon";
 import { MatPaginatorModule } from "@angular/material/paginator";
 import { MatSortModule } from "@angular/material/sort";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
+import { MatTableHarness } from "@angular/material/table/testing";
 import { By } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { TranslateModule } from "@ngx-translate/core";
+import { throwError } from "rxjs";
 import { IbToolTestModule } from "../../tools/tools-test.module";
 import { IbFilterModule } from "../kai-filter";
 import {
   useColumn,
   useDateColumn,
   useNumberColumn,
-  useTranslateColumn,
+  useTranslateColumn
 } from "./cells";
 import { IbKaiRowGroupDirective } from "./rowgroup";
 import { IbSelectionColumn } from "./selection-column";
 import { IbDataSource } from "./table-data-source";
 import { IbTable } from "./table.component";
+import { IbKaiTableState } from "./table.types";
 
 fdescribe("IbTable", () => {
   describe("with MatTableDataSource", () => {
     let host: IbTableApp;
     let fixture: ComponentFixture<IbTableApp>;
     let component: IbTable;
+    let loader: HarnessLoader;
 
     beforeEach(waitForAsync(() => {
       configureModule(IbTableApp);
@@ -39,13 +52,17 @@ fdescribe("IbTable", () => {
         By.directive(IbTable)
       ).componentInstance;
       fixture.detectChanges();
+      loader = TestbedHarnessEnvironment.loader(fixture);
     });
 
-    it("should create", () => {
+    it("should create", async () => {
+      const table = await loader.getHarness(MatTableHarness);
+      const rows = await table.getRows();
       expect(component).toBeTruthy();
+      expect(rows.length).toBe(2);
     });
 
-    it("should select column", () => {
+    it("should select a row", () => {
       const row = { name: "alice" };
       component.selectionColumn.toggleRowSelection({ checked: true }, row);
       fixture.detectChanges();
@@ -88,9 +105,31 @@ fdescribe("IbTable", () => {
         By.directive(IbTable)
       ).componentInstance;
       component.dataSource.refresh();
-      tick(1)
+      tick(1);
       expect(component).toBeTruthy();
     }));
+
+    it("should show error on exception", fakeAsync(() => {
+      const fixture = createComponent(IbTableWithIbDataSourceApp);
+      const component = fixture.debugElement.query(
+        By.directive(IbTable)
+      ).componentInstance;
+      component.dataSource.fetchData = () => throwError('oh no')
+      component.dataSource.refresh();
+      tick(1);
+      fixture.detectChanges();
+      expect(component.state === IbKaiTableState.HTTP_ERROR).toBeTruthy();
+    }));
+  });
+
+  describe("with rowgroup", () => {
+    it("should render", async () => {
+      const fixture = createComponent(IbTableWithRowGroupApp);
+      const rowGroup = fixture.nativeElement.querySelectorAll(
+        ".ib-table-group-detail-row"
+      );
+      expect(rowGroup.length).toBeTruthy();
+    });
   });
 });
 
@@ -106,6 +145,7 @@ function configureModule<T>(type: Type<T>) {
       MatPaginatorModule,
       MatSortModule,
       MatIconModule,
+      MatCheckboxModule,
       IbFilterModule,
       TranslateModule.forRoot({
         extend: true,
@@ -114,10 +154,7 @@ function configureModule<T>(type: Type<T>) {
   }).compileComponents();
 }
 
-function createComponent<T>(
-  type: Type<T>,
-  providers: Provider[] = []
-): ComponentFixture<T> {
+function createComponent<T>(type: Type<T>): ComponentFixture<T> {
   configureModule(type);
 
   const fixture = TestBed.createComponent(type);
@@ -132,9 +169,6 @@ function createComponent<T>(
         <ib-text-filter ibTableColumnName="name">Name</ib-text-filter>
       </ib-filter>
       <ib-selection-column></ib-selection-column>
-      <ng-template ibKaiRowGroup let-row="row">
-        row data: {{row | json}}
-      </ng-template>
     </ib-kai-table>
   `,
 })
@@ -145,6 +179,20 @@ class IbTableApp {
     { name: "bob", description: "test.test" },
   ]);
   columns = [useColumn("name", "name"), useTranslateColumn("description")];
+}
+
+@Component({
+  template: `
+    <ib-kai-table [columns]="columns" [dataSource]="dataSource">
+      <ng-template ibKaiRowGroup let-row="row">
+        row data: {{ row | json }}
+      </ng-template>
+    </ib-kai-table>
+  `,
+})
+class IbTableWithRowGroupApp {
+  dataSource = new MatTableDataSource<any>([{ name: "alice" }]);
+  columns = [useColumn("name", "name")];
 }
 
 @Component({
