@@ -94,7 +94,7 @@ class GithubService {
       [tableDef]="tableDef"
     >
       <ib-filter>
-        <!-- <ib-date-filter name="created">Created</ib-date-filter> -->
+        <ib-date-filter name="created">Created</ib-date-filter>
         <ib-tag-filter
           name="state"
           multiple="false"

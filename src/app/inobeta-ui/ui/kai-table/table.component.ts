@@ -103,6 +103,12 @@ export class IbTable implements OnDestroy {
     return this._dataSource;
   }
 
+  /** @ignore */
+  @Input()
+  set data(value: any[]) {
+    this._dataSource.data = value;
+  }
+
   @Input() tableName = tableNameGen.next().value;
   @Input()
   set tableDef(value) {

@@ -16,6 +16,7 @@ import { IbFilterBase } from "../base/filter-base";
 export class IbNumberFilter extends IbFilterBase {
   @Input() min: number = 0;
   @Input() max: number = 100;
+  @Input() step: number = 1;
 
   searchCriteria = new FormGroup({
     min: new FormControl(),

@@ -21,6 +21,10 @@ const meta: Meta<IbFilter> = {
       ],
     }),
   ],
+  argTypes: {
+    ibFilterUpdated: { control: { disable: true } },
+    ibRawFilterUpdated: { control: { disable: true } },
+  },
 };
 
 export default meta;

@@ -11,7 +11,7 @@
   <section [formGroup]="filter?.form" style="padding: 0 1em">
     <section class="ib-number-filter" [formGroupName]="name">
       <section style="display: flex">
-        <mat-slider style="flex: 1" [max]="max" [min]="min">
+        <mat-slider style="flex: 1" [max]="max" [min]="min" [step]="step">
           <input
             matSliderStartThumb
             formControlName="min"
