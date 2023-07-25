@@ -1,14 +1,13 @@
 import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { Component } from "@angular/core";
+import { MatButtonHarness } from "@angular/material/button/testing";
+import { MatSelectionListHarness } from "@angular/material/list/testing";
 import { MatMenuHarness } from "@angular/material/menu/testing";
 import { By } from "@angular/platform-browser";
-import { IbApplyFilterButton } from "../../filter-actions/apply-filter-button.component";
 import { createFilterComponent } from "../../filter.component.spec";
 import { eq, none, or } from "../../filters";
 import { IbTagFilter } from "./filter-tag.component";
-import { MatSelectionListHarness } from "@angular/material/list/testing";
-import { MatButtonHarness } from "@angular/material/button/testing";
 
 fdescribe("IbTagFilter", () => {
   let fixture;
@@ -37,16 +36,18 @@ fdescribe("IbTagFilter", () => {
     await menu.open();
     const list = await menu.getHarness(MatSelectionListHarness);
     await list.selectItems({ title: /white|black/ });
-    const apply = await (await menu.getChildLoader('ib-apply-filter-button')).getHarness(MatButtonHarness);
-    await apply.click()
+    const apply = await (
+      await menu.getChildLoader("ib-apply-filter-button")
+    ).getHarness(MatButtonHarness);
+    await apply.click();
     expect(component.build()).toEqual(or([eq("black"), eq("white")]));
   });
 
   it("should reset with empty selection", () => {
     component.searchCriteria.setValue(["blue"]);
-    component.applyFilter()
+    component.applyFilter();
     expect(component.searchCriteria.value).toBeFalsy();
-  })
+  });
 });
 
 @Component({
