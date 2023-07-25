@@ -12,7 +12,7 @@ import { and, gte, lte, none } from "../../filters";
 import { MatSelectHarness } from "@angular/material/select/testing";
 import { MatDateRangeInputHarness } from "@angular/material/datepicker/testing";
 
-fdescribe("IbDateFilter", () => {
+describe("IbDateFilter", () => {
   let fixture;
   let component: IbDateFilter;
   let loader: HarnessLoader;

@@ -10,7 +10,7 @@ import { MatInputHarness } from "@angular/material/input/testing";
 import { contains, eq, none } from "../../filters";
 import { MatSelectHarness } from "@angular/material/select/testing";
 
-fdescribe("IbTextFilter", () => {
+describe("IbTextFilter", () => {
   let fixture;
   let component: IbTextFilter;
   let loader: HarnessLoader;

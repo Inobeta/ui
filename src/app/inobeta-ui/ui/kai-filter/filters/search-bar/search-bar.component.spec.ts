@@ -4,7 +4,7 @@ import { createFilterComponent } from "../../filter.component.spec";
 import { contains, none } from "../../filters";
 import { IbSearchBar } from "./search-bar.component";
 
-fdescribe("IbSearchBar", () => {
+describe("IbSearchBar", () => {
   let fixture;
   let component: IbSearchBar;
 

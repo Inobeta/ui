@@ -34,7 +34,7 @@ import { IbDataSource } from "./table-data-source";
 import { IbTable } from "./table.component";
 import { IbKaiTableState } from "./table.types";
 
-fdescribe("IbTable", () => {
+describe("IbTable", () => {
   describe("with MatTableDataSource", () => {
     let host: IbTableApp;
     let fixture: ComponentFixture<IbTableApp>;

@@ -9,7 +9,7 @@ import { createFilterComponent } from "../../filter.component.spec";
 import { eq, none, or } from "../../filters";
 import { IbTagFilter } from "./filter-tag.component";
 
-fdescribe("IbTagFilter", () => {
+describe("IbTagFilter", () => {
   let fixture;
   let component: IbTagFilter;
   let loader: HarnessLoader;
@@ -36,17 +36,46 @@ fdescribe("IbTagFilter", () => {
     await menu.open();
     const list = await menu.getHarness(MatSelectionListHarness);
     await list.selectItems({ title: /white|black/ });
-    const apply = await (
-      await menu.getChildLoader("ib-apply-filter-button")
-    ).getHarness(MatButtonHarness);
+
+    const clear = await menu.getHarness(
+      MatButtonHarness.with({ ancestor: "ib-clear-filter-button" })
+    );
+    const apply = await menu.getHarness(
+      MatButtonHarness.with({ ancestor: "ib-apply-filter-button" })
+    );
     await apply.click();
+
     expect(component.build()).toEqual(or([eq("black"), eq("white")]));
+
+    await clear.click();
   });
 
   it("should reset with empty selection", () => {
     component.searchCriteria.setValue(["blue"]);
     component.applyFilter();
     expect(component.searchCriteria.value).toBeFalsy();
+  });
+
+  it("should reset on clear", async () => {
+    const menu = await loader.getHarness(MatMenuHarness);
+    await menu.open();
+    const list = await menu.getHarness(MatSelectionListHarness);
+    await list.selectItems({ title: /white|black/ });
+
+    const clear = await menu.getHarness(
+      MatButtonHarness.with({ ancestor: "ib-clear-filter-button" })
+    );
+    const apply = await menu.getHarness(
+      MatButtonHarness.with({ ancestor: "ib-apply-filter-button" })
+    );
+    await apply.click();
+
+    expect(component.build()).toEqual(or([eq("black"), eq("white")]));
+
+    await menu.open();
+    await clear.click();
+
+    expect(component.build()).toEqual(none());
   });
 });
 

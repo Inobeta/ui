@@ -9,7 +9,7 @@ import { MatSliderHarness } from "@angular/material/slider/testing";
 import { MatMenuHarness } from "@angular/material/menu/testing";
 import { MatButtonHarness } from "@angular/material/button/testing";
 
-fdescribe("IbNumberFilter", () => {
+describe("IbNumberFilter", () => {
   let fixture;
   let component: IbNumberFilter;
   let loader: HarnessLoader;

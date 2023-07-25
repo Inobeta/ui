@@ -5,7 +5,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { TranslateModule } from "@ngx-translate/core";
 import { IbFilterModule } from "./filters.module";
 
-fdescribe("IbFilter", () => {
+describe("IbFilter", () => {
   it("should create", () => {
     const fixture = createComponent(IbFilterApp);
     const component = fixture.componentInstance;
