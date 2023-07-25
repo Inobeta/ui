@@ -8,7 +8,7 @@ import {
 import { FormControl } from "@angular/forms";
 import { MatSelectionList } from "@angular/material/list";
 import { IbFilterDef } from "../../filter.types";
-import { eq, or } from "../../filters";
+import { eq, none, or } from "../../filters";
 import { IbFilterBase } from "../base/filter-base";
 
 @Component({
@@ -86,5 +86,5 @@ export class IbTagFilter extends IbFilterBase {
   }
 
   build = (): IbFilterDef =>
-    this.selected?.length ? or(this.selected.map((s) => eq(s.value))) : null;
+    this.selected?.length ? or(this.selected.map((s) => eq(s.value))) : none();
 }
