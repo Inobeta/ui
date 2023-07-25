@@ -168,6 +168,7 @@ function createComponent<T>(type: Type<T>): ComponentFixture<T> {
       <ib-filter [value]="filterValue">
         <ib-text-filter ibTableColumnName="name">Name</ib-text-filter>
         <ib-tag-filter ibTableColumnName="color">Name</ib-tag-filter>
+        <ib-number-filter ibTableColumnName="price">Name</ib-number-filter>
       </ib-filter>
       <ib-selection-column></ib-selection-column>
     </ib-kai-table>
@@ -176,8 +177,8 @@ function createComponent<T>(type: Type<T>): ComponentFixture<T> {
 class IbTableApp {
   filterValue = { color: ["black"] };
   dataSource = new MatTableDataSource<any>([
-    { name: "alice", color: "white" },
-    { name: "bob", color: "black" },
+    { name: "alice", color: "white", price: 10 },
+    { name: "bob", color: "black", price: 12 },
   ]);
   columns = [useColumn("name", "name"), useTranslateColumn("color")];
 }
