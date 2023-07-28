@@ -3,6 +3,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { Store } from "@ngrx/store";
 import { TranslateService } from "@ngx-translate/core";
 import { map, skipWhile, switchMap } from "rxjs/operators";
+import { IbTable } from "../kai-table/table.component";
 import { IbToastNotification } from "../toast";
 import {
   IbTableViewDialog,
@@ -30,7 +31,7 @@ export class IbTableViewService {
     });
   }
 
-  addView(tableName: string, filter: any) {
+  addView(table: IbTable) {
     const dialog = this.openDialog({
       title: "shared.ibTableView.addTitle",
       confirm: "shared.ibTableView.add",
@@ -42,8 +43,9 @@ export class IbTableViewService {
         const view = {
           id: btoa(Math.random().toString()),
           name: result?.name,
-          tableName: tableName,
-          filter,
+          tableName: table.tableName as string,
+          filter: table.filter.rawFilter,
+          pageSize: table.paginator.pageSize
         };
 
         this.store.dispatch(TableViewActions.addView({ view }));
@@ -166,7 +168,7 @@ export class IbTableViewService {
     );
   }
 
-  askShouldSaveAs(currentView: TableView, filter: any) {
+  askShouldSaveAs(table: IbTable) {
     const dialog = this.openDialog({
       title: "shared.ibTableView.unsavedTitle",
       confirm: "shared.ibTableView.save",
@@ -178,7 +180,7 @@ export class IbTableViewService {
 
     return dialog.afterClosed().pipe(
       skipWhile((result) => !result),
-      switchMap(() => this.addView(currentView.tableName, filter))
+      switchMap(() => this.addView(table))
     );
   }
 }

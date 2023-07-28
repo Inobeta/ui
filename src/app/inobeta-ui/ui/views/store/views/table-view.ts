@@ -3,4 +3,5 @@ export interface TableView {
   name: string;
   tableName: string;
   filter: Record<string, any>;
+  pageSize?: number;
 }

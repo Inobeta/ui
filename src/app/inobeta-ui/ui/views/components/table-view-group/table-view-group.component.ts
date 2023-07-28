@@ -10,8 +10,9 @@ import { IbTableViewService } from "../../table-view.service";
   templateUrl: "./table-view-group.component.html",
 })
 export class IbTableViewGroup implements AfterViewInit {
+  private _activeView = new BehaviorSubject<TableView>(this.defaultView);
+
   isDirty = false;
-  _activeView = new BehaviorSubject<TableView>(this.defaultView);
   views$ = this.store.select(
     selectTableViews(this.ibTable.tableName as string)
   );
@@ -39,6 +40,8 @@ export class IbTableViewGroup implements AfterViewInit {
     if (this.ibTable?.filter) {
       this._activeView.subscribe((nextView) => {
         this.ibTable.filter.value = nextView.filter;
+        this.ibTable.paginator.pageSize =
+          nextView.pageSize ?? this.ibTable.tableDef.paginator.pageSize;
       });
 
       this.ibTable.filter.ibRawFilterUpdated.subscribe((rawFilter) => {
@@ -50,7 +53,7 @@ export class IbTableViewGroup implements AfterViewInit {
 
   handleAddView() {
     this.view
-      .addView(this.ibTable.tableName as string, this.ibTable.filter.rawFilter)
+      .addView(this.ibTable)
       .subscribe((view) => this._activeView.next(view));
   }
 
@@ -65,11 +68,9 @@ export class IbTableViewGroup implements AfterViewInit {
   }
 
   handleDuplicateView(view: TableView) {
-    this.view
-      .duplicateView(view, this.ibTable.filter.rawFilter)
-      .subscribe(() => {
-        this._activeView.next(view);
-      });
+    this.view.duplicateView(view, this.ibTable).subscribe((nextView) => {
+      this._activeView.next(nextView);
+    });
   }
 
   handleSaveView() {
@@ -78,7 +79,7 @@ export class IbTableViewGroup implements AfterViewInit {
       return;
     }
 
-    this.view.saveView(this.activeView, this.ibTable.filter.rawFilter);
+    this.view.saveView(this.activeView, this.ibTable);
     this._activeView.next(this.activeView);
   }
 
@@ -89,15 +90,14 @@ export class IbTableViewGroup implements AfterViewInit {
     }
 
     if (this.activeView.id === this.defaultView.id) {
-      this.view.askShouldSaveAs(this.activeView, this.ibTable.filter.rawFilter)
-        .subscribe(() => {
-          this._activeView.next(view);
-        });
+      this.view.askShouldSaveAs(this.ibTable).subscribe(() => {
+        this._activeView.next(view);
+      });
       return;
     }
-    
+
     this.view
-      .askShouldSaveChanges(this.activeView, this.ibTable.filter.rawFilter)
+      .askShouldSaveChanges(this.activeView, this.ibTable)
       .subscribe(() => {
         this._activeView.next(view);
       });

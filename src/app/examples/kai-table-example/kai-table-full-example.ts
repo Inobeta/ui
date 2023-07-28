@@ -36,12 +36,12 @@ import { createNewUser } from "./users";
       ></ib-selection-column>
     </ib-kai-table>
 
-    <ib-kai-table #table tableName="dontmakemecomethere" [columns]="columns" [dataSource]="ds">
+    <!-- <ib-kai-table #table tableName="dontmakemecomethere" [columns]="columns" [dataSource]="ds">
       <ib-table-view-group></ib-table-view-group>
       <ib-filter>
         <ib-text-filter ibTableColumnName="name">Name</ib-text-filter>
       </ib-filter>
-    </ib-kai-table>
+    </ib-kai-table> -->
   `,
   styles: [
     `
