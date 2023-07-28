@@ -187,7 +187,8 @@
       "viewName": "Nome vista",
       "defaultView": "Tutti",
       "unsavedTitle": "Modifiche non salvate",
-      "unsavedView": "Vuoi salvare le modifiche apportate a \"{{viewName}}\"",
+      "unsavedView": "Vuoi salvare le modifiche apportate a \"{{viewName}}\"?",
+      "unsavedUnnamedView": "Vuoi salvare le modifiche apportate in una nuova vista?",
       "view": {
         "added": "Vista creata",
         "removed": "Vista eliminata",

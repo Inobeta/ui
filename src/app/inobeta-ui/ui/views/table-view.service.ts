@@ -2,8 +2,7 @@ import { Injectable } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { Store } from "@ngrx/store";
 import { TranslateService } from "@ngx-translate/core";
-import { map, skipWhile } from "rxjs/operators";
-import { IbTable } from "../kai-table";
+import { map, skipWhile, switchMap } from "rxjs/operators";
 import { IbToastNotification } from "../toast";
 import {
   IbTableViewDialog,
@@ -31,7 +30,7 @@ export class IbTableViewService {
     });
   }
 
-  addView(table: IbTable) {
+  addView(tableName: string, filter: any) {
     const dialog = this.openDialog({
       title: "shared.ibTableView.addTitle",
       confirm: "shared.ibTableView.add",
@@ -40,11 +39,10 @@ export class IbTableViewService {
     return dialog.afterClosed().pipe(
       skipWhile((result) => !result),
       map((result) => {
-        const filter = { ...table.filter.rawFilter };
         const view = {
           id: btoa(Math.random().toString()),
           name: result?.name,
-          tableName: table.tableName as string,
+          tableName: tableName,
           filter,
         };
 
@@ -165,6 +163,22 @@ export class IbTableViewService {
       map(() => {
         this.saveView(currentView, filter);
       })
+    );
+  }
+
+  askShouldSaveAs(currentView: TableView, filter: any) {
+    const dialog = this.openDialog({
+      title: "shared.ibTableView.unsavedTitle",
+      confirm: "shared.ibTableView.save",
+      message: {
+        label: "shared.ibTableView.unsavedUnnamedView",
+      },
+      hideInput: true,
+    });
+
+    return dialog.afterClosed().pipe(
+      skipWhile((result) => !result),
+      switchMap(() => this.addView(currentView.tableName, filter))
     );
   }
 }

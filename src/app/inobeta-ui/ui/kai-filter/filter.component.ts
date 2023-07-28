@@ -45,6 +45,10 @@ export class IbFilter {
    * */
   @Input()
   set value(value: Record<string, any>) {
+    if (!value) {
+      return;
+    }
+
     // as indicated in NG01000
     setTimeout(() => {
       this.form.patchValue(value);

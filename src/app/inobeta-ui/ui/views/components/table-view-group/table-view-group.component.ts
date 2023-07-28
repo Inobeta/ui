@@ -38,11 +38,6 @@ export class IbTableViewGroup implements AfterViewInit {
   ngAfterViewInit(): void {
     if (this.ibTable?.filter) {
       this._activeView.subscribe((nextView) => {
-        if (nextView.id === this.defaultView.id) {
-          this.ibTable.filter.reset();
-          return;
-        }
-
         this.ibTable.filter.value = nextView.filter;
       });
 
@@ -55,7 +50,7 @@ export class IbTableViewGroup implements AfterViewInit {
 
   handleAddView() {
     this.view
-      .addView(this.ibTable)
+      .addView(this.ibTable.tableName as string, this.ibTable.filter.rawFilter)
       .subscribe((view) => this._activeView.next(view));
   }
 
@@ -93,6 +88,14 @@ export class IbTableViewGroup implements AfterViewInit {
       return;
     }
 
+    if (this.activeView.id === this.defaultView.id) {
+      this.view.askShouldSaveAs(this.activeView, this.ibTable.filter.rawFilter)
+        .subscribe(() => {
+          this._activeView.next(view);
+        });
+      return;
+    }
+    
     this.view
       .askShouldSaveChanges(this.activeView, this.ibTable.filter.rawFilter)
       .subscribe(() => {
