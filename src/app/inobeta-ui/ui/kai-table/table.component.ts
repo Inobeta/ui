@@ -112,7 +112,10 @@ export class IbTable implements OnDestroy {
   @Input() tableName = tableNameGen.next().value;
   @Input()
   set tableDef(value) {
-    this._tableDef = value;
+    this._tableDef = {
+      ...defaultTableDef,
+      ...value
+    };
   }
   get tableDef() {
     return this._tableDef;

@@ -1,0 +1,32 @@
+<button *ngIf="!selected" mat-flat-button (click)="handleChangeView()">
+  {{ view.name }}
+</button>
+
+<button
+  *ngIf="selected && !isDefault"
+  mat-flat-button
+  color="primary"
+  [matMenuTriggerFor]="menu"
+>
+  {{ view.name }} {{ dirty ? "*" : "" }}
+  <mat-icon iconPositionEnd>keyboard_arrow_down</mat-icon>
+</button>
+
+<button *ngIf="selected && isDefault" mat-flat-button color="primary">
+  {{ view.name }}
+</button>
+
+<mat-menu #menu="matMenu">
+  <button mat-menu-item (click)="handleRenameView()">
+    <mat-icon>drive_file_rename_outline</mat-icon>
+    {{ "shared.ibTableView.rename" | translate }}
+  </button>
+  <button mat-menu-item (click)="handleDuplicateView()">
+    <mat-icon>content_copy</mat-icon>
+    {{ "shared.ibTableView.duplicate" | translate }}
+  </button>
+  <button mat-menu-item (click)="handleRemoveView()">
+    <mat-icon color="warn">delete_forever</mat-icon>
+    {{ "shared.ibTableView.remove" | translate }}
+  </button>
+</mat-menu>

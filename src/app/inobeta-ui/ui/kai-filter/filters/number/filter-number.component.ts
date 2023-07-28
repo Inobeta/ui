@@ -19,8 +19,8 @@ export class IbNumberFilter extends IbFilterBase {
   @Input() step: number = 1;
 
   searchCriteria = new FormGroup({
-    min: new FormControl(),
-    max: new FormControl(),
+    min: new FormControl(this.min, { nonNullable: true }),
+    max: new FormControl(this.max, { nonNullable: true }),
   });
 
   get displayLabelParams() {
@@ -34,6 +34,9 @@ export class IbNumberFilter extends IbFilterBase {
     super.ngOnInit();
     if (this.filter?.ibTable) {
       this.defineRangeFromColumn();
+      this.searchCriteria.reset = () => {
+        this.clearRange();
+      };
     }
 
     this.clearRange();

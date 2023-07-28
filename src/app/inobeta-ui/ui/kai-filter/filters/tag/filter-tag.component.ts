@@ -25,7 +25,7 @@ export class IbTagFilter extends IbFilterBase {
 
   private _options: Set<string> = new Set();
 
-  searchCriteria = new FormControl([]);
+  searchCriteria = new FormControl([], { nonNullable: true });
 
   @Input() multiple = true;
   @Input()

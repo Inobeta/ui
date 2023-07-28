@@ -51,7 +51,7 @@ import { IbKaiTableFullExamplePage } from './examples/kai-table-example/kai-tabl
 import { IbKaiTableModule } from './inobeta-ui/ui/kai-table';
 import { IbKaiTableApiExamplePage } from './examples/kai-table-example/kai-table-api-example';
 import { IbFilterModule } from './inobeta-ui/ui/kai-filter';
-//import { IbTableViewModule } from './inobeta-ui/ui/kai-table-view/table-view.module';
+import { IbTableViewModule } from './inobeta-ui/ui/views/view.module';
 
 export interface IAppState {
   sessionState?: ISessionState;
@@ -69,7 +69,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 export const statusErrorMessages = { 404: 'Risorsa non trovata'};
 
 
-const reduxStorageSave = ibSetupHydration('__redux-store-inobeta-ui__', ['sessionState', 'ibTable', 'lazyLoaded']);
+const reduxStorageSave = ibSetupHydration('__redux-store-inobeta-ui__', ['sessionState', 'ibTable', 'lazyLoaded', 'ibTableViews']);
 
 @NgModule({
   declarations: [
@@ -114,6 +114,7 @@ const reduxStorageSave = ibSetupHydration('__redux-store-inobeta-ui__', ['sessio
     MatGridListModule,
     IbKaiTableModule,
     IbFilterModule,
+    IbTableViewModule,
     StoreModule.forRoot(reducers, {
       metaReducers: reduxStorageSave.metareducers,
       runtimeChecks: {

@@ -13,8 +13,11 @@ import { IbFilterBase } from "../base/filter-base";
 })
 export class IbTextFilter extends IbFilterBase {
   searchCriteria = new FormGroup({
-    operator: new FormControl(IbFilterOperator.CONTAINS, [Validators.required]),
-    value: new FormControl(""),
+    operator: new FormControl(IbFilterOperator.CONTAINS, {
+      validators: [Validators.required],
+      nonNullable: true,
+    }),
+    value: new FormControl("", { nonNullable: true }),
   });
 
   operators = [

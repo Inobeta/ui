@@ -26,11 +26,11 @@ export class IbDateFilter extends IbFilterBase {
     categorySelected: new FormControl(null, [Validators.required]),
     within: new FormGroup({
       value: new FormControl(null, [Validators.min(1)]),
-      period: new FormControl(IbDateFilterPeriod.MINUTES),
+      period: new FormControl(IbDateFilterPeriod.MINUTES, { nonNullable: true }),
     }),
     moreThan: new FormGroup({
       value: new FormControl(null, [Validators.min(1)]),
-      period: new FormControl(IbDateFilterPeriod.MINUTES),
+      period: new FormControl(IbDateFilterPeriod.MINUTES, { nonNullable: true }),
     }),
     range: new FormGroup({
       start: new FormControl(null),

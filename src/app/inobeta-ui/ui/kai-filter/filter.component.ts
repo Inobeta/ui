@@ -58,10 +58,15 @@ export class IbFilter {
   /** @ignore */
   form: FormGroup = new FormGroup<Record<string, any>>({});
 
+  initialRawValue: Record<string, any> = {};
   rawFilter: Record<string, any> = {};
   filter: IbFilterSyntax = {};
 
   constructor(/** @ignore */ @Optional() public ibTable: IbTable) {}
+
+  ngAfterViewInit() {
+    this.initialRawValue = this.rawFilter = this.form.value;
+  }
 
   update() {
     this.rawFilter = this.form.value;
@@ -71,10 +76,8 @@ export class IbFilter {
   }
 
   reset() {
-    this.rawFilter = {};
-    this.filter = {};
-    this.ibFilterUpdated.emit({});
-    this.ibRawFilterUpdated.emit(this.rawFilter);
+    this.form.reset();
+    this.update();
   }
 
   /** @ignore */

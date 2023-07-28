@@ -21,8 +21,9 @@ import { createNewUser } from "./users";
         get selection
       </button>
     </div>
-    <ib-kai-table #table [columns]="columns" [dataSource]="dataSource">
-      <ib-filter [value]="filterValue">
+    <ib-kai-table #table tableName="fullExample" [columns]="columns" [dataSource]="dataSource">
+      <ib-table-view-group></ib-table-view-group>
+      <ib-filter>
         <ib-search-bar></ib-search-bar>
 
         <ib-text-filter ibTableColumnName="name">Name</ib-text-filter>
@@ -33,6 +34,13 @@ import { createNewUser } from "./users";
       <ib-selection-column
         (ibRowSelectionChange)="selectionChange($event)"
       ></ib-selection-column>
+    </ib-kai-table>
+
+    <ib-kai-table #table tableName="dontmakemecomethere" [columns]="columns" [dataSource]="ds">
+      <ib-table-view-group></ib-table-view-group>
+      <ib-filter>
+        <ib-text-filter ibTableColumnName="name">Name</ib-text-filter>
+      </ib-filter>
     </ib-kai-table>
   `,
   styles: [
@@ -56,8 +64,8 @@ export class IbKaiTableFullExamplePage {
   @ViewChild(IbSelectionColumn, { static: true })
   selectionColumn: IbSelectionColumn;
 
-  filterValue = { fruit: ["apple", "banana"], number: { min: 5, max: 10 } };
   dataSource = new MatTableDataSource<any>();
+  ds = new MatTableDataSource<any>();
   columns = [
     useColumn("Name", "name"),
     useColumn("Fruit", "fruit"),
@@ -71,6 +79,7 @@ export class IbKaiTableFullExamplePage {
       createNewUser(k + 1)
     ).map((u) => ({ ...u, select: false }));
     this.dataSource.data = users;
+    this.ds.data = users
   }
 
   selectionChange(data) {
