@@ -23,19 +23,19 @@ import {
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { MatTable, MatTableDataSource } from "@angular/material/table";
+import { IbFilter } from "../kai-filter";
+import { IbTableViewGroup } from "../views";
 import { IbCell } from "./cells";
 import { IbKaiRowGroupDirective } from "./rowgroup";
+import { IbSelectionColumn } from "./selection-column";
+import { IbDataSource } from "./table-data-source";
 import {
   IbCellData,
   IbColumnDef,
+  IbKaiTableState,
   IbTableDef,
   IbTableRowEvent,
-  IbKaiTableState,
 } from "./table.types";
-import { IbSelectionColumn } from "./selection-column";
-import { IbDataSource } from "./table-data-source";
-import { IB_FILTER } from "../kai-filter/filter.types";
-import { IbFilter } from "../kai-filter";
 
 export const IB_TABLE = new InjectionToken<any>("IbTable");
 export const IB_CELL_DATA = new InjectionToken<IbCellData>("IbCellData");
@@ -84,7 +84,8 @@ export class IbTable implements OnDestroy {
 
   @ContentChild(IbSelectionColumn) selectionColumn!: IbSelectionColumn;
   @ContentChild(IbKaiRowGroupDirective) rowGroup!: IbKaiRowGroupDirective;
-  @ContentChild(IB_FILTER) filter!: IbFilter;
+  @ContentChild(IbFilter) filter!: IbFilter;
+  @ContentChild(IbTableViewGroup) view!: IbTableViewGroup;
 
   @ViewChild(MatTable, { static: true }) table: MatTable<any>;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -114,7 +115,7 @@ export class IbTable implements OnDestroy {
   set tableDef(value) {
     this._tableDef = {
       ...defaultTableDef,
-      ...value
+      ...value,
     };
   }
   get tableDef() {
@@ -159,7 +160,7 @@ export class IbTable implements OnDestroy {
 
   ngAfterViewInit() {
     if (this.table && this.selectionColumn) {
-      setTimeout(() => this.isSelectionColumnAdded = true)
+      setTimeout(() => (this.isSelectionColumnAdded = true));
     }
   }
 
@@ -168,14 +169,20 @@ export class IbTable implements OnDestroy {
       const updateFilter = (filter) => {
         this.selectionColumn?.selection?.clear();
         this.dataSource.filter = filter as any;
-      }
+      };
       this.dataSource.filterPredicate = this.filter.filterPredicate;
       if (this._dataSource instanceof IbDataSource) {
         this.filter.ibRawFilterUpdated.subscribe(updateFilter);
-        return
+        return;
       }
 
+      this.filter.filters.forEach((f) =>
+        f.initializeFromColumn(this.dataSource.data)
+      );
       this.filter.ibFilterUpdated.subscribe(updateFilter);
+    }
+
+    if (this.view) {
     }
   }
 

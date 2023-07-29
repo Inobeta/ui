@@ -3,15 +3,12 @@ import {
   ContentChildren,
   EventEmitter,
   Input,
-  Optional,
   Output,
   QueryList,
   ViewEncapsulation,
-  forwardRef,
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { IbTable } from "../kai-table/table.component";
-import { IB_FILTER, IbFilterDef, IbFilterSyntax } from "./filter.types";
+import { IbFilterDef, IbFilterSyntax } from "./filter.types";
 import { applyFilter } from "./filters";
 import { IbFilterBase } from "./filters/base/filter-base";
 
@@ -25,17 +22,11 @@ import { IbFilterBase } from "./filters/base/filter-base";
   `,
   styleUrls: ["./filter.component.scss"],
   encapsulation: ViewEncapsulation.None,
-  providers: [
-    {
-      provide: IB_FILTER,
-      useExisting: IbFilter,
-    },
-  ],
 })
 export class IbFilter {
   /** @ignore */
-  @ContentChildren(forwardRef(() => IbFilterBase))
-  private filters: QueryList<IbFilterBase>;
+  @ContentChildren(IbFilterBase)
+  filters: QueryList<IbFilterBase>;
 
   /**
    * Manually sets a filter
@@ -65,8 +56,6 @@ export class IbFilter {
   initialRawValue: Record<string, any> = {};
   rawFilter: Record<string, any> = {};
   filter: IbFilterSyntax = {};
-
-  constructor(/** @ignore */ @Optional() public ibTable: IbTable) {}
 
   ngAfterViewInit() {
     this.initialRawValue = this.rawFilter = this.form.value;

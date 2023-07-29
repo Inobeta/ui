@@ -1,4 +1,4 @@
-import { Component, forwardRef } from "@angular/core";
+import { Component } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { IbFilterDef, IbFilterOperator } from "../../filter.types";
 import { none } from "../../filters";
@@ -7,9 +7,7 @@ import { IbFilterBase } from "../base/filter-base";
 @Component({
   selector: "ib-text-filter",
   templateUrl: "filter-text.component.html",
-  providers: [
-    { provide: IbFilterBase, useExisting: forwardRef(() => IbTextFilter) },
-  ],
+  providers: [{ provide: IbFilterBase, useExisting: IbTextFilter }],
 })
 export class IbTextFilter extends IbFilterBase {
   searchCriteria = new FormGroup({

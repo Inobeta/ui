@@ -45,6 +45,7 @@ export abstract class _IbFilterBase {
   }
 
   abstract build: () => IbFilterDef;
+  initializeFromColumn(data: any[]) {}
 }
 
 @Directive({
@@ -73,7 +74,7 @@ export class IbFilterBase extends _IbFilterBase {
   ngAfterViewInit() {
     this.button?.trigger.menuClosed.subscribe(() => {
       this.revertFilter();
-    })
+    });
   }
 
   revertFilter() {

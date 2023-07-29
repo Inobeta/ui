@@ -1,10 +1,4 @@
-import {
-  Component,
-  forwardRef,
-  Input,
-  ViewChild,
-  ViewEncapsulation,
-} from "@angular/core";
+import { Component, Input, ViewChild, ViewEncapsulation } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MatSelectionList } from "@angular/material/list";
 import { IbFilterDef } from "../../filter.types";
@@ -15,9 +9,7 @@ import { IbFilterBase } from "../base/filter-base";
   selector: "ib-tag-filter",
   templateUrl: "./filter-tag.component.html",
   styleUrls: ["./filter-tag.component.scss"],
-  providers: [
-    { provide: IbFilterBase, useExisting: forwardRef(() => IbTagFilter) },
-  ],
+  providers: [{ provide: IbFilterBase, useExisting: IbTagFilter }],
   encapsulation: ViewEncapsulation.None,
 })
 export class IbTagFilter extends IbFilterBase {
@@ -67,13 +59,12 @@ export class IbTagFilter extends IbFilterBase {
 
   ngOnInit() {
     super.ngOnInit();
-    if (!this._options.size && this.filter?.ibTable) {
-      this.populateOptionsFromColumn();
-    }
   }
 
-  populateOptionsFromColumn() {
-    this.options = this.filter.ibTable.dataSource.data.map((x) => x[this.name]);
+  initializeFromColumn(data: any[]) {
+    if (!this._options.size) {
+      this.options = data.map((x) => x[this.name]);
+    }
   }
 
   applyFilter() {
