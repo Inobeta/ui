@@ -1,16 +1,14 @@
 import { createActionGroup, props } from "@ngrx/store";
-import { TableView } from "./table-view";
+import { IView } from "./table-view";
 
 export const TableViewActions = createActionGroup({
   source: "TableView",
   events: {
     "Add View": props<{
-      view: TableView;
+      view: IView;
     }>(),
-    "Save View": props<{ id: string; filter: Record<string, any> }>(),
+    "Save View": props<{ id: string; data: any }>(),
     "Rename View": props<{ id: string; name: string }>(),
-    "Remove View": props<{ id: string }>(),
-    "Duplicate View": props<{ id: string; name: string }>(),
-    "Change View": props<{ id: string, tableName: string; }>(),
+    "Delete View": props<{ id: string }>(),
   },
 });

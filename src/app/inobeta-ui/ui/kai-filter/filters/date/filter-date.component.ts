@@ -13,7 +13,7 @@ import { and, gte, lte, none } from "../../filters";
 import { IbFilterBase } from "../base/filter-base";
 
 @Component({
-  selector: "ib-filter-date, ib-date-filter",
+  selector: "ib-date-filter",
   templateUrl: "filter-date.component.html",
   styleUrls: ["./filter-date.component.scss"],
   providers: [{ provide: IbFilterBase, useExisting: IbDateFilter }],

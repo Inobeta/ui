@@ -1,26 +1,18 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import { TableView } from "../../store/views";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { IView } from "../../store/views";
 
 @Component({
   selector: "ib-table-view",
   templateUrl: "./table-view.component.html",
 })
-export class IbTableView implements OnInit {
-  @Input() view: Readonly<TableView>;
+export class IbTableView {
+  @Input() view: Readonly<IView>;
   @Input() selected: boolean = false;
   @Input() dirty: boolean = false;
-  @Output() ibRemoveView = new EventEmitter<TableView>();
-  @Output() ibRenameView = new EventEmitter<TableView>();
-  @Output() ibDuplicateView = new EventEmitter<TableView>();
-  @Output() ibChangeView = new EventEmitter<TableView>();
-
-  get isDefault() {
-    return this.view.id === "__ibTableView__all";
-  }
-
-  constructor() {}
-
-  ngOnInit() {}
+  @Output() ibRemoveView = new EventEmitter<IView>();
+  @Output() ibRenameView = new EventEmitter<IView>();
+  @Output() ibDuplicateView = new EventEmitter<IView>();
+  @Output() ibChangeView = new EventEmitter<IView>();
 
   handleRemoveView() {
     this.ibRemoveView.emit(this.view);

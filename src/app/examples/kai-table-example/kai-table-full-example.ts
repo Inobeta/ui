@@ -29,19 +29,12 @@ import { createNewUser } from "./users";
         <ib-text-filter ibTableColumnName="name">Name</ib-text-filter>
         <ib-tag-filter ibTableColumnName="fruit">Fruit</ib-tag-filter>
         <ib-number-filter ibTableColumnName="number">Amount</ib-number-filter>
-        <ib-filter-date ibTableColumnName="aDate">Purchased</ib-filter-date>
+        <ib-date-filter ibTableColumnName="aDate">Purchased</ib-date-filter>
       </ib-filter>
       <ib-selection-column
         (ibRowSelectionChange)="selectionChange($event)"
       ></ib-selection-column>
     </ib-kai-table>
-
-    <!-- <ib-kai-table #table tableName="dontmakemecomethere" [columns]="columns" [dataSource]="ds">
-      <ib-table-view-group></ib-table-view-group>
-      <ib-filter>
-        <ib-text-filter ibTableColumnName="name">Name</ib-text-filter>
-      </ib-filter>
-    </ib-kai-table> -->
   `,
   styles: [
     `
@@ -65,7 +58,6 @@ export class IbKaiTableFullExamplePage {
   selectionColumn: IbSelectionColumn;
 
   dataSource = new MatTableDataSource<any>();
-  ds = new MatTableDataSource<any>();
   columns = [
     useColumn("Name", "name"),
     useColumn("Fruit", "fruit"),
@@ -79,7 +71,6 @@ export class IbKaiTableFullExamplePage {
       createNewUser(k + 1)
     ).map((u) => ({ ...u, select: false }));
     this.dataSource.data = users;
-    this.ds.data = users
   }
 
   selectionChange(data) {

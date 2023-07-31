@@ -23,8 +23,9 @@ import {
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { MatTable, MatTableDataSource } from "@angular/material/table";
+import { skip } from "rxjs/operators";
 import { IbFilter } from "../kai-filter";
-import { IbTableViewGroup } from "../views";
+import { IbTableViewGroup, ITableViewData, IView } from "../views";
 import { IbCell } from "./cells";
 import { IbKaiRowGroupDirective } from "./rowgroup";
 import { IbSelectionColumn } from "./selection-column";
@@ -47,14 +48,6 @@ const defaultTableDef: IbTableDef = {
     pageSize: 10,
   },
 };
-
-function* generateTableName() {
-  let i = 0;
-  while (true) {
-    yield btoa(window.location.pathname + window.location.hash + i++);
-  }
-}
-const tableNameGen = generateTableName();
 
 @Component({
   selector: "ib-kai-table",
@@ -110,7 +103,7 @@ export class IbTable implements OnDestroy {
     this._dataSource.data = value;
   }
 
-  @Input() tableName = tableNameGen.next().value;
+  @Input() tableName = btoa(window.location.pathname + window.location.hash);
   @Input()
   set tableDef(value) {
     this._tableDef = {
@@ -162,6 +155,35 @@ export class IbTable implements OnDestroy {
     if (this.table && this.selectionColumn) {
       setTimeout(() => (this.isSelectionColumnAdded = true));
     }
+
+    if (this.view) {
+      this.view.defaultView.data = {
+        filter: this.filter.initialRawValue,
+        pageSize: this.tableDef.paginator.pageSize,
+      };
+
+      this.view.viewDataAccessor = () => ({
+        filter: this.filter.rawFilter,
+        pageSize: this.paginator.pageSize,
+      });
+
+      this.view._activeView
+        .pipe(skip(1))
+        .subscribe((view: IView<ITableViewData>) => {
+          this.paginator.firstPage();
+          this.paginator.pageSize = view.data.pageSize;
+          this.filter.value = view.data.filter;
+        });
+
+      this.filter.ibRawFilterUpdated.subscribe((rawFilter) => {
+        this.view.dirty =
+          JSON.stringify(rawFilter) !==
+          JSON.stringify(this.view.activeView.data.filter);
+      });
+      this.paginator.page.subscribe((p) => {
+        this.view.dirty = p.pageSize !== this.view.activeView.data.pageSize;
+      });
+    }
   }
 
   ngAfterContentInit() {
@@ -183,6 +205,7 @@ export class IbTable implements OnDestroy {
     }
 
     if (this.view) {
+      this.view.viewGroupName = this.tableName as string;
     }
   }
 

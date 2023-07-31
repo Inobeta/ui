@@ -6,6 +6,7 @@ section.ib-filter-list {
   opacity: 0;
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
 
   gap: 0.4em;
   @include mat.button-density(-1);
@@ -28,6 +29,10 @@ section.ib-filter-list {
     .mdc-evolution-chip__cell--primary
     .mdc-evolution-chip__action {
     padding-left: 0;
+  }
+
+  mat-icon:first-child {
+    margin: 0 12px;
   }
 }
 

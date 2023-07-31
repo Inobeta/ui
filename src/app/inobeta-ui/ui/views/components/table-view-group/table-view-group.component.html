@@ -1,16 +1,16 @@
 <ng-container *ngIf="views$ | async as views">
-  <section style="display: flex; justify-content: space-between">
-    <section style="display: flex; gap: 0.5em; align-items: center">
-      <ib-table-view
+  <section class="ib-table-view-group">
+    <section class="ib-table-view-wrapper">
+      <ib-default-table-view
         [view]="defaultView"
         [selected]="activeView?.id === defaultView.id"
         (ibChangeView)="handleChangeView(defaultView)"
-      ></ib-table-view>
+      ></ib-default-table-view>
       <ib-table-view
         *ngFor="let view of views"
         [view]="view"
         [selected]="activeView?.id === view.id"
-        [dirty]="isDirty"
+        [dirty]="dirty"
         (ibChangeView)="handleChangeView($event)"
         (ibRemoveView)="handleRemoveView($event)"
         (ibRenameView)="handleRenameView($event)"
@@ -27,7 +27,7 @@
         mat-icon-button
         [matTooltip]="'shared.ibTableView.undo' | translate"
         (click)="handleDiscardChanges()"
-        [disabled]="!isDirty"
+        [disabled]="!dirty"
       >
         <mat-icon>undo</mat-icon>
       </button>
@@ -36,7 +36,7 @@
         mat-icon-button
         [matTooltip]="'shared.ibTableView.save' | translate"
         (click)="handleSaveView()"
-        [disabled]="!isDirty"
+        [disabled]="!dirty"
       >
         <mat-icon>save</mat-icon>
       </button>

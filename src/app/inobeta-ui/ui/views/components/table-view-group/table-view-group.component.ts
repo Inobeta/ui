@@ -1,109 +1,119 @@
-import { AfterViewInit, Component, Optional } from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { Store } from "@ngrx/store";
-import { BehaviorSubject, Subscription } from "rxjs";
-import { IbTable } from "../../../kai-table";
-import { selectTableViews, TableView } from "../../store/views";
-import { IbTableViewService } from "../../table-view.service";
+import { BehaviorSubject, Observable } from "rxjs";
+import { IbView, IView, selectTableViews } from "../../store/views";
+import { IbViewService } from "../../table-view.service";
 
 @Component({
-  selector: "ib-table-view-group",
-  templateUrl: "./table-view-group.component.html",
+  selector: "ib-view-group, ib-table-view-group",
+  templateUrl: "table-view-group.component.html",
+  styleUrls: ["table-view-group.component.scss"],
 })
-export class IbTableViewGroup implements AfterViewInit {
-  private _activeView = new BehaviorSubject<TableView>(this.defaultView);
+export class IbTableViewGroup {
+  defaultView: IView = {
+    id: "__ibTableView__all",
+    name: "",
+    groupName: "",
+    data: {},
+  };
+  _activeView = new BehaviorSubject<IView>(this.defaultView);
+  private _viewGroupName: string;
 
-  isDirty = false;
-  views$ = this.store.select(
-    selectTableViews(this.ibTable.tableName as string)
-  );
+  @Input() set viewGroupName(name) {
+    this._viewGroupName = name;
+    this.views$ = this.store.select(selectTableViews(this._viewGroupName));
+  }
+  @Input() viewDataAccessor = () => {};
+  @Output() ibViewChanged = new EventEmitter<IView>();
+
+  get viewGroupName() {
+    return this._viewGroupName;
+  }
+
+  dirty = false;
+  views$: Observable<IView[]>;
 
   get activeView() {
     return this._activeView.value;
   }
 
-  get defaultView(): TableView {
-    return {
-      id: "__ibTableView__all",
-      name: this.view.defaultViewLabel,
-      tableName: this.ibTable?.tableName as string,
-      filter: this.ibTable?.filter?.initialRawValue,
-    };
+  constructor(private store: Store, public viewService: IbViewService) {}
+
+  ngOnInit() {
+    this.views$ = this.store.select(selectTableViews(this.viewGroupName));
   }
 
-  constructor(
-    /** @ignore */ @Optional() public ibTable: IbTable,
-    private store: Store,
-    private view: IbTableViewService
-  ) {}
-
-  ngAfterViewInit(): void {
-    if (this.ibTable?.filter) {
-      this._activeView.subscribe((nextView) => {
-        this.ibTable.filter.value = nextView.filter;
-        this.ibTable.paginator.pageSize =
-          nextView.pageSize ?? this.ibTable.tableDef.paginator.pageSize;
+  handleAddView(data = this.defaultView.data) {
+    this.viewService.openAddViewDialog().subscribe(({ name }) => {
+      const view = new IbView<any>({
+        name,
+        groupName: this.viewGroupName,
+        data,
       });
-
-      this.ibTable.filter.ibRawFilterUpdated.subscribe((rawFilter) => {
-        this.isDirty =
-          JSON.stringify(rawFilter) !== JSON.stringify(this.activeView.filter);
-      });
-    }
+      this.viewService.addView(view);
+      this._activeView.next(view);
+    });
   }
 
-  handleAddView() {
-    this.view
-      .addView(this.ibTable)
-      .subscribe((view) => this._activeView.next(view));
-  }
-
-  handleRemoveView(view: TableView) {
-    this.view.deleteView(view).subscribe(() => {
+  handleRemoveView(view: IView) {
+    this.viewService.openDeleteViewDialog(view).subscribe(() => {
       this._activeView.next(this.defaultView);
     });
   }
 
-  handleRenameView(view: TableView) {
-    this.view.renameView(view).subscribe();
+  handleRenameView(view: IView) {
+    this.viewService.openRenameViewDialog(view).subscribe();
   }
 
-  handleDuplicateView(view: TableView) {
-    this.view.duplicateView(view, this.ibTable).subscribe((nextView) => {
+  handleDuplicateView(view: IView) {
+    this.viewService.openDuplicateViewDialog(view).subscribe(({ name }) => {
+      const nextView = new IbView<any>({
+        name,
+        groupName: view.groupName,
+        data: this.viewDataAccessor(),
+      });
+      this.viewService.duplicateView(nextView);
       this._activeView.next(nextView);
     });
   }
 
   handleSaveView() {
     if (this.activeView.id === this.defaultView.id) {
-      this.handleAddView();
+      this.handleAddView(this.viewDataAccessor());
       return;
     }
 
-    this.view.saveView(this.activeView, this.ibTable);
+    this.viewService.saveView(this.activeView, this.viewDataAccessor());
     this._activeView.next(this.activeView);
   }
 
-  handleChangeView(view: TableView) {
-    if (!this.isDirty) {
+  handleChangeView(view: IView) {
+    if (!this.dirty) {
       this._activeView.next(view);
       return;
     }
 
     if (this.activeView.id === this.defaultView.id) {
-      this.view.askShouldSaveAs(this.ibTable).subscribe(() => {
+      this.viewService.openSaveAsDialog().subscribe(({ name }) => {
+        const newView = new IbView<any>({
+          name,
+          groupName: this.viewGroupName,
+          data: this.viewDataAccessor(),
+        });
+        this.viewService.addView(newView);
         this._activeView.next(view);
       });
       return;
     }
 
-    this.view
-      .askShouldSaveChanges(this.activeView, this.ibTable)
+    this.viewService
+      .openSaveChangesDialog(this.activeView, this.viewDataAccessor())
       .subscribe(() => {
         this._activeView.next(view);
       });
   }
 
   handleDiscardChanges() {
-    this.ibTable.filter.value = this.activeView.filter;
+    this._activeView.next(this.activeView);
   }
 }

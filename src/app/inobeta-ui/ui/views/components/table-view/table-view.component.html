@@ -3,17 +3,13 @@
 </button>
 
 <button
-  *ngIf="selected && !isDefault"
+  *ngIf="selected"
   mat-flat-button
   color="primary"
   [matMenuTriggerFor]="menu"
 >
   {{ view.name }} {{ dirty ? "*" : "" }}
   <mat-icon iconPositionEnd>keyboard_arrow_down</mat-icon>
-</button>
-
-<button *ngIf="selected && isDefault" mat-flat-button color="primary">
-  {{ view.name }}
 </button>
 
 <mat-menu #menu="matMenu">

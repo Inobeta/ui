@@ -9,10 +9,10 @@ import {
   IbTableViewDialog,
   IbTableViewDialogData,
 } from "./components/view-dialog/view-dialog.component";
-import { TableView, TableViewActions } from "./store/views";
+import { IView, TableViewActions } from "./store/views";
 
 @Injectable({ providedIn: "root" })
-export class IbTableViewService {
+export class IbViewService {
   get defaultViewLabel() {
     return this.translate.instant("shared.ibTableView.defaultView");
   }
@@ -24,6 +24,26 @@ export class IbTableViewService {
     private toast: IbToastNotification
   ) {}
 
+  addView(view: IView) {
+    this.store.dispatch(TableViewActions.addView({ view }));
+    this.toast.open("shared.ibTableView.view.added");
+  }
+
+  duplicateView(view: IView) {
+    this.store.dispatch(TableViewActions.addView({ view }));
+    this.toast.open("shared.ibTableView.view.duplicated");
+  }
+
+  saveView(view: IView, data: any) {
+    this.store.dispatch(
+      TableViewActions.saveView({
+        id: view.id,
+        data,
+      })
+    );
+    this.toast.open("shared.ibTableView.view.saved");
+  }
+
   openDialog(data: IbTableViewDialogData) {
     return this.dialog.open(IbTableViewDialog, {
       width: "480px",
@@ -31,41 +51,16 @@ export class IbTableViewService {
     });
   }
 
-  addView(table: IbTable) {
+  openAddViewDialog() {
     const dialog = this.openDialog({
       title: "shared.ibTableView.addTitle",
       confirm: "shared.ibTableView.add",
     });
 
-    return dialog.afterClosed().pipe(
-      skipWhile((result) => !result),
-      map((result) => {
-        const view = {
-          id: btoa(Math.random().toString()),
-          name: result?.name,
-          tableName: table.tableName as string,
-          filter: table.filter.rawFilter,
-          pageSize: table.paginator.pageSize
-        };
-
-        this.store.dispatch(TableViewActions.addView({ view }));
-        this.toast.open("shared.ibTableView.view.added");
-        return view;
-      })
-    );
+    return dialog.afterClosed().pipe(skipWhile((result) => !result));
   }
 
-  saveView(view: TableView, filter) {
-    this.store.dispatch(
-      TableViewActions.saveView({
-        id: view.id,
-        filter,
-      })
-    );
-    this.toast.open("shared.ibTableView.view.saved");
-  }
-
-  deleteView(view: TableView) {
+  openDeleteViewDialog(view: IView) {
     const dialog = this.openDialog({
       title: "shared.ibTableView.removeTitle",
       confirm: "shared.ibTableView.remove",
@@ -81,7 +76,7 @@ export class IbTableViewService {
       skipWhile((result) => !result),
       map(() => {
         this.store.dispatch(
-          TableViewActions.removeView({
+          TableViewActions.deleteView({
             id: view.id,
           })
         );
@@ -91,7 +86,7 @@ export class IbTableViewService {
     );
   }
 
-  renameView(view: TableView) {
+  openRenameViewDialog(view: IView) {
     const dialog = this.openDialog({
       title: "shared.ibTableView.renameTitle",
       confirm: "shared.ibTableView.rename",
@@ -113,7 +108,7 @@ export class IbTableViewService {
     );
   }
 
-  duplicateView(currentView: TableView, filter: any) {
+  openDuplicateViewDialog(currentView: IView) {
     const dialog = this.openDialog({
       title: "shared.ibTableView.duplicateTitle",
       confirm: "shared.ibTableView.add",
@@ -125,29 +120,10 @@ export class IbTableViewService {
       ),
     });
 
-    return dialog.afterClosed().pipe(
-      skipWhile((result) => !result),
-      map((result) => {
-        const view = {
-          id: btoa(Math.random().toString()),
-          name: result.name,
-          tableName: currentView.tableName,
-          filter,
-        };
-
-        this.store.dispatch(
-          TableViewActions.addView({
-            view,
-          })
-        );
-
-        this.toast.open("shared.ibTableView.view.duplicated");
-        return view;
-      })
-    );
+    return dialog.afterClosed().pipe(skipWhile((result) => !result));
   }
 
-  askShouldSaveChanges(currentView: TableView, filter: any) {
+  openSaveChangesDialog(currentView: IView, data: any) {
     const dialog = this.openDialog({
       title: "shared.ibTableView.unsavedTitle",
       confirm: "shared.ibTableView.save",
@@ -163,12 +139,12 @@ export class IbTableViewService {
     return dialog.afterClosed().pipe(
       skipWhile((result) => !result),
       map(() => {
-        this.saveView(currentView, filter);
+        this.saveView(currentView, data);
       })
     );
   }
 
-  askShouldSaveAs(table: IbTable) {
+  openSaveAsDialog() {
     const dialog = this.openDialog({
       title: "shared.ibTableView.unsavedTitle",
       confirm: "shared.ibTableView.save",
@@ -180,7 +156,7 @@ export class IbTableViewService {
 
     return dialog.afterClosed().pipe(
       skipWhile((result) => !result),
-      switchMap(() => this.addView(table))
+      switchMap(() => this.openAddViewDialog())
     );
   }
 }

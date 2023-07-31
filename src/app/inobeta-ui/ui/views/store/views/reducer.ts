@@ -1,8 +1,8 @@
 import { createReducer, on } from "@ngrx/store";
 import { TableViewActions } from "./actions";
-import { TableView } from "./table-view";
+import { IView } from "./table-view";
 
-export const initialState: ReadonlyArray<TableView> = [];
+export const initialState: ReadonlyArray<IView> = [];
 
 export const viewsReducer = createReducer(
   initialState,
@@ -11,7 +11,7 @@ export const viewsReducer = createReducer(
     view,
   ]),
 
-  on(TableViewActions.removeView, (state, { id }) =>
+  on(TableViewActions.deleteView, (state, { id }) =>
     state.filter((view) => view.id !== id)
   ),
 
@@ -25,12 +25,12 @@ export const viewsReducer = createReducer(
     return [...state];
   }),
 
-  on(TableViewActions.saveView, (state, { id, filter }) => {
+  on(TableViewActions.saveView, (state, { id, data }) => {
     const view = state.find((v) => v.id === id);
     if (!view) {
       return state;
     }
-    view.filter = filter;
+    view.data = data;
     return [...state];
   })
 );

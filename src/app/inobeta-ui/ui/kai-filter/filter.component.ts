@@ -17,6 +17,7 @@ import { IbFilterBase } from "./filters/base/filter-base";
   template: `
     <ng-content select="ib-search-bar"></ng-content>
     <section class="ib-filter-list ib-filter-list__show">
+      <mat-icon>filter_list</mat-icon>
       <ng-content></ng-content>
     </section>
   `,
