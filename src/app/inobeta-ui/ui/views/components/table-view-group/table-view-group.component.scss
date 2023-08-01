@@ -1,11 +1,5 @@
-.ib-table-view-group {
+:host {
   display: flex;
   justify-content: space-between;
   padding: 4px 8px 4px 16px;
-
-  .ib-table-view-wrapper {
-    display: flex;
-    gap: 0.5em;
-    align-items: center;
-  }
 }

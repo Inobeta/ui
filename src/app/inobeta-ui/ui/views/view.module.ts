@@ -14,8 +14,9 @@ import { IbDefaultTableView } from "./components/default-table-view/default-tabl
 import { IbTableViewGroup } from "./components/table-view-group/table-view-group.component";
 import { IbTableView } from "./components/table-view/table-view.component";
 import { IbTableViewDialog } from "./components/view-dialog/view-dialog.component";
-import { viewsReducer } from "./store/views/reducer";
-import { IbViewService } from "./table-view.service";
+import { IbViewList } from "./components/view-list/view-list.component";
+import { reducers } from "./store/reducer";
+import { IbViewService } from "./view.service";
 
 @NgModule({
   declarations: [
@@ -23,12 +24,14 @@ import { IbViewService } from "./table-view.service";
     IbTableView,
     IbDefaultTableView,
     IbTableViewDialog,
+    IbViewList,
   ],
   exports: [
     IbTableViewGroup,
     IbTableView,
     IbDefaultTableView,
     IbTableViewDialog,
+    IbViewList,
   ],
   imports: [
     CommonModule,
@@ -41,11 +44,11 @@ import { IbViewService } from "./table-view.service";
     MatTooltipModule,
     MatFormFieldModule,
     ReactiveFormsModule,
-    StoreModule.forFeature("ibTableViews", viewsReducer),
+    StoreModule.forFeature("ibViews", reducers),
     TranslateModule.forChild({
       extend: true,
     }),
   ],
   providers: [IbViewService],
 })
-export class IbTableViewModule {}
+export class IbViewModule {}

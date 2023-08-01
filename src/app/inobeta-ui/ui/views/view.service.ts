@@ -3,13 +3,13 @@ import { MatDialog } from "@angular/material/dialog";
 import { Store } from "@ngrx/store";
 import { TranslateService } from "@ngx-translate/core";
 import { map, skipWhile, switchMap } from "rxjs/operators";
-import { IbTable } from "../kai-table/table.component";
 import { IbToastNotification } from "../toast";
 import {
   IbTableViewDialog,
   IbTableViewDialogData,
 } from "./components/view-dialog/view-dialog.component";
-import { IView, TableViewActions } from "./store/views";
+import { TableViewActions } from "./store/actions";
+import { IView } from "./store/views/table-view";
 
 @Injectable({ providedIn: "root" })
 export class IbViewService {
@@ -42,6 +42,26 @@ export class IbViewService {
       })
     );
     this.toast.open("shared.ibTableView.view.saved");
+  }
+
+  pinView(view: IView) {
+    this.store.dispatch(
+      TableViewActions.pinView({
+        groupName: view.groupName,
+        id: view.id,
+      })
+    );
+    this.toast.open("shared.ibTableView.view.pinned");
+  }
+
+  unpinView(view: IView) {
+    this.store.dispatch(
+      TableViewActions.unpinView({
+        groupName: view.groupName,
+        id: view.id,
+      })
+    );
+    this.toast.open("shared.ibTableView.view.unpinned");
   }
 
   openDialog(data: IbTableViewDialogData) {

@@ -1,8 +1,10 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { Store } from "@ngrx/store";
 import { BehaviorSubject, Observable } from "rxjs";
+import { tap } from "rxjs/operators";
+import { selectPinnedView } from "../../store/pinned-view/selectors";
 import { IbView, IView, selectTableViews } from "../../store/views";
-import { IbViewService } from "../../table-view.service";
+import { IbViewService } from "../../view.service";
 
 @Component({
   selector: "ib-view-group, ib-table-view-group",
@@ -22,6 +24,9 @@ export class IbTableViewGroup {
   @Input() set viewGroupName(name) {
     this._viewGroupName = name;
     this.views$ = this.store.select(selectTableViews(this._viewGroupName));
+    this.pinned$ = this.store
+      .select(selectPinnedView(this.viewGroupName))
+      .pipe(tap((view) => view && this._activeView.next(view)));
   }
   @Input() viewDataAccessor = () => {};
   @Output() ibViewChanged = new EventEmitter<IView>();
@@ -32,6 +37,7 @@ export class IbTableViewGroup {
 
   dirty = false;
   views$: Observable<IView[]>;
+  pinned$: Observable<IView>;
 
   get activeView() {
     return this._activeView.value;
@@ -111,6 +117,14 @@ export class IbTableViewGroup {
       .subscribe(() => {
         this._activeView.next(view);
       });
+  }
+
+  handlePinView({ view, pinned }) {
+    if (pinned) {
+      this.viewService.pinView(view);
+    } else {
+      this.viewService.unpinView(view);
+    }
   }
 
   handleDiscardChanges() {

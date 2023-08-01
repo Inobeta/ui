@@ -175,6 +175,8 @@
       "remove": "Elimina vista",
       "rename": "Rinomina vista",
       "duplicate": "Duplica vista",
+      "pin": "Rendi predefinita",
+      "unpin": "Rimuovi",
       "duplicatePlaceholder": "Copia di {{viewName}}",
       "save": "Salva",
       "undo": "Annulla modifiche",
@@ -194,7 +196,9 @@
         "removed": "Vista eliminata",
         "duplicated": "Vista duplicata",
         "renamed": "Vista rinominata",
-        "saved": "Vista salvata"
+        "saved": "Vista salvata",
+        "pinned": "Vista salvata come predefinita",
+        "unpinned": "Vista rimossa dai predefiniti"
       }
     }
   },

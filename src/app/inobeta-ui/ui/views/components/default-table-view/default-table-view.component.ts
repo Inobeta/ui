@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component } from "@angular/core";
 import { IbTableView } from "../table-view/table-view.component";
 
 @Component({

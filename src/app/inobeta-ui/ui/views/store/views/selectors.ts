@@ -1,7 +1,12 @@
 import { createFeatureSelector, createSelector } from "@ngrx/store";
+import { IViewState } from "../reducer";
 import { IView } from "./table-view";
 
-export const selectViews = createFeatureSelector("ibTableViews");
+export const selectViewsFeature = createFeatureSelector("ibViews");
+export const selectViews = createSelector(
+  selectViewsFeature,
+  (state: IViewState) => state.views
+);
 
 export const selectTableViews = (tableName: string) =>
   createSelector(selectViews, (views: IView[]) =>
