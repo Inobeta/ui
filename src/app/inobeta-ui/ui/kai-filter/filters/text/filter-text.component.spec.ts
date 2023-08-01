@@ -65,6 +65,22 @@ describe("IbTextFilter", () => {
     expect(component.build()).toEqual(none())
     expect(component.searchCriteria.value).toEqual(contains("") as any)
   });
+
+  it("should not apply filter if invalid", async () => {
+    component.searchCriteria.setValue({
+      operator: null,
+      value: null
+    })
+    const menu = await loader.getHarness(MatMenuHarness);
+    await menu.open();
+
+    const apply = await menu.getHarness(
+      MatButtonHarness.with({ ancestor: "ib-apply-filter-button" })
+    );
+    await apply.click();
+    const spyBuild = spyOn(component, 'build')
+    expect(spyBuild).not.toHaveBeenCalled();
+  });
 });
 
 @Component({

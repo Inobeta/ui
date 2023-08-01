@@ -49,13 +49,13 @@ describe("IbDateFilter", () => {
       })
     );
     await button.check();
-    
+
     const value = await menu.getHarness(MatInputHarness);
     await value.setValue("-1");
-    
+
     expect(component.build()).toEqual(none());
   });
-  
+
   it("should build a filter (within)", async () => {
     const menu = await loader.getHarness(MatMenuHarness);
     await menu.open();
@@ -150,6 +150,35 @@ describe("IbDateFilter", () => {
     end.setHours(0);
 
     expect(component.build()).toEqual(and([gte(start), lte(end)]));
+  });
+
+  it("should not apply filter if invalid", async () => {
+    const menu = await loader.getHarness(MatMenuHarness);
+    await menu.open();
+
+    const button = await menu.getHarness(
+      MatRadioButtonHarness.with({
+        label: "shared.ibFilter.date.withinTheLast",
+      })
+    );
+    await button.check();
+
+    const section = await menu.getChildLoader(
+      'section[formgroupname="within"]'
+    );
+    const value = await section.getHarness(MatInputHarness);
+    await value.setValue("-1");
+
+    const apply = await menu.getHarness(
+      MatButtonHarness.with({ ancestor: "ib-apply-filter-button" })
+    );
+    await apply.click();
+    const spyBuild = spyOn(component, 'build')
+    expect(spyBuild).not.toHaveBeenCalled();
+
+    const previous = component.searchCriteria.getRawValue();
+    component.clear();
+    expect(component.searchCriteria.getRawValue()).not.toEqual(previous);
   });
 });
 
