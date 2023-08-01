@@ -156,7 +156,7 @@ export class IbTable implements OnDestroy {
       setTimeout(() => (this.isSelectionColumnAdded = true));
     }
 
-    if (this.view) {
+    if (this.view && this.filter) {
       this.view.defaultView.data = {
         filter: this.filter.initialRawValue,
         pageSize: this.tableDef.paginator.pageSize,
