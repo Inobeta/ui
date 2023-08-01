@@ -3,4 +3,5 @@
   gap: 8px;
   align-items: center;
   flex: 1;
+  flex-wrap: wrap;
 }
