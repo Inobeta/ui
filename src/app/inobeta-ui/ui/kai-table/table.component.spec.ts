@@ -26,9 +26,9 @@ import { StoreModule } from "@ngrx/store";
 import { TranslateModule } from "@ngx-translate/core";
 import { throwError } from "rxjs";
 import { IbToolTestModule } from "../../tools/tools-test.module";
-import { IbFilterModule } from "../kai-filter";
-import { IbToastModule } from "../toast";
-import { IbViewModule } from "../views";
+import { IbFilterModule } from "../kai-filter/filters.module";
+import { IbToastModule } from "../toast/toast.module";
+import { IbViewModule } from "../views/view.module";
 import {
   useColumn,
   useDateColumn,
@@ -138,7 +138,7 @@ describe("IbTable", () => {
     });
   });
 
-  fdescribe("with IbView", () => {
+  describe("with IbView", () => {
     let fixture: ComponentFixture<IbTableWithViewGroupApp>;
     let component: IbTable;
     let loader: HarnessLoader;
@@ -183,7 +183,7 @@ describe("IbTable", () => {
       expect(views.length - 1).toBe(2);
     });
 
-    it("should remove a view", async () => {
+    it("should pin a view", async () => {
       const addViewButton = await loader.getHarness(
         MatButtonHarness.with({
           ancestor: "ib-view-list",
@@ -192,24 +192,14 @@ describe("IbTable", () => {
       );
       await addViewButton.click();
 
-      let dialog = await loader.getHarness(MatDialogHarness);
+      const dialog = await loader.getHarness(MatDialogHarness);
+      await fixture.whenStable();
       const input = await dialog.getHarness(MatInputHarness);
       await input.setValue("green view");
 
-      let confirm = await dialog.getHarness(
+      const confirm = await dialog.getHarness(
         MatButtonHarness.with({
           text: "shared.ibTableView.add",
-        })
-      );
-      await confirm.click();
-
-      const menu = await loader.getHarness(MatMenuHarness);
-      await menu.clickItem({ text: /shared.ibTableView.remove/ });
-
-      dialog = await loader.getHarness(MatDialogHarness);
-      confirm = await dialog.getHarness(
-        MatButtonHarness.with({
-          text: "shared.ibTableView.remove",
         })
       );
       await confirm.click();
@@ -219,8 +209,52 @@ describe("IbTable", () => {
           ancestor: "ib-view-list",
         })
       );
-      expect(views.length - 1).toBe(1);
+      expect(views.length - 1).toBe(2);
+
+      const pinView = spyOn(component.view.viewService, "pinView").and.callThrough();
+      const unpinView = spyOn(component.view.viewService, "unpinView").and.callThrough();
+      component.view.handlePinView({ view: component.view.activeView, pinned: true })
+      expect(pinView).toHaveBeenCalledWith(component.view.activeView);
+      component.view.handlePinView({ view: component.view.activeView, pinned: false })
+      expect(unpinView).toHaveBeenCalledWith(component.view.activeView);
+  
     });
+
+    it("should save view", fakeAsync(async () => {
+      component.filter.form.patchValue({ color: ["green"] });
+      component.filter.update();
+      expect(component.view.dirty).toBeTruthy();
+
+      tick(1);
+      const save = await loader.getHarness(
+        MatButtonHarness.with({
+          ancestor: "ib-table-view-group",
+          variant: "icon",
+          text: /save/,
+        })
+      );
+      await save.click();
+
+      const dialog = await loader.getHarness(MatDialogHarness);
+      expect(dialog).toBeTruthy();
+      await fixture.whenStable();
+      const input = await dialog.getHarness(MatInputHarness);
+      await input.setValue("green view");
+
+      const confirm = await dialog.getHarness(
+        MatButtonHarness.with({
+          text: "shared.ibTableView.add",
+        })
+      );
+      await confirm.click();
+
+      const views = await loader.getAllHarnesses(
+        MatButtonHarness.with({
+          ancestor: "ib-view-list",
+        })
+      );
+      expect(views.length - 1).toBe(2);
+    }));
   });
 });
 

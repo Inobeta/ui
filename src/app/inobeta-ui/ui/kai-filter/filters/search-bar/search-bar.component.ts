@@ -13,7 +13,7 @@ import { IbFilterBase } from "../base/filter-base";
     <input
       matInput
       [formControlName]="name"
-      (keyup)="update()"
+      (keyup)="applyFilter()"
       [placeholder]="'shared.ibFilter.search' | translate"
     />
     <button
@@ -33,10 +33,6 @@ import { IbFilterBase } from "../base/filter-base";
 export class IbSearchBar extends IbFilterBase {
   name = "__ibSearchBar";
   searchCriteria = new FormControl("", { nonNullable: true });
-
-  update() {
-    this.applyFilter();
-  }
 
   clear() {
     this.searchCriteria.reset();
