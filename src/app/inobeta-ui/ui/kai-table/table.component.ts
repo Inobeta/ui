@@ -23,7 +23,7 @@ import {
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { MatTable, MatTableDataSource } from "@angular/material/table";
-import { filter } from "rxjs/operators";
+import { distinctUntilChanged, filter } from "rxjs/operators";
 import { IbFilter } from "../kai-filter";
 import { IbTableViewGroup, ITableViewData, IView } from "../views";
 import { IbCell } from "./cells";
@@ -168,7 +168,10 @@ export class IbTable implements OnDestroy {
       });
 
       this.view._activeView
-        .pipe(filter((view) => !!view))
+        .pipe(
+          filter((view) => !!view),
+          distinctUntilChanged((pre, cur) => pre.id === cur.id)
+        )
         .subscribe((view: IView<ITableViewData>) => {
           this.paginator.firstPage();
           this.paginator.pageSize = view.data.pageSize;
@@ -205,7 +208,7 @@ export class IbTable implements OnDestroy {
     }
 
     if (this.view) {
-      this.view.viewGroupName = this.tableName as string;
+      this.view.viewGroupName = this.tableName;
     }
   }
 

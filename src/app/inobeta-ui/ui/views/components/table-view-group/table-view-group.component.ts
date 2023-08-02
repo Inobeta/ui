@@ -51,34 +51,35 @@ export class IbTableViewGroup {
 
   handleAddView(data = this.defaultView.data) {
     this.viewService.openAddViewDialog().subscribe(({ name }) => {
-      const view = new IbView<any>({
+      const view = this.viewService.addView({
         name,
         groupName: this.viewGroupName,
         data,
       });
-      this.viewService.addView(view);
       this._activeView.next(view);
     });
   }
 
   handleRemoveView(view: IView) {
     this.viewService.openDeleteViewDialog(view).subscribe(() => {
+      this.viewService.deleteView(view);
       this._activeView.next(this.defaultView);
     });
   }
 
   handleRenameView(view: IView) {
-    this.viewService.openRenameViewDialog(view).subscribe();
+    this.viewService.openRenameViewDialog(view).subscribe(({ name }) => {
+      this._activeView.next(this.viewService.renameView(view, name));
+    });
   }
 
   handleDuplicateView(view: IView) {
     this.viewService.openDuplicateViewDialog(view).subscribe(({ name }) => {
-      const nextView = new IbView<any>({
+      const nextView = this.viewService.duplicateView({
         name,
         groupName: view.groupName,
         data: this.viewDataAccessor(),
       });
-      this.viewService.duplicateView(nextView);
       this._activeView.next(nextView);
     });
   }
@@ -89,8 +90,11 @@ export class IbTableViewGroup {
       return;
     }
 
-    this.viewService.saveView(this.activeView, this.viewDataAccessor());
-    this._activeView.next(this.activeView);
+    const view = this.viewService.saveView(
+      this.activeView,
+      this.viewDataAccessor()
+    );
+    this._activeView.next(view);
   }
 
   handleChangeView(view: IView) {
@@ -101,22 +105,21 @@ export class IbTableViewGroup {
 
     if (this.activeView.id === this.defaultView.id) {
       this.viewService.openSaveAsDialog().subscribe(({ name }) => {
-        const newView = new IbView<any>({
+        this.viewService.addView({
           name,
           groupName: this.viewGroupName,
           data: this.viewDataAccessor(),
         });
-        this.viewService.addView(newView);
         this._activeView.next(view);
       });
       return;
     }
 
-    this.viewService
-      .openSaveChangesDialog(this.activeView, this.viewDataAccessor())
-      .subscribe(() => {
-        this._activeView.next(view);
-      });
+    this.viewService.openSaveChangesDialog(this.activeView).subscribe(() => {
+      this._activeView.next(
+        this.viewService.saveView(view, this.viewDataAccessor())
+      );
+    });
   }
 
   handlePinView({ view, pinned }) {

@@ -8,32 +8,38 @@ import {
   fakeAsync,
   TestBed,
   tick,
-  waitForAsync
+  waitForAsync,
 } from "@angular/core/testing";
+import { MatButtonHarness } from "@angular/material/button/testing";
 import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatDialogHarness } from "@angular/material/dialog/testing";
 import { MatIconModule } from "@angular/material/icon";
+import { MatInputHarness } from "@angular/material/input/testing";
+import { MatMenuHarness } from "@angular/material/menu/testing";
 import { MatPaginatorModule } from "@angular/material/paginator";
 import { MatSortModule } from "@angular/material/sort";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { MatTableHarness } from "@angular/material/table/testing";
 import { By } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { StoreModule } from "@ngrx/store";
 import { TranslateModule } from "@ngx-translate/core";
 import { throwError } from "rxjs";
 import { IbToolTestModule } from "../../tools/tools-test.module";
 import { IbFilterModule } from "../kai-filter";
+import { IbToastModule } from "../toast";
+import { IbViewModule } from "../views";
 import {
   useColumn,
   useDateColumn,
   useNumberColumn,
-  useTranslateColumn
+  useTranslateColumn,
 } from "./cells";
 import { IbKaiRowGroupDirective } from "./rowgroup";
 import { IbSelectionColumn } from "./selection-column";
 import { IbDataSource } from "./table-data-source";
 import { IbTable } from "./table.component";
 import { IbKaiTableState } from "./table.types";
-
 describe("IbTable", () => {
   describe("with MatTableDataSource", () => {
     let host: IbTableApp;
@@ -88,7 +94,7 @@ describe("IbTable", () => {
       const column = useDateColumn("updated_at");
       expect(column.columnDef === "updated_at").toBeTruthy();
       const d = new Date(1690204463 * 1000);
-      expect(column.cell({ updated_at: d })).toContain("24/07/2023")
+      expect(column.cell({ updated_at: d })).toContain("24/07/2023");
     });
 
     it("should create a number column", () => {
@@ -114,7 +120,7 @@ describe("IbTable", () => {
       const component = fixture.debugElement.query(
         By.directive(IbTable)
       ).componentInstance;
-      component.dataSource.fetchData = () => throwError('oh no')
+      component.dataSource.fetchData = () => throwError("oh no");
       component.dataSource.refresh();
       tick(1);
       fixture.detectChanges();
@@ -129,6 +135,91 @@ describe("IbTable", () => {
         ".ib-table-group-detail-row"
       );
       expect(rowGroup.length).toBeTruthy();
+    });
+  });
+
+  fdescribe("with IbView", () => {
+    let fixture: ComponentFixture<IbTableWithViewGroupApp>;
+    let component: IbTable;
+    let loader: HarnessLoader;
+
+    beforeEach(() => {
+      fixture = createComponent(IbTableWithViewGroupApp);
+      component = fixture.debugElement.query(
+        By.directive(IbTable)
+      ).componentInstance;
+      loader = TestbedHarnessEnvironment.documentRootLoader(fixture);
+    });
+
+    it("should create", () => {
+      expect(component).toBeTruthy();
+    });
+
+    it("should create a view", async () => {
+      const addViewButton = await loader.getHarness(
+        MatButtonHarness.with({
+          ancestor: "ib-view-list",
+          variant: "icon",
+        })
+      );
+      await addViewButton.click();
+
+      const dialog = await loader.getHarness(MatDialogHarness);
+      const input = await dialog.getHarness(MatInputHarness);
+      await input.setValue("green view");
+
+      const confirm = await dialog.getHarness(
+        MatButtonHarness.with({
+          text: "shared.ibTableView.add",
+        })
+      );
+      await confirm.click();
+
+      const views = await loader.getAllHarnesses(
+        MatButtonHarness.with({
+          ancestor: "ib-view-list",
+        })
+      );
+      expect(views.length - 1).toBe(2);
+    });
+
+    it("should remove a view", async () => {
+      const addViewButton = await loader.getHarness(
+        MatButtonHarness.with({
+          ancestor: "ib-view-list",
+          variant: "icon",
+        })
+      );
+      await addViewButton.click();
+
+      let dialog = await loader.getHarness(MatDialogHarness);
+      const input = await dialog.getHarness(MatInputHarness);
+      await input.setValue("green view");
+
+      let confirm = await dialog.getHarness(
+        MatButtonHarness.with({
+          text: "shared.ibTableView.add",
+        })
+      );
+      await confirm.click();
+
+      const menu = await loader.getHarness(MatMenuHarness);
+      await menu.clickItem({ text: /shared.ibTableView.remove/ });
+
+      dialog = await loader.getHarness(MatDialogHarness);
+      confirm = await dialog.getHarness(
+        MatButtonHarness.with({
+          text: "shared.ibTableView.remove",
+        })
+      );
+      await confirm.click();
+
+      const views = await loader.getAllHarnesses(
+        MatButtonHarness.with({
+          ancestor: "ib-view-list",
+        })
+      );
+      expect(views.length - 1).toBe(1);
     });
   });
 });
@@ -147,6 +238,9 @@ function configureModule<T>(type: Type<T>) {
       MatIconModule,
       MatCheckboxModule,
       IbFilterModule,
+      IbViewModule,
+      IbToastModule,
+      StoreModule.forRoot({}),
       TranslateModule.forRoot({
         extend: true,
       }),
@@ -207,4 +301,26 @@ class IbTableWithRowGroupApp {
 class IbTableWithIbDataSourceApp {
   dataSource = new IbDataSource<any>([{ name: "alice" }]);
   columns = [useColumn("name", "name")];
+}
+
+@Component({
+  template: `
+    <ib-kai-table
+      tableName="employees"
+      [columns]="columns"
+      [dataSource]="dataSource"
+    >
+      <ib-table-view-group></ib-table-view-group>
+      <ib-filter>
+        <ib-tag-filter ibTableColumnName="color">Name</ib-tag-filter>
+      </ib-filter>
+    </ib-kai-table>
+  `,
+})
+class IbTableWithViewGroupApp {
+  dataSource = new MatTableDataSource<any>([
+    { name: "alice", color: "peach" },
+    { name: "bob", color: "green" },
+  ]);
+  columns = [useColumn("name", "name"), useColumn("color", "color")];
 }

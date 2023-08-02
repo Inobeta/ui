@@ -9,14 +9,10 @@ import {
   IbTableViewDialogData,
 } from "./components/view-dialog/view-dialog.component";
 import { TableViewActions } from "./store/actions";
-import { IView } from "./store/views/table-view";
+import { IbView, IView } from "./store/views/table-view";
 
 @Injectable({ providedIn: "root" })
 export class IbViewService {
-  get defaultViewLabel() {
-    return this.translate.instant("shared.ibTableView.defaultView");
-  }
-
   constructor(
     private store: Store,
     private dialog: MatDialog,
@@ -24,14 +20,18 @@ export class IbViewService {
     private toast: IbToastNotification
   ) {}
 
-  addView(view: IView) {
+  addView(viewDef: Partial<IView>) {
+    const view = new IbView<any>(viewDef);
     this.store.dispatch(TableViewActions.addView({ view }));
     this.toast.open("shared.ibTableView.view.added");
+    return view;
   }
-
-  duplicateView(view: IView) {
+  
+  duplicateView(viewDef: Partial<IView>) {
+    const view = new IbView<any>(viewDef);
     this.store.dispatch(TableViewActions.addView({ view }));
     this.toast.open("shared.ibTableView.view.duplicated");
+    return view;
   }
 
   saveView(view: IView, data: any) {
@@ -42,6 +42,29 @@ export class IbViewService {
       })
     );
     this.toast.open("shared.ibTableView.view.saved");
+    return { ...view, data };
+  }
+
+  deleteView(view: IView) {
+    this.store.dispatch(
+      TableViewActions.deleteView({
+        id: view.id,
+      })
+    );
+
+    this.toast.open("shared.ibTableView.view.removed");
+  }
+
+  renameView(view: IView, name: string) {
+    this.store.dispatch(
+      TableViewActions.renameView({
+        id: view.id,
+        name,
+      })
+    );
+
+    this.toast.open("shared.ibTableView.view.renamed");
+    return { ...view, name };
   }
 
   pinView(view: IView) {
@@ -92,18 +115,7 @@ export class IbViewService {
       color: "warn",
     });
 
-    return dialog.afterClosed().pipe(
-      skipWhile((result) => !result),
-      map(() => {
-        this.store.dispatch(
-          TableViewActions.deleteView({
-            id: view.id,
-          })
-        );
-
-        this.toast.open("shared.ibTableView.view.removed");
-      })
-    );
+    return dialog.afterClosed().pipe(skipWhile((result) => !result));
   }
 
   openRenameViewDialog(view: IView) {
@@ -113,19 +125,7 @@ export class IbViewService {
       viewName: view.name,
     });
 
-    return dialog.afterClosed().pipe(
-      skipWhile((result) => !result),
-      map((result) => {
-        this.store.dispatch(
-          TableViewActions.renameView({
-            id: view.id,
-            name: result.name,
-          })
-        );
-
-        this.toast.open("shared.ibTableView.view.renamed");
-      })
-    );
+    return dialog.afterClosed().pipe(skipWhile((result) => !result));
   }
 
   openDuplicateViewDialog(currentView: IView) {
@@ -143,7 +143,7 @@ export class IbViewService {
     return dialog.afterClosed().pipe(skipWhile((result) => !result));
   }
 
-  openSaveChangesDialog(currentView: IView, data: any) {
+  openSaveChangesDialog(currentView: IView) {
     const dialog = this.openDialog({
       title: "shared.ibTableView.unsavedTitle",
       confirm: "shared.ibTableView.save",
@@ -156,12 +156,7 @@ export class IbViewService {
       hideInput: true,
     });
 
-    return dialog.afterClosed().pipe(
-      skipWhile((result) => !result),
-      map(() => {
-        this.saveView(currentView, data);
-      })
-    );
+    return dialog.afterClosed().pipe(skipWhile((result) => !result));
   }
 
   openSaveAsDialog() {

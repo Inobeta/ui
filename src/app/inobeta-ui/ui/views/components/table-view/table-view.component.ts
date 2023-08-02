@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { IView } from "../../store/views";
+import { IView } from "../../store/views/table-view";
 
 @Component({
   selector: "ib-table-view",
@@ -18,27 +18,4 @@ export class IbTableView {
     view: IView;
     pinned: boolean;
   }>();
-
-  handleRemoveView() {
-    this.ibRemoveView.emit(this.view);
-  }
-
-  handleRenameView() {
-    this.ibRenameView.emit(this.view);
-  }
-
-  handleDuplicateView() {
-    this.ibDuplicateView.emit(this.view);
-  }
-
-  handleChangeView() {
-    this.ibChangeView.emit(this.view);
-  }
-
-  handlePinView(pinned) {
-    this.ibPinView.emit({
-      view: this.view,
-      pinned,
-    });
-  }
 }
