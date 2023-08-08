@@ -1,12 +1,14 @@
 import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { Component } from "@angular/core";
-import { ComponentFixture } from "@angular/core/testing";
+import { ComponentFixture, fakeAsync, flush } from "@angular/core/testing";
 import { MatButtonHarness } from "@angular/material/button/testing";
 import { MatDialogHarness } from "@angular/material/dialog/testing";
 import { createViewComponent } from "./components/table-view-group/table-view-group.component.spec";
 import { IbView } from "./store/views/table-view";
 import { IbViewService } from "./view.service";
+import { of } from "rxjs";
+import { MatInputHarness } from "@angular/material/input/testing";
 
 describe("IbViewService", () => {
   let fixture: ComponentFixture<IbViewServiceApp>;
@@ -44,7 +46,7 @@ describe("IbViewService", () => {
   });
 
   it("should open duplicate dialog", async () => {
-    service.openDuplicateViewDialog(view)
+    service.openDuplicateViewDialog(view);
     const dialog = await loader.getHarness(MatDialogHarness);
     expect(dialog).toBeTruthy();
     const confirm = await dialog.getHarness(
@@ -55,9 +57,11 @@ describe("IbViewService", () => {
     await confirm.click();
   });
 
-  it("should open save as dialog", async () => {
-    service.openSaveAsDialog();
-    const dialog = await loader.getHarness(MatDialogHarness);
+  it("should open save as dialog, and save", fakeAsync(async () => {
+    service.openSaveAsDialog().subscribe((result) => {
+      expect(result?.name).toBe("test123");
+    });
+    let dialog = await loader.getHarness(MatDialogHarness);
     expect(dialog).toBeTruthy();
     const save = await dialog.getHarness(
       MatButtonHarness.with({
@@ -65,10 +69,43 @@ describe("IbViewService", () => {
       })
     );
     await save.click();
-  });
+
+    fixture.detectChanges();
+    flush();
+
+    const input = await loader.getHarness(MatInputHarness);
+    await input.setValue("test123");
+    dialog = await loader.getHarness(MatDialogHarness);
+    const add = await dialog.getHarness(
+      MatButtonHarness.with({
+        text: "shared.ibTableView.add",
+      })
+    );
+    await add.click();
+
+    fixture.detectChanges();
+    flush();
+  }));
+
+  it("should open save as dialog, and cancel", fakeAsync(async () => {
+    service.openSaveAsDialog().subscribe((result) => {
+      expect(result?.confirmed).toBe(false);
+    });
+    let dialog = await loader.getHarness(MatDialogHarness);
+    expect(dialog).toBeTruthy();
+    const noButton = await dialog.getHarness(
+      MatButtonHarness.with({
+        text: "shared.ui.modalMessage.no",
+      })
+    );
+    await noButton.click();
+
+    fixture.detectChanges();
+    flush();
+  }));
 
   it("should open save changes dialog", async () => {
-    service.openSaveChangesDialog(view);
+    service.openSaveChangesDialog(view).subscribe((result) => {});
     const dialog = await loader.getHarness(MatDialogHarness);
     expect(dialog).toBeTruthy();
     const save = await dialog.getHarness(

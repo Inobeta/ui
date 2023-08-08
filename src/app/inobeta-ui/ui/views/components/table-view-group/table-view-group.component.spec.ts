@@ -103,7 +103,7 @@ describe("IbTableViewGroup", () => {
 
   it("should save a new view when default is selected", () => {
     spyOn(component.viewService, "openAddViewDialog").and.returnValue(
-      of({ name: "dandori" })
+      of({ name: "dandori", confirmed: true })
     );
 
     fixture.componentInstance.filter = { issueType: "dandori" };
@@ -149,7 +149,7 @@ describe("IbTableViewGroup", () => {
       of({ name: "time" })
     );
     spyOn(component.viewService, "openSaveAsDialog").and.returnValue(
-      of({ name: "dandori" })
+      of({ name: "dandori", confirmed: true })
     );
 
     component.handleAddView();
@@ -169,7 +169,7 @@ describe("IbTableViewGroup", () => {
       of({ name: "time" })
     );
     spyOn(component.viewService, "openSaveChangesDialog").and.returnValue(
-      of({ name: "dandori" })
+      of({ name: "dandori", confirmed: true })
     );
 
     component.handleAddView();

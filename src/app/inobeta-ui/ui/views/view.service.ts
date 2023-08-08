@@ -2,14 +2,15 @@ import { Injectable } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { Store } from "@ngrx/store";
 import { TranslateService } from "@ngx-translate/core";
-import { map, skipWhile, switchMap } from "rxjs/operators";
+import { of } from "rxjs";
+import { skipWhile, switchMap } from "rxjs/operators";
 import { IbToastNotification } from "../toast";
 import {
   IbTableViewDialog,
   IbTableViewDialogData,
 } from "./components/view-dialog/view-dialog.component";
 import { TableViewActions } from "./store/actions";
-import { IbView, IView } from "./store/views/table-view";
+import { IView, IbView } from "./store/views/table-view";
 
 @Injectable({ providedIn: "root" })
 export class IbViewService {
@@ -26,7 +27,7 @@ export class IbViewService {
     this.toast.open("shared.ibTableView.view.added");
     return view;
   }
-  
+
   duplicateView(viewDef: Partial<IView>) {
     const view = new IbView<any>(viewDef);
     this.store.dispatch(TableViewActions.addView({ view }));
@@ -154,6 +155,8 @@ export class IbViewService {
         },
       },
       hideInput: true,
+      hideCancel: true,
+      hasNo: true,
     });
 
     return dialog.afterClosed().pipe(skipWhile((result) => !result));
@@ -167,11 +170,15 @@ export class IbViewService {
         label: "shared.ibTableView.unsavedUnnamedView",
       },
       hideInput: true,
+      hideCancel: true,
+      hasNo: true,
     });
 
     return dialog.afterClosed().pipe(
       skipWhile((result) => !result),
-      switchMap(() => this.openAddViewDialog())
+      switchMap((result) =>
+        result.confirmed ? this.openAddViewDialog() : of(result)
+      )
     );
   }
 }

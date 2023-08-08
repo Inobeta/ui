@@ -23,9 +23,9 @@ import {
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { MatTable, MatTableDataSource } from "@angular/material/table";
-import { distinctUntilChanged, filter } from "rxjs/operators";
+import { filter } from "rxjs/operators";
 import { IbFilter } from "../kai-filter";
-import { IbTableViewGroup, ITableViewData, IView } from "../views";
+import { ITableViewData, IView, IbTableViewGroup } from "../views";
 import { IbCell } from "./cells";
 import { IbKaiRowGroupDirective } from "./rowgroup";
 import { IbSelectionColumn } from "./selection-column";
@@ -168,10 +168,7 @@ export class IbTable implements OnDestroy {
       });
 
       this.view._activeView
-        .pipe(
-          filter((view) => !!view),
-          distinctUntilChanged((pre, cur) => pre.id === cur.id)
-        )
+        .pipe(filter((view) => !!view))
         .subscribe((view: IView<ITableViewData>) => {
           this.paginator.firstPage();
           this.paginator.pageSize = view.data.pageSize;
@@ -185,6 +182,10 @@ export class IbTable implements OnDestroy {
       });
       this.paginator.page.subscribe((p) => {
         this.view.dirty = p.pageSize !== this.view.activeView.data.pageSize;
+      });
+
+      this.view.ibToggleFilters.subscribe(() => {
+        this.filter.toggleFilters();
       });
     }
   }

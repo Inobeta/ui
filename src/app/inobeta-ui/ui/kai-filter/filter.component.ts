@@ -16,7 +16,7 @@ import { IbFilterBase } from "./filters/base/filter-base";
   selector: "ib-filter",
   template: `
     <ng-content select="ib-search-bar"></ng-content>
-    <section #list class="ib-filter-list ib-filter-list__show">
+    <section #list class="ib-filter-list" [class.ib-filter-list__show]="showFilters">
       <mat-icon *ngIf="list.children.length > 1">filter_list</mat-icon>
       <ng-content></ng-content>
     </section>
@@ -58,6 +58,8 @@ export class IbFilter {
   rawFilter: Record<string, any> = {};
   filter: IbFilterSyntax = {};
 
+  showFilters = true;
+  
   ngAfterViewInit() {
     this.initialRawValue = this.rawFilter = this.form.value;
   }
@@ -74,6 +76,10 @@ export class IbFilter {
     this.update();
   }
 
+  toggleFilters() {
+    this.showFilters = !this.showFilters;
+  }
+  
   /** @ignore */
   filterPredicate = (data: any, filter: IbFilterSyntax | any) => {
     const matchesSearchBar = this.applySearchBarFilter(

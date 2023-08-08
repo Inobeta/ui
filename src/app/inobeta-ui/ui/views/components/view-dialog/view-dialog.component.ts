@@ -13,6 +13,9 @@ export interface IbTableViewDialogData {
 
   viewName?: string;
   hideInput?: boolean;
+
+  hideCancel?: boolean;
+  hasNo?: boolean;
 }
 
 @Component({
@@ -37,9 +40,12 @@ export interface IbTableViewDialogData {
     </mat-dialog-content>
 
     <div mat-dialog-actions style="justify-content: flex-end">
-      <button mat-button mat-dialog-close>
+      <button *ngIf="!data?.hideCancel" mat-button mat-dialog-close>
         {{ "shared.ibTableView.cancel" | translate }}
       </button>
+      <button *ngIf="data?.hasNo" mat-button [mat-dialog-close]="{
+        confirmed: false
+      }">{{ "shared.ui.modalMessage.no" | translate }}</button>
       <button
         mat-button
         [disabled]="!data?.hideInput ? viewName.value.length === 0 : false"

@@ -116,7 +116,7 @@ export class IbDateFilter extends IbFilterBase {
       if (!this.rawValue?.range?.start || !this.rawValue?.range?.end) {
         return;
       }
-      const start = formatDate(this.rawValue?.range?.start, "dd/MM/YYYY", "en");
+      const start = formatDate(this.rawValue?.range?.start, "dd/MM/yyyy", "en");
       const end = formatDate(this.rawValue?.range?.end, "dd/MM/YYYY", "en");
       return `${start} - ${end}`;
     }

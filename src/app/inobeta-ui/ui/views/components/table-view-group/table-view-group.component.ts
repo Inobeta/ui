@@ -30,6 +30,7 @@ export class IbTableViewGroup {
   }
   @Input() viewDataAccessor = () => {};
   @Output() ibViewChanged = new EventEmitter<IView>();
+  @Output() ibToggleFilters = new EventEmitter();
 
   get viewGroupName() {
     return this._viewGroupName;
@@ -104,21 +105,24 @@ export class IbTableViewGroup {
     }
 
     if (this.activeView.id === this.defaultView.id) {
-      this.viewService.openSaveAsDialog().subscribe(({ name }) => {
-        this.viewService.addView({
-          name,
-          groupName: this.viewGroupName,
-          data: this.viewDataAccessor(),
-        });
+      this.viewService.openSaveAsDialog().subscribe((newView) => {
+        if (newView.confirmed) {
+          this.viewService.addView({
+            name: newView.view,
+            groupName: this.viewGroupName,
+            data: this.viewDataAccessor(),
+          });
+        }
         this._activeView.next(view);
       });
       return;
     }
 
-    this.viewService.openSaveChangesDialog(this.activeView).subscribe(() => {
-      this._activeView.next(
-        this.viewService.saveView(view, this.viewDataAccessor())
-      );
+    this.viewService.openSaveChangesDialog(this.activeView).subscribe((result) => {
+      if (result.confirmed) {
+        this.viewService.saveView(this.activeView, this.viewDataAccessor());
+      }
+      this._activeView.next(view);
     });
   }
 
