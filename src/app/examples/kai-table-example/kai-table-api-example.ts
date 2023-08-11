@@ -135,7 +135,7 @@ export class IbKaiTableApiExamplePage {
     {
       columnDef: "created",
       header: "Created",
-      cell: (e) => `${formatDate(e.created_at, "d MMM YYYY", "it-IT")}`,
+      cell: (e) => `${formatDate(e.created_at, "d MMM yyyy", "it-IT")}`,
       sort: true,
     },
     useColumn("state"),
