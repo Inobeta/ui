@@ -108,7 +108,7 @@ export class IbTableViewGroup {
       this.viewService.openSaveAsDialog().subscribe((newView) => {
         if (newView.confirmed) {
           this.viewService.addView({
-            name: newView.view,
+            name: newView.name,
             groupName: this.viewGroupName,
             data: this.viewDataAccessor(),
           });

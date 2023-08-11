@@ -5,8 +5,8 @@ import { CommonModule } from "@angular/common";
 import { Component, Type } from "@angular/core";
 import {
   ComponentFixture,
-  fakeAsync,
   TestBed,
+  fakeAsync,
   tick,
   waitForAsync,
 } from "@angular/core/testing";
@@ -15,7 +15,6 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatDialogHarness } from "@angular/material/dialog/testing";
 import { MatIconModule } from "@angular/material/icon";
 import { MatInputHarness } from "@angular/material/input/testing";
-import { MatMenuHarness } from "@angular/material/menu/testing";
 import { MatPaginatorModule } from "@angular/material/paginator";
 import { MatSortModule } from "@angular/material/sort";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
@@ -115,6 +114,22 @@ describe("IbTable", () => {
       expect(component).toBeTruthy();
     }));
 
+    it("should create with empty constructor", () => {
+      const dataSource = new IbDataSource();
+      expect(dataSource).toBeTruthy();
+      expect(dataSource.data).toEqual([]);
+    });
+    
+    it("should reset to empty array with non array types", () => {
+      const dataSource = new IbDataSource([{ name: "alice" }]);
+      expect(dataSource).toBeTruthy();
+      expect(dataSource.data).toEqual([{ name: "alice" }]);
+      dataSource.data = null
+      expect(dataSource.data).toEqual([]);
+      dataSource.data = [{ name: 'rabbit' }]
+      expect(dataSource.data).toEqual([{ name: 'rabbit' }]);
+    });
+    
     it("should show error on exception", fakeAsync(() => {
       const fixture = createComponent(IbTableWithIbDataSourceApp);
       const component = fixture.debugElement.query(
@@ -211,13 +226,24 @@ describe("IbTable", () => {
       );
       expect(views.length - 1).toBe(2);
 
-      const pinView = spyOn(component.view.viewService, "pinView").and.callThrough();
-      const unpinView = spyOn(component.view.viewService, "unpinView").and.callThrough();
-      component.view.handlePinView({ view: component.view.activeView, pinned: true })
+      const pinView = spyOn(
+        component.view.viewService,
+        "pinView"
+      ).and.callThrough();
+      const unpinView = spyOn(
+        component.view.viewService,
+        "unpinView"
+      ).and.callThrough();
+      component.view.handlePinView({
+        view: component.view.activeView,
+        pinned: true,
+      });
       expect(pinView).toHaveBeenCalledWith(component.view.activeView);
-      component.view.handlePinView({ view: component.view.activeView, pinned: false })
+      component.view.handlePinView({
+        view: component.view.activeView,
+        pinned: false,
+      });
       expect(unpinView).toHaveBeenCalledWith(component.view.activeView);
-  
     });
 
     it("should save view", fakeAsync(async () => {

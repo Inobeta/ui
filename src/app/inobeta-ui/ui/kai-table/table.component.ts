@@ -220,13 +220,10 @@ export class IbTable implements OnDestroy {
   private sendRowEvent = (event: Partial<IbTableRowEvent>) =>
     this.ibRowClicked.emit({
       ...(event as IbTableRowEvent),
-      tableName: this.tableName || "",
+      tableName: this.tableName,
     });
 
   getCell(column: IbColumnDef) {
-    if (column.columnDef in this._componentCache) {
-      return this._componentCache[column.columnDef];
-    }
     this._componentCache[column.columnDef] = new ComponentPortal(
       column.component ?? IbCell
     );

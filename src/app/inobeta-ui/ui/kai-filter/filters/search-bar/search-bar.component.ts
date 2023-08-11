@@ -34,10 +34,6 @@ export class IbSearchBar extends IbFilterBase {
   name = "__ibSearchBar";
   searchCriteria = new FormControl("", { nonNullable: true });
 
-  clear() {
-    this.searchCriteria.reset();
-  }
-
   build = () =>
     this.searchCriteria.value ? contains(this.searchCriteria.value) : none();
 }

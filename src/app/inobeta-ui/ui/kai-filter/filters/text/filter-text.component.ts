@@ -39,7 +39,7 @@ export class IbTextFilter extends IbFilterBase {
 
   get displayCondition() {
     const operator = this.rawValue.operator;
-    return this.operators.find((o) => o.value === operator)?.displayValue ?? "";
+    return this.operators.find((o) => o.value === operator)?.displayValue;
   }
 
   get displayValue() {

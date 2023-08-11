@@ -63,7 +63,7 @@ export class IbSelectionColumn implements OnInit {
     const selectionAfterToggle = this.isAllSelected();
     this.ibRowSelectionChange.emit(
       this.table.dataSource.filteredData.map((row) => ({
-        tableName: this.table.tableName || "",
+        tableName: this.table.tableName,
         row,
         selection: selectionAfterToggle,
       }))
@@ -76,7 +76,7 @@ export class IbSelectionColumn implements OnInit {
 
       this.ibRowSelectionChange.emit([
         {
-          tableName: this.table.tableName || "",
+          tableName: this.table.tableName,
           row,
           selection: ev.checked,
         },
