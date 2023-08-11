@@ -15,10 +15,12 @@ import { IbFilterBase } from "./filters/base/filter-base";
 @Component({
   selector: "ib-filter",
   template: `
-    <ng-content select="ib-search-bar"></ng-content>
-    <section #list class="ib-filter-list" [class.ib-filter-list__show]="showFilters">
-      <mat-icon *ngIf="list.children.length > 1">filter_list</mat-icon>
-      <ng-content></ng-content>
+    <section class="ib-filter" [class.ib-filter__hide]="hideFilters">
+      <ng-content select="ib-search-bar"></ng-content>
+      <section #list class="ib-filter-list">
+        <mat-icon *ngIf="list.children.length > 1">filter_list</mat-icon>
+        <ng-content></ng-content>
+      </section>
     </section>
   `,
   styleUrls: ["./filter.component.scss"],
@@ -58,7 +60,7 @@ export class IbFilter {
   rawFilter: Record<string, any> = {};
   filter: IbFilterSyntax = {};
 
-  showFilters = true;
+  hideFilters = false;
   
   ngAfterViewInit() {
     this.initialRawValue = this.rawFilter = this.form.value;
@@ -77,7 +79,7 @@ export class IbFilter {
   }
 
   toggleFilters() {
-    this.showFilters = !this.showFilters;
+    this.hideFilters = !this.hideFilters;
   }
   
   /** @ignore */
