@@ -94,7 +94,7 @@ class GithubService {
       [tableDef]="tableDef"
     >
       <ib-filter>
-        <!-- <ib-date-filter name="created">Created</ib-date-filter> -->
+        <ib-date-filter name="created">Created</ib-date-filter>
         <ib-tag-filter
           name="state"
           multiple="false"
@@ -135,7 +135,7 @@ export class IbKaiTableApiExamplePage {
     {
       columnDef: "created",
       header: "Created",
-      cell: (e) => `${formatDate(e.created_at, "d MMM YYYY", "it-IT")}`,
+      cell: (e) => `${formatDate(e.created_at, "d MMM yyyy", "it-IT")}`,
       sort: true,
     },
     useColumn("state"),

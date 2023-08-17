@@ -21,6 +21,7 @@ import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { IbMatDateAdapter } from "../material-forms/intl/datepicker.intl";
 import { ibMatDatepickerTranslate } from "../material-forms/material-form.module";
 import { IbApplyFilterButton } from "./filter-actions/apply-filter-button.component";
+import { IbClearFilterButton } from "./filter-actions/clear-filter-button.component";
 import { IbFilterActions } from "./filter-actions/filter-actions.component";
 import { IbFilterButton } from "./filter-button/filter-button.component";
 import { IbFilter } from "./filter.component";
@@ -64,6 +65,7 @@ import { IbTextFilter } from "./filters/text/filter-text.component";
     IbDateFilter,
     IbFilterActions,
     IbApplyFilterButton,
+    IbClearFilterButton,
     IbSearchBar,
   ],
   declarations: [
@@ -76,6 +78,7 @@ import { IbTextFilter } from "./filters/text/filter-text.component";
     IbDateFilter,
     IbFilterActions,
     IbApplyFilterButton,
+    IbClearFilterButton,
     IbSearchBar,
   ],
   providers: [

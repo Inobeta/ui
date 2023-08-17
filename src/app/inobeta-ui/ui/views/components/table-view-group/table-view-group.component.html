@@ -1,0 +1,41 @@
+<ib-view-list
+  [views]="views$ | async"
+  [defaultView]="defaultView"
+  [pinnedView]="pinned$ | async"
+  [activeView]="activeView"
+  [dirty]="dirty"
+  (ibAddView)="handleAddView()"
+  (ibChangeView)="handleChangeView($event)"
+  (ibRemoveView)="handleRemoveView($event)"
+  (ibRenameView)="handleRenameView($event)"
+  (ibDuplicateView)="handleDuplicateView($event)"
+  (ibPinView)="handlePinView($event)"
+></ib-view-list>
+
+<section style="justify-self: flex-end">
+  <button
+    mat-icon-button
+    [matTooltip]="'shared.ibTableView.showFilters' | translate"
+    (click)="ibToggleFilters.emit()"
+  >
+    <mat-icon>filter_alt</mat-icon>
+  </button>
+
+  <button
+    mat-icon-button
+    [matTooltip]="'shared.ibTableView.undo' | translate"
+    (click)="handleDiscardChanges()"
+    [disabled]="!dirty"
+  >
+    <mat-icon>undo</mat-icon>
+  </button>
+
+  <button
+    mat-icon-button
+    [matTooltip]="'shared.ibTableView.save' | translate"
+    (click)="handleSaveView()"
+    [disabled]="!dirty"
+  >
+    <mat-icon>save</mat-icon>
+  </button>
+</section>

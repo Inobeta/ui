@@ -10,13 +10,13 @@ export class IbMatDatepickerI18n {
     getDateFormats() {
         return {
           parse: {
-            dateInput: 'DD/MM/YYYY',
+            dateInput: 'dd/MM/yyyy',
             },
           display: {
-            dateInput: 'DD/MM/YYYY',
-            monthYearLabel: 'MMMM YYYY',
-            dateA11yLabel: 'DD/MM/YYYY',
-            monthYearA11yLabel: 'MMMM YYYY',
+            dateInput: 'dd/MM/yyyy',
+            monthYearLabel: 'MMMM yyyy',
+            dateA11yLabel: 'dd/MM/yyyy',
+            monthYearA11yLabel: 'MMMM yyyy',
           }
         };
     }

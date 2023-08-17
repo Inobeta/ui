@@ -59,7 +59,7 @@ useColumn(
 |`useColumn`|`useColumn('firstName')`
 ||`useColumn('user.firstName', 'firstName', false)`
 |`useDateColumn`|`useDateColumn('order.update_at', 'updated_at', true)` => 01/01/1970 16:59 GMT+1 (default)
-||`useDateColumn('movie.release_date', 'release_date', true, 'dd MMMM YYYY')` => 23 February 2021
+||`useDateColumn('movie.release_date', 'release_date', true, 'dd MMMM yyyy')` => 23 February 2021
 
 ### Context Actions
 

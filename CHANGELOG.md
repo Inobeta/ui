@@ -7,6 +7,8 @@
 |DEVK-181|fix|Package|Updated `package.json`; Moved `dependencies` in `peerDependencies`|
 |DEVK-183|feat|IbTable|Created a new table that will replace old IbTableModule|
 |DEVK-184|feat|IbFilter|Created filters for the new IbTable|
+|DEVK-186|feat|IbView|Added IbViewModule; Added support for IbViewGroup in IbTable|
+|DEVK-189|feat|IbTable|Created IbDataSource for server side interaction|
 |DEVK-192|fix|IbTable|Removed `selectableRows` input. Added `ib-selection-column`|
 |STOR-98|feat|IbHydration|**Breaking change** on hydration metareducer provided. Please use ibSetupHydration with full support on lazy loaded modules|
 

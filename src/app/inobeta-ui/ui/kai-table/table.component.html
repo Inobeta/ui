@@ -1,4 +1,5 @@
 <div class="ib-table-scrollable" [class.ib-table-scrollable__loading]="isState(states.LOADING)">
+  <ng-content select="ib-table-view-group"></ng-content>
   <ng-content select="ib-filter"></ng-content>
   <div class="ib-table-progress-bar" *ngIf="isState(states.LOADING)">
     <mat-progress-bar mode="indeterminate"></mat-progress-bar>

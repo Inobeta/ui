@@ -21,14 +21,15 @@ import { createNewUser } from "./users";
         get selection
       </button>
     </div>
-    <ib-kai-table #table [columns]="columns" [dataSource]="dataSource">
-      <ib-filter [value]="filterValue">
+    <ib-kai-table #table tableName="fullExample" [columns]="columns" [dataSource]="dataSource">
+      <ib-table-view-group></ib-table-view-group>
+      <ib-filter>
         <ib-search-bar></ib-search-bar>
 
         <ib-text-filter ibTableColumnName="name">Name</ib-text-filter>
         <ib-tag-filter ibTableColumnName="fruit">Fruit</ib-tag-filter>
         <ib-number-filter ibTableColumnName="number">Amount</ib-number-filter>
-        <ib-filter-date ibTableColumnName="aDate">Purchased</ib-filter-date>
+        <ib-date-filter ibTableColumnName="aDate">Purchased</ib-date-filter>
       </ib-filter>
       <ib-selection-column
         (ibRowSelectionChange)="selectionChange($event)"
@@ -56,7 +57,6 @@ export class IbKaiTableFullExamplePage {
   @ViewChild(IbSelectionColumn, { static: true })
   selectionColumn: IbSelectionColumn;
 
-  filterValue = { fruit: ["apple", "banana"], number: { min: 5, max: 10 } };
   dataSource = new MatTableDataSource<any>();
   columns = [
     useColumn("Name", "name"),

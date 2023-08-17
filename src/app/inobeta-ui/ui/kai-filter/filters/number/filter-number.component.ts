@@ -1,4 +1,4 @@
-import { Component, Input, ViewEncapsulation, forwardRef } from "@angular/core";
+import { Component, Input, ViewEncapsulation } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { IbFilterDef } from "../../filter.types";
 import { and, gte, lte, none } from "../../filters";
@@ -9,17 +9,16 @@ import { IbFilterBase } from "../base/filter-base";
   templateUrl: "filter-number.component.html",
   styleUrls: ["./filter-number.component.scss"],
   encapsulation: ViewEncapsulation.None,
-  providers: [
-    { provide: IbFilterBase, useExisting: forwardRef(() => IbNumberFilter) },
-  ],
+  providers: [{ provide: IbFilterBase, useExisting: IbNumberFilter }],
 })
 export class IbNumberFilter extends IbFilterBase {
   @Input() min: number = 0;
   @Input() max: number = 100;
+  @Input() step: number = 1;
 
   searchCriteria = new FormGroup({
-    min: new FormControl(),
-    max: new FormControl(),
+    min: new FormControl(this.min, { nonNullable: true }),
+    max: new FormControl(this.max, { nonNullable: true }),
   });
 
   get displayLabelParams() {
@@ -31,17 +30,17 @@ export class IbNumberFilter extends IbFilterBase {
 
   ngOnInit() {
     super.ngOnInit();
-    if (this.filter?.ibTable) {
-      this.defineRangeFromColumn();
-    }
-
+    this.searchCriteria.reset = () => {
+      this.clearRange();
+    };
     this.clearRange();
   }
 
-  defineRangeFromColumn() {
-    const values = this.filter.ibTable.dataSource.data.map((x) => x[this.name]);
+  initializeFromColumn(data: any[]): void {
+    const values = data.map((x) => x[this.name]);
     this.min = Math.min(...values);
     this.max = Math.max(...values);
+    this.clearRange();
   }
 
   clear(update = true) {

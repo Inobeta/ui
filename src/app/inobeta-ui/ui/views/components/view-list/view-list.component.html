@@ -1,0 +1,21 @@
+<ib-default-table-view
+  [view]="defaultView"
+  [selected]="activeView?.id === defaultView.id"
+  (ibChangeView)="ibChangeView.emit(defaultView)"
+></ib-default-table-view>
+<ib-table-view
+  *ngFor="let view of views"
+  [view]="view"
+  [selected]="activeView?.id === view.id"
+  [dirty]="dirty"
+  [pinned]="view.id === pinnedView?.id"
+  (ibChangeView)="ibChangeView.emit($event)"
+  (ibRemoveView)="ibRemoveView.emit($event)"
+  (ibRenameView)="ibRenameView.emit($event)"
+  (ibDuplicateView)="ibDuplicateView.emit($event)"
+  (ibPinView)="ibPinView.emit($event)"
+></ib-table-view>
+
+<button mat-icon-button (click)="ibAddView.emit()">
+  <mat-icon>add</mat-icon>
+</button>

@@ -1,4 +1,4 @@
-import { Component, forwardRef } from "@angular/core";
+import { Component } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { IbFilterDef, IbFilterOperator } from "../../filter.types";
 import { none } from "../../filters";
@@ -7,14 +7,15 @@ import { IbFilterBase } from "../base/filter-base";
 @Component({
   selector: "ib-text-filter",
   templateUrl: "filter-text.component.html",
-  providers: [
-    { provide: IbFilterBase, useExisting: forwardRef(() => IbTextFilter) },
-  ],
+  providers: [{ provide: IbFilterBase, useExisting: IbTextFilter }],
 })
 export class IbTextFilter extends IbFilterBase {
   searchCriteria = new FormGroup({
-    operator: new FormControl(IbFilterOperator.CONTAINS, [Validators.required]),
-    value: new FormControl(""),
+    operator: new FormControl(IbFilterOperator.CONTAINS, {
+      validators: [Validators.required],
+      nonNullable: true,
+    }),
+    value: new FormControl("", { nonNullable: true }),
   });
 
   operators = [
@@ -38,7 +39,7 @@ export class IbTextFilter extends IbFilterBase {
 
   get displayCondition() {
     const operator = this.rawValue.operator;
-    return this.operators.find((o) => o.value === operator)?.displayValue ?? "";
+    return this.operators.find((o) => o.value === operator)?.displayValue;
   }
 
   get displayValue() {

@@ -3,39 +3,33 @@ import {
   ContentChildren,
   EventEmitter,
   Input,
-  Optional,
   Output,
   QueryList,
   ViewEncapsulation,
-  forwardRef,
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { IbTable } from "../kai-table/table.component";
-import { IB_FILTER, IbFilterDef, IbFilterSyntax } from "./filter.types";
+import { IbFilterDef, IbFilterSyntax } from "./filter.types";
 import { applyFilter } from "./filters";
 import { IbFilterBase } from "./filters/base/filter-base";
 
 @Component({
   selector: "ib-filter",
   template: `
-    <ng-content select="ib-search-bar"></ng-content>
-    <section class="ib-filter-list ib-filter-list__show">
-      <ng-content></ng-content>
+    <section class="ib-filter" [class.ib-filter__hide]="hideFilters">
+      <ng-content select="ib-search-bar"></ng-content>
+      <section #list class="ib-filter-list">
+        <mat-icon *ngIf="list.children.length > 1">filter_list</mat-icon>
+        <ng-content></ng-content>
+      </section>
     </section>
   `,
   styleUrls: ["./filter.component.scss"],
   encapsulation: ViewEncapsulation.None,
-  providers: [
-    {
-      provide: IB_FILTER,
-      useExisting: IbFilter,
-    },
-  ],
 })
 export class IbFilter {
   /** @ignore */
-  @ContentChildren(forwardRef(() => IbFilterBase))
-  private filters: QueryList<IbFilterBase>;
+  @ContentChildren(IbFilterBase)
+  filters: QueryList<IbFilterBase>;
 
   /**
    * Manually sets a filter
@@ -45,6 +39,10 @@ export class IbFilter {
    * */
   @Input()
   set value(value: Record<string, any>) {
+    if (!value) {
+      return;
+    }
+
     // as indicated in NG01000
     setTimeout(() => {
       this.form.patchValue(value);
@@ -58,10 +56,15 @@ export class IbFilter {
   /** @ignore */
   form: FormGroup = new FormGroup<Record<string, any>>({});
 
+  initialRawValue: Record<string, any> = {};
   rawFilter: Record<string, any> = {};
   filter: IbFilterSyntax = {};
 
-  constructor(/** @ignore */ @Optional() public ibTable: IbTable) {}
+  hideFilters = false;
+  
+  ngAfterViewInit() {
+    this.initialRawValue = this.rawFilter = this.form.value;
+  }
 
   update() {
     this.rawFilter = this.form.value;
@@ -71,12 +74,14 @@ export class IbFilter {
   }
 
   reset() {
-    this.rawFilter = {};
-    this.filter = {};
-    this.ibFilterUpdated.emit({});
-    this.ibRawFilterUpdated.emit(this.rawFilter);
+    this.form.reset();
+    this.update();
   }
 
+  toggleFilters() {
+    this.hideFilters = !this.hideFilters;
+  }
+  
   /** @ignore */
   filterPredicate = (data: any, filter: IbFilterSyntax | any) => {
     const matchesSearchBar = this.applySearchBarFilter(

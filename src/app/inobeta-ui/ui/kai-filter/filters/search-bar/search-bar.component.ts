@@ -13,7 +13,7 @@ import { IbFilterBase } from "../base/filter-base";
     <input
       matInput
       [formControlName]="name"
-      (ngModelChange)="update()"
+      (keyup)="applyFilter()"
       [placeholder]="'shared.ibFilter.search' | translate"
     />
     <button
@@ -32,15 +32,7 @@ import { IbFilterBase } from "../base/filter-base";
 })
 export class IbSearchBar extends IbFilterBase {
   name = "__ibSearchBar";
-  searchCriteria = new FormControl("");
-
-  update() {
-    this.applyFilter();
-  }
-
-  clear() {
-    this.searchCriteria.reset();
-  }
+  searchCriteria = new FormControl("", { nonNullable: true });
 
   build = () =>
     this.searchCriteria.value ? contains(this.searchCriteria.value) : none();

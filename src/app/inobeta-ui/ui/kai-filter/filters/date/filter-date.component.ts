@@ -1,5 +1,5 @@
 import { formatDate } from "@angular/common";
-import { Component, forwardRef, ViewEncapsulation } from "@angular/core";
+import { Component, ViewEncapsulation } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { DateAdapter } from "@angular/material/core";
 import { TranslateService } from "@ngx-translate/core";
@@ -13,12 +13,10 @@ import { and, gte, lte, none } from "../../filters";
 import { IbFilterBase } from "../base/filter-base";
 
 @Component({
-  selector: "ib-filter-date, ib-date-filter",
+  selector: "ib-date-filter",
   templateUrl: "filter-date.component.html",
   styleUrls: ["./filter-date.component.scss"],
-  providers: [
-    { provide: IbFilterBase, useExisting: forwardRef(() => IbDateFilter) },
-  ],
+  providers: [{ provide: IbFilterBase, useExisting: IbDateFilter }],
   encapsulation: ViewEncapsulation.None,
 })
 export class IbDateFilter extends IbFilterBase {
@@ -26,11 +24,15 @@ export class IbDateFilter extends IbFilterBase {
     categorySelected: new FormControl(null, [Validators.required]),
     within: new FormGroup({
       value: new FormControl(null, [Validators.min(1)]),
-      period: new FormControl(IbDateFilterPeriod.MINUTES),
+      period: new FormControl(IbDateFilterPeriod.MINUTES, {
+        nonNullable: true,
+      }),
     }),
     moreThan: new FormGroup({
       value: new FormControl(null, [Validators.min(1)]),
-      period: new FormControl(IbDateFilterPeriod.MINUTES),
+      period: new FormControl(IbDateFilterPeriod.MINUTES, {
+        nonNullable: true,
+      }),
     }),
     range: new FormGroup({
       start: new FormControl(null),
@@ -114,8 +116,8 @@ export class IbDateFilter extends IbFilterBase {
       if (!this.rawValue?.range?.start || !this.rawValue?.range?.end) {
         return;
       }
-      const start = formatDate(this.rawValue?.range?.start, "dd/MM/YYYY", "en");
-      const end = formatDate(this.rawValue?.range?.end, "dd/MM/YYYY", "en");
+      const start = formatDate(this.rawValue?.range?.start, "dd/MM/yyyy", "en");
+      const end = formatDate(this.rawValue?.range?.end, "dd/MM/yyyy", "en");
       return `${start} - ${end}`;
     }
 
@@ -251,7 +253,7 @@ export class IbDateFilter extends IbFilterBase {
       return none();
     }
 
-    return and([gte(start), lte(end)]);
+    return and([gte(new Date(start)), lte(new Date(end))]);
   }
 
   build = (): IbFilterDef => {

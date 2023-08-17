@@ -8,9 +8,6 @@ export abstract class _IbFilterBase {
   button?: IbFilterButton;
 
   name: string;
-  set ibTableColumnName(value) {
-    this.name = value;
-  }
 
   get rawValue() {
     return this.filter?.rawFilter[this.name];
@@ -45,6 +42,7 @@ export abstract class _IbFilterBase {
   }
 
   abstract build: () => IbFilterDef;
+  initializeFromColumn(data: any[]) {}
 }
 
 @Directive({
@@ -73,7 +71,7 @@ export class IbFilterBase extends _IbFilterBase {
   ngAfterViewInit() {
     this.button?.trigger.menuClosed.subscribe(() => {
       this.revertFilter();
-    })
+    });
   }
 
   revertFilter() {
