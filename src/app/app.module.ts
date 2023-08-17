@@ -52,6 +52,7 @@ import { IbKaiTableModule } from './inobeta-ui/ui/kai-table';
 import { IbKaiTableApiExamplePage } from './examples/kai-table-example/kai-table-api-example';
 import { IbFilterModule } from './inobeta-ui/ui/kai-filter';
 import { IbViewModule } from './inobeta-ui/ui/views/view.module';
+import { IbDataExportModule } from './inobeta-ui/ui/data-export/data-export.module';
 
 export interface IAppState {
   sessionState?: ISessionState;
@@ -115,6 +116,7 @@ const reduxStorageSave = ibSetupHydration('__redux-store-inobeta-ui__', ['sessio
     IbKaiTableModule,
     IbFilterModule,
     IbViewModule,
+    IbDataExportModule,
     StoreModule.forRoot(reducers, {
       metaReducers: reduxStorageSave.metareducers,
       runtimeChecks: {

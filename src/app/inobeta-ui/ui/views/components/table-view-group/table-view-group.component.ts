@@ -1,9 +1,17 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  QueryList,
+  ViewChildren,
+} from "@angular/core";
 import { Store } from "@ngrx/store";
 import { BehaviorSubject, Observable } from "rxjs";
 import { tap } from "rxjs/operators";
+import { IbKaiTableAction } from "../../../kai-table/action";
 import { selectPinnedView } from "../../store/pinned-view/selectors";
-import { IbView, IView, selectTableViews } from "../../store/views";
+import { IView, selectTableViews } from "../../store/views";
 import { IbViewService } from "../../view.service";
 
 @Component({
@@ -12,6 +20,8 @@ import { IbViewService } from "../../view.service";
   styleUrls: ["table-view-group.component.scss"],
 })
 export class IbTableViewGroup {
+  @ViewChildren(IbKaiTableAction) actions: QueryList<IbKaiTableAction>;
+
   defaultView: IView = {
     id: "__ibTableView__all",
     name: "",
@@ -30,7 +40,6 @@ export class IbTableViewGroup {
   }
   @Input() viewDataAccessor = () => {};
   @Output() ibViewChanged = new EventEmitter<IView>();
-  @Output() ibToggleFilters = new EventEmitter();
 
   get viewGroupName() {
     return this._viewGroupName;
@@ -118,12 +127,14 @@ export class IbTableViewGroup {
       return;
     }
 
-    this.viewService.openSaveChangesDialog(this.activeView).subscribe((result) => {
-      if (result.confirmed) {
-        this.viewService.saveView(this.activeView, this.viewDataAccessor());
-      }
-      this._activeView.next(view);
-    });
+    this.viewService
+      .openSaveChangesDialog(this.activeView)
+      .subscribe((result) => {
+        if (result.confirmed) {
+          this.viewService.saveView(this.activeView, this.viewDataAccessor());
+        }
+        this._activeView.next(view);
+      });
   }
 
   handlePinView({ view, pinned }) {

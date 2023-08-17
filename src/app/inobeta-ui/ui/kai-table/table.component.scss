@@ -2,9 +2,14 @@
   overflow-y: auto;
   position: relative;
 
-  &__loading {
+  &--loading {
     overflow: hidden;
   }
+}
+
+.ib-table__toolbar {
+  display: flex;
+  align-items: center;
 }
 
 .ib-table-progress-bar {
@@ -15,10 +20,9 @@
   bottom: 0;
   z-index: 101;
   transform: translateZ(1px);
-  background-color: rgba(0,0,0,.01);
-
+  background-color: rgba(0,0,0,.05);
+  
   mat-progress-bar {
-    position: relative;
     top: 56px;
   }
 }

@@ -8,16 +8,20 @@ import {
 import {
   CdkPortalOutletAttachedRef,
   ComponentPortal,
+  Portal,
+  TemplatePortal,
 } from "@angular/cdk/portal";
 import {
   Component,
   ComponentRef,
   ContentChild,
+  ContentChildren,
   EventEmitter,
   InjectionToken,
   Input,
   OnDestroy,
   Output,
+  QueryList,
   ViewChild,
 } from "@angular/core";
 import { MatPaginator } from "@angular/material/paginator";
@@ -37,6 +41,7 @@ import {
   IbTableDef,
   IbTableRowEvent,
 } from "./table.types";
+import { IbKaiTableAction } from "./action";
 
 export const IB_TABLE = new InjectionToken<any>("IbTable");
 export const IB_CELL_DATA = new InjectionToken<IbCellData>("IbCellData");
@@ -74,11 +79,13 @@ export class IbTable implements OnDestroy {
   private _columns: IbColumnDef<any>[] = [];
   // tslint:disable-next-line: variable-name
   private _componentCache: any = {};
+  actionPortals: Portal<any>[] = [];
 
   @ContentChild(IbSelectionColumn) selectionColumn!: IbSelectionColumn;
   @ContentChild(IbKaiRowGroupDirective) rowGroup!: IbKaiRowGroupDirective;
   @ContentChild(IbFilter) filter!: IbFilter;
   @ContentChild(IbTableViewGroup) view!: IbTableViewGroup;
+  @ContentChildren(IbKaiTableAction, { descendants: true }) actions: QueryList<IbKaiTableAction>;
 
   @ViewChild(MatTable, { static: true }) table: MatTable<any>;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -156,6 +163,10 @@ export class IbTable implements OnDestroy {
       setTimeout(() => (this.isSelectionColumnAdded = true));
     }
 
+    if (this.actions.length) {
+      this.actions.forEach(a => this.actionPortals.push(new TemplatePortal(a.templateRef, a.viewContainerRef)))
+    }
+    
     if (this.view && this.filter) {
       this.view.defaultView.data = {
         filter: this.filter.initialRawValue,
@@ -184,9 +195,14 @@ export class IbTable implements OnDestroy {
         this.view.dirty = p.pageSize !== this.view.activeView.data.pageSize;
       });
 
-      this.view.ibToggleFilters.subscribe(() => {
-        this.filter.toggleFilters();
-      });
+      for (const action of [
+        this.filter.hideFilterAction,
+        ...this.view.actions.toArray(),
+      ]) {
+        this.actionPortals.push(
+          new TemplatePortal(action.templateRef, action.viewContainerRef)
+        );
+      }
     }
   }
 

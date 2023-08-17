@@ -199,7 +199,8 @@
         "saved": "Vista salvata",
         "pinned": "Vista salvata come predefinita",
         "unpinned": "Vista rimossa dai predefiniti"
-      }
+      },
+      "showFilters": "Mostra filtri"
     }
   },
   "receiptGoods": {

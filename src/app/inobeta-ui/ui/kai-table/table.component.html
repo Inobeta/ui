@@ -1,6 +1,12 @@
-<div class="ib-table-scrollable" [class.ib-table-scrollable__loading]="isState(states.LOADING)">
+<section class="ib-table__toolbar">
   <ng-content select="ib-table-view-group"></ng-content>
-  <ng-content select="ib-filter"></ng-content>
+  <section class="ib-table__toolbar__actions">
+    <ng-content select="[ib-table-action-group]"></ng-content>
+    <ng-template *ngFor="let portal of actionPortals" [cdkPortalOutlet]="portal"></ng-template>
+  </section>
+</section>
+<ng-content select="ib-filter"></ng-content>
+<div class="ib-table-scrollable" [class.ib-table-scrollable--loading]="isState(states.LOADING)">
   <div class="ib-table-progress-bar" *ngIf="isState(states.LOADING)">
     <mat-progress-bar mode="indeterminate"></mat-progress-bar>
   </div>
@@ -26,12 +32,14 @@
       <td mat-cell *matCellDef="let element" [attr.colspan]="columns.length">
         <div class="ib-table-element-detail"
              [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-          <ng-container *ngTemplateOutlet="rowGroup.templateRef; context: {'row': element}" ></ng-container>
+          <ng-container *ngTemplateOutlet="rowGroup.templateRef; context: {'$implicit': element, 'row': element}" ></ng-container>
         </div>
       </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true;"></tr>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true;">
+      test 123
+    </tr>
     <tr
       mat-row
       *matRowDef="let row; columns: displayedColumns;"

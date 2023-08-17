@@ -17,6 +17,7 @@ import { IbTableViewDialog } from "./components/view-dialog/view-dialog.componen
 import { IbViewList } from "./components/view-list/view-list.component";
 import { reducers } from "./store/reducer";
 import { IbViewService } from "./view.service";
+import { IbTableActionModule } from "../kai-table/action";
 
 @NgModule({
   declarations: [
@@ -24,7 +25,7 @@ import { IbViewService } from "./view.service";
     IbTableView,
     IbDefaultTableView,
     IbTableViewDialog,
-    IbViewList,
+    IbViewList
   ],
   exports: [
     IbTableViewGroup,
@@ -44,6 +45,7 @@ import { IbViewService } from "./view.service";
     MatTooltipModule,
     MatFormFieldModule,
     ReactiveFormsModule,
+    IbTableActionModule,
     StoreModule.forFeature("ibViews", reducers),
     TranslateModule.forChild({
       extend: true,
