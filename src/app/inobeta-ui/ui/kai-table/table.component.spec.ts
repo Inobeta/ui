@@ -254,7 +254,7 @@ describe("IbTable", () => {
       tick(1);
       const save = await loader.getHarness(
         MatButtonHarness.with({
-          ancestor: "ib-table-view-group",
+          ancestor: ".ib-table__toolbar__actions",
           variant: "icon",
           text: /save/,
         })
