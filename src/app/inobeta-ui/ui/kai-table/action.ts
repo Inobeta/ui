@@ -20,8 +20,13 @@ export class IbKaiTableAction {
   }
 }
 
+@Directive({
+  selector: "ib-table-action-group, [ib-table-action-group]",
+})
+export class IbKaiTableActionGroup {}
+
 @NgModule({
-  exports: [IbKaiTableAction],
-  declarations: [IbKaiTableAction],
+  exports: [IbKaiTableAction, IbKaiTableActionGroup],
+  declarations: [IbKaiTableAction, IbKaiTableActionGroup],
 })
 export class IbTableActionModule {}

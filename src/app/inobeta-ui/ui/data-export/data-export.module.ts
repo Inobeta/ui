@@ -10,7 +10,7 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { TranslateModule } from "@ngx-translate/core";
 import { IbTableActionModule } from "../kai-table";
-import { IbTableDataExportDialog } from "./table-data-export-dialog.componen";
+import { IbTableDataExportDialog } from "./table-data-export-dialog.component";
 import { IbTableDataExportAction } from "./table-data-export.component";
 import { MatRadioModule } from "@angular/material/radio";
 

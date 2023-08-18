@@ -28,8 +28,10 @@ import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { MatTable, MatTableDataSource } from "@angular/material/table";
 import { filter } from "rxjs/operators";
+import { IbTableDataExportAction } from "../data-export/table-data-export.component";
 import { IbFilter } from "../kai-filter";
 import { ITableViewData, IView, IbTableViewGroup } from "../views";
+import { IbKaiTableAction } from "./action";
 import { IbCell } from "./cells";
 import { IbKaiRowGroupDirective } from "./rowgroup";
 import { IbSelectionColumn } from "./selection-column";
@@ -41,7 +43,6 @@ import {
   IbTableDef,
   IbTableRowEvent,
 } from "./table.types";
-import { IbKaiTableAction } from "./action";
 
 export const IB_TABLE = new InjectionToken<any>("IbTable");
 export const IB_CELL_DATA = new InjectionToken<IbCellData>("IbCellData");
@@ -85,7 +86,9 @@ export class IbTable implements OnDestroy {
   @ContentChild(IbKaiRowGroupDirective) rowGroup!: IbKaiRowGroupDirective;
   @ContentChild(IbFilter) filter!: IbFilter;
   @ContentChild(IbTableViewGroup) view!: IbTableViewGroup;
-  @ContentChildren(IbKaiTableAction, { descendants: true }) actions: QueryList<IbKaiTableAction>;
+  @ContentChildren(IbKaiTableAction, { descendants: true })
+  actions: QueryList<IbKaiTableAction>;
+  @ContentChild(IbTableDataExportAction) exportAction: IbTableDataExportAction;
 
   @ViewChild(MatTable, { static: true }) table: MatTable<any>;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -164,9 +167,13 @@ export class IbTable implements OnDestroy {
     }
 
     if (this.actions.length) {
-      this.actions.forEach(a => this.actionPortals.push(new TemplatePortal(a.templateRef, a.viewContainerRef)))
+      this.actions.forEach((a) =>
+        this.actionPortals.push(
+          new TemplatePortal(a.templateRef, a.viewContainerRef)
+        )
+      );
     }
-    
+
     if (this.view && this.filter) {
       this.view.defaultView.data = {
         filter: this.filter.initialRawValue,
@@ -203,6 +210,19 @@ export class IbTable implements OnDestroy {
           new TemplatePortal(action.templateRef, action.viewContainerRef)
         );
       }
+    }
+
+    if (this.exportAction) {
+      this.exportAction.showSelectedRowsOption = !!this.selectionColumn;
+      this.exportAction.ibDataExport.subscribe((settings) => {
+        this.exportAction.exportService.exportFromTable(
+          this.tableName,
+          this.columns,
+          this.dataSource as MatTableDataSource<any>,
+          this.selectionColumn?.selection.selected,
+          settings
+        );
+      });
     }
   }
 

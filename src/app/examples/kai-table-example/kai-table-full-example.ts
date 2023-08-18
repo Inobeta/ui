@@ -11,19 +11,22 @@ import { createNewUser } from "./users";
 @Component({
   selector: "ib-kai-table-full-example",
   template: `
-    <div style="display: flex; gap: 12px">
-      <button
-        (click)="getSelection()"
-        [disabled]="selectionColumn?.selection.selected.length === 0"
-        mat-raised-button
-      >
-        get selection
-      </button>
-    </div>
-    <ib-kai-table tableName="fullExample" [columns]="columns" [dataSource]="dataSource">
-      <section ib-table-action-group>
-        <ib-table-data-export></ib-table-data-export>
-      </section>
+    <ib-kai-table
+      tableName="fullExample"
+      [columns]="columns"
+      [dataSource]="dataSource"
+    >
+      <ib-table-action-group>
+        <button
+          mat-icon-button
+          (click)="getSelection()"
+          [disabled]="selectionColumn?.selection.selected.length === 0"
+        >
+          <mat-icon>list</mat-icon>
+        </button>
+        <ib-table-data-export-action></ib-table-data-export-action>
+      </ib-table-action-group>
+
       <ib-table-view-group></ib-table-view-group>
       <ib-filter>
         <ib-search-bar></ib-search-bar>
@@ -68,9 +71,7 @@ export class IbKaiTableFullExamplePage {
   ];
 
   ngOnInit() {
-    const users = Array.from({ length: 1000 }, (_, k) =>
-      createNewUser(k + 1)
-    ).map((u) => ({ ...u, select: false }));
+    const users = Array.from({ length: 1000 }, (_, k) => createNewUser(k + 1));
     this.dataSource.data = users;
   }
 

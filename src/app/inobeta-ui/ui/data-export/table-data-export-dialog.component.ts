@@ -1,5 +1,10 @@
-import { Component } from "@angular/core";
+import { Component, Inject } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
+import { MAT_DIALOG_DATA } from "@angular/material/dialog";
+
+export interface IbTableDataExportDialogData {
+  showSelectedRowsOption: boolean;
+}
 
 @Component({
   selector: "ib-table-data-export-dialog",
@@ -26,7 +31,7 @@ import { FormControl, FormGroup } from "@angular/forms";
         <mat-radio-button value="all">{{
           "shared.ibTable.exportData.all" | translate
         }}</mat-radio-button>
-        <mat-radio-button value="selected">
+        <mat-radio-button value="selected" *ngIf="data?.showSelectedRowsOption">
           {{ "shared.ibTable.exportData.selectedRows" | translate }}
         </mat-radio-button>
         <mat-radio-button value="current">{{
@@ -60,4 +65,8 @@ export class IbTableDataExportDialog {
   get settings() {
     return this._settings.value;
   }
+
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: IbTableDataExportDialogData
+  ) {}
 }

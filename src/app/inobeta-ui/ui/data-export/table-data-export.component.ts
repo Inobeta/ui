@@ -1,12 +1,14 @@
-import { Component, ViewContainerRef } from "@angular/core";
-import { IbKaiTableAction } from "../kai-table/action";
-import { IbDataExportService } from "./data-export.service";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { filter } from "rxjs/operators";
+import {
+  IDataExportSettings,
+  IbDataExportService,
+} from "./data-export.service";
 
 @Component({
-  selector: "ib-table-data-export",
-  template: `  
+  selector: "ib-table-data-export-action",
+  template: `
     <button
-      *ibTableAction
       mat-icon-button
       [matTooltip]="'shared.ibTable.export' | translate"
       (click)="openExportDialog()"
@@ -14,16 +16,19 @@ import { IbDataExportService } from "./data-export.service";
       <mat-icon>file_download</mat-icon>
     </button>
   `,
-  providers: [
-    { provide: IbKaiTableAction, useExisting: IbTableDataExportAction },
-  ],
 })
-export class IbTableDataExportAction extends IbKaiTableAction {
-  constructor(viewContainerRef: ViewContainerRef, private exportService: IbDataExportService) {
-    super(null, viewContainerRef);
-  }
+export class IbTableDataExportAction {
+  @Input() showSelectedRowsOption = false;
+  @Output() ibDataExport = new EventEmitter<IDataExportSettings>();
+
+  constructor(public exportService: IbDataExportService) {}
 
   openExportDialog() {
-    this.exportService.openDialog({});
+    this.exportService
+      .openDialog({
+        showSelectedRowsOption: this.showSelectedRowsOption,
+      })
+      .pipe(filter((settings) => !!settings))
+      .subscribe((settings) => this.ibDataExport.emit(settings));
   }
 }
