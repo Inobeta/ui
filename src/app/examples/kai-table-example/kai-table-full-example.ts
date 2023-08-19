@@ -7,6 +7,7 @@ import {
 } from "src/app/inobeta-ui/ui/kai-table/cells";
 import { IbSelectionColumn } from "src/app/inobeta-ui/ui/kai-table/selection-column";
 import { createNewUser } from "./users";
+import { IB_DATA_JSPDF_OPTIONS, IbDataExportService } from "src/app/inobeta-ui/ui/data-export/data-export.service";
 
 @Component({
   selector: "ib-kai-table-full-example",
@@ -56,6 +57,11 @@ import { createNewUser } from "./users";
       }
     `,
   ],
+  providers: [{
+    provide: IB_DATA_JSPDF_OPTIONS,
+    useValue: { orientation: 'p',     compress: true,
+  }
+  }, IbDataExportService]
 })
 export class IbKaiTableFullExamplePage {
   @ViewChild(IbSelectionColumn, { static: true })

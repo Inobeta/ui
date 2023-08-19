@@ -4,7 +4,7 @@ declare global {
   }
 }
 
-import { Injectable } from "@angular/core";
+import { Inject, Injectable, InjectionToken, Optional } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { MatTableDataSource } from "@angular/material/table";
 import { TranslateService } from "@ngx-translate/core";
@@ -23,17 +23,37 @@ export interface IDataExportSettings {
   dataset: "all" | "selected" | "current";
 }
 
+export const IB_DATA_JSPDF_OPTIONS = new InjectionToken<jsPDFOptions>(
+  "jsPDFOptions"
+);
+
+export const IB_DATA_JSPDF_AUTOTABLE_USER_OPTIONS =
+  new InjectionToken<jsPDFOptions>("jsPDFAutotableUserOptions");
+
 @Injectable({ providedIn: "root" })
 export class IbDataExportService {
-  pdfSetup: jsPDFOptions = {
+  private defaultPdfSetup: jsPDFOptions = {
     orientation: "l",
     unit: null,
     format: null,
+    compress: true,
   };
-  pdfUserOptions: UserOptions = {};
   filename = "__internal";
 
-  constructor(private dialog: MatDialog, private translate: TranslateService) {}
+  constructor(
+    private dialog: MatDialog,
+    private translate: TranslateService,
+    @Optional()
+    @Inject(IB_DATA_JSPDF_OPTIONS)
+    public pdfSetup: jsPDFOptions,
+    @Optional()
+    @Inject(IB_DATA_JSPDF_AUTOTABLE_USER_OPTIONS)
+    public pdfUserOptions: UserOptions = {}
+  ) {
+    if (!this.pdfSetup) {
+      this.pdfSetup = this.defaultPdfSetup;
+    }
+  }
 
   openDialog(data: IbTableDataExportDialogData) {
     return this.dialog
@@ -106,11 +126,7 @@ export class IbDataExportService {
   }
 
   pdfExport(body, columns: ColumnInput[]) {
-    const doc = new jsPDF(
-      this.pdfSetup.orientation,
-      this.pdfSetup.unit,
-      this.pdfSetup.format
-    );
+    const doc = new jsPDF(this.pdfSetup);
     autoTable(doc, {
       ...this.pdfUserOptions,
       body,
