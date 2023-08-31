@@ -1,18 +1,10 @@
-declare global {
-  interface Navigator {
-    msSaveBlob: (blob: Blob, filename: string) => void;
-  }
-}
-
-import { Inject, Injectable, InjectionToken, Optional } from "@angular/core";
+import { Inject, Injectable, InjectionToken } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { MatTableDataSource } from "@angular/material/table";
 import { TranslateService } from "@ngx-translate/core";
-import jsPDF, { jsPDFOptions } from "jspdf";
-import autoTable, { ColumnInput, UserOptions } from "jspdf-autotable";
-import Papa from "papaparse";
-import * as XLSX from "xlsx";
+import { jsPDFOptions } from "jspdf";
 import { IbColumnDef } from "../kai-table/table.types";
+import { IbDataExportProvider } from "./provider";
 import {
   IbTableDataExportDialog,
   IbTableDataExportDialogData,
@@ -30,36 +22,32 @@ export const IB_DATA_JSPDF_OPTIONS = new InjectionToken<jsPDFOptions>(
 export const IB_DATA_JSPDF_AUTOTABLE_USER_OPTIONS =
   new InjectionToken<jsPDFOptions>("jsPDFAutotableUserOptions");
 
+export const OVERRIDE_EXPORT_FORMATS = new InjectionToken<IbDataExportProvider>("overrideExportFormats")
+
 @Injectable({ providedIn: "root" })
 export class IbDataExportService {
-  private defaultPdfSetup: jsPDFOptions = {
-    orientation: "l",
-    unit: null,
-    format: null,
-    compress: true,
-  };
   filename = "__internal";
+  formats: any;
 
   constructor(
     private dialog: MatDialog,
     private translate: TranslateService,
-    @Optional()
-    @Inject(IB_DATA_JSPDF_OPTIONS)
-    public pdfSetup: jsPDFOptions,
-    @Optional()
-    @Inject(IB_DATA_JSPDF_AUTOTABLE_USER_OPTIONS)
-    public pdfUserOptions: UserOptions = {}
+    @Inject(OVERRIDE_EXPORT_FORMATS) private providers: IbDataExportProvider[]
   ) {
-    if (!this.pdfSetup) {
-      this.pdfSetup = this.defaultPdfSetup;
-    }
+    this.formats = this.providers.map(p => ({
+      value: p.format,
+      label: p.label
+    }));
   }
 
-  openDialog(data: IbTableDataExportDialogData) {
+  openDialog(data: Partial<IbTableDataExportDialogData>) {
     return this.dialog
       .open(IbTableDataExportDialog, {
         width: "350px",
-        data,
+        data: {
+          ...data,
+          formats: this.formats
+        },
       })
       .afterClosed();
   }
@@ -71,8 +59,6 @@ export class IbDataExportService {
     selectedRows: any[],
     settings: IDataExportSettings
   ) {
-    this.filename = tableName;
-
     let data: any[];
     if (settings.dataset === "all") {
       data = dataSource._orderData(dataSource.filteredData);
@@ -83,12 +69,9 @@ export class IbDataExportService {
     }
 
     if (settings.dataset === "current") {
-      const pageSize = dataSource.paginator.pageSize;
-      const skip = pageSize * dataSource.paginator.pageIndex;
-      data = dataSource
-        ._orderData(dataSource.filteredData)
-        .filter((d, i) => i >= skip)
-        .filter((d, i) => i < pageSize);
+      data = dataSource._pageData(
+        dataSource._orderData(dataSource.filteredData)
+      );
     }
 
     const outputData = [];
@@ -102,67 +85,7 @@ export class IbDataExportService {
       outputData.push(outputRow);
     }
 
-    if (settings.format === "pdf") {
-      const header = this.preparePdfColumns(columns);
-      return this.pdfExport(outputData, header);
-    }
-
-    if (settings.format === "xlsx") {
-      return this.xlsxExport(outputData);
-    }
-
-    if (settings.format === "csv") {
-      return this.csvExport(outputData);
-    }
-  }
-
-  private preparePdfColumns(columns: IbColumnDef[]) {
-    return columns
-      .filter((c) => c.header)
-      .map((c) => ({
-        header: this.translate.instant(c.header),
-        dataKey: this.translate.instant(c.header),
-      }));
-  }
-
-  pdfExport(body, columns: ColumnInput[]) {
-    const doc = new jsPDF(this.pdfSetup);
-    autoTable(doc, {
-      ...this.pdfUserOptions,
-      body,
-      columns,
-    });
-    doc.save(this.filename + ".pdf");
-  }
-
-  xlsxExport(data: any[], skipHeader = false) {
-    const ws = XLSX.utils.json_to_sheet(data, { skipHeader });
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, this.filename);
-    XLSX.writeFile(wb, this.filename + ".xlsx");
-  }
-
-  csvExport(data: any[]) {
-    const csv = Papa.unparse(data, {
-      quotes: true,
-      delimiter: ";",
-    });
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-
-    if (navigator.msSaveBlob) {
-      // IE 10+
-      navigator.msSaveBlob(blob, this.filename + ".csv");
-    } else {
-      const link = document.createElement("a");
-      if (link.download !== undefined) {
-        const url = URL.createObjectURL(blob);
-        link.setAttribute("href", url);
-        link.setAttribute("download", this.filename + ".csv");
-        link.style.visibility = "hidden";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
-    }
+    const provider = this.providers.find(p => p.format === settings.format);
+    provider.export(outputData, tableName);
   }
 }

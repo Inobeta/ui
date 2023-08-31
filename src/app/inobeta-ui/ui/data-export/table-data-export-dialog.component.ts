@@ -4,6 +4,7 @@ import { MAT_DIALOG_DATA } from "@angular/material/dialog";
 
 export interface IbTableDataExportDialogData {
   showSelectedRowsOption: boolean;
+  formats: { value: string, label: string }[]
 }
 
 @Component({
@@ -18,8 +19,8 @@ export interface IbTableDataExportDialogData {
           "shared.ibTable.exportData.format" | translate
         }}</mat-label>
         <mat-select formControlName="format">
-          <mat-option *ngFor="let format of formats" [value]="format.value">
-            {{ format.viewValue }}
+          <mat-option *ngFor="let format of data.formats" [value]="format.value">
+            {{ format.label }}
           </mat-option>
         </mat-select>
       </mat-form-field>
@@ -58,7 +59,7 @@ export class IbTableDataExportDialog {
   ];
 
   _settings = new FormGroup({
-    format: new FormControl("xlsx"),
+    format: new FormControl(this.data.formats[0].value),
     dataset: new FormControl("all"),
   });
 
