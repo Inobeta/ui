@@ -35,10 +35,14 @@ export class IbPDFExportService implements IbDataExportProvider {
     public pdfSetup: jsPDFOptions,
     @Optional()
     @Inject(IB_DATA_JSPDF_AUTOTABLE_USER_OPTIONS)
-    public pdfUserOptions: UserOptions = {}
+    public pdfUserOptions: UserOptions
   ) {
     if (!pdfSetup) {
       this.pdfSetup = this.defaultPdfSetup;
+    }
+
+    if (!pdfUserOptions) {
+      this.pdfUserOptions = {}
     }
   }
 

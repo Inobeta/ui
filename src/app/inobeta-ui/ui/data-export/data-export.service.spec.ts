@@ -1,30 +1,73 @@
 import { CommonModule } from "@angular/common";
 import { Component, Type } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { TranslateModule } from "@ngx-translate/core";
 import { IbDataExportModule } from "./data-export.module";
 import {
   IbDataExportService,
   OVERRIDE_EXPORT_FORMATS,
 } from "./data-export.service";
 import { IbDataExportProvider } from "./provider";
-import { TranslateModule } from "@ngx-translate/core";
 
 describe("IbDataExport", () => {
-  let fixture: ComponentFixture<IbDataExportApp>;
-  let service: IbDataExportService;
+  describe("with override", () => {
+    let fixture: ComponentFixture<IbDataExportWithOverrideApp>;
+    let service: IbDataExportService;
 
-  beforeEach(() => {
-    fixture = createComponent(IbDataExportApp);
-    service = fixture.componentInstance.exportService;
+    beforeEach(() => {
+      fixture = createComponent(IbDataExportWithOverrideApp);
+      service = fixture.componentInstance.exportService;
+    });
+
+    it("should create", () => {
+      expect(service).toBeTruthy();
+    });
+
+    it("should export", () => {
+      const result = service.export([], "test", "ib");
+      expect(result).toBeTruthy();
+    });
   });
 
-  it("should create", () => {
-    expect(service).toBeTruthy();
-  });
+  describe("default configuration", () => {
+    let fixture: ComponentFixture<IbDataExportApp>;
+    let service: IbDataExportService;
 
-  it("should export", () => {
-    const result = service.export([], "test", "ib");
-    expect(result).toBeTruthy();
+    beforeEach(() => {
+      fixture = createComponent(IbDataExportApp);
+      service = fixture.componentInstance.exportService;
+    });
+
+    it("should create", () => {
+      expect(service).toBeTruthy();
+    });
+
+    it("should export as xlsx", () => {
+      const spy = spyOn(service, "export").and.callThrough();
+      service.export([{ test: "123" }], "test", "xlsx");
+      expect(spy).toHaveBeenCalled();
+    });
+
+    it("should export as pdf", () => {
+      const spy = spyOn(service, "export").and.callThrough();
+      service.export([{ test: "123" }], "test", "pdf");
+      expect(spy).toHaveBeenCalled();
+    });
+
+    it("should export as csv", () => {
+      const spy = spyOn(service, "export").and.callThrough();
+      service.export([{ test: "123" }], "test", "csv");
+      expect(spy).toHaveBeenCalled();
+    });
+
+    it("should export as csv (IE 10+)", () => {
+      const msSaveBlobSpy = jasmine.createSpy("msSaveBlob")
+      navigator.msSaveBlob = msSaveBlobSpy;
+      const spy = spyOn(service, "export").and.callThrough();
+      service.export([{ test: "123" }], "test", "csv");
+      expect(spy).toHaveBeenCalled();
+      expect(msSaveBlobSpy).toHaveBeenCalled();
+    });
   });
 });
 
@@ -63,6 +106,13 @@ class IbStubExportProvider implements IbDataExportProvider {
       multi: true,
     },
   ],
+})
+class IbDataExportWithOverrideApp {
+  constructor(public exportService: IbDataExportService) {}
+}
+
+@Component({
+  template: ``,
 })
 class IbDataExportApp {
   constructor(public exportService: IbDataExportService) {}
