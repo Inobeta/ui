@@ -3,6 +3,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { MatTableDataSource } from "@angular/material/table";
 import { TranslateService } from "@ngx-translate/core";
 import { jsPDFOptions } from "jspdf";
+import { UserOptions } from "jspdf-autotable";
 import { IbColumnDef } from "../kai-table/table.types";
 import { IbDataExportProvider } from "./provider";
 import {
@@ -20,13 +21,14 @@ export const IB_DATA_JSPDF_OPTIONS = new InjectionToken<jsPDFOptions>(
 );
 
 export const IB_DATA_JSPDF_AUTOTABLE_USER_OPTIONS =
-  new InjectionToken<jsPDFOptions>("jsPDFAutotableUserOptions");
+  new InjectionToken<UserOptions>("jsPDFAutotableUserOptions");
 
-export const OVERRIDE_EXPORT_FORMATS = new InjectionToken<IbDataExportProvider>("overrideExportFormats")
+export const OVERRIDE_EXPORT_FORMATS = new InjectionToken<IbDataExportProvider>(
+  "overrideExportFormats"
+);
 
 @Injectable({ providedIn: "root" })
 export class IbDataExportService {
-  filename = "__internal";
   formats: any;
 
   constructor(
@@ -34,25 +36,30 @@ export class IbDataExportService {
     private translate: TranslateService,
     @Inject(OVERRIDE_EXPORT_FORMATS) private providers: IbDataExportProvider[]
   ) {
-    this.formats = this.providers.map(p => ({
+    this.formats = this.providers.map((p) => ({
       value: p.format,
-      label: p.label
+      label: p.label,
     }));
   }
 
-  openDialog(data: Partial<IbTableDataExportDialogData>) {
+  openExportDialog(data: Partial<IbTableDataExportDialogData>) {
     return this.dialog
       .open(IbTableDataExportDialog, {
         width: "350px",
         data: {
           ...data,
-          formats: this.formats
+          formats: this.formats,
         },
       })
       .afterClosed();
   }
 
-  exportFromTable(
+  /**
+   * Internal use for IbTable
+   *
+   * @ignore
+   */
+  _exportFromTable(
     tableName: string,
     columns: IbColumnDef[],
     dataSource: MatTableDataSource<any>,
@@ -74,18 +81,33 @@ export class IbDataExportService {
       );
     }
 
+    const displayHeader = {};
+    for (const column of columns.filter((c) => c.header)) {
+      displayHeader[column.header] = this.translate.instant(column.header);
+    }
+
     const outputData = [];
     for (const row of data) {
       let outputRow = {};
       for (const column of columns.filter((c) => c.header)) {
-        const displayHeader = this.translate.instant(column.header);
+        const header = displayHeader[column.header];
         const displayValue = column.cell(row);
-        outputRow[displayHeader] = displayValue;
+        outputRow[header] = displayValue;
       }
       outputData.push(outputRow);
     }
 
-    const provider = this.providers.find(p => p.format === settings.format);
-    provider.export(outputData, tableName);
+    this.export(outputData, tableName, settings.format);
+  }
+
+  /**
+   *
+   * @param data Array of object to export
+   * @param filename Name of the output file
+   * @param format Output file format. By default, only `xlsx`, `pdf`, and `csv` are supported
+   */
+  export(data: any[], filename: string, format: string) {
+    const provider = this.providers.find((p) => p.format === format);
+    return provider.export(data, filename);
   }
 }

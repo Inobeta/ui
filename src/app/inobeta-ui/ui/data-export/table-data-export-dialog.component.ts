@@ -52,12 +52,6 @@ export interface IbTableDataExportDialogData {
   `,
 })
 export class IbTableDataExportDialog {
-  formats = [
-    { value: "xlsx", viewValue: "XLSX (Excel)" },
-    { value: "csv", viewValue: "CSV" },
-    { value: "pdf", viewValue: "PDF" },
-  ];
-
   _settings = new FormGroup({
     format: new FormControl(this.data.formats[0].value),
     dataset: new FormControl("all"),

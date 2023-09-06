@@ -215,7 +215,7 @@ export class IbTable implements OnDestroy {
     if (this.exportAction) {
       this.exportAction.showSelectedRowsOption = !!this.selectionColumn;
       this.exportAction.ibDataExport.subscribe((settings) => {
-        this.exportAction.exportService.exportFromTable(
+        this.exportAction.exportService._exportFromTable(
           this.tableName,
           this.columns,
           this.dataSource as MatTableDataSource<any>,

@@ -44,11 +44,10 @@ export class IbPDFExportService implements IbDataExportProvider {
   }
 
   private preparePdfColumns(columns: string[]) {
-    return columns
-      .map((c) => ({
-        header: c,
-        dataKey: c,
-      }));
+    return columns.map((c) => ({
+      header: c,
+      dataKey: c,
+    }));
   }
 }
 

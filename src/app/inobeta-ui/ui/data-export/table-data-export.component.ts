@@ -25,7 +25,7 @@ export class IbTableDataExportAction {
 
   openExportDialog() {
     this.exportService
-      .openDialog({
+      .openExportDialog({
         showSelectedRowsOption: this.showSelectedRowsOption,
       })
       .pipe(filter((settings) => !!settings))

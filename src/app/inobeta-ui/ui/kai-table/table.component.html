@@ -1,7 +1,7 @@
 <section class="ib-table__toolbar">
   <ng-content select="ib-table-view-group"></ng-content>
   <section class="ib-table__toolbar__actions">
-    <ng-content select="ib-table-action-group, [ib-tableaction-group]"></ng-content>
+    <ng-content select="ib-table-action-group, [ib-table-action-group]"></ng-content>
     <ng-template *ngFor="let portal of actionPortals" [cdkPortalOutlet]="portal"></ng-template>
   </section>
 </section>
