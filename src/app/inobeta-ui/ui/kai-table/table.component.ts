@@ -107,12 +107,6 @@ export class IbTable implements OnDestroy {
     return this._dataSource;
   }
 
-  /** @ignore */
-  @Input()
-  set data(value: any[]) {
-    this._dataSource.data = value;
-  }
-
   @Input() tableName = btoa(window.location.pathname + window.location.hash);
   @Input()
   set tableDef(value) {
