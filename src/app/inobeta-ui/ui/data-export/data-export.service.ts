@@ -16,13 +16,6 @@ export interface IDataExportSettings {
   dataset: "all" | "selected" | "current";
 }
 
-export const IB_DATA_JSPDF_OPTIONS = new InjectionToken<jsPDFOptions>(
-  "jsPDFOptions"
-);
-
-export const IB_DATA_JSPDF_AUTOTABLE_USER_OPTIONS =
-  new InjectionToken<UserOptions>("jsPDFAutotableUserOptions");
-
 export const OVERRIDE_EXPORT_FORMATS = new InjectionToken<IbDataExportProvider>(
   "overrideExportFormats"
 );

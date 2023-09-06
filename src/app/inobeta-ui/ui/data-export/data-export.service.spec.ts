@@ -1,51 +1,37 @@
-import { HarnessLoader } from "@angular/cdk/testing";
-import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { CommonModule } from "@angular/common";
 import { Component, Type } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { provideMockStore } from "@ngrx/store/testing";
-import { TranslateModule } from "@ngx-translate/core";
-import { IbToastModule } from "../toast";
-import { initialState } from "../views";
 import { IbDataExportModule } from "./data-export.module";
-import { IbDataExportService, OVERRIDE_EXPORT_FORMATS } from "./data-export.service";
+import {
+  IbDataExportService,
+  OVERRIDE_EXPORT_FORMATS,
+} from "./data-export.service";
 import { IbDataExportProvider } from "./provider";
+import { TranslateModule } from "@ngx-translate/core";
 
 describe("IbDataExport", () => {
   let fixture: ComponentFixture<IbDataExportApp>;
   let service: IbDataExportService;
-  let loader: HarnessLoader;
 
   beforeEach(() => {
     fixture = createComponent(IbDataExportApp);
     service = fixture.componentInstance.exportService;
-    loader = TestbedHarnessEnvironment.documentRootLoader(fixture);
   });
 
   it("should create", () => {
     expect(service).toBeTruthy();
-  })
+  });
 
   it("should export", () => {
-    const result = service.export([], 'test', 'ib');
+    const result = service.export([], "test", "ib");
     expect(result).toBeTruthy();
-  })
+  });
 });
 
 function configureModule<T>(type: Type<T>) {
   TestBed.configureTestingModule({
     declarations: [type],
-    imports: [
-      CommonModule,
-      BrowserAnimationsModule,
-      IbToastModule,
-      IbDataExportModule,
-      TranslateModule.forRoot({
-        extend: true,
-      }),
-    ],
-    providers: [provideMockStore({ initialState })],
+    imports: [CommonModule, IbDataExportModule, TranslateModule.forRoot()],
   }).compileComponents();
 }
 
@@ -56,6 +42,8 @@ function createComponent<T>(type: Type<T>): ComponentFixture<T> {
   fixture.detectChanges();
   return fixture;
 }
+
+export const createDataExportComponent = createComponent;
 
 class IbStubExportProvider implements IbDataExportProvider {
   format = "ib";
@@ -74,7 +62,7 @@ class IbStubExportProvider implements IbDataExportProvider {
       useClass: IbStubExportProvider,
       multi: true,
     },
-  ]
+  ],
 })
 class IbDataExportApp {
   constructor(public exportService: IbDataExportService) {}

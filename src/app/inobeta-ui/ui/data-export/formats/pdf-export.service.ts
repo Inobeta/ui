@@ -1,12 +1,21 @@
-import { ClassProvider, Inject, Injectable, Optional } from "@angular/core";
+import {
+  ClassProvider,
+  Inject,
+  Injectable,
+  InjectionToken,
+  Optional,
+} from "@angular/core";
 import jsPDF, { jsPDFOptions } from "jspdf";
 import autoTable, { UserOptions } from "jspdf-autotable";
-import {
-  IB_DATA_JSPDF_AUTOTABLE_USER_OPTIONS,
-  IB_DATA_JSPDF_OPTIONS,
-  OVERRIDE_EXPORT_FORMATS,
-} from "../data-export.service";
+import { OVERRIDE_EXPORT_FORMATS } from "../data-export.service";
 import { IbDataExportProvider } from "../provider";
+
+export const IB_DATA_JSPDF_OPTIONS = new InjectionToken<jsPDFOptions>(
+  "jsPDFOptions"
+);
+
+export const IB_DATA_JSPDF_AUTOTABLE_USER_OPTIONS =
+  new InjectionToken<UserOptions>("jsPDFAutotableUserOptions");
 
 @Injectable()
 export class IbPDFExportService implements IbDataExportProvider {
