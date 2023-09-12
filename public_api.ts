@@ -13,5 +13,6 @@ export * from './src/app/inobeta-ui/hydration/index';
 export * from './src/app/inobeta-ui/ui/kai-table/index';
 export * from './src/app/inobeta-ui/ui/kai-filter/index';
 export * from './src/app/inobeta-ui/ui/views/index';
+export * from './src/app/inobeta-ui/ui/data-export/index';
 
 

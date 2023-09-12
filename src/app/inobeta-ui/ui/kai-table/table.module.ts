@@ -6,7 +6,7 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatIconModule } from "@angular/material/icon";
 import {
   MatPaginatorIntl,
-  MatPaginatorModule
+  MatPaginatorModule,
 } from "@angular/material/paginator";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatSortModule } from "@angular/material/sort";
@@ -48,4 +48,4 @@ import { IbTable } from "./table.component";
     },
   ],
 })
-export class IbKaiTableModule { }
+export class IbKaiTableModule {}

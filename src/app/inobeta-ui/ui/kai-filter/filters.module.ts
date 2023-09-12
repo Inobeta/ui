@@ -6,7 +6,11 @@ import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatChipsModule } from "@angular/material/chips";
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from "@angular/material/core";
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MAT_DATE_LOCALE,
+} from "@angular/material/core";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -18,6 +22,7 @@ import { MatRadioModule } from "@angular/material/radio";
 import { MatSelectModule } from "@angular/material/select";
 import { MatSliderModule } from "@angular/material/slider";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { IbTableActionModule } from "../kai-table/action";
 import { IbMatDateAdapter } from "../material-forms/intl/datepicker.intl";
 import { ibMatDatepickerTranslate } from "../material-forms/material-form.module";
 import { IbApplyFilterButton } from "./filter-actions/apply-filter-button.component";
@@ -31,6 +36,7 @@ import { IbNumberFilter } from "./filters/number/filter-number.component";
 import { IbSearchBar } from "./filters/search-bar/search-bar.component";
 import { IbTagFilter } from "./filters/tag/filter-tag.component";
 import { IbTextFilter } from "./filters/text/filter-text.component";
+import { MatTooltipModule } from "@angular/material/tooltip";
 
 @NgModule({
   imports: [
@@ -51,6 +57,8 @@ import { IbTextFilter } from "./filters/text/filter-text.component";
     MatSliderModule,
     MatRadioModule,
     MatDatepickerModule,
+    IbTableActionModule,
+    MatTooltipModule,
     TranslateModule.forChild({
       extend: true,
     }),

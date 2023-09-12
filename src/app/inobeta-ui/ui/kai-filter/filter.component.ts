@@ -5,23 +5,34 @@ import {
   Input,
   Output,
   QueryList,
+  ViewChild,
   ViewEncapsulation,
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { IbFilterDef, IbFilterSyntax } from "./filter.types";
 import { applyFilter } from "./filters";
 import { IbFilterBase } from "./filters/base/filter-base";
+import { IbKaiTableAction } from "../kai-table/action";
 
 @Component({
   selector: "ib-filter",
   template: `
-    <section class="ib-filter" [class.ib-filter__hide]="hideFilters">
+    <section class="ib-filter" [class.ib-filter__hide]="hideFilters" [attr.aria-hidden]="hideFilters">
       <ng-content select="ib-search-bar"></ng-content>
       <section #list class="ib-filter-list">
         <mat-icon *ngIf="list.children.length > 1">filter_list</mat-icon>
         <ng-content></ng-content>
       </section>
     </section>
+
+    <button
+      *ibTableAction
+      mat-icon-button
+      [matTooltip]="'shared.ibTableView.showFilters' | translate"
+      (click)="hideFilters = !hideFilters"
+    >
+      <mat-icon>{{ !hideFilters ? "filter_alt" : "filter_alt_off" }}</mat-icon>
+    </button>
   `,
   styleUrls: ["./filter.component.scss"],
   encapsulation: ViewEncapsulation.None,
@@ -30,6 +41,9 @@ export class IbFilter {
   /** @ignore */
   @ContentChildren(IbFilterBase)
   filters: QueryList<IbFilterBase>;
+
+  /** @ignore */
+  @ViewChild(IbKaiTableAction) hideFilterAction: IbKaiTableAction;
 
   /**
    * Manually sets a filter
@@ -61,7 +75,7 @@ export class IbFilter {
   filter: IbFilterSyntax = {};
 
   hideFilters = false;
-  
+
   ngAfterViewInit() {
     this.initialRawValue = this.rawFilter = this.form.value;
   }
@@ -78,10 +92,6 @@ export class IbFilter {
     this.update();
   }
 
-  toggleFilters() {
-    this.hideFilters = !this.hideFilters;
-  }
-  
   /** @ignore */
   filterPredicate = (data: any, filter: IbFilterSyntax | any) => {
     const matchesSearchBar = this.applySearchBarFilter(

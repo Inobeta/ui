@@ -4,7 +4,7 @@
   [tableDef]="tableDef"
   (ibRowClicked)="testClick($event)"
   >
-  <ng-template ibKaiRowGroup let-row="row">
+  <section *ibKaiRowGroup="let row">
     row data: {{row | json}}
-  </ng-template>
+  </section>
 </ib-kai-table>

@@ -16,18 +16,24 @@ import { MatDialogHarness } from "@angular/material/dialog/testing";
 import { MatIconModule } from "@angular/material/icon";
 import { MatInputHarness } from "@angular/material/input/testing";
 import { MatPaginatorModule } from "@angular/material/paginator";
+import { MatRadioButtonHarness } from "@angular/material/radio/testing";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatSortModule } from "@angular/material/sort";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { MatTableHarness } from "@angular/material/table/testing";
 import { By } from "@angular/platform-browser";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { StoreModule } from "@ngrx/store";
 import { TranslateModule } from "@ngx-translate/core";
 import { throwError } from "rxjs";
 import { IbToolTestModule } from "../../tools/tools-test.module";
+import { IbDataExportService, OVERRIDE_EXPORT_FORMATS } from "../data-export";
+import { IbDataExportModule } from "../data-export/data-export.module";
+import { IbDataExportProvider } from "../data-export/provider";
 import { IbFilterModule } from "../kai-filter/filters.module";
 import { IbToastModule } from "../toast/toast.module";
 import { IbViewModule } from "../views/view.module";
+import { IbTableActionModule } from "./action";
 import {
   useColumn,
   useDateColumn,
@@ -39,6 +45,7 @@ import { IbSelectionColumn } from "./selection-column";
 import { IbDataSource } from "./table-data-source";
 import { IbTable } from "./table.component";
 import { IbKaiTableState } from "./table.types";
+
 describe("IbTable", () => {
   describe("with MatTableDataSource", () => {
     let host: IbTableApp;
@@ -119,17 +126,17 @@ describe("IbTable", () => {
       expect(dataSource).toBeTruthy();
       expect(dataSource.data).toEqual([]);
     });
-    
+
     it("should reset to empty array with non array types", () => {
       const dataSource = new IbDataSource([{ name: "alice" }]);
       expect(dataSource).toBeTruthy();
       expect(dataSource.data).toEqual([{ name: "alice" }]);
-      dataSource.data = null
+      dataSource.data = null;
       expect(dataSource.data).toEqual([]);
-      dataSource.data = [{ name: 'rabbit' }]
-      expect(dataSource.data).toEqual([{ name: 'rabbit' }]);
+      dataSource.data = [{ name: "rabbit" }];
+      expect(dataSource.data).toEqual([{ name: "rabbit" }]);
     });
-    
+
     it("should show error on exception", fakeAsync(() => {
       const fixture = createComponent(IbTableWithIbDataSourceApp);
       const component = fixture.debugElement.query(
@@ -179,16 +186,24 @@ describe("IbTable", () => {
       );
       await addViewButton.click();
 
+      fixture.detectChanges();
+      await fixture.whenStable();
+
       const dialog = await loader.getHarness(MatDialogHarness);
-      const input = await dialog.getHarness(MatInputHarness);
+      expect(dialog).toBeTruthy();
+      const input = await loader.getHarness(MatInputHarness);
       await input.setValue("green view");
 
-      const confirm = await dialog.getHarness(
+      const confirm = await loader.getHarness(
         MatButtonHarness.with({
           text: "shared.ibTableView.add",
         })
       );
+      expect(confirm).toBeTruthy();
       await confirm.click();
+
+      fixture.detectChanges();
+      await fixture.whenStable();
 
       const views = await loader.getAllHarnesses(
         MatButtonHarness.with({
@@ -254,7 +269,7 @@ describe("IbTable", () => {
       tick(1);
       const save = await loader.getHarness(
         MatButtonHarness.with({
-          ancestor: "ib-table-view-group",
+          ancestor: ".ib-table__toolbar__actions",
           variant: "icon",
           text: /save/,
         })
@@ -282,6 +297,122 @@ describe("IbTable", () => {
       expect(views.length - 1).toBe(2);
     }));
   });
+
+  describe("with export", () => {
+    let fixture: ComponentFixture<IbTableWithExport>;
+    let component: IbTable;
+    let loader: HarnessLoader;
+
+    beforeEach(() => {
+      fixture = createComponent(IbTableWithExport);
+      component = fixture.debugElement.query(
+        By.directive(IbTable)
+      ).componentInstance;
+      fixture.detectChanges();
+      loader = TestbedHarnessEnvironment.documentRootLoader(fixture);
+    });
+
+    it("should create", () => {
+      expect(component).toBeTruthy();
+    });
+
+    it("should export entire dataset", async () => {
+      const exportSpy = spyOn(component.exportAction.exportService, "export");
+      const exportButton = await loader.getHarness(
+        MatButtonHarness.with({
+          ancestor: ".ib-table__toolbar__actions",
+          variant: "icon",
+        })
+      );
+      await exportButton.click();
+      const dialog = await loader.getHarness(MatDialogHarness);
+      fixture.detectChanges();
+      await fixture.whenStable();
+      expect(dialog).toBeTruthy();
+      const confirm = await dialog.getHarness(
+        MatButtonHarness.with({
+          text: "shared.ibTable.export",
+        })
+      );
+      await confirm.click();
+      fixture.detectChanges();
+
+      expect(exportSpy).toHaveBeenCalledWith(
+        component.dataSource.data,
+        component.tableName,
+        "ib"
+      );
+    });
+
+    it("should export current page", async () => {
+      const exportSpy = spyOn(component.exportAction.exportService, "export");
+      const exportButton = await loader.getHarness(
+        MatButtonHarness.with({
+          ancestor: ".ib-table__toolbar__actions",
+          variant: "icon",
+        })
+      );
+      await exportButton.click();
+      const dialog = await loader.getHarness(MatDialogHarness);
+      fixture.detectChanges();
+      await fixture.whenStable();
+      expect(dialog).toBeTruthy();
+      const [_, __, option] = await dialog.getAllHarnesses(
+        MatRadioButtonHarness
+      );
+      await option.check();
+      const confirm = await dialog.getHarness(
+        MatButtonHarness.with({
+          text: "shared.ibTable.export",
+        })
+      );
+      await confirm.click();
+      fixture.detectChanges();
+
+      expect(exportSpy).toHaveBeenCalledWith(
+        component.dataSource.data.slice(0, 5),
+        component.tableName,
+        "ib"
+      );
+    });
+
+    it("should export selected rows", fakeAsync(async () => {
+      const exportSpy = spyOn(component.exportAction.exportService, "export");
+
+      component.selectionColumn.selection.select(
+        ...component.dataSource.data.slice(0, 2)
+      );
+
+      const exportButton = await loader.getHarness(
+        MatButtonHarness.with({
+          ancestor: ".ib-table__toolbar__actions",
+          variant: "icon",
+        })
+      );
+      await exportButton.click();
+      const dialog = await loader.getHarness(MatDialogHarness);
+      fixture.detectChanges();
+      await fixture.whenStable();
+      expect(dialog).toBeTruthy();
+      const [_, option, __] = await dialog.getAllHarnesses(
+        MatRadioButtonHarness
+      );
+      await option.check();
+      const confirm = await dialog.getHarness(
+        MatButtonHarness.with({
+          text: "shared.ibTable.export",
+        })
+      );
+      await confirm.click();
+      fixture.detectChanges();
+
+      expect(exportSpy).toHaveBeenCalledWith(
+        component.selectionColumn.selection.selected,
+        component.tableName,
+        "ib"
+      );
+    }));
+  });
 });
 
 function configureModule<T>(type: Type<T>) {
@@ -290,7 +421,7 @@ function configureModule<T>(type: Type<T>) {
     imports: [
       CommonModule,
       PortalModule,
-      BrowserAnimationsModule,
+      NoopAnimationsModule,
       IbToolTestModule,
       MatTableModule,
       MatPaginatorModule,
@@ -300,10 +431,16 @@ function configureModule<T>(type: Type<T>) {
       IbFilterModule,
       IbViewModule,
       IbToastModule,
+      IbDataExportModule,
+      IbTableActionModule,
       StoreModule.forRoot({}),
       TranslateModule.forRoot({
         extend: true,
       }),
+    ],
+    providers: [
+      IbDataExportService,
+      { provide: MatSnackBar, useValue: { open: () => {} } },
     ],
   }).compileComponents();
 }
@@ -381,6 +518,48 @@ class IbTableWithViewGroupApp {
   dataSource = new MatTableDataSource<any>([
     { name: "alice", color: "peach" },
     { name: "bob", color: "green" },
+  ]);
+  columns = [useColumn("name", "name"), useColumn("color", "color")];
+}
+
+class IbStubExportProvider implements IbDataExportProvider {
+  format = "ib";
+  label = "inobeta";
+  export(data: any[], filename: string): void {}
+}
+
+@Component({
+  template: `
+    <ib-kai-table
+      tableName="employees"
+      [columns]="columns"
+      [dataSource]="dataSource"
+      [tableDef]="{ paginator: { pageSize: 5 } }"
+    >
+      <ib-table-action-group>
+        <ib-table-data-export-action></ib-table-data-export-action>
+      </ib-table-action-group>
+      <ib-selection-column></ib-selection-column>
+    </ib-kai-table>
+  `,
+  providers: [
+    IbDataExportService,
+    {
+      provide: OVERRIDE_EXPORT_FORMATS,
+      useClass: IbStubExportProvider,
+      multi: true,
+    },
+  ],
+})
+class IbTableWithExport {
+  dataSource = new MatTableDataSource<any>([
+    { name: "alice", color: "blue" },
+    { name: "rabbit", color: "white" },
+    { name: "queen", color: "red" },
+    { name: "cat", color: "black" },
+    { name: "rook", color: "purple" },
+    { name: "knight", color: "brown" },
+    { name: "king", color: "green" },
   ]);
   columns = [useColumn("name", "name"), useColumn("color", "color")];
 }

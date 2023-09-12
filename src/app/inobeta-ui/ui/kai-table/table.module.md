@@ -1,8 +1,6 @@
 # Table 
 
-Questo modulo fornisce diverse funzionalità come il filtraggio dei dati, la creazione e l'esportazione di viste*, il rollup delle righe* e altro ancora per `ib-kai-table`
-
-_*not yet implemented_
+Questo modulo fornisce il componente `ib-kai-table`, basato su `mat-table` di Angular Material, con capacità di facile personalizzazione e diverse funzionalità out-of-the-box come il filtraggio dei dati, la creazione e l'esportazione di viste.
 
 ## Getting Started
 
