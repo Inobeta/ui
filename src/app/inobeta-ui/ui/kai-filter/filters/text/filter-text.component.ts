@@ -11,7 +11,7 @@ import { IbFilterBase } from "../base/filter-base";
 })
 export class IbTextFilter extends IbFilterBase {
   searchCriteria = new FormGroup({
-    operator: new FormControl(IbFilterOperator.CONTAINS, {
+    operator: new FormControl<IbFilterOperator>(IbFilterOperator.CONTAINS, {
       validators: [Validators.required],
       nonNullable: true,
     }),

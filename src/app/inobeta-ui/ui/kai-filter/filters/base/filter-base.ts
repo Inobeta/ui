@@ -68,6 +68,11 @@ export class IbFilterBase extends _IbFilterBase {
     this.filter.form.addControl(this.name, this.searchCriteria);
   }
 
+  ngOnDestroy() {
+    this.clear();
+    this.filter.form.removeControl(this.name);
+  }
+
   ngAfterViewInit() {
     this.button?.trigger.menuClosed.subscribe(() => {
       this.revertFilter();
