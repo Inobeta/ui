@@ -1,8 +1,23 @@
 import { formatDate, formatNumber } from "@angular/common";
-import { Component, ChangeDetectionStrategy, Inject, Optional } from "@angular/core";
+import { Component, ChangeDetectionStrategy, Inject, Optional, Directive, TemplateRef, ElementRef } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { IB_CELL_DATA } from "./table.component";
 import { IbCellData, IbColumnDef } from "./table.types";
+
+@Directive({
+  selector: '[ibCellDef]',
+  host: {
+    '[class]': '"test"',
+    '[style.background-color]': '"yellow"',
+    '[style.display]': '"flex"',
+    '[style.gap]': '"4px"',
+    '[style.justify-content]': '"flex-end"',
+  }
+})
+export class IbCellDirective {
+  constructor(public templateRef: TemplateRef<unknown>, public el: ElementRef) {}
+}
+
 
 @Component({
   selector: 'ib-cell',

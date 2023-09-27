@@ -5,15 +5,9 @@ import {
   transition,
   trigger,
 } from "@angular/animations";
-import {
-  CdkPortalOutletAttachedRef,
-  ComponentPortal,
-  Portal,
-  TemplatePortal,
-} from "@angular/cdk/portal";
+import { Portal, TemplatePortal } from "@angular/cdk/portal";
 import {
   Component,
-  ComponentRef,
   ContentChild,
   ContentChildren,
   EventEmitter,
@@ -32,9 +26,10 @@ import { IbTableDataExportAction } from "../data-export/table-data-export.compon
 import { IbFilter } from "../kai-filter";
 import { ITableViewData, IView, IbTableViewGroup } from "../views";
 import { IbKaiTableAction } from "./action";
-import { IbCell } from "./cells";
+import { IbColumn } from "./columns/column";
+import { IbSelectionColumn } from "./columns/selection-column";
+import { IbTextColumn } from "./columns/text-column";
 import { IbKaiRowGroupDirective } from "./rowgroup";
-import { IbSelectionColumn } from "./selection-column";
 import { IbDataSource } from "./table-data-source";
 import {
   IbCellData,
@@ -43,7 +38,6 @@ import {
   IbTableDef,
   IbTableRowEvent,
 } from "./table.types";
-import { IbTextColumn } from "./text-column";
 
 export const IB_CELL_DATA = new InjectionToken<IbCellData>("IbCellData");
 
@@ -76,13 +70,9 @@ export class IbTable implements OnDestroy {
     new MatTableDataSource([]);
   // tslint:disable-next-line: variable-name
   private _tableDef: IbTableDef = defaultTableDef;
-  // tslint:disable-next-line: variable-name
-  private _columns: IbColumnDef<any>[] = [];
-  // tslint:disable-next-line: variable-name
-  private _componentCache: any = {};
   actionPortals: Portal<any>[] = [];
 
-  @ContentChildren(IbTextColumn) columns: QueryList<IbTextColumn<any>>;
+  @ContentChildren(IbColumn) columns: QueryList<IbColumn<any>>;
   @ContentChild(IbSelectionColumn) selectionColumn!: IbSelectionColumn;
   @ContentChild(IbKaiRowGroupDirective) rowGroup!: IbKaiRowGroupDirective;
   @ContentChild(IbFilter) filter!: IbFilter;
@@ -121,8 +111,8 @@ export class IbTable implements OnDestroy {
   }
 
   @Input()
-  displayedColumns: string[] = []
-  
+  displayedColumns: string[] = [];
+
   @Output() ibRowClicked = new EventEmitter<IbTableRowEvent>();
 
   ngOnInit() {
@@ -219,7 +209,6 @@ export class IbTable implements OnDestroy {
   }
 
   ngOnDestroy() {
-    this._componentCache = null;
   }
 
   isState(state: IbKaiTableState) {

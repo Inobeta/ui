@@ -10,7 +10,8 @@ import {
   IbTableDataExportDialog,
   IbTableDataExportDialogData,
 } from "./table-data-export-dialog.component";
-import { IbTextColumn } from "../kai-table/text-column";
+import { IbTextColumn } from "../kai-table/columns/text-column";
+import { IbColumn } from "../kai-table/columns/column";
 
 export interface IDataExportSettings {
   format: "xlsx" | "pdf" | "csv";
@@ -55,7 +56,7 @@ export class IbDataExportService {
    */
   _exportFromTable(
     tableName: string,
-    columns: IbTextColumn<any>[],
+    columns: IbColumn<any>[],
     dataSource: MatTableDataSource<any>,
     selectedRows: any[],
     settings: IDataExportSettings

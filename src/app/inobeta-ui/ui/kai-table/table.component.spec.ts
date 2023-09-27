@@ -41,7 +41,7 @@ import {
   useTranslateColumn,
 } from "./cells";
 import { IbKaiRowGroupDirective } from "./rowgroup";
-import { IbSelectionColumn } from "./selection-column";
+import { IbSelectionColumn } from "./columns/selection-column";
 import { IbDataSource } from "./table-data-source";
 import { IbTable } from "./table.component";
 import { IbKaiTableState } from "./table.types";

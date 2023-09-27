@@ -5,7 +5,7 @@ import {
   useContextColumn,
   useDateColumn,
 } from "src/app/inobeta-ui/ui/kai-table/cells";
-import { IbSelectionColumn } from "src/app/inobeta-ui/ui/kai-table/selection-column";
+import { IbSelectionColumn } from "../../inobeta-ui/ui/kai-table/columns/selection-column";
 import { createNewUser } from "./users";
 
 @Component({
@@ -13,7 +13,7 @@ import { createNewUser } from "./users";
   template: `
     <ib-kai-table
       tableName="fullExample"
-      [displayedColumns]="['name', 'fruit', 'number', 'aDate']"
+      [displayedColumns]="['name', 'fruit', 'number', 'aDate', 'actions']"
       [dataSource]="dataSource"
     >
       <ib-table-action-group>
@@ -36,14 +36,21 @@ import { createNewUser } from "./users";
         <ib-number-filter ibTableColumnName="number">Amount</ib-number-filter>
         <ib-date-filter ibTableColumnName="aDate">Purchased</ib-date-filter>
       </ib-filter>
+
       <ib-selection-column
         (ibRowSelectionChange)="selectionChange($event)"
       ></ib-selection-column>
-
-      <ib-text-column name="name"></ib-text-column>
-      <ib-text-column name="fruit"></ib-text-column>
-      <ib-text-column name="number"></ib-text-column>
-      <ib-text-column name="aDate"></ib-text-column>
+      <ib-text-column headerText="Name" name="name"></ib-text-column>
+      <ib-text-column headerText="Fruit" name="fruit"></ib-text-column>
+      <ib-number-column headerText="Amount" name="number"></ib-number-column>
+      <ib-date-column headerText="Purchased" name="aDate"></ib-date-column>
+      <ib-column headerText="" name="actions">
+        <div *ibCellDef="let data">
+          <button mat-icon-button (click)="handleView(data)">
+            <mat-icon>chevron_right</mat-icon>
+          </button>
+        </div>
+      </ib-column>
       
       <!-- <ib-footer>
         <ib-aggregate ibTableColumnName="number"></ib-aggregate>
@@ -90,5 +97,9 @@ export class IbKaiTableFullExamplePage {
 
   getSelection() {
     console.log("selection", this.selectionColumn?.selection.selected);
+  }
+
+  handleView(row) {
+    console.log("handleView", row)
   }
 }

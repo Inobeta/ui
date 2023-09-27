@@ -6,15 +6,24 @@ import {
   Output,
   ViewChild,
 } from "@angular/core";
-import { IbTable } from "./table.component";
-import { MatColumnDef } from "@angular/material/table";
-import { IbTableRowSelectionChange, IbKaiTableState } from "./table.types";
+import {
+  MatCellDef,
+  MatColumnDef,
+  MatHeaderCellDef,
+} from "@angular/material/table";
+import { IbTable } from "../table.component";
+import { IbKaiTableState, IbTableRowSelectionChange } from "../table.types";
 
 @Component({
   selector: "ib-selection-column",
   template: `
-    <ng-container matColumnDef="ibSelectColumn">
-      <th style="width: 40px" class="ib-table__header-cell" mat-header-cell *matHeaderCellDef>
+    <ng-container matColumnDef="ibSelectionColumn">
+      <th
+        style="width: 40px"
+        class="ib-table__header-cell"
+        mat-header-cell
+        *matHeaderCellDef
+      >
         <mat-checkbox
           (change)="$event ? toggleAllRows() : null"
           [checked]="selection.hasValue() && isAllSelected()"
@@ -37,6 +46,15 @@ import { IbTableRowSelectionChange, IbKaiTableState } from "./table.types";
   `,
 })
 export class IbSelectionColumn implements OnInit {
+  /**
+   * @ignore
+   */
+  @ViewChild(MatCellDef, { static: true }) cell: MatCellDef;
+
+  /**
+   * @ignore
+   */
+  @ViewChild(MatHeaderCellDef, { static: true }) headerCell: MatHeaderCellDef;
   @ViewChild(MatColumnDef, { static: true }) columnDef: MatColumnDef;
   selection = new SelectionModel<any>(true, []);
 
@@ -47,7 +65,10 @@ export class IbSelectionColumn implements OnInit {
   constructor(public table: IbTable) {}
 
   ngOnInit() {
+    this.columnDef.cell = this.cell;
+    this.columnDef.headerCell = this.headerCell;
     this.table.table.addColumnDef(this.columnDef);
+    this.table.displayedColumns.unshift("ibSelectionColumn");
   }
 
   isAllSelected() {

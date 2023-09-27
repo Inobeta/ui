@@ -20,7 +20,7 @@
     [dataSource]="dataSource"
   >
     <ng-content select="ib-selection-column"></ng-content>
-    <ng-content select="selector"></ng-content>
+    <ng-content></ng-content>
     <!-- <ng-container *ngFor="let column of columns" [matColumnDef]="column.columnDef">
       <th class="ib-table__header-cell" mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!column.sort">
         {{column.header | translate}}

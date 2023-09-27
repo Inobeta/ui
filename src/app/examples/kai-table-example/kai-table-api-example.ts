@@ -15,7 +15,7 @@ import {
   IbTableDef,
 } from "src/app/inobeta-ui/ui/kai-table";
 import { useColumn } from "src/app/inobeta-ui/ui/kai-table/cells";
-import { IbSelectionColumn } from "src/app/inobeta-ui/ui/kai-table/selection-column";
+import { IbSelectionColumn } from "../../inobeta-ui/ui/kai-table/columns/selection-column";
 import { IbDataSource } from "src/app/inobeta-ui/ui/kai-table/table-data-source";
 import { IbTable } from "src/app/inobeta-ui/ui/kai-table/table.component";
 

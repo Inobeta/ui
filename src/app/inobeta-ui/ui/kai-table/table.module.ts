@@ -13,27 +13,38 @@ import { MatSortModule } from "@angular/material/sort";
 import { MatTableModule } from "@angular/material/table";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { ibMatPaginatorTranslate } from "../table";
-import { IbContextActionCell } from "./cells";
+import { IbCellDirective, IbContextActionCell } from "./cells";
 import { IbKaiRowGroupDirective } from "./rowgroup";
-import { IbSelectionColumn } from "./selection-column";
+import { IbSelectionColumn } from "./columns/selection-column";
 import { IbSortHeader } from "./sort-header";
 import { IbTable } from "./table.component";
-import { IbTextColumn } from "./text-column";
+import { IbTextColumn } from "./columns/text-column";
+import { IbColumn } from "./columns/column";
+import { IbNumberColumn } from "./columns/number-column";
+import { IbDateColumn } from "./columns/date-column";
 
 @NgModule({
   exports: [
     IbTable,
     IbKaiRowGroupDirective,
+    IbCellDirective,
     IbSelectionColumn,
+    IbColumn,
     IbTextColumn,
+    IbNumberColumn,
+    IbDateColumn,
     IbSortHeader,
   ],
   declarations: [
     IbTable,
     IbContextActionCell,
     IbKaiRowGroupDirective,
+    IbCellDirective,
     IbSelectionColumn,
+    IbColumn,
     IbTextColumn,
+    IbNumberColumn,
+    IbDateColumn,
     IbSortHeader,
   ],
   imports: [
