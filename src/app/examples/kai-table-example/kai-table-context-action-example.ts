@@ -20,7 +20,6 @@ import { createNewUser, IbUserExample } from './users';
   </section>
 
   <ib-kai-table
-    [columns]="columns"
     [dataSource]="dataSource"
     (ibRowClicked)="handleRowClicked($event)"
     class="mat-elevation-z8"

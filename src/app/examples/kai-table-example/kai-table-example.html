@@ -1,10 +1,11 @@
 <ib-kai-table
   [dataSource]="dataSource"
-  [columns]="columns"
+  [displayedColumns]="['name', 'fruit']"
   [tableDef]="tableDef"
   (ibRowClicked)="testClick($event)"
-  >
-  <section *ibKaiRowGroup="let row">
-    row data: {{row | json}}
-  </section>
+>
+  <ib-text-column name="name"></ib-text-column>
+  <ib-text-column name="fruit"></ib-text-column>
+
+  <section *ibKaiRowGroup="let row">row data: {{row | json}}</section>
 </ib-kai-table>

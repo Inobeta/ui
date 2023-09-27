@@ -43,8 +43,8 @@ import {
   IbTableDef,
   IbTableRowEvent,
 } from "./table.types";
+import { IbTextColumn } from "./text-column";
 
-export const IB_TABLE = new InjectionToken<any>("IbTable");
 export const IB_CELL_DATA = new InjectionToken<IbCellData>("IbCellData");
 
 const defaultTableDef: IbTableDef = {
@@ -82,6 +82,7 @@ export class IbTable implements OnDestroy {
   private _componentCache: any = {};
   actionPortals: Portal<any>[] = [];
 
+  @ContentChildren(IbTextColumn) columns: QueryList<IbTextColumn<any>>;
   @ContentChild(IbSelectionColumn) selectionColumn!: IbSelectionColumn;
   @ContentChild(IbKaiRowGroupDirective) rowGroup!: IbKaiRowGroupDirective;
   @ContentChild(IbFilter) filter!: IbFilter;
@@ -120,30 +121,8 @@ export class IbTable implements OnDestroy {
   }
 
   @Input()
-  set columns(value) {
-    this._columns = value;
-    // tslint:disable-next-line: prefer-for-of
-    for (let i = 0; i < this._columns.length; i++) {
-      this.getCell(this._columns[i]);
-    }
-  }
-  get columns() {
-    return this._columns;
-  }
-
-  isSelectionColumnAdded = false;
-  get displayedColumns() {
-    let displayedColumns = [];
-    if (this.isSelectionColumnAdded) {
-      displayedColumns = displayedColumns.concat(["ibSelectColumn"]);
-    }
-    return displayedColumns.concat(this.columns.map((c) => c.columnDef));
-  }
-
-  get portals() {
-    return this._componentCache;
-  }
-
+  displayedColumns: string[] = []
+  
   @Output() ibRowClicked = new EventEmitter<IbTableRowEvent>();
 
   ngOnInit() {
@@ -156,10 +135,6 @@ export class IbTable implements OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (this.table && this.selectionColumn) {
-      setTimeout(() => (this.isSelectionColumnAdded = true));
-    }
-
     if (this.actions.length) {
       this.actions.forEach((a) =>
         this.actionPortals.push(
@@ -211,7 +186,7 @@ export class IbTable implements OnDestroy {
       this.exportAction.ibDataExport.subscribe((settings) => {
         this.exportAction.exportService._exportFromTable(
           this.tableName,
-          this.columns,
+          this.columns.toArray(),
           this.dataSource as MatTableDataSource<any>,
           this.selectionColumn?.selection.selected,
           settings
@@ -245,30 +220,6 @@ export class IbTable implements OnDestroy {
 
   ngOnDestroy() {
     this._componentCache = null;
-  }
-
-  private sendRowEvent = (event: Partial<IbTableRowEvent>) =>
-    this.ibRowClicked.emit({
-      ...(event as IbTableRowEvent),
-      tableName: this.tableName,
-    });
-
-  getCell(column: IbColumnDef) {
-    this._componentCache[column.columnDef] = new ComponentPortal(
-      column.component ?? IbCell
-    );
-  }
-
-  handleAttached(
-    ref: CdkPortalOutletAttachedRef,
-    column: IbColumnDef,
-    row: any
-  ) {
-    (ref as ComponentRef<IbCell>).instance.data = {
-      send: this.sendRowEvent,
-      column,
-      row,
-    };
   }
 
   isState(state: IbKaiTableState) {

@@ -32,6 +32,7 @@ import { IbTableRowSelectionChange, IbKaiTableState } from "./table.types";
         >
         </mat-checkbox>
       </td>
+      <td mat-footer-cell *matFooterCellDef></td>
     </ng-container>
   `,
 })

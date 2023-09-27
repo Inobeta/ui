@@ -69,8 +69,8 @@ export class IbFilterBase extends _IbFilterBase {
   }
 
   ngOnDestroy() {
-    this.clear();
     this.filter.form.removeControl(this.name);
+    this.filter.update();
   }
 
   ngAfterViewInit() {

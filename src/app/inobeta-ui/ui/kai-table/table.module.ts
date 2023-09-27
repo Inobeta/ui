@@ -16,15 +16,25 @@ import { ibMatPaginatorTranslate } from "../table";
 import { IbContextActionCell } from "./cells";
 import { IbKaiRowGroupDirective } from "./rowgroup";
 import { IbSelectionColumn } from "./selection-column";
+import { IbSortHeader } from "./sort-header";
 import { IbTable } from "./table.component";
+import { IbTextColumn } from "./text-column";
 
 @NgModule({
-  exports: [IbTable, IbKaiRowGroupDirective, IbSelectionColumn],
+  exports: [
+    IbTable,
+    IbKaiRowGroupDirective,
+    IbSelectionColumn,
+    IbTextColumn,
+    IbSortHeader,
+  ],
   declarations: [
     IbTable,
     IbContextActionCell,
     IbKaiRowGroupDirective,
     IbSelectionColumn,
+    IbTextColumn,
+    IbSortHeader,
   ],
   imports: [
     CommonModule,

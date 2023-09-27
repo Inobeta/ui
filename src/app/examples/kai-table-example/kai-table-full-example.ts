@@ -13,7 +13,7 @@ import { createNewUser } from "./users";
   template: `
     <ib-kai-table
       tableName="fullExample"
-      [columns]="columns"
+      [displayedColumns]="['name', 'fruit', 'number', 'aDate']"
       [dataSource]="dataSource"
     >
       <ib-table-action-group>
@@ -39,6 +39,15 @@ import { createNewUser } from "./users";
       <ib-selection-column
         (ibRowSelectionChange)="selectionChange($event)"
       ></ib-selection-column>
+
+      <ib-text-column name="name"></ib-text-column>
+      <ib-text-column name="fruit"></ib-text-column>
+      <ib-text-column name="number"></ib-text-column>
+      <ib-text-column name="aDate"></ib-text-column>
+      
+      <!-- <ib-footer>
+        <ib-aggregate ibTableColumnName="number"></ib-aggregate>
+      </ib-footer> -->
     </ib-kai-table>
   `,
   styles: [

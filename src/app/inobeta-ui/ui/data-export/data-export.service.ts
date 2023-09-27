@@ -10,6 +10,7 @@ import {
   IbTableDataExportDialog,
   IbTableDataExportDialogData,
 } from "./table-data-export-dialog.component";
+import { IbTextColumn } from "../kai-table/text-column";
 
 export interface IDataExportSettings {
   format: "xlsx" | "pdf" | "csv";
@@ -54,7 +55,7 @@ export class IbDataExportService {
    */
   _exportFromTable(
     tableName: string,
-    columns: IbColumnDef[],
+    columns: IbTextColumn<any>[],
     dataSource: MatTableDataSource<any>,
     selectedRows: any[],
     settings: IDataExportSettings
@@ -75,16 +76,16 @@ export class IbDataExportService {
     }
 
     const displayHeader = {};
-    for (const column of columns.filter((c) => c.header)) {
-      displayHeader[column.header] = this.translate.instant(column.header);
+    for (const column of columns.filter((c) => c.name)) {
+      displayHeader[column.name] = this.translate.instant(column.headerText);
     }
 
     const outputData = [];
     for (const row of data) {
       let outputRow = {};
-      for (const column of columns.filter((c) => c.header)) {
-        const header = displayHeader[column.header];
-        const displayValue = column.cell(row);
+      for (const column of columns.filter((c) => c.name)) {
+        const header = displayHeader[column.name];
+        const displayValue = column.dataAccessor(row, column.name);
         outputRow[header] = displayValue;
       }
       outputData.push(outputRow);

@@ -90,14 +90,13 @@ class GithubService {
     <ib-kai-table
       #table
       [dataSource]="dataSource"
-      [columns]="columns"
       [tableDef]="tableDef"
     >
       <ib-filter>
         <ib-date-filter name="created">Created</ib-date-filter>
         <ib-tag-filter
           name="state"
-          multiple="false"
+          [multiple]="false"
           [options]="['open', 'closed']"
           >State</ib-tag-filter
         >
