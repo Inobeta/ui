@@ -1,3 +1,4 @@
+import { BooleanInput, coerceBooleanProperty } from "@angular/cdk/coercion";
 import {
   ChangeDetectionStrategy,
   Component,
@@ -8,7 +9,6 @@ import {
   OnInit,
   Optional,
   ViewChild,
-  ViewEncapsulation,
 } from "@angular/core";
 import {
   MatCellDef,
@@ -16,9 +16,9 @@ import {
   MatFooterCellDef,
   MatHeaderCellDef,
 } from "@angular/material/table";
+import { IbCellDef } from "../cells";
 import { IbTable } from "../table.component";
 import { IB_COLUMN_OPTIONS, IbColumnOptions } from "../tokens";
-import { IbCellDef } from "../cells";
 
 @Component({
   selector: "ib-column",
@@ -78,13 +78,34 @@ export class IbColumn<T> implements OnDestroy, OnInit {
   /**
    * Enables sorting for the column.
    */
-  @Input() sort = true;
+  @Input()
+  get sort() {
+    return this._sort;
+  }
+  set sort(value: BooleanInput) {
+    this._sort = coerceBooleanProperty(value);
+  }
+  private _sort = false;
 
   /** Whether sticky positioning should be applied. */
-  @Input() sticky = false;
+  @Input()
+  get sticky() {
+    return this._sticky;
+  }
+  set sticky(value: BooleanInput) {
+    this._sticky = coerceBooleanProperty(value);
+  }
+  private _sticky = false;
 
   /** Whether this column should be sticky positioned on the end of the row. */
-  @Input() stickyEnd = false;
+  @Input()
+  get stickyEnd() {
+    return this._stickyEnd;
+  }
+  set stickyEnd(value: BooleanInput) {
+    this._stickyEnd = coerceBooleanProperty(value);
+  }
+  private _stickyEnd = false;
 
   @ContentChild(IbCellDef, { static: true }) ibCellDef: IbCellDef;
 

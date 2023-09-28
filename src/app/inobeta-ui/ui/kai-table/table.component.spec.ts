@@ -34,14 +34,8 @@ import { IbFilterModule } from "../kai-filter/filters.module";
 import { IbToastModule } from "../toast/toast.module";
 import { IbViewModule } from "../views/view.module";
 import { IbTableActionModule } from "./action";
-import {
-  useColumn,
-  useDateColumn,
-  useNumberColumn,
-  useTranslateColumn,
-} from "./cells";
-import { IbKaiRowGroupDirective } from "./rowgroup";
 import { IbSelectionColumn } from "./columns/selection-column";
+import { IbKaiRowGroupDirective } from "./rowgroup";
 import { IbDataSource } from "./table-data-source";
 import { IbTable } from "./table.component";
 import { IbKaiTableState } from "./table.types";
@@ -88,25 +82,6 @@ describe("IbTable", () => {
       component.selectionColumn.toggleAllRows();
       fixture.detectChanges();
       expect(component.selectionColumn.isAllSelected()).toBeFalsy();
-    });
-
-    it("should create a text column", () => {
-      const column = useColumn("sku");
-      expect(column.columnDef === "sku").toBeTruthy();
-      expect(column.cell({ sku: "TPS-1" })).toBe("TPS-1");
-    });
-
-    it("should create a date column", () => {
-      const column = useDateColumn("updated_at");
-      expect(column.columnDef === "updated_at").toBeTruthy();
-      const d = new Date(1690204463 * 1000);
-      expect(column.cell({ updated_at: d })).toContain("24/07/2023");
-    });
-
-    it("should create a number column", () => {
-      const column = useNumberColumn("price");
-      expect(column.columnDef === "price").toBeTruthy();
-      expect(column.cell({ price: 1209.33 })).toBe("1.209,33");
     });
   });
 
@@ -455,13 +430,16 @@ function createComponent<T>(type: Type<T>): ComponentFixture<T> {
 
 @Component({
   template: `
-    <ib-kai-table [columns]="columns" [dataSource]="dataSource">
+    <ib-kai-table [dataSource]="dataSource">
       <ib-filter [value]="filterValue">
         <ib-text-filter ibTableColumnName="name">Name</ib-text-filter>
         <ib-tag-filter ibTableColumnName="color">Name</ib-tag-filter>
         <ib-number-filter ibTableColumnName="price">Name</ib-number-filter>
       </ib-filter>
       <ib-selection-column></ib-selection-column>
+      <ib-text-column name="name"></ib-text-column>
+      <ib-text-column name="color"></ib-text-column>
+      <ib-number-column name="price"></ib-number-column>
     </ib-kai-table>
   `,
 })
@@ -471,12 +449,12 @@ class IbTableApp {
     { name: "alice", color: "white", price: 10 },
     { name: "bob", color: "black", price: 12 },
   ]);
-  columns = [useColumn("name", "name"), useTranslateColumn("color")];
 }
 
 @Component({
   template: `
-    <ib-kai-table [columns]="columns" [dataSource]="dataSource">
+    <ib-kai-table [dataSource]="dataSource">
+      <ib-text-column name="name"></ib-text-column>
       <ng-template ibKaiRowGroup let-row="row">
         row data: {{ row | json }}
       </ng-template>
@@ -485,32 +463,30 @@ class IbTableApp {
 })
 class IbTableWithRowGroupApp {
   dataSource = new MatTableDataSource<any>([{ name: "alice" }]);
-  columns = [useColumn("name", "name")];
 }
 
 @Component({
   template: `
-    <ib-kai-table [columns]="columns" [dataSource]="dataSource">
+    <ib-kai-table [dataSource]="dataSource">
       <ib-filter></ib-filter>
+      <ib-text-column name="name"></ib-text-column>
     </ib-kai-table>
   `,
 })
 class IbTableWithIbDataSourceApp {
   dataSource = new IbDataSource<any>([{ name: "alice" }]);
-  columns = [useColumn("name", "name")];
 }
 
 @Component({
   template: `
-    <ib-kai-table
-      tableName="employees"
-      [columns]="columns"
-      [dataSource]="dataSource"
-    >
+    <ib-kai-table tableName="employees" [dataSource]="dataSource">
       <ib-table-view-group></ib-table-view-group>
       <ib-filter>
         <ib-tag-filter ibTableColumnName="color">Name</ib-tag-filter>
       </ib-filter>
+
+      <ib-text-column name="name"></ib-text-column>
+      <ib-text-column name="tag"></ib-text-column>
     </ib-kai-table>
   `,
 })
@@ -519,7 +495,6 @@ class IbTableWithViewGroupApp {
     { name: "alice", color: "peach" },
     { name: "bob", color: "green" },
   ]);
-  columns = [useColumn("name", "name"), useColumn("color", "color")];
 }
 
 class IbStubExportProvider implements IbDataExportProvider {
@@ -532,7 +507,6 @@ class IbStubExportProvider implements IbDataExportProvider {
   template: `
     <ib-kai-table
       tableName="employees"
-      [columns]="columns"
       [dataSource]="dataSource"
       [tableDef]="{ paginator: { pageSize: 5 } }"
     >
@@ -540,6 +514,8 @@ class IbStubExportProvider implements IbDataExportProvider {
         <ib-table-data-export-action></ib-table-data-export-action>
       </ib-table-action-group>
       <ib-selection-column></ib-selection-column>
+      <ib-text-column name="name"></ib-text-column>
+      <ib-text-column name="color"></ib-text-column>
     </ib-kai-table>
   `,
   providers: [
@@ -561,5 +537,4 @@ class IbTableWithExport {
     { name: "knight", color: "brown" },
     { name: "king", color: "green" },
   ]);
-  columns = [useColumn("name", "name"), useColumn("color", "color")];
 }

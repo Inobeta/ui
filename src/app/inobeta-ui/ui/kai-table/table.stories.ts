@@ -1,18 +1,17 @@
 import { StorybookTranslateModule } from ".storybook/i18n";
+import { MatTableDataSource } from "@angular/material/table";
+import { provideAnimations } from "@angular/platform-browser/animations";
 import {
   Meta,
   StoryObj,
   applicationConfig,
   moduleMetadata,
 } from "@storybook/angular";
+import { IbDataExportModule } from "../data-export";
+import { IbFilterModule } from "../kai-filter";
+import { IbTableActionModule } from "./action";
 import { IbTable } from "./table.component";
 import { IbKaiTableModule } from "./table.module";
-import { useColumn, useDateColumn } from "./cells";
-import { IbFilterModule } from "../kai-filter";
-import { provideAnimations } from "@angular/platform-browser/animations";
-import { IbDataExportModule } from "../data-export";
-import { IbTableActionModule } from "./action";
-import { MatTableDataSource } from "@angular/material/table";
 
 const tableData = [
   {
@@ -58,30 +57,23 @@ type Story = StoryObj<IbTable>;
 
 export const Simple: Story = {
   args: {
-    columns: [
-      useColumn("SKU", "sku"),
-      useColumn("Prezzo", "price"),
-      useColumn("Categoria", "category"),
-      useDateColumn("Aggiunto il", "created_at"),
-    ],
     dataSource: new MatTableDataSource(tableData),
   },
   render: (args) => ({
     props: args,
     template: `
-      <ib-kai-table tableName="products" [columns]="columns" [dataSource]="dataSource"></ib-kai-table>
+      <ib-kai-table tableName="products" [columns]="columns" [dataSource]="dataSource">
+        <ib-text-column headerText="SKU" name="sku"></ib-text-column>
+        <ib-text-column headerText="Prezzo" name="price"></ib-text-column>
+        <ib-text-column headerText="Categoria" name="category"></ib-text-column>
+        <ib-date-column headerText="Aggiunto il" name="created_at"></ib-date-column>
+      </ib-kai-table>
     `,
   }),
 };
 
 export const WithFilters: Story = {
   args: {
-    columns: [
-      useColumn("SKU", "sku"),
-      useColumn("Prezzo", "price"),
-      useColumn("Categoria", "category"),
-      useDateColumn("Aggiunto il", "created_at"),
-    ],
     dataSource: new MatTableDataSource(tableData),
   },
   render: (args) => ({
@@ -94,6 +86,11 @@ export const WithFilters: Story = {
           <ib-tag-filter name="category" [options]="['shirts', 'jeans']">Categoria</ib-tag-filter>
           <ib-date-filter name="created_at">Aggiunto il</ib-date-filter>
         </ib-filter>
+
+        <ib-text-column headerText="SKU" name="sku"></ib-text-column>
+        <ib-text-column headerText="Prezzo" name="price"></ib-text-column>
+        <ib-text-column headerText="Categoria" name="category"></ib-text-column>
+        <ib-date-column headerText="Aggiunto il" name="created_at"></ib-date-column>
       </ib-kai-table>
     `,
   }),
@@ -101,12 +98,6 @@ export const WithFilters: Story = {
 
 export const WithExport: Story = {
   args: {
-    columns: [
-      useColumn("SKU", "sku"),
-      useColumn("Prezzo", "price"),
-      useColumn("Categoria", "category"),
-      useDateColumn("Aggiunto il", "created_at"),
-    ],
     dataSource: new MatTableDataSource(tableData),
   },
   render: (args) => ({
@@ -116,6 +107,11 @@ export const WithExport: Story = {
         <ib-table-action-group>
           <ib-table-data-export-action></ib-table-data-export-action>
         </ib-table-action-group>
+
+        <ib-text-column headerText="SKU" name="sku"></ib-text-column>
+        <ib-text-column headerText="Prezzo" name="price"></ib-text-column>
+        <ib-text-column headerText="Categoria" name="category"></ib-text-column>
+        <ib-date-column headerText="Aggiunto il" name="created_at"></ib-date-column>
       </ib-kai-table>
     `,
   }),

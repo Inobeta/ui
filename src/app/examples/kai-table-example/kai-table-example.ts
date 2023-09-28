@@ -37,14 +37,6 @@ import { createNewUser } from './users';
 })
 export class IbKaiTableExamplePage {
   dataSource = new MatTableDataSource<any>();
-  // columns = [
-  //   useColumn('name', 'name'),
-  //   useColumn('Frutta','fruit', true),
-  //   useNumberColumn('number', 'number', true),
-  //   useDateColumn('My Date', 'aDate', true),
-  //   useDateColumn('My Date String', 'aDateString', true, 'dd/MMM/yyyy HH:mm'),
-  //   useContextColumn(() => [{type: 'the-search-key', icon: 'search'}])
-  // ];
 
   tableDef: IbTableDef = {
     /*paginator: {

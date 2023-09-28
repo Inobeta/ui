@@ -5,15 +5,11 @@ import { Observable } from "rxjs";
 import {
   IbDateFilterCriteria,
   IbTagFilterCriteria,
-  IbTextFilterCritera
+  IbTextFilterCritera,
 } from "src/app/inobeta-ui/ui/kai-filter/filter.types";
-import {
-  IbKaiTableState,
-  IbTableDef
-} from "src/app/inobeta-ui/ui/kai-table";
+import { IbKaiTableState, IbTableDef } from "src/app/inobeta-ui/ui/kai-table";
 import { IbDataSource } from "src/app/inobeta-ui/ui/kai-table/table-data-source";
 import { IbTable } from "src/app/inobeta-ui/ui/kai-table/table.component";
-import { IbSelectionColumn } from "../../inobeta-ui/ui/kai-table/columns/selection-column";
 
 type GithubPRState = "open" | "closed";
 
@@ -38,7 +34,7 @@ class GithubService {
     if (filter?.state?.length) {
       q = `${q} is:${filter?.state[0]}`;
     }
-    
+
     return q;
   }
 
@@ -83,11 +79,7 @@ class GithubService {
       </button>
       <button mat-raised-button (click)="setState('idle')">set to idle</button>
     </div>
-    <ib-kai-table
-      #table
-      [dataSource]="dataSource"
-      [tableDef]="tableDef"
-    >
+    <ib-kai-table #table [displayedColumns]="['created_at', 'state', 'number', 'title']" [dataSource]="dataSource" [tableDef]="tableDef">
       <ib-filter>
         <ib-date-filter name="created">Created</ib-date-filter>
         <ib-tag-filter
@@ -98,6 +90,11 @@ class GithubService {
         >
         <ib-text-filter name="title">Title</ib-text-filter>
       </ib-filter>
+
+      <ib-date-column headerText="Created" name="created_at" format="d MMM yyyy" sort></ib-date-column>
+      <ib-text-column name="state"></ib-text-column>
+      <ib-text-column headerText="#" name="number"></ib-text-column>
+      <ib-text-column name="title"></ib-text-column>
     </ib-kai-table>
   `,
   styles: [
@@ -122,21 +119,8 @@ class GithubService {
 })
 export class IbKaiTableApiExamplePage {
   @ViewChild("table", { static: true }) kaiTable: IbTable;
-  @ViewChild(IbSelectionColumn, { static: true })
-  selectionColumn: IbSelectionColumn;
 
   dataSource = new IbDataSource<GithubIssue>();
-  // columns: IbColumnDef[] = [
-  //   {
-  //     columnDef: "created",
-  //     header: "Created",
-  //     cell: (e) => `${formatDate(e.created_at, "d MMM yyyy", "it-IT")}`,
-  //     sort: true,
-  //   },
-  //   useColumn("state"),
-  //   useColumn("#", "number", false),
-  //   useColumn("title"),
-  // ];
   tableDef: IbTableDef = {
     paginator: {
       pageSize: 30,

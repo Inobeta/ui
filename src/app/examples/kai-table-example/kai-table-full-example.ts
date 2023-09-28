@@ -35,11 +35,15 @@ import { createNewUser } from "./users";
       <ib-selection-column
         (ibRowSelectionChange)="selectionChange($event)"
       ></ib-selection-column>
-      <ib-text-column headerText="Name" name="name"></ib-text-column>
-      <ib-text-column headerText="Fruit" name="fruit"></ib-text-column>
-      <ib-number-column headerText="Amount" name="number"></ib-number-column>
-      <ib-date-column headerText="Purchased" name="aDate"></ib-date-column>
-      <ib-column headerText="" name="actions" [stickyEnd]="true">
+      <ib-text-column headerText="Name" name="name" sort></ib-text-column>
+      <ib-text-column headerText="Fruit" name="fruit" sort></ib-text-column>
+      <ib-number-column
+        headerText="Amount"
+        name="number"
+        sort
+      ></ib-number-column>
+      <ib-date-column headerText="Purchased" name="aDate" sort></ib-date-column>
+      <ib-column headerText="" name="actions" stickyEnd>
         <div *ibCellDef="let data" ib-context-column>
           <button mat-icon-button (click)="handleView(data)">
             <mat-icon>chevron_right</mat-icon>
