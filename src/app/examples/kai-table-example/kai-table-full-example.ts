@@ -1,10 +1,5 @@
 import { Component, ViewChild } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
-import {
-  useColumn,
-  useContextColumn,
-  useDateColumn,
-} from "src/app/inobeta-ui/ui/kai-table/cells";
 import { IbSelectionColumn } from "../../inobeta-ui/ui/kai-table/columns/selection-column";
 import { createNewUser } from "./users";
 
@@ -44,14 +39,14 @@ import { createNewUser } from "./users";
       <ib-text-column headerText="Fruit" name="fruit"></ib-text-column>
       <ib-number-column headerText="Amount" name="number"></ib-number-column>
       <ib-date-column headerText="Purchased" name="aDate"></ib-date-column>
-      <ib-column headerText="" name="actions">
-        <div *ibCellDef="let data">
+      <ib-column headerText="" name="actions" [stickyEnd]="true">
+        <div *ibCellDef="let data" ib-context-column>
           <button mat-icon-button (click)="handleView(data)">
             <mat-icon>chevron_right</mat-icon>
           </button>
         </div>
       </ib-column>
-      
+
       <!-- <ib-footer>
         <ib-aggregate ibTableColumnName="number"></ib-aggregate>
       </ib-footer> -->
@@ -78,13 +73,6 @@ export class IbKaiTableFullExamplePage {
   selectionColumn: IbSelectionColumn;
 
   dataSource = new MatTableDataSource<any>();
-  columns = [
-    useColumn("Name", "name"),
-    useColumn("Fruit", "fruit"),
-    useColumn("Amount", "number", true),
-    useDateColumn("Purchased", "aDate", true),
-    useContextColumn(() => [{ type: "view", icon: "chevron_right" }]),
-  ];
 
   ngOnInit() {
     const users = Array.from({ length: 1000 }, (_, k) => createNewUser(k + 1));
@@ -100,6 +88,6 @@ export class IbKaiTableFullExamplePage {
   }
 
   handleView(row) {
-    console.log("handleView", row)
+    console.log("handleView", row);
   }
 }

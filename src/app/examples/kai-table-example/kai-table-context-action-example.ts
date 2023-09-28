@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { useColumn, useContextColumn } from 'src/app/inobeta-ui/ui/kai-table/cells';
-import { IbColumnDef, IbTableRowEvent } from 'src/app/inobeta-ui/ui/kai-table/table.types';
-import { createNewUser, IbUserExample } from './users';
+import { IbTableRowEvent } from 'src/app/inobeta-ui/ui/kai-table/table.types';
+import { IbUserExample, createNewUser } from './users';
 
 @Component({
   selector: 'ib-kai-table-context-action-example',
@@ -36,12 +35,12 @@ import { createNewUser, IbUserExample } from './users';
 
 export class IbKaiTableContextActionExamplePage implements OnInit {
   dataSource = new MatTableDataSource<IbUserExample>();
-  columns: IbColumnDef<IbUserExample>[] = [
-    useColumn('name'),
-    useColumn('fruit'),
-    useColumn('number', 'number', true),
-    useContextColumn(() => [{type: 'view', icon: 'chevron_right'}])
-  ];
+  // columns: IbColumnDef<IbUserExample>[] = [
+  //   useColumn('name'),
+  //   useColumn('fruit'),
+  //   useColumn('number', 'number', true),
+  //   useContextColumn(() => [{type: 'view', icon: 'chevron_right'}])
+  // ];
 
   ngOnInit() {
     const users = Array.from({ length: 1000 }, (_, k) => createNewUser(k + 1))

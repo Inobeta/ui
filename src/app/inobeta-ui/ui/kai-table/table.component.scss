@@ -20,8 +20,8 @@
   bottom: 0;
   z-index: 101;
   transform: translateZ(1px);
-  background-color: rgba(0,0,0,.05);
-  
+  background-color: rgba(0, 0, 0, 0.05);
+
   mat-progress-bar {
     top: 56px;
   }
@@ -42,4 +42,10 @@ tr.ib-table-element-row:not(.ib-table-expanded-row):hover {
 .ib-table-element-detail {
   overflow: hidden;
   display: flex;
+}
+
+::ng-deep td > .ib-table-context-column {
+  display: flex;
+  gap: 4px;
+  justify-content: flex-end;
 }

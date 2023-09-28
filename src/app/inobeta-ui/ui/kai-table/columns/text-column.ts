@@ -17,7 +17,7 @@ import { IbColumn } from "./column";
 @Component({
   selector: "ib-text-column",
   template: `
-    <ng-container matColumnDef matSort>
+    <ng-container matColumnDef matSort [sticky]="sticky" [stickyEnd]="stickyEnd">
       <th
         class="ib-table__header-cell"
         mat-header-cell

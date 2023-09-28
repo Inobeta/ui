@@ -18,7 +18,12 @@ import { IbColumn } from "./column";
 @Component({
   selector: "ib-date-column",
   template: `
-    <ng-container matColumnDef matSort>
+    <ng-container
+      matColumnDef
+      matSort
+      [sticky]="sticky"
+      [stickyEnd]="stickyEnd"
+    >
       <th
         class="ib-table__header-cell"
         mat-header-cell
@@ -36,7 +41,7 @@ import { IbColumn } from "./column";
   `,
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.Default,
-  providers: [{ provide: IbColumn, useExisting: IbDateColumn }]
+  providers: [{ provide: IbColumn, useExisting: IbDateColumn }],
 })
 export class IbDateColumn<T> extends IbColumn<T> {
   @Input() format = "dd/MM/yyyy HH:mm z";

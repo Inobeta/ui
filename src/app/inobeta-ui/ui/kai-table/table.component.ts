@@ -11,7 +11,6 @@ import {
   ContentChild,
   ContentChildren,
   EventEmitter,
-  InjectionToken,
   Input,
   OnDestroy,
   Output,
@@ -28,18 +27,9 @@ import { ITableViewData, IView, IbTableViewGroup } from "../views";
 import { IbKaiTableAction } from "./action";
 import { IbColumn } from "./columns/column";
 import { IbSelectionColumn } from "./columns/selection-column";
-import { IbTextColumn } from "./columns/text-column";
 import { IbKaiRowGroupDirective } from "./rowgroup";
 import { IbDataSource } from "./table-data-source";
-import {
-  IbCellData,
-  IbColumnDef,
-  IbKaiTableState,
-  IbTableDef,
-  IbTableRowEvent,
-} from "./table.types";
-
-export const IB_CELL_DATA = new InjectionToken<IbCellData>("IbCellData");
+import { IbKaiTableState, IbTableDef, IbTableRowEvent } from "./table.types";
 
 const defaultTableDef: IbTableDef = {
   paginator: {

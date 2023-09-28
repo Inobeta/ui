@@ -2,16 +2,12 @@ import { Inject, Injectable, InjectionToken } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { MatTableDataSource } from "@angular/material/table";
 import { TranslateService } from "@ngx-translate/core";
-import { jsPDFOptions } from "jspdf";
-import { UserOptions } from "jspdf-autotable";
-import { IbColumnDef } from "../kai-table/table.types";
+import { IbColumn } from "../kai-table/columns/column";
 import { IbDataExportProvider } from "./provider";
 import {
   IbTableDataExportDialog,
   IbTableDataExportDialogData,
 } from "./table-data-export-dialog.component";
-import { IbTextColumn } from "../kai-table/columns/text-column";
-import { IbColumn } from "../kai-table/columns/column";
 
 export interface IDataExportSettings {
   format: "xlsx" | "pdf" | "csv";

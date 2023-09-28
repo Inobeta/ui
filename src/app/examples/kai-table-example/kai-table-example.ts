@@ -1,6 +1,5 @@
-import {  Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { useColumn, useContextColumn, useDateColumn, useNumberColumn } from 'src/app/inobeta-ui/ui/kai-table/cells';
 import { IbTableDef } from 'src/app/inobeta-ui/ui/kai-table/table.types';
 import { createNewUser } from './users';
 
@@ -38,14 +37,14 @@ import { createNewUser } from './users';
 })
 export class IbKaiTableExamplePage {
   dataSource = new MatTableDataSource<any>();
-  columns = [
-    useColumn('name', 'name'),
-    useColumn('Frutta','fruit', true),
-    useNumberColumn('number', 'number', true),
-    useDateColumn('My Date', 'aDate', true),
-    useDateColumn('My Date String', 'aDateString', true, 'dd/MMM/yyyy HH:mm'),
-    useContextColumn(() => [{type: 'the-search-key', icon: 'search'}])
-  ];
+  // columns = [
+  //   useColumn('name', 'name'),
+  //   useColumn('Frutta','fruit', true),
+  //   useNumberColumn('number', 'number', true),
+  //   useDateColumn('My Date', 'aDate', true),
+  //   useDateColumn('My Date String', 'aDateString', true, 'dd/MMM/yyyy HH:mm'),
+  //   useContextColumn(() => [{type: 'the-search-key', icon: 'search'}])
+  // ];
 
   tableDef: IbTableDef = {
     /*paginator: {

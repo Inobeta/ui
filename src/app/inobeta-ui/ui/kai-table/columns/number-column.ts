@@ -18,7 +18,7 @@ import { formatNumber } from "@angular/common";
 @Component({
   selector: "ib-number-column",
   template: `
-    <ng-container matColumnDef matSort>
+    <ng-container matColumnDef matSort [sticky]="sticky" [stickyEnd]="stickyEnd">
       <th
         class="ib-table__header-cell"
         mat-header-cell

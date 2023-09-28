@@ -18,21 +18,23 @@ import {
 } from "@angular/material/table";
 import { IbTable } from "../table.component";
 import { IB_COLUMN_OPTIONS, IbColumnOptions } from "../tokens";
-import { IbCellDirective } from "../cells";
+import { IbCellDef } from "../cells";
 
 @Component({
   selector: "ib-column",
   template: `
-    <ng-container matColumnDef>
-      <th
-        class="ib-table__header-cell"
-        mat-header-cell
-        *matHeaderCellDef
-      >
+    <ng-container matColumnDef [sticky]="sticky" [stickyEnd]="stickyEnd">
+      <th class="ib-table__header-cell" mat-header-cell *matHeaderCellDef>
         {{ headerText }}
       </th>
-      <td mat-cell *matCellDef="let data" >
-        <ng-container *ngTemplateOutlet="ibCellDef.templateRef; context: {'$implicit': data}"></ng-container>
+      <td mat-cell *matCellDef="let data" class="test">
+        <ng-container
+          *ngTemplateOutlet="
+            ibCellDef.templateRef;
+            context: { $implicit: data }
+          "
+        >
+        </ng-container>
       </td>
     </ng-container>
   `,
@@ -78,8 +80,14 @@ export class IbColumn<T> implements OnDestroy, OnInit {
    */
   @Input() sort = true;
 
-  @ContentChild(IbCellDirective, {static: true}) ibCellDef: IbCellDirective;
-  
+  /** Whether sticky positioning should be applied. */
+  @Input() sticky = false;
+
+  /** Whether this column should be sticky positioned on the end of the row. */
+  @Input() stickyEnd = false;
+
+  @ContentChild(IbCellDef, { static: true }) ibCellDef: IbCellDef;
+
   /** @docs-private */
   @ViewChild(MatColumnDef, { static: true }) columnDef: MatColumnDef;
 

@@ -13,39 +13,40 @@ import { MatSortModule } from "@angular/material/sort";
 import { MatTableModule } from "@angular/material/table";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { ibMatPaginatorTranslate } from "../table";
-import { IbCellDirective, IbContextActionCell } from "./cells";
-import { IbKaiRowGroupDirective } from "./rowgroup";
+import { IbCellDef, IbContextColumn } from "./cells";
+import { IbColumn } from "./columns/column";
+import { IbDateColumn } from "./columns/date-column";
+import { IbNumberColumn } from "./columns/number-column";
 import { IbSelectionColumn } from "./columns/selection-column";
+import { IbTextColumn } from "./columns/text-column";
+import { IbKaiRowGroupDirective } from "./rowgroup";
 import { IbSortHeader } from "./sort-header";
 import { IbTable } from "./table.component";
-import { IbTextColumn } from "./columns/text-column";
-import { IbColumn } from "./columns/column";
-import { IbNumberColumn } from "./columns/number-column";
-import { IbDateColumn } from "./columns/date-column";
 
 @NgModule({
   exports: [
     IbTable,
     IbKaiRowGroupDirective,
-    IbCellDirective,
+    IbCellDef,
     IbSelectionColumn,
     IbColumn,
     IbTextColumn,
     IbNumberColumn,
     IbDateColumn,
     IbSortHeader,
+    IbContextColumn,
   ],
   declarations: [
     IbTable,
-    IbContextActionCell,
     IbKaiRowGroupDirective,
-    IbCellDirective,
+    IbCellDef,
     IbSelectionColumn,
     IbColumn,
     IbTextColumn,
     IbNumberColumn,
     IbDateColumn,
     IbSortHeader,
+    IbContextColumn,
   ],
   imports: [
     CommonModule,

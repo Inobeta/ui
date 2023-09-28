@@ -1,23 +1,19 @@
-import { formatDate } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { Component, Injectable, ViewChild } from "@angular/core";
 import { SortDirection } from "@angular/material/sort";
 import { Observable } from "rxjs";
 import {
-  IbDateFilterCategory,
   IbDateFilterCriteria,
   IbTagFilterCriteria,
-  IbTextFilterCritera,
+  IbTextFilterCritera
 } from "src/app/inobeta-ui/ui/kai-filter/filter.types";
 import {
-  IbColumnDef,
   IbKaiTableState,
-  IbTableDef,
+  IbTableDef
 } from "src/app/inobeta-ui/ui/kai-table";
-import { useColumn } from "src/app/inobeta-ui/ui/kai-table/cells";
-import { IbSelectionColumn } from "../../inobeta-ui/ui/kai-table/columns/selection-column";
 import { IbDataSource } from "src/app/inobeta-ui/ui/kai-table/table-data-source";
 import { IbTable } from "src/app/inobeta-ui/ui/kai-table/table.component";
+import { IbSelectionColumn } from "../../inobeta-ui/ui/kai-table/columns/selection-column";
 
 type GithubPRState = "open" | "closed";
 
@@ -130,17 +126,17 @@ export class IbKaiTableApiExamplePage {
   selectionColumn: IbSelectionColumn;
 
   dataSource = new IbDataSource<GithubIssue>();
-  columns: IbColumnDef[] = [
-    {
-      columnDef: "created",
-      header: "Created",
-      cell: (e) => `${formatDate(e.created_at, "d MMM yyyy", "it-IT")}`,
-      sort: true,
-    },
-    useColumn("state"),
-    useColumn("#", "number", false),
-    useColumn("title"),
-  ];
+  // columns: IbColumnDef[] = [
+  //   {
+  //     columnDef: "created",
+  //     header: "Created",
+  //     cell: (e) => `${formatDate(e.created_at, "d MMM yyyy", "it-IT")}`,
+  //     sort: true,
+  //   },
+  //   useColumn("state"),
+  //   useColumn("#", "number", false),
+  //   useColumn("title"),
+  // ];
   tableDef: IbTableDef = {
     paginator: {
       pageSize: 30,
