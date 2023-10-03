@@ -17,17 +17,37 @@ import {
   MatHeaderCellDef,
 } from "@angular/material/table";
 import { IbCellDef } from "../cells";
-import { IbTable } from "../table.component";
-import { IB_COLUMN_OPTIONS, IbColumnOptions } from "../tokens";
+import { IB_COLUMN_OPTIONS, IB_TABLE, IbColumnOptions } from "../tokens";
 
+/**
+ * Column that shows any arbitrary content for the row cells.
+ *
+ * It requires a single element with the `*ibCellDef` directive in its template.
+ *
+ * By default, the name of this column will be the header text and data property accessor.
+ * The header text can be overridden with the `headerText` input. Cell values can be overridden with
+ * the `dataAccessor` input.
+ */
 @Component({
   selector: "ib-column",
   template: `
-    <ng-container matColumnDef [sticky]="sticky" [stickyEnd]="stickyEnd">
-      <th class="ib-table__header-cell" mat-header-cell *matHeaderCellDef>
+    <ng-container
+      matColumnDef
+      matSort
+      [sticky]="sticky"
+      [stickyEnd]="stickyEnd"
+    >
+      <th
+        class="ib-table__header-cell"
+        mat-header-cell
+        *matHeaderCellDef
+        [ibSortHeaderFor]="matSort"
+        mat-sort-header
+        [disabled]="!sort"
+      >
         {{ headerText }}
       </th>
-      <td mat-cell *matCellDef="let data" class="test">
+      <td mat-cell *matCellDef="let data">
         <ng-container
           *ngTemplateOutlet="
             ibCellDef.templateRef;
@@ -109,46 +129,28 @@ export class IbColumn<T> implements OnDestroy, OnInit {
 
   @ContentChild(IbCellDef, { static: true }) ibCellDef: IbCellDef;
 
-  /** @docs-private */
+  /** @ignore */
   @ViewChild(MatColumnDef, { static: true }) columnDef: MatColumnDef;
 
   /**
-   * The column cell is provided to the column during `ngOnInit` with a static query.
+   * The column cell, headerCell, and footerCell are provided to the column during `ngOnInit` with a static query.
    * Normally, this will be retrieved by the column using `ContentChild`, but that assumes the
    * column definition was provided in the same view as the table, which is not the case with this
    * component.
-   * @docs-private
+   * @ignore
    */
   @ViewChild(MatCellDef, { static: true }) cell: MatCellDef;
-
-  /**
-   * The column headerCell is provided to the column during `ngOnInit` with a static query.
-   * Normally, this will be retrieved by the column using `ContentChild`, but that assumes the
-   * column definition was provided in the same view as the table, which is not the case with this
-   * component.
-   * @docs-private
-   */
   @ViewChild(MatHeaderCellDef, { static: true }) headerCell: MatHeaderCellDef;
-
-  /**
-   * The column footerCell is provided to the column during `ngOnInit` with a static query.
-   * Normally, this will be retrieved by the column using `ContentChild`, but that assumes the
-   * column definition was provided in the same view as the table, which is not the case with this
-   * component.
-   * @docs-private
-   */
   @ViewChild(MatFooterCellDef, { static: true }) footerCell: MatFooterCellDef;
 
-  /**
-   * @ignore
-   * @docs-private */
+  /** @ignore */
   get matSort() {
     return this._table.sort;
   }
 
   constructor(
     // tslint:disable-next-line: lightweight-tokens
-    @Optional() private _table: IbTable,
+    @Inject(IB_TABLE) @Optional() public _table: any,
     @Optional()
     @Inject(IB_COLUMN_OPTIONS)
     private _options: IbColumnOptions<T>
@@ -176,13 +178,13 @@ export class IbColumn<T> implements OnDestroy, OnInit {
       this.columnDef.cell = this.cell;
       this.columnDef.headerCell = this.headerCell;
       this.columnDef.footerCell = this.footerCell;
-      this._table.table.addColumnDef(this.columnDef);
+      this._table.matTable.addColumnDef(this.columnDef);
     }
   }
 
   ngOnDestroy() {
     if (this._table) {
-      this._table.table.removeColumnDef(this.columnDef);
+      this._table.matTable.removeColumnDef(this.columnDef);
     }
   }
 
@@ -194,7 +196,7 @@ export class IbColumn<T> implements OnDestroy, OnInit {
     const name = this.name;
 
     if (!name) {
-      throw Error(`Table text column must have a name.`);
+      throw Error(`Table column must have a name.`);
     }
 
     if (this._options && this._options.defaultHeaderTextTransform) {

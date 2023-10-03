@@ -34,8 +34,16 @@ import { IbFilterModule } from "../kai-filter/filters.module";
 import { IbToastModule } from "../toast/toast.module";
 import { IbViewModule } from "../views/view.module";
 import { IbTableActionModule } from "./action";
+import {
+  IbColumn,
+  IbDateColumn,
+  IbNumberColumn,
+  IbTextColumn,
+} from "./columns";
+import { IbActionColumn } from "./columns/action-column";
 import { IbSelectionColumn } from "./columns/selection-column";
 import { IbKaiRowGroupDirective } from "./rowgroup";
+import { IbSortHeader } from "./sort-header";
 import { IbDataSource } from "./table-data-source";
 import { IbTable } from "./table.component";
 import { IbKaiTableState } from "./table.types";
@@ -392,7 +400,18 @@ describe("IbTable", () => {
 
 function configureModule<T>(type: Type<T>) {
   TestBed.configureTestingModule({
-    declarations: [IbTable, IbKaiRowGroupDirective, IbSelectionColumn, type],
+    declarations: [
+      IbTable,
+      IbKaiRowGroupDirective,
+      IbSelectionColumn,
+      IbColumn,
+      IbTextColumn,
+      IbNumberColumn,
+      IbDateColumn,
+      IbSortHeader,
+      IbActionColumn,
+      type,
+    ],
     imports: [
       CommonModule,
       PortalModule,
@@ -514,8 +533,8 @@ class IbStubExportProvider implements IbDataExportProvider {
         <ib-table-data-export-action></ib-table-data-export-action>
       </ib-table-action-group>
       <ib-selection-column></ib-selection-column>
-      <ib-text-column name="name"></ib-text-column>
-      <ib-text-column name="color"></ib-text-column>
+      <ib-text-column headerText="name" name="name"></ib-text-column>
+      <ib-text-column headerText="color" name="color"></ib-text-column>
     </ib-kai-table>
   `,
   providers: [

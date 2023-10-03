@@ -17,7 +17,12 @@ import { IbColumn } from "./column";
 @Component({
   selector: "ib-text-column",
   template: `
-    <ng-container matColumnDef matSort [sticky]="sticky" [stickyEnd]="stickyEnd">
+    <ng-container
+      matColumnDef
+      matSort
+      [sticky]="sticky"
+      [stickyEnd]="stickyEnd"
+    >
       <th
         class="ib-table__header-cell"
         mat-header-cell
@@ -42,7 +47,7 @@ import { IbColumn } from "./column";
   // an ExpressionChangedAfterItHasBeenCheckedError).
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
-  providers: [{ provide: IbColumn, useExisting: IbTextColumn }]
+  providers: [{ provide: IbColumn, useExisting: IbTextColumn }],
 })
 export class IbTextColumn<T> extends IbColumn<T> {
   /** Alignment of the cell values. */

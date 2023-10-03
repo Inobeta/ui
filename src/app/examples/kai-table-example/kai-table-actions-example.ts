@@ -1,20 +1,32 @@
 import { Component, OnInit } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
-import { IbTableRowEvent } from "src/app/inobeta-ui/ui/kai-table/table.types";
 import { IbUserExample, createNewUser } from "./users";
 
 @Component({
   selector: "ib-kai-table-context-action-example",
   template: `
     <ib-kai-table
+      style="text-direction: rtl"
       [displayedColumns]="['name', 'fruit', 'number']"
       [dataSource]="dataSource"
-      (ibRowClicked)="handleRowClicked($event)"
       class="mat-elevation-z8"
     >
       <ib-text-column name="name"></ib-text-column>
       <ib-text-column name="fruit"></ib-text-column>
       <ib-text-column name="number" sort></ib-text-column>
+      <ib-column ib-action-column>
+        <section *ibCellDef="let element">
+          <button mat-icon-button (click)="handleShowReport(element)">
+            <mat-icon>chevron_right</mat-icon>
+          </button>
+          <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="handleTest(element)">test</button>
+          </mat-menu>
+        </section>
+      </ib-column>
     </ib-kai-table>
   `,
   styles: [
@@ -27,7 +39,7 @@ import { IbUserExample, createNewUser } from "./users";
     `,
   ],
 })
-export class IbKaiTableContextActionExamplePage implements OnInit {
+export class IbKaiTableActionColumnExamplePage implements OnInit {
   dataSource = new MatTableDataSource<IbUserExample>();
 
   ngOnInit() {
@@ -35,10 +47,11 @@ export class IbKaiTableContextActionExamplePage implements OnInit {
     this.dataSource.data = users;
   }
 
-  handleRowClicked(event: IbTableRowEvent<IbUserExample>) {
-    if (event.type === "view") {
-      alert(`${event.row.name} has ${event.row.number} ${event.row.fruit}(s)`);
-      // do the thing
-    }
+  handleShowReport(user: IbUserExample) {
+    alert(`${user.name} has ${user.number} ${user.fruit}(s)`);
+  }
+
+  handleTest(user: IbUserExample) {
+    alert(`this is user ${user.id}`);
   }
 }

@@ -28,7 +28,7 @@ const tableData = [
   },
 ];
 
-const meta: Meta<IbTable> = {
+const meta: Meta = {
   title: "IbTable",
   component: IbTable,
   tags: ["autodocs"],
@@ -47,7 +47,6 @@ const meta: Meta<IbTable> = {
     }),
   ],
   argTypes: {
-    ibRowClicked: { control: { disable: true } },
     dataSource: { control: { disable: true } },
   },
 };
@@ -58,13 +57,14 @@ type Story = StoryObj<IbTable>;
 export const Simple: Story = {
   args: {
     dataSource: new MatTableDataSource(tableData),
+    displayedColumns: ["sku", "price", "category", "created_at"],
   },
   render: (args) => ({
     props: args,
     template: `
-      <ib-kai-table tableName="products" [columns]="columns" [dataSource]="dataSource">
+      <ib-kai-table tableName="products" [displayedColumns]="displayedColumns" [dataSource]="dataSource">
         <ib-text-column headerText="SKU" name="sku"></ib-text-column>
-        <ib-text-column headerText="Prezzo" name="price"></ib-text-column>
+        <ib-number-column headerText="Prezzo" name="price"></ib-number-column>
         <ib-text-column headerText="Categoria" name="category"></ib-text-column>
         <ib-date-column headerText="Aggiunto il" name="created_at"></ib-date-column>
       </ib-kai-table>
@@ -75,11 +75,12 @@ export const Simple: Story = {
 export const WithFilters: Story = {
   args: {
     dataSource: new MatTableDataSource(tableData),
+    displayedColumns: ["sku", "price", "category", "created_at"],
   },
   render: (args) => ({
     props: args,
     template: `
-      <ib-kai-table tableName="products" [columns]="columns" [dataSource]="dataSource">
+      <ib-kai-table tableName="daje" [displayedColumns]="displayedColumns" [dataSource]="dataSource">
         <ib-filter>
           <ib-text-filter name="sku">SKU</ib-text-filter>
           <ib-number-filter name="price" [step]="0.01">Prezzo</ib-number-filter>
@@ -88,7 +89,7 @@ export const WithFilters: Story = {
         </ib-filter>
 
         <ib-text-column headerText="SKU" name="sku"></ib-text-column>
-        <ib-text-column headerText="Prezzo" name="price"></ib-text-column>
+        <ib-number-column headerText="Prezzo" name="price"></ib-number-column>
         <ib-text-column headerText="Categoria" name="category"></ib-text-column>
         <ib-date-column headerText="Aggiunto il" name="created_at"></ib-date-column>
       </ib-kai-table>
@@ -99,17 +100,18 @@ export const WithFilters: Story = {
 export const WithExport: Story = {
   args: {
     dataSource: new MatTableDataSource(tableData),
+    displayedColumns: ["sku", "price", "category", "created_at"],
   },
   render: (args) => ({
     props: args,
     template: `
-      <ib-kai-table tableName="products" [columns]="columns" [dataSource]="dataSource">
+      <ib-kai-table tableName="products" [displayedColumns]="displayedColumns" [dataSource]="dataSource">
         <ib-table-action-group>
           <ib-table-data-export-action></ib-table-data-export-action>
         </ib-table-action-group>
 
         <ib-text-column headerText="SKU" name="sku"></ib-text-column>
-        <ib-text-column headerText="Prezzo" name="price"></ib-text-column>
+        <ib-number-column headerText="Prezzo" name="price"></ib-number-column>
         <ib-text-column headerText="Categoria" name="category"></ib-text-column>
         <ib-date-column headerText="Aggiunto il" name="created_at"></ib-date-column>
       </ib-kai-table>

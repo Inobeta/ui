@@ -10,17 +10,16 @@ import {
   Component,
   ContentChild,
   ContentChildren,
-  EventEmitter,
   Input,
   OnDestroy,
-  Output,
   QueryList,
   ViewChild,
 } from "@angular/core";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { MatTable, MatTableDataSource } from "@angular/material/table";
-import { filter } from "rxjs/operators";
+import { Subject } from "rxjs";
+import { filter, takeUntil } from "rxjs/operators";
 import { IbTableDataExportAction } from "../data-export/table-data-export.component";
 import { IbFilter } from "../kai-filter";
 import { ITableViewData, IView, IbTableViewGroup } from "../views";
@@ -29,7 +28,8 @@ import { IbColumn } from "./columns/column";
 import { IbSelectionColumn } from "./columns/selection-column";
 import { IbKaiRowGroupDirective } from "./rowgroup";
 import { IbDataSource } from "./table-data-source";
-import { IbKaiTableState, IbTableDef, IbTableRowEvent } from "./table.types";
+import { IbKaiTableState, IbTableDef } from "./table.types";
+import { IB_TABLE } from "./tokens";
 
 const defaultTableDef: IbTableDef = {
   paginator: {
@@ -53,44 +53,59 @@ const defaultTableDef: IbTableDef = {
       ),
     ]),
   ],
+  providers: [{ provide: IB_TABLE, useExisting: IbTable }],
 })
 export class IbTable implements OnDestroy {
-  // tslint:disable-next-line: variable-name
-  private _dataSource: MatTableDataSource<any> | IbDataSource<any> =
-    new MatTableDataSource([]);
-  // tslint:disable-next-line: variable-name
-  private _tableDef: IbTableDef = defaultTableDef;
-  actionPortals: Portal<any>[] = [];
+  private _destroyed = new Subject();
 
   @ContentChildren(IbColumn) columns: QueryList<IbColumn<any>>;
   @ContentChild(IbSelectionColumn) selectionColumn!: IbSelectionColumn;
   @ContentChild(IbKaiRowGroupDirective) rowGroup!: IbKaiRowGroupDirective;
+
   @ContentChild(IbFilter) filter!: IbFilter;
   @ContentChild(IbTableViewGroup) view!: IbTableViewGroup;
+
   @ContentChildren(IbKaiTableAction, { descendants: true })
   actions: QueryList<IbKaiTableAction>;
   @ContentChild(IbTableDataExportAction) exportAction: IbTableDataExportAction;
 
-  @ViewChild(MatTable, { static: true }) table: MatTable<any>;
+  @ViewChild(MatTable, { static: true }) matTable: MatTable<any>;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   expandedElement: any;
+  actionPortals: Portal<any>[] = [];
 
   states = IbKaiTableState;
   state = IbKaiTableState.IDLE;
 
   @Input()
-  set dataSource(value: MatTableDataSource<any> | IbDataSource<any>) {
-    this._dataSource = value;
-  }
-  get dataSource() {
-    return this._dataSource;
-  }
+  dataSource: MatTableDataSource<any> | IbDataSource<any> =
+    new MatTableDataSource([]);
 
-  @Input() tableName = btoa(window.location.pathname + window.location.hash);
+  @Input() tableName: string = btoa(
+    window.location.pathname + window.location.hash
+  );
+
+  /**
+   * Configuration for the table and its inner components. Currently supports only
+   * `paginator` and `sort` parameters.
+   *
+   * If left empty, the following default is used
+   *
+   * ```
+   * {
+   *   paginator : {
+   *     pageSizeOptions: [5, 10, 25, 100],
+   *     showFirstLastButtons: true,
+   *     pageSize: 10,
+   *     hide: false,
+   *   }
+   * }
+   * ```
+   */
   @Input()
-  set tableDef(value) {
+  set tableDef(value: Partial<IbTableDef>) {
     this._tableDef = {
       ...defaultTableDef,
       ...value,
@@ -99,18 +114,25 @@ export class IbTable implements OnDestroy {
   get tableDef() {
     return this._tableDef;
   }
+  private _tableDef: IbTableDef = defaultTableDef;
 
-  @Input()
-  displayedColumns: string[] = [];
-
-  @Output() ibRowClicked = new EventEmitter<IbTableRowEvent>();
+  /**
+   * Columns to be displayed.
+   *
+   * The order of the columns present in this array is rendered
+   * as is in a language written from left-to-right. It is reversed
+   * in a language written from right-to-left.
+   */
+  @Input() displayedColumns: string[] = [];
 
   ngOnInit() {
-    this._dataSource.paginator = this.paginator;
-    this._dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
 
-    if (this._dataSource instanceof IbDataSource) {
-      this._dataSource._state.subscribe((s) => (this.state = s));
+    if (this.dataSource instanceof IbDataSource) {
+      this.dataSource._state
+        .pipe(takeUntil(this._destroyed))
+        .subscribe((s) => (this.state = s));
     }
   }
 
@@ -124,73 +146,17 @@ export class IbTable implements OnDestroy {
     }
 
     if (this.view && this.filter) {
-      this.view.defaultView.data = {
-        filter: this.filter.initialRawValue,
-        pageSize: this.tableDef.paginator.pageSize,
-      };
-
-      this.view.viewDataAccessor = () => ({
-        filter: this.filter.rawFilter,
-        pageSize: this.paginator.pageSize,
-      });
-
-      this.view._activeView
-        .pipe(filter((view) => !!view))
-        .subscribe((view: IView<ITableViewData>) => {
-          this.paginator.firstPage();
-          this.paginator.pageSize = view.data.pageSize;
-          this.filter.value = view.data.filter;
-        });
-
-      this.filter.ibRawFilterUpdated.subscribe((rawFilter) => {
-        this.view.dirty =
-          JSON.stringify(rawFilter) !==
-          JSON.stringify(this.view.activeView.data.filter);
-      });
-      this.paginator.page.subscribe((p) => {
-        this.view.dirty = p.pageSize !== this.view.activeView.data.pageSize;
-      });
-
-      for (const action of [
-        this.filter.hideFilterAction,
-        ...this.view.actions.toArray(),
-      ]) {
-        this.actionPortals.push(
-          new TemplatePortal(action.templateRef, action.viewContainerRef)
-        );
-      }
+      this.setupViewGroup();
     }
 
     if (this.exportAction) {
-      this.exportAction.showSelectedRowsOption = !!this.selectionColumn;
-      this.exportAction.ibDataExport.subscribe((settings) => {
-        this.exportAction.exportService._exportFromTable(
-          this.tableName,
-          this.columns.toArray(),
-          this.dataSource as MatTableDataSource<any>,
-          this.selectionColumn?.selection.selected,
-          settings
-        );
-      });
+      this.setupExportAction();
     }
   }
 
   ngAfterContentInit() {
     if (this.filter) {
-      const updateFilter = (filter) => {
-        this.selectionColumn?.selection?.clear();
-        this.dataSource.filter = filter as any;
-      };
-      this.dataSource.filterPredicate = this.filter.filterPredicate;
-      if (this._dataSource instanceof IbDataSource) {
-        this.filter.ibRawFilterUpdated.subscribe(updateFilter);
-        return;
-      }
-
-      this.filter.filters.forEach((f) =>
-        f.initializeFromColumn(this.dataSource.data)
-      );
-      this.filter.ibFilterUpdated.subscribe(updateFilter);
+      this.setupFilter();
     }
 
     if (this.view) {
@@ -199,9 +165,86 @@ export class IbTable implements OnDestroy {
   }
 
   ngOnDestroy() {
+    this._destroyed.next();
+    this._destroyed.complete();
   }
 
   isState(state: IbKaiTableState) {
     return this.state === state;
+  }
+
+  private setupFilter() {
+    const updateFilter = (filter) => {
+      this.selectionColumn?.selection?.clear();
+      this.dataSource.filter = filter as any;
+    };
+    this.dataSource.filterPredicate = this.filter.filterPredicate;
+    let event = this.filter.ibRawFilterUpdated;
+    if (this.dataSource instanceof MatTableDataSource) {
+      event = this.filter.ibFilterUpdated;
+      this.filter.filters.forEach((f) =>
+        f.initializeFromColumn(this.dataSource.data)
+      );
+    }
+
+    event.pipe(takeUntil(this._destroyed)).subscribe(updateFilter);
+  }
+
+  private setupViewGroup() {
+    this.view.defaultView.data = {
+      filter: this.filter.initialRawValue,
+      pageSize: this.tableDef.paginator.pageSize,
+    };
+
+    this.view.viewDataAccessor = () => ({
+      filter: this.filter.rawFilter,
+      pageSize: this.paginator.pageSize,
+    });
+
+    this.view._activeView
+      .pipe(
+        filter((view) => !!view),
+        takeUntil(this._destroyed)
+      )
+      .subscribe((view: IView<ITableViewData>) => {
+        this.paginator.firstPage();
+        this.paginator.pageSize = view.data.pageSize;
+        this.filter.value = view.data.filter;
+      });
+
+    this.filter.ibRawFilterUpdated
+      .pipe(takeUntil(this._destroyed))
+      .subscribe((rawFilter) => {
+        this.view.dirty =
+          JSON.stringify(rawFilter) !==
+          JSON.stringify(this.view.activeView.data.filter);
+      });
+    this.paginator.page.pipe(takeUntil(this._destroyed)).subscribe((p) => {
+      this.view.dirty = p.pageSize !== this.view.activeView.data.pageSize;
+    });
+
+    for (const action of [
+      this.filter.hideFilterAction,
+      ...this.view.actions.toArray(),
+    ]) {
+      this.actionPortals.push(
+        new TemplatePortal(action.templateRef, action.viewContainerRef)
+      );
+    }
+  }
+
+  private setupExportAction() {
+    this.exportAction.showSelectedRowsOption = !!this.selectionColumn;
+    this.exportAction.ibDataExport
+      .pipe(takeUntil(this._destroyed))
+      .subscribe((settings) => {
+        this.exportAction.exportService._exportFromTable(
+          this.tableName,
+          this.columns.filter((c) => !c.name.startsWith("ib-")),
+          this.dataSource as MatTableDataSource<any>,
+          this.selectionColumn?.selection.selected,
+          settings
+        );
+      });
   }
 }

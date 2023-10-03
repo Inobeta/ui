@@ -1,3 +1,4 @@
+import { formatNumber } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   Component,
@@ -5,20 +6,24 @@ import {
   ViewEncapsulation,
 } from "@angular/core";
 import { IbColumn } from "./column";
-import { formatNumber } from "@angular/common";
 
 /**
  * Column that shows a formatted number for the row cells.
  *
  * By default, the name of this column will be the header text and data property accessor.
  * The header text can be overridden with the `headerText` input. Cell values can be overridden with
- * the `dataAccessor` input. Change the decimal representation using the 
+ * the `dataAccessor` input. Change the decimal representation using the
  * `digitsInfo` input. Same as `DecimalPipe` or `formatNumber` function.
  */
 @Component({
   selector: "ib-number-column",
   template: `
-    <ng-container matColumnDef matSort [sticky]="sticky" [stickyEnd]="stickyEnd">
+    <ng-container
+      matColumnDef
+      matSort
+      [sticky]="sticky"
+      [stickyEnd]="stickyEnd"
+    >
       <th
         class="ib-table__header-cell"
         mat-header-cell
@@ -36,7 +41,7 @@ import { formatNumber } from "@angular/common";
   `,
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.Default,
-  providers: [{ provide: IbColumn, useExisting: IbNumberColumn }]
+  providers: [{ provide: IbColumn, useExisting: IbNumberColumn }],
 })
 export class IbNumberColumn<T> extends IbColumn<T> {
   @Input() digitsInfo = "1.0-2";

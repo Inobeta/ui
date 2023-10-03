@@ -1,7 +1,6 @@
 import { Inject, Injectable, InjectionToken } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { MatTableDataSource } from "@angular/material/table";
-import { TranslateService } from "@ngx-translate/core";
 import { IbColumn } from "../kai-table/columns/column";
 import { IbDataExportProvider } from "./provider";
 import {
@@ -24,7 +23,6 @@ export class IbDataExportService {
 
   constructor(
     private dialog: MatDialog,
-    private translate: TranslateService,
     @Inject(OVERRIDE_EXPORT_FORMATS) private providers: IbDataExportProvider[]
   ) {
     this.formats = this.providers.map((p) => ({
@@ -73,14 +71,14 @@ export class IbDataExportService {
     }
 
     const displayHeader = {};
-    for (const column of columns.filter((c) => c.name)) {
-      displayHeader[column.name] = this.translate.instant(column.headerText);
+    for (const column of columns) {
+      displayHeader[column.name] = column.headerText;
     }
 
     const outputData = [];
     for (const row of data) {
       let outputRow = {};
-      for (const column of columns.filter((c) => c.name)) {
+      for (const column of columns) {
         const header = displayHeader[column.name];
         const displayValue = column.dataAccessor(row, column.name);
         outputRow[header] = displayValue;

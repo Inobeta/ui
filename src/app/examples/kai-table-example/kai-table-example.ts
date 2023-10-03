@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { IbTableDef } from 'src/app/inobeta-ui/ui/kai-table/table.types';
+import { IbTableDef } from '../../inobeta-ui/ui/kai-table/table.types';
 import { createNewUser } from './users';
 
 @Component({
@@ -13,24 +13,24 @@ import { createNewUser } from './users';
     padding: 30px;
   }
 
-  ib-kai-table >>> .ib-cell-number{
+  ib-kai-table ::ng-deep .ib-cell-number{
     text-align: right;
     padding-right: 20px;
   }
 
-  ib-kai-table >>> .ib-action-the-search-key{
+  ib-kai-table ::ng-deep .ib-action-the-search-key{
     color: purple;
     font-weight: bold;
   }
 
-  ib-kai-table >>> table th:first-of-type{
+  ib-kai-table ::ng-deep table th:first-of-type{
     border-top-left-radius: 20px;
   }
 
-  ib-kai-table >>> table th:last-of-type{
+  ib-kai-table ::ng-deep table th:last-of-type{
     border-top-right-radius: 20px;
   }
-  ib-kai-table >>> .ib-table-scrollable{
+  ib-kai-table ::ng-deep .ib-table-scrollable{
     height: 450px;
   }
   `]

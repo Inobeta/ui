@@ -6,10 +6,10 @@ import {
   IbDateFilterCriteria,
   IbTagFilterCriteria,
   IbTextFilterCritera,
-} from "src/app/inobeta-ui/ui/kai-filter/filter.types";
-import { IbKaiTableState, IbTableDef } from "src/app/inobeta-ui/ui/kai-table";
-import { IbDataSource } from "src/app/inobeta-ui/ui/kai-table/table-data-source";
-import { IbTable } from "src/app/inobeta-ui/ui/kai-table/table.component";
+} from "../../inobeta-ui/ui/kai-filter/filter.types";
+import { IbKaiTableState, IbTableDef } from "../../inobeta-ui/ui/kai-table";
+import { IbDataSource } from "../../inobeta-ui/ui/kai-table/table-data-source";
+import { IbTable } from "../../inobeta-ui/ui/kai-table/table.component";
 
 type GithubPRState = "open" | "closed";
 
@@ -79,7 +79,7 @@ class GithubService {
       </button>
       <button mat-raised-button (click)="setState('idle')">set to idle</button>
     </div>
-    <ib-kai-table #table [displayedColumns]="['created_at', 'state', 'number', 'title']" [dataSource]="dataSource" [tableDef]="tableDef">
+    <ib-kai-table #table [displayedColumns]="['created', 'state', 'number', 'title']" [dataSource]="dataSource" [tableDef]="tableDef">
       <ib-filter>
         <ib-date-filter name="created">Created</ib-date-filter>
         <ib-tag-filter
@@ -91,7 +91,7 @@ class GithubService {
         <ib-text-filter name="title">Title</ib-text-filter>
       </ib-filter>
 
-      <ib-date-column headerText="Created" name="created_at" format="d MMM yyyy" sort></ib-date-column>
+      <ib-date-column headerText="Created" name="created" [dataAccessor]="createdAtAccessor" format="d MMM yyyy" sort></ib-date-column>
       <ib-text-column name="state"></ib-text-column>
       <ib-text-column headerText="#" name="number"></ib-text-column>
       <ib-text-column name="title"></ib-text-column>
@@ -130,6 +130,7 @@ export class IbKaiTableApiExamplePage {
 
   isRateLimitReached = false;
   resultsLength = 0;
+  createdAtAccessor = (data: GithubIssue, name: string) => data.created_at
 
   constructor(private github: GithubService) {}
 

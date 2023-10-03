@@ -5,6 +5,7 @@ export interface IbUserExample {
   number: number;
   aDate?: Date;
   aDateString?: string;
+  subscribed: boolean;
 }
 
 const FRUITS: string[] = [
@@ -59,7 +60,8 @@ export function createNewUser(id: number): IbUserExample {
     fruit: FRUITS[Math.round(Math.random() * (FRUITS.length - 1))],
     number: Math.round(Math.random() * 22) + 1,
     aDate: getRandomDate(minDate, maxDate),
-    aDateString: '2023-01-01T12:53:12.000Z'
+    aDateString: '2023-01-01T12:53:12.000Z',
+    subscribed: Math.round(Math.random() * 10) % 2 === 0
   };
 }
 

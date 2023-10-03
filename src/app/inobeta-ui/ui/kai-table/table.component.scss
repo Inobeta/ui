@@ -44,8 +44,10 @@ tr.ib-table-element-row:not(.ib-table-expanded-row):hover {
   display: flex;
 }
 
-::ng-deep td > .ib-table-context-column {
+::ng-deep td.cdk-column-ib-action > :first-child,
+::ng-deep td.mat-column-ib-action > :first-child {
   display: flex;
   gap: 4px;
   justify-content: flex-end;
+  align-content: center;
 }

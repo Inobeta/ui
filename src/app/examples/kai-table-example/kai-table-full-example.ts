@@ -8,16 +8,16 @@ import { createNewUser } from "./users";
   template: `
     <ib-kai-table
       tableName="fullExample"
-      [displayedColumns]="['name', 'fruit', 'number', 'aDate', 'actions']"
+      [displayedColumns]="columns"
       [dataSource]="dataSource"
     >
       <ib-table-action-group>
         <button
           mat-icon-button
           (click)="getSelection()"
-          [disabled]="selectionColumn?.selection.selected.length === 0"
+          *ngIf="selectionColumn?.selection.selected.length > 0"
         >
-          <mat-icon>list</mat-icon>
+          <mat-icon>delete</mat-icon>
         </button>
         <ib-table-data-export-action></ib-table-data-export-action>
       </ib-table-action-group>
@@ -26,10 +26,10 @@ import { createNewUser } from "./users";
       <ib-filter>
         <ib-search-bar></ib-search-bar>
 
-        <ib-text-filter ibTableColumnName="name">Name</ib-text-filter>
-        <ib-tag-filter ibTableColumnName="fruit">Fruit</ib-tag-filter>
-        <ib-number-filter ibTableColumnName="number">Amount</ib-number-filter>
-        <ib-date-filter ibTableColumnName="aDate">Purchased</ib-date-filter>
+        <ib-text-filter name="name">Name</ib-text-filter>
+        <ib-tag-filter name="fruit">Fruit</ib-tag-filter>
+        <ib-number-filter name="number">Amount</ib-number-filter>
+        <ib-date-filter name="aDate">Purchased</ib-date-filter>
       </ib-filter>
 
       <ib-selection-column
@@ -43,12 +43,19 @@ import { createNewUser } from "./users";
         sort
       ></ib-number-column>
       <ib-date-column headerText="Purchased" name="aDate" sort></ib-date-column>
-      <ib-column headerText="" name="actions" stickyEnd>
-        <div *ibCellDef="let data" ib-context-column>
-          <button mat-icon-button (click)="handleView(data)">
+      <ib-column name="subscribed" sort>
+        <section *ibCellDef="let element">
+          <mat-icon [color]="element.subscribed ? 'accent' : ''">{{
+            element.subscribed ? "done" : "close"
+          }}</mat-icon>
+        </section>
+      </ib-column>
+      <ib-column ib-action-column>
+        <section *ibCellDef="let element">
+          <button mat-icon-button (click)="handleView(element)">
             <mat-icon>chevron_right</mat-icon>
           </button>
-        </div>
+        </section>
       </ib-column>
 
       <!-- <ib-footer>
@@ -77,6 +84,7 @@ export class IbKaiTableFullExamplePage {
   selectionColumn: IbSelectionColumn;
 
   dataSource = new MatTableDataSource<any>();
+  columns = ['name', 'fruit', 'number', 'aDate', 'subscribed'];
 
   ngOnInit() {
     const users = Array.from({ length: 1000 }, (_, k) => createNewUser(k + 1));

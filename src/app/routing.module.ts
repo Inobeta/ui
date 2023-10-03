@@ -11,7 +11,7 @@ import { IbTableExampleNoReduxComponent } from './examples/table-example/table-w
 import { IbTableStickyExampleComponent } from './examples/table-example/table-sticky/table-example.component';
 import { NavComponent } from './examples/nav/nav.component';
 import { IbKaiTableExamplePage } from './examples/kai-table-example/kai-table-example';
-import { IbKaiTableContextActionExamplePage } from './examples/kai-table-example/kai-table-context-action-example';
+import { IbKaiTableActionColumnExamplePage } from './examples/kai-table-example/kai-table-actions-example';
 import { IbKaiTableFullExamplePage } from './examples/kai-table-example/kai-table-full-example';
 import { IbKaiTableApiExamplePage } from './examples/kai-table-example/kai-table-api-example';
 
@@ -90,9 +90,9 @@ const appRoutes: Routes = [
             component: IbKaiTableExamplePage
           },
           {
-            path: 'context-action',
-            data: { breadcrumb: 'Context Action' },
-            component: IbKaiTableContextActionExamplePage
+            path: 'actions',
+            data: { breadcrumb: 'Actions' },
+            component: IbKaiTableActionColumnExamplePage
           },
           {
             path: 'api',

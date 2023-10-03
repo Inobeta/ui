@@ -13,7 +13,8 @@ import { MatSortModule } from "@angular/material/sort";
 import { MatTableModule } from "@angular/material/table";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { ibMatPaginatorTranslate } from "../table";
-import { IbCellDef, IbContextColumn } from "./cells";
+import { IbCellDef } from "./cells";
+import { IbActionColumn } from "./columns/action-column";
 import { IbColumn } from "./columns/column";
 import { IbDateColumn } from "./columns/date-column";
 import { IbNumberColumn } from "./columns/number-column";
@@ -34,7 +35,7 @@ import { IbTable } from "./table.component";
     IbNumberColumn,
     IbDateColumn,
     IbSortHeader,
-    IbContextColumn,
+    IbActionColumn,
   ],
   declarations: [
     IbTable,
@@ -46,7 +47,7 @@ import { IbTable } from "./table.component";
     IbNumberColumn,
     IbDateColumn,
     IbSortHeader,
-    IbContextColumn,
+    IbActionColumn,
   ],
   imports: [
     CommonModule,

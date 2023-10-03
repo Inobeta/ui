@@ -2,7 +2,9 @@ import { SelectionModel } from "@angular/cdk/collections";
 import {
   Component,
   EventEmitter,
+  Inject,
   OnInit,
+  Optional,
   Output,
   ViewChild,
 } from "@angular/core";
@@ -11,13 +13,13 @@ import {
   MatColumnDef,
   MatHeaderCellDef,
 } from "@angular/material/table";
-import { IbTable } from "../table.component";
 import { IbKaiTableState, IbTableRowSelectionChange } from "../table.types";
+import { IB_TABLE } from "../tokens";
 
 @Component({
   selector: "ib-selection-column",
   template: `
-    <ng-container matColumnDef="ibSelectionColumn">
+    <ng-container matColumnDef="ib-selection">
       <th
         style="width: 40px"
         class="ib-table__header-cell"
@@ -62,13 +64,15 @@ export class IbSelectionColumn implements OnInit {
     IbTableRowSelectionChange[]
   >();
 
-  constructor(public table: IbTable) {}
+  constructor(@Inject(IB_TABLE) @Optional() private table: any) {}
 
   ngOnInit() {
-    this.columnDef.cell = this.cell;
-    this.columnDef.headerCell = this.headerCell;
-    this.table.table.addColumnDef(this.columnDef);
-    this.table.displayedColumns.unshift("ibSelectionColumn");
+    if (this.table) {
+      this.columnDef.cell = this.cell;
+      this.columnDef.headerCell = this.headerCell;
+      this.table.matTable.addColumnDef(this.columnDef);
+      this.table.displayedColumns.unshift("ib-selection");
+    }
   }
 
   isAllSelected() {

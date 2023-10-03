@@ -21,15 +21,7 @@
   >
     <ng-content select="ib-selection-column"></ng-content>
     <ng-content></ng-content>
-    <!-- <ng-container *ngFor="let column of columns" [matColumnDef]="column.columnDef">
-      <th class="ib-table__header-cell" mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!column.sort">
-        {{column.header | translate}}
-      </th>
-      <td mat-cell *matCellDef="let row">
-        <ng-template [cdkPortalOutlet]="portals[column.columnDef]" (attached)="handleAttached($event, column, row)"></ng-template>
-      </td>
-      <td mat-footer-cell *matFooterCellDef>footer cell</td>
-    </ng-container> -->
+
     <ng-container matColumnDef="expandedDetail" *ngIf="rowGroup">
       <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
         <div class="ib-table-element-detail"
@@ -56,7 +48,6 @@
           <ng-container *ngIf="isState(states.IDLE)">
             <mat-icon style="color: #888">inbox</mat-icon>
             {{ "common.noItems" | translate }}
-            {{ state }}
           </ng-container>
 
           <ng-container *ngIf="isState(states.HTTP_ERROR)">
