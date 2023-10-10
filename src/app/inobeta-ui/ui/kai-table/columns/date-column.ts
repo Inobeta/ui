@@ -5,6 +5,7 @@ import {
   Input,
   ViewEncapsulation,
 } from "@angular/core";
+import { IB_COLUMN } from "../tokens";
 import { IbColumn } from "./column";
 
 /**
@@ -37,11 +38,17 @@ import { IbColumn } from "./column";
       <td mat-cell *matCellDef="let data">
         {{ transform(dataAccessor(data, name)) }}
       </td>
+      <td mat-footer-cell *matFooterCellDef>
+        <ib-aggregate *ngIf="aggregate"></ib-aggregate>
+      </td>
     </ng-container>
   `,
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.Default,
-  providers: [{ provide: IbColumn, useExisting: IbDateColumn }],
+  providers: [
+    { provide: IbColumn, useExisting: IbDateColumn },
+    { provide: IB_COLUMN, useExisting: IbDateColumn },
+  ],
 })
 export class IbDateColumn<T> extends IbColumn<T> {
   @Input() format = "dd/MM/yyyy HH:mm z";

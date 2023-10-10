@@ -201,6 +201,12 @@
         "unpinned": "Vista rimossa dai predefiniti"
       },
       "showFilters": "Mostra filtri"
+    },
+    "aggregate": {
+      "sum": "Calcola somma",
+      "avg": "Calcola media",
+      "help": "Pagina corrente (Totale)",
+      "apply": "Applica una funzione"
     }
   },
   "receiptGoods": {

@@ -5,6 +5,7 @@ import {
   Input,
   ViewEncapsulation,
 } from "@angular/core";
+import { IB_AGGREGATE_TYPE, IB_COLUMN } from "../tokens";
 import { IbColumn } from "./column";
 
 /**
@@ -37,11 +38,21 @@ import { IbColumn } from "./column";
       <td mat-cell *matCellDef="let data">
         {{ transform(dataAccessor(data, name)) }}
       </td>
+      <td mat-footer-cell *matFooterCellDef>
+        <ib-aggregate *ngIf="aggregate"></ib-aggregate>
+      </td>
     </ng-container>
   `,
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.Default,
-  providers: [{ provide: IbColumn, useExisting: IbNumberColumn }],
+  providers: [
+    {
+      provide: IbColumn,
+      useExisting: IbNumberColumn,
+    },
+    { provide: IB_COLUMN, useExisting: IbNumberColumn },
+    { provide: IB_AGGREGATE_TYPE, useValue: "number" },
+  ],
 })
 export class IbNumberColumn<T> extends IbColumn<T> {
   @Input() digitsInfo = "1.0-2";

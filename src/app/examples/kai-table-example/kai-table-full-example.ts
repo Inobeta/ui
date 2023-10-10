@@ -35,11 +35,17 @@ import { createNewUser } from "./users";
       <ib-selection-column
         (ibRowSelectionChange)="selectionChange($event)"
       ></ib-selection-column>
-      <ib-text-column headerText="Name" name="name" sort></ib-text-column>
+      <ib-text-column
+        headerText="Name"
+        name="name"
+        aggregate
+        sort
+      ></ib-text-column>
       <ib-text-column headerText="Fruit" name="fruit" sort></ib-text-column>
       <ib-number-column
         headerText="Amount"
         name="number"
+        aggregate
         sort
       ></ib-number-column>
       <ib-date-column headerText="Purchased" name="aDate" sort></ib-date-column>
@@ -84,7 +90,7 @@ export class IbKaiTableFullExamplePage {
   selectionColumn: IbSelectionColumn;
 
   dataSource = new MatTableDataSource<any>();
-  columns = ['name', 'fruit', 'number', 'aDate', 'subscribed'];
+  columns = ["name", "fruit", "number", "aDate", "subscribed"];
 
   ngOnInit() {
     const users = Array.from({ length: 1000 }, (_, k) => createNewUser(k + 1));

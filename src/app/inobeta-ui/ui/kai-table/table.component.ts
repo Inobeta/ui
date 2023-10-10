@@ -5,6 +5,7 @@ import {
   transition,
   trigger,
 } from "@angular/animations";
+import { DataSource } from "@angular/cdk/collections";
 import { Portal, TemplatePortal } from "@angular/cdk/portal";
 import {
   Component,
@@ -80,7 +81,7 @@ export class IbTable implements OnDestroy {
   state = IbKaiTableState.IDLE;
 
   @Input()
-  dataSource: MatTableDataSource<any> | IbDataSource<any> =
+  dataSource: MatTableDataSource<unknown> | IbDataSource<unknown> =
     new MatTableDataSource([]);
 
   @Input() tableName: string = btoa(
@@ -125,7 +126,14 @@ export class IbTable implements OnDestroy {
    */
   @Input() displayedColumns: string[] = [];
 
+  aggregateColumns = new Set<string>();
+
   ngOnInit() {
+    if (!(this.dataSource instanceof DataSource)) {
+      throw new Error(
+        "`dataSource` input must be an instance of DataSource and compatible with either MatTableDataSource or IbDataSource"
+      );
+    }
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
 
@@ -165,6 +173,7 @@ export class IbTable implements OnDestroy {
   }
 
   ngOnDestroy() {
+    this.aggregateColumns.clear();
     this._destroyed.next();
     this._destroyed.complete();
   }

@@ -51,3 +51,15 @@ tr.ib-table-element-row:not(.ib-table-expanded-row):hover {
   justify-content: flex-end;
   align-content: center;
 }
+
+::ng-deep ib-aggregate {
+  display: flex;
+  align-items: center;
+
+  .ib-aggregate-display {
+    flex: 1;
+    text-align: end;
+    font-weight: 500;
+    min-width: 100px;
+  }
+}

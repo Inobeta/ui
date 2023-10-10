@@ -4,6 +4,8 @@ The `ib-kai-table`, built upon `mat-table` of Angular Material, provides high cu
 
 - [IbTable](#ibtable)
   - [Getting started](#getting-started)
+  - [Sorting](#sorting)
+  - [Aggregation](#aggregation)
   - [Columns](#columns)
     - [Text column](#text-column)
     - [Number column](#number-column)
@@ -11,8 +13,6 @@ The `ib-kai-table`, built upon `mat-table` of Angular Material, provides high cu
     - [Custom column](#custom-column)
     - [Action column](#action-column)
   - [Use server-side data as a source](#use-server-side-data-as-a-source)
-
-<!-- TOC ignore:true -->
 
 ## Getting started
 
@@ -35,7 +35,7 @@ export class SimpleKaiTableExample {
 
 Next, write your table's column templates.
 
-Each column definition should be given a name. By default, the name of the columns will be the header text and data property accessor.
+Each column definition must be given a name. By default, the name of the columns will be the header text and data property accessor.
 
 Take the following column as an example.
 
@@ -76,9 +76,27 @@ export class SimpleKaiTableExample {
 
 ![simple table](../../../../assets/docs/ib-kai-table/simple.png "Simple IbTable")
 
-## Columns
+## Sorting
 
-There are more column types available other than `ib-text-column`.
+By default, sorting a column is disabled. To enable sorting, use `sort` in your column.
+
+> Sorting is supported by any column.
+
+```html
+<ib-text-column name="firstName" sort></ib-text-column>
+```
+
+## Aggregation
+
+> In version `15.1`, aggregation is supported only for `ib-number-column`
+
+Use `aggregate` to show a roll-up footer row in your table. Each column has a different set of functions available. For example, with `ib-number-column` you can estimate the sum, or the average, of a column.
+
+```html
+<ib-number-column name="firstName" aggregate></ib-number-column>
+```
+
+## Columns
 
 ### Text column
 
@@ -110,15 +128,6 @@ There are more column types available other than `ib-text-column`.
 
 ### Action column
 
-```typescript
-@Component({
-  /* ... */
-})
-export class KaiTableRowActionExample {
-  dataSource = new MatTableDataSource<any>(TABLE_DATA);
-}
-```
-
 ```html
 <ib-kai-table [displayedColumns]="['name', 'fruit', 'stock']" [dataSource]="dataSource">
   <!-- ... -->
@@ -139,15 +148,22 @@ export class KaiTableRowActionExample {
 ```
 
 ```typescript
-handleShowReport(data: Record<string, any>) {
-  // your code here
-}
+@Component({
+  /* ... */
+})
+export class KaiTableRowActionExample {
+  dataSource = new MatTableDataSource<any>(TABLE_DATA);
 
-handleDelete(data: Record<string, any>) {
-  // your code here
+  handleShowReport(data: Record<string, any>) {
+    // your code here
+  }
+
+  handleDelete(data: Record<string, any>) {
+    // your code here
+  }
 }
 ```
 
 ## Use server-side data as a source
 
-(docs no ready)
+(docs not ready)

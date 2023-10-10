@@ -11,6 +11,7 @@ import {
 import {
   MatCellDef,
   MatColumnDef,
+  MatFooterCellDef,
   MatHeaderCellDef,
 } from "@angular/material/table";
 import { IbKaiTableState, IbTableRowSelectionChange } from "../table.types";
@@ -48,15 +49,13 @@ import { IB_TABLE } from "../tokens";
   `,
 })
 export class IbSelectionColumn implements OnInit {
-  /**
-   * @ignore
-   */
+  /** @ignore */
   @ViewChild(MatCellDef, { static: true }) cell: MatCellDef;
-
-  /**
-   * @ignore
-   */
+  /** @ignore */
   @ViewChild(MatHeaderCellDef, { static: true }) headerCell: MatHeaderCellDef;
+  /** @ignore */
+  @ViewChild(MatFooterCellDef, { static: true }) footerCell: MatFooterCellDef;
+  /** @ignore */
   @ViewChild(MatColumnDef, { static: true }) columnDef: MatColumnDef;
   selection = new SelectionModel<any>(true, []);
 
@@ -70,6 +69,7 @@ export class IbSelectionColumn implements OnInit {
     if (this.table) {
       this.columnDef.cell = this.cell;
       this.columnDef.headerCell = this.headerCell;
+      this.columnDef.footerCell = this.footerCell;
       this.table.matTable.addColumnDef(this.columnDef);
       this.table.displayedColumns.unshift("ib-selection");
     }

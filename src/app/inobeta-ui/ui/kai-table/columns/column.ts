@@ -56,6 +56,7 @@ import { IB_COLUMN_OPTIONS, IB_TABLE, IbColumnOptions } from "../tokens";
         >
         </ng-container>
       </td>
+      <td mat-footer-cell *matFooterCellDef></td>
     </ng-container>
   `,
   // Change detection is intentionally not set to OnPush. This component's template will be provided
@@ -126,6 +127,21 @@ export class IbColumn<T> implements OnDestroy, OnInit {
     this._stickyEnd = coerceBooleanProperty(value);
   }
   private _stickyEnd = false;
+
+  /** Whether this column should display in the roll-up footer. */
+  @Input()
+  get aggregate() {
+    return this._aggregate;
+  }
+  set aggregate(value: BooleanInput) {
+    this._aggregate = coerceBooleanProperty(value);
+    if (this._aggregate) {
+      this._table.aggregateColumns.add(this.name);
+    } else {
+      this._table.aggregateColumns.delete(this.name);
+    }
+  }
+  private _aggregate = false;
 
   @ContentChild(IbCellDef, { static: true }) ibCellDef: IbCellDef;
 

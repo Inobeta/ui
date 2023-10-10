@@ -5,6 +5,9 @@ import {InjectionToken} from '@angular/core';
  */
 export const IB_TABLE = new InjectionToken<any>("IbTable");
 
+/** Used to provide a column to the aggregate cell of a given column. */
+export const IB_COLUMN = new InjectionToken<any>("IbColumn");
+
 /** Configurable options for `IbColumn`. */
 export interface IbColumnOptions<T> {
   /**
@@ -21,3 +24,7 @@ export interface IbColumnOptions<T> {
 export const IB_COLUMN_OPTIONS = new InjectionToken<IbColumnOptions<any>>(
   'ib-column-options',
 );
+
+/** Used to provide a list of aggregate funciton to a number column */
+export const IB_AGGREGATE = new InjectionToken<any>("IbAggregate");
+export const IB_AGGREGATE_TYPE = new InjectionToken<any>("IbAggregateType");

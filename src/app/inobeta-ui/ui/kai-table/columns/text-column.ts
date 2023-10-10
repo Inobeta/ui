@@ -4,6 +4,7 @@ import {
   Input,
   ViewEncapsulation,
 } from "@angular/core";
+import { IB_AGGREGATE_TYPE, IB_COLUMN } from "../tokens";
 import { IbColumn } from "./column";
 
 /**
@@ -37,6 +38,9 @@ import { IbColumn } from "./column";
       <td mat-cell *matCellDef="let data" [style.text-align]="justify">
         {{ dataAccessor(data, name) }}
       </td>
+      <td mat-footer-cell *matFooterCellDef>
+        <ib-aggregate *ngIf="aggregate"></ib-aggregate>
+      </td>
     </ng-container>
   `,
   encapsulation: ViewEncapsulation.None,
@@ -47,7 +51,11 @@ import { IbColumn } from "./column";
   // an ExpressionChangedAfterItHasBeenCheckedError).
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
-  providers: [{ provide: IbColumn, useExisting: IbTextColumn }],
+  providers: [
+    { provide: IbColumn, useExisting: IbTextColumn },
+    { provide: IB_COLUMN, useExisting: IbTextColumn },
+    { provide: IB_AGGREGATE_TYPE, useValue: "string" },
+  ],
 })
 export class IbTextColumn<T> extends IbColumn<T> {
   /** Alignment of the cell values. */

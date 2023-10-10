@@ -58,7 +58,9 @@
       </td>
     </tr>
 
-    <!-- <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr> -->
+    <ng-container *ngIf="aggregateColumns.size">
+      <tr mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></tr>
+    </ng-container>
   </table>
 </div>
 <div class="ib-table-paginator">
