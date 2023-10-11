@@ -1,4 +1,3 @@
-import { PortalModule } from "@angular/cdk/portal";
 import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { CommonModule } from "@angular/common";
@@ -11,42 +10,29 @@ import {
   waitForAsync,
 } from "@angular/core/testing";
 import { MatButtonHarness } from "@angular/material/button/testing";
-import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatDialogHarness } from "@angular/material/dialog/testing";
-import { MatIconModule } from "@angular/material/icon";
 import { MatInputHarness } from "@angular/material/input/testing";
-import { MatPaginatorModule } from "@angular/material/paginator";
 import { MatRadioButtonHarness } from "@angular/material/radio/testing";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { MatSortModule } from "@angular/material/sort";
-import { MatTableDataSource, MatTableModule } from "@angular/material/table";
+import { MatSortHarness } from "@angular/material/sort/testing";
+import { MatTableDataSource } from "@angular/material/table";
 import { MatTableHarness } from "@angular/material/table/testing";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { StoreModule } from "@ngrx/store";
 import { TranslateModule } from "@ngx-translate/core";
 import { throwError } from "rxjs";
-import { IbToolTestModule } from "../../tools/tools-test.module";
-import { IbDataExportService, OVERRIDE_EXPORT_FORMATS } from "../data-export";
-import { IbDataExportModule } from "../data-export/data-export.module";
+import { IbDataExportModule, IbDataExportService, OVERRIDE_EXPORT_FORMATS } from "../data-export";
 import { IbDataExportProvider } from "../data-export/provider";
-import { IbFilterModule } from "../kai-filter/filters.module";
-import { IbToastModule } from "../toast/toast.module";
-import { IbViewModule } from "../views/view.module";
+import { IbFilterModule } from "../kai-filter";
+import { IbViewModule } from "../views";
 import { IbTableActionModule } from "./action";
-import {
-  IbColumn,
-  IbDateColumn,
-  IbNumberColumn,
-  IbTextColumn,
-} from "./columns";
-import { IbActionColumn } from "./columns/action-column";
-import { IbSelectionColumn } from "./columns/selection-column";
-import { IbKaiRowGroupDirective } from "./rowgroup";
-import { IbSortHeader } from "./sort-header";
+import { IbAverageAggregateProvider, IbSumAggregateProvider } from "./cells";
 import { IbDataSource } from "./table-data-source";
 import { IbTable } from "./table.component";
+import { IbKaiTableModule } from "./table.module";
 import { IbKaiTableState } from "./table.types";
+import { MatSortModule } from "@angular/material/sort";
 
 describe("IbTable", () => {
   describe("with MatTableDataSource", () => {
@@ -396,45 +382,59 @@ describe("IbTable", () => {
       );
     }));
   });
+
+  fdescribe("with sort", () => {
+    let fixture: ComponentFixture<IbTableWithSort>;
+    let component: IbTable;
+    let loader: HarnessLoader;
+
+    beforeEach(() => {
+      fixture = createComponent(IbTableWithSort);
+      component = fixture.debugElement.query(
+        By.directive(IbTable)
+      ).componentInstance;
+      fixture.detectChanges();
+      loader = TestbedHarnessEnvironment.loader(fixture);
+    });
+
+    it("should create", () => {
+      expect(component).toBeTruthy();
+    });
+
+    it("should apply asc order", async () => {
+      await fixture.whenStable();
+      fixture.detectChanges();
+      await fixture.whenRenderingDone();
+      // tick(1000);
+      const sort = await loader.getHarness(MatSortHarness);
+      console.log(await sort.getSortHeaders());
+      const active = await sort.getActiveHeader();
+      console.log(component.dataSource.sort.sortables);
+    });
+  });
 });
 
 function configureModule<T>(type: Type<T>) {
   TestBed.configureTestingModule({
-    declarations: [
-      IbTable,
-      IbKaiRowGroupDirective,
-      IbSelectionColumn,
-      IbColumn,
-      IbTextColumn,
-      IbNumberColumn,
-      IbDateColumn,
-      IbSortHeader,
-      IbActionColumn,
-      type,
-    ],
+    declarations: [type],
     imports: [
       CommonModule,
-      PortalModule,
-      NoopAnimationsModule,
-      IbToolTestModule,
-      MatTableModule,
-      MatPaginatorModule,
-      MatSortModule,
-      MatIconModule,
-      MatCheckboxModule,
+      IbKaiTableModule,
+      IbTableActionModule,
       IbFilterModule,
       IbViewModule,
-      IbToastModule,
+      MatSortModule,
       IbDataExportModule,
-      IbTableActionModule,
+      NoopAnimationsModule,
       StoreModule.forRoot({}),
       TranslateModule.forRoot({
         extend: true,
       }),
     ],
     providers: [
-      IbDataExportService,
       { provide: MatSnackBar, useValue: { open: () => {} } },
+      IbSumAggregateProvider,
+      IbAverageAggregateProvider,
     ],
   }).compileComponents();
 }
@@ -458,7 +458,7 @@ function createComponent<T>(type: Type<T>): ComponentFixture<T> {
       <ib-selection-column></ib-selection-column>
       <ib-text-column name="name"></ib-text-column>
       <ib-text-column name="color"></ib-text-column>
-      <ib-number-column name="price"></ib-number-column>
+      <ib-number-column name="price" sort aggregate></ib-number-column>
     </ib-kai-table>
   `,
 })
@@ -555,5 +555,27 @@ class IbTableWithExport {
     { name: "rook", color: "purple" },
     { name: "knight", color: "brown" },
     { name: "king", color: "green" },
+  ]);
+}
+
+@Component({
+  template: `
+    <ib-kai-table [dataSource]="dataSource">
+      <ib-text-column name="name" [aggregate]="false"></ib-text-column>
+      <ib-number-column
+        name="amount"
+        [sort]="true"
+        aggregate
+      ></ib-number-column>
+      <ib-column name="cust" [sort]="true">
+        <section *ibCellDef="let element">{{ element.amount }}</section>
+      </ib-column>
+    </ib-kai-table>
+  `,
+})
+class IbTableWithSort {
+  dataSource = new MatTableDataSource<any>([
+    { name: "alice", amount: 10 },
+    { name: "bob", amount: 20 },
   ]);
 }
