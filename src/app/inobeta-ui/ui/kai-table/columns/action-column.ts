@@ -10,14 +10,6 @@ export class IbActionColumn {
   }
 
   ngOnInit() {
-    if (!this.ibColumn) {
-      return;
-    }
-
-    if (!this.ibColumn._table) {
-      return;
-    }
-
     this.ibColumn.headerText = "";
     this.ibColumn._table.displayedColumns.push("ib-action")
   }

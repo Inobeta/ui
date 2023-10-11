@@ -12,8 +12,10 @@ import {
 import { MatButtonHarness } from "@angular/material/button/testing";
 import { MatDialogHarness } from "@angular/material/dialog/testing";
 import { MatInputHarness } from "@angular/material/input/testing";
+import { MatMenuHarness } from "@angular/material/menu/testing";
 import { MatRadioButtonHarness } from "@angular/material/radio/testing";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { MatSortModule } from "@angular/material/sort";
 import { MatSortHarness } from "@angular/material/sort/testing";
 import { MatTableDataSource } from "@angular/material/table";
 import { MatTableHarness } from "@angular/material/table/testing";
@@ -22,17 +24,20 @@ import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { StoreModule } from "@ngrx/store";
 import { TranslateModule } from "@ngx-translate/core";
 import { throwError } from "rxjs";
-import { IbDataExportModule, IbDataExportService, OVERRIDE_EXPORT_FORMATS } from "../data-export";
+import {
+  IbDataExportModule,
+  IbDataExportService,
+  OVERRIDE_EXPORT_FORMATS,
+} from "../data-export";
 import { IbDataExportProvider } from "../data-export/provider";
 import { IbFilterModule } from "../kai-filter";
 import { IbViewModule } from "../views";
 import { IbTableActionModule } from "./action";
-import { IbAverageAggregateProvider, IbSumAggregateProvider } from "./cells";
+import { IbAggregateCell } from "./cells";
 import { IbDataSource } from "./table-data-source";
 import { IbTable } from "./table.component";
 import { IbKaiTableModule } from "./table.module";
 import { IbKaiTableState } from "./table.types";
-import { MatSortModule } from "@angular/material/sort";
 
 describe("IbTable", () => {
   describe("with MatTableDataSource", () => {
@@ -383,7 +388,7 @@ describe("IbTable", () => {
     }));
   });
 
-  fdescribe("with sort", () => {
+  describe("with sort", () => {
     let fixture: ComponentFixture<IbTableWithSort>;
     let component: IbTable;
     let loader: HarnessLoader;
@@ -401,15 +406,65 @@ describe("IbTable", () => {
       expect(component).toBeTruthy();
     });
 
-    it("should apply asc order", async () => {
-      await fixture.whenStable();
-      fixture.detectChanges();
-      await fixture.whenRenderingDone();
-      // tick(1000);
+    it("should apply", async () => {
+      const dataSource = component.dataSource as MatTableDataSource<any>;
       const sort = await loader.getHarness(MatSortHarness);
-      console.log(await sort.getSortHeaders());
-      const active = await sort.getActiveHeader();
-      console.log(component.dataSource.sort.sortables);
+      const [_, number] = await sort.getSortHeaders();
+      let active = await sort.getActiveHeader();
+      expect(active).toBeNull();
+
+      await number.click();
+
+      active = await sort.getActiveHeader();
+      let direction = await number.getSortDirection();
+      expect(await active.getLabel()).toEqual(await number.getLabel());
+
+      expect(direction).toBe("asc");
+
+      await number.click();
+      direction = await number.getSortDirection();
+      expect(direction).toBe("desc");
+
+      const amountData = dataSource
+        ._orderData(dataSource.filteredData)
+        .map((i) => i.amount);
+      expect(amountData).toEqual([20, 10]);
+    });
+  });
+
+  describe("with aggregate", () => {
+    let fixture: ComponentFixture<IbTableWithAggregate>;
+    let component: IbTable;
+    let loader: HarnessLoader;
+
+    beforeEach(() => {
+      fixture = createComponent(IbTableWithAggregate);
+      component = fixture.debugElement.query(
+        By.directive(IbTable)
+      ).componentInstance;
+      fixture.detectChanges();
+      loader = TestbedHarnessEnvironment.loader(fixture);
+    });
+
+    it("should create", () => {
+      expect(component).toBeTruthy();
+    });
+
+    it("should apply an aggregate function", async () => {
+      const ibAggregate = fixture.debugElement.query(
+        By.directive(IbAggregateCell)
+      ).componentInstance;
+
+      expect(ibAggregate).toBeTruthy();
+      const footerLoader = await loader.getChildLoader("ib-aggregate");
+      const button = await footerLoader.getHarness(MatButtonHarness);
+      await button.click();
+      const functionMenu = await footerLoader.getHarness(MatMenuHarness);
+      await functionMenu.clickItem({ text: "shared.aggregate.sum" });
+      expect(ibAggregate.result.currentPage).toBe("30");
+
+      await functionMenu.clickItem({ text: "shared.aggregate.avg" });
+      expect(ibAggregate.result.currentPage).toBe("15");
     });
   });
 });
@@ -433,8 +488,8 @@ function configureModule<T>(type: Type<T>) {
     ],
     providers: [
       { provide: MatSnackBar, useValue: { open: () => {} } },
-      IbSumAggregateProvider,
-      IbAverageAggregateProvider,
+      // IbSumAggregateProvider,
+      // IbAverageAggregateProvider,
     ],
   }).compileComponents();
 }
@@ -449,7 +504,10 @@ function createComponent<T>(type: Type<T>): ComponentFixture<T> {
 
 @Component({
   template: `
-    <ib-kai-table [dataSource]="dataSource">
+    <ib-kai-table
+      [dataSource]="dataSource"
+      [displayedColumns]="['name', 'color', 'price']"
+    >
       <ib-filter [value]="filterValue">
         <ib-text-filter ibTableColumnName="name">Name</ib-text-filter>
         <ib-tag-filter ibTableColumnName="color">Name</ib-tag-filter>
@@ -458,7 +516,7 @@ function createComponent<T>(type: Type<T>): ComponentFixture<T> {
       <ib-selection-column></ib-selection-column>
       <ib-text-column name="name"></ib-text-column>
       <ib-text-column name="color"></ib-text-column>
-      <ib-number-column name="price" sort aggregate></ib-number-column>
+      <ib-number-column name="price"></ib-number-column>
     </ib-kai-table>
   `,
 })
@@ -472,7 +530,7 @@ class IbTableApp {
 
 @Component({
   template: `
-    <ib-kai-table [dataSource]="dataSource">
+    <ib-kai-table [dataSource]="dataSource" [displayedColumns]="['name']">
       <ib-text-column name="name"></ib-text-column>
       <ng-template ibKaiRowGroup let-row="row">
         row data: {{ row | json }}
@@ -486,7 +544,7 @@ class IbTableWithRowGroupApp {
 
 @Component({
   template: `
-    <ib-kai-table [dataSource]="dataSource">
+    <ib-kai-table [dataSource]="dataSource" [displayedColumns]="['name']">
       <ib-filter></ib-filter>
       <ib-text-column name="name"></ib-text-column>
     </ib-kai-table>
@@ -498,7 +556,11 @@ class IbTableWithIbDataSourceApp {
 
 @Component({
   template: `
-    <ib-kai-table tableName="employees" [dataSource]="dataSource">
+    <ib-kai-table
+      tableName="employees"
+      [dataSource]="dataSource"
+      [displayedColumns]="['name', 'tag']"
+    >
       <ib-table-view-group></ib-table-view-group>
       <ib-filter>
         <ib-tag-filter ibTableColumnName="color">Name</ib-tag-filter>
@@ -528,6 +590,7 @@ class IbStubExportProvider implements IbDataExportProvider {
       tableName="employees"
       [dataSource]="dataSource"
       [tableDef]="{ paginator: { pageSize: 5 } }"
+      [displayedColumns]="['name', 'color']"
     >
       <ib-table-action-group>
         <ib-table-data-export-action></ib-table-data-export-action>
@@ -560,20 +623,38 @@ class IbTableWithExport {
 
 @Component({
   template: `
-    <ib-kai-table [dataSource]="dataSource">
+    <ib-kai-table
+      [dataSource]="dataSource"
+      [displayedColumns]="['name', 'amount', 'createdAt']"
+    >
       <ib-text-column name="name" [aggregate]="false"></ib-text-column>
-      <ib-number-column
-        name="amount"
-        [sort]="true"
-        aggregate
-      ></ib-number-column>
-      <ib-column name="cust" [sort]="true">
+      <ib-number-column name="amount" sort></ib-number-column>
+      <ib-date-column name="createdAt" sort></ib-date-column>
+      <ib-column ib-action-column>
         <section *ibCellDef="let element">{{ element.amount }}</section>
       </ib-column>
     </ib-kai-table>
   `,
 })
 class IbTableWithSort {
+  dataSource = new MatTableDataSource<any>([
+    { name: "alice", amount: 10, createdAt: new Date() },
+    { name: "bob", amount: 20, createdAt: new Date() },
+  ]);
+}
+
+@Component({
+  template: `
+    <ib-kai-table
+      [dataSource]="dataSource"
+      [displayedColumns]="['name', 'amount']"
+    >
+      <ib-text-column name="name"></ib-text-column>
+      <ib-number-column name="amount" aggregate></ib-number-column>
+    </ib-kai-table>
+  `,
+})
+class IbTableWithAggregate {
   dataSource = new MatTableDataSource<any>([
     { name: "alice", amount: 10 },
     { name: "bob", amount: 20 },
