@@ -35,12 +35,7 @@ import { createNewUser } from "./users";
       <ib-selection-column
         (ibRowSelectionChange)="selectionChange($event)"
       ></ib-selection-column>
-      <ib-text-column
-        headerText="Name"
-        name="name"
-        aggregate
-        sort
-      ></ib-text-column>
+      <ib-text-column headerText="Name" name="name" sort></ib-text-column>
       <ib-text-column headerText="Fruit" name="fruit" sort></ib-text-column>
       <ib-number-column
         headerText="Amount"
