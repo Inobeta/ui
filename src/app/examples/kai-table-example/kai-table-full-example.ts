@@ -1,11 +1,6 @@
 import { Component, ViewChild } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
-import {
-  useColumn,
-  useContextColumn,
-  useDateColumn,
-} from "src/app/inobeta-ui/ui/kai-table/cells";
-import { IbSelectionColumn } from "src/app/inobeta-ui/ui/kai-table/selection-column";
+import { IbSelectionColumn } from "../../inobeta-ui/ui/kai-table/columns/selection-column";
 import { createNewUser } from "./users";
 
 @Component({
@@ -13,16 +8,16 @@ import { createNewUser } from "./users";
   template: `
     <ib-kai-table
       tableName="fullExample"
-      [columns]="columns"
+      [displayedColumns]="columns"
       [dataSource]="dataSource"
     >
       <ib-table-action-group>
         <button
           mat-icon-button
           (click)="getSelection()"
-          [disabled]="selectionColumn?.selection.selected.length === 0"
+          *ngIf="selectionColumn?.selection.selected.length > 0"
         >
-          <mat-icon>list</mat-icon>
+          <mat-icon>delete</mat-icon>
         </button>
         <ib-table-data-export-action></ib-table-data-export-action>
       </ib-table-action-group>
@@ -31,14 +26,38 @@ import { createNewUser } from "./users";
       <ib-filter>
         <ib-search-bar></ib-search-bar>
 
-        <ib-text-filter ibTableColumnName="name">Name</ib-text-filter>
-        <ib-tag-filter ibTableColumnName="fruit">Fruit</ib-tag-filter>
-        <ib-number-filter ibTableColumnName="number">Amount</ib-number-filter>
-        <ib-date-filter ibTableColumnName="aDate">Purchased</ib-date-filter>
+        <ib-text-filter name="name">Name</ib-text-filter>
+        <ib-tag-filter name="fruit">Fruit</ib-tag-filter>
+        <ib-number-filter name="number">Amount</ib-number-filter>
+        <ib-date-filter name="aDate">Purchased</ib-date-filter>
       </ib-filter>
+
       <ib-selection-column
         (ibRowSelectionChange)="selectionChange($event)"
       ></ib-selection-column>
+      <ib-text-column headerText="Name" name="name" sort></ib-text-column>
+      <ib-text-column headerText="Fruit" name="fruit" sort></ib-text-column>
+      <ib-number-column
+        headerText="Amount"
+        name="number"
+        aggregate
+        sort
+      ></ib-number-column>
+      <ib-date-column headerText="Purchased" name="aDate" sort></ib-date-column>
+      <ib-column name="subscribed" sort>
+        <section *ibCellDef="let element">
+          <mat-icon [color]="element.subscribed ? 'accent' : ''">{{
+            element.subscribed ? "done" : "close"
+          }}</mat-icon>
+        </section>
+      </ib-column>
+      <ib-column ib-action-column>
+        <section *ibCellDef="let element">
+          <button mat-icon-button (click)="handleView(element)">
+            <mat-icon>chevron_right</mat-icon>
+          </button>
+        </section>
+      </ib-column>
     </ib-kai-table>
   `,
   styles: [
@@ -62,13 +81,7 @@ export class IbKaiTableFullExamplePage {
   selectionColumn: IbSelectionColumn;
 
   dataSource = new MatTableDataSource<any>();
-  columns = [
-    useColumn("Name", "name"),
-    useColumn("Fruit", "fruit"),
-    useColumn("Amount", "number", true),
-    useDateColumn("Purchased", "aDate", true),
-    useContextColumn(() => [{ type: "view", icon: "chevron_right" }]),
-  ];
+  columns = ["name", "fruit", "number", "aDate", "subscribed"];
 
   ngOnInit() {
     const users = Array.from({ length: 1000 }, (_, k) => createNewUser(k + 1));
@@ -81,5 +94,9 @@ export class IbKaiTableFullExamplePage {
 
   getSelection() {
     console.log("selection", this.selectionColumn?.selection.selected);
+  }
+
+  handleView(row) {
+    console.log("handleView", row);
   }
 }

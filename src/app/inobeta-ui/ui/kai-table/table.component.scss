@@ -20,8 +20,8 @@
   bottom: 0;
   z-index: 101;
   transform: translateZ(1px);
-  background-color: rgba(0,0,0,.05);
-  
+  background-color: rgba(0, 0, 0, 0.05);
+
   mat-progress-bar {
     top: 56px;
   }
@@ -42,4 +42,31 @@ tr.ib-table-element-row:not(.ib-table-expanded-row):hover {
 .ib-table-element-detail {
   overflow: hidden;
   display: flex;
+}
+
+::ng-deep td.cdk-column-ib-action > :first-child,
+::ng-deep td.mat-column-ib-action > :first-child {
+  display: flex;
+  gap: 4px;
+  justify-content: flex-end;
+  align-content: center;
+}
+
+::ng-deep ib-aggregate {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  gap: 2em;
+
+  .ib-aggregate__function {
+    display: flex;
+    align-items: center;
+    width: fit-content;
+  }
+
+  .ib-aggregate__display-value {
+    text-align: end;
+    font-weight: 500;
+    white-space: nowrap
+  }
 }

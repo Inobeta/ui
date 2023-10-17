@@ -20,16 +20,10 @@
     [dataSource]="dataSource"
   >
     <ng-content select="ib-selection-column"></ng-content>
-    <ng-container *ngFor="let column of columns" [matColumnDef]="column.columnDef">
-      <th class="ib-table__header-cell" mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!column.sort">
-        {{column.header | translate}}
-      </th>
-      <td mat-cell *matCellDef="let row">
-        <ng-template [cdkPortalOutlet]="portals[column.columnDef]" (attached)="handleAttached($event, column, row)"></ng-template>
-      </td>
-    </ng-container>
+    <ng-content></ng-content>
+
     <ng-container matColumnDef="expandedDetail" *ngIf="rowGroup">
-      <td mat-cell *matCellDef="let element" [attr.colspan]="columns.length">
+      <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
         <div class="ib-table-element-detail"
              [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
           <ng-container *ngTemplateOutlet="rowGroup.templateRef; context: {'$implicit': element, 'row': element}" ></ng-container>
@@ -37,9 +31,7 @@
       </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true;">
-      test 123
-    </tr>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true;"></tr>
     <tr
       mat-row
       *matRowDef="let row; columns: displayedColumns;"
@@ -56,7 +48,6 @@
           <ng-container *ngIf="isState(states.IDLE)">
             <mat-icon style="color: #888">inbox</mat-icon>
             {{ "common.noItems" | translate }}
-            {{ state }}
           </ng-container>
 
           <ng-container *ngIf="isState(states.HTTP_ERROR)">
@@ -66,6 +57,10 @@
         </div>
       </td>
     </tr>
+
+    <ng-container *ngIf="aggregateColumns.size">
+      <tr mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></tr>
+    </ng-container>
   </table>
 </div>
 <div class="ib-table-paginator">

@@ -30,11 +30,11 @@ export abstract class _IbFilterBase {
     this.closeMenu();
   }
 
-  clear(update = true) {
+  clear() {
     this.searchCriteria.markAsPristine();
     this.searchCriteria.clearValidators();
     this.searchCriteria.reset();
-    update && this.filter?.update();
+    this.filter?.update();
   }
 
   closeMenu() {
@@ -66,6 +66,11 @@ export class IbFilterBase extends _IbFilterBase {
     }
 
     this.filter.form.addControl(this.name, this.searchCriteria);
+  }
+
+  ngOnDestroy() {
+    this.filter.form.removeControl(this.name);
+    this.filter.update();
   }
 
   ngAfterViewInit() {

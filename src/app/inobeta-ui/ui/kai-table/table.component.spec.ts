@@ -1,4 +1,3 @@
-import { PortalModule } from "@angular/cdk/portal";
 import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { CommonModule } from "@angular/common";
@@ -11,39 +10,33 @@ import {
   waitForAsync,
 } from "@angular/core/testing";
 import { MatButtonHarness } from "@angular/material/button/testing";
-import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatDialogHarness } from "@angular/material/dialog/testing";
-import { MatIconModule } from "@angular/material/icon";
 import { MatInputHarness } from "@angular/material/input/testing";
-import { MatPaginatorModule } from "@angular/material/paginator";
+import { MatMenuHarness } from "@angular/material/menu/testing";
 import { MatRadioButtonHarness } from "@angular/material/radio/testing";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatSortModule } from "@angular/material/sort";
-import { MatTableDataSource, MatTableModule } from "@angular/material/table";
+import { MatSortHarness } from "@angular/material/sort/testing";
+import { MatTableDataSource } from "@angular/material/table";
 import { MatTableHarness } from "@angular/material/table/testing";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { StoreModule } from "@ngrx/store";
 import { TranslateModule } from "@ngx-translate/core";
 import { throwError } from "rxjs";
-import { IbToolTestModule } from "../../tools/tools-test.module";
-import { IbDataExportService, OVERRIDE_EXPORT_FORMATS } from "../data-export";
-import { IbDataExportModule } from "../data-export/data-export.module";
-import { IbDataExportProvider } from "../data-export/provider";
-import { IbFilterModule } from "../kai-filter/filters.module";
-import { IbToastModule } from "../toast/toast.module";
-import { IbViewModule } from "../views/view.module";
-import { IbTableActionModule } from "./action";
 import {
-  useColumn,
-  useDateColumn,
-  useNumberColumn,
-  useTranslateColumn,
-} from "./cells";
-import { IbKaiRowGroupDirective } from "./rowgroup";
-import { IbSelectionColumn } from "./selection-column";
+  IbDataExportModule,
+  IbDataExportService,
+  OVERRIDE_EXPORT_FORMATS,
+} from "../data-export";
+import { IbDataExportProvider } from "../data-export/provider";
+import { IbFilterModule } from "../kai-filter";
+import { IbViewModule } from "../views";
+import { IbTableActionModule } from "./action";
+import { IbAggregateCell } from "./cells";
 import { IbDataSource } from "./table-data-source";
 import { IbTable } from "./table.component";
+import { IbKaiTableModule } from "./table.module";
 import { IbKaiTableState } from "./table.types";
 
 describe("IbTable", () => {
@@ -88,25 +81,6 @@ describe("IbTable", () => {
       component.selectionColumn.toggleAllRows();
       fixture.detectChanges();
       expect(component.selectionColumn.isAllSelected()).toBeFalsy();
-    });
-
-    it("should create a text column", () => {
-      const column = useColumn("sku");
-      expect(column.columnDef === "sku").toBeTruthy();
-      expect(column.cell({ sku: "TPS-1" })).toBe("TPS-1");
-    });
-
-    it("should create a date column", () => {
-      const column = useDateColumn("updated_at");
-      expect(column.columnDef === "updated_at").toBeTruthy();
-      const d = new Date(1690204463 * 1000);
-      expect(column.cell({ updated_at: d })).toContain("24/07/2023");
-    });
-
-    it("should create a number column", () => {
-      const column = useNumberColumn("price");
-      expect(column.columnDef === "price").toBeTruthy();
-      expect(column.cell({ price: 1209.33 })).toBe("1.209,33");
     });
   });
 
@@ -413,34 +387,109 @@ describe("IbTable", () => {
       );
     }));
   });
+
+  describe("with sort", () => {
+    let fixture: ComponentFixture<IbTableWithSort>;
+    let component: IbTable;
+    let loader: HarnessLoader;
+
+    beforeEach(() => {
+      fixture = createComponent(IbTableWithSort);
+      component = fixture.debugElement.query(
+        By.directive(IbTable)
+      ).componentInstance;
+      fixture.detectChanges();
+      loader = TestbedHarnessEnvironment.loader(fixture);
+    });
+
+    it("should create", () => {
+      expect(component).toBeTruthy();
+    });
+
+    it("should apply", async () => {
+      const dataSource = component.dataSource as MatTableDataSource<any>;
+      const sort = await loader.getHarness(MatSortHarness);
+      const [_, number] = await sort.getSortHeaders();
+      let active = await sort.getActiveHeader();
+      expect(active).toBeNull();
+
+      await number.click();
+
+      active = await sort.getActiveHeader();
+      let direction = await number.getSortDirection();
+      expect(await active.getLabel()).toEqual(await number.getLabel());
+
+      expect(direction).toBe("asc");
+
+      await number.click();
+      direction = await number.getSortDirection();
+      expect(direction).toBe("desc");
+
+      const amountData = dataSource
+        ._orderData(dataSource.filteredData)
+        .map((i) => i.amount);
+      expect(amountData).toEqual([20, 10]);
+    });
+  });
+
+  describe("with aggregate", () => {
+    let fixture: ComponentFixture<IbTableWithAggregate>;
+    let component: IbTable;
+    let loader: HarnessLoader;
+
+    beforeEach(() => {
+      fixture = createComponent(IbTableWithAggregate);
+      component = fixture.debugElement.query(
+        By.directive(IbTable)
+      ).componentInstance;
+      fixture.detectChanges();
+      loader = TestbedHarnessEnvironment.loader(fixture);
+    });
+
+    it("should create", () => {
+      expect(component).toBeTruthy();
+    });
+
+    it("should apply an aggregate function", async () => {
+      const ibAggregate = fixture.debugElement.query(
+        By.directive(IbAggregateCell)
+      ).componentInstance;
+
+      expect(ibAggregate).toBeTruthy();
+      const footerLoader = await loader.getChildLoader("ib-aggregate");
+      const button = await footerLoader.getHarness(MatButtonHarness);
+      await button.click();
+      const functionMenu = await footerLoader.getHarness(MatMenuHarness);
+      await functionMenu.clickItem({ text: "shared.aggregate.sum.label" });
+      expect(ibAggregate.result.currentPage).toBe("30");
+
+      await functionMenu.clickItem({ text: "shared.aggregate.avg.label" });
+      expect(ibAggregate.result.currentPage).toBe("15");
+    });
+  });
 });
 
 function configureModule<T>(type: Type<T>) {
   TestBed.configureTestingModule({
-    declarations: [IbTable, IbKaiRowGroupDirective, IbSelectionColumn, type],
+    declarations: [type],
     imports: [
       CommonModule,
-      PortalModule,
-      NoopAnimationsModule,
-      IbToolTestModule,
-      MatTableModule,
-      MatPaginatorModule,
-      MatSortModule,
-      MatIconModule,
-      MatCheckboxModule,
+      IbKaiTableModule,
+      IbTableActionModule,
       IbFilterModule,
       IbViewModule,
-      IbToastModule,
+      MatSortModule,
       IbDataExportModule,
-      IbTableActionModule,
+      NoopAnimationsModule,
       StoreModule.forRoot({}),
       TranslateModule.forRoot({
         extend: true,
       }),
     ],
     providers: [
-      IbDataExportService,
       { provide: MatSnackBar, useValue: { open: () => {} } },
+      // IbSumAggregateProvider,
+      // IbAverageAggregateProvider,
     ],
   }).compileComponents();
 }
@@ -455,13 +504,19 @@ function createComponent<T>(type: Type<T>): ComponentFixture<T> {
 
 @Component({
   template: `
-    <ib-kai-table [columns]="columns" [dataSource]="dataSource">
+    <ib-kai-table
+      [dataSource]="dataSource"
+      [displayedColumns]="['name', 'color', 'price']"
+    >
       <ib-filter [value]="filterValue">
         <ib-text-filter ibTableColumnName="name">Name</ib-text-filter>
         <ib-tag-filter ibTableColumnName="color">Name</ib-tag-filter>
         <ib-number-filter ibTableColumnName="price">Name</ib-number-filter>
       </ib-filter>
       <ib-selection-column></ib-selection-column>
+      <ib-text-column name="name"></ib-text-column>
+      <ib-text-column name="color"></ib-text-column>
+      <ib-number-column name="price"></ib-number-column>
     </ib-kai-table>
   `,
 })
@@ -471,12 +526,12 @@ class IbTableApp {
     { name: "alice", color: "white", price: 10 },
     { name: "bob", color: "black", price: 12 },
   ]);
-  columns = [useColumn("name", "name"), useTranslateColumn("color")];
 }
 
 @Component({
   template: `
-    <ib-kai-table [columns]="columns" [dataSource]="dataSource">
+    <ib-kai-table [dataSource]="dataSource" [displayedColumns]="['name']">
+      <ib-text-column name="name"></ib-text-column>
       <ng-template ibKaiRowGroup let-row="row">
         row data: {{ row | json }}
       </ng-template>
@@ -485,32 +540,34 @@ class IbTableApp {
 })
 class IbTableWithRowGroupApp {
   dataSource = new MatTableDataSource<any>([{ name: "alice" }]);
-  columns = [useColumn("name", "name")];
 }
 
 @Component({
   template: `
-    <ib-kai-table [columns]="columns" [dataSource]="dataSource">
+    <ib-kai-table [dataSource]="dataSource" [displayedColumns]="['name']">
       <ib-filter></ib-filter>
+      <ib-text-column name="name"></ib-text-column>
     </ib-kai-table>
   `,
 })
 class IbTableWithIbDataSourceApp {
   dataSource = new IbDataSource<any>([{ name: "alice" }]);
-  columns = [useColumn("name", "name")];
 }
 
 @Component({
   template: `
     <ib-kai-table
       tableName="employees"
-      [columns]="columns"
       [dataSource]="dataSource"
+      [displayedColumns]="['name', 'tag']"
     >
       <ib-table-view-group></ib-table-view-group>
       <ib-filter>
         <ib-tag-filter ibTableColumnName="color">Name</ib-tag-filter>
       </ib-filter>
+
+      <ib-text-column name="name"></ib-text-column>
+      <ib-text-column name="tag"></ib-text-column>
     </ib-kai-table>
   `,
 })
@@ -519,7 +576,6 @@ class IbTableWithViewGroupApp {
     { name: "alice", color: "peach" },
     { name: "bob", color: "green" },
   ]);
-  columns = [useColumn("name", "name"), useColumn("color", "color")];
 }
 
 class IbStubExportProvider implements IbDataExportProvider {
@@ -532,14 +588,16 @@ class IbStubExportProvider implements IbDataExportProvider {
   template: `
     <ib-kai-table
       tableName="employees"
-      [columns]="columns"
       [dataSource]="dataSource"
       [tableDef]="{ paginator: { pageSize: 5 } }"
+      [displayedColumns]="['name', 'color']"
     >
       <ib-table-action-group>
         <ib-table-data-export-action></ib-table-data-export-action>
       </ib-table-action-group>
       <ib-selection-column></ib-selection-column>
+      <ib-text-column headerText="name" name="name"></ib-text-column>
+      <ib-text-column headerText="color" name="color"></ib-text-column>
     </ib-kai-table>
   `,
   providers: [
@@ -561,5 +619,44 @@ class IbTableWithExport {
     { name: "knight", color: "brown" },
     { name: "king", color: "green" },
   ]);
-  columns = [useColumn("name", "name"), useColumn("color", "color")];
+}
+
+@Component({
+  template: `
+    <ib-kai-table
+      [dataSource]="dataSource"
+      [displayedColumns]="['name', 'amount', 'createdAt']"
+    >
+      <ib-text-column name="name" [aggregate]="false"></ib-text-column>
+      <ib-number-column name="amount" sort></ib-number-column>
+      <ib-date-column name="createdAt" sort></ib-date-column>
+      <ib-column ib-action-column>
+        <section *ibCellDef="let element">{{ element.amount }}</section>
+      </ib-column>
+    </ib-kai-table>
+  `,
+})
+class IbTableWithSort {
+  dataSource = new MatTableDataSource<any>([
+    { name: "alice", amount: 10, createdAt: new Date() },
+    { name: "bob", amount: 20, createdAt: new Date() },
+  ]);
+}
+
+@Component({
+  template: `
+    <ib-kai-table
+      [dataSource]="dataSource"
+      [displayedColumns]="['name', 'amount']"
+    >
+      <ib-text-column name="name"></ib-text-column>
+      <ib-number-column name="amount" aggregate></ib-number-column>
+    </ib-kai-table>
+  `,
+})
+class IbTableWithAggregate {
+  dataSource = new MatTableDataSource<any>([
+    { name: "alice", amount: 10 },
+    { name: "bob", amount: 20 },
+  ]);
 }

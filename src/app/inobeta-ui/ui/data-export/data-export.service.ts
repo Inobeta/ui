@@ -1,10 +1,7 @@
 import { Inject, Injectable, InjectionToken } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { MatTableDataSource } from "@angular/material/table";
-import { TranslateService } from "@ngx-translate/core";
-import { jsPDFOptions } from "jspdf";
-import { UserOptions } from "jspdf-autotable";
-import { IbColumnDef } from "../kai-table/table.types";
+import { IbColumn } from "../kai-table/columns/column";
 import { IbDataExportProvider } from "./provider";
 import {
   IbTableDataExportDialog,
@@ -26,7 +23,6 @@ export class IbDataExportService {
 
   constructor(
     private dialog: MatDialog,
-    private translate: TranslateService,
     @Inject(OVERRIDE_EXPORT_FORMATS) private providers: IbDataExportProvider[]
   ) {
     this.formats = this.providers.map((p) => ({
@@ -54,7 +50,7 @@ export class IbDataExportService {
    */
   _exportFromTable(
     tableName: string,
-    columns: IbColumnDef[],
+    columns: IbColumn<any>[],
     dataSource: MatTableDataSource<any>,
     selectedRows: any[],
     settings: IDataExportSettings
@@ -75,16 +71,16 @@ export class IbDataExportService {
     }
 
     const displayHeader = {};
-    for (const column of columns.filter((c) => c.header)) {
-      displayHeader[column.header] = this.translate.instant(column.header);
+    for (const column of columns) {
+      displayHeader[column.name] = column.headerText;
     }
 
     const outputData = [];
     for (const row of data) {
       let outputRow = {};
-      for (const column of columns.filter((c) => c.header)) {
-        const header = displayHeader[column.header];
-        const displayValue = column.cell(row);
+      for (const column of columns) {
+        const header = displayHeader[column.name];
+        const displayValue = column.dataAccessor(row, column.name);
         outputRow[header] = displayValue;
       }
       outputData.push(outputRow);

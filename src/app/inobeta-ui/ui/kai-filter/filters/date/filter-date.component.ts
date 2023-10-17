@@ -204,9 +204,9 @@ export class IbDateFilter extends IbFilterBase {
     });
   }
 
-  clear(update = true): void {
+  clear(): void {
     this.clearFilter();
-    update && this.filter.update();
+    this.filter.update();
   }
 
   private getOffsetTime(value: number, category) {

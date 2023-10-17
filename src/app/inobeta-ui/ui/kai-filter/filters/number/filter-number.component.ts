@@ -30,9 +30,6 @@ export class IbNumberFilter extends IbFilterBase {
 
   ngOnInit() {
     super.ngOnInit();
-    this.searchCriteria.reset = () => {
-      this.clearRange();
-    };
     this.clearRange();
   }
 
@@ -43,9 +40,9 @@ export class IbNumberFilter extends IbFilterBase {
     this.clearRange();
   }
 
-  clear(update = true) {
+  clear() {
     this.clearRange();
-    update && this.filter.update();
+    this.filter.update();
   }
 
   clearRange() {

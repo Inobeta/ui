@@ -59,6 +59,18 @@ export class IbTableViewGroup {
     this.views$ = this.store.select(selectTableViews(this.viewGroupName));
   }
 
+  checkViewDataChanges(): boolean {
+    const current = this.viewDataAccessor();
+    if (current === undefined) {
+      return false;
+    }
+    return JSON.stringify(current) != JSON.stringify(this.activeView.data);
+  }
+
+  handleStateChanges(changes$: Observable<unknown>) {
+    changes$.subscribe(() => (this.dirty = this.checkViewDataChanges()));
+  }
+
   handleAddView(data = this.defaultView.data) {
     this.viewService.openAddViewDialog().subscribe(({ name }) => {
       const view = this.viewService.addView({

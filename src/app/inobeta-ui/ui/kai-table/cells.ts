@@ -1,125 +1,199 @@
-import { formatDate, formatNumber } from "@angular/common";
-import { Component, ChangeDetectionStrategy, Inject, Optional } from "@angular/core";
-import { TranslateService } from "@ngx-translate/core";
-import { IB_CELL_DATA } from "./table.component";
-import { IbCellData, IbColumnDef } from "./table.types";
+import { formatNumber } from "@angular/common";
+import {
+  Component,
+  Directive,
+  Inject,
+  Optional,
+  TemplateRef,
+} from "@angular/core";
+import { MatTableDataSource } from "@angular/material/table";
+import { IB_AGGREGATE, IB_AGGREGATE_TYPE, IB_COLUMN } from "./tokens";
 
-@Component({
-  selector: 'ib-cell',
-  template: '<div class="ib-cell-{{this.column.columnDef}}">{{column.cell(row)}}</div>',
-  changeDetection: ChangeDetectionStrategy.OnPush
+@Directive({
+  selector: "[ibCellDef]",
 })
-export class IbCell {
-  get cell() { return this.data.column.cell(this.data.row) }
-  get column() { return this.data.column }
-  get row() { return this.data.row }
-  get send() { return this.data.send }
-
-  constructor(@Inject(IB_CELL_DATA) @Optional() public data: IbCellData) { }
+export class IbCellDef {
+  constructor(public templateRef: TemplateRef<unknown>) {}
 }
 
-interface IbContextAction {
-  /** Unique action type identifier. Used in `IbTableRowEvent.type` */
-  type: string;
-  /** Icon name for the action. Only supports material icons names. */
-  icon?: string;
-}
-
-@Component({
-  selector: 'ib-cell-ctx',
-  template: `<div *ngFor="let action of actions" class="action-section ib-action-{{action.type}}">
-    <button mat-icon-button (click)="send({ type: action.type, row: row }); $event.stopPropagation();">
-      <mat-icon>{{ action?.icon ?? action.type }}</mat-icon>
-    </button>
-</div>`,
-  styles: [`
-  :host {
-    display: flex;
-    gap: 4px;
-    justify-content: flex-end;
-  }
-
-  .button-infos {
-    cursor: pointer;
-    user-select: none;
-  }`],
-  changeDetection: ChangeDetectionStrategy.OnPush
-})
-export class IbContextActionCell extends IbCell {
-  get actions(): IbContextAction[] { return this.data.column.cell(this.data.row) }
-}
-
-@Component({
-  selector: 'ib-cell-translate',
-  template: `{{text()}}`,
-  changeDetection: ChangeDetectionStrategy.OnPush
-})
-export class IbTranslateCell extends IbCell {
-  text = () => this.translate.instant(this.cell.key, this.cell.params);
-  constructor(
-    @Inject(IB_CELL_DATA) @Optional() public data: IbCellData,
-    public translate: TranslateService) {
-    super(data);
-  }
+interface IbAggregateResult {
+  currentPage: string;
+  total: string;
 }
 
 /**
  *
- * @param {cell} cell - Data accessor. Same as `IbColumnDef.cell`, but returns
- *  an {IbContextAction} array.
- * @returns
  */
-export const useContextCell = <T>(cell: (e: T) => IbContextAction[]): IbColumnDef => ({
-  component: IbContextActionCell,
-  columnDef: '_ctxActions',
-  header: '',
-  cell,
+export abstract class IbAggregate {
+  /** Unique identifier for the aggregate function. */
+  abstract id: string;
+  /** Function name displayed before the results. i18n supported. */
+  abstract name: string;
+  /** Text shown hovering the result of the function. i18n supported. */
+  abstract help: string;
+  /** Menu item label. i18n supported. */
+  abstract label: string;
+  /**
+   * Function type. Used to include this function in the available functions of
+   * a given column with the same `IB_AGGREGATE_TYPE` token value.
+   * Currently, only `number` is supported.
+   */
+  abstract type: string;
+
+  /**
+   * Calls {@link aggregateData} twice and returns an {@link IbAggregateResult}
+   * with the aggregated value for the entire column and the current visible page.
+   *
+   * It takes into account only filtered data.
+   *
+   * @param dataSource `MatTableDataSource` compatible data source instance
+   * @param column Column name
+   */
+  aggregate(
+    dataSource: MatTableDataSource<unknown>,
+    column: string
+  ): IbAggregateResult {
+    const dataset = dataSource
+      ._orderData(dataSource.filteredData)
+      .map((i) => i[column]);
+    const pagedData = dataSource._pageData(dataset);
+    return {
+      currentPage: this.aggregateData(pagedData),
+      total: this.aggregateData(dataset),
+    };
+  }
+
+  /**
+   * An aggregate function.
+   *
+   * @param data Data array of a given column.
+   * @returns A string representation of the value. In case of a numeric result, use `formatNumber` or `formatCurrency.`
+   */
+  abstract aggregateData(data: any[]): string;
+}
+
+class IbSumAggregate extends IbAggregate {
+  id = "sum";
+  name = "shared.aggregate.sum.name";
+  label = "shared.aggregate.sum.label";
+  help = "shared.aggregate.sum.help";
+  type = "number";
+
+  aggregateData(data: number[]) {
+    const total = data.reduce((acc, cur) => acc + cur, 0);
+    return formatNumber(total, "it");
+  }
+}
+
+export const IbSumAggregateProvider = {
+  provide: IB_AGGREGATE,
+  useClass: IbSumAggregate,
+  multi: true,
+};
+
+class IbAverageAggregate extends IbAggregate {
+  id = "avg";
+  name = "shared.aggregate.avg.name";
+  label = "shared.aggregate.avg.label";
+  help = "shared.aggregate.avg.help";
+  type = "number";
+
+  aggregateData(data: number[]) {
+    const length = Math.max(data.length, 1);
+    const average = data.reduce((acc, cur) => acc + cur, 0) / length;
+    return formatNumber(average, "it");
+  }
+}
+
+export const IbAverageAggregateProvider = {
+  provide: IB_AGGREGATE,
+  useClass: IbAverageAggregate,
+  multi: true,
+};
+
+@Component({
+  selector: "ib-aggregate, [ib-aggregate]",
+  template: `
+    <section class="ib-aggregate__function">
+      <button
+        mat-icon-button
+        [matMenuTriggerFor]="menu"
+        [matTooltip]="'shared.aggregate.apply' | translate"
+      >
+        <mat-icon>functions</mat-icon>
+      </button>
+      <span class="mat-caption">{{ displayName | translate }}</span>
+    </section>
+    <mat-menu #menu="matMenu">
+      <button
+        *ngFor="let function of availableFunctions"
+        mat-menu-item
+        (click)="apply(function.id, true)"
+      >
+        {{ function.label | translate }}
+      </button>
+    </mat-menu>
+    <section class="ib-aggregate__display-value">
+      <div>
+        <span class="mat-caption">{{
+          "shared.aggregate.currentPage" | translate
+        }}</span>
+        {{ result.currentPage }}
+      </div>
+
+      <div>
+        <span class="mat-caption">{{
+          "shared.aggregate.total" | translate
+        }}</span>
+        {{ result.total }}
+      </div>
+    </section>
+  `,
 })
-export const useContextColumn = useContextCell;
+export class IbAggregateCell {
+  function: string;
+  displayName = "";
+  help = "shared.aggregate.help";
+  result: IbAggregateResult = {
+    currentPage: "--",
+    total: "--",
+  };
+  get displayValue() {
+    return `${this.result.currentPage} (${this.result.total})`;
+  }
 
-export const useColumn = <T>(columnName: string, propertyName?: string, sort?: boolean): IbColumnDef => ({
-  columnDef: propertyName ?? columnName,
-  header: columnName,
-  cell: (e) => e[propertyName ?? columnName],
-  sort
-});
+  availableFunctions: IbAggregate[] = [];
 
-export const useDateColumn = <T>(
-  columnName: string,
-  propertyName?: string,
-  sort?: boolean,
-  format: string = 'dd/MM/yyyy HH:mm z',
-  locale: string = 'it'
-): IbColumnDef => ({
-  columnDef: propertyName ?? columnName,
-  header: columnName,
-  cell: (e) => `${formatDate(e[propertyName ?? columnName], format, locale)}`,
-  sort
-});
+  constructor(
+    @Inject(IB_COLUMN) private column: any,
+    @Optional() @Inject(IB_AGGREGATE_TYPE) private type: string,
+    @Optional() @Inject(IB_AGGREGATE) private functions: IbAggregate[]
+  ) {
+    this.availableFunctions = functions.filter((f) => f.type === type);
+  }
 
+  apply(fun: string, update = false) {
+    this.function = fun;
+    update && this.aggregate();
+    update && this.column._table.aggregate.emit();
+  }
 
-export const useNumberColumn = <T>(
-  columnName: string,
-  propertyName?: string,
-  sort?: boolean,
-  format: string = '1.2-2',
-  locale: string = 'it'
-): IbColumnDef => ({
-  columnDef: propertyName ?? columnName,
-  header: columnName,
-  cell: (e) => `${formatNumber(e[propertyName ?? columnName], locale, format)}`,
-  sort
-});
+  aggregate() {
+    const strategy = this.availableFunctions.find(
+      (f) => f.id === this.function
+    );
+    if (!strategy) {
+      this.displayName = "";
+      this.help = "shared.aggregate.help";
+      this.result = { currentPage: "--", total: "--" };
+      return;
+    }
 
-export const useTranslateColumn = <T>(
-  columnName: string,
-  propertyName?: string,
-  sort?: boolean,
-  params: any = {},
-): IbColumnDef => ({
-  component: IbTranslateCell,
-  columnDef: propertyName ?? columnName,
-  header: columnName,
-  cell: (e) => ({ key: e[propertyName ?? columnName], params }),
-  sort
-});
+    this.displayName = strategy.name;
+    this.help = strategy.help;
+    this.result = strategy.aggregate(
+      this.column._table.dataSource,
+      this.column.name
+    );
+  }
+}

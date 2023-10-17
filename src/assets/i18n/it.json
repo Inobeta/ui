@@ -201,6 +201,22 @@
         "unpinned": "Vista rimossa dai predefiniti"
       },
       "showFilters": "Mostra filtri"
+    },
+    "aggregate": {
+      "sum": {
+        "name": "Somma",
+        "label": "Calcola somma",
+        "help": "Totale pagina (Totale complessivo)"
+      },
+      "avg": {
+        "name": "Media",
+        "label": "Calcola media",
+        "help": "Media pagina (Media complessiva)"
+      },
+      "help": "Pagina corrente (Totale)",
+      "apply": "Applica una funzione",
+      "currentPage": "pagina",
+      "total": "tutti"
     }
   },
   "receiptGoods": {
@@ -228,7 +244,7 @@
 
       "kaiTable": "New Table",
       "kaiTableSimple": "Simple",
-      "kaiTableContextAction": "Row Context Actions",
+      "kaiTableContextAction": "Row Actions",
       "kaiTableFull": "Full Example",
       "kaiTableApi": "Data from API",
       

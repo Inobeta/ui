@@ -60,7 +60,7 @@ export class IbFilter {
     // as indicated in NG01000
     setTimeout(() => {
       this.form.patchValue(value);
-      Object.keys(value).forEach((key) => this.form.get(key).markAsDirty());
+      Object.keys(value).forEach((key) => this.form.get(key)?.markAsDirty());
       this.update();
     });
   }

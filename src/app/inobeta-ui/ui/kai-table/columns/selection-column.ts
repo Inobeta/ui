@@ -2,19 +2,31 @@ import { SelectionModel } from "@angular/cdk/collections";
 import {
   Component,
   EventEmitter,
+  Inject,
   OnInit,
+  Optional,
   Output,
   ViewChild,
 } from "@angular/core";
-import { IbTable } from "./table.component";
-import { MatColumnDef } from "@angular/material/table";
-import { IbTableRowSelectionChange, IbKaiTableState } from "./table.types";
+import {
+  MatCellDef,
+  MatColumnDef,
+  MatFooterCellDef,
+  MatHeaderCellDef,
+} from "@angular/material/table";
+import { IbKaiTableState, IbTableRowSelectionChange } from "../table.types";
+import { IB_TABLE } from "../tokens";
 
 @Component({
   selector: "ib-selection-column",
   template: `
-    <ng-container matColumnDef="ibSelectColumn">
-      <th style="width: 40px" class="ib-table__header-cell" mat-header-cell *matHeaderCellDef>
+    <ng-container matColumnDef="ib-selection">
+      <th
+        style="width: 40px"
+        class="ib-table__header-cell"
+        mat-header-cell
+        *matHeaderCellDef
+      >
         <mat-checkbox
           (change)="$event ? toggleAllRows() : null"
           [checked]="selection.hasValue() && isAllSelected()"
@@ -32,10 +44,18 @@ import { IbTableRowSelectionChange, IbKaiTableState } from "./table.types";
         >
         </mat-checkbox>
       </td>
+      <td mat-footer-cell *matFooterCellDef></td>
     </ng-container>
   `,
 })
 export class IbSelectionColumn implements OnInit {
+  /** @ignore */
+  @ViewChild(MatCellDef, { static: true }) cell: MatCellDef;
+  /** @ignore */
+  @ViewChild(MatHeaderCellDef, { static: true }) headerCell: MatHeaderCellDef;
+  /** @ignore */
+  @ViewChild(MatFooterCellDef, { static: true }) footerCell: MatFooterCellDef;
+  /** @ignore */
   @ViewChild(MatColumnDef, { static: true }) columnDef: MatColumnDef;
   selection = new SelectionModel<any>(true, []);
 
@@ -43,10 +63,16 @@ export class IbSelectionColumn implements OnInit {
     IbTableRowSelectionChange[]
   >();
 
-  constructor(public table: IbTable) {}
+  constructor(@Inject(IB_TABLE) @Optional() private table: any) {}
 
   ngOnInit() {
-    this.table.table.addColumnDef(this.columnDef);
+    if (this.table) {
+      this.columnDef.cell = this.cell;
+      this.columnDef.headerCell = this.headerCell;
+      this.columnDef.footerCell = this.footerCell;
+      this.table.matTable.addColumnDef(this.columnDef);
+      this.table.displayedColumns.unshift("ib-selection");
+    }
   }
 
   isAllSelected() {

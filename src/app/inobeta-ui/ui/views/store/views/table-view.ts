@@ -8,6 +8,7 @@ export interface IView<T = any> {
 export interface ITableViewData {
   filter?: Record<string, any>;
   pageSize?: number;
+  aggregate?: Record<string, any>;
 }
 
 export class IbView<T> implements IView {

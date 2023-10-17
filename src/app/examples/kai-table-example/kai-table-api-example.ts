@@ -1,23 +1,15 @@
-import { formatDate } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { Component, Injectable, ViewChild } from "@angular/core";
 import { SortDirection } from "@angular/material/sort";
 import { Observable } from "rxjs";
 import {
-  IbDateFilterCategory,
   IbDateFilterCriteria,
   IbTagFilterCriteria,
   IbTextFilterCritera,
-} from "src/app/inobeta-ui/ui/kai-filter/filter.types";
-import {
-  IbColumnDef,
-  IbKaiTableState,
-  IbTableDef,
-} from "src/app/inobeta-ui/ui/kai-table";
-import { useColumn } from "src/app/inobeta-ui/ui/kai-table/cells";
-import { IbSelectionColumn } from "src/app/inobeta-ui/ui/kai-table/selection-column";
-import { IbDataSource } from "src/app/inobeta-ui/ui/kai-table/table-data-source";
-import { IbTable } from "src/app/inobeta-ui/ui/kai-table/table.component";
+} from "../../inobeta-ui/ui/kai-filter/filter.types";
+import { IbKaiTableState, IbTableDef } from "../../inobeta-ui/ui/kai-table";
+import { IbDataSource } from "../../inobeta-ui/ui/kai-table/table-data-source";
+import { IbTable } from "../../inobeta-ui/ui/kai-table/table.component";
 
 type GithubPRState = "open" | "closed";
 
@@ -42,7 +34,7 @@ class GithubService {
     if (filter?.state?.length) {
       q = `${q} is:${filter?.state[0]}`;
     }
-    
+
     return q;
   }
 
@@ -87,22 +79,22 @@ class GithubService {
       </button>
       <button mat-raised-button (click)="setState('idle')">set to idle</button>
     </div>
-    <ib-kai-table
-      #table
-      [dataSource]="dataSource"
-      [columns]="columns"
-      [tableDef]="tableDef"
-    >
+    <ib-kai-table #table [displayedColumns]="['created', 'state', 'number', 'title']" [dataSource]="dataSource" [tableDef]="tableDef">
       <ib-filter>
         <ib-date-filter name="created">Created</ib-date-filter>
         <ib-tag-filter
           name="state"
-          multiple="false"
+          [multiple]="false"
           [options]="['open', 'closed']"
           >State</ib-tag-filter
         >
         <ib-text-filter name="title">Title</ib-text-filter>
       </ib-filter>
+
+      <ib-date-column headerText="Created" name="created" [dataAccessor]="createdAtAccessor" format="d MMM yyyy" sort></ib-date-column>
+      <ib-text-column name="state"></ib-text-column>
+      <ib-text-column headerText="#" name="number"></ib-text-column>
+      <ib-text-column name="title"></ib-text-column>
     </ib-kai-table>
   `,
   styles: [
@@ -127,21 +119,8 @@ class GithubService {
 })
 export class IbKaiTableApiExamplePage {
   @ViewChild("table", { static: true }) kaiTable: IbTable;
-  @ViewChild(IbSelectionColumn, { static: true })
-  selectionColumn: IbSelectionColumn;
 
   dataSource = new IbDataSource<GithubIssue>();
-  columns: IbColumnDef[] = [
-    {
-      columnDef: "created",
-      header: "Created",
-      cell: (e) => `${formatDate(e.created_at, "d MMM yyyy", "it-IT")}`,
-      sort: true,
-    },
-    useColumn("state"),
-    useColumn("#", "number", false),
-    useColumn("title"),
-  ];
   tableDef: IbTableDef = {
     paginator: {
       pageSize: 30,
@@ -151,6 +130,7 @@ export class IbKaiTableApiExamplePage {
 
   isRateLimitReached = false;
   resultsLength = 0;
+  createdAtAccessor = (data: GithubIssue, name: string) => data.created_at
 
   constructor(private github: GithubService) {}
 
