@@ -114,7 +114,7 @@ export const IbAverageAggregateProvider = {
 @Component({
   selector: "ib-aggregate, [ib-aggregate]",
   template: `
-    <section style="min-width: fit-content">
+    <section class="ib-aggregate__function">
       <button
         mat-icon-button
         [matMenuTriggerFor]="menu"
