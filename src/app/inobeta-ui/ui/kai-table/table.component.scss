@@ -67,5 +67,6 @@ tr.ib-table-element-row:not(.ib-table-expanded-row):hover {
   .ib-aggregate__display-value {
     text-align: end;
     font-weight: 500;
+    white-space: nowrap
   }
 }
