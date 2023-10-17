@@ -58,10 +58,6 @@ import { createNewUser } from "./users";
           </button>
         </section>
       </ib-column>
-
-      <!-- <ib-footer>
-        <ib-aggregate ibTableColumnName="number"></ib-aggregate>
-      </ib-footer> -->
     </ib-kai-table>
   `,
   styles: [

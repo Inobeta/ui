@@ -46,12 +46,12 @@ export class IbTextFilter extends IbFilterBase {
     return this.rawValue.value;
   }
 
-  clear(update = true): void {
+  clear(): void {
     this.searchCriteria.setValue({
       operator: IbFilterOperator.CONTAINS,
       value: "",
     });
-    update && this.filter?.update();
+    this.filter?.update();
   }
 
   build = (): IbFilterDef => {

@@ -30,11 +30,11 @@ export abstract class _IbFilterBase {
     this.closeMenu();
   }
 
-  clear(update = true) {
+  clear() {
     this.searchCriteria.markAsPristine();
     this.searchCriteria.clearValidators();
     this.searchCriteria.reset();
-    update && this.filter?.update();
+    this.filter?.update();
   }
 
   closeMenu() {

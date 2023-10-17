@@ -35,10 +35,10 @@ import { IbColumn } from "./column";
       >
         {{ headerText }}
       </th>
-      <td mat-cell *matCellDef="let data">
+      <td mat-cell *matCellDef="let data" [style.text-align]="'end'">
         {{ transform(dataAccessor(data, name)) }}
       </td>
-      <td mat-footer-cell *matFooterCellDef>
+      <td mat-footer-cell *matFooterCellDef style="max-width: fit-content">
         <ib-aggregate *ngIf="aggregate"></ib-aggregate>
       </td>
     </ng-container>

@@ -21,10 +21,34 @@ interface IbAggregateResult {
   total: string;
 }
 
-abstract class IbAggregate {
+/**
+ *
+ */
+export abstract class IbAggregate {
+  /** Unique identifier for the aggregate function. */
+  abstract id: string;
+  /** Function name displayed before the results. i18n supported. */
   abstract name: string;
+  /** Text shown hovering the result of the function. i18n supported. */
+  abstract help: string;
+  /** Menu item label. i18n supported. */
   abstract label: string;
+  /**
+   * Function type. Used to include this function in the available functions of
+   * a given column with the same `IB_AGGREGATE_TYPE` token value.
+   * Currently, only `number` is supported.
+   */
   abstract type: string;
+
+  /**
+   * Calls {@link aggregateData} twice and returns an {@link IbAggregateResult}
+   * with the aggregated value for the entire column and the current visible page.
+   *
+   * It takes into account only filtered data.
+   * 
+   * @param dataSource `MatTableDataSource` compatible data source instance
+   * @param column Column name
+   */
   aggregate(
     dataSource: MatTableDataSource<unknown>,
     column: string
@@ -39,17 +63,25 @@ abstract class IbAggregate {
     };
   }
 
-  abstract aggregateData(data: any[]): any;
+  /**
+   * An aggregate function.
+   *
+   * @param data Data array of a given column.
+   * @returns A string representation of the value. In case of a numeric result, use `formatNumber` or `formatCurrency.`
+   */
+  abstract aggregateData(data: any[]): string;
 }
 
 class IbSumAggregate extends IbAggregate {
-  name = "sum";
-  label = "shared.aggregate.sum";
+  id = "sum";
+  name = "shared.aggregate.sum.name";
+  label = "shared.aggregate.sum.label";
+  help = "shared.aggregate.sum.help";
   type = "number";
 
-  aggregateData(data: any[]) {
+  aggregateData(data: number[]) {
     const total = data.reduce((acc, cur) => acc + cur, 0);
-    return formatNumber(total, "it", "1.0-2");
+    return formatNumber(total, "it");
   }
 }
 
@@ -60,13 +92,16 @@ export const IbSumAggregateProvider = {
 };
 
 class IbAverageAggregate extends IbAggregate {
-  name = "avg";
-  label = "shared.aggregate.avg";
+  id = "avg";
+  name = "shared.aggregate.avg.name";
+  label = "shared.aggregate.avg.label";
+  help = "shared.aggregate.avg.help";
   type = "number";
 
-  aggregateData(data: any[]) {
-    const average = data.reduce((acc, cur) => acc + cur, 0) / data.length;
-    return formatNumber(average, "it", "1.0-2");
+  aggregateData(data: number[]) {
+    const length = Math.max(data.length, 1);
+    const average = data.reduce((acc, cur) => acc + cur, 0) / length;
+    return formatNumber(average, "it");
   }
 }
 
@@ -77,60 +112,73 @@ export const IbAverageAggregateProvider = {
 };
 
 @Component({
-  selector: "ib-aggregate",
+  selector: "ib-aggregate, [ib-aggregate]",
   template: `
-    <button
-      mat-icon-button
-      [matMenuTriggerFor]="menu"
-      [matTooltip]="'shared.aggregate.apply' | translate"
-    >
-      <mat-icon>functions</mat-icon>
-    </button>
+    <section style="min-width: fit-content">
+      <button
+        mat-icon-button
+        [matMenuTriggerFor]="menu"
+        [matTooltip]="'shared.aggregate.apply' | translate"
+      >
+        <mat-icon>functions</mat-icon>
+      </button>
+      <span class="mat-caption">{{ displayName | translate }}</span>
+    </section>
     <mat-menu #menu="matMenu">
       <button
         *ngFor="let function of availableFunctions"
         mat-menu-item
-        (click)="apply(function.name)"
+        (click)="apply(function.id, true)"
       >
         {{ function.label | translate }}
       </button>
     </mat-menu>
-    <span
-      class="ib-aggregate-display"
-      [matTooltip]="'shared.aggregate.help' | translate"
-      >{{ display }}</span
-    >
+    <span class="ib-aggregate__display-value" [matTooltip]="help | translate">{{
+      displayValue
+    }}</span>
   `,
 })
 export class IbAggregateCell {
   function: string;
-  result: IbAggregateResult;
-  get display() {
-    if (!this.function) {
-      return "-- (--)";
-    }
-    this.aggregate();
+  displayName = "";
+  help = "shared.aggregate.help";
+  result: IbAggregateResult = {
+    currentPage: "--",
+    total: "--",
+  };
+  get displayValue() {
     return `${this.result.currentPage} (${this.result.total})`;
   }
 
-  get availableFunctions() {
-    return this.functions.filter((f) => f.type === this.type);
-  }
+  availableFunctions: IbAggregate[] = [];
 
   constructor(
     @Inject(IB_COLUMN) private column: any,
     @Optional() @Inject(IB_AGGREGATE_TYPE) private type: string,
     @Optional() @Inject(IB_AGGREGATE) private functions: IbAggregate[]
-  ) {}
+  ) {
+    this.availableFunctions = functions.filter((f) => f.type === type);
+  }
 
-  apply(fun: string) {
+  apply(fun: string, update = false) {
     this.function = fun;
+    update && this.aggregate();
+    update && this.column._table.aggregate.emit();
   }
 
   aggregate() {
     const strategy = this.availableFunctions.find(
-      (f) => f.name === this.function
+      (f) => f.id === this.function
     );
+    if (!strategy) {
+      this.displayName = "";
+      this.help = "shared.aggregate.help";
+      this.result = { currentPage: "--", total: "--" };
+      return;
+    }
+
+    this.displayName = strategy.name;
+    this.help = strategy.help;
     this.result = strategy.aggregate(
       this.column._table.dataSource,
       this.column.name

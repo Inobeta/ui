@@ -11,6 +11,7 @@ import {
   Component,
   ContentChild,
   ContentChildren,
+  EventEmitter,
   Input,
   OnDestroy,
   QueryList,
@@ -19,7 +20,7 @@ import {
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { MatTable, MatTableDataSource } from "@angular/material/table";
-import { Subject } from "rxjs";
+import { Subject, merge } from "rxjs";
 import { filter, takeUntil } from "rxjs/operators";
 import { IbTableDataExportAction } from "../data-export/table-data-export.component";
 import { IbFilter } from "../kai-filter";
@@ -127,6 +128,7 @@ export class IbTable implements OnDestroy {
   @Input() displayedColumns: string[] = [];
 
   aggregateColumns = new Set<string>();
+  aggregate = new EventEmitter();
 
   ngOnInit() {
     if (!(this.dataSource instanceof DataSource)) {
@@ -200,15 +202,32 @@ export class IbTable implements OnDestroy {
   }
 
   private setupViewGroup() {
+    const getAggregateCells = () =>
+      this.columns
+        .filter((c) => !!c.aggregateCell)
+        .map((c) => ({
+          name: c.name,
+          function: c.aggregateCell.function,
+        }));
+
     this.view.defaultView.data = {
       filter: this.filter.initialRawValue,
       pageSize: this.tableDef.paginator.pageSize,
+      aggregate: getAggregateCells(),
     };
 
     this.view.viewDataAccessor = () => ({
       filter: this.filter.rawFilter,
       pageSize: this.paginator.pageSize,
+      aggregate: getAggregateCells(),
     });
+
+    const changes$ = merge(
+      this.filter.ibRawFilterUpdated,
+      this.paginator.page,
+      this.aggregate
+    ).pipe(takeUntil(this._destroyed));
+    this.view.handleStateChanges(changes$);
 
     this.view._activeView
       .pipe(
@@ -219,18 +238,12 @@ export class IbTable implements OnDestroy {
         this.paginator.firstPage();
         this.paginator.pageSize = view.data.pageSize;
         this.filter.value = view.data.filter;
-      });
 
-    this.filter.ibRawFilterUpdated
-      .pipe(takeUntil(this._destroyed))
-      .subscribe((rawFilter) => {
-        this.view.dirty =
-          JSON.stringify(rawFilter) !==
-          JSON.stringify(this.view.activeView.data.filter);
+        view.data.aggregate.forEach((a) => {
+          const column = this.columns.find((c) => a.name === c.name);
+          column?.aggregateCell?.apply(a.function);
+        });
       });
-    this.paginator.page.pipe(takeUntil(this._destroyed)).subscribe((p) => {
-      this.view.dirty = p.pageSize !== this.view.activeView.data.pageSize;
-    });
 
     for (const action of [
       this.filter.hideFilterAction,

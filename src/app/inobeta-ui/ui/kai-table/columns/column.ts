@@ -16,7 +16,8 @@ import {
   MatFooterCellDef,
   MatHeaderCellDef,
 } from "@angular/material/table";
-import { IbCellDef } from "../cells";
+import { merge } from "rxjs";
+import { IbAggregateCell, IbCellDef } from "../cells";
 import { IB_COLUMN_OPTIONS, IB_TABLE, IbColumnOptions } from "../tokens";
 
 /**
@@ -159,6 +160,8 @@ export class IbColumn<T> implements OnDestroy, OnInit {
   @ViewChild(MatHeaderCellDef, { static: true }) headerCell: MatHeaderCellDef;
   @ViewChild(MatFooterCellDef, { static: true }) footerCell: MatFooterCellDef;
 
+  @ViewChild(IbAggregateCell) aggregateCell: IbAggregateCell;
+
   /** @ignore */
   get matSort() {
     return this._table.sort;
@@ -198,6 +201,10 @@ export class IbColumn<T> implements OnDestroy, OnInit {
     }
   }
 
+  ngAfterViewInit() {
+    this.handleStateChanges();
+  }
+
   ngOnDestroy() {
     if (this._table) {
       this._table.matTable.removeColumnDef(this.columnDef);
@@ -227,5 +234,17 @@ export class IbColumn<T> implements OnDestroy, OnInit {
     if (this.columnDef) {
       this.columnDef.name = this.name;
     }
+  }
+
+  private handleStateChanges() {
+    const changes$ = [this._table.paginator?.page, this._table.sort?.sortChange];
+
+    if (this._table.filter) {
+      changes$.push(this._table.filter?.ibRawFilterUpdated);
+    }
+
+    merge(...changes$).subscribe(() => {
+      this.aggregateCell?.aggregate();
+    });
   }
 }
