@@ -45,7 +45,7 @@ export abstract class IbAggregate {
    * with the aggregated value for the entire column and the current visible page.
    *
    * It takes into account only filtered data.
-   * 
+   *
    * @param dataSource `MatTableDataSource` compatible data source instance
    * @param column Column name
    */
@@ -133,9 +133,21 @@ export const IbAverageAggregateProvider = {
         {{ function.label | translate }}
       </button>
     </mat-menu>
-    <span class="ib-aggregate__display-value" [matTooltip]="help | translate">{{
-      displayValue
-    }}</span>
+    <section class="ib-aggregate__display-value">
+      <div>
+        <span class="mat-caption">{{
+          "shared.aggregate.currentPage" | translate
+        }}</span>
+        {{ result.currentPage }}
+      </div>
+
+      <div>
+        <span class="mat-caption">{{
+          "shared.aggregate.total" | translate
+        }}</span>
+        {{ result.total }}
+      </div>
+    </section>
   `,
 })
 export class IbAggregateCell {

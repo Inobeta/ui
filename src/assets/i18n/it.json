@@ -214,7 +214,9 @@
         "help": "Media pagina (Media complessiva)"
       },
       "help": "Pagina corrente (Totale)",
-      "apply": "Applica una funzione"
+      "apply": "Applica una funzione",
+      "currentPage": "pagina",
+      "total": "tutti"
     }
   },
   "receiptGoods": {
