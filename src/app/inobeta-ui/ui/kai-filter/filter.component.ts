@@ -13,11 +13,16 @@ import { IbFilterDef, IbFilterSyntax } from "./filter.types";
 import { applyFilter } from "./filters";
 import { IbFilterBase } from "./filters/base/filter-base";
 import { IbKaiTableAction } from "../kai-table/action";
+import { IB_FILTER } from "./tokens";
 
 @Component({
   selector: "ib-filter",
   template: `
-    <section class="ib-filter" [class.ib-filter__hide]="hideFilters" [attr.aria-hidden]="hideFilters">
+    <section
+      class="ib-filter"
+      [class.ib-filter__hide]="hideFilters"
+      [attr.aria-hidden]="hideFilters"
+    >
       <ng-content select="ib-search-bar"></ng-content>
       <section #list class="ib-filter-list">
         <mat-icon *ngIf="list.children.length > 1">filter_list</mat-icon>
@@ -36,6 +41,7 @@ import { IbKaiTableAction } from "../kai-table/action";
   `,
   styleUrls: ["./filter.component.scss"],
   encapsulation: ViewEncapsulation.None,
+  providers: [{ provide: IB_FILTER, useExisting: IbFilter }],
 })
 export class IbFilter {
   /** @ignore */
@@ -109,9 +115,8 @@ export class IbFilter {
     let output = {};
     const filters = this.filters.toArray();
 
-    for (const key of Object.keys(this.rawFilter)) {
-      const filter = filters.find((f) => f.name === key);
-      output = { ...output, [key]: filter.build() };
+    for (const filter of filters) {
+      output[filter.name] = filter.build();
     }
 
     return output;

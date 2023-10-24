@@ -3,6 +3,7 @@
   "compilerOptions": {
     "types": ["node"],
     "allowSyntheticDefaultImports": true,
+    "emitDecoratorMetadata": true,
     "resolveJsonModule": true
   },
   "exclude": ["../src/test.ts", "../src/**/*.spec.ts"],

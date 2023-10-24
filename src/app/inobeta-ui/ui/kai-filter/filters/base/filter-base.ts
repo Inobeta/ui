@@ -1,13 +1,37 @@
-import { Directive, Input, ViewChild } from "@angular/core";
+import { Directive, Inject, Input, ViewChild } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { IbFilterButton } from "../../filter-button/filter-button.component";
-import { IbFilter } from "../../filter.component";
 import { IbFilterDef } from "../../filter.types";
+import { IB_FILTER } from "../../tokens";
 
-export abstract class _IbFilterBase {
-  button?: IbFilterButton;
-
+export interface IFilterBase {
+  /** Name that should be used to reference this filter. */
   name: string;
+  /** Ra */
+  searchCriteria: FormControl | FormGroup;
+
+  /** Perform validation and call `filter.update()` */
+  applyFilter(): void;
+  /** Reset search criteria and call `filter.update()` */
+  clear(): void;
+  /** Build filter syntax */
+  build: () => IbFilterDef;
+  /**  */
+  initializeFromColumn(data: any[]): void;
+}
+
+@Directive({
+  selector: "ib-filter-base",
+})
+export class IbFilterBase implements IFilterBase {
+  @ViewChild(IbFilterButton) button: IbFilterButton;
+
+  @Input() name: string;
+  @Input() set ibTableColumnName(value) {
+    this.name = value;
+  }
+
+  searchCriteria: FormGroup | FormControl;
 
   get rawValue() {
     return this.filter?.rawFilter[this.name];
@@ -17,52 +41,11 @@ export abstract class _IbFilterBase {
     return !!this.filter.filter[this.name]?.value;
   }
 
-  searchCriteria: FormGroup | FormControl;
-
-  constructor(public filter: IbFilter) {}
-
-  applyFilter() {
-    if (!this.searchCriteria.valid) {
-      this.searchCriteria.markAllAsTouched();
-      return;
-    }
-    this.filter?.update();
-    this.closeMenu();
-  }
-
-  clear() {
-    this.searchCriteria.markAsPristine();
-    this.searchCriteria.clearValidators();
-    this.searchCriteria.reset();
-    this.filter?.update();
-  }
-
-  closeMenu() {
-    this.button?.closeMenu();
-  }
-
-  abstract build: () => IbFilterDef;
-  initializeFromColumn(data: any[]) {}
-}
-
-@Directive({
-  selector: "ib-filter-base",
-})
-export class IbFilterBase extends _IbFilterBase {
-  @ViewChild(IbFilterButton) button: IbFilterButton;
-
-  @Input() name: string;
-  @Input() set ibTableColumnName(value) {
-    this.name = value;
-  }
-
-  constructor(public filter: IbFilter) {
-    super(filter);
-  }
+  constructor(@Inject(IB_FILTER) public filter: any) {}
 
   ngOnInit() {
     if (!this.name) {
-      return;
+      throw Error("Filter must have a name.");
     }
 
     this.filter.form.addControl(this.name, this.searchCriteria);
@@ -84,4 +67,26 @@ export class IbFilterBase extends _IbFilterBase {
   }
 
   build: () => IbFilterDef;
+
+  applyFilter() {
+    if (!this.searchCriteria.valid) {
+      this.searchCriteria.markAllAsTouched();
+      return;
+    }
+    this.filter?.update();
+    this.closeMenu();
+  }
+
+  initializeFromColumn(data: any[]): void {}
+
+  clear() {
+    this.searchCriteria.markAsPristine();
+    this.searchCriteria.clearValidators();
+    this.searchCriteria.reset();
+    this.filter?.update();
+  }
+
+  closeMenu() {
+    this.button?.closeMenu();
+  }
 }

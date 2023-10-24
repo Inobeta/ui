@@ -5,7 +5,7 @@ import { Observable } from "rxjs";
 import {
   IbDateFilterCriteria,
   IbTagFilterCriteria,
-  IbTextFilterCritera,
+  IbTextFilterCriteria,
 } from "../../inobeta-ui/ui/kai-filter/filter.types";
 import { IbKaiTableState, IbTableDef } from "../../inobeta-ui/ui/kai-table";
 import { IbDataSource } from "../../inobeta-ui/ui/kai-table/table-data-source";
@@ -15,7 +15,7 @@ type GithubPRState = "open" | "closed";
 
 interface GithubApiQueryFilter {
   created: IbDateFilterCriteria;
-  title: IbTextFilterCritera;
+  title: IbTextFilterCriteria;
   state: IbTagFilterCriteria<GithubPRState>;
 }
 

@@ -1,18 +1,23 @@
-# IbTable
+<h1>IbTable</h1>
 
 The `ib-kai-table`, built upon `mat-table` of Angular Material, provides high customization capabilities and out-of-the-box compatibility with other components such as `ib-filter` for filtering, `ib-table-view-group` to manage user-defined views, and much more.
 
-- [IbTable](#ibtable)
-  - [Getting started](#getting-started)
-  - [Sorting](#sorting)
-  - [Aggregation](#aggregation)
-  - [Columns](#columns)
-    - [Text column](#text-column)
-    - [Number column](#number-column)
-    - [Date column](#date-column)
-    - [Custom column](#custom-column)
-    - [Action column](#action-column)
-  - [Use server-side data as a source](#use-server-side-data-as-a-source)
+- [Getting started](#getting-started)
+- [Columns](#columns)
+  - [Text column](#text-column)
+  - [Number column](#number-column)
+  - [Date column](#date-column)
+  - [Custom column](#custom-column)
+  - [Action column](#action-column)
+  - [Build your own column](#build-your-own-column)
+- [Sorting](#sorting)
+  - [Set initial sort](#set-initial-sort)
+- [Filtering](#filtering)
+- [Selection](#selection)
+- [Pagination](#pagination)
+- [Export](#export)
+- [Aggregation](#aggregation)
+- [Use server-side data as a source](#use-server-side-data-as-a-source)
 
 ## Getting started
 
@@ -35,7 +40,7 @@ export class SimpleKaiTableExample {
 
 Next, write your table's column templates.
 
-Each column definition must be given a name. By default, the name of the columns will be the header text and data property accessor.
+Each column definition must be given a name. By default, the name of the columns will also used as the header text and data property accessor.
 
 Take the following column as an example.
 
@@ -52,7 +57,7 @@ Putting it all together, you'll have:
 ```typescript
 const EXAMPLE_DATA = [
   {
-    name: "Amelia M.",
+    name: "Alice M.",
     fruit: "apple",
   },
   // ...
@@ -74,57 +79,69 @@ export class SimpleKaiTableExample {
 </ib-kai-table>
 ```
 
-![simple table](../../../../assets/docs/ib-kai-table/simple.png "Simple IbTable")
-
-## Sorting
-
-By default, sorting a column is disabled. To enable sorting, use `sort` in your column.
-
-> Sorting is supported by any column.
-
-```html
-<ib-text-column name="firstName" sort></ib-text-column>
-```
-
-## Aggregation
-
-> In version `15.1`, aggregation is supported only for `ib-number-column`
-
-Use `aggregate` to show a roll-up footer row in your table. Each column has a different set of functions available. For example, with `ib-number-column` you can estimate the sum, or the average, of a column.
-
-```html
-<ib-number-column name="firstName" aggregate></ib-number-column>
-```
+![simple table](/docs/ib-kai-table/simple.png "Simple IbTable")
 
 ## Columns
+
+Columns are defined by adding a column component as slots within `ib-kai-table`
+
+```html
+<ib-kai-table [dataSource]="dataSource" [displayedColumns]="displayedColumns">
+  <ib-text-column name="name"></ib-text-column>
+  <ib-text-column name="surname"></ib-text-column>
+</ib-kai-table>
+```
+
+`name` is the only input required for every type of column.
+
+To change the label shown in the header, use `headerText`.
+
+```html
+<ib-kai-table [dataSource]="dataSource" [displayedColumns]="displayedColumns">
+  <ib-text-column [headerText]="'user.name' | translate" name="name"></ib-text-column>
+  <ib-text-column [headerText]="'user.surname' | translate" name="surname"></ib-text-column>
+</ib-kai-table>
+```
 
 ### Text column
 
 ```html
-<ib-text-column name="fruit" justify="start"></ib-text-column>
+<ib-text-column name="surname" justify="start"></ib-text-column>
 ```
+
+`ib-text-column` displays text content for the row cells. Text justification can be edited with `justify` (`start`, `end`, or `center`)
 
 ### Number column
 
 ```html
-<ib-number-column name="price" digitsInfo="1.0-2"></ib-number-column>
+<ib-number-column name="price" digitsInfo="1.0-2" locale="it"></ib-number-column>
 ```
+
+`ib-number-column` displays a decimal value. The decimal representation can be specified with `digitsInfo`, while `locale` will format a value according to locale rules. Since a `DecimalPipe` is used in the implementation, [follow its usage notes to know more](https://angular.io/api/common/DecimalPipe#usage-notes).
 
 ### Date column
 
 ```html
-<ib-date-column name="created_at" format="dd/MM/yyyy"></ib-date-column>
+<ib-date-column name="created_at" format="dd/MM/yyyy" locale="it"></ib-date-column>
 ```
+
+`ib-date-column` shows a formatted date. Since a `DatePipe` is used in the implementation, [follow its usage notes to know more](https://angular.io/api/common/DatePipe#usage-notes).
 
 ### Custom column
 
 ```html
 <ib-column name="subscribed">
-  <section *ibCellDef="let element">
+  <ng-container *ibCellDef="let element">
     <mat-icon [color]="element.subscribed ? 'accent' : ''">{{ element.subscribed ? "done" : "close" }}</mat-icon>
-  </section>
+  </ng-container>
 </ib-column>
 ```
+
+`ib-column` is the base component that all the previous columns are built upon. However, it can be used on its own. The only requirement is a single element with an `*ibCellDef` directive (in the example above, `ng-container` was used, but any element will do.) This directive only exports the data of a given row.
+
+This column makes possible formatting data in an arbitrary fashion, without declaring a new component.
+
+If custom logic is needed instead, please follow [how to extend a column](#extending-a-column).
 
 ### Action column
 
@@ -162,6 +179,218 @@ export class KaiTableRowActionExample {
     // your code here
   }
 }
+```
+
+`ib-action-column` is a helper directive to define a column that will be added at the end of a table. It is recommended to use a container element (like `section` or `div`) to avoid layout issues.
+
+### Build your own column
+
+Writing a custom column component is achieved by extending the component `IbColumn`.
+
+Here's an example of a column that shows content for boolean values:
+
+```typescript
+// boolean-column.component.ts
+@Component({
+  selector: "ib-boolean-column",
+  templateUrl: "boolean.column.component.html",
+  // View encapsulation must be removed so that the styles can be applied accordingly.
+  encapsulation: ViewEncapsulation.None,
+  // Ensure that no change detection related exception will be thrown.
+  changeDetection: ChangeDetectionStrategy.Default,
+  providers: [
+    // Provide both `IbColumn` and `IB_COLUMN` tokens.
+    // Make sure that the parent table and any descendant
+    // can access this column.
+    { provide: IbColumn, useExisting: IbBooleanColumn },
+    { provide: IB_COLUMN, useExisting: IbBooleanColumn },
+    // Provide a valid `IB_AGGREGATE_TYPE` token value to support aggregation
+    { provide: IB_AGGREGATE_TYPE, useValue: "boolean" },
+  ],
+})
+export class IbBooleanColumn<T> extends IbColumn<T> {
+  getIcon(value: BooleanInput) {
+    return coerceBooleanProperty(value) ? "done" : "close";
+  }
+
+  getColor(value: BooleanInput) {
+    return coerceBooleanProperty(value) ? "accent" : "";
+  }
+}
+```
+
+```html
+<!-- boolean.column.component.html -->
+<ng-container
+  matColumnDef
+  matSort
+  [sticky]="sticky"
+  [stickyEnd]="stickyEnd"
+>
+  <th
+    class="ib-table__header-cell"
+    mat-header-cell
+    *matHeaderCellDef
+    [ibSortHeaderFor]="matSort"
+    mat-sort-header
+    [disabled]="!sort"
+  >
+    {{ headerText }}
+  </th>
+  <td mat-cell *matCellDef="let data">
+    <mat-icon [color]="getColor(dataAccessor(data, name))">
+      {{ getIcon(dataAccessor(data, name)) }}
+    </mat-icon>
+  </td>
+  <td mat-footer-cell *matFooterCellDef style="max-width: fit-content">
+    <ib-aggregate *ngIf="aggregate"></ib-aggregate>
+  </td>
+</ng-container>
+```
+
+||Info
+|-|-|
+`matColumnDef`|Column definition for the mat-table.
+`matSort`|*Dummy* instance of `matSort`.
+`sticky`; `stickyEnd`|Whether the column should be sticky positioned.
+|
+`mat-header-cell`|Header cell template container that adds the right classes and role.
+`*matHeaderCellDef`|Header cell definition for the mat-table. Captures the template of a column's header cell.
+|
+`ibSortHeaderFor`|Replaces the temporary `matSort` instance with the one declared in the table component.
+`mat-sort-header`|Applies sorting behavior.
+`[disabled]="!sort"`|Whether sorting is disabled.
+|
+`*matCellDef`|Cell definition for the mat-table.
+`dataAccessor(data, name)`|Accessor function to retrieve the data rendered for each cell.
+
+During declaration, `IbColumn` depends on `MatTableModule`. To add sorting support, import `MatSortModule` as well. 
+
+```typescript
+@NgModule({
+  imports: [
+    // ...
+    MatTableModule,
+    MatSortModule
+  ],
+  declarations: [
+    // ..
+    IbBooleanColumn,
+  ],
+})
+export class CustomColumnExampleModule { }
+```
+
+## Sorting
+
+By default, sorting is disabled in any column. To enable sorting, use `sort` in your column.
+
+> Sorting is supported by any column.
+
+```html
+<ib-text-column name="firstName" sort></ib-text-column>
+```
+
+### Set initial sort
+
+Through the `initialSort` property of `IbTableDef` a sort direction can be activated during the first render of the table. The property `active` corresponds to the `name` of a column, and `direction` can only be either `asc` or `desc`.
+
+```html
+<ib-kai-table ... [tableDef]="tableDef">
+  <!-- ... -->
+</ib-kai-table>
+```
+
+```typescript
+export class IbKaiTableExamplePage {
+  tableDef: IbTableDef = {
+    initialSort: {
+      active: "fruit",
+      direction: "asc",
+    },
+  };
+}
+```
+
+## Filtering
+
+[test](../kai-filter/filters.module.md#extend-a-filter)
+
+## Selection
+
+To activate checkbox selection, add an `ib-selection-column` to the table.
+
+```html
+<ib-selection-column (ibRowSelectionChange)="selectionChange($event)"></ib-selection-column>
+```
+
+Listen to `ibRowSelectionChange` in order to obtain the rows selected by the user. The event fires an _array_ containing the selected rows, each element is of type `IbTableRowSelectionChange` declared as follows:
+
+```typescript
+interface IbTableRowSelectionChange<T> {
+  tableName: string;
+  selection: boolean;
+  row: T;
+}
+```
+
+If a single row is selected, then the array will contain a single element. If the checkbox placed in the header is selected, the array will contain all the rows available.
+
+Alternatively, it is possible to leverage on the API of `ib-selection-column` itself. It exposes a `SelectionModel` under the property `selection`. For example, here's how to get all selected rows.
+
+```typescript
+export class SelectionColumnExample {
+  @ViewChild(IbSelectionColumn, { static: true })
+  selectionColumn: IbSelectionColumn;
+
+  someMethod() {
+    this.selectionColumn.selection.selected;
+  }
+}
+```
+
+## Pagination
+
+```html
+<ib-kai-table ... [tableDef]="tableDef">
+  <!-- ... -->
+</ib-kai-table>
+```
+
+```typescript
+export class IbKaiTableExamplePage {
+  tableDef: IbTableDef = {
+    paginator: {
+      pageSize: 10
+      pageSizeOptions: [5, 10, 25, 100],
+      hidePageSize: false,
+      showFirstLastButtons: true,
+      hide: false
+    },
+  };
+}
+```
+
+## Export
+
+```html
+<ib-kai-table [dataSource]="dataSource" [displayedColumns]="displayedColumns">
+  <ib-table-action-group>
+    <ib-table-data-export-action></ib-table-data-export-action>
+  </ib-table-action-group>
+
+  <!-- ... --->
+</ib-kai-table>
+```
+
+## Aggregation
+
+> In version `15.1`, aggregation is supported only for `ib-number-column`
+
+Use `aggregate` to show a roll-up footer row in your table. Each column has a different set of functions available. For example, in `ib-number-column` you can estimate the sum, or the average, of a column.
+
+```html
+<ib-number-column name="firstName" aggregate></ib-number-column>
 ```
 
 ## Use server-side data as a source

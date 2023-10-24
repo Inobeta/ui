@@ -1,5 +1,5 @@
 import { Component, Input, ViewEncapsulation } from "@angular/core";
-import { FormControl, FormGroup } from "@angular/forms";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { IbFilterDef } from "../../filter.types";
 import { and, gte, lte, none } from "../../filters";
 import { IbFilterBase } from "../base/filter-base";
