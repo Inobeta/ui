@@ -15,7 +15,7 @@ export interface IFilterBase {
   /** Reset search criteria and call `filter.update()` */
   clear(): void;
   /** Build filter syntax */
-  build: () => IbFilterDef;
+  build(): IbFilterDef;
   /**  */
   initializeFromColumn(data: any[]): void;
 }
@@ -38,7 +38,8 @@ export class IbFilterBase implements IFilterBase {
   }
 
   get isDirty() {
-    return !!this.filter.filter[this.name]?.value;
+    const value = this.filter.filter[this.name]?.value;
+    return value != null || value != undefined;
   }
 
   constructor(@Inject(IB_FILTER) public filter: any) {}
@@ -46,6 +47,10 @@ export class IbFilterBase implements IFilterBase {
   ngOnInit() {
     if (!this.name) {
       throw Error("Filter must have a name.");
+    }
+
+    if (!this.searchCriteria) {
+      throw Error(`Filter ${this.name} has no search criteria`);
     }
 
     this.filter.form.addControl(this.name, this.searchCriteria);
@@ -66,8 +71,10 @@ export class IbFilterBase implements IFilterBase {
     this.searchCriteria.patchValue(this.rawValue);
   }
 
-  build: () => IbFilterDef;
-
+  build(): IbFilterDef {
+    throw Error(`Filter ${this.name} has no build method defined.`);
+  }
+  
   applyFilter() {
     if (!this.searchCriteria.valid) {
       this.searchCriteria.markAllAsTouched();

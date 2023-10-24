@@ -314,7 +314,48 @@ export class IbKaiTableExamplePage {
 
 ## Filtering
 
-[test](../kai-filter/filters.module.md#extend-a-filter)
+To define filters, first import `IbFilterModule` alongside `IbKaiTableModule`.
+
+```typescript
+@NgModule({
+  imports: [
+    IbKaiTableModule, 
+    IbFilterModule,
+  ],
+  // ...
+})
+export class TableWithFiltersModule { }
+```
+
+Then, add the necessary filters withing your table. Each filter requires a `name` that must match a column defined with the same name.
+
+```html
+<ib-kai-table [displayedColumns]="['name', 'fruit', 'quantity', 'purchased_at']" [dataSource]="dataSource">
+  <ib-filter>
+    <ib-search-bar></ib-search-bar>
+
+    <ib-text-filter name="name">{{ 'user.name' | translate }}</ib-text-filter>
+    <ib-tag-filter name="fruit">{{ 'fruit.name' | translate }}</ib-tag-filter>
+    <ib-number-filter name="quantity">{{ 'common.quantity' | translate }}</ib-number-filter>
+    <ib-date-filter name="purchased_at">{{ 'common.purchasedAt' | translate }}</ib-date-filter>
+  </ib-filter>
+
+  <ib-text-column name="name"></ib-text-column>
+  <ib-text-column name="fruit"></ib-text-column>
+  <ib-number-column name="quantity"></ib-number-column>
+  <ib-date-column name="purchased_at"></ib-date-column>
+</ib-kai-table>
+
+```
+
+**Filters**
+
+|Name|Usage|
+|--|-|
+`ib-text-filter`|Text-based search.
+`ib-tag-filter`|Selection-based search. By default, a distinct set of options is generated from the column's data. Can be overriden with `options`. Use `[multiple]="false"` to disable mutli selection.
+`ib-number-filter`|Number-based search. By default, the minimum and maximum values are set from the column's data. Can be overriden with `min` and `max`. Use `step` to define the precision of the slider.
+`ib-date-filter`|Date-based search. 
 
 ## Selection
 
@@ -351,6 +392,8 @@ export class SelectionColumnExample {
 
 ## Pagination
 
+Through the `paginator` property of `IbTableDef` it is possible to change the appearance of the paginator, for example with `hide` set to `true` the paginator will disappear, or with `showFirstLastButtons` set to `false` the jump to first and last page buttons will disappear.
+
 ```html
 <ib-kai-table ... [tableDef]="tableDef">
   <!-- ... -->
@@ -373,6 +416,21 @@ export class IbKaiTableExamplePage {
 
 ## Export
 
+To enable data export from a table, first import `IbDataExportModule` alongside `IbKaiTableModule` and `IbTableActionModule`.
+
+```typescript
+@NgModule({
+  imports: [
+    IbKaiTableModule,
+    IbTableActionModule,
+    IbDataExportModule,
+  ],
+  // ...
+})
+export class TableWithExportModule {}
+```
+Then add the export button within `ib-table-action-group` in the table.
+
 ```html
 <ib-kai-table [dataSource]="dataSource" [displayedColumns]="displayedColumns">
   <ib-table-action-group>
@@ -382,6 +440,25 @@ export class IbKaiTableExamplePage {
   <!-- ... --->
 </ib-kai-table>
 ```
+
+By default, there are three available formats: `xlsx`, `csv`, and `pdf`.
+The formats can be overriden by including the providers desired, as such:
+
+```typescript
+@NgModule({
+  imports: [
+    IbKaiTableModule,
+    IbTableActionModule,
+    IbDataExportModule,
+  ],
+   providers: [
+    IbXLXSExportProvider,
+  ],
+})
+export class TableWithExportModule {}
+```
+
+In this example, only `xlsx` export will be allowed.
 
 ## Aggregation
 
@@ -395,4 +472,6 @@ Use `aggregate` to show a roll-up footer row in your table. Each column has a di
 
 ## Use server-side data as a source
 
-(docs not ready)
+Server-side interactions only available with an instance of `IbDataSource` used as input.
+
+> However, this feature is currently under-construction, and not yet suitable for production. 
