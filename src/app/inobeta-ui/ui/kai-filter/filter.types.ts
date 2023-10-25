@@ -1,13 +1,11 @@
-import { InjectionToken } from "@angular/core";
-
 export enum IbFilterOperator {
   NONE,
   EQUALS,
   NOT_EQUALS,
   LESS_THAN,
   LESS_THAN_EQUALS,
-  GREATHER_THAN,
-  GREATHER_THAN_EQUALS,
+  GREATER_THAN,
+  GREATER_THAN_EQUALS,
   CONTAINS,
   NOT_CONTAINS,
   STARTS_WITH,
@@ -25,9 +23,7 @@ export interface IbFilterSyntax {
   [key: string]: IbFilterDef;
 }
 
-export const IB_FILTER = new InjectionToken<string>("IbFilter");
-
-export interface IbTextFilterCritera {
+export interface IbTextFilterCriteria {
   operator: IbFilterOperator;
   value: string;
 }

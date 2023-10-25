@@ -15,7 +15,7 @@ export class IbTextFilter extends IbFilterBase {
       validators: [Validators.required],
       nonNullable: true,
     }),
-    value: new FormControl("", { nonNullable: true }),
+    value: new FormControl(null, { nonNullable: true }),
   });
 
   operators = [
@@ -54,7 +54,7 @@ export class IbTextFilter extends IbFilterBase {
     this.filter?.update();
   }
 
-  build = (): IbFilterDef => {
+  build(): IbFilterDef {
     if (!this.searchCriteria.value.value) {
       return none();
     }

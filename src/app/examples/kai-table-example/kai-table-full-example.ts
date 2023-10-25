@@ -45,11 +45,11 @@ import { createNewUser } from "./users";
       ></ib-number-column>
       <ib-date-column headerText="Purchased" name="aDate" sort></ib-date-column>
       <ib-column name="subscribed" sort>
-        <section *ibCellDef="let element">
+        <ng-container *ibCellDef="let element">
           <mat-icon [color]="element.subscribed ? 'accent' : ''">{{
             element.subscribed ? "done" : "close"
           }}</mat-icon>
-        </section>
+        </ng-container>
       </ib-column>
       <ib-column ib-action-column>
         <section *ibCellDef="let element">

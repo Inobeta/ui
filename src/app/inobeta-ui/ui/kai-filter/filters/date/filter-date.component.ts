@@ -1,5 +1,5 @@
 import { formatDate } from "@angular/common";
-import { Component, ViewEncapsulation } from "@angular/core";
+import { Component, Inject, ViewEncapsulation } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { DateAdapter } from "@angular/material/core";
 import { TranslateService } from "@ngx-translate/core";
@@ -11,6 +11,7 @@ import {
 } from "../../filter.types";
 import { and, gte, lte, none } from "../../filters";
 import { IbFilterBase } from "../base/filter-base";
+import { IB_FILTER } from "../../tokens";
 
 @Component({
   selector: "ib-date-filter",
@@ -155,7 +156,7 @@ export class IbDateFilter extends IbFilterBase {
   }
 
   constructor(
-    public filter: IbFilter,
+    @Inject(IB_FILTER) public filter: any,
     private adapter: DateAdapter<any>,
     private translate: TranslateService
   ) {

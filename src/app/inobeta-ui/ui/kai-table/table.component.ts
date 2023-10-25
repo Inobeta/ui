@@ -125,7 +125,22 @@ export class IbTable implements OnDestroy {
    * as is in a language written from left-to-right. It is reversed
    * in a language written from right-to-left.
    */
-  @Input() displayedColumns: string[] = [];
+  @Input()
+  set displayedColumns(columns: string[]) {
+    this._displayedColumns = columns;
+    if (this.selectionColumn) {
+      this._displayedColumns.unshift("ib-selection");
+    }
+    if (this.columns?.find(c => c.name === 'ib-action')) {
+      this._displayedColumns.push("ib-action");
+    }
+  }
+  get displayedColumns() {
+    return this._displayedColumns;
+  }
+  
+
+  private _displayedColumns: string[] = [];
 
   aggregateColumns = new Set<string>();
   aggregate = new EventEmitter();

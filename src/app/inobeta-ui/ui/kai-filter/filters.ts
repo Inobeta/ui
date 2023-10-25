@@ -9,11 +9,11 @@ export const neq = (value): IbFilterDef => ({
   value,
 });
 export const gt = (value): IbFilterDef => ({
-  operator: IbFilterOperator.GREATHER_THAN,
+  operator: IbFilterOperator.GREATER_THAN,
   value,
 });
 export const gte = (value): IbFilterDef => ({
-  operator: IbFilterOperator.GREATHER_THAN_EQUALS,
+  operator: IbFilterOperator.GREATER_THAN_EQUALS,
   value,
 });
 export const lt = (value): IbFilterDef => ({
@@ -115,11 +115,11 @@ export function evalOperation(
     return filterValue === value;
   }
 
-  if (operation === IbFilterOperator.GREATHER_THAN) {
+  if (operation === IbFilterOperator.GREATER_THAN) {
     return filterValue > value;
   }
 
-  if (operation === IbFilterOperator.GREATHER_THAN_EQUALS) {
+  if (operation === IbFilterOperator.GREATER_THAN_EQUALS) {
     return filterValue >= value;
   }
 
