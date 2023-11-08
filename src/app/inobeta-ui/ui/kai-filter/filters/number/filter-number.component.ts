@@ -17,8 +17,14 @@ export class IbNumberFilter extends IbFilterBase {
   @Input() step: number = 1;
 
   searchCriteria = new FormGroup({
-    min: new FormControl(this.min, { nonNullable: true }),
-    max: new FormControl(this.max, { nonNullable: true }),
+    min: new FormControl(this.min, {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+    max: new FormControl(this.max, {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
   });
 
   get displayLabelParams() {
@@ -34,10 +40,15 @@ export class IbNumberFilter extends IbFilterBase {
   }
 
   initializeFromColumn(data: any[]): void {
+    if (!data.length) {
+      return;
+    }
     const values = data.map((x) => x[this.name]);
     this.min = Math.min(...values);
     this.max = Math.max(...values);
-    this.clearRange();
+    if (!this.isDirty) {
+      this.clearRange();
+    }
   }
 
   clear() {

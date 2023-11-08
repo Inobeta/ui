@@ -1,9 +1,6 @@
-import { Component } from "@angular/core";
+import { Directive } from "@angular/core";
 
-@Component({
-  selector: "ib-apply-filter-button",
-  template: ` <button mat-button color="primary">
-    {{ "shared.ibFilter.update" | translate }}
-  </button>`,
+@Directive({
+  selector: "[ib-apply-filter-button]",
 })
 export class IbApplyFilterButton {}

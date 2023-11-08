@@ -39,8 +39,12 @@ export class IbBooleanFilter extends IbFilterBase {
   </section>
 
   <ib-filter-actions>
-    <ib-clear-filter-button (click)="clear()" [disabled]="!isDirty"></ib-clear-filter-button>
-    <ib-apply-filter-button (click)="applyFilter()"></ib-apply-filter-button>
+    <button ib-clear-filter-button mat-button (click)="clear()" [disabled]="!isDirty">
+      {{ "shared.ibFilter.clear" | translate }}
+    </button>
+    <button ib-apply-filter-button mat-button color="primary" (click)="applyFilter()">
+      {{ "shared.ibFilter.update" | translate }}
+    </button>
   </ib-filter-actions>
 </ib-filter-button>
 ```

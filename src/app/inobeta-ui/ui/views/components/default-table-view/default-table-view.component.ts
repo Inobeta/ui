@@ -1,8 +1,10 @@
-import { Component } from "@angular/core";
-import { IbTableView } from "../table-view/table-view.component";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 
 @Component({
   selector: "ib-default-table-view",
   templateUrl: "default-table-view.component.html",
 })
-export class IbDefaultTableView extends IbTableView {}
+export class IbDefaultTableView {
+  @Input() selected: boolean = false;
+  @Output() ibChangeView = new EventEmitter();
+}

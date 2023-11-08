@@ -82,6 +82,12 @@ export class IbTable implements OnDestroy {
   state = IbKaiTableState.IDLE;
 
   @Input()
+  set data(data: any[]) {
+    this.dataSource.data = data;
+    this.initializeFilters(data);
+  }
+
+  @Input()
   dataSource: MatTableDataSource<unknown> | IbDataSource<unknown> =
     new MatTableDataSource([]);
 
@@ -131,26 +137,19 @@ export class IbTable implements OnDestroy {
     if (this.selectionColumn) {
       this._displayedColumns.unshift("ib-selection");
     }
-    if (this.columns?.find(c => c.name === 'ib-action')) {
+    if (this.columns?.find((c) => c.name === "ib-action")) {
       this._displayedColumns.push("ib-action");
     }
   }
   get displayedColumns() {
     return this._displayedColumns;
   }
-  
-
   private _displayedColumns: string[] = [];
 
   aggregateColumns = new Set<string>();
   aggregate = new EventEmitter();
 
   ngOnInit() {
-    if (!(this.dataSource instanceof DataSource)) {
-      throw new Error(
-        "`dataSource` input must be an instance of DataSource and compatible with either MatTableDataSource or IbDataSource"
-      );
-    }
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
 
@@ -205,15 +204,11 @@ export class IbTable implements OnDestroy {
       this.dataSource.filter = filter as any;
     };
     this.dataSource.filterPredicate = this.filter.filterPredicate;
-    let event = this.filter.ibRawFilterUpdated;
-    if (this.dataSource instanceof MatTableDataSource) {
-      event = this.filter.ibFilterUpdated;
-      this.filter.filters.forEach((f) =>
-        f.initializeFromColumn(this.dataSource.data)
-      );
-    }
+    this.initializeFilters(this.dataSource.data);
 
-    event.pipe(takeUntil(this._destroyed)).subscribe(updateFilter);
+    this.filter.ibFilterUpdated
+      .pipe(takeUntil(this._destroyed))
+      .subscribe(updateFilter);
   }
 
   private setupViewGroup() {
@@ -283,5 +278,9 @@ export class IbTable implements OnDestroy {
           settings
         );
       });
+  }
+
+  private initializeFilters(data: any[]) {
+    this.filter?.filters.forEach((f) => f.initializeFromColumn(data));
   }
 }

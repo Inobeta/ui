@@ -1,7 +1,7 @@
 import { Component, ViewChild } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
 import { IbSelectionColumn } from "../../inobeta-ui/ui/kai-table/columns/selection-column";
-import { createNewUser } from "./users";
+import { UserService } from "./users";
 
 @Component({
   selector: "ib-kai-table-full-example",
@@ -9,7 +9,7 @@ import { createNewUser } from "./users";
     <ib-kai-table
       tableName="fullExample"
       [displayedColumns]="columns"
-      [dataSource]="dataSource"
+      [data]="data"
     >
       <ib-table-action-group>
         <button
@@ -18,6 +18,9 @@ import { createNewUser } from "./users";
           *ngIf="selectionColumn?.selection.selected.length > 0"
         >
           <mat-icon>delete</mat-icon>
+        </button>
+        <button mat-icon-button (click)="getUserOrders()">
+          <mat-icon>refresh</mat-icon>
         </button>
         <ib-table-data-export-action></ib-table-data-export-action>
       </ib-table-action-group>
@@ -73,19 +76,32 @@ import { createNewUser } from "./users";
         --ib-table-header-cell-color: lightgrey;
         --ib-table-header-cell-background-color: #309933;
       }
+
+      ib-kai-table ::ng-deep .mat-column-name {
+        width: 10px;
+      }
     `,
   ],
+  providers: [UserService],
 })
 export class IbKaiTableFullExamplePage {
   @ViewChild(IbSelectionColumn, { static: true })
   selectionColumn: IbSelectionColumn;
 
   dataSource = new MatTableDataSource<any>();
+  data: any[] = [];
   columns = ["name", "fruit", "number", "aDate", "subscribed"];
 
+  constructor(private userService: UserService) {}
+
   ngOnInit() {
-    const users = Array.from({ length: 1000 }, (_, k) => createNewUser(k + 1));
-    this.dataSource.data = users;
+    this.getUserOrders();
+  }
+
+  getUserOrders() {
+    this.userService
+      .getUserOrders()
+      .subscribe((orders) => (this.data = orders));
   }
 
   selectionChange(data) {

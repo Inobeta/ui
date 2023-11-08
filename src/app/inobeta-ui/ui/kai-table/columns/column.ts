@@ -16,7 +16,7 @@ import {
   MatFooterCellDef,
   MatHeaderCellDef,
 } from "@angular/material/table";
-import { merge } from "rxjs";
+import { Subscription, merge } from "rxjs";
 import { IbAggregateCell, IbCellDef } from "../cells";
 import { IB_COLUMN_OPTIONS, IB_TABLE, IbColumnOptions } from "../tokens";
 
@@ -144,6 +144,8 @@ export class IbColumn<T> implements OnDestroy, OnInit {
   }
   private _aggregate = false;
 
+  private aggregateSubscription: Subscription;
+  
   @ContentChild(IbCellDef, { static: true }) ibCellDef: IbCellDef;
 
   /** @ignore */
@@ -206,6 +208,7 @@ export class IbColumn<T> implements OnDestroy, OnInit {
   }
 
   ngOnDestroy() {
+    this.aggregateSubscription.unsubscribe();
     if (this._table) {
       this._table.matTable.removeColumnDef(this.columnDef);
     }
@@ -237,13 +240,14 @@ export class IbColumn<T> implements OnDestroy, OnInit {
   }
 
   private handleStateChanges() {
-    const changes$ = [this._table.paginator?.page, this._table.sort?.sortChange];
+    const changes$ = [this._table.dataSource.connect()];
 
     if (this._table.filter) {
       changes$.push(this._table.filter?.ibRawFilterUpdated);
     }
 
-    merge(...changes$).subscribe(() => {
+    this.aggregateSubscription?.unsubscribe();
+    this.aggregateSubscription = merge(...changes$).subscribe(() => {
       this.aggregateCell?.aggregate();
     });
   }

@@ -36,7 +36,7 @@ import { createNewUser } from './users';
   `]
 })
 export class IbKaiTableExamplePage {
-  dataSource = new MatTableDataSource<any>();
+  data: any[];
 
   tableDef: IbTableDef = {
     /*paginator: {
@@ -49,8 +49,7 @@ export class IbKaiTableExamplePage {
   }
 
   ngOnInit() {
-    const users = Array.from({ length: 1000 }, (_, k) => createNewUser(k + 1))
-    this.dataSource.data = users
+    this.data = Array.from({ length: 1000 }, (_, k) => createNewUser(k + 1))
   }
 
   testClick(ev){

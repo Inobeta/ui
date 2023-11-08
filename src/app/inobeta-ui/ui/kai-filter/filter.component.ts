@@ -66,7 +66,7 @@ export class IbFilter {
     // as indicated in NG01000
     setTimeout(() => {
       this.form.patchValue(value);
-      Object.keys(value).forEach((key) => this.form.get(key)?.markAsDirty());
+      // Object.keys(value).forEach((key) => this.form.get(key)?.markAsDirty());
       this.update();
     });
   }
@@ -83,11 +83,11 @@ export class IbFilter {
   hideFilters = false;
 
   ngAfterViewInit() {
-    this.initialRawValue = this.rawFilter = this.form.value;
+    this.initialRawValue = this.rawFilter = this.form.getRawValue();
   }
 
   update() {
-    this.rawFilter = this.form.value;
+    this.rawFilter = this.form.getRawValue();
     this.filter = this.buildFilter();
     this.ibFilterUpdated.emit(this.filter);
     this.ibRawFilterUpdated.emit(this.rawFilter);

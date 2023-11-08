@@ -8,7 +8,7 @@ import { IbUserExample, createNewUser } from "./users";
     <ib-kai-table
       style="text-direction: rtl"
       [displayedColumns]="['name', 'fruit', 'number']"
-      [dataSource]="dataSource"
+      [data]="data"
       class="mat-elevation-z8"
     >
       <ib-text-column name="name"></ib-text-column>
@@ -40,11 +40,10 @@ import { IbUserExample, createNewUser } from "./users";
   ],
 })
 export class IbKaiTableActionColumnExamplePage implements OnInit {
-  dataSource = new MatTableDataSource<IbUserExample>();
+  data: IbUserExample[];
 
   ngOnInit() {
-    const users = Array.from({ length: 1000 }, (_, k) => createNewUser(k + 1));
-    this.dataSource.data = users;
+    this.data = Array.from({ length: 1000 }, (_, k) => createNewUser(k + 1));
   }
 
   handleShowReport(user: IbUserExample) {
