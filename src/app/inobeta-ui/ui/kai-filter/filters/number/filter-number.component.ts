@@ -68,6 +68,10 @@ export class IbNumberFilter extends IbFilterBase {
   }
 
   applyFilter(): void {
+    if (!this.slider.valid) {
+      this.slider.markAllAsTouched();
+      return;
+    }
     this.searchCriteria.setValue(this.build());
     this.filter.update();
     this.button.closeMenu();
