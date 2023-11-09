@@ -63,10 +63,13 @@ export class UserService {
   getUserOrders() {
     return timer(1000).pipe(switchMap(() => this._getOrders()));
   }
-
 }
 
-export function createNewUser(id: number, names = UserService.names, fruits = UserService.fruits): IbUserExample {
+export function createNewUser(
+  id: number,
+  names = UserService.names,
+  fruits = UserService.fruits
+): IbUserExample {
   const name =
     names[Math.round(Math.random() * (names.length - 1))] +
     " " +
@@ -98,19 +101,4 @@ function getRandomDate(startDate, endDate) {
   const randomDate = new Date(randomMs);
 
   return randomDate;
-}
-
-function uniqueShuffle(inputArray: string[], l: number): string[] {
-  const uniqueSet = new Set<string>();
-  const copyArray = inputArray.concat().sort(() => Math.random() - 0.5);
-
-  for (const element of copyArray) {
-    uniqueSet.add(element);
-
-    if (uniqueSet.size >= l) {
-      break;
-    }
-  }
-
-  return Array.from(uniqueSet);
 }

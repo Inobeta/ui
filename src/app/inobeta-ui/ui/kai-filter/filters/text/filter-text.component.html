@@ -33,10 +33,10 @@
   </section>
 
   <ib-filter-actions>
-    <button ib-clear-filter-button mat-button (click)="clear()" [disabled]="!isDirty">
+    <button mat-button (click)="clear()" [disabled]="!isDirty">
       {{ "shared.ibFilter.clear" | translate }}
     </button>
-    <button ib-apply-filter-button mat-button color="primary" (click)="applyFilter()">
+    <button mat-button color="primary" (click)="applyFilter()">
       {{ "shared.ibFilter.update" | translate }}
     </button>
   </ib-filter-actions>

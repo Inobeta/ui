@@ -145,7 +145,7 @@ export class IbColumn<T> implements OnDestroy, OnInit {
   private _aggregate = false;
 
   private aggregateSubscription: Subscription;
-  
+
   @ContentChild(IbCellDef, { static: true }) ibCellDef: IbCellDef;
 
   /** @ignore */
@@ -240,15 +240,11 @@ export class IbColumn<T> implements OnDestroy, OnInit {
   }
 
   private handleStateChanges() {
-    const changes$ = [this._table.dataSource.connect()];
-
-    if (this._table.filter) {
-      changes$.push(this._table.filter?.ibRawFilterUpdated);
-    }
-
     this.aggregateSubscription?.unsubscribe();
-    this.aggregateSubscription = merge(...changes$).subscribe(() => {
-      this.aggregateCell?.aggregate();
-    });
+    this.aggregateSubscription = this._table.dataSource
+      .connect()
+      .subscribe(() => {
+        this.aggregateCell?.aggregate();
+      });
   }
 }

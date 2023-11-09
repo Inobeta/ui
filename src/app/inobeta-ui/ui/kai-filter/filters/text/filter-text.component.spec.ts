@@ -2,13 +2,13 @@ import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { Component } from "@angular/core";
 import { MatButtonHarness } from "@angular/material/button/testing";
+import { MatInputHarness } from "@angular/material/input/testing";
 import { MatMenuHarness } from "@angular/material/menu/testing";
+import { MatSelectHarness } from "@angular/material/select/testing";
 import { By } from "@angular/platform-browser";
 import { IbTextFilter } from "../..";
 import { createFilterComponent } from "../../filter.component.spec";
-import { MatInputHarness } from "@angular/material/input/testing";
 import { contains, eq, none } from "../../filters";
-import { MatSelectHarness } from "@angular/material/select/testing";
 
 describe("IbTextFilter", () => {
   let fixture;
@@ -30,12 +30,12 @@ describe("IbTextFilter", () => {
   it("should build a filter", async () => {
     const menu = await loader.getHarness(MatMenuHarness);
     await menu.open();
-    
+
     const value = await menu.getHarness(MatInputHarness);
     await value.setValue("test");
 
     const apply = await menu.getHarness(
-      MatButtonHarness.with({ ancestor: "ib-apply-filter-button" })
+      MatButtonHarness.with({ text: "shared.ibFilter.update" })
     );
     await apply.click();
     expect(component.build()).toEqual(contains("test"));
@@ -44,7 +44,7 @@ describe("IbTextFilter", () => {
   it("should reset on clear", async () => {
     const menu = await loader.getHarness(MatMenuHarness);
     await menu.open();
-    
+
     const condition = await menu.getHarness(MatSelectHarness);
     await condition.open();
     const options = await condition.getOptions();
@@ -54,31 +54,31 @@ describe("IbTextFilter", () => {
     await value.setValue("test");
 
     const clear = await menu.getHarness(
-      MatButtonHarness.with({ ancestor: "ib-clear-filter-button" })
+      MatButtonHarness.with({ text: "shared.ibFilter.clear" })
     );
     const apply = await menu.getHarness(
-      MatButtonHarness.with({ ancestor: "ib-apply-filter-button" })
+      MatButtonHarness.with({ text: "shared.ibFilter.update" })
     );
     await apply.click();
-    expect(component.build()).toEqual(eq("test"))
+    expect(component.build()).toEqual(eq("test"));
     await clear.click();
-    expect(component.build()).toEqual(none())
-    expect(component.searchCriteria.value).toEqual(contains("") as any)
+    expect(component.build()).toEqual(none());
+    expect(component.searchCriteria.value).toEqual(contains("") as any);
   });
 
   it("should not apply filter if invalid", async () => {
     component.searchCriteria.setValue({
       operator: null,
-      value: null
-    })
+      value: null,
+    });
     const menu = await loader.getHarness(MatMenuHarness);
     await menu.open();
 
     const apply = await menu.getHarness(
-      MatButtonHarness.with({ ancestor: "ib-apply-filter-button" })
+      MatButtonHarness.with({ text: "shared.ibFilter.update" })
     );
     await apply.click();
-    const spyBuild = spyOn(component, 'build')
+    const spyBuild = spyOn(component, "build");
     expect(spyBuild).not.toHaveBeenCalled();
   });
 });

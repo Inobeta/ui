@@ -1,13 +1,13 @@
 import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { Component } from "@angular/core";
+import { MatButtonHarness } from "@angular/material/button/testing";
+import { MatMenuHarness } from "@angular/material/menu/testing";
+import { MatSliderHarness } from "@angular/material/slider/testing";
 import { By } from "@angular/platform-browser";
 import { IbNumberFilter } from "../..";
 import { createFilterComponent } from "../../filter.component.spec";
 import { and, gte, lte, none } from "../../filters";
-import { MatSliderHarness } from "@angular/material/slider/testing";
-import { MatMenuHarness } from "@angular/material/menu/testing";
-import { MatButtonHarness } from "@angular/material/button/testing";
 
 describe("IbNumberFilter", () => {
   let fixture;
@@ -45,7 +45,7 @@ describe("IbNumberFilter", () => {
     await endThumb.setValue(75);
 
     const apply = await menu.getHarness(
-      MatButtonHarness.with({ ancestor: "ib-apply-filter-button" })
+      MatButtonHarness.with({ text: "shared.ibFilter.update" })
     );
     await apply.click();
     expect(component.build()).toEqual(and([gte(50), lte(75)]));
@@ -65,10 +65,10 @@ describe("IbNumberFilter", () => {
     await endThumb.setValue(75);
 
     const clear = await menu.getHarness(
-      MatButtonHarness.with({ ancestor: "ib-clear-filter-button" })
+      MatButtonHarness.with({ text: "shared.ibFilter.clear" })
     );
     const apply = await menu.getHarness(
-      MatButtonHarness.with({ ancestor: "ib-apply-filter-button" })
+      MatButtonHarness.with({ text: "shared.ibFilter.update" })
     );
     await apply.click();
     expect(component.build()).toEqual(and([gte(50), lte(75)]));

@@ -5,7 +5,6 @@ import {
   transition,
   trigger,
 } from "@angular/animations";
-import { DataSource } from "@angular/cdk/collections";
 import { Portal, TemplatePortal } from "@angular/cdk/portal";
 import {
   Component,
@@ -25,7 +24,6 @@ import { filter, takeUntil } from "rxjs/operators";
 import { IbTableDataExportAction } from "../data-export/table-data-export.component";
 import { IbFilter } from "../kai-filter";
 import { ITableViewData, IView, IbTableViewGroup } from "../views";
-import { IbKaiTableAction } from "./action";
 import { IbColumn } from "./columns/column";
 import { IbSelectionColumn } from "./columns/selection-column";
 import { IbKaiRowGroupDirective } from "./rowgroup";
@@ -67,8 +65,6 @@ export class IbTable implements OnDestroy {
   @ContentChild(IbFilter) filter!: IbFilter;
   @ContentChild(IbTableViewGroup) view!: IbTableViewGroup;
 
-  @ContentChildren(IbKaiTableAction, { descendants: true })
-  actions: QueryList<IbKaiTableAction>;
   @ContentChild(IbTableDataExportAction) exportAction: IbTableDataExportAction;
 
   @ViewChild(MatTable, { static: true }) matTable: MatTable<any>;
@@ -161,14 +157,6 @@ export class IbTable implements OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (this.actions.length) {
-      this.actions.forEach((a) =>
-        this.actionPortals.push(
-          new TemplatePortal(a.templateRef, a.viewContainerRef)
-        )
-      );
-    }
-
     if (this.view && this.filter) {
       this.setupViewGroup();
     }
@@ -212,24 +200,16 @@ export class IbTable implements OnDestroy {
   }
 
   private setupViewGroup() {
-    const getAggregateCells = () =>
-      this.columns
-        .filter((c) => !!c.aggregateCell)
-        .map((c) => ({
-          name: c.name,
-          function: c.aggregateCell.function,
-        }));
-
     this.view.defaultView.data = {
       filter: this.filter.initialRawValue,
       pageSize: this.tableDef.paginator.pageSize,
-      aggregate: getAggregateCells(),
+      aggregate: this.getAggregateCells(),
     };
 
     this.view.viewDataAccessor = () => ({
       filter: this.filter.rawFilter,
       pageSize: this.paginator.pageSize,
-      aggregate: getAggregateCells(),
+      aggregate: this.getAggregateCells(),
     });
 
     const changes$ = merge(
@@ -244,16 +224,7 @@ export class IbTable implements OnDestroy {
         filter((view) => !!view),
         takeUntil(this._destroyed)
       )
-      .subscribe((view: IView<ITableViewData>) => {
-        this.paginator.firstPage();
-        this.paginator.pageSize = view.data.pageSize;
-        this.filter.value = view.data.filter;
-
-        view.data.aggregate.forEach((a) => {
-          const column = this.columns.find((c) => a.name === c.name);
-          column?.aggregateCell?.apply(a.function);
-        });
-      });
+      .subscribe(this.handleChangeView);
 
     for (const action of [
       this.filter.hideFilterAction,
@@ -283,4 +254,22 @@ export class IbTable implements OnDestroy {
   private initializeFilters(data: any[]) {
     this.filter?.filters.forEach((f) => f.initializeFromColumn(data));
   }
+
+  private handleChangeView = (view: IView<ITableViewData>) => {
+    this.paginator.firstPage();
+    this.paginator.pageSize = view.data.pageSize;
+    this.filter.value = view.data.filter;
+    view.data.aggregate.forEach((a) => {
+      const column = this.columns.find((c) => a.name === c.name);
+      column?.aggregateCell?.apply(a.function);
+    });
+  };
+
+  private getAggregateCells = () =>
+    this.columns
+      .filter((c) => !!c.aggregateCell)
+      .map((c) => ({
+        name: c.name,
+        function: c.aggregateCell.function,
+      }));
 }

@@ -9,10 +9,10 @@ import {
   ViewEncapsulation,
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
+import { IbKaiTableAction } from "../kai-table/action";
 import { IbFilterDef, IbFilterSyntax } from "./filter.types";
 import { applyFilter } from "./filters";
 import { IbFilterBase } from "./filters/base/filter-base";
-import { IbKaiTableAction } from "../kai-table/action";
 import { IB_FILTER } from "./tokens";
 
 @Component({
@@ -66,7 +66,6 @@ export class IbFilter {
     // as indicated in NG01000
     setTimeout(() => {
       this.form.patchValue(value);
-      // Object.keys(value).forEach((key) => this.form.get(key)?.markAsDirty());
       this.update();
     });
   }
@@ -95,6 +94,7 @@ export class IbFilter {
 
   reset() {
     this.form.reset();
+    this.form.patchValue(this.initialRawValue);
     this.update();
   }
 

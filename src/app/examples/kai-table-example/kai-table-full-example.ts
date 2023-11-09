@@ -76,10 +76,6 @@ import { UserService } from "./users";
         --ib-table-header-cell-color: lightgrey;
         --ib-table-header-cell-background-color: #309933;
       }
-
-      ib-kai-table ::ng-deep .mat-column-name {
-        width: 10px;
-      }
     `,
   ],
   providers: [UserService],

@@ -70,10 +70,6 @@ export class IbTagFilter extends IbFilterBase {
   }
 
   applyFilter() {
-    if (!this.selected.length) {
-      this.searchCriteria.patchValue(null);
-    }
-
     this.filter.update();
     this.button.closeMenu();
   }

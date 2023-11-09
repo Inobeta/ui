@@ -38,10 +38,10 @@ describe("IbTagFilter", () => {
     await list.selectItems({ title: /white|black/ });
 
     const clear = await menu.getHarness(
-      MatButtonHarness.with({ ancestor: "ib-clear-filter-button" })
+      MatButtonHarness.with({ text: "shared.ibFilter.clear" })
     );
     const apply = await menu.getHarness(
-      MatButtonHarness.with({ ancestor: "ib-apply-filter-button" })
+      MatButtonHarness.with({ text: "shared.ibFilter.update" })
     );
     await apply.click();
 
@@ -53,7 +53,7 @@ describe("IbTagFilter", () => {
   it("should reset with empty selection", () => {
     component.searchCriteria.setValue(["blue"]);
     component.applyFilter();
-    expect(component.searchCriteria.value).toBeFalsy();
+    expect(component.build()).toEqual(none());
   });
 
   it("should reset on clear", async () => {
@@ -63,10 +63,10 @@ describe("IbTagFilter", () => {
     await list.selectItems({ title: /white|black/ });
 
     const clear = await menu.getHarness(
-      MatButtonHarness.with({ ancestor: "ib-clear-filter-button" })
+      MatButtonHarness.with({ text: "shared.ibFilter.clear" })
     );
     const apply = await menu.getHarness(
-      MatButtonHarness.with({ ancestor: "ib-apply-filter-button" })
+      MatButtonHarness.with({ text: "shared.ibFilter.update" })
     );
     await apply.click();
 
