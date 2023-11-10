@@ -28,8 +28,15 @@ export class IbTableViewGroup {
     groupName: "",
     data: {},
   };
+
   _activeView = new BehaviorSubject<IView>(this.defaultView);
-  private _viewGroupName: string;
+  get activeView() {
+    return this._activeView.value;
+  }
+
+  @Input() viewDataAccessor = () => {};
+  @Output() ibViewChanged = new EventEmitter<IView>();
+  @Output() ibResetView = new EventEmitter();
 
   @Input() set viewGroupName(name) {
     this._viewGroupName = name;
@@ -38,20 +45,14 @@ export class IbTableViewGroup {
       .select(selectPinnedView(this.viewGroupName))
       .pipe(tap((view) => view && this._activeView.next(view)));
   }
-  @Input() viewDataAccessor = () => {};
-  @Output() ibViewChanged = new EventEmitter<IView>();
-
   get viewGroupName() {
     return this._viewGroupName;
   }
+  private _viewGroupName: string;
 
   dirty = false;
   views$: Observable<IView[]>;
   pinned$: Observable<IView>;
-
-  get activeView() {
-    return this._activeView.value;
-  }
 
   constructor(private store: Store, public viewService: IbViewService) {}
 

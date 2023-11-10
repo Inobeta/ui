@@ -36,7 +36,7 @@ import { IbColumn } from "./column";
         {{ headerText }}
       </th>
       <td mat-cell *matCellDef="let data">
-        {{ transform(dataAccessor(data, name)) }}
+        {{ dataAccessor(data, name) }}
       </td>
       <td mat-footer-cell *matFooterCellDef>
         <ib-aggregate *ngIf="aggregate"></ib-aggregate>
@@ -55,4 +55,5 @@ export class IbDateColumn<T> extends IbColumn<T> {
   @Input() locale = "it";
 
   transform = (data) => formatDate(data, this.format, this.locale);
+  dataAccessor = (data: T, name: string) => this.transform((data as any)[name]);
 }

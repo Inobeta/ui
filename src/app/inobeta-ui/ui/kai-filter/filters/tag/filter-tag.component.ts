@@ -15,20 +15,19 @@ import { IbFilterBase } from "../base/filter-base";
 export class IbTagFilter extends IbFilterBase {
   @ViewChild(MatSelectionList) matSelectionList: MatSelectionList;
 
-  private _options: Set<string> = new Set();
-
   searchCriteria = new FormControl([], { nonNullable: true });
 
   @Input() multiple = true;
   @Input()
   set options(value: string[]) {
-    value = value.sort((a, b) => (a.toLowerCase() > b.toLowerCase() ? 1 : -1));
-    this._options = new Set(value);
+    this.isSetByUser = true;
+    this.setOptions(value);
   }
-
   get options() {
     return Array.from(this._options);
   }
+  private _options: Set<string> = new Set();
+  private isSetByUser = false;
 
   get displayLabel() {
     if (this.rawValue?.length == 1) {
@@ -57,21 +56,20 @@ export class IbTagFilter extends IbFilterBase {
     return this.matSelectionList?.selectedOptions?.selected;
   }
 
-  ngOnInit() {
-    super.ngOnInit();
+  initializeFromColumn(data: any[]) {
+    if (!this.isSetByUser) {
+      this.setOptions(data.map((x) => x[this.name]));
+    }
   }
 
-  initializeFromColumn(data: any[]) {
-    if (!this._options.size) {
-      this.options = data.map((x) => x[this.name]);
-    }
+  private setOptions(options: string[]) {
+    options = options.sort((a, b) =>
+      a.toLowerCase() > b.toLowerCase() ? 1 : -1
+    );
+    this._options = new Set(options);
   }
 
   applyFilter() {
-    if (!this.selected.length) {
-      this.searchCriteria.patchValue(null);
-    }
-
     this.filter.update();
     this.button.closeMenu();
   }

@@ -23,7 +23,7 @@ The `ib-kai-table`, built upon `mat-table` of Angular Material, provides high cu
 
 First, add the `ib-kai-table` component to your template and pass in data.
 
-You can provide data to the table using a `MatTableDataSource` instance. An `IbDataSource` is also available for [server-side interactions.](#use-server-side-data-as-a-source)
+You can provide data to the table using a data array or a `MatTableDataSource` instance. An `IbDataSource` is also available for [server-side interactions.](#use-server-side-data-as-a-source)
 
 ```html
 <ib-kai-table [dataSource]="dataSource"> ... </ib-kai-table>
@@ -38,6 +38,18 @@ export class SimpleKaiTableExample {
 }
 ```
 
+```html
+<ib-kai-table [data]="data"> ... </ib-kai-table>
+```
+
+```typescript
+@Component({
+  /* ... */
+})
+export class SimpleKaiTableExample {
+  data = [{column1: 'a value', column2: 'another value'}];
+}
+```
 Next, write your table's column templates.
 
 Each column definition must be given a name. By default, the name of the columns will also used as the header text and data property accessor.
@@ -55,25 +67,28 @@ Finally, tell the table which columns to be rendered.
 Putting it all together, you'll have:
 
 ```typescript
-const EXAMPLE_DATA = [
-  {
-    name: "Alice M.",
-    fruit: "apple",
-  },
-  // ...
-];
 
 @Component({
   /* ... */
 })
 export class SimpleKaiTableExample {
-  dataSource = new MatTableDataSource<any>(TABLE_DATA);
+  data = [
+  {
+    name: "Alice M.",
+    fruit: "apple",
+    hiddenColumn: "this is hidden"
+  },
+  // ...
+];;
   displayedColumns = ["name", "fruit"];
 }
 ```
 
 ```html
-<ib-kai-table [dataSource]="dataSource" [displayedColumns]="displayedColumns">
+<ib-kai-table
+  [data]="data"
+  [displayedColumns]="displayedColumns"
+>
   <ib-text-column name="name"></ib-text-column>
   <ib-text-column name="fruit"></ib-text-column>
 </ib-kai-table>

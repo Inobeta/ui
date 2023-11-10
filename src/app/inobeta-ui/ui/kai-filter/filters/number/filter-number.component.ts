@@ -16,37 +16,75 @@ export class IbNumberFilter extends IbFilterBase {
   @Input() max: number = 100;
   @Input() step: number = 1;
 
-  searchCriteria = new FormGroup({
-    min: new FormControl(this.min, { nonNullable: true }),
-    max: new FormControl(this.max, { nonNullable: true }),
+  slider = new FormGroup({
+    min: new FormControl(this.min, {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+    max: new FormControl(this.max, {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
   });
+
+  searchCriteria = new FormControl(none(), { nonNullable: true });
 
   get displayLabelParams() {
     return {
-      min: this.rawValue.min,
-      max: this.rawValue.max,
+      min: this.rawValue?.value?.[0]?.value,
+      max: this.rawValue?.value?.[1]?.value,
     };
   }
 
   ngOnInit() {
-    super.ngOnInit();
+    this.searchCriteria.reset = () => {
+      this.searchCriteria.setValue(none());
+      this.clearRange();
+    };
+    this.searchCriteria.valueChanges.subscribe((values) => {
+      if (values.operator === 0) {
+        this.clearRange();
+        return;
+      }
+      this.slider.setValue({
+        min: values.value?.[0]?.value,
+        max: values.value?.[1]?.value,
+      });
+    });
     this.clearRange();
+    super.ngOnInit();
   }
 
   initializeFromColumn(data: any[]): void {
+    if (!data.length) {
+      return;
+    }
     const values = data.map((x) => x[this.name]);
     this.min = Math.min(...values);
     this.max = Math.max(...values);
-    this.clearRange();
+    if (!this.isDirty) {
+      this.clearRange();
+    }
+  }
+
+  applyFilter(): void {
+    if (!this.slider.valid) {
+      this.slider.markAllAsTouched();
+      return;
+    }
+    this.searchCriteria.setValue(this.build());
+    this.filter.update();
+    this.button.closeMenu();
   }
 
   clear() {
+    this.searchCriteria.setValue(none());
     this.clearRange();
     this.filter.update();
   }
 
   clearRange() {
-    this.searchCriteria.setValue({
+    this.slider.setValue({
       min: this.min,
       max: this.max,
     });
@@ -54,15 +92,12 @@ export class IbNumberFilter extends IbFilterBase {
 
   build = (): IbFilterDef => {
     if (
-      this.searchCriteria.value.min === this.min &&
-      this.searchCriteria.value.max === this.max
+      this.slider.value.min === this.min &&
+      this.slider.value.max === this.max
     ) {
       return none();
     }
 
-    return and([
-      gte(this.searchCriteria.value.min),
-      lte(this.searchCriteria.value.max),
-    ]);
+    return and([gte(this.slider.value.min), lte(this.slider.value.max)]);
   };
 }

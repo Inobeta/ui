@@ -1,16 +1,16 @@
 import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { Component } from "@angular/core";
+import { MatButtonHarness } from "@angular/material/button/testing";
+import { MatDateRangeInputHarness } from "@angular/material/datepicker/testing";
+import { MatInputHarness } from "@angular/material/input/testing";
+import { MatMenuHarness } from "@angular/material/menu/testing";
+import { MatRadioButtonHarness } from "@angular/material/radio/testing";
+import { MatSelectHarness } from "@angular/material/select/testing";
 import { By } from "@angular/platform-browser";
 import { createFilterComponent } from "../../filter.component.spec";
-import { IbDateFilter } from "./filter-date.component";
-import { MatRadioButtonHarness } from "@angular/material/radio/testing";
-import { MatMenuHarness } from "@angular/material/menu/testing";
-import { MatInputHarness } from "@angular/material/input/testing";
-import { MatButtonHarness } from "@angular/material/button/testing";
 import { and, gte, lte, none } from "../../filters";
-import { MatSelectHarness } from "@angular/material/select/testing";
-import { MatDateRangeInputHarness } from "@angular/material/datepicker/testing";
+import { IbDateFilter } from "./filter-date.component";
 
 describe("IbDateFilter", () => {
   let fixture;
@@ -75,7 +75,7 @@ describe("IbDateFilter", () => {
     await value.setValue("1");
 
     const apply = await menu.getHarness(
-      MatButtonHarness.with({ ancestor: "ib-apply-filter-button" })
+      MatButtonHarness.with({ text: "shared.ibFilter.update" })
     );
     await apply.click();
 
@@ -107,7 +107,7 @@ describe("IbDateFilter", () => {
     await value.setValue("1");
 
     const apply = await menu.getHarness(
-      MatButtonHarness.with({ ancestor: "ib-apply-filter-button" })
+      MatButtonHarness.with({ text: "shared.ibFilter.update" })
     );
     await apply.click();
 
@@ -137,7 +137,7 @@ describe("IbDateFilter", () => {
     await endInput.setValue("26/07/2023");
 
     const apply = await menu.getHarness(
-      MatButtonHarness.with({ ancestor: "ib-apply-filter-button" })
+      MatButtonHarness.with({ text: "shared.ibFilter.update" })
     );
     await apply.click();
 
@@ -170,10 +170,10 @@ describe("IbDateFilter", () => {
     await value.setValue("-1");
 
     const apply = await menu.getHarness(
-      MatButtonHarness.with({ ancestor: "ib-apply-filter-button" })
+      MatButtonHarness.with({ text: "shared.ibFilter.update" })
     );
     await apply.click();
-    const spyBuild = spyOn(component, 'build')
+    const spyBuild = spyOn(component, "build");
     expect(spyBuild).not.toHaveBeenCalled();
 
     const previous = component.searchCriteria.getRawValue();
