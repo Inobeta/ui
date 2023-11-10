@@ -31,8 +31,8 @@ export class IbNumberFilter extends IbFilterBase {
 
   get displayLabelParams() {
     return {
-      min: this.rawValue?.value[0].value,
-      max: this.rawValue?.value[1].value,
+      min: this.rawValue?.value?.[0]?.value,
+      max: this.rawValue?.value?.[1]?.value,
     };
   }
 
@@ -47,8 +47,8 @@ export class IbNumberFilter extends IbFilterBase {
         return;
       }
       this.slider.setValue({
-        min: values.value[0].value,
-        max: values.value[1].value,
+        min: values.value?.[0]?.value,
+        max: values.value?.[1]?.value,
       });
     });
     this.clearRange();
