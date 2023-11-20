@@ -13,7 +13,7 @@ export class IbTableConfService {
 
   constructor(
     private storage: IbStorageService,
-    private auth: IbAuthService
+    private auth: IbAuthService<any>
   ) { }
 
   saveConfig(tableName, options, config){
@@ -45,7 +45,7 @@ export class IbTableConfService {
     if (error) {
       return null;
     }
-    
+
     if (config) {
       return { config, name: configName };
     }
@@ -94,7 +94,7 @@ export class IbTableConfService {
       this.user = this.auth.activeSession.user.username;
     }
     const stored = this.storage.get(this.key) || {};
-    
+
     const instanceExists = (tableName in stored);
     if (!instanceExists) {
       return [true, stored, {}, null];
@@ -105,12 +105,12 @@ export class IbTableConfService {
     if (!configName) {
       return [false, stored, instance, null];
     }
-    
+
     const configExists = (configName in instance);
     if (!configExists) {
       return [true, stored, instance, null];
     }
-    
+
     const config = instance[configName];
     return [false, stored, instance, config];
   }

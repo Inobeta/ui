@@ -1,12 +1,24 @@
-export class IbSession {
+export class IbSession<T extends IbAPITokens | IbAPITokens> {
   user: IbUserLogin;
+  /**
+   * @deprecated: user serverData instead
+   */
   userData: any;
   valid: boolean;
+
+  /**
+   * @deprecated: user serverData instead
+   */
   authToken: string;
+  serverData: T
 }
 
 export class IbUserLogin {
-  username: string;
+  /**
+   * @deprecated use email instead of username
+   */
+  username?: string;
+  email: string;
   password: string;
   rememberMe: boolean;
 }
@@ -14,4 +26,11 @@ export class IbUserLogin {
 export enum IbAuthTypes {
   BASIC_AUTH,
   JWT
+}
+
+export interface IbAPITokens {
+  accessToken: string;
+  refreshToken: string;
+  sessionToken?: string;
+
 }

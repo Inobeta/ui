@@ -1,12 +1,12 @@
 import {Inject, Injectable, Optional} from '@angular/core';
 import { IbStorageService, IbStorageTypes } from '../../storage/storage.service';
-import {IbSession} from './session.model';
+import {IbAPITokens, IbSession} from './session.model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class IbAuthService {
-  activeSession: IbSession = null;
+export class IbAuthService<T extends IbAPITokens | IbAPITokens> {
+  activeSession: IbSession<T> = null;
   sessionStorageKey = '';
 
   constructor(private storage: IbStorageService,
@@ -20,9 +20,9 @@ export class IbAuthService {
       console.warn('[deprecated] Rename SessionStorageKey to ibSessionStorageKey please');
     }
     this.sessionStorageKey = ibSessionStorageKey || SessionStorageKey || '';
-    this.activeSession = this.storage.get(`userData-${this.sessionStorageKey}`, IbStorageTypes.COOKIESTORAGE) as IbSession;
+    this.activeSession = this.storage.get(`userData-${this.sessionStorageKey}`, IbStorageTypes.COOKIESTORAGE) as IbSession<T>;
     if (!this.activeSession) {
-      this.activeSession = this.storage.get(`userData-${this.sessionStorageKey}`, IbStorageTypes.LOCALSTORAGE) as IbSession;
+      this.activeSession = this.storage.get(`userData-${this.sessionStorageKey}`, IbStorageTypes.LOCALSTORAGE) as IbSession<T>;
     }
   }
 

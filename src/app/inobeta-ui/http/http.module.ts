@@ -16,6 +16,7 @@ import { IbErrorInterceptor } from './http/error.interceptor';
 import { ibSessionReducer } from './auth/redux/session.reducer';
 import { StoreModule } from '@ngrx/store';
 import { IbStorageModule } from '../storage/storage.module';
+import { IbLoginService } from './auth/login.service';
 
 
 
@@ -43,6 +44,7 @@ const components = [
   ],
   providers: [
     IbHttpClientService,
+    IbLoginService,
     IbResponseHandlerService,
     { provide: HTTP_INTERCEPTORS, useClass: IbAuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: IbErrorInterceptor, multi: true },
@@ -62,6 +64,7 @@ export class IbHttpModule {
       ngModule: IbHttpModule,
       providers: [
         IbAuthService,
+        IbLoginService,
         IbSessionService,
         IbAuthGuard,
         IbLoginGuard,

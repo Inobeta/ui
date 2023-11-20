@@ -1,9 +1,10 @@
-import {IbSession} from '../session.model';
+import {IbAPITokens, IbSession} from '../session.model';
 import {Action, createReducer, on} from '@ngrx/store';
 import * as SessionActions from './session.actions';
+import { ibAuthActions } from './session.actions';
 
 export interface ISessionState {
-  activeSession: IbSession;
+  activeSession: IbSession<IbAPITokens>;
 }
 
 export const INITIAL_SESSION_STATE: ISessionState = {
@@ -11,8 +12,6 @@ export const INITIAL_SESSION_STATE: ISessionState = {
 };
 
 const mainSessionReducer = createReducer(INITIAL_SESSION_STATE,
-  on(SessionActions.login, (state, { activeSession }) => ({ activeSession})),
-  on(SessionActions.logout, state => ({ ...state, activeSession: null })),
   on(SessionActions.changeNameSurname, (state, {name, surname}) => ({ ...state, activeSession: {
       ...state.activeSession,
       userData: {
@@ -20,7 +19,10 @@ const mainSessionReducer = createReducer(INITIAL_SESSION_STATE,
         name,
         surname
       }
-    } }))
+    } })),
+
+  on(ibAuthActions.login, (state, { activeSession }) => ({ activeSession})),
+  on(ibAuthActions.logout, state => ({ ...state, activeSession: null })),
 );
 
 export function ibSessionReducer(state: ISessionState = INITIAL_SESSION_STATE, action: Action) {

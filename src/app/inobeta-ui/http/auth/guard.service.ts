@@ -1,11 +1,12 @@
 import { Inject, Injectable, Optional } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { IbAuthService } from './auth.service';
+import { IbAPITokens } from './session.model';
 
 @Injectable({providedIn: 'root'})
 export class IbAuthGuard implements CanActivate {
   constructor(
-    private authService: IbAuthService,
+    private authService: IbAuthService<IbAPITokens>,
     private router: Router,
     @Inject('ibHttpGUILoginUrl') @Optional() public ibHttpGUILoginUrl?: string,
   ) {
@@ -23,7 +24,7 @@ export class IbAuthGuard implements CanActivate {
 export class IbLoginGuard implements CanActivate {
   public path = '';
   constructor(
-    private authService: IbAuthService,
+    private authService: IbAuthService<IbAPITokens>,
     private router: Router,
     @Inject('ibHttpGUIDashboardUrl') @Optional() public ibHttpGUIDashboardUrl?: string,
     ) {
