@@ -25,18 +25,20 @@ export class IbAuthInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     let authString = ''
 
-    let authReq = request
+    let authReq = request.clone({
+      headers: request.headers
+        .set('Content-Type', 'application/json')
+        .set('x-requested-with', 'XMLHttpRequest')
+    })
     switch(this.ibHttpAuthType){
       case IbAuthTypes.JWT: authString = 'Bearer '; break;
       case IbAuthTypes.BASIC_AUTH: authString = 'Basic '; break;
     }
-    if(this.auth.activeSession.valid && this.auth.activeSession.serverData.accessToken){
+    if(this.auth.activeSession?.valid && this.auth.activeSession?.serverData?.accessToken){
       authString += this.auth.activeSession.serverData.accessToken
       authReq = request.clone({
         headers: request.headers
           .set('Authorization', authString)
-          .set('Content-Type', 'application/json')
-          .set('x-requested-with', 'XMLHttpRequest')
       })
     }
     return next.handle(authReq).pipe(catchError(err => {
