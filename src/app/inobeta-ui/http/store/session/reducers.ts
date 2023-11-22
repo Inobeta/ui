@@ -9,7 +9,9 @@ const INITIAL: IbSessionState = {
 }
 
 const main = createReducer(INITIAL,
-  on(ibAuthActions.login, (state, { activeSession }) => ({activeSession})),
+  on(ibAuthActions.login, (state, { activeSession }) => ({
+    activeSession: {...activeSession}
+  })),
   on(ibAuthActions.logout, state => ({activeSession: undefined})),
 );
 
