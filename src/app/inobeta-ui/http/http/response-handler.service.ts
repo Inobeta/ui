@@ -3,6 +3,9 @@ import {Injectable} from '@angular/core';
 import {Observable, throwError} from 'rxjs';
 import {HttpEvent} from '@angular/common/http';
 
+/**
+ * @deprecated Use Angular standard interceptors to deal with response and errors
+ */
 @Injectable({providedIn: 'root'})
 export class IbResponseHandlerService {
 

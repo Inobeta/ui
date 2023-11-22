@@ -1,8 +1,11 @@
 import {IbAPITokens, IbSession} from '../session.model';
 import {Action, createReducer, on} from '@ngrx/store';
 import * as SessionActions from './session.actions';
-import { ibAuthActions } from './session.actions';
+import { ibAuthActions } from '../../store/session/actions';
 
+/**
+ * @deprecated use IbSessionState
+ */
 export interface ISessionState {
   activeSession: IbSession<IbAPITokens>;
 }

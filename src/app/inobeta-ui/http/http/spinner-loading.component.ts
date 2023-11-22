@@ -1,5 +1,7 @@
 import {Component, ViewEncapsulation} from '@angular/core';
-import {IbHttpClientService} from './http-client.service';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { ibSelectIsHttpLoading } from '../store/loader/selectors';
 
 @Component({
   selector: 'ib-spinner-loading',
@@ -60,7 +62,8 @@ import {IbHttpClientService} from './http-client.service';
     }
   `],
   template: `
-    <div *ngIf="this.httpService.showLoading" [hidden]="!this.httpService.showLoading" class="modal-spinner">
+  <pre>{{ showLoading$ | async}}</pre>
+    <div *ngIf="showLoading$ | async" class="modal-spinner">
       <div class="spinner">
         <div class="double-bounce1"></div>
         <div class="double-bounce2"></div>
@@ -70,7 +73,8 @@ import {IbHttpClientService} from './http-client.service';
 })
 
 export class IbSpinnerLoadingComponent {
-  constructor(public httpService: IbHttpClientService) {}
+  showLoading$: Observable<boolean> = this.store.select(ibSelectIsHttpLoading)
+  constructor(public store: Store) {}
 }
 
 /* istanbul ignore next */

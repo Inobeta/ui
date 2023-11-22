@@ -21,6 +21,8 @@ export * from './http/response-handler.service.stub.spec';
 export * from './http-test.module';
 
 export * from './pages/login.component';
+export * from './store/session/actions';
+export * from './store/loader/actions';
 
 
 // FIXME error NG3001

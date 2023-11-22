@@ -1,19 +1,17 @@
 import {TestBed} from '@angular/core/testing';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {IbAuthService} from '../auth/auth.service';
-import {IbResponseHandlerService} from './response-handler.service';
 import { authServiceStub } from '../auth/auth.service.stub.spec';
-import { responseHandlerStub } from './response-handler.service.stub.spec';
 import { IbAuthInterceptor } from './auth.interceptor';
 import { RouterTestingModule } from '@angular/router/testing';
 import { IbToolTestModule } from '../../tools/tools-test.module';
 import { IbToastTestModule } from '../../ui/toast/toast-test.module';
 import { throwError } from 'rxjs';
-import { Router } from '@angular/router';
 
 import { Component, OnInit } from '@angular/core';
-import { IbSessionService } from '../auth/session.service';
-import { sessionServiceStub } from '../auth/session.stub.spec';
+import { IbLoginService } from '../auth/login.service';
+import { IbLoginServiceStub } from '../auth/login.service.stub.spec';
+import { HttpRequest } from '@angular/common/http';
 
 @Component({
   selector: 'login-dummy',
@@ -31,7 +29,6 @@ describe('IbAuthInterceptor', () => {
 
   let service: IbAuthInterceptor;
   let routerCall;
-  const httpRequestSpy = jasmine.createSpyObj('HttpRequest', ['doesNotMatter']);
   const httpHandlerSpy = jasmine.createSpyObj('HttpHandler', ['handle']);
 
   beforeEach(async () => {
@@ -47,13 +44,12 @@ describe('IbAuthInterceptor', () => {
       declarations: [LoginDummyComponent],
       providers: [
         { provide: IbAuthService, useValue: authServiceStub},
-        { provide: IbSessionService, useValue: sessionServiceStub},
-        { provide: IbResponseHandlerService, useValue: responseHandlerStub},
+        { provide: IbLoginService, useClass: IbLoginServiceStub},
         IbAuthInterceptor
       ]
     }).compileComponents();
     service = TestBed.inject(IbAuthInterceptor);
-    routerCall = spyOn(TestBed.inject(IbSessionService), 'logout').and.callThrough();
+    routerCall = spyOn(TestBed.inject(IbLoginService), 'logout').and.callThrough();
   });
 
   it('Should be created', () => {
@@ -68,7 +64,8 @@ describe('IbAuthInterceptor', () => {
             {message: 'test-error'}
         }
     ));
-    service.intercept(httpRequestSpy, httpHandlerSpy).subscribe(() => {
+    const requestMock = new HttpRequest('GET', '/test');
+    service.intercept(requestMock, httpHandlerSpy).subscribe(() => {
       done();
     }, () => {
       expect(routerCall).toHaveBeenCalled();
@@ -86,8 +83,8 @@ describe('IbAuthInterceptor', () => {
             {message: 'test-error'}
         }
     ));
-
-    service.intercept(httpRequestSpy, httpHandlerSpy).subscribe(() => {
+    const requestMock = new HttpRequest('GET', '/test');
+    service.intercept(requestMock, httpHandlerSpy).subscribe(() => {
       done();
     }, () => {
       expect(routerCall).not.toHaveBeenCalled();
@@ -106,7 +103,8 @@ describe('IbAuthInterceptor', () => {
     ));
 
     service.ibHttpEnableInterceptors = false;
-    service.intercept(httpRequestSpy, httpHandlerSpy).subscribe(() => {
+    const requestMock = new HttpRequest('GET', '/test');
+    service.intercept(requestMock, httpHandlerSpy).subscribe(() => {
       done();
     }, () => {
       expect(routerCall).not.toHaveBeenCalled();

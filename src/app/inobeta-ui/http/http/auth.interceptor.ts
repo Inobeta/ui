@@ -21,6 +21,7 @@ export class IbAuthInterceptor implements HttpInterceptor {
     this.ibHttpEnableInterceptors = this.ibHttpEnableInterceptors === null ? true : false;
     this.ibHttpAPILoginUrl = this.ibHttpAPILoginUrl || '/api/login';
     this.ibHttpToastOnLoginFailure = this.ibHttpToastOnLoginFailure || 'shared.ibHttp.authFailure';
+    this.ibHttpAuthType = this.ibHttpAuthType || IbAuthTypes.JWT;
   }
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     let authString = ''

@@ -8,7 +8,7 @@ import { Store } from '@ngrx/store';
 import { throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { IbStorageTypes } from '../../storage';
-import { ibAuthActions } from './redux/session.actions';
+import { ibAuthActions } from '../store/session/actions';
 
 @Injectable({providedIn: 'root'})
 export class IbLoginService<T extends IbAPITokens | IbAPITokens > {

@@ -10,11 +10,6 @@ export const login = createAction('[IbSession Service] Login', props<{ activeSes
  */
 export const logout = createAction('[IbSession Service] Logout');
 
-export const ibAuthActions = {
-  login: createAction('[IbSession Service] Login', props<{ activeSession: IbSession<IbAPITokens>}>()),
-  logout: createAction('[IbSession Service] Logout')
-}
-
 /**
  * @deprecated Don't use this shit
  */

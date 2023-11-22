@@ -11,7 +11,7 @@ import { from } from 'rxjs';
  */
 
 /**
- * @deprecated Use Angular standard HttpClientService
+ * @deprecated Use Angular standard HttpClientService with provided interceptors
  */
 @Injectable({providedIn: 'root'})
 export class IbHttpClientService {

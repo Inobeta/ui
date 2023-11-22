@@ -1,3 +1,4 @@
+import { httpReducers, httpEffects } from './store';
 import { Injector, ModuleWithProviders, NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { IbHttpClientService } from './http/http-client.service';
@@ -17,6 +18,9 @@ import { ibSessionReducer } from './auth/redux/session.reducer';
 import { StoreModule } from '@ngrx/store';
 import { IbStorageModule } from '../storage/storage.module';
 import { IbLoginService } from './auth/login.service';
+import { EffectsModule } from '@ngrx/effects';
+import { httpFeatureKey } from './store/const';
+import { IbLoaderInterceptor } from './http/loader.interceptor';
 
 
 
@@ -35,6 +39,8 @@ const components = [
     IbToastModule,
     IbStorageModule,
     StoreModule.forFeature('sessionState', ibSessionReducer),
+    StoreModule.forFeature(httpFeatureKey, httpReducers),
+    EffectsModule.forFeature(httpEffects),
   ],
   exports: [
     ...components
@@ -48,6 +54,7 @@ const components = [
     IbResponseHandlerService,
     { provide: HTTP_INTERCEPTORS, useClass: IbAuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: IbErrorInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: IbLoaderInterceptor, multi: true },
 
   ]
 })
