@@ -5,6 +5,9 @@ import {IbAPITokens, IbSession} from './session.model';
 @Injectable({
   providedIn: 'root',
 })
+/**
+ * @deprecated Use ibSelectActiveSession selector from store in order to get active session
+ */
 export class IbAuthService<T extends IbAPITokens | IbAPITokens> {
   activeSession: IbSession<T> = null;
   sessionStorageKey = '';

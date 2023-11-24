@@ -7,7 +7,7 @@ export class IbSession<T extends IbAPITokens | IbAPITokens> {
   valid: boolean;
 
   /**
-   * @deprecated: user serverData instead
+   * @deprecated: use serverData instead
    */
   authToken: string;
   serverData: T
