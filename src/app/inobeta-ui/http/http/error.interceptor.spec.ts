@@ -1,14 +1,9 @@
 import {TestBed} from '@angular/core/testing';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {IbAuthService} from '../auth/auth.service';
-import {IbResponseHandlerService} from './response-handler.service';
-import { authServiceStub } from '../auth/auth.service.stub.spec';
-import { responseHandlerStub } from './response-handler.service.stub.spec';
 import { RouterTestingModule } from '@angular/router/testing';
 import { IbToolTestModule } from '../../tools/tools-test.module';
 import { IbToastTestModule } from '../../ui/toast/toast-test.module';
 import { throwError } from 'rxjs';
-import { Router } from '@angular/router';
 import { IbErrorInterceptor } from './error.interceptor';
 import { IbToastNotification } from '../../ui/toast/toast.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -29,8 +24,6 @@ describe('IbErrorInterceptor', () => {
         IbToastTestModule
       ],
       providers: [
-        { provide: IbAuthService, useValue: authServiceStub},
-        { provide: IbResponseHandlerService, useValue: responseHandlerStub},
         IbErrorInterceptor
       ]
     }).compileComponents();

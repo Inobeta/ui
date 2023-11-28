@@ -21,7 +21,7 @@ export class IbAuthInterceptor implements HttpInterceptor {
     @Inject('ibHttpToastOnLoginFailure') @Optional() public ibHttpToastOnLoginFailure?: string,
     @Inject('ibHttpAuthType') @Optional() public ibHttpAuthType?: IbAuthTypes,
   ) {
-    this.ibHttpEnableInterceptors = this.ibHttpEnableInterceptors === null ? true : false;
+    this.ibHttpEnableInterceptors = this.ibHttpEnableInterceptors ?? true;
     this.ibHttpAPILoginUrl = this.ibHttpAPILoginUrl || '/api/login';
     this.ibHttpToastOnLoginFailure = this.ibHttpToastOnLoginFailure || 'shared.ibHttp.authFailure';
     this.ibHttpAuthType = this.ibHttpAuthType || IbAuthTypes.JWT;

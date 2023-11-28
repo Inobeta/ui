@@ -14,7 +14,7 @@ import { ibAuthActions } from '../store/session/actions';
 export class IbLoginService<T extends IbAPITokens | IbAPITokens > {
   constructor(
     private httpClient: HttpClient,
-    private srvAuth: IbAuthService<T>,
+    private srvAuth: IbAuthService<T>, //@deprecated: this is a fallback that will be removed in next major
     private store: Store,
     private srvRouter: Router,
     private snackBar: MatSnackBar,

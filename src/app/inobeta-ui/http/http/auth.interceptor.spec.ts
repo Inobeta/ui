@@ -1,7 +1,5 @@
 import {TestBed} from '@angular/core/testing';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {IbAuthService} from '../auth/auth.service';
-import { authServiceStub } from '../auth/auth.service.stub.spec';
 import { IbAuthInterceptor } from './auth.interceptor';
 import { RouterTestingModule } from '@angular/router/testing';
 import { IbToolTestModule } from '../../tools/tools-test.module';
@@ -12,6 +10,7 @@ import { Component, OnInit } from '@angular/core';
 import { IbLoginService } from '../auth/login.service';
 import { IbLoginServiceStub } from '../auth/login.service.stub.spec';
 import { HttpRequest } from '@angular/common/http';
+import { provideMockStore } from '@ngrx/store/testing';
 
 @Component({
   selector: 'login-dummy',
@@ -43,9 +42,9 @@ describe('IbAuthInterceptor', () => {
       ],
       declarations: [LoginDummyComponent],
       providers: [
-        { provide: IbAuthService, useValue: authServiceStub},
         { provide: IbLoginService, useClass: IbLoginServiceStub},
-        IbAuthInterceptor
+        IbAuthInterceptor,
+        provideMockStore({  }),
       ]
     }).compileComponents();
     service = TestBed.inject(IbAuthInterceptor);
@@ -84,9 +83,11 @@ describe('IbAuthInterceptor', () => {
         }
     ));
     const requestMock = new HttpRequest('GET', '/test');
+    console.log('service.ibHttpAPILoginUrl', service.ibHttpAPILoginUrl)
     service.intercept(requestMock, httpHandlerSpy).subscribe(() => {
+      console.log('success')
       done();
-    }, () => {
+    }, (err) => {
       expect(routerCall).not.toHaveBeenCalled();
       done();
     });
