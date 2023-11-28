@@ -10,6 +10,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { responseHandlerStub } from './http/response-handler.service.stub.spec';
 import { IbLoginServiceStub } from './auth/login.service.stub.spec';
 import { IbLoginService } from './auth/login.service';
+import { IbLoadingStubDirective } from './http/loading-skeleton.directive.stub.spec';
 
 
 @NgModule({
@@ -17,10 +18,12 @@ import { IbLoginService } from './auth/login.service';
     HttpClientTestingModule
   ],
   exports: [
-    SpinnerLoadingStubComponent
+    SpinnerLoadingStubComponent,
+    IbLoadingStubDirective
   ],
   declarations: [
-    SpinnerLoadingStubComponent
+    SpinnerLoadingStubComponent,
+    IbLoadingStubDirective
   ],
   providers: [
     IbHttpClientService,

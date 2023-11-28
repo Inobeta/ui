@@ -1,5 +1,4 @@
-import { Directive, Input, TemplateRef, ViewContainerRef, SimpleChanges, OnDestroy, OnInit } from "@angular/core";
-import { IbLoadingSkeletonRectComponent } from "./loading-skeleton.component";
+import { Directive, Input, TemplateRef, ViewContainerRef, OnDestroy, OnInit } from "@angular/core";
 import { Store } from "@ngrx/store";
 import { ibSelectIsHttpLoading, ibSelectIsHttpUrlLoading } from "../store/loader/selectors";
 import { Observable, Subscription } from "rxjs";

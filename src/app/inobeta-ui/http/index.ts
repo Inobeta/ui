@@ -22,6 +22,10 @@ export * from './pages/login.component';
 export * from './store/session/actions';
 export * from './store/loader/actions';
 
+export * from './http/loading-skeleton.directive'
+export * from './http/loading-skeleton.component'
+export * from './http/loading-skeleton-container.component'
+export * from './http/loading-skeleton.directive.stub.spec'
 
 // FIXME error NG3001
 export * from './http/spinner-loading.stub.spec';
