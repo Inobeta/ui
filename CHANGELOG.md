@@ -20,9 +20,9 @@
 - `IbHttpClientService` is now deprecated, Use Angular standard HttpClientService with provided interceptors
 - Redux actions `login`, `logout` are now deprecated, use `ibAuthActions` instead
 - Redux action `changeNameSurname` is now deprecated and it will be removed
-- `IbSessionService` is now deprecated, Use `IbLoginService` instead
+- `IbSessionService` is now deprecated, Use `IbLoginService<T>` instead
 - `IbSession.userData` is now deprecated, Use `IbSession.serverData` with generics support instead
-- `IbAuthService` is now deprecated, Use `ibSelectActiveSession` selector from store in order to get active session
+- `IbAuthService` is now deprecated, Use `ibSelectActiveSession<T>()` selector from store in order to get active session
 
 ## [15.0.0] (2023-01-11)
 

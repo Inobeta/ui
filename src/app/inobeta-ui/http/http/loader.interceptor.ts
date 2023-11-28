@@ -25,7 +25,18 @@ export class IbLoaderInterceptor implements HttpInterceptor {
       .find(u => u.url.toUpperCase() === request.url.toUpperCase() && u.method.toUpperCase() === request.method.toUpperCase()) ) {
       this.store.dispatch(ibLoaderActions.skipShow());
     }
-    this.store.dispatch(ibLoaderActions.incLoading());
-    return next.handle(request).pipe(delay(1000), finalize(() => this.store.dispatch(ibLoaderActions.decLoading()) ));
+    this.store.dispatch(ibLoaderActions.incLoading({
+      url: request.url,
+      method: request.method
+    }));
+    return next.handle(request).pipe(
+      delay(1000),
+      finalize(
+        () => this.store.dispatch(ibLoaderActions.decLoading({
+          url: request.url,
+          method: request.method
+          }))
+        )
+      );
   }
 }

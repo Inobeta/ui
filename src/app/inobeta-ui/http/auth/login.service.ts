@@ -15,7 +15,7 @@ export class IbLoginService<T extends IbAPITokens | IbAPITokens > {
   constructor(
     private httpClient: HttpClient,
     private srvAuth: IbAuthService<T>,
-    private store: Store<any>,
+    private store: Store,
     private srvRouter: Router,
     private snackBar: MatSnackBar,
     @Inject('ibHttpGUILoginUrl') @Optional() public ibHttpGUILoginUrl?: string,

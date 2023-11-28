@@ -9,4 +9,8 @@ import { IbStickyColumnDirective } from './sticky-column.directive';
   ],
   exports: [IbStickyColumnDirective]
 })
+
+/**
+* @deprecated Use IbKaiTableModule
+*/
 export class IbStickyAreaModule { }

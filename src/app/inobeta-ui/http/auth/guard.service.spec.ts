@@ -30,7 +30,7 @@ describe('IbAuthGuard & IbLoginGuard with activeSession null', () => {
 
   it('IbAuthGuard should be use canActivate ang return to login', () => {
     const lguard = TestBed.inject(IbAuthGuard);
-    lguard.canActivate(null);
+    lguard.canActivate();
     expect(routerSpy.navigateByUrl).toHaveBeenCalledTimes(1);
     expect (routerSpy.navigateByUrl).toHaveBeenCalledWith ('/login');
   });
@@ -75,7 +75,7 @@ describe('IbAuthGuard & IbLoginGuard with activeSession something', () => {
 
   it('IbAuthGuard should be use canActivate', () => {
     const lguard = TestBed.inject(IbAuthGuard);
-    lguard.canActivate(null);
+    lguard.canActivate();
     expect(routerSpy.navigateByUrl).toHaveBeenCalledTimes(0);
   });
 

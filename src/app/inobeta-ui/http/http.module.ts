@@ -21,12 +21,18 @@ import { IbLoginService } from './auth/login.service';
 import { EffectsModule } from '@ngrx/effects';
 import { httpFeatureKey } from './store/const';
 import { IbLoaderInterceptor } from './http/loader.interceptor';
+import { IbLoadingDirective } from './http/loading-skeleton.directive';
+import { IbLoadingSkeletonRectComponent } from './http/loading-skeleton.component';
+import { IbLoadingSkeletonContainerComponent } from './http/loading-skeleton-container.component';
 
 
 
 const components = [
   IbSpinnerLoadingComponent,
-  IbLoginComponent
+  IbLoginComponent,
+  IbLoadingDirective,
+  IbLoadingSkeletonContainerComponent,
+  IbLoadingSkeletonRectComponent
 ];
 @NgModule({
   imports: [

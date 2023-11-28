@@ -24,6 +24,9 @@ import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { IbTableTotalRowState } from './store/reducers/table.reducer';
 
+/**
+ * @deprecated Use IbKaiTableModule
+ */
 @Component({
   selector: 'ib-table',
   template: `

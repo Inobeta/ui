@@ -2,12 +2,12 @@ import {Inject, Injectable, Optional} from '@angular/core';
 import { IbStorageService, IbStorageTypes } from '../../storage/storage.service';
 import {IbAPITokens, IbSession} from './session.model';
 
-@Injectable({
-  providedIn: 'root',
-})
 /**
  * @deprecated Use ibSelectActiveSession selector from store in order to get active session
  */
+@Injectable({
+  providedIn: 'root',
+})
 export class IbAuthService<T extends IbAPITokens | IbAPITokens> {
   activeSession: IbSession<T> = null;
   sessionStorageKey = '';

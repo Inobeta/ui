@@ -31,6 +31,4 @@ export enum IbAuthTypes {
 export interface IbAPITokens {
   accessToken: string;
   refreshToken: string;
-  sessionToken?: string;
-
 }

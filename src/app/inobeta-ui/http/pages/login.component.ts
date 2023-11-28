@@ -4,8 +4,9 @@ import {Router} from '@angular/router';
 import {IbSessionService} from '../auth/session.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-// TODO angular2-toaster eliminato da package.json, quindi qui ci sono vari commenti per far partire l'app
-
+/**
+ * @deprecated Don't use this component, and implement your own
+ */
 @Component({
   selector: 'ib-login',
   template: `

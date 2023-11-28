@@ -8,8 +8,6 @@ import * as TableActions from '../actions/table.actions';
 import { IbTableState } from '../reducers/table.reducer';
 import { Store } from '@ngrx/store';
 import { selectTableState } from '../selectors/table.selectors';
-import { IbAuthService } from '../../../../http/auth/auth.service';
-import { IbStorageService } from '../../../../storage/storage.service';
 import { IbTableConfService } from '../../services/table-conf.service';
 
 const STORAGE_NAME = 'ib-table-store';

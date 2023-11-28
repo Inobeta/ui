@@ -1,5 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
+
+/**
+* @deprecated Use IbKaiTableModule
+*/
 @Component({
   selector: 'ib-table-button',
   template: `

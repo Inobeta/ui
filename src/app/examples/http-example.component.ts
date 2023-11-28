@@ -22,12 +22,23 @@ import { ibLoaderActions } from '../inobeta-ui/http/store/loader/actions';
     <button mat-raised-button color="primary" (click)="noSpinner()">No Spinner test</button>
   </mat-grid-tile>
 </mat-grid-list>
-
-  <pre>
+<div class="display-container">
+  <pre *ibLoading="{size: 12, width: '25%', endpoint: {url: 'assets/i18n/it.json', method: 'GET'}}">
     {{ loadedData | json }}
   </pre>
-
-  `
+  <pre *ibLoading="{size: 8, width: '25%'}">
+    test loader result end
+  </pre>
+</div>
+  `,
+  styles:[`
+  .display-container{
+    display: flex;
+  }
+  .display-container pre{
+    flex: 1;
+  }
+  `]
 })
 
 export class HttpExampleComponent implements OnInit {

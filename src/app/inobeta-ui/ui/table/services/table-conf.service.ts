@@ -5,7 +5,9 @@ import { IbStorageService } from '../../../storage/storage.service';
 export const IB_TABLE_STORAGE_NAME = 'ib-table-store';
 export const IB_TABLE_ANON_USER = 'ib-anon';
 
-
+/**
+ * @deprecated Use IbKaiTableModule
+ */
 @Injectable({providedIn: 'root'})
 export class IbTableConfService {
   private user = IB_TABLE_ANON_USER;

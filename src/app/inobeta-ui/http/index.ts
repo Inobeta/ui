@@ -13,8 +13,6 @@ export * from './auth/login.service';
 export * from './http.module';
 
 export * from './auth/auth.service.stub.spec';
-export * from './auth/local-storage.stub.spec';
-export * from './auth/cookies-storage.stub.spec';
 export * from './auth/session.stub.spec';
 export * from './auth/session.fixture.spec';
 export * from './http/response-handler.service.stub.spec';

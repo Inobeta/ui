@@ -2,7 +2,9 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { IbTableConfService } from '../../services/table-conf.service';
-
+/**
+ * @deprecated Use IbKaiTableModule
+ */
 @Component({
   selector: 'ib-table-conf-save',
   template: `

@@ -1,18 +1,21 @@
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, mergeMap, take } from 'rxjs/operators';
 import { IbToastNotification } from '../../ui/toast/toast.service';
-import { IbAuthService } from '../auth/auth.service';
 import { IbLoginService } from '../auth/login.service';
-import { IbAPITokens, IbAuthTypes } from '../auth/session.model';
+import { IbAPITokens, IbAuthTypes, IbSession } from '../auth/session.model';
+import { Store } from '@ngrx/store';
+import { ibSelectActiveSession } from '../store/session/selectors';
 
 @Injectable({providedIn: 'root'})
 export class IbAuthInterceptor implements HttpInterceptor {
+  session$: Observable<IbSession<IbAPITokens>> = this.store.select(ibSelectActiveSession<IbAPITokens>())
+
   constructor(
-    private auth: IbAuthService<IbAPITokens>,
     private ibToast: IbToastNotification,
     private login: IbLoginService<IbAPITokens>,
+    private store: Store,
     @Inject('ibHttpEnableInterceptors') @Optional() public ibHttpEnableInterceptors?: boolean,
     @Inject('ibHttpAPILoginUrl') @Optional() public ibHttpAPILoginUrl?: string,
     @Inject('ibHttpToastOnLoginFailure') @Optional() public ibHttpToastOnLoginFailure?: string,
@@ -35,24 +38,29 @@ export class IbAuthInterceptor implements HttpInterceptor {
       case IbAuthTypes.JWT: authString = 'Bearer '; break;
       case IbAuthTypes.BASIC_AUTH: authString = 'Basic '; break;
     }
-    if(this.auth.activeSession?.valid && this.auth.activeSession?.serverData?.accessToken){
-      authString += this.auth.activeSession.serverData.accessToken
-      authReq = request.clone({
-        headers: request.headers
-          .set('Authorization', authString)
-      })
-    }
-    return next.handle(authReq).pipe(catchError(err => {
-      if (!this.ibHttpEnableInterceptors) {
+    return this.session$.pipe(
+      take(1),
+      mergeMap((session) => {
+        if(session?.valid && session?.serverData?.accessToken){
+          authString += session.serverData.accessToken
+          authReq = request.clone({
+            headers: request.headers
+              .set('Authorization', authString)
+          })
+        }
+        return next.handle(authReq)
+      }),
+      catchError(err => {
+        if (!this.ibHttpEnableInterceptors) {
+          return throwError(err);
+        }
+        if (request.url !== this.ibHttpAPILoginUrl && err.status === 401) {
+          this.ibToast.open(this.ibHttpToastOnLoginFailure, 'warning');
+          this.login.logout(false);
+        }
         return throwError(err);
-      }
-      if (request.url !== this.ibHttpAPILoginUrl && err.status === 401) {
-        this.ibToast.open(this.ibHttpToastOnLoginFailure, 'warning');
-        this.login.logout(false);
-      }
-      return throwError(err);
-    }));
-
+      })
+    )
 
   }
 
