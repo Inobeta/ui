@@ -1,6 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { IbTableAction } from '../models/titles.model';
 
+
+/**
+* @deprecated Use IbKaiTableModule
+*/
 @Component({
   selector: '[ib-table-actions]',
   template: `

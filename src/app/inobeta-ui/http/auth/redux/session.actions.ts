@@ -1,7 +1,17 @@
 import { createAction, props } from '@ngrx/store';
-import {IbSession} from '../session.model';
+import {IbAPITokens, IbSession} from '../session.model';
 
-export const login = createAction('[IbSession Service] Login', props<{ activeSession: IbSession}>());
+/**
+ * @deprecated use ibAuthActions.login
+ */
+export const login = createAction('[IbSession Service] Login', props<{ activeSession: IbSession<IbAPITokens>}>());
+/**
+ * @deprecated  use ibAuthActions.logout
+ */
 export const logout = createAction('[IbSession Service] Logout');
+
+/**
+ * @deprecated Don't use this shit
+ */
 export const changeNameSurname = createAction('[IbSession Service] Change Name And Surname', props<{ name: string, surname: string}>());
 

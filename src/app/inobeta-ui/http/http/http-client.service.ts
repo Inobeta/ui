@@ -9,6 +9,10 @@ import { from } from 'rxjs';
 /*
   HttpClient with Bearer authentication
  */
+
+/**
+ * @deprecated Use Angular standard HttpClientService with provided interceptors
+ */
 @Injectable({providedIn: 'root'})
 export class IbHttpClientService {
 
@@ -24,7 +28,7 @@ export class IbHttpClientService {
 
   constructor(
     public h: HttpClient,
-    private srvAuth: IbAuthService,
+    private srvAuth: IbAuthService<any>,
     private srvResponse: IbResponseHandlerService,
     /**
      * @deprecated Mobile version deprecated, please delete this param

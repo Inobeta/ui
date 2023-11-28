@@ -50,4 +50,8 @@ import { IbStickyAreaModule } from '../../directives/sticky-area/sticky-area.mod
     IbTotalRowBaseCellComponent
   ]
 })
+
+/**
+* @deprecated Use IbKaiTableModule
+*/
 export class TotalRowModule { }

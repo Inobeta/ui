@@ -1,4 +1,3 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { RoutingModule } from './routing.module';
@@ -16,7 +15,6 @@ import { IbDynamicFormsModule } from './inobeta-ui/ui/forms/forms.module';
 import { IbBreadcrumbModule } from './inobeta-ui/ui/breadcrumb/breadcrumb.module';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatCardModule } from '@angular/material/card';
 import { MatRippleModule } from '@angular/material/core';
@@ -35,7 +33,6 @@ import { MyCustomTextboxComponent } from './examples/dynamic-forms-example/my-cu
 import { IbToastExampleComponent } from './examples/toast-example/toast-example.component';
 import { IbToastModule } from './inobeta-ui/ui/toast/toast.module';
 import { IbTableExampleNoReduxComponent } from './examples/table-example/table-without-redux/table-example.component';
-import { ITableFiltersState } from './inobeta-ui/ui/table/redux/table.reducer';
 import { ISessionState } from './inobeta-ui/http/auth/redux/session.reducer';
 import { MatButtonModule } from '@angular/material/button';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -53,6 +50,7 @@ import { IbKaiTableApiExamplePage } from './examples/kai-table-example/kai-table
 import { IbFilterModule } from './inobeta-ui/ui/kai-filter';
 import { IbViewModule } from './inobeta-ui/ui/views/view.module';
 import { IbDataExportModule } from './inobeta-ui/ui/data-export/data-export.module';
+import { IbTranslateModuleLoader } from './inobeta-ui/translate/translate-loader.service';
 
 export interface IAppState {
   sessionState?: ISessionState;
@@ -63,9 +61,6 @@ const reducers: ActionReducerMap<IAppState> = {
   countState: counterReducer
 };
 
-export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-}
 
 export const statusErrorMessages = { 404: 'Risorsa non trovata'};
 
@@ -138,7 +133,7 @@ const reduxStorageSave = ibSetupHydration('__redux-store-inobeta-ui__', ['sessio
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
+        useExisting: IbTranslateModuleLoader,
         deps: [HttpClient]
       }
     }),

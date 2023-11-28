@@ -45,7 +45,7 @@ export interface IbTableViewDialogData {
       </button>
       <button *ngIf="data?.hasNo" mat-button [mat-dialog-close]="{
         confirmed: false
-      }">{{ "shared.ui.modalMessage.no" | translate }}</button>
+      }">{{ "shared.ibTableView.no" | translate }}</button>
       <button
         mat-button
         [disabled]="!data?.hideInput ? viewName.value.length === 0 : false"

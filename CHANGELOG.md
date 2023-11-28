@@ -11,6 +11,18 @@
 |DEVK-189|feat|IbTable|Created IbDataSource for server side interaction|
 |DEVK-192|fix|IbTable|Removed `selectableRows` input. Added `ib-selection-column`|
 |STOR-98|feat|IbHydration|**Breaking change** on hydration metareducer provided. Please use ibSetupHydration with full support on lazy loaded modules|
+|DEVK-206|feat|IbHttpModule|Cleanup, deprecations, loader improvements & translation refactoring with `IbTranslateModuleLoader`|
+
+## [15.1.0] - deprecations
+
+- All features from `IbTableModule` are now deprecated, move to `IbKaiTableModule` ASAP
+- `IbResponseHandlerService` is now deprecated, Use Angular standard interceptors to deal with response and errors
+- `IbHttpClientService` is now deprecated, Use Angular standard HttpClientService with provided interceptors
+- Redux actions `login`, `logout` are now deprecated, use `ibAuthActions` instead
+- Redux action `changeNameSurname` is now deprecated and it will be removed
+- `IbSessionService` is now deprecated, Use `IbLoginService<T>` instead
+- `IbSession.userData` is now deprecated, Use `IbSession.serverData` with generics support instead
+- `IbAuthService` is now deprecated, Use `ibSelectActiveSession<T>()` selector from store in order to get active session
 
 ## [15.0.0] (2023-01-11)
 

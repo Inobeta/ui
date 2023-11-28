@@ -8,6 +8,10 @@ import { ibTableActionLoadConfig, ibTableActionSaveConfig } from '../../store/ac
 import { IbModalMessage } from '../../../modal/modal-message.model';
 import { IbTableConfLoadComponent } from '../table-conf/table-conf-load.component';
 
+
+/**
+* @deprecated Use IbKaiTableModule
+*/
 @Component({
   // tslint:disable-next-line: component-selector
   selector: '[ib-table-header]',

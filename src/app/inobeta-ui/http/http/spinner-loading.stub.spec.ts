@@ -1,5 +1,4 @@
 import {Component, ViewEncapsulation} from '@angular/core';
-import {IbHttpClientService} from './http-client.service';
 
 @Component({
   selector: 'ib-spinner-loading',

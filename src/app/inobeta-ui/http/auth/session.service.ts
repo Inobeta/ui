@@ -13,6 +13,9 @@ import { Optional } from '@angular/core';
 
 const loginUrl = '/api/auth/login';
 
+/**
+ * @deprecated Use IbLoginService
+ */
 @Injectable({
   providedIn: 'root',
 })
@@ -20,7 +23,7 @@ export class IbSessionService {
   private authType = null /*IbAuthTypes.BASIC_AUTH*/;
 
   constructor(
-    private srvAuth: IbAuthService,
+    private srvAuth: IbAuthService<any>,
     private h: IbHttpClientService,
     private store: Store<any>,
     private srvRouter: Router,

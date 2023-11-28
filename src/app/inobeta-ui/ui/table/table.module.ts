@@ -115,5 +115,8 @@ export function ibMatPaginatorTranslate(translateService: TranslateService) {
     }
   ]
 })
+/**
+ * @deprecated Use IbKaiTableModule
+ */
 export class IbTableModule { }
 

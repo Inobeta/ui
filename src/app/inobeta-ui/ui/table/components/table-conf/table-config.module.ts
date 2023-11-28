@@ -36,4 +36,8 @@ import { MatIconModule } from '@angular/material/icon';
     IbTableConfService
   ]
 })
+
+/**
+* @deprecated Use IbKaiTableModule
+*/
 export class IbTableConfigModule { }

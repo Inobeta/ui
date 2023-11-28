@@ -32,7 +32,7 @@ function loadState(ibSessionStorageKey: string, ibReduxPersistKeys: string[]){
       for(let fk of ibReduxPersistKeys){
         filteredState[fk] = state[fk]
       }
-      console.log('[IbHydrade] load from local storage', filteredState)
+      console.log('[IbHydrate] load from local storage', filteredState)
       return filteredState;
     } catch {
       localStorage.removeItem(ibSessionStorageKey);

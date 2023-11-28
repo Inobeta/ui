@@ -95,7 +95,7 @@ describe("IbViewService", () => {
     expect(dialog).toBeTruthy();
     const noButton = await dialog.getHarness(
       MatButtonHarness.with({
-        text: "shared.ui.modalMessage.no",
+        text: "shared.ibTableView.no",
       })
     );
     await noButton.click();
