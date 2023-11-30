@@ -8,7 +8,7 @@ import { Store } from "@ngrx/store";
 import { ibSelectAccessTokenExp, ibSelectActiveSession } from "./selectors";
 import { IbLoginService } from "../../auth/login.service";
 import { IbAuthService } from "../../auth/auth.service";
-import { IbStorageTypes } from "src/app/inobeta-ui/storage/storage.service";
+import { IbStorageTypes } from "../../../storage/storage.service";
 
 @Injectable({providedIn: 'root'})
 export class IbSessionEffects{
@@ -24,10 +24,8 @@ export class IbSessionEffects{
             this.authLegacy.cookieSession();
           }
         })
-      ).pipe(
-        switchMap(() => [ibAuthActions.refreshCycle()])
       )
-  });
+  }, { dispatch: false});
 
 
 
@@ -38,23 +36,25 @@ export class IbSessionEffects{
         this.store.select(ibSelectActiveSession<IbAPITokens>()),
         this.store.select(ibSelectAccessTokenExp)
       ])),
-      filter(([, [session]]) => session !== null),
       mergeMap(([, [session, exp]]) => of(session).pipe(
         delay(exp),
         takeUntil(this.actions$.pipe(ofType(ibAuthActions.logout)))
       )),
-      mergeMap((session) => this.login.refresh(session.serverData.refreshToken)),
-    ).pipe(
-      switchMap((serverData: IbAPITokens) => {
+      mergeMap((session) => session?.serverData?.refreshToken ? this.login.refresh(session?.serverData?.refreshToken) : of(null)),
+      switchMap((serverData: IbAPITokens | null) => {
+        if(serverData === null){
+          return [
+            ibAuthActions.logout()
+          ]
+        }
         const activeSession =  new IbSession<IbAPITokens>();
-        activeSession.user.password = '';
         activeSession.valid = true;
         activeSession.serverData = serverData;
         return [
-          ibAuthActions.login({activeSession})
+          ibAuthActions.login({activeSession}),
+          ibAuthActions.refreshCycle()
         ]
-      }),
-      catchError(() => [ibAuthActions.logout()]),
+      })
     )
   });
 

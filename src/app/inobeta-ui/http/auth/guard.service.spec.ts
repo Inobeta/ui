@@ -58,7 +58,6 @@ describe('IbAuthGuard & IbLoginGuard with a session', () => {
 
   const mockStore: IHttpStore = {
     loader: {
-      pendingRequests: 0,
       showLoading: false,
       skipShow: false,
       pendingRequestList: []

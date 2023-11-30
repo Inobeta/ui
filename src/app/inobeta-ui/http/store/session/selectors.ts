@@ -1,10 +1,9 @@
-import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { createSelector } from '@ngrx/store';
 import { jwtDecode } from 'jwt-decode';
 import { IHttpStore } from '..';
 import { IbAPITokens, IbSession } from '../../auth/session.model';
-import { httpFeatureKey } from '../const';
 
-const selectFeature = createFeatureSelector<IHttpStore>(httpFeatureKey);
+const selectFeature = (state) => state.ibHttpState;
 
 export const ibSelectActiveSession = <T extends IbAPITokens | IbAPITokens>() => createSelector(
   selectFeature,
@@ -20,7 +19,8 @@ export const ibSelectAccessTokenExp = createSelector(
       exp: number
     } = jwtDecode(state.session.activeSession.serverData.accessToken);
     const now = new Date().getTime() / 1000;
-    return  (decoded.exp - now - 3600) * 1000
-
+    let exp = (decoded.exp - now - 300) * 1000
+    if(exp < 0) exp = 0
+    return  exp
   }
 )
