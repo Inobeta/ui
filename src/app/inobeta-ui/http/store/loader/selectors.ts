@@ -1,9 +1,7 @@
-import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { createSelector } from '@ngrx/store';
 import { IHttpStore } from '..';
-import { httpFeatureKey } from '../const';
 
-const selectFeature = createFeatureSelector<IHttpStore>(httpFeatureKey);
-
+const selectFeature = (state) => state.ibHttpState;
 
 export const ibSelectIsHttpLoading = createSelector(
   selectFeature,

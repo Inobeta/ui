@@ -31,7 +31,7 @@ export class IbLoadingDirective implements OnInit, OnDestroy{
               ) {}
 
   ngOnInit(): void {
-
+  console.log('ibLoad init')
     const {
       size, width, height, className, endpoint
     } = {
@@ -40,7 +40,7 @@ export class IbLoadingDirective implements OnInit, OnDestroy{
     }
     const renderCb = (isLoading) => {
       this.vcr.clear();
-
+      console.log('ibLoad render', isLoading)
       if (isLoading) {
         const ref = this.vcr.createComponent(IbLoadingSkeletonContainerComponent);
         Object.assign(ref.instance, {

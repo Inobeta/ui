@@ -9,7 +9,7 @@ import { environment } from '../environments/environment';
 import { IbTableExampleComponent } from 'src/app/examples/table-example/table-with-redux/table-example.component';
 import { NavComponent } from './examples/nav/nav.component';
 import { DynamicFormsExampleComponent } from './examples/dynamic-forms-example/dynamic-forms-example.component';
-import { ActionReducerMap, StoreModule } from '@ngrx/store';
+import { ActionReducerMap, StoreModule, combineReducers } from '@ngrx/store';
 import { IbTableModule } from './inobeta-ui/ui/table/table.module';
 import { IbDynamicFormsModule } from './inobeta-ui/ui/forms/forms.module';
 import { IbBreadcrumbModule } from './inobeta-ui/ui/breadcrumb/breadcrumb.module';
@@ -51,14 +51,16 @@ import { IbFilterModule } from './inobeta-ui/ui/kai-filter';
 import { IbViewModule } from './inobeta-ui/ui/views/view.module';
 import { IbDataExportModule } from './inobeta-ui/ui/data-export/data-export.module';
 import { IbTranslateModuleLoader } from './inobeta-ui/translate/translate-loader.service';
+import { IHttpStore, ibHttpEffects, ibHttpReducers } from './inobeta-ui/http/store';
 
 export interface IAppState {
-  sessionState?: ISessionState;
+  ibHttpState: IHttpStore;
   countState: ICounterState;
 }
 
 const reducers: ActionReducerMap<IAppState> = {
-  countState: counterReducer
+  countState: counterReducer,
+  ibHttpState: combineReducers(ibHttpReducers)
 };
 
 
@@ -120,7 +122,11 @@ const reduxStorageSave = ibSetupHydration('__redux-store-inobeta-ui__', ['sessio
         strictActionImmutability: false,
       },
     }),
-    EffectsModule.forRoot([TableEffects, ...reduxStorageSave.effects]),
+    EffectsModule.forRoot([
+      TableEffects,
+      ...reduxStorageSave.effects,
+      ...ibHttpEffects
+    ]),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       logOnly: environment.production,

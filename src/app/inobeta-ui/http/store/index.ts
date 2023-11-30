@@ -1,8 +1,9 @@
 import { sessionReducer } from './session/reducers';
 import { ActionReducerMap } from '@ngrx/store';
-import { IbLoaderState } from './loader/interfaces';
 import { loaderReducer } from './loader/reducers';
-import { LoaderEffects } from "./loader/effects";
+import { IbLoaderEffects } from "./loader/effects";
+import { IbSessionEffects } from './session/effects';
+import { IbLoaderState } from './loader/interfaces';
 import { IbSessionState } from './session/interfaces';
 
 export interface IHttpStore{
@@ -10,11 +11,11 @@ export interface IHttpStore{
   loader: IbLoaderState;
 }
 
-export const httpReducers: ActionReducerMap<IHttpStore> = {
+export const ibHttpReducers: ActionReducerMap<IHttpStore> = {
   session: sessionReducer,
   loader: loaderReducer,
 };
 
-export const httpEffects = [
-  LoaderEffects,
+export const ibHttpEffects = [
+  IbLoaderEffects, IbSessionEffects
 ]
