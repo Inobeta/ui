@@ -2,7 +2,7 @@ import { Inject, Injectable, Optional } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { ibAuthActions } from "./actions";
 import { combineLatest, of } from "rxjs";
-import { mergeMap, delay, switchMap, catchError, withLatestFrom, map, filter } from "rxjs/operators";
+import { mergeMap, delay, switchMap, catchError, withLatestFrom, map, filter, takeUntil } from "rxjs/operators";
 import { IbAPITokens, IbSession } from "../../auth/session.model";
 import { Store } from "@ngrx/store";
 import { ibSelectAccessTokenExp, ibSelectActiveSession } from "./selectors";
@@ -40,7 +40,8 @@ export class IbSessionEffects{
       ])),
       filter(([, [session]]) => session !== null),
       mergeMap(([, [session, exp]]) => of(session).pipe(
-        delay(exp)
+        delay(exp),
+        takeUntil(this.actions$.pipe(ofType(ibAuthActions.logout)))
       )),
       mergeMap((session) => this.login.refresh(session.serverData.refreshToken)),
     ).pipe(
