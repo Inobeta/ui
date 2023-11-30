@@ -1,6 +1,11 @@
 <form (ngSubmit)="onSubmit()" [formGroup]="form" class="ibForm">
 
-  <ib-dynamic-form-control *ngFor="let field of fields" class="ibFormRow" [base]="field" [form]="form"></ib-dynamic-form-control>
+  <ng-container *ngFor="let field of fields">
+    <ng-container [ngSwitch]="field.role">
+      <ib-dynamic-form-control *ngSwitchCase="'control'" class="ibFormRow" [base]="field" [form]="form"></ib-dynamic-form-control>
+      <ib-dynamic-form-array *ngSwitchCase="'array'" class="ibFormRow" [base]="field" [form]="form"></ib-dynamic-form-array>
+    </ng-container>
+  </ng-container>
 
   <div class="ibFormRow ibFormActions">
     <button type="submit" [disabled]="!form.valid">Save</button>

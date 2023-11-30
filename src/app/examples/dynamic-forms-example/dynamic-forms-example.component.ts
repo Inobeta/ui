@@ -15,6 +15,8 @@ import { IbMatTextareaControl } from 'src/app/inobeta-ui/ui/material-forms/contr
 import { IbMatButtonControl } from 'src/app/inobeta-ui/ui/material-forms/controls/button';
 import { IbMatPaddingControl } from 'src/app/inobeta-ui/ui/material-forms/controls/padding';
 import { IbMatSlideToggleControl } from 'src/app/inobeta-ui/ui/material-forms/controls/slide-toggle';
+import { IbFormArray } from 'src/app/inobeta-ui/ui/forms/array/array';
+import { IbFormField } from 'src/app/inobeta-ui/ui/forms/forms.types';
 
 @Component({
   selector: 'app-dynamic-forms-example',
@@ -25,11 +27,22 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
   @ViewChild('customForm', {static: true}) customForm: IbMaterialFormComponent;
   @ViewChild('emptyForm', {static: true}) emptyForm: IbMaterialFormComponent;
   ibMatActionsPosition = IbMatActionsPosition;
-  defaultFormFields: IbFormControlBase<string>[] = [
+  defaultFormFields: IbFormField<any>[] = [
     new IbTextbox({
       key: 'defaultTextbox',
       label: 'First name',
       required: true,
+    }),
+    new IbFormArray({
+      key: 'contacts',
+      fields: [
+        new IbTextbox({
+          key: 'key',
+        }),
+        new IbTextbox({
+          key: 'value'
+        })
+      ]
     })
   ];
 
