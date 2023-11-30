@@ -1,143 +1,12 @@
 {
   "shared": {
-    "ui": {
-      "modalMessage": {
-        "yes": "Sì",
-        "no": "No"
-      }
-    },
     "login": {
       "email": "E-mail",
       "password": "Password",
       "rememberMe": "Rimani collegato"
     },
-    "tableHeaderPopup": {
-      "sort": "Ordinamento",
-      "filter": "Filtra",
-      "elementsToFilter": "Seleziona elementi"
-    },
-    "header": {},
-    "ibTable": {
-        "noData": "Nessun elemento presente in lista",
-        "search": "Cerca",
-        "filterReset": "Resetta filtri",
-        "delete": "Elimina",
-        "edit": "Modifica",
-        "export": "Esporta",
-        "add": "Nuovo",
-        "select": "Seleziona",
-        "filter": "Filtra",
-        "apply": "Applica",
-        "true": "Si",
-        "false": "No",
-        "confirmDeleteTitle": "Attenzione",
-        "confirmDeleteMessage": "Sei sicuro di voler eliminare?",
-        "paginator": {
-          "itemsPerPageLabel": "Elementi per pagina",
-          "nextPageLabel": "Pagina successiva",
-          "previousPageLabel": "Pagina precedente",
-          "firstPageLabel": "Prima pagina",
-          "lastPageLabel": "Ultima pagina",
-          "rangeLabel1": "0 di {{length}}",
-          "rangeLabel2": "{{startIndex}} - {{endIndex}} di {{length}}"
-        },
-        "func": {
-          "title": "Totali",
-          "add": "Aggrega",
-          "change": "Cambia",
-          "dialog": {
-            "title": "Aggrega",
-            "selectFunction": "Seleziona una funzione",
-            "remove": "Rimuovi"
-          },
-          "sum": {
-            "name": "Somma",
-            "currentPage": "Totale pagina:",
-            "allPages": "Totale complessivo:"
-          },
-          "avg": {
-            "name": "Media",
-            "currentPage": "Media pagina:",
-            "allPages": "Media complessiva:"
-          }
-        },
-        "saveConf": {
-          "title": "Salvataggio configurazione tabella",
-          "message": "Salva nuova configurazione o sovrascrivi quella corrente",
-          "newConf": "Nuova",
-          "editConf": "Corrente",
-          "setAsDefault": "Predefinita",
-          "configName": "Nome",
-          "configExists": "Esiste già una configurazione con questo nome"
-        },
-        "loadConf": {
-          "title": "Carica una configurazione",
-          "configName": "Nome",
-          "noConfig": "Non esistono configurazioni per questa tabella"
-        },
-        "exportData": {
-          "title": "Esporta Dati",
-          "export": "Esporta",
-          "format": "Formato",
-          "all": "Tutti i dati",
-          "currentPage": "Pagina corrente",
-          "selectedRows": "Righe selezionate"
-        }
-    },
-    "ibDropdown": {
-      "selectAll": "Seleziona tutti",
-      "selectNone": "Deseleziona tutti",
-      "nullLabel": "Seleziona un elemento"
-    },
-    "ibForms": {
-      "errors": {
-        "minlength": "deve avere una lunghezza minima di {{v}} caratteri",
-        "maxlength": "deve avere una lunghezza massima di {{v}} caratteri",
-        "min": "deve avere un valore minimo di {{v}}",
-        "max": "deve avere un valore massimo di {{v}}",
-        "required": "è obbligatorio",
-        "email": "Indirizzo email non valido",
-        "date": "Data non valida"
-      },
-      "unsavedTitle": "Attenzione",
-      "unsavedMessage": "Questa pagina potrebbe contenere dei dati non salvati, vuoi proseguire?"
-    },
-    "ibModal": {
-      "yes": "Si",
-      "no": "No",
-      "close": "Chiudi"
-    },
-    "ibCrudToast": {
-      "success": "Salvataggio avvenuto con successo",
-      "error": "Errore in fase di salvataggio"
-    },
-    "ibHttp": {
-      "authFailure": "Errore: autenticazione non riuscita",
-      "genericFailure": "Errore: operazione non riuscita"
-    },
     "ibMainMenu": {
       "returnToDash": "Ritorna alla Dashboard"
-    },
-    "profile": {
-      "name": "Nome",
-      "surname": "Cognome",
-      "oldPassword": "Password attuale",
-      "newPassword": "Nuova Password",
-      "confirmPassword": "Conferma Password",
-      "dataChangedSuccessfully": "Dati cambiati con successo",
-      "caution": "Attenzione!",
-      "confirm": "Conferma",
-      "errors": {
-        "passwordsMatch": "Le password non coincidono!",
-        "min6max32": "La password deve essere compresa tra 6 e 32 caratteri!"
-      }
-    }
-  },
-  "receiptGoods": {
-    "historyGoods": {
-      "table": {
-        "date": "Scadenza"
-      }
     }
   },
   "examples": {
@@ -155,6 +24,12 @@
       "tableRedux": "With redux",
       "tableNoRedux": "Without redux",
       "tableSticky": "Sticky",
+
+      "kaiTable": "New Table",
+      "kaiTableSimple": "Simple",
+      "kaiTableContextAction": "Row Actions",
+      "kaiTableFull": "Full Example",
+      "kaiTableApi": "Data from API",
 
       "dynamicFormsMain": "Dynamic forms",
       "dynamicFormsDynamicForms": "Dynamic forms",

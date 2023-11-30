@@ -1,6 +1,11 @@
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { TranslateService } from '@ngx-translate/core';
 
+
+
+/**
+* @deprecated Use IbKaiTableModule
+*/
 export class IbMatPaginatorI18n {
 
     constructor(private readonly translate: TranslateService) {}

@@ -1,7 +1,9 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { map } from 'rxjs/operators';
-import { IbHttpClientService } from 'src/app/inobeta-ui/http/http/http-client.service';
 import { ibCrudToast } from '../inobeta-ui/http/http/messages.decorator';
+import { ibLoaderActions } from '../inobeta-ui/http/store/loader/actions';
 
 @Component({
   selector: 'app-test',
@@ -19,22 +21,31 @@ import { ibCrudToast } from '../inobeta-ui/http/http/messages.decorator';
   <mat-grid-tile [colspan]="1" [rowspan]="1">
     <button mat-raised-button color="primary" (click)="noSpinner()">No Spinner test</button>
   </mat-grid-tile>
-  <mat-grid-tile [colspan]="1" [rowspan]="1">
-    <button mat-raised-button color="primary" (click)="getBlobData()">Test responseType 'blob'</button>
-  </mat-grid-tile>
 </mat-grid-list>
-
-  <pre>
+<div class="display-container">
+  <pre *ibLoading="{size: 12, width: '25%', endpoint: {url: 'assets/i18n/it.json', method: 'GET'}}">
     {{ loadedData | json }}
   </pre>
-
-  `
+  <pre *ibLoading="{size: 8, width: '25%'}">
+    test loader result end
+  </pre>
+</div>
+  `,
+  styles:[`
+  .display-container{
+    display: flex;
+  }
+  .display-container pre{
+    flex: 1;
+  }
+  `]
 })
 
 export class HttpExampleComponent implements OnInit {
   loadedData: any = {};
   constructor(
-    private h: IbHttpClientService
+    private h: HttpClient,
+    private store: Store
   ) { }
 
   ngOnInit() {
@@ -44,8 +55,8 @@ export class HttpExampleComponent implements OnInit {
   }
 
   @ibCrudToast()
-  serviceCall(wrong = '', data = null) {
-    return this.h.get(`assets/i18n/it.json${wrong}`, data).pipe(
+  serviceCall(wrong = '') {
+    return this.h.get(`assets/i18n/it.json${wrong}`).pipe(
       map((x) => {
         console.log('additional map', x);
         return x;
@@ -61,17 +72,13 @@ export class HttpExampleComponent implements OnInit {
     });
   }
 
-  getBlobData() {
-    return this.h.get('assets/i18n/it.json', {provaTest: 'bah'}, { responseType: 'blob'}).subscribe(data => {
-      console.log('blob data', data);
-    });
-  }
 
   otherTest() {
     this.h.get('http://ec2-54-170-145-63.eu-west-1.compute.amazonaws.com/auth/admin/users?page=1&size=300').subscribe();
   }
   noSpinner() {
-    this.h.get('http://repubblica.it').subscribe();
+    this.store.dispatch(ibLoaderActions.skipShow())
+    this.h.get('assets/i18n/it.json').subscribe();
   }
 
 }

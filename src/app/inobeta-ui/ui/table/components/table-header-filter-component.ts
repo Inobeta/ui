@@ -4,6 +4,10 @@ import { UntypedFormBuilder, UntypedFormControl, Validators } from '@angular/for
 import { debounceTime } from 'rxjs/operators';
 import { IbTableTitlesTypes } from '../models/titles.model';
 
+
+/**
+* @deprecated Use IbKaiTableModule
+*/
 @Component({
   selector: '[ib-table-header-filter]',
   template: `

@@ -5,6 +5,10 @@ import { IbTableItem } from '../models/table-item.model';
 import { IbTemplateModel } from '../models/template.model';
 import { IbStickyAreas, IbTableCellAligns, IbTableTitles, IbTableTitlesTypes } from '../models/titles.model';
 
+
+/**
+* @deprecated Use IbKaiTableModule
+*/
 @Component({
   selector: '[ib-table-row]',
   template: `

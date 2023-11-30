@@ -1,4 +1,3 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { RoutingModule } from './routing.module';
@@ -10,13 +9,12 @@ import { environment } from '../environments/environment';
 import { IbTableExampleComponent } from 'src/app/examples/table-example/table-with-redux/table-example.component';
 import { NavComponent } from './examples/nav/nav.component';
 import { DynamicFormsExampleComponent } from './examples/dynamic-forms-example/dynamic-forms-example.component';
-import { ActionReducerMap, StoreModule } from '@ngrx/store';
+import { ActionReducerMap, StoreModule, combineReducers } from '@ngrx/store';
 import { IbTableModule } from './inobeta-ui/ui/table/table.module';
 import { IbDynamicFormsModule } from './inobeta-ui/ui/forms/forms.module';
 import { IbBreadcrumbModule } from './inobeta-ui/ui/breadcrumb/breadcrumb.module';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatCardModule } from '@angular/material/card';
 import { MatRippleModule } from '@angular/material/core';
@@ -35,7 +33,6 @@ import { MyCustomTextboxComponent } from './examples/dynamic-forms-example/my-cu
 import { IbToastExampleComponent } from './examples/toast-example/toast-example.component';
 import { IbToastModule } from './inobeta-ui/ui/toast/toast.module';
 import { IbTableExampleNoReduxComponent } from './examples/table-example/table-without-redux/table-example.component';
-import { ITableFiltersState } from './inobeta-ui/ui/table/redux/table.reducer';
 import { ISessionState } from './inobeta-ui/http/auth/redux/session.reducer';
 import { MatButtonModule } from '@angular/material/button';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -44,22 +41,33 @@ import { EffectsModule } from '@ngrx/effects';
 import { TableEffects } from './inobeta-ui/ui/table/store/effects/table.effects';
 import { IbMainMenuModule } from './inobeta-ui/ui/main-menu/main-menu.module';
 import { IbMainMenuExampleComponent } from './examples/main-menu-example/main-menu-example.component';
-import { ibEffects, ibMetaReducers } from './inobeta-ui/hydration';
+import { ibSetupHydration } from './inobeta-ui/hydration';
+import { IbKaiTableExamplePage } from './examples/kai-table-example/kai-table-example';
+import { IbKaiTableActionColumnExamplePage } from './examples/kai-table-example/kai-table-actions-example';
+import { IbKaiTableFullExamplePage } from './examples/kai-table-example/kai-table-full-example';
+import { IbKaiTableModule, IbTableActionModule } from './inobeta-ui/ui/kai-table';
+import { IbKaiTableApiExamplePage } from './examples/kai-table-example/kai-table-api-example';
+import { IbFilterModule } from './inobeta-ui/ui/kai-filter';
+import { IbViewModule } from './inobeta-ui/ui/views/view.module';
+import { IbDataExportModule } from './inobeta-ui/ui/data-export/data-export.module';
+import { IbTranslateModuleLoader } from './inobeta-ui/translate/translate-loader.service';
+import { IHttpStore, ibHttpEffects, ibHttpReducers } from './inobeta-ui/http/store';
 
 export interface IAppState {
-  sessionState?: ISessionState;
+  ibHttpState: IHttpStore;
   countState: ICounterState;
 }
 
 const reducers: ActionReducerMap<IAppState> = {
-  countState: counterReducer
+  countState: counterReducer,
+  ibHttpState: combineReducers(ibHttpReducers)
 };
 
-export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-}
 
 export const statusErrorMessages = { 404: 'Risorsa non trovata'};
+
+
+const reduxStorageSave = ibSetupHydration('__redux-store-inobeta-ui__', ['sessionState', 'ibTable', 'lazyLoaded', 'ibViews']);
 
 @NgModule({
   declarations: [
@@ -74,7 +82,11 @@ export const statusErrorMessages = { 404: 'Risorsa non trovata'};
     IbToastExampleComponent,
     IbTableExampleNoReduxComponent,
     IbTableStickyExampleComponent,
-    IbMainMenuExampleComponent
+    IbMainMenuExampleComponent,
+    IbKaiTableExamplePage,
+    IbKaiTableActionColumnExamplePage,
+    IbKaiTableFullExamplePage,
+    IbKaiTableApiExamplePage
   ],
   imports: [
     CommonModule,
@@ -98,14 +110,23 @@ export const statusErrorMessages = { 404: 'Risorsa non trovata'};
     MatRippleModule,
     MatButtonModule,
     MatGridListModule,
+    IbKaiTableModule,
+    IbFilterModule,
+    IbViewModule,
+    IbDataExportModule,
+    IbTableActionModule,
     StoreModule.forRoot(reducers, {
-      metaReducers: ibMetaReducers,
+      metaReducers: reduxStorageSave.metareducers,
       runtimeChecks: {
         strictStateImmutability: false,
         strictActionImmutability: false,
       },
     }),
-    EffectsModule.forRoot([TableEffects, ...ibEffects]),
+    EffectsModule.forRoot([
+      TableEffects,
+      ...reduxStorageSave.effects,
+      ...ibHttpEffects
+    ]),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       logOnly: environment.production,
@@ -118,7 +139,7 @@ export const statusErrorMessages = { 404: 'Risorsa non trovata'};
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
+        useExisting: IbTranslateModuleLoader,
         deps: [HttpClient]
       }
     }),
@@ -129,8 +150,8 @@ export const statusErrorMessages = { 404: 'Risorsa non trovata'};
     FlexLayoutModule
   ],
   providers: [
-    {provide: 'ibSessionStorageKey', useValue: '__redux-store-inobeta-ui__'},
-    {provide: 'ibReduxPersistKeys', useValue: ['sessionState', 'ibTable']},
+    //{provide: 'ibSessionStorageKey', useValue: '__redux-store-inobeta-ui__'},
+    //{provide: 'ibReduxPersistKeys', useValue: ['sessionState', 'ibTable', 'lazyLoaded']},
     {provide: 'HttpMode', useValue: 'NORMAL'},
     {provide: 'ibHttpToastOnStatusCode', useValue: statusErrorMessages },
     {provide: 'ibHttpToastErrorCode', useValue: 'code' },

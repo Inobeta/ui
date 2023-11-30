@@ -1,18 +1,20 @@
 import { Router} from '@angular/router';
 import {TestBed} from '@angular/core/testing';
-import {IbAuthService} from './auth.service';
 import {IbAuthGuard, IbLoginGuard} from './guard.service';
+import { provideMockStore } from '@ngrx/store/testing';
+import { IHttpStore } from '../store';
 
-describe('IbAuthGuard & IbLoginGuard with activeSession null', () => {
+describe('IbAuthGuard & IbLoginGuard with no session', () => {
 
-  const mockAuthService = {activeSession: null};
   const routerSpy = { navigateByUrl: jasmine.createSpy('navigateByUrl')};
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [
         { provide: Router, useValue: routerSpy },
-        { provide: IbAuthService, useValue: mockAuthService},
+        provideMockStore({initialState: {
+          ibHttpState: null
+        }}),
         IbAuthGuard,
         IbLoginGuard
       ]
@@ -28,11 +30,13 @@ describe('IbAuthGuard & IbLoginGuard with activeSession null', () => {
     expect(guard).toBeTruthy();
   });
 
-  it('IbAuthGuard should be use canActivate ang return to login', () => {
+  it('IbAuthGuard should be use canActivate and return to login', (done) => {
     const lguard = TestBed.inject(IbAuthGuard);
-    lguard.canActivate(null);
-    expect(routerSpy.navigateByUrl).toHaveBeenCalledTimes(1);
-    expect (routerSpy.navigateByUrl).toHaveBeenCalledWith ('/login');
+    lguard.canActivate().subscribe(() => {
+      expect(routerSpy.navigateByUrl).toHaveBeenCalledTimes(1);
+      expect (routerSpy.navigateByUrl).toHaveBeenCalledWith ('/login');
+      done()
+    })
   });
 
   it('IbLoginGuard should be created', () => {
@@ -40,24 +44,47 @@ describe('IbAuthGuard & IbLoginGuard with activeSession null', () => {
     expect(lguard).toBeTruthy();
   });
 
-  it('IbLoginGuard should be use canActivate', () => {
+  it('IbLoginGuard should be use canActivate', (done) => {
     const lguard = TestBed.inject(IbLoginGuard);
-    lguard.canActivate();
-    expect(routerSpy.navigateByUrl).toHaveBeenCalledTimes(0);
+    lguard.canActivate().subscribe(() => {
+      expect(routerSpy.navigateByUrl).toHaveBeenCalledTimes(0);
+      done()
+    })
   });
 
 });
 
-describe('IbAuthGuard & IbLoginGuard with activeSession something', () => {
+describe('IbAuthGuard & IbLoginGuard with a session', () => {
 
-  const mockAuthService2 = {activeSession: 'user'};
+  const mockStore: IHttpStore = {
+    loader: {
+      showLoading: false,
+      skipShow: false,
+      pendingRequestList: []
+    },
+    session: {
+      activeSession: {
+        valid: true,
+        serverData: null,
+        userData: null,
+        authToken: null,
+        user: {
+          email: 'pippo',
+          password: '',
+          rememberMe: false
+        }
+      }
+    }
+  };
   const routerSpy = { navigateByUrl: jasmine.createSpy('navigateByUrl')};
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [
         { provide: Router, useValue: routerSpy },
-        { provide: IbAuthService, useValue: mockAuthService2},
+        provideMockStore({initialState: {
+          ibHttpState: mockStore
+        }}),
         IbAuthGuard,
         IbLoginGuard
       ]
@@ -73,10 +100,12 @@ describe('IbAuthGuard & IbLoginGuard with activeSession something', () => {
     expect(guard).toBeTruthy();
   });
 
-  it('IbAuthGuard should be use canActivate', () => {
+  it('IbAuthGuard should be use canActivate', (done) => {
     const lguard = TestBed.inject(IbAuthGuard);
-    lguard.canActivate(null);
-    expect(routerSpy.navigateByUrl).toHaveBeenCalledTimes(0);
+    lguard.canActivate().subscribe(() => {
+      expect(routerSpy.navigateByUrl).toHaveBeenCalledTimes(0);
+      done()
+    })
   });
 
   it('IbLoginGuard should be created', () => {
@@ -84,11 +113,13 @@ describe('IbAuthGuard & IbLoginGuard with activeSession something', () => {
     expect(lguard).toBeTruthy();
   });
 
-  it('IbLoginGuard should be use canActivate', () => {
+  it('IbLoginGuard should be use canActivate', (done) => {
     const lguard = TestBed.inject(IbLoginGuard);
-    lguard.canActivate();
-    expect(routerSpy.navigateByUrl).toHaveBeenCalledTimes(1);
-    expect (routerSpy.navigateByUrl).toHaveBeenCalledWith ('/dashboard');
+    lguard.canActivate().subscribe(() => {
+      expect(routerSpy.navigateByUrl).toHaveBeenCalledTimes(1);
+      expect (routerSpy.navigateByUrl).toHaveBeenCalledWith ('/dashboard');
+      done()
+    })
   });
 
 });

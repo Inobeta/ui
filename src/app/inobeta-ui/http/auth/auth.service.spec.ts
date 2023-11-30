@@ -1,11 +1,11 @@
 import {IbAuthService} from './auth.service';
 import {TestBed} from '@angular/core/testing';
 import {Router} from '@angular/router';
-import { IbSession } from './session.model';
+import { IbAPITokens, IbSession } from './session.model';
 import { IbStorageService, IbStorageTestModule } from '../../storage';
 
 describe('IbAuthService', () => {
-  let authService: IbAuthService;
+  let authService: IbAuthService<IbAPITokens>;
   let storageService: IbStorageService;
 
   const routerSpy = { navigate: jasmine.createSpy('navigate')};

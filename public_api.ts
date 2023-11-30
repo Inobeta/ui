@@ -10,5 +10,10 @@ export * from './src/app/inobeta-ui/http/index';
 export * from './src/app/inobeta-ui/storage/index';
 export * from './src/app/inobeta-ui/tools/index';
 export * from './src/app/inobeta-ui/hydration/index';
+export * from './src/app/inobeta-ui/ui/kai-table/index';
+export * from './src/app/inobeta-ui/ui/kai-filter/index';
+export * from './src/app/inobeta-ui/ui/views/index';
+export * from './src/app/inobeta-ui/ui/data-export/index';
+export * from './src/app/inobeta-ui/translate/index';
 
 

@@ -1,5 +1,9 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 
+
+/**
+* @deprecated Use IbKaiTableModule
+*/
 @Component({
   selector: 'ib-table-paginator',
   template: `
@@ -20,6 +24,6 @@ export class IbTablePaginatorComponent {
   @Input() numOfElements;
   @Input() paginationInfo;
   @Input() elemForPage = 0;
-  
+
   @Output() pageChangeHandle = new EventEmitter();
 }

@@ -1,0 +1,62 @@
+<ib-filter-button>
+  <span ib-filter-name><ng-content></ng-content></span>
+  <span ib-filter-value *ngIf="isDirty">
+    {{
+      "shared.ibFilter.label.number"
+        | translate : displayLabelParams
+        | lowercase
+    }}
+  </span>
+
+  <section style="padding: 0 1em">
+    <section class="ib-number-filter" [formGroup]="slider">
+      <section style="display: flex">
+        <mat-slider style="flex: 1" [max]="max" [min]="min" [step]="step">
+          <input
+            matSliderStartThumb
+            formControlName="min"
+            [value]="slider.value.min"
+          />
+          <input
+            matSliderEndThumb
+            formControlName="max"
+            [value]="slider.value.max"
+          />
+        </mat-slider>
+      </section>
+
+      <section class="ib-number-filter__input-range">
+        <mat-form-field appearance="outline" style="width: 12ch">
+          <mat-label>{{ "shared.ibFilter.min" | translate }}</mat-label>
+          <input
+            matInput
+            type="number"
+            placeholder="min"
+            formControlName="min"
+            [value]="slider.value.min"
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" style="width: 12ch">
+          <mat-label>{{ "shared.ibFilter.max" | translate }}</mat-label>
+          <input
+            matInput
+            type="number"
+            placeholder="max"
+            formControlName="max"
+            [value]="slider.value.max"
+          />
+        </mat-form-field>
+      </section>
+    </section>
+  </section>
+
+  <ib-filter-actions>
+    <button mat-button (click)="clear()" [disabled]="!isDirty">
+      {{ "shared.ibFilter.clear" | translate }}
+    </button>
+    <button mat-button color="primary" (click)="applyFilter()">
+      {{ "shared.ibFilter.update" | translate }}
+    </button>
+  </ib-filter-actions>
+</ib-filter-button>

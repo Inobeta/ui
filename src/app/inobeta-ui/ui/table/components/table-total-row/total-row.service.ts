@@ -3,6 +3,10 @@ import { IbTotalRowAddCellComponent } from './cells/ib-total-row-add-cell/ib-tot
 import { IbTotalRowAvgCellComponent } from './cells/ib-total-row-avg-cell/ib-total-row-avg-cell.component';
 import { IbTotalRowSumCellComponent } from './cells/ib-total-row-sum-cell/total-row-sum-cell.component';
 
+
+/**
+* @deprecated Use IbKaiTableModule
+*/
 @Injectable({
   providedIn: 'root'
 })

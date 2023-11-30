@@ -1,0 +1,72 @@
+.ib-table-scrollable {
+  overflow-y: auto;
+  position: relative;
+
+  &--loading {
+    overflow: hidden;
+  }
+}
+
+.ib-table__toolbar {
+  display: flex;
+  align-items: center;
+}
+
+.ib-table-progress-bar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 101;
+  transform: translateZ(1px);
+  background-color: rgba(0, 0, 0, 0.05);
+
+  mat-progress-bar {
+    top: 56px;
+  }
+}
+
+tr.ib-table-group-detail-row {
+  height: 0;
+}
+
+tr.ib-table-element-row:not(.ib-table-expanded-row):hover {
+  background: whitesmoke;
+}
+
+::ng-deep .ib-table-expanded-row > td {
+  border-bottom-width: 0;
+}
+
+.ib-table-element-detail {
+  overflow: hidden;
+  display: flex;
+}
+
+::ng-deep td.cdk-column-ib-action > :first-child,
+::ng-deep td.mat-column-ib-action > :first-child {
+  display: flex;
+  gap: 4px;
+  justify-content: flex-end;
+  align-content: center;
+}
+
+::ng-deep ib-aggregate {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  gap: 2em;
+
+  .ib-aggregate__function {
+    display: flex;
+    align-items: center;
+    width: fit-content;
+  }
+
+  .ib-aggregate__display-value {
+    text-align: end;
+    font-weight: 500;
+    white-space: nowrap
+  }
+}

@@ -1,6 +1,10 @@
 import {Component, EventEmitter, Input, Output, Inject} from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 
+
+/**
+* @deprecated Use IbKaiTableModule
+*/
 @Component({
   selector: 'ib-table-export',
   template: `

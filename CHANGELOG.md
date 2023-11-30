@@ -1,5 +1,30 @@
 # Inobeta/UI Changelog
 
+## [15.1.0] (2023-11-30)
+
+| Issue ID | Type | Section | Description |
+| -- | -- | -- | -- |
+|DEVK-181|fix|Package|Updated `package.json`; Moved `dependencies` in `peerDependencies`|
+|DEVK-183|feat|IbTable|Created a new table that will replace old IbTableModule|
+|DEVK-184|feat|IbFilter|Created filters for the new IbTable|
+|DEVK-186|feat|IbView|Added IbViewModule; Added support for IbViewGroup in IbTable|
+|DEVK-189|feat|IbTable|Created IbDataSource for server side interaction|
+|DEVK-192|fix|IbTable|Removed `selectableRows` input. Added `ib-selection-column`|
+|STOR-98|feat|IbHydration|**Breaking change** on hydration metareducer provided. Please use ibSetupHydration with full support on lazy loaded modules|
+|DEVK-206|feat|IbHttpModule|Cleanup, deprecations, loader improvements|
+|DEVK-154|feat|IbTranslate|Translation refactoring with `IbTranslateModuleLoader`|
+
+## [15.1.0] - deprecations
+
+- All features from `IbTableModule` are now deprecated, move to `IbKaiTableModule` ASAP
+- `IbResponseHandlerService` is now deprecated, Use Angular standard interceptors to deal with response and errors
+- `IbHttpClientService` is now deprecated, Use Angular standard HttpClientService with provided interceptors
+- Redux actions `login`, `logout` are now deprecated, use `ibAuthActions` instead
+- Redux action `changeNameSurname` is now deprecated and it will be removed
+- `IbSessionService` is now deprecated, Use `IbLoginService<T>` instead
+- `IbSession.userData` is now deprecated, Use `IbSession.serverData` with generics support instead
+- `IbAuthService` is now deprecated, Use `ibSelectActiveSession<T>()` selector from store in order to get active session
+
 ## [15.0.0] (2023-01-11)
 
 | Issue ID | Type | Section | Description |
@@ -9,7 +34,7 @@
 
 ### [15.0.0] - breaks
 
-- ngrx-store-localstorage support end, please remove any usage and replace it with hydration metareducer provided
+- ngrx-store-localstorage support end, please remove any usage and replace it with hydration metareducer provided. **no support on lazy loaded modules**: please install 15.1.x if you need it.
 - @angular/flex-layout support end, please replace any usage with @Inobeta/flex-layout provided by @Inobeta/flex-layout@15.0.0-inobeta and move away from this lib ASAP
 - @angular/material deprecates old styled component so take care of this, this version is now supporting new styled components
 

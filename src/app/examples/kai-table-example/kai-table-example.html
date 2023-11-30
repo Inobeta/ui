@@ -1,0 +1,13 @@
+<ib-kai-table
+  [data]="data"
+  [displayedColumns]="['name', 'fruit', 'number', 'aDate']"
+  [tableDef]="tableDef"
+  (ibRowClicked)="testClick($event)"
+>
+  <ib-text-column name="name"></ib-text-column>
+  <ib-text-column name="fruit" sort></ib-text-column>
+  <ib-number-column name="number"></ib-number-column>
+  <ib-date-column name="aDate"></ib-date-column>
+
+  <section *ibKaiRowGroup="let row">row data: {{row | json}}</section>
+</ib-kai-table>

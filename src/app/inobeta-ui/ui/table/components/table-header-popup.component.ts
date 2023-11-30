@@ -2,6 +2,10 @@ import { Component, Input, OnChanges } from '@angular/core';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
+
+/**
+* @deprecated Use IbKaiTableModule
+*/
 @Component({
   selector: 'ib-table-header-popup',
   template: /*template*/`
@@ -58,7 +62,7 @@ import { debounceTime } from 'rxjs/operators';
             color: black;
             z-index: 100;
           }
-    
+
           .modal-row {
             font-family: 'Red Hat Text';
             font-weight: bold;
@@ -68,32 +72,32 @@ import { debounceTime } from 'rxjs/operators';
             padding-right: 20px;
             padding-left: 20px;
           }
-    
+
           .mat-mdc-input-element {
             font-family: 'Red Hat Text' !important;
           }
-    
+
           .modal-row:hover, .modal-row-active {
             background-color: #F7F7F7;
           }
-    
+
           .modal-icons {
             float: right;
             size: 10px;
             font-weight: normal;
           }
-    
+
           .inner-modal {
             margin-left: 200px;
             margin-top: 125px;
             width: 300px;
           }
-    
+
           .inner-modal .modal-row {
             overflow-x: hidden;
             text-overflow: ellipsis;
           }
-    
+
         `
 
   ]

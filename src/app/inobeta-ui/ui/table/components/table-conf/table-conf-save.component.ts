@@ -8,7 +8,9 @@ import { IbFormControlBase } from '../../../forms';
 import { IbMatCheckboxControl, IbMaterialFormComponent, IbMatRadioControl, IbMatTextboxControl } from '../../../material-forms';
 import { IbTableConfService } from '../../services/table-conf.service';
 import { ibTableCurrentConfSelector } from '../../store/selectors/table.selectors';
-
+/**
+ * @deprecated Use IbKaiTableModule
+ */
 @Component({
   selector: 'ib-table-conf-save',
   template: `

@@ -5,6 +5,10 @@ import { IbTableTitles } from '../../models/titles.model';
 import { IbTableTotalRowState } from '../../store/reducers/table.reducer';
 import { TotalRowService } from './total-row.service';
 
+
+/**
+* @deprecated Use IbKaiTableModule
+*/
 @Component({
   selector: '[ib-table-total-row]',
   templateUrl: './table-total-row.component.html',

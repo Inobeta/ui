@@ -13,15 +13,21 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { IbToastModule } from '../ui/toast/toast.module';
 import { IbAuthInterceptor } from './http/auth.interceptor';
 import { IbErrorInterceptor } from './http/error.interceptor';
-import { ibSessionReducer } from './auth/redux/session.reducer';
-import { StoreModule } from '@ngrx/store';
 import { IbStorageModule } from '../storage/storage.module';
+import { IbLoginService } from './auth/login.service';
+import { IbLoaderInterceptor } from './http/loader.interceptor';
+import { IbLoadingDirective } from './http/loading-skeleton.directive';
+import { IbLoadingSkeletonRectComponent } from './http/loading-skeleton.component';
+import { IbLoadingSkeletonContainerComponent } from './http/loading-skeleton-container.component';
 
 
 
 const components = [
   IbSpinnerLoadingComponent,
-  IbLoginComponent
+  IbLoginComponent,
+  IbLoadingDirective,
+  IbLoadingSkeletonContainerComponent,
+  IbLoadingSkeletonRectComponent
 ];
 @NgModule({
   imports: [
@@ -33,7 +39,6 @@ const components = [
     ReactiveFormsModule,
     IbToastModule,
     IbStorageModule,
-    StoreModule.forFeature('sessionState', ibSessionReducer),
   ],
   exports: [
     ...components
@@ -43,9 +48,11 @@ const components = [
   ],
   providers: [
     IbHttpClientService,
+    IbLoginService,
     IbResponseHandlerService,
     { provide: HTTP_INTERCEPTORS, useClass: IbAuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: IbErrorInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: IbLoaderInterceptor, multi: true },
 
   ]
 })
@@ -62,6 +69,7 @@ export class IbHttpModule {
       ngModule: IbHttpModule,
       providers: [
         IbAuthService,
+        IbLoginService,
         IbSessionService,
         IbAuthGuard,
         IbLoginGuard,
