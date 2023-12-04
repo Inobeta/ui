@@ -3,14 +3,18 @@
   <section *ngFor="let line of array.controls; let index = index" style="display: flex; gap: 1em">
     <ng-container *ngFor="let field of base.fields">
       <ng-container [ngSwitch]="field.role">
-        <ib-dynamic-form-control *ngSwitchCase="'control'" class="ibFormRow" [base]="field"
-          [form]="getGroupAt(index)"></ib-dynamic-form-control>
+        <ib-material-form-control *ngSwitchCase="'control'" class="ibFormRow" [base]="field"
+          [form]="getGroupAt(index)"></ib-material-form-control>
         <!-- <ib-dynamic-form-array *ngSwitchCase="'array'" class="ibFormRow" [base]="field" [form]="form"></ib-dynamic-form-array> -->
       </ng-container>
     </ng-container>
     <div class="ibFormRow ibFormActions">
-      <button *ngIf="lines > 1" (click)="removeField(index)">-</button>
-      <button *ngIf="lines - 1 === index" (click)="addField()">Add</button>
+      <button mat-icon-button *ngIf="lines > 1" (click)="removeField(index)">
+        <mat-icon>minus</mat-icon>
+      </button>
+      <button mat-icon-button *ngIf="lines - 1 === index" (click)="addField()">
+        <mat-icon>add</mat-icon>
+      </button>
     </div>
   </section>
 

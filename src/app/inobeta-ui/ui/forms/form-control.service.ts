@@ -13,7 +13,7 @@ import { IbFormArray } from "./array/array";
 export class IbFormControlService {
   constructor() {}
 
-  toFormGroup(fields: IbFormField<any>[]) {
+  toFormGroup(fields: IbFormField[]) {
     const group = new UntypedFormGroup({});
 
     for (const field of fields) {

@@ -27,25 +27,35 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
   @ViewChild('customForm', {static: true}) customForm: IbMaterialFormComponent;
   @ViewChild('emptyForm', {static: true}) emptyForm: IbMaterialFormComponent;
   ibMatActionsPosition = IbMatActionsPosition;
-  defaultFormFields: IbFormField<any>[] = [
+  defaultFormFields: IbFormField[] = [
     new IbTextbox({
       key: 'defaultTextbox',
       label: 'First name',
       required: true,
-    }),
-    new IbFormArray({
-      key: 'contacts',
-      fields: [
-        new IbTextbox({
-          key: 'key',
-        }),
-        new IbTextbox({
-          key: 'value'
-        })
-      ]
     })
   ];
 
+  formWithArray: IbFormField[] = [
+    new IbMatTextboxControl({
+      key: 'fullName',
+      label: 'Full name',
+    }),
+    new IbFormArray({
+      key: 'addresses',
+      fields: [
+        new IbMatTextboxControl({
+          key: 'key',
+          label: '(es. Phone, Email)'
+        }),
+        new IbMatTextboxControl({
+          key: 'value',
+          label: 'es. +39123123',
+          validators: [Validators.required]
+        })
+      ]
+    })
+  ]
+  
   customFormFields: IbFormControlBase<any>[] = [
     new IbMatTextboxControl({
       key: 'firstName',

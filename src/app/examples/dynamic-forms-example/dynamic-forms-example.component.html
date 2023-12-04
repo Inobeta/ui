@@ -3,6 +3,21 @@
   <h3>Default Form</h3>
   <ib-form [fields]="defaultFormFields" (ibSubmit)="onSubmit($event)"></ib-form>
 </div>
+
+<mat-card appearance="outlined" style="margin: 2em">
+  <mat-card-header>
+    <mat-card-title>Form</mat-card-title>
+    <mat-card-subtitle>with array</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <ib-material-form
+      [fields]="formWithArray"
+      [actions]="customFormActions"
+      (ibSubmit)="onSubmit($event)"
+    ></ib-material-form>
+  </mat-card-content>
+</mat-card>
+
 <mat-card appearance="outlined" style="margin: 2em">
   <mat-card-header>
     <mat-card-title>Custom Form</mat-card-title>
