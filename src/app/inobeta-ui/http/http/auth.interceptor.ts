@@ -10,7 +10,7 @@ import { ibSelectActiveSession } from '../store/session/selectors';
 
 @Injectable({providedIn: 'root'})
 export class IbAuthInterceptor implements HttpInterceptor {
-  session$: Observable<IbSession<IbAPITokens>> = this.store.select(ibSelectActiveSession<IbAPITokens>())
+  session$: Observable<IbSession<IbAPITokens> | null> = this.store.select(ibSelectActiveSession<IbAPITokens>())
 
   constructor(
     private ibToast: IbToastNotification,

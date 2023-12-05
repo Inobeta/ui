@@ -8,7 +8,7 @@ import { map, take } from 'rxjs/operators';
 
 @Injectable({providedIn: 'root'})
 export class IbAuthGuard implements CanActivate {
-  session$: Observable<IbSession<IbAPITokens>> = this.store.select(ibSelectActiveSession<IbAPITokens>())
+  session$: Observable<IbSession<IbAPITokens> | null> = this.store.select(ibSelectActiveSession<IbAPITokens>())
 
   constructor(
     private router: Router,
@@ -32,7 +32,7 @@ export class IbAuthGuard implements CanActivate {
 
 @Injectable({providedIn: 'root'})
 export class IbLoginGuard implements CanActivate {
-  session$: Observable<IbSession<IbAPITokens>> = this.store.select(ibSelectActiveSession<IbAPITokens>())
+  session$: Observable<IbSession<IbAPITokens> | null> = this.store.select(ibSelectActiveSession<IbAPITokens>())
 
   public path = '';
   constructor(

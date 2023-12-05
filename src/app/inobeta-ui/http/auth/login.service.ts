@@ -22,42 +22,42 @@ export class IbLoginService<T extends IbAPITokens | IbAPITokens > {
     @Inject('ibHttpAPILoginUrl') @Optional() public ibHttpAPILoginUrl?: string,
     @Inject('ibHttpAuthType') @Optional() public ibHttpAuthType?: IbAuthTypes,
     @Inject('ibHttpSessionStorageType') @Optional() public ibHttpSessionStorageType?: IbStorageTypes,
+    @Inject('ibHttpAPIRefreshUrl') @Optional() public ibHttpAPIRefreshUrl?: string,
     ) {
       this.ibHttpGUILoginUrl = this.ibHttpGUILoginUrl ?? '/login';
       this.ibHttpAPILoginUrl = this.ibHttpAPILoginUrl ?? '/api/auth/login';
+      this.ibHttpAPIRefreshUrl = this.ibHttpAPIRefreshUrl ?? '/api/auth/refresh';
       this.ibHttpAuthType = this.ibHttpAuthType ?? IbAuthTypes.JWT;
       this.ibHttpSessionStorageType = this.ibHttpSessionStorageType ?? IbStorageTypes.LOCALSTORAGE;
     }
 
   public login( u: IbUserLogin ) {
-
+    this.srvAuth.activeSession = null;
+    const activeSession =  new IbSession<T>();
     if (u) {
-      this.srvAuth.activeSession = new IbSession<T>();
       if (this.ibHttpAuthType === IbAuthTypes.BASIC_AUTH) {
-        this.srvAuth.activeSession.serverData.accessToken = window.btoa(u.email + ':' + u.password);
+        activeSession.serverData.accessToken = window.btoa(u.email + ':' + u.password);
       }
-      this.srvAuth.activeSession.valid = false;
-      this.srvAuth.activeSession.user = u;
+      activeSession.valid = false;
+      activeSession.user = u;
     }
     return this.httpClient.post<T>(this.ibHttpAPILoginUrl, u)
       .pipe(
         map( x => {
-          this.srvAuth.activeSession.user.password = '';
-          this.srvAuth.activeSession.valid = true;
-          this.srvAuth.activeSession.serverData = x;
-          if (this.ibHttpSessionStorageType === IbStorageTypes.LOCALSTORAGE) {
-            this.srvAuth.storeSession();
-          } else {
-            this.srvAuth.cookieSession();
-          }
-          this.store.dispatch(ibAuthActions.login({activeSession: this.srvAuth.activeSession}));
+          activeSession.user.password = '';
+          activeSession.valid = true;
+          activeSession.serverData = x;
+          this.store.dispatch(ibAuthActions.login({activeSession: activeSession}));
           return x;
         }),
         catchError( err => {
-          this.srvAuth.activeSession = null;
           return throwError(err);
         } )
       );
+  }
+
+  public refresh(token: string){
+    return this.httpClient.post<IbAPITokens>(this.ibHttpAPIRefreshUrl, {token})
   }
 
   public logout(makeSnack: boolean = true) {

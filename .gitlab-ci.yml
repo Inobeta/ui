@@ -64,7 +64,7 @@ deploy_unstable:
   only:
     - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
 
-deploy_manual_unstable:
+deploy_testing:
   stage: npm:deploy
   script:
     #- echo '//gitlab.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}'>.npmrc
