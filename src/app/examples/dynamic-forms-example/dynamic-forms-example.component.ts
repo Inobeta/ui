@@ -40,23 +40,32 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
       key: 'fullName',
       label: 'Full name',
     }),
+    new IbMatLabelControl({
+      value: "Contatti",
+      width: "100%"
+    }),
     new IbFormArray({
       key: 'addresses',
+      options: {
+        max: 2,
+      },
       fields: [
         new IbMatTextboxControl({
           key: 'key',
-          label: '(es. Phone, Email)'
+          label: '(es. Phone, Email)',
+          width: '25%'
         }),
         new IbMatTextboxControl({
           key: 'value',
           label: 'es. +39123123',
-          validators: [Validators.required]
+          validators: [Validators.required],
+          width: '25%'
         })
       ]
     })
   ]
   
-  customFormFields: IbFormControlBase<any>[] = [
+  customFormFields: IbFormField[] = [
     new IbMatTextboxControl({
       key: 'firstName',
       label: 'First name',
@@ -279,6 +288,61 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
       label: 'Date to',
       validators: [this.dateValidator(), this.multipleCustomExample()]
     }),
+    new IbMatLabelControl({
+      value: 'Campi',
+      width: '100%',
+      cols: 4
+    }),
+    new IbFormArray({
+      key: 'stuff',
+      cols: 4,
+      fields: [
+        new IbMatTextboxControl({
+          key: 'field1',
+          label: 'Campo 1',
+          width: '100%'
+        }),
+        new IbMatTextboxControl({
+          key: 'field2',
+          label: 'Campo 2',
+          width: '50%'
+        }),
+        new IbMatTextboxControl({
+          key: 'field3',
+          label: 'Campo 3',
+          width: '50%'
+        }),
+        new IbMatTextboxControl({
+          key: 'field4',
+          label: 'Campo 4',
+          width: '25%'
+        }),
+        new IbMatTextboxControl({
+          key: 'field5',
+          label: 'Campo 5',
+          width: '25%'
+        }),
+        new IbMatTextboxControl({
+          key: 'field6',
+          label: 'Campo 6',
+          width: '25%'
+        }),
+        new IbMatTextboxControl({
+          key: 'field7',
+          label: 'Campo 7',
+          width: '25%'
+        }),
+        new IbMatTextboxControl({
+          key: 'field8',
+          label: 'Campo 8',
+        }),
+        new IbMatTextboxControl({
+          key: 'field9',
+          label: 'Campo 9',
+          validators: [Validators.required],
+        })
+      ]
+    })
   ];
   customFormActions = [
     new IbMatButtonControl({

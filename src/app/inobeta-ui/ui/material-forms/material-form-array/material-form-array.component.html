@@ -1,21 +1,20 @@
-<div [formGroup]="form">
+<form class="ibForm" [formGroup]="form">
 
-  <section *ngFor="let line of array.controls; let index = index" style="display: flex; gap: 1em">
+  <section *ngFor="let line of array.controls; let index = index" style="display: flex; flex-wrap: wrap">
     <ng-container *ngFor="let field of base.fields">
       <ng-container [ngSwitch]="field.role">
         <ib-material-form-control *ngSwitchCase="'control'" class="ibFormRow" [base]="field"
-          [form]="getGroupAt(index)"></ib-material-form-control>
-        <!-- <ib-dynamic-form-array *ngSwitchCase="'array'" class="ibFormRow" [base]="field" [form]="form"></ib-dynamic-form-array> -->
+          [form]="getGroupAt(index)" [style.flex]="'1 1 ' + field.width" [style.max-width]="field.width"></ib-material-form-control>
       </ng-container>
     </ng-container>
     <div class="ibFormRow ibFormActions">
       <button mat-icon-button *ngIf="lines > 1" (click)="removeField(index)">
-        <mat-icon>minus</mat-icon>
+        <mat-icon>remove</mat-icon>
       </button>
-      <button mat-icon-button *ngIf="lines - 1 === index" (click)="addField()">
+      <button mat-icon-button *ngIf="lines - 1 === index && lines !== max" (click)="addField()">
         <mat-icon>add</mat-icon>
       </button>
     </div>
   </section>
 
-</div>
+</form>
