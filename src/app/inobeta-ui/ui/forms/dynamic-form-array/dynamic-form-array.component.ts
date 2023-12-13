@@ -9,7 +9,7 @@ import { IbFormControlService } from "../form-control.service";
 })
 export class IbDynamicFormArrayComponent implements OnInit {
   @Input() base: IbFormArray;
-  @Input() form: UntypedFormGroup | UntypedFormArray;
+  @Input() form: UntypedFormGroup;
 
   constructor(private cs: IbFormControlService) {}
 
@@ -21,10 +21,6 @@ export class IbDynamicFormArrayComponent implements OnInit {
     return this.form.get(this.base.key) as UntypedFormArray;
   }
 
-  get min() {
-    return this.base.options.min;
-  }
-
   get max() {
     return this.base.options.max;
   }
@@ -34,7 +30,7 @@ export class IbDynamicFormArrayComponent implements OnInit {
   }
 
   getGroupAt(index: number) {
-    return this.array.at(index);
+    return this.array.at(index) as UntypedFormGroup;
   }
 
   addField() {

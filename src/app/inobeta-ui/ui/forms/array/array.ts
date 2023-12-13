@@ -1,7 +1,6 @@
 import { IbFormControlBase } from "../controls/form-control-base";
 
 export interface IFormArrayOptions {
-  min?: number;
   max?: number;
 }
 
@@ -27,7 +26,6 @@ export class IbFormArray implements IFormArray {
     this.key = options.key;
     this.fields = options.fields ?? [];
     this.options = options.options ?? {
-      min: 1,
       max: Infinity,
     };
     this.cols = options.cols ?? 1;

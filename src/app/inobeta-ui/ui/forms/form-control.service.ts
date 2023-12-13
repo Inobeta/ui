@@ -50,21 +50,6 @@ export class IbFormControlService {
 
   toFormArray(source: IbFormArray) {
     const formArray = new UntypedFormArray([]);
-    
-    // for (const field of source.fields) {
-    //   if (!field.key) {
-    //     continue;
-    //   }
-      
-    //   if (field instanceof IbFormControlBase) {
-    //     formArray.push(this.toControl(field));
-    //   }
-
-    //   if (field instanceof IbFormArray) {
-    //     formArray.push(this.toFormArray(field));
-    //   }
-    // }
-    
     return formArray;
   }
 }

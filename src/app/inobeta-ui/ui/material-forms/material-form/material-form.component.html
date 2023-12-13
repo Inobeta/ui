@@ -1,6 +1,6 @@
 <form (ngSubmit)="onSubmit()" [formGroup]="form" class="ibForm">
   <div
-    class="ibFormRow ibFormActions"
+    class="ibFormActions"
     fxLayout="row"
     fxLayoutAlign="end"
     fxLayoutGap="20px"
@@ -29,17 +29,10 @@
           <ib-material-form-control
             *ngSwitchCase="'control'"
             class="ibFormRow"
-            [base]="field"
+            [base]="asFormControl(field)"
             [form]="form"
             [fxFlex]="field.width"
           ></ib-material-form-control>
-          <ib-material-form-array
-            *ngSwitchCase="'array'"
-            class="ibFormRow"
-            [base]="field"
-            [form]="form"
-            [fxFlex]="field.width"
-          ></ib-material-form-array>
         </ng-container>
     </mat-grid-tile>
   </mat-grid-list>
@@ -50,14 +43,14 @@
         <ib-material-form-control
           *ngSwitchCase="'control'"
           class="ibFormRow"
-          [base]="field"
+          [base]="asFormControl(field)"
           [form]="form"
           [fxFlex]="field.width"
         ></ib-material-form-control>
         <ib-material-form-array
           *ngSwitchCase="'array'"
           class="ibFormRow"
-          [base]="field"
+          [base]="asFormArray(field)"
           [form]="form"
           [fxFlex]="field.width"
         ></ib-material-form-array>
@@ -66,7 +59,7 @@
   </div>
 
   <div
-    class="ibFormRow ibFormActions"
+    class="ibFormActions"
     fxLayout="row"
     fxLayoutAlign="end"
     fxLayoutGap="20px"

@@ -4,7 +4,7 @@ Modulo per generare forms.
 
 ## Utilizzo
 
-Definire i campi del form attraverso un array di [IbFormControlBase](/classes/IbFormControlBase.html). Gli unici valori richiesti sono `key` e `label`, dove `key` viene assegnato come `formControlName`.
+Definire i campi del form attraverso un array di [IbFormField](/classes/IbFormField.html). Gli unici valori richiesti sono `key` e `label`, dove `key` viene assegnato come `formControlName`.
 
 `IbDynamicFormComponent` espongono un evento `ibSubmit` corrispondente a `ngSubmit`.
 
@@ -14,61 +14,87 @@ Ogni azione necessita di un campo `key`, `label`, e `handler` (callback) eccetto
 ```typescript
 // dynamic-forms-example.component.ts
 @Component({
-  selector: 'app-dynamic-forms-example',
-  templateUrl: './dynamic-forms-example.component.html',
-  styleUrls: ['./dynamic-forms-example.component.css']
+  selector: "app-dynamic-forms-example",
+  templateUrl: "./dynamic-forms-example.component.html",
+  styleUrls: ["./dynamic-forms-example.component.css"],
 })
 export class DynamicFormsExampleComponent implements OnInit {
-  customFormFields: IbFormControlBase<string>[] = [
-    new IbTextbox({
-      key: 'firstName',
-      label: 'First name',
+  fields: IbFormField[] = [
+    new IbMatTextboxControl({
+      key: "firstName",
+      label: "First name",
       required: true,
-      validators: [Validators.minLength(3)]
+      validators: [Validators.minLength(3)],
     }),
-    new IbTextbox({
-      type: 'email',
-      key: 'email',
-      label: 'Email',
+    new IbMatTextboxControl({
+      type: "email",
+      key: "email",
+      label: "Email",
       required: true,
-      validators: [Validators.email]
+      validators: [Validators.email],
     }),
-    new IbTextbox({
-      type: 'date',
-      key: 'dateTime',
-      label: 'Date',
+    new IbMatTextboxControl({
+      type: "date",
+      key: "dateTime",
+      label: "Date",
       required: true,
     }),
-    new IbDropdown({
-      key: 'options',
-      label: 'Options',
+    new IbMatDropdownControl({
+      key: "options",
+      label: "Options",
+      width: "22%",
+      value: "test2",
+      emptyRow: { key: null, value: "NULL" },
       options: [
-        { key: 'test', value: 'value' }
-      ]
-    }),
-    new IbRadio({
-      key: 'food',
-      value: 'test-1',
-      label: 'Scegli qualcosa',
-      options: [
-        { key: 'test-1', value: 'Lasagne' },
-        { key: 'test-2', value: 'Maccheroni' },
+        { key: "test1", value: "value1" },
+        { key: "test2", value: "value2" },
+        { key: "test3", value: "value3" },
+        { key: "test4", value: "value4" },
       ],
-      required: true
     }),
-    new IbCheckbox({
-      key: 'checked',
-      label: 'check this',
-    })
+    new IbMatRadioControl({
+      key: "food",
+      value: "test-1",
+      label: "Scegli qualcosa",
+      options: [
+        { key: "las-1", value: "Lasagne" },
+        { key: "macc-2", value: "Maccheroni" },
+      ],
+    }),
+    new IbMatCheckboxControl({
+      key: "checked",
+      label: "check this",
+      width: "12.5%",
+    }),
+    new IbFormArray({
+      key: "addresses",
+      options: {
+        max: 2,
+      },
+      fields: [
+        new IbMatTextboxControl({
+          key: "key",
+          label: "(es. Phone, Email)",
+          width: "25%",
+        }),
+        new IbMatTextboxControl({
+          key: "value",
+          label: "es. +39123123",
+          validators: [Validators.required],
+          width: "25%",
+        }),
+      ],
+    }),
   ];
-  customFormActions = [
-    { key: 'submit', label: 'Search' },
+
+  actions = [
+    { key: "submit", label: "Search" },
     {
-      key: 'clear',
-      label: 'Clear',
-      options: { color: 'accent' },
-      handler: (form) => form.reset()
-    }
+      key: "clear",
+      label: "Clear",
+      options: { color: "accent" },
+      handler: (form) => form.reset(),
+    },
   ];
 
   constructor() {}
@@ -76,15 +102,34 @@ export class DynamicFormsExampleComponent implements OnInit {
   ngOnInit() {}
 
   onSubmit(payload) {
-    console.log('example', payload)
+    console.log("example", payload);
   }
 }
 ```
 
 ```html
 <!-- dynamic-forms-example.component.html -->
-<ib-material-form
-  [fields]="customFormFields"
-  [actions]="customFormActions"
-  (ibSubmit)="onSubmit($event)"></ib-material-form>
+<ib-material-form [fields]="fields" [actions]="actions" (ibSubmit)="onSubmit($event)"></ib-material-form>
 ```
+
+## Customizzazione CSS
+
+Sono disponibili delle classi CSS per personalizzare lo stile del form, sotto-sezione del form array e le singole linee, ed i control.
+
+|nome classe|elemento|
+|-|-|
+|ibForm|Container del form
+|ibFormArray|Container di un form array
+|ibFormArrayActions|Container delle azioni di un form array
+|ibFormArrayItem|Linea di un form array
+|ibFormRow|Container form control
+|ibFormActions|Container per azioni del form
+
+Esempio per aggiungere un separatore tra le linee di un form array
+
+```css
+.customForm ::ng-deep .ibFormArrayItem {
+  border-bottom: 1px solid #888;
+  margin-bottom: 1em;
+  padding-bottom: .33em;
+}```

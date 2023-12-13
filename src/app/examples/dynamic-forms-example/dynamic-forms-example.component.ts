@@ -295,7 +295,6 @@ export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
     }),
     new IbFormArray({
       key: 'stuff',
-      cols: 4,
       fields: [
         new IbMatTextboxControl({
           key: 'field1',
