@@ -23,7 +23,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { IbMaterialFormModule } from './inobeta-ui/ui/material-forms/material-form.module';
-import { HttpExampleComponent } from './examples/http-example.component';
+import { HttpExampleComponent } from './examples/http/http-example.component';
 import { MyCounterComponent } from './examples/redux-example/my-counter.component';
 import { IbHttpModule } from './inobeta-ui/http/http.module';
 import { ICounterState, counterReducer } from './examples/redux-example/counter.reducer';
@@ -52,6 +52,7 @@ import { IbViewModule } from './inobeta-ui/ui/views/view.module';
 import { IbDataExportModule } from './inobeta-ui/ui/data-export/data-export.module';
 import { IbTranslateModuleLoader } from './inobeta-ui/translate/translate-loader.service';
 import { IHttpStore, ibHttpEffects, ibHttpReducers } from './inobeta-ui/http/store';
+import { AuthExampleComponent } from './examples/http/auth.component';
 
 export interface IAppState {
   ibHttpState: IHttpStore;
@@ -76,6 +77,7 @@ const reduxStorageSave = ibSetupHydration('__redux-store-inobeta-ui__', ['sessio
     NavComponent,
     DynamicFormsExampleComponent,
     HttpExampleComponent,
+    AuthExampleComponent,
     MyCounterComponent,
     DialogExampleComponent,
     MyCustomTextboxComponent,

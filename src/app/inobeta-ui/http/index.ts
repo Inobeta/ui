@@ -24,6 +24,7 @@ export * from './store/index';
 export * from './http/loading-skeleton.component'
 export * from './http/loading-skeleton-container.component'
 export * from './http/loading-skeleton.directive'
+export * from './http/role-check.directive'
 export * from './http.module';
 
 export * from './auth/auth.service.stub.spec';

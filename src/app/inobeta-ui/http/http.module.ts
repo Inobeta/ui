@@ -6,7 +6,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { IbResponseHandlerService } from './http/response-handler.service';
 import { IbAuthService } from './auth/auth.service';
 import { IbSessionService } from './auth/session.service';
-import { IbAuthGuard, IbLoginGuard } from './auth/guard.service';
+import { IbAuthGuard, IbLoginGuard, IbRoleGuard } from './auth/guard.service';
 import { IbSpinnerLoadingComponent } from './http/spinner-loading.component';
 import { IbLoginComponent } from './pages/login.component';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -19,6 +19,7 @@ import { IbLoaderInterceptor } from './http/loader.interceptor';
 import { IbLoadingDirective } from './http/loading-skeleton.directive';
 import { IbLoadingSkeletonRectComponent } from './http/loading-skeleton.component';
 import { IbLoadingSkeletonContainerComponent } from './http/loading-skeleton-container.component';
+import { IbRoleCheckDirective } from './http/role-check.directive';
 
 
 
@@ -27,7 +28,8 @@ const components = [
   IbLoginComponent,
   IbLoadingDirective,
   IbLoadingSkeletonContainerComponent,
-  IbLoadingSkeletonRectComponent
+  IbLoadingSkeletonRectComponent,
+  IbRoleCheckDirective
 ];
 @NgModule({
   imports: [
@@ -73,6 +75,7 @@ export class IbHttpModule {
         IbSessionService,
         IbAuthGuard,
         IbLoginGuard,
+        IbRoleGuard
       ]
     };
   }

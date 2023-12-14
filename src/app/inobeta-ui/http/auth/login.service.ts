@@ -5,10 +5,12 @@ import { IbAPITokens, IbAuthTypes, IbSession, IbUserLogin } from './session.mode
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { throwError } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { map, catchError, filter } from 'rxjs/operators';
 import { IbStorageTypes } from '../../storage';
 import { ibAuthActions } from '../store/session/actions';
+import { ibSelectActiveSession } from '../store/session/selectors';
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable({providedIn: 'root'})
 export class IbLoginService<T extends IbAPITokens | IbAPITokens > {
@@ -23,12 +25,16 @@ export class IbLoginService<T extends IbAPITokens | IbAPITokens > {
     @Inject('ibHttpAuthType') @Optional() public ibHttpAuthType?: IbAuthTypes,
     @Inject('ibHttpSessionStorageType') @Optional() public ibHttpSessionStorageType?: IbStorageTypes,
     @Inject('ibHttpAPIRefreshUrl') @Optional() public ibHttpAPIRefreshUrl?: string,
+    @Inject('ibHttpJWTClaimsField') @Optional() public ibHttpJWTClaimsField?: string,
+    @Inject('ibHttpJWTRolesField') @Optional() public ibHttpJWTRolesField?: string
     ) {
       this.ibHttpGUILoginUrl = this.ibHttpGUILoginUrl ?? '/login';
       this.ibHttpAPILoginUrl = this.ibHttpAPILoginUrl ?? '/api/auth/login';
       this.ibHttpAPIRefreshUrl = this.ibHttpAPIRefreshUrl ?? '/api/auth/refresh';
       this.ibHttpAuthType = this.ibHttpAuthType ?? IbAuthTypes.JWT;
       this.ibHttpSessionStorageType = this.ibHttpSessionStorageType ?? IbStorageTypes.LOCALSTORAGE;
+      this.ibHttpJWTClaimsField = this.ibHttpJWTClaimsField ?? 'https://hasura.io/jwt/claims';
+      this.ibHttpJWTRolesField = this.ibHttpJWTRolesField ?? 'x-hasura-allowed-roles';
     }
 
   public login( u: IbUserLogin ) {
@@ -68,6 +74,23 @@ export class IbLoginService<T extends IbAPITokens | IbAPITokens > {
     if (makeSnack) {
       this.snackBar.open('Logout completed', null, {duration: 2000});
     }
+  }
+
+  public hasRoles(roles: string[]): Observable<boolean>{
+    return this.store.select(ibSelectActiveSession<IbAPITokens>())
+            .pipe(
+              filter(session => session?.serverData?.accessToken !== undefined),
+              map(session => jwtDecode(session.serverData.accessToken)),
+              map(decodedData => {
+                const userRoles: string[] = decodedData?.[this.ibHttpJWTClaimsField]?.[this.ibHttpJWTRolesField] ?? []
+                for(let r of roles){
+                  if(userRoles.findIndex(ur => ur === r) >= 0){
+                    return true;
+                  }
+                }
+                return false
+              })
+            )
   }
 
 }

@@ -3,7 +3,7 @@ import {CommonModule} from '@angular/common';
 import {RouterModule, Routes} from '@angular/router';
 import { IbTableExampleComponent } from 'src/app/examples/table-example/table-with-redux/table-example.component';
 import { DynamicFormsExampleComponent } from './examples/dynamic-forms-example/dynamic-forms-example.component';
-import { HttpExampleComponent } from './examples/http-example.component';
+import { HttpExampleComponent } from './examples/http/http-example.component';
 import { MyCounterComponent } from './examples/redux-example/my-counter.component';
 import { DialogExampleComponent } from './examples/dialog-example/dialog-example.component';
 import { IbToastExampleComponent } from './examples/toast-example/toast-example.component';
@@ -14,6 +14,8 @@ import { IbKaiTableExamplePage } from './examples/kai-table-example/kai-table-ex
 import { IbKaiTableActionColumnExamplePage } from './examples/kai-table-example/kai-table-actions-example';
 import { IbKaiTableFullExamplePage } from './examples/kai-table-example/kai-table-full-example';
 import { IbKaiTableApiExamplePage } from './examples/kai-table-example/kai-table-api-example';
+import { AuthExampleComponent } from './examples/http/auth.component';
+import { IbRoleGuard } from './inobeta-ui/http/auth/guard.service';
 
 const appRoutes: Routes = [
   {
@@ -68,7 +70,27 @@ const appRoutes: Routes = [
       {
         path: 'http',
         data: { breadcrumb: 'Http' },
-        component: HttpExampleComponent,
+        children: [
+          {
+            path: 'base',
+            component: HttpExampleComponent,
+            data: { breadcrumb: 'Base' },
+          },
+          {
+            path: 'auth',
+            component: AuthExampleComponent,
+            data: { breadcrumb: 'Auth' },
+          },
+          {
+            path: 'protected-admin',
+            component: AuthExampleComponent,
+            canActivate: [IbRoleGuard],
+            data: {
+              roles: ['admin'],
+              breadcrumb: 'Auth Protected'
+            }
+          }
+        ]
       },
       {
         path: 'dialog',

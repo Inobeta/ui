@@ -35,7 +35,9 @@
       "dynamicFormsDynamicForms": "Dynamic forms",
 
       "httpMain": "Http",
-      "httpHttp": "Http",
+      "httpBase": "Base",
+      "httpAuth": "Auth",
+      "httpProtected": "Role Admin",
 
       "reduxMain": "Redux",
       "reduxRedux": "Redux",
