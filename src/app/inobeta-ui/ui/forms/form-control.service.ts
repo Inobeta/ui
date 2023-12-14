@@ -1,31 +1,55 @@
-import { Injectable } from '@angular/core';
-import { IbFormControlBase } from './controls/form-control-base';
-import { UntypedFormControl, Validators, UntypedFormGroup } from '@angular/forms';
+import { Injectable } from "@angular/core";
+import { IbFormControlBase } from "./controls/form-control-base";
+import {
+  UntypedFormControl,
+  Validators,
+  UntypedFormGroup,
+  UntypedFormArray,
+} from "@angular/forms";
+import { IbFormField } from "./forms.types";
+import { IbFormArray } from "./array/array";
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: "root" })
 export class IbFormControlService {
   constructor() {}
 
-  toFormGroup(fields: IbFormControlBase<any>[]) {
-    const group: any = {};
+  toFormGroup(fields: IbFormField[]) {
+    const group = new UntypedFormGroup({});
 
-    fields.forEach(field => {
-      if(!field.key) return;
-      const elem = {
-        value: (field.value === undefined) ? null : field.value,
-        disabled: field.disabled
+    for (const field of fields) {
+      if (!field.key) {
+        continue;
       }
-      let validators = []
-      if(field.validators && field.validators.length){
-        validators = validators.concat(field.validators)
+      
+      if (field instanceof IbFormControlBase) {
+        group.addControl(field.key, this.toControl(field))
       }
-      if(field.required){
-        validators.push(Validators.required)
-      }
-      group[field.key] = new UntypedFormControl(elem, validators);
 
-    });
+      if (field instanceof IbFormArray) {
+        group.addControl(field.key, this.toFormArray(field));
+      }
+    }
 
-    return new UntypedFormGroup(group);
+    return group;
+  }
+
+  toControl(field: IbFormControlBase<any>) {
+    const elem = {
+      value: field.value === undefined ? null : field.value,
+      disabled: field.disabled,
+    };
+    let validators = [];
+    if (field.validators && field.validators.length) {
+      validators = validators.concat(field.validators);
+    }
+    if (field.required) {
+      validators.push(Validators.required);
+    }
+    return new UntypedFormControl(elem, validators)
+  }
+
+  toFormArray(source: IbFormArray) {
+    const formArray = new UntypedFormArray([]);
+    return formArray;
   }
 }

@@ -6,7 +6,7 @@ import { ibLoaderActions } from './actions';
 import { ibSelectIsHttpLoading } from './selectors';
 
 @Injectable({providedIn: 'root'})
-export class LoaderEffects {
+export class IbLoaderEffects {
 
   /**
    * @deprecated this is a legacy fallback
@@ -15,7 +15,7 @@ export class LoaderEffects {
     return this.actions$.pipe(
       ofType(ibLoaderActions.incLoading),
       withLatestFrom(ibSelectIsHttpLoading),
-      map((showLoading) => this.httpLegagy.showLoading = showLoading)
+      map((showLoading) => this.httpLegacy.showLoading = showLoading)
     )
   }, {
     dispatch: false
@@ -28,14 +28,14 @@ export class LoaderEffects {
     return this.actions$.pipe(
       ofType(ibLoaderActions.decLoading),
       withLatestFrom(ibSelectIsHttpLoading),
-      map((showLoading) => this.httpLegagy.showLoading = showLoading)
+      map((showLoading) => this.httpLegacy.showLoading = showLoading)
     )
   }, {
     dispatch: false
   });
   constructor(
     private actions$: Actions,
-    private httpLegagy: IbHttpClientService
+    private httpLegacy: IbHttpClientService
     ) { }
 
 }

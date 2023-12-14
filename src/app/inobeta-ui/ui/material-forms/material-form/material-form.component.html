@@ -1,6 +1,6 @@
 <form (ngSubmit)="onSubmit()" [formGroup]="form" class="ibForm">
   <div
-    class="ibFormRow ibFormActions"
+    class="ibFormActions"
     fxLayout="row"
     fxLayoutAlign="end"
     fxLayoutGap="20px"
@@ -25,27 +25,41 @@
         *ngFor="let field of fields"
         [colspan]="field.cols"
         [rowspan]="field.rows">
+        <ng-container [ngSwitch]="field.role">
           <ib-material-form-control
-          class="ibFormRow"
-          [base]="field"
-          [form]="form"
-          [fxFlex]="field.width"
-        ></ib-material-form-control>
+            *ngSwitchCase="'control'"
+            class="ibFormRow"
+            [base]="asFormControl(field)"
+            [form]="form"
+            [fxFlex]="field.width"
+          ></ib-material-form-control>
+        </ng-container>
     </mat-grid-tile>
   </mat-grid-list>
 
   <div fxLayout="row wrap"  *ngIf="!cols">
-    <ib-material-form-control
-      *ngFor="let field of fields"
-      class="ibFormRow"
-      [base]="field"
-      [form]="form"
-      [fxFlex]="field.width"
-    ></ib-material-form-control>
+    <ng-container *ngFor="let field of fields">
+      <ng-container [ngSwitch]="field.role">
+        <ib-material-form-control
+          *ngSwitchCase="'control'"
+          class="ibFormRow"
+          [base]="asFormControl(field)"
+          [form]="form"
+          [fxFlex]="field.width"
+        ></ib-material-form-control>
+        <ib-material-form-array
+          *ngSwitchCase="'array'"
+          class="ibFormRow"
+          [base]="asFormArray(field)"
+          [form]="form"
+          [fxFlex]="field.width"
+        ></ib-material-form-array>
+      </ng-container>
+    </ng-container>
   </div>
 
   <div
-    class="ibFormRow ibFormActions"
+    class="ibFormActions"
     fxLayout="row"
     fxLayoutAlign="end"
     fxLayoutGap="20px"

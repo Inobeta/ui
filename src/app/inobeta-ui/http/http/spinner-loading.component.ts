@@ -62,7 +62,6 @@ import { ibSelectIsHttpLoading } from '../store/loader/selectors';
     }
   `],
   template: `
-  <pre>{{ showLoading$ | async}}</pre>
     <div *ngIf="showLoading$ | async" class="modal-spinner">
       <div class="spinner">
         <div class="double-bounce1"></div>

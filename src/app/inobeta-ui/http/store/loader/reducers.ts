@@ -4,7 +4,6 @@ import { IbLoaderState } from "./interfaces";
 
 
 const INITIAL: IbLoaderState = {
-  pendingRequests: 0,
   showLoading: false,
   skipShow: false,
   pendingRequestList: []
@@ -12,16 +11,14 @@ const INITIAL: IbLoaderState = {
 
 const main = createReducer(INITIAL,
   on(ibLoaderActions.incLoading, (state, {url, method}) => {
-    const pendingRequests = state.pendingRequests +1
+    const pendingRequestList = [...state.pendingRequestList, {url, method} ]
     return {
       ...state,
-      pendingRequests,
-      pendingRequestList: [...state.pendingRequestList, {url, method} ],
-      showLoading: (!state.skipShow && pendingRequests > 0)
+      pendingRequestList,
+      showLoading: (!state.skipShow && pendingRequestList.length > 0)
     }
   }),
   on(ibLoaderActions.decLoading, (state, {url, method}) => {
-    const pendingRequests = state.pendingRequests -1
     const pendingRequestList = state.pendingRequestList.reduce((acc, pl) => {
       if(pl.url !== url || pl.method !== method){
         acc.push(pl)
@@ -30,10 +27,9 @@ const main = createReducer(INITIAL,
     }, [])
     return {
       ...state,
-      pendingRequests,
       skipShow: false,
       pendingRequestList,
-      showLoading: (pendingRequests > 0)
+      showLoading: (pendingRequestList.length > 0)
     }
   }),
   on(ibLoaderActions.skipShow, (state) => ({
