@@ -1,5 +1,11 @@
 # Inobeta/UI Changelog
 
+## [15.2.0] (unreleased)
+
+| Issue ID | Type | Section | Description |
+| -- | -- | -- | -- |
+|DEVK-223|feat|IbForm|Added support for FormArray|
+
 ## [15.1.0] (2023-11-30)
 
 | Issue ID | Type | Section | Description |
