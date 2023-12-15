@@ -24,3 +24,14 @@ export const ibSelectAccessTokenExp = createSelector(
     return  exp
   }
 )
+
+
+export const ibSelectDecodedData = <T>() => createSelector(
+  selectFeature,
+  (state: IHttpStore): T | null => {
+    const token = state.session.activeSession?.serverData?.accessToken
+    if(!token) return null
+    return jwtDecode(state.session.activeSession.serverData.accessToken) as T;
+  }
+)
+
