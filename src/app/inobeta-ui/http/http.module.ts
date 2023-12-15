@@ -28,8 +28,7 @@ const components = [
   IbLoginComponent,
   IbLoadingDirective,
   IbLoadingSkeletonContainerComponent,
-  IbLoadingSkeletonRectComponent,
-  IbRoleCheckDirective
+  IbLoadingSkeletonRectComponent
 ];
 @NgModule({
   imports: [
@@ -41,9 +40,11 @@ const components = [
     ReactiveFormsModule,
     IbToastModule,
     IbStorageModule,
+    IbRoleCheckDirective
   ],
   exports: [
-    ...components
+    ...components,
+    IbRoleCheckDirective
   ],
   declarations: [
     ...components
