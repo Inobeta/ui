@@ -1,11 +1,13 @@
 import { Directive, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
-import { Store } from '@ngrx/store';
 import { IbAPITokens } from '../auth/session.model';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { IbLoginService } from '../auth/login.service';
 
-@Directive({ selector: '[ibRoleCheck]' })
+@Directive({
+  selector: '[ibRoleCheck]',
+  standalone: true
+ })
 export class IbRoleCheckDirective implements OnInit, OnDestroy{
   @Input('ibRoleCheck') roles: string[]
   destroy: Subject<boolean> = new Subject()
@@ -13,7 +15,6 @@ export class IbRoleCheckDirective implements OnInit, OnDestroy{
 
   constructor(private tpl: TemplateRef<any>,
     private vcr: ViewContainerRef,
-    private store: Store,
     private login: IbLoginService<IbAPITokens>
     ) {
     }
