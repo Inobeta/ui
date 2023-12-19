@@ -110,12 +110,4 @@ export class IbDynamicFormComponent implements OnInit, OnChanges, OnDestroy {
   afterChanges(): Observable<IbFormOnChanges> {
     return this.onChangesSubject;
   }
-
-  asFormControl(field: IbFormField) {
-    return field as IbFormControlBase<string>;
-  }
-
-  asFormArray(field: IbFormField) {
-    return field as IbFormArray;
-  }
 }

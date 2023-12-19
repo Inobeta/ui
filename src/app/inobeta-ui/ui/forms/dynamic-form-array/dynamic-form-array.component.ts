@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input } from "@angular/core";
 import { UntypedFormArray, UntypedFormGroup } from "@angular/forms";
 import { IbFormArray } from "../array/array";
 import { IbFormControlService } from "../form-control.service";
@@ -7,15 +7,11 @@ import { IbFormControlService } from "../form-control.service";
   selector: "ib-dynamic-form-array",
   templateUrl: "dynamic-form-array.component.html",
 })
-export class IbDynamicFormArrayComponent implements OnInit {
+export class IbDynamicFormArrayComponent {
   @Input() base: IbFormArray;
   @Input() form: UntypedFormGroup;
 
   constructor(private cs: IbFormControlService) {}
-
-  ngOnInit() {
-    this.addField();
-  }
 
   get array() {
     return this.form.get(this.base.key) as UntypedFormArray;

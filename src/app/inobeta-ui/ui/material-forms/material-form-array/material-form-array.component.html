@@ -9,10 +9,11 @@
       </ng-container>
     </ng-container>
     <div class="ibFormArrayActions">
-      <button mat-icon-button *ngIf="lines > 1" (click)="removeField(index)">
+      <button mat-icon-button *ngIf="lines > 1" (click)="removeField(index)" [disabled]="array.disabled">
         <mat-icon>remove</mat-icon>
       </button>
-      <button mat-icon-button *ngIf="lines - 1 === index && lines !== max" (click)="addField()">
+      <button mat-icon-button *ngIf="lines - 1 === index && lines !== max" (click)="addField()"
+        [disabled]="array.disabled">
         <mat-icon>add</mat-icon>
       </button>
     </div>

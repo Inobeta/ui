@@ -1,0 +1,20 @@
+<mat-card appearance="outlined" style="margin: 2em">
+  <mat-card-header>
+    <mat-card-title>Form</mat-card-title>
+    <mat-card-subtitle>with array</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <ib-material-form #arrayForm [actions]="actions" [fields]="formWithArray" (ibSubmit)="onSubmit($event)"></ib-material-form>
+  </mat-card-content>
+</mat-card>
+
+<mat-card class="customForm" appearance="outlined" style="margin: 2em">
+  <mat-card-header>
+    <mat-card-title>Form array with lots of fields</mat-card-title>
+    <mat-card-subtitle>and custom styles</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <ib-material-form #customForm [actions]="actions" [fields]="customFormFields"
+      (ibSubmit)="onSubmit($event)"></ib-material-form>
+  </mat-card-content>
+</mat-card>

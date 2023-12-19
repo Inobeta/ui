@@ -1,19 +1,19 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterModule, Routes} from '@angular/router';
-import { IbTableExampleComponent } from 'src/app/examples/table-example/table-with-redux/table-example.component';
 import { DynamicFormsExampleComponent } from './examples/dynamic-forms-example/dynamic-forms-example.component';
 import { HttpExampleComponent } from './examples/http/http-example.component';
 import { MyCounterComponent } from './examples/redux-example/my-counter.component';
 import { DialogExampleComponent } from './examples/dialog-example/dialog-example.component';
 import { IbToastExampleComponent } from './examples/toast-example/toast-example.component';
-import { IbTableExampleNoReduxComponent } from './examples/table-example/table-without-redux/table-example.component';
-import { IbTableStickyExampleComponent } from './examples/table-example/table-sticky/table-example.component';
 import { NavComponent } from './examples/nav/nav.component';
 import { IbKaiTableExamplePage } from './examples/kai-table-example/kai-table-example';
 import { IbKaiTableActionColumnExamplePage } from './examples/kai-table-example/kai-table-actions-example';
 import { IbKaiTableFullExamplePage } from './examples/kai-table-example/kai-table-full-example';
 import { IbKaiTableApiExamplePage } from './examples/kai-table-example/kai-table-api-example';
+import { MaterialFormArrayExampleComponent } from './examples/material-form-array-example/form-array-example.component';
+import { MaterialFormExampleComponent } from './examples/material-form-example/material-form-example.component';
+import { MaterialFormGridExampleComponent } from './examples/material-form-grid-example/material-form-grid-example.component';
 import { AuthExampleComponent } from './examples/http/auth.component';
 import { IbRoleGuard } from './inobeta-ui/http/auth/guard.service';
 
@@ -23,35 +23,35 @@ const appRoutes: Routes = [
     component: NavComponent,
     children: [
       {
-        path: 'table',
-        data: { breadcrumb: 'Table' },
+        path: 'forms',
+        data: { breadcrumb: 'Forms' },
         children: [
           {
-            path: 'redux',
-            component: IbTableExampleComponent,
-            data: { breadcrumb: '' },
+            path: 'api',
+            component: DynamicFormsExampleComponent,
+            data: { breadcrumb: 'API' },
           },
           {
-            path: 'noredux',
-            data: { breadcrumb: 'Without redux' },
-            component: IbTableExampleNoReduxComponent
+            path: 'basic',
+            component: MaterialFormExampleComponent,
+            data: { breadcrumb: 'Material' },
           },
           {
-            path: 'sticky',
-            data: { breadcrumb: 'Sticky' },
-            component: IbTableStickyExampleComponent
+            path: 'array',
+            component: MaterialFormArrayExampleComponent,
+            data: { breadcrumb: 'Array' },
           },
           {
-            path: '',
-            redirectTo: 'redux',
+            path: 'grid',
+            component: MaterialFormGridExampleComponent,
+            data: { breadcrumb: 'Grid' }
+          },
+          {
+            path: '**',
+            redirectTo: 'api',
             pathMatch: 'full'
           }
         ]
-      },
-      {
-        path: 'forms',
-        data: { breadcrumb: 'Forms' },
-        component: DynamicFormsExampleComponent,
       },
       {
         path: 'redux',
@@ -125,12 +125,17 @@ const appRoutes: Routes = [
             path: 'full',
             data: { breadcrumb: 'Full' },
             component: IbKaiTableFullExamplePage
+          },
+          {
+            path: '',
+            redirectTo: 'simple',
+            pathMatch: 'full'
           }
         ]
       },
       {
         path: '',
-        redirectTo: 'table',
+        redirectTo: 'kai-table',
         pathMatch: 'full'
       }
     ]

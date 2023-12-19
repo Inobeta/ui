@@ -1,0 +1,15 @@
+<mat-card appearance="outlined" style="margin: 2em">
+  <mat-card-header>
+    <mat-card-title>Custom Form</mat-card-title>
+    <mat-card-subtitle>Grid system</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <ib-material-form
+      #customForm2
+      [cols]="4"
+      [actions]="customFormActions"
+      [fields]="customFormFields"
+      (ibSubmit)="onSubmit($event)"
+    ></ib-material-form>
+  </mat-card-content>
+</mat-card>
