@@ -1,6 +1,6 @@
 {
   "name": "@Inobeta/ui",
-  "version": "15.2.0",
+  "version": "16.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --disable-host-check",
@@ -65,7 +65,7 @@
     "storybook": "^7.0.17",
     "ts-node": "~4.1.0",
     "tslint": "~6.1.0",
-    "typescript": "4.8.4"
+    "typescript": "^4.9.3"
   },
   "peerDependencies": {
     "@angular/animations": "^15.x.x",
