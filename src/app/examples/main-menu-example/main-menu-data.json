@@ -1,24 +1,5 @@
 [
   {
-    "label": "examples.ibMainMenu.tableMain",
-    "icon": {"label": "table_rows", "type": "two-tone"},
-    "link": "/home/table",
-    "paths": [
-      {
-        "label": "examples.ibMainMenu.tableRedux",
-        "link":  "/home/table/redux"
-      },
-      {
-        "label": "examples.ibMainMenu.tableNoRedux" ,
-        "link":  "/home/table/noredux"
-      },
-      {
-        "label": "examples.ibMainMenu.tableSticky",
-        "link": "/home/table/sticky"
-      }
-    ]
-  },
-  {
     "label": "examples.ibMainMenu.kaiTable",
     "icon": {"label": "table_rows", "type": "two-tone"},
     "link": "/home/kai-table",

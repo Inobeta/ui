@@ -16,7 +16,6 @@ import { EffectsModule } from "@ngrx/effects";
 import { ActionReducerMap, StoreModule, combineReducers } from "@ngrx/store";
 import { StoreDevtoolsModule } from "@ngrx/store-devtools";
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
-import { IbTableExampleComponent } from "src/app/examples/table-example/table-with-redux/table-example.component";
 import { environment } from "../environments/environment";
 import { AppComponent } from "./app.component";
 import { DialogExampleComponent } from "./examples/dialog-example/dialog-example.component";
@@ -36,8 +35,6 @@ import {
   counterReducer,
 } from "./examples/redux-example/counter.reducer";
 import { MyCounterComponent } from "./examples/redux-example/my-counter.component";
-import { IbTableStickyExampleComponent } from "./examples/table-example/table-sticky/table-example.component";
-import { IbTableExampleNoReduxComponent } from "./examples/table-example/table-without-redux/table-example.component";
 import { IbToastExampleComponent } from "./examples/toast-example/toast-example.component";
 import { IbHttpModule } from "./inobeta-ui/http/http.module";
 import {
@@ -89,7 +86,6 @@ const reduxStorageSave = ibSetupHydration("__redux-store-inobeta-ui__", [
 @NgModule({
   declarations: [
     AppComponent,
-    IbTableExampleComponent,
     NavComponent,
     DynamicFormsExampleComponent,
     HttpExampleComponent,
@@ -98,8 +94,6 @@ const reduxStorageSave = ibSetupHydration("__redux-store-inobeta-ui__", [
     DialogExampleComponent,
     MyCustomTextboxComponent,
     IbToastExampleComponent,
-    IbTableExampleNoReduxComponent,
-    IbTableStickyExampleComponent,
     IbMainMenuExampleComponent,
     IbKaiTableExamplePage,
     IbKaiTableActionColumnExamplePage,

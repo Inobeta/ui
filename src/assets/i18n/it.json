@@ -20,12 +20,7 @@
       "settings": "Settings",
       "logout": "Logout",
 
-      "tableMain": "Table",
-      "tableRedux": "With redux",
-      "tableNoRedux": "Without redux",
-      "tableSticky": "Sticky",
-
-      "kaiTable": "New Table",
+      "kaiTable": "Table",
       "kaiTableSimple": "Simple",
       "kaiTableContextAction": "Row Actions",
       "kaiTableFull": "Full Example",
