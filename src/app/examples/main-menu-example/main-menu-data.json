@@ -70,8 +70,16 @@
     "link": "/home/http",
     "paths": [
       {
-        "label": "examples.ibMainMenu.httpHttp",
-        "link": "/home/http"
+        "label": "examples.ibMainMenu.httpBase",
+        "link": "/home/http/base"
+      },
+      {
+        "label": "examples.ibMainMenu.httpAuth",
+        "link": "/home/http/auth"
+      },
+      {
+        "label": "examples.ibMainMenu.httpProtected",
+        "link": "/home/http/protected-admin"
       }
     ]
   },

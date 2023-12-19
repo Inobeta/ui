@@ -3,7 +3,7 @@ import {CommonModule} from '@angular/common';
 import {RouterModule, Routes} from '@angular/router';
 import { IbTableExampleComponent } from 'src/app/examples/table-example/table-with-redux/table-example.component';
 import { DynamicFormsExampleComponent } from './examples/dynamic-forms-example/dynamic-forms-example.component';
-import { HttpExampleComponent } from './examples/http-example.component';
+import { HttpExampleComponent } from './examples/http/http-example.component';
 import { MyCounterComponent } from './examples/redux-example/my-counter.component';
 import { DialogExampleComponent } from './examples/dialog-example/dialog-example.component';
 import { IbToastExampleComponent } from './examples/toast-example/toast-example.component';
@@ -17,6 +17,8 @@ import { IbKaiTableApiExamplePage } from './examples/kai-table-example/kai-table
 import { MaterialFormArrayExampleComponent } from './examples/material-form-array-example/form-array-example.component';
 import { MaterialFormExampleComponent } from './examples/material-form-example/material-form-example.component';
 import { MaterialFormGridExampleComponent } from './examples/material-form-grid-example/material-form-grid-example.component';
+import { AuthExampleComponent } from './examples/http/auth.component';
+import { IbRoleGuard } from './inobeta-ui/http/auth/guard.service';
 
 const appRoutes: Routes = [
   {
@@ -97,7 +99,27 @@ const appRoutes: Routes = [
       {
         path: 'http',
         data: { breadcrumb: 'Http' },
-        component: HttpExampleComponent,
+        children: [
+          {
+            path: 'base',
+            component: HttpExampleComponent,
+            data: { breadcrumb: 'Base' },
+          },
+          {
+            path: 'auth',
+            component: AuthExampleComponent,
+            data: { breadcrumb: 'Auth' },
+          },
+          {
+            path: 'protected-admin',
+            component: AuthExampleComponent,
+            canActivate: [IbRoleGuard],
+            data: {
+              roles: ['admin'],
+              breadcrumb: 'Auth Protected'
+            }
+          }
+        ]
       },
       {
         path: 'dialog',

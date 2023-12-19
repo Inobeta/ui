@@ -1,10 +1,11 @@
 import { Inject, Injectable, Optional } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import {  ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
 import { IbAPITokens, IbSession } from './session.model';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { ibSelectActiveSession } from '../store/session/selectors';
 import { map, take } from 'rxjs/operators';
+import { IbLoginService } from './login.service';
 
 @Injectable({providedIn: 'root'})
 export class IbAuthGuard implements CanActivate {
@@ -56,6 +57,29 @@ export class IbLoginGuard implements CanActivate {
           }
         }
         return !isAuth;
+      })
+    )
+  }
+}
+
+
+@Injectable({providedIn: 'root'})
+export class IbRoleGuard implements CanActivate {
+
+  constructor(
+    private router: Router,
+    private login: IbLoginService<IbAPITokens>,
+    @Inject('ibHttpGUIDashboardUrl') @Optional() public ibHttpGUIDashboardUrl?: string,
+    ) {
+      this.ibHttpGUIDashboardUrl = this.ibHttpGUIDashboardUrl || '/dashboard';
+    }
+
+  canActivate(route: ActivatedRouteSnapshot) {
+    return this.login.hasRoles(route.data.roles).pipe(
+      take(1),
+      map(hasRole => {
+        if (!hasRole) { this.router.navigateByUrl(this.ibHttpGUIDashboardUrl); }
+        return hasRole;
       })
     )
   }

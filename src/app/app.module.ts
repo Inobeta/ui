@@ -21,7 +21,6 @@ import { environment } from "../environments/environment";
 import { AppComponent } from "./app.component";
 import { DialogExampleComponent } from "./examples/dialog-example/dialog-example.component";
 import { DynamicFormsExampleComponent } from "./examples/dynamic-forms-example/dynamic-forms-example.component";
-import { HttpExampleComponent } from "./examples/http-example.component";
 import { IbKaiTableActionColumnExamplePage } from "./examples/kai-table-example/kai-table-actions-example";
 import { IbKaiTableApiExamplePage } from "./examples/kai-table-example/kai-table-api-example";
 import { IbKaiTableExamplePage } from "./examples/kai-table-example/kai-table-example";
@@ -65,6 +64,9 @@ import { IbToastModule } from "./inobeta-ui/ui/toast/toast.module";
 import { IbViewModule } from "./inobeta-ui/ui/views/view.module";
 import { RoutingModule } from "./routing.module";
 
+import { AuthExampleComponent } from './examples/http/auth.component';
+import { HttpExampleComponent } from "./examples/http/http-example.component";
+
 export interface IAppState {
   ibHttpState: IHttpStore;
   countState: ICounterState;
@@ -91,6 +93,7 @@ const reduxStorageSave = ibSetupHydration("__redux-store-inobeta-ui__", [
     NavComponent,
     DynamicFormsExampleComponent,
     HttpExampleComponent,
+    AuthExampleComponent,
     MyCounterComponent,
     DialogExampleComponent,
     MyCustomTextboxComponent,
