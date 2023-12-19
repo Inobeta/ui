@@ -38,6 +38,7 @@ import { IbMatPaddingComponent, IbMatPaddingControl } from '../controls/padding'
 import { TranslateService } from '@ngx-translate/core';
 import { IbModalTestModule } from '../../modal';
 import { IbMatDateAdapter } from '../intl/datepicker.intl';
+import { IbFormPipeModule } from '../../forms/forms.pipes';
 
 
 @Component({
@@ -235,7 +236,8 @@ describe('IbMaterialFormComponent', () => {
         MatGridListModule,
         MatTooltipModule,
         MatSlideToggleModule,
-        IbModalTestModule
+        IbModalTestModule,
+        IbFormPipeModule
       ],
       providers: [
         IbFormControlService,
