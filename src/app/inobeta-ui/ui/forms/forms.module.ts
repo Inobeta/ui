@@ -5,6 +5,7 @@ import { IbDynamicFormArrayComponent } from "./dynamic-form-array/dynamic-form-a
 import { IbDynamicFormControlComponent } from "./dynamic-form-control/dynamic-form-control.component";
 import { IbDynamicFormComponent } from "./dynamic-form/dynamic-form.component";
 import { IbFormControlService } from "./form-control.service";
+import { IbFormPipeModule } from "./forms.pipes";
 
 @NgModule({
   declarations: [
@@ -12,7 +13,7 @@ import { IbFormControlService } from "./form-control.service";
     IbDynamicFormComponent,
     IbDynamicFormArrayComponent,
   ],
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, IbFormPipeModule],
   providers: [IbFormControlService],
   exports: [
     IbDynamicFormComponent,

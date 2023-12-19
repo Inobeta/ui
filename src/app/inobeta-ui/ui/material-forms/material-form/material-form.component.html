@@ -29,7 +29,7 @@
           <ib-material-form-control
             *ngSwitchCase="'control'"
             class="ibFormRow"
-            [base]="asFormControl(field)"
+            [base]="field | asFormControl"
             [form]="form"
             [fxFlex]="field.width"
           ></ib-material-form-control>
@@ -43,14 +43,14 @@
         <ib-material-form-control
           *ngSwitchCase="'control'"
           class="ibFormRow"
-          [base]="asFormControl(field)"
+          [base]="field | asFormControl"
           [form]="form"
           [fxFlex]="field.width"
         ></ib-material-form-control>
         <ib-material-form-array
           *ngSwitchCase="'array'"
           class="ibFormRow"
-          [base]="asFormArray(field)"
+          [base]="field | asFormArray"
           [form]="form"
           [fxFlex]="field.width"
         ></ib-material-form-array>
