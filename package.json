@@ -1,5 +1,5 @@
 {
-  "name": "@Inobeta/ui",
+  "name": "@inobeta/ui",
   "version": "17.0.0",
   "scripts": {
     "ng": "ng",
@@ -22,24 +22,24 @@
   },
   "private": false,
   "devDependencies": {
-    "@angular-devkit/build-angular": "^16.2.10",
-    "@angular/animations": "^16.2.12",
-    "@angular/cdk": "^16.2.12",
-    "@angular/cli": "^16.2.10",
-    "@angular/common": "^16.2.12",
-    "@angular/compiler": "^16.2.12",
-    "@angular/compiler-cli": "^16.2.12",
-    "@angular/core": "^16.2.12",
-    "@angular/forms": "^16.2.12",
-    "@angular/language-service": "^16.2.12",
-    "@angular/material": "^16.2.12",
-    "@angular/platform-browser": "^16.2.12",
-    "@angular/platform-browser-dynamic": "^16.2.12",
-    "@angular/router": "^16.2.12",
+    "@angular-devkit/build-angular": "^17.0.7",
+    "@angular/animations": "^17.0.7",
+    "@angular/cdk": "^17.0.4",
+    "@angular/cli": "^17.0.7",
+    "@angular/common": "^17.0.7",
+    "@angular/compiler": "^17.0.7",
+    "@angular/compiler-cli": "^17.0.7",
+    "@angular/core": "^17.0.7",
+    "@angular/forms": "^17.0.7",
+    "@angular/language-service": "^17.0.7",
+    "@angular/material": "^17.0.4",
+    "@angular/platform-browser": "^17.0.7",
+    "@angular/platform-browser-dynamic": "^17.0.7",
+    "@angular/router": "^17.0.7",
     "@babel/preset-env": "^7.15.0",
     "@compodoc/compodoc": "^1.1.22",
     "@Inobeta/cli": "^15.0.1",
-    "@ngrx/schematics": "^16.3.0",
+    "@ngrx/schematics": "^17.0.1",
     "@storybook/addon-essentials": "^7.0.17",
     "@storybook/addon-interactions": "^7.0.17",
     "@storybook/addon-links": "^7.0.17",
@@ -58,7 +58,7 @@
     "karma-coverage": "^2.0.3",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "^1.6.0",
-    "ng-packagr": "^16.2.3",
+    "ng-packagr": "^17.0.3",
     "protractor": "~7.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -68,12 +68,10 @@
     "typescript": "~5.2"
   },
   "peerDependencies": {
-    "@angular/cdk": "^16.x.x",
-    "@angular/material": "^16.x.x",
     "@Inobeta/flex-layout": "^15.0.0-inobeta",
-    "@ngrx/effects": "^16.3.0",
-    "@ngrx/store": "^16.3.0",
-    "@ngrx/store-devtools": "^16.3.0",
+    "@ngrx/effects": "^17.0.1",
+    "@ngrx/store": "^17.0.1",
+    "@ngrx/store-devtools": "^17.0.1",
     "@ngx-translate/core": "^15.0.0",
     "@ngx-translate/http-loader": "^8.0.0",
     "jspdf": "^2.3.1",
@@ -83,10 +81,10 @@
     "rxjs": "6.6.7",
     "tslib": "^2.4.0",
     "xlsx": "^0.18.5",
-    "zone.js": "~0.13.3"
+    "zone.js": "~0.14.2"
   },
   "publishConfig": {
-    "@Inobeta:registry": "https://gitlab.com/api/v4/projects/8604184/packages/npm/"
+    "@inobeta:registry": "https://gitlab.com/api/v4/projects/8604184/packages/npm/"
   },
   "exports": {
     ".": {

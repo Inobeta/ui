@@ -54,12 +54,13 @@ export class IbMainMenuBarComponent  {
   */
   @Output() action: EventEmitter<IbMainMenuButton> = new EventEmitter<IbMainMenuButton>();
 
-  temporaryWrapper: HTMLElement = this.renderer.createElement('div');
+  temporaryWrapper: HTMLElement;
 
 
   constructor(
     public dialog: MatDialog,
     private renderer: Renderer2) {
+      this.temporaryWrapper = this.renderer.createElement('div');
       this.renderer.addClass(this.temporaryWrapper, 'blur-effect');
       this.renderer.appendChild(document.body, this.temporaryWrapper);
     }
