@@ -114,7 +114,7 @@ docs:
     - /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 examples:build:
-  image: docker:latest
+  image: docker:24.0.6
   stage: examples:build
   services:
     - docker:dind
@@ -128,7 +128,7 @@ examples:build:
   #  - /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 examples:deploy:
-  image: docker:latest
+  image: docker:24.0.6
   stage: examples:deploy
   services:
     - docker:dind
