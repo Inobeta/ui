@@ -9,8 +9,8 @@
       </ng-container>
     </ng-container>
     <div class="ibFormRow ibFormActions">
-      <button *ngIf="lines > 1" (click)="removeField(index)">-</button>
-      <button *ngIf="lines - 1 === index" (click)="addField()">Add</button>
+      <button *ngIf="lines > 1" (click)="removeField(index)" [disabled]="array.disabled">-</button>
+      <button *ngIf="lines - 1 === index" (click)="addField()" [disabled]="array.disabled">Add</button>
     </div>
   </section>
 

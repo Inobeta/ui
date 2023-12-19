@@ -50,6 +50,7 @@ export class IbFormControlService {
 
   toFormArray(source: IbFormArray) {
     const formArray = new UntypedFormArray([]);
+    formArray.push(this.toFormGroup(source.fields));
     return formArray;
   }
 }
