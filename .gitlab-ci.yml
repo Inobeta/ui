@@ -114,11 +114,12 @@ docs:
     - /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 examples:build:
-  image: docker:24.0.6
+  image: docker:latest
   stage: examples:build
   services:
     - docker:dind
   script:
+    - cat package.json | grep version | head -1
     - set_current_version
     - build $IMAGE
   tags:
@@ -128,7 +129,7 @@ examples:build:
   #  - /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 examples:deploy:
-  image: docker:24.0.6
+  image: docker:latest
   stage: examples:deploy
   services:
     - docker:dind
