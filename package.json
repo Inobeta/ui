@@ -75,7 +75,7 @@
     "@ngrx/store": "^16.3.0",
     "@ngrx/store-devtools": "^16.3.0",
     "@ngx-translate/core": "^15.0.0",
-    "@ngx-translate/http-loader": "^7.x.x",
+    "@ngx-translate/http-loader": "^8.0.0",
     "jspdf": "^2.3.1",
     "jspdf-autotable": "^3.5.14",
     "jwt-decode": "^4.0.0",
