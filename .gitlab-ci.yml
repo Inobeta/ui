@@ -23,10 +23,10 @@ install:
     paths:
       - dist
     expire_in: 1 hour
-  only:
-    - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
-    - /^[0-9]+\.[0-9]+\.[0-9]+$/
-    - main
+  #only:
+  #  - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
+  #  - /^[0-9]+\.[0-9]+\.[0-9]+$/
+  #  - main
 
 test_unit:
   image: inobeta/node-chrome:16
@@ -109,7 +109,7 @@ docs:
     - /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 examples:build:
-  image: docker:latest
+  image: docker:24.0.6
   stage: examples:build
   services:
     - docker:dind
@@ -117,12 +117,12 @@ examples:build:
     - build $IMAGE
   tags:
   - docker
-  only:
-    - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
-    - /^[0-9]+\.[0-9]+\.[0-9]+$/
+  #only:
+  #  - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
+  #  - /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 examples:deploy:
-  image: docker:latest
+  image: docker:24.0.6
   stage: examples:deploy
   services:
     - docker:dind
@@ -134,8 +134,8 @@ examples:deploy:
   environment:
     name: examples
     url: $STAGING_URL
-  only:
-    - /^[0-9]+\.[0-9]+\.[0-9]+$/
+  #only:
+  #  - /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 .inobeta_pkg: &inobeta_pkg |
   [[ "$TRACE" ]] && set -x
