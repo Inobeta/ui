@@ -121,7 +121,7 @@ examples:build:
     - cat package.json
     - cat package.json | grep version
     - cat package.json | grep version | head -1
-    - cat package.json | grep version | head -1 | awk -F: '{ print $2 }' 
+    #- cat package.json | grep version | head -1 | awk -F: '{ print $2 }' 
     - set_current_version
     #- cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[\",]//g' 
     #- cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[\",]//g' | tr -d '[[:space:]]'
