@@ -23,10 +23,10 @@ install:
     paths:
       - dist
     expire_in: 1 hour
-  #only:
-  #  - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
-  #  - /^[0-9]+\.[0-9]+\.[0-9]+$/
-  #  - main
+  only:
+    - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
+    - /^[0-9]+\.[0-9]+\.[0-9]+$/
+    - master
 
 test_unit:
   image: inobeta/node-chrome:16
@@ -38,10 +38,8 @@ test_unit:
     paths: [./src/coverage]
   tags:
   - docker
-  only:
-    - skip
-  #except:
-  #  - /^[0-9]+\.[0-9]+\.[0-9]+$/
+  except:
+    - /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 deploy:
   stage: npm:deploy
@@ -84,12 +82,10 @@ test_package_creation:
     - npm ci --cache .npm --prefer-offline --no-audit --no-fund
     - npm run packagr
     - npm pack dist/
-#  except:
-#    - master
-#    - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
-#    - /^[0-9]+\.[0-9]+\.[0-9]+$/
-  only:
-    - skip
+  except:
+    - master
+    - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
+    - /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 docs:
   stage: npm:deploy
@@ -119,9 +115,9 @@ examples:build:
     - docker push $IMAGE:$CURRENT_VERSION
   tags:
     - docker
-  #only:
-  #  - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
-  #  - /^[0-9]+\.[0-9]+\.[0-9]+$/
+  only:
+    - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
+    - /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 examples:deploy:
   image: docker:latest
@@ -136,8 +132,8 @@ examples:deploy:
   environment:
     name: examples
     url: $STAGING_URL
-  #only:
-  #  - /^[0-9]+\.[0-9]+\.[0-9]+$/
+  only:
+    - /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 .inobeta_pkg: &inobeta_pkg |
   [[ "$TRACE" ]] && set -x
