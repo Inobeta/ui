@@ -26,7 +26,7 @@ install:
   only:
     - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
     - /^[0-9]+\.[0-9]+\.[0-9]+$/
-    - main
+    - master
 
 test_unit:
   image: inobeta/node-chrome:16
@@ -44,7 +44,6 @@ test_unit:
 deploy:
   stage: npm:deploy
   script:
-    #- echo '//gitlab.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}'>.npmrc
     - npm i --cache .npm --prefer-offline --no-audit --no-fund
     - npm run packagr
     - npm pack dist/
@@ -55,7 +54,6 @@ deploy:
 deploy_unstable:
   stage: npm:deploy
   script:
-    #- echo '//gitlab.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}'>.npmrc
     - create_temp_version
     - npm i --cache .npm --prefer-offline --no-audit --no-fund
     - npm run packagr
@@ -67,7 +65,6 @@ deploy_unstable:
 deploy_testing:
   stage: npm:deploy
   script:
-    #- echo '//gitlab.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}'>.npmrc
     - create_temp_version
     - npm i --cache .npm --prefer-offline --no-audit --no-fund
     - npm run packagr
@@ -81,7 +78,6 @@ deploy_testing:
 test_package_creation:
   stage: quality
   script:
-    #- echo '//gitlab.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}'>.npmrc
     - create_temp_version
     - npm ci --cache .npm --prefer-offline --no-audit --no-fund
     - npm run packagr
@@ -114,9 +110,11 @@ examples:build:
   services:
     - docker:dind
   script:
-    - build $IMAGE
+    - docker build -t $IMAGE:$CURRENT_VERSION .
+    - docker login -u $GITLAB_USER -p $AUTH_TOKEN registry.gitlab.com
+    - docker push $IMAGE:$CURRENT_VERSION
   tags:
-  - docker
+    - docker
   only:
     - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
     - /^[0-9]+\.[0-9]+\.[0-9]+$/
@@ -149,13 +147,6 @@ examples:deploy:
       sed -i "s/\"version\"\: \"$CURRENT_VERSION\"/\"version\": \"$TEMP_VERSION\"/g" ./package.json
       echo $TEMP_VERSION
   }
-
-  function build() {
-    docker build -t $1:$CURRENT_VERSION .
-    docker login -u $GITLAB_USER -p $AUTH_TOKEN registry.gitlab.com
-    docker push $1:$CURRENT_VERSION
-  }
-
 
   function prepare_staging() {
     mkdir -p ~/.ssh && echo "$SSH_STAGING" | tr -d '\r' > ~/.ssh/id_rsa && chmod -R 600 ~/.ssh

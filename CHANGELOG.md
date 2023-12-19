@@ -6,6 +6,7 @@
 | -- | -- | -- | -- |
 |DEVK-223|feat|IbForm|Added support for FormArray|
 |DEVK-9|feat|IbHttp|Added directive and guard for role check|
+|DEVK-228|ci|Examples build|Fix examples build |
 
 ## [15.1.0] (2023-11-30)
 
