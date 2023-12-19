@@ -14,6 +14,9 @@ import { IbKaiTableExamplePage } from './examples/kai-table-example/kai-table-ex
 import { IbKaiTableActionColumnExamplePage } from './examples/kai-table-example/kai-table-actions-example';
 import { IbKaiTableFullExamplePage } from './examples/kai-table-example/kai-table-full-example';
 import { IbKaiTableApiExamplePage } from './examples/kai-table-example/kai-table-api-example';
+import { MaterialFormArrayExampleComponent } from './examples/material-form-array-example/form-array-example.component';
+import { MaterialFormExampleComponent } from './examples/material-form-example/material-form-example.component';
+import { MaterialFormGridExampleComponent } from './examples/material-form-grid-example/material-form-grid-example.component';
 
 const appRoutes: Routes = [
   {
@@ -49,7 +52,33 @@ const appRoutes: Routes = [
       {
         path: 'forms',
         data: { breadcrumb: 'Forms' },
-        component: DynamicFormsExampleComponent,
+        children: [
+          {
+            path: 'api',
+            component: DynamicFormsExampleComponent,
+            data: { breadcrumb: 'API' },
+          },
+          {
+            path: 'basic',
+            component: MaterialFormExampleComponent,
+            data: { breadcrumb: 'Material' },
+          },
+          {
+            path: 'array',
+            component: MaterialFormArrayExampleComponent,
+            data: { breadcrumb: 'Array' },
+          },
+          {
+            path: 'grid',
+            component: MaterialFormGridExampleComponent,
+            data: { breadcrumb: 'Grid' }
+          },
+          {
+            path: '**',
+            redirectTo: 'api',
+            pathMatch: 'full'
+          }
+        ]
       },
       {
         path: 'redux',

@@ -48,7 +48,19 @@
     "paths": [
       {
         "label": "examples.ibMainMenu.dynamicFormsDynamicForms",
-        "link": "/home/forms"
+        "link": "/home/forms/api"
+      },
+      {
+        "label": "examples.ibMainMenu.basicForm",
+        "link": "/home/forms/basic"
+      },
+      {
+        "label": "examples.ibMainMenu.formArray",
+        "link": "/home/forms/array"
+      },
+      {
+        "label": "examples.ibMainMenu.formGrid",
+        "link": "/home/forms/grid"
       }
     ]
   },
