@@ -114,7 +114,11 @@ examples:build:
   services:
     - docker:dind
   script:
-    - build $IMAGE
+    - echo $CURRENT_VERSION
+    - echo $IMAGE
+    - docker build -t $IMAGE:$CURRENT_VERSION .
+    - docker login -u $GITLAB_USER -p $AUTH_TOKEN registry.gitlab.com
+    - docker push $IMAGE:$CURRENT_VERSION
   tags:
   - docker
   #only:
