@@ -29,7 +29,7 @@ install:
     - main
 
 test_unit:
-  image: inobeta/node-chrome:20
+  image: inobeta/node-chrome:20.10
   stage: quality
   script:
   - npm ci --cache .npm --prefer-offline --no-audit --no-fund && npm run test-ci
