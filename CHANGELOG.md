@@ -1,5 +1,11 @@
 # Inobeta/UI Changelog
 
+## [16.0.0] (2023-12-20)
+
+| Issue ID | Type | Section | Description |
+| -- | -- | -- | -- |
+|DEVK-204|feat|All|Added support for Angular 16|
+
 ## [15.2.0] (2023-12-20)
 
 | Issue ID | Type | Section | Description |
