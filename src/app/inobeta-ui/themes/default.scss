@@ -5,19 +5,14 @@
 
 @mixin theme($app-theme) {
   $typography: mat.define-typography-config(
-    $body-1: mat.define-typography-level(
-      $font-family: Roboto,
-      $font-size: 14px,
-      $font-weight: normal,
-      $line-height: 1,
-    ),
-    $button: mat.define-typography-level(
-      $font-family: Roboto,
-      $font-size: 14px,
-      $font-weight: 500,
-      $line-height: 1,
-      $letter-spacing: 0.04rem,
-    )
+    $button:
+      mat.define-typography-level(
+        $font-family: Roboto,
+        $font-size: 14px,
+        $font-weight: 500,
+        $line-height: 1,
+        $letter-spacing: 0.04rem,
+      ),
   );
   @include mat.all-component-typographies($typography);
 
