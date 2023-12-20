@@ -1,24 +1,5 @@
 [
   {
-    "label": "examples.ibMainMenu.tableMain",
-    "icon": {"label": "table_rows", "type": "two-tone"},
-    "link": "/home/table",
-    "paths": [
-      {
-        "label": "examples.ibMainMenu.tableRedux",
-        "link":  "/home/table/redux"
-      },
-      {
-        "label": "examples.ibMainMenu.tableNoRedux" ,
-        "link":  "/home/table/noredux"
-      },
-      {
-        "label": "examples.ibMainMenu.tableSticky",
-        "link": "/home/table/sticky"
-      }
-    ]
-  },
-  {
     "label": "examples.ibMainMenu.kaiTable",
     "icon": {"label": "table_rows", "type": "two-tone"},
     "link": "/home/kai-table",
@@ -48,7 +29,19 @@
     "paths": [
       {
         "label": "examples.ibMainMenu.dynamicFormsDynamicForms",
-        "link": "/home/forms"
+        "link": "/home/forms/api"
+      },
+      {
+        "label": "examples.ibMainMenu.basicForm",
+        "link": "/home/forms/basic"
+      },
+      {
+        "label": "examples.ibMainMenu.formArray",
+        "link": "/home/forms/array"
+      },
+      {
+        "label": "examples.ibMainMenu.formGrid",
+        "link": "/home/forms/grid"
       }
     ]
   },
@@ -58,8 +51,16 @@
     "link": "/home/http",
     "paths": [
       {
-        "label": "examples.ibMainMenu.httpHttp",
-        "link": "/home/http"
+        "label": "examples.ibMainMenu.httpBase",
+        "link": "/home/http/base"
+      },
+      {
+        "label": "examples.ibMainMenu.httpAuth",
+        "link": "/home/http/auth"
+      },
+      {
+        "label": "examples.ibMainMenu.httpProtected",
+        "link": "/home/http/protected-admin"
       }
     ]
   },

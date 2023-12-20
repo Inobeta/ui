@@ -15,6 +15,7 @@ import { Component, Input, OnInit } from '@angular/core';
   styles: [`
   :host{
     flex: 1;
+    width: 100%;
   }
   .ib-skeleton-container{
     display: flex;

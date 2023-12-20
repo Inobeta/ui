@@ -1,8 +1,19 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
-import { IbFormControlBase } from '../controls/form-control-base';
-import { UntypedFormGroup } from '@angular/forms';
-import { IbFormControlService } from '../form-control.service';
-import { Observable, Subject } from 'rxjs';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from "@angular/core";
+import { UntypedFormGroup } from "@angular/forms";
+import { Observable, Subject } from "rxjs";
+import { IbFormArray } from "../array/array";
+import { IbFormControlBase } from "../controls/form-control-base";
+import { IbFormControlService } from "../form-control.service";
+import { IbFormField } from "../forms.types";
 
 export interface IbFormAction {
   key?: string;
@@ -18,14 +29,12 @@ interface IbFormOnChanges {
 }
 
 @Component({
-  selector: 'ib-form',
-  templateUrl: './dynamic-form.component.html',
+  selector: "ib-form",
+  templateUrl: "./dynamic-form.component.html",
 })
 export class IbDynamicFormComponent implements OnInit, OnChanges, OnDestroy {
-  @Input() fields: IbFormControlBase<string>[] = [];
-  @Input() actions: IbFormAction[] = [
-    { key: 'submit', label: 'Save' }
-  ];
+  @Input() fields: IbFormField[] = [];
+  @Input() actions: IbFormAction[] = [{ key: "submit", label: "Save" }];
   @Input() cols: number;
   /**
    * @deprecated
@@ -53,12 +62,26 @@ export class IbDynamicFormComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges): void {
     const fields = changes.fields;
+
     if (fields && !fields.isFirstChange()) {
       this.form = this.cs.toFormGroup(fields.currentValue);
     }
+
+    const cols = changes.cols;
+    if (fields && cols) {
+      const hasFormArray = (fields.currentValue as IbFormField[]).find(
+        (f) => f.role === "array"
+      );
+      if (hasFormArray && cols.currentValue > 0) {
+        console.warn(
+          `IbFormArray is not supported in grid mode and will not be shown. Please, remove the cols input from ib-material-form`
+        );
+      }
+    }
+
     for (const prop of Object.values(changes)) {
       if (!prop.isFirstChange()) {
-        this.onChangesSubject.next({changes, form: this.form});
+        this.onChangesSubject.next({ changes, form: this.form });
         break;
       }
     }
@@ -74,7 +97,7 @@ export class IbDynamicFormComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   handleActionClick(source: IbFormAction) {
-    if (source.key === 'submit') {
+    if (source.key === "submit") {
       return;
     }
     source.handler(this.form);

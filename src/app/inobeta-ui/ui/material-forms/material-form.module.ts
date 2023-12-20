@@ -33,6 +33,8 @@ import { IbMatSlideToggleComponent } from './controls/slide-toggle';
 import { IbMatDateAdapter, IbMatDatepickerI18n } from './intl/datepicker.intl';
 import { IbModalModule } from '../modal/modal.module';
 import { Platform, PlatformModule } from '@angular/cdk/platform';
+import { IbMaterialFormArrayComponent } from './material-form-array/material-form-array.component';
+import { IbFormPipeModule } from '../forms/forms.pipes';
 
 const components = [
   IbMatTextboxComponent,
@@ -48,7 +50,8 @@ const components = [
   IbMatSlideToggleComponent,
   IbMaterialFormComponent,
   IbMaterialFormControlComponent,
-  IbFormControlDirective
+  IbFormControlDirective,
+  IbMaterialFormArrayComponent,
 ];
 
 
@@ -79,7 +82,8 @@ export function ibMatDatepickerTranslate(translateService: TranslateService) {
     MatTooltipModule,
     MatSlideToggleModule,
     IbModalModule,
-    PlatformModule
+    PlatformModule,
+    IbFormPipeModule
   ],
   exports: [
     ...components

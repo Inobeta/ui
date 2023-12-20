@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { map } from 'rxjs/operators';
-import { ibCrudToast } from '../inobeta-ui/http/http/messages.decorator';
-import { ibLoaderActions } from '../inobeta-ui/http/store/loader/actions';
+import { ibCrudToast } from '../../inobeta-ui/http/http/messages.decorator';
+import { ibLoaderActions } from '../../inobeta-ui/http/store/loader/actions';
 
 @Component({
   selector: 'app-test',

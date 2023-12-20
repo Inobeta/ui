@@ -20,6 +20,7 @@ export class IbFormControlBase<T> {
   public cols: number;
   public rows: number;
   public debounceOnChange: number;
+  readonly role = 'control';
 
   constructor(options: IbFormControlBaseParams<T> = {}) {
 

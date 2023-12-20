@@ -20,22 +20,22 @@
       "settings": "Settings",
       "logout": "Logout",
 
-      "tableMain": "Table",
-      "tableRedux": "With redux",
-      "tableNoRedux": "Without redux",
-      "tableSticky": "Sticky",
-
-      "kaiTable": "New Table",
+      "kaiTable": "Table",
       "kaiTableSimple": "Simple",
       "kaiTableContextAction": "Row Actions",
       "kaiTableFull": "Full Example",
       "kaiTableApi": "Data from API",
 
       "dynamicFormsMain": "Dynamic forms",
-      "dynamicFormsDynamicForms": "Dynamic forms",
+      "dynamicFormsDynamicForms": "Dynamic forms (API)",
+      "basicForm": "Material Form",
+      "formArray": "With Array",
+      "formGrid": "With Grid",
 
       "httpMain": "Http",
-      "httpHttp": "Http",
+      "httpBase": "Base",
+      "httpAuth": "Auth",
+      "httpProtected": "Role Admin",
 
       "reduxMain": "Redux",
       "reduxRedux": "Redux",
