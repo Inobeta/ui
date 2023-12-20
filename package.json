@@ -10,7 +10,7 @@
     "test-with-diagnostic": "ng test --sourceMap=false",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "packagr": "ng-packagr -p ng-package.json && cp -r ./src/app/inobeta-ui/themes ./dist/ && cp ./src/app/inobeta-ui/ui/kai-table/_table-theme.scss ./dist/src/app/inobeta-ui/ui/kai-table/_table-theme.scss",
+    "packagr": "ng-packagr -p ng-package.json && cp -r ./src/app/inobeta-ui/themes ./dist/",
     "release": "npm run packagr && cd dist/ && npm pack",
     "doc": "compodoc -p tsconfig.doc.json --disableCoverage --disableDomTree --disableGraph --hideGenerator --theme readthedocs",
     "pre-release": "npm version --no-git-tag-version prerelease",
@@ -68,20 +68,32 @@
     "typescript": "~5.2"
   },
   "peerDependencies": {
+    "@angular/animations": "^17.x.x",
+    "@angular/cdk": "^17.x.x",
+    "@angular/common": "^17.x.x",
+    "@angular/compiler": "^17.x.x",
+    "@angular/core": "^17.x.x",
+    "@angular/forms": "^17.x.x",
+    "@angular/material": "^17.x.x",
+    "@angular/platform-browser": "^17.x.x",
+    "@angular/platform-browser-dynamic": "^17.x.x",
+    "@angular/router": "^17.x.x",
     "@Inobeta/flex-layout": "^15.0.0-inobeta",
-    "@ngrx/effects": "^17.0.1",
-    "@ngrx/store": "^17.0.1",
-    "@ngrx/store-devtools": "^17.0.1",
-    "@ngx-translate/core": "^15.0.0",
-    "@ngx-translate/http-loader": "^8.0.0",
+    "@ngrx/effects": "^17.x.x",
+    "@ngrx/store": "^17.x.x",
+    "@ngrx/store-devtools": "^17.x.x",
+    "@ngx-translate/core": "^15.x.x",
+    "@ngx-translate/http-loader": "^8.x.x",
     "jspdf": "^2.3.1",
     "jspdf-autotable": "^3.5.14",
     "jwt-decode": "^4.0.0",
     "papaparse": "^5.3.1",
     "rxjs": "6.6.7",
-    "tslib": "^2.4.0",
     "xlsx": "^0.18.5",
     "zone.js": "~0.14.2"
+  },
+  "dependencies": {
+    "tslib": "^2.4.0"
   },
   "publishConfig": {
     "@inobeta:registry": "https://gitlab.com/api/v4/projects/8604184/packages/npm/"
