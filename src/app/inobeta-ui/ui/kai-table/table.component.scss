@@ -55,7 +55,7 @@ tr.ib-table-element-row:not(.ib-table-expanded-row):hover {
 ::ng-deep ib-aggregate {
   display: flex;
   align-items: center;
-  justify-content: end;
+  justify-content: flex-end;
   gap: 2em;
 
   .ib-aggregate__function {

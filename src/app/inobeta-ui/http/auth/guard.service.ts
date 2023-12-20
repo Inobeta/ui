@@ -1,5 +1,5 @@
 import { Inject, Injectable, Optional } from '@angular/core';
-import {  ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { IbAPITokens, IbSession } from './session.model';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
@@ -8,7 +8,7 @@ import { map, take } from 'rxjs/operators';
 import { IbLoginService } from './login.service';
 
 @Injectable({providedIn: 'root'})
-export class IbAuthGuard implements CanActivate {
+export class IbAuthGuard  {
   session$: Observable<IbSession<IbAPITokens> | null> = this.store.select(ibSelectActiveSession<IbAPITokens>())
 
   constructor(
@@ -32,7 +32,7 @@ export class IbAuthGuard implements CanActivate {
 }
 
 @Injectable({providedIn: 'root'})
-export class IbLoginGuard implements CanActivate {
+export class IbLoginGuard  {
   session$: Observable<IbSession<IbAPITokens> | null> = this.store.select(ibSelectActiveSession<IbAPITokens>())
 
   public path = '';
@@ -64,7 +64,7 @@ export class IbLoginGuard implements CanActivate {
 
 
 @Injectable({providedIn: 'root'})
-export class IbRoleGuard implements CanActivate {
+export class IbRoleGuard  {
 
   constructor(
     private router: Router,
