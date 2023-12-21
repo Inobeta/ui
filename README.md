@@ -75,7 +75,7 @@ then, define your theme.scss with this example (customize your palette)
 
 ```typescript
 @import '~@angular/material/theming';
-@import '../inobeta-ui/themes/default.scss';
+@import '@inobeta/ui';
 @include mat-core();
 
 $app-primary: mat-palette($mat-deep-purple);

@@ -10,7 +10,8 @@
     "test-with-diagnostic": "ng test --sourceMap=false",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "packagr": "ng-packagr -p ng-package.json && cp ./src/app/inobeta-ui/ui/_index.scss ./dist/src/app/inobeta-ui/ui  && cp ./src/app/inobeta-ui/ui/kai-table/_table-theme.scss ./dist/src/app/inobeta-ui/ui/kai-table/_table-theme.scss",
+    "packagr": "ng-packagr -p ng-package.json",
+    "postpackagr": "./postpackagr",
     "release": "npm run packagr && cd dist/ && npm pack",
     "doc": "compodoc -p tsconfig.doc.json --disableCoverage --disableDomTree --disableGraph --hideGenerator --theme readthedocs",
     "pre-release": "npm version --no-git-tag-version prerelease",
@@ -100,7 +101,7 @@
   },
   "exports": {
     ".": {
-      "sass": "./src/app/inobeta-ui/themes/default.scss"
+      "sass": "./src/app/inobeta-ui/_index.scss"
     }
   }
 }

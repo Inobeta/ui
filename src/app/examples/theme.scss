@@ -1,5 +1,5 @@
 @use '@angular/material' as mat;
-@use '../inobeta-ui/themes/default.scss' as ui;
+@use '../inobeta-ui/ui' as ui;
 @include mat.core();
 
 // Define the default theme (same as the example above).
