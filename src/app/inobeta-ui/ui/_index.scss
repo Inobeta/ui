@@ -1,7 +1,7 @@
 @use "sass:map";
 @use "@angular/material" as mat;
 
-@use "../ui/kai-table/theme" as table;
+@use "./kai-table/table-theme" as table;
 
 @mixin theme($app-theme) {
   $typography: mat.define-typography-config(

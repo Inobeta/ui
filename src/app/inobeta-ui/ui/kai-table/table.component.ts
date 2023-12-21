@@ -42,7 +42,7 @@ const defaultTableDef: IbTableDef = {
 @Component({
   selector: "ib-kai-table",
   templateUrl: "./table.component.html",
-  styleUrls: ["./table.component.scss", "./theme.scss"],
+  styleUrls: ["./table.component.scss"],
   animations: [
     trigger("detailExpand", [
       state("collapsed", style({ height: "0px", minHeight: "0" })),
