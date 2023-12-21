@@ -1,10 +1,11 @@
 # README
 
-1. [Naming convention](#naming-convention)
-2. [How to version](#how-to-version)
-3. [How to install](#how-to-install)
-4. [Upgrade notes](#upgrade-notes)
-    1. [From 1.1.x to 9.x](#from-1.1.x-to-9.x)
+- [README](#readme)
+  - [Naming convention](#naming-convention)
+  - [How to version](#how-to-version)
+  - [How to install](#how-to-install)
+  - [Upgrade notes](#upgrade-notes)
+    - [From 1.1.x to 9.x](#from-11x-to-9x)
 
 ## Naming convention
 
@@ -67,7 +68,7 @@ echo @Inobeta:registry=https://gitlab.com/api/v4/packages/npm/ >> .npmrc
 After gitlab setup registry:
 
 ```bash
-npm i --save @Inobeta/ui
+npm i --save @inobeta/ui
 ```
 
 then, define your theme.scss with this example (customize your palette)
