@@ -2,7 +2,7 @@ import { waitForAsync } from '@angular/core/testing';
 import * as actions from './table.action';
 import { ibTableFiltersReducer } from './table.reducer';
 
-fdescribe('ibTableFiltersReducer', () => {
+describe('ibTableFiltersReducer', () => {
   let MOCK_INITIAL_STATE_EMPTY = {
     tableFilters: {}
   };
