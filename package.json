@@ -101,7 +101,7 @@
   },
   "exports": {
     ".": {
-      "sass": "./src/app/inobeta-ui/_index.scss"
+      "sass": "./_index.scss"
     }
   }
 }
