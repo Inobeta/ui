@@ -13,21 +13,21 @@ export const viewsReducer = createReducer(
   ),
 
   on(TableViewActions.renameView, (state, { id, name }) => {
-    const view = state.find((v) => v.id === id);
+    const view = structuredClone(state.find((v) => v.id === id));
     if (!view) {
       return state;
     }
 
     view.name = name;
-    return [...state];
+    return [...state.filter((v) => v.id !== id), view];
   }),
 
   on(TableViewActions.saveView, (state, { id, data }) => {
-    const view = state.find((v) => v.id === id);
+    const view = structuredClone(state.find((v) => v.id === id));
     if (!view) {
       return state;
     }
     view.data = data;
-    return [...state];
+    return [...state.filter((v) => v.id !== id), view];
   })
 );

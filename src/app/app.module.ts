@@ -131,10 +131,6 @@ const reduxStorageSave = ibSetupHydration("__redux-store-inobeta-ui__", [
     IbTableActionModule,
     StoreModule.forRoot(reducers, {
       metaReducers: reduxStorageSave.metareducers,
-      runtimeChecks: {
-        strictStateImmutability: false,
-        strictActionImmutability: false,
-      },
     }),
     EffectsModule.forRoot([
       TableEffects,

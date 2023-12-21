@@ -1,9 +1,8 @@
+import { waitForAsync } from '@angular/core/testing';
 import * as actions from './table.action';
 import { ibTableFiltersReducer } from './table.reducer';
-import { waitForAsync } from '@angular/core/testing';
 
-describe('ibTableFiltersReducer', () => {
-
+fdescribe('ibTableFiltersReducer', () => {
   let MOCK_INITIAL_STATE_EMPTY = {
     tableFilters: {}
   };
@@ -28,9 +27,7 @@ describe('ibTableFiltersReducer', () => {
   });
 
   it('addFilterToTable', () => {
-    let state = ibTableFiltersReducer({
-      ...MOCK_INITIAL_STATE_EMPTY
-    }, actions.addFilterToTable({
+    let state = ibTableFiltersReducer(MOCK_INITIAL_STATE_EMPTY, actions.addFilterToTable({
       tableName: 'prova',
       filterName: 'colonna',
       filterValue: 'pippo'
@@ -39,9 +36,7 @@ describe('ibTableFiltersReducer', () => {
       colonna: { value: 'pippo'}
     });
 
-    state = ibTableFiltersReducer({
-      ...state
-    }, actions.addFilterToTable({
+    state = ibTableFiltersReducer(state, actions.addFilterToTable({
       tableName: 'prova',
       filterName: 'colonna',
       filterValue: 'pluto'
@@ -51,9 +46,7 @@ describe('ibTableFiltersReducer', () => {
     });
 
 
-    state = ibTableFiltersReducer({
-      ...state
-    }, actions.addFilterToTable({
+    state = ibTableFiltersReducer(state, actions.addFilterToTable({
       tableName: 'prova',
       filterName: 'colonna2',
       filterValue: 'topolino'
