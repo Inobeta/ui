@@ -8,10 +8,7 @@ interface IbBreadcrumbItem {
   icon?: string;
 }
 
-enum IbBreadcrumbMode {
-  static = 'static',
-  auto = 'auto',
-}
+type IbBreadcrumbMode = 'static' | 'auto';
 
 @Component({
   selector: 'ib-breadcrumb',
@@ -28,12 +25,12 @@ export class IbBreadcrumbComponent implements OnInit {
    * Modalità per il render delle breadcrumbs.
    * Di default, il percorso viene calcolato dalle routes. Per inserire le singole "briciole" usare la modalità `static`
    */
-  @Input() mode = IbBreadcrumbMode.auto;
+  @Input() mode: 'static' | 'auto';
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
 
   ngOnInit() {
-    if (this.mode === IbBreadcrumbMode.static) {
+    if (this.mode === 'static') {
       return;
     }
     this.items = this.createBreadcrumbs(this.activatedRoute.root);
