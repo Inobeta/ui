@@ -1,4 +1,4 @@
-import { Component, Inject } from "@angular/core";
+import { Component, Inject, inject } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { MAT_DIALOG_DATA } from "@angular/material/dialog";
 
@@ -52,6 +52,7 @@ export interface IbTableDataExportDialogData {
   `,
 })
 export class IbTableDataExportDialog {
+  data: IbTableDataExportDialogData = inject(MAT_DIALOG_DATA);
   _settings = new FormGroup({
     format: new FormControl(this.data.formats[0].value),
     dataset: new FormControl("all"),
@@ -60,8 +61,4 @@ export class IbTableDataExportDialog {
   get settings() {
     return this._settings.value;
   }
-
-  constructor(
-    @Inject(MAT_DIALOG_DATA) public data: IbTableDataExportDialogData
-  ) {}
 }

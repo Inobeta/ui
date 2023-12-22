@@ -1,9 +1,6 @@
 import { DataSource } from "@angular/cdk/collections";
+import { MatPaginator, PageEvent } from "@angular/material/paginator";
 import { MatSort, Sort, SortDirection } from "@angular/material/sort";
-import {
-  MatTableDataSourcePageEvent,
-  MatTableDataSourcePaginator,
-} from "@angular/material/table";
 import {
   BehaviorSubject,
   Observable,
@@ -24,7 +21,7 @@ import { IbKaiTableState } from "./table.types";
 
 export class IbDataSource<
   T,
-  P extends MatTableDataSourcePaginator = MatTableDataSourcePaginator
+  P extends MatPaginator = MatPaginator
 > extends DataSource<T> {
   /** Stream that emits when a new data array is set on the data source. */
   private readonly _data: BehaviorSubject<T[]>;
@@ -55,7 +52,7 @@ export class IbDataSource<
   get filteredData() {
     return this._data.value;
   }
-  
+
   get sort(): MatSort | null {
     return this._sort;
   }
@@ -111,14 +108,13 @@ export class IbDataSource<
         ) as Observable<Sort | void>)
       : of(null);
 
-    const pageChange: Observable<MatTableDataSourcePageEvent | null | void> =
-      this._paginator
-        ? (merge(
-            this._paginator.page,
-            // this._internalPageChanges,
-            this._paginator.initialized
-          ) as Observable<MatTableDataSourcePageEvent | void>)
-        : of(null);
+    const pageChange: Observable<PageEvent | null | void> = this._paginator
+      ? (merge(
+          this._paginator.page,
+          // this._internalPageChanges,
+          this._paginator.initialized
+        ) as Observable<PageEvent | void>)
+      : of(null);
 
     if (sortChange && this._paginator) {
       sortChange.subscribe(() => (this._paginator.pageIndex = 0));
@@ -176,7 +172,12 @@ export class IbDataSource<
 
   filterPredicate() {}
 
-  fetchData(sort: string, order: SortDirection, page: number, filter: Record<string, any>): Observable<any> {
+  fetchData(
+    sort: string,
+    order: SortDirection,
+    page: number,
+    filter: Record<string, any>
+  ): Observable<any> {
     return of(this.data);
   }
 

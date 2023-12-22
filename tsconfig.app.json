@@ -2,7 +2,8 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
-    "types": []
+    "types": [],
+    "useDefineForClassFields": false,
   },
   "files": [
     "src/main.ts",
@@ -19,6 +20,7 @@
     "strictMetadataEmit": true,
     "enableResourceInlining": true,
     "fullTemplateTypeCheck": true,
-    "enableIvy": true
+    "enableIvy": true,
+    "strictTemplates": true
   },
 }

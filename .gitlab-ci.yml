@@ -1,4 +1,4 @@
-image: node:16
+image: node:20
 
 stages:
   - quality
@@ -29,7 +29,7 @@ install:
     - master
 
 test_unit:
-  image: inobeta/node-chrome:16
+  image: inobeta/node-chrome:20
   stage: quality
   script:
   - npm ci --cache .npm --prefer-offline --no-audit --no-fund && npm run test-ci
@@ -47,7 +47,7 @@ deploy:
     - npm i --cache .npm --prefer-offline --no-audit --no-fund
     - npm run packagr
     - npm pack dist/
-    - npm publish Inobeta-ui-$CURRENT_VERSION.tgz --tag latest
+    - npm publish inobeta-ui-$CURRENT_VERSION.tgz --tag latest
   only:
     - /^[0-9]+\.[0-9]+\.[0-9]+$/
 
@@ -58,7 +58,7 @@ deploy_unstable:
     - npm i --cache .npm --prefer-offline --no-audit --no-fund
     - npm run packagr
     - npm pack dist/
-    - npm publish Inobeta-ui-$TEMP_VERSION.tgz --tag unstable
+    - npm publish inobeta-ui-$TEMP_VERSION.tgz --tag unstable
   only:
     - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
 
@@ -69,7 +69,7 @@ deploy_testing:
     - npm i --cache .npm --prefer-offline --no-audit --no-fund
     - npm run packagr
     - npm pack dist/
-    - npm publish Inobeta-ui-$TEMP_VERSION.tgz --tag testing
+    - npm publish inobeta-ui-$TEMP_VERSION.tgz --tag testing
   except:
     - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
     - /^[0-9]+\.[0-9]+\.[0-9]+$/

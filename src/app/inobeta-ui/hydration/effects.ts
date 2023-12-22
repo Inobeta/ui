@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { Actions, createEffect, ofType, OnInitEffects } from "@ngrx/effects";
 import { Action, Store } from "@ngrx/store";
 import { distinctUntilChanged, map, switchMap, tap } from "rxjs/operators";
@@ -9,9 +9,12 @@ export class HydrationEffects implements OnInitEffects {
   static ibSessionStorageKey: string
   static ibReduxPersistKeys: string[]
 
+  private actions$ = inject(Actions);
+  private store = inject(Store);
+  
   serialize$ = createEffect(
     () =>
-      this.action$.pipe(
+      this.actions$.pipe(
         ofType(
           HydrationActions.ibHydrate
         ),
@@ -23,11 +26,6 @@ export class HydrationEffects implements OnInitEffects {
         })
       )
   , {dispatch: false});
-
-  constructor(
-    private action$: Actions,
-    private store: Store<any>
-    ) {}
 
   ngrxOnInitEffects(): Action {
     return HydrationActions.ibHydrate();
