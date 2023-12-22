@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import {Component, ViewEncapsulation, inject} from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { ibSelectIsHttpLoading } from '../store/loader/selectors';
@@ -72,8 +72,8 @@ import { ibSelectIsHttpLoading } from '../store/loader/selectors';
 })
 
 export class IbSpinnerLoadingComponent {
+  store = inject(Store);
   showLoading$: Observable<boolean> = this.store.select(ibSelectIsHttpLoading)
-  constructor(public store: Store) {}
 }
 
 /* istanbul ignore next */

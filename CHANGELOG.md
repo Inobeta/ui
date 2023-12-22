@@ -1,5 +1,22 @@
 # Inobeta/UI Changelog
 
+## [17.0.0] (2023-12-22)
+
+| Issue ID | Type | Section | Description |
+| -- | -- | -- | -- |
+|DEVK-204|feat|All|Added support for Angular 17|
+
+### [17.0.0] - breaks
+
+- Node versions <= 20.9.0 are unsupported from this version, please install **v20.10.0** for a better support
+- themes inclusion changes, please replace import and usage instructions with `@use '@inobeta-ui/ui';` and `@include ui.theme($app-theme);` in your scss. See README instructions for more info.
+
+## [16.0.0] (2023-12-20)
+
+| Issue ID | Type | Section | Description |
+| -- | -- | -- | -- |
+|DEVK-204|feat|All|Added support for Angular 16|
+
 ## [15.2.0] (2023-12-20)
 
 | Issue ID | Type | Section | Description |

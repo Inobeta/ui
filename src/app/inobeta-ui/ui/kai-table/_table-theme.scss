@@ -11,7 +11,7 @@
 
   .ib-table__header-cell,
   .mat-sort-header-arrow {
-    color: var(--ib-table-header-color, mat.get-color-from-palette($primary-palette, darker-contrast));
+    color: var(--ib-table-header-color, mat.get-color-from-palette($primary-palette, darker-contrast)) !important;
   }
 
   .ib-table__header-cell {

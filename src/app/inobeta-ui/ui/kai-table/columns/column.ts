@@ -1,23 +1,26 @@
-import { BooleanInput, coerceBooleanProperty } from "@angular/cdk/coercion";
+import { NgTemplateOutlet } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   Component,
   ContentChild,
-  Inject,
   Input,
   OnDestroy,
   OnInit,
-  Optional,
   ViewChild,
+  booleanAttribute,
+  inject,
 } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { MatSortModule } from "@angular/material/sort";
 import {
   MatCellDef,
   MatColumnDef,
   MatFooterCellDef,
   MatHeaderCellDef,
+  MatTableModule,
 } from "@angular/material/table";
-import { Subscription, merge } from "rxjs";
 import { IbAggregateCell, IbCellDef } from "../cells";
+import { IbSortHeader } from "../sort-header";
 import { IB_COLUMN_OPTIONS, IB_TABLE, IbColumnOptions } from "../tokens";
 
 /**
@@ -67,6 +70,8 @@ import { IB_COLUMN_OPTIONS, IB_TABLE, IbColumnOptions } from "../tokens";
   // an ExpressionChangedAfterItHasBeenCheckedError).
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
+  standalone: true,
+  imports: [MatSortModule, MatTableModule, IbSortHeader, NgTemplateOutlet],
 })
 export class IbColumn<T> implements OnDestroy, OnInit {
   /** Column name that should be used to reference this column. */
@@ -100,42 +105,21 @@ export class IbColumn<T> implements OnDestroy, OnInit {
   /**
    * Enables sorting for the column.
    */
-  @Input()
-  get sort() {
-    return this._sort;
-  }
-  set sort(value: BooleanInput) {
-    this._sort = coerceBooleanProperty(value);
-  }
-  private _sort = false;
+  @Input({ transform: booleanAttribute }) sort = false;
 
   /** Whether sticky positioning should be applied. */
-  @Input()
-  get sticky() {
-    return this._sticky;
-  }
-  set sticky(value: BooleanInput) {
-    this._sticky = coerceBooleanProperty(value);
-  }
-  private _sticky = false;
+  @Input({ transform: booleanAttribute }) sticky = false;
 
   /** Whether this column should be sticky positioned on the end of the row. */
-  @Input()
-  get stickyEnd() {
-    return this._stickyEnd;
-  }
-  set stickyEnd(value: BooleanInput) {
-    this._stickyEnd = coerceBooleanProperty(value);
-  }
-  private _stickyEnd = false;
+  @Input({ transform: booleanAttribute }) stickyEnd = false;
 
   /** Whether this column should display in the roll-up footer. */
-  @Input()
+  @Input({ transform: booleanAttribute })
   get aggregate() {
     return this._aggregate;
   }
-  set aggregate(value: BooleanInput) {
-    this._aggregate = coerceBooleanProperty(value);
+  set aggregate(value: boolean) {
+    this._aggregate = value;
     if (this._aggregate) {
       this._table.aggregateColumns.add(this.name);
     } else {
@@ -143,8 +127,6 @@ export class IbColumn<T> implements OnDestroy, OnInit {
     }
   }
   private _aggregate = false;
-
-  private aggregateSubscription: Subscription;
 
   @ContentChild(IbCellDef, { static: true }) ibCellDef: IbCellDef;
 
@@ -169,14 +151,12 @@ export class IbColumn<T> implements OnDestroy, OnInit {
     return this._table.sort;
   }
 
-  constructor(
-    // tslint:disable-next-line: lightweight-tokens
-    @Inject(IB_TABLE) @Optional() public _table: any,
-    @Optional()
-    @Inject(IB_COLUMN_OPTIONS)
-    private _options: IbColumnOptions<T>
-  ) {
-    this._options = _options || {};
+  _table: any = inject(IB_TABLE, { optional: true });
+  _options: IbColumnOptions<T> =
+    inject(IB_COLUMN_OPTIONS, { optional: true }) || {};
+
+  constructor() {
+    this.handleStateChanges();
   }
 
   ngOnInit() {
@@ -203,12 +183,7 @@ export class IbColumn<T> implements OnDestroy, OnInit {
     }
   }
 
-  ngAfterViewInit() {
-    this.handleStateChanges();
-  }
-
   ngOnDestroy() {
-    this.aggregateSubscription.unsubscribe();
     if (this._table) {
       this._table.matTable.removeColumnDef(this.columnDef);
     }
@@ -240,9 +215,9 @@ export class IbColumn<T> implements OnDestroy, OnInit {
   }
 
   private handleStateChanges() {
-    this.aggregateSubscription?.unsubscribe();
-    this.aggregateSubscription = this._table.dataSource
+    this._table.dataSource
       .connect()
+      .pipe(takeUntilDestroyed())
       .subscribe(() => {
         this.aggregateCell?.aggregate();
       });

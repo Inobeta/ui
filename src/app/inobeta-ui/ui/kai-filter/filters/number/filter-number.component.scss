@@ -9,9 +9,12 @@
 .ib-number-filter__input-range {
   display: flex;
   justify-content: space-between;
-  @include mat.form-field-density(-4);
 
-  input[type=number] {
+  mat-form-field {
+    @include mat.form-field-density(-5);
+  }
+
+  input[type="number"] {
     appearance: textfield;
   }
 
@@ -22,4 +25,3 @@
     width: auto !important;
   }
 }
-

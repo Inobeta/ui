@@ -1,10 +1,11 @@
 # README
 
-1. [Naming convention](#naming-convention)
-2. [How to version](#how-to-version)
-3. [How to install](#how-to-install)
-4. [Upgrade notes](#upgrade-notes)
-    1. [From 1.1.x to 9.x](#from-1.1.x-to-9.x)
+- [README](#readme)
+  - [Naming convention](#naming-convention)
+  - [How to version](#how-to-version)
+  - [How to install](#how-to-install)
+  - [Upgrade notes](#upgrade-notes)
+    - [From 1.1.x to 9.x](#from-11x-to-9x)
 
 ## Naming convention
 
@@ -59,7 +60,7 @@ Setup gitlab registry  (manual)
 npm config set @inobeta:registry https://gitlab.com/api/v4/packages/npm/
 npm config set '//gitlab.com/api/v4/packages/npm/:_authToken' "GITLAB_TOKEN"
 npm config set '//gitlab.com/api/v4/projects/8604184/packages/npm/:_authToken' "GITLAB_TOKEN"
-echo @Inobeta:registry=https://gitlab.com/api/v4/packages/npm/ >> .npmrc
+echo @inobeta:registry=https://gitlab.com/api/v4/packages/npm/ >> .npmrc
 ```
 
 ## How to install
@@ -67,23 +68,33 @@ echo @Inobeta:registry=https://gitlab.com/api/v4/packages/npm/ >> .npmrc
 After gitlab setup registry:
 
 ```bash
-npm i --save @Inobeta/ui
+npm i --save @inobeta/ui
 ```
 
 then, define your theme.scss with this example (customize your palette)
 
-```typescript
-@import '~@angular/material/theming';
-@import '../inobeta-ui/themes/default.scss';
-@include mat-core();
+```scss
+@use '@angular/material' as mat;
+@use '@inobeta-ui/ui';
+@include mat.core();
 
-$app-primary: mat-palette($mat-deep-purple);
-$app-accent: mat-palette($mat-amber, A200, A100, A400);
-$app-warning: mat-palette($mat-red);
+// Define the default theme
+$app-primary: mat.define-palette(mat.$deep-purple-palette);
+$app-accent: mat.define-palette(mat.$amber-palette, A200, A100, A400);
+$app-warning: mat.define-palette(mat.$red-palette);
 
-$app-theme: mat-light-theme($app-primary, $app-accent, $app-warning);
+$app-theme: mat.define-light-theme((
+  color: (
+    primary: $app-primary,
+    accent: $app-accent,
+    warning: $app-warning
+  )
+));
 
-@include inobeta-ui-theme($app-theme);
+// Include the default theme styles.
+@include ui.theme($app-theme);
+// Overwrites and other styles here
+// ...
 ```
 
 Last, force translate loading on app.component:

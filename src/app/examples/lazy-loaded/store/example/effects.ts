@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { UPDATE } from '@ngrx/store';
 import { of } from 'rxjs';
@@ -7,7 +7,7 @@ import { exampleActions } from './actions';
 
 @Injectable({providedIn: 'root'})
 export class ExampleEffects {
-
+  private actions$ = inject(Actions);
   sampleAction$ = createEffect(():any => {
     return this.actions$.pipe(
       ofType(UPDATE),
@@ -22,9 +22,4 @@ export class ExampleEffects {
   }, {
     dispatch: false
   });
-
-  constructor(
-    private actions$: Actions,
-    ) { }
-
 }
