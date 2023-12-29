@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
-import { timer } from "rxjs";
-import { of } from "rxjs/internal/observable/of";
+import { of, timer } from "rxjs";
 import { switchMap } from "rxjs/operators";
 
 export interface IbUserExample {
