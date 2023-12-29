@@ -60,7 +60,6 @@
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "^1.6.0",
     "ng-packagr": "^17.0.3",
-    "protractor": "~7.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "storybook": "^7.0.17",
@@ -85,13 +84,16 @@
     "@ngrx/store-devtools": "^17.x.x",
     "@ngx-translate/core": "^15.x.x",
     "@ngx-translate/http-loader": "^8.x.x",
-    "jspdf": "^2.3.1",
-    "jspdf-autotable": "^3.5.14",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.8.1",
     "jwt-decode": "^4.0.0",
     "papaparse": "^5.3.1",
     "rxjs": "6.6.7",
-    "xlsx": "^0.18.5",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.1/xlsx-0.20.1.tgz",
     "zone.js": "~0.14.2"
+  },
+  "overrides": {
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.1/xlsx-0.20.1.tgz"
   },
   "dependencies": {
     "tslib": "^2.4.0"
