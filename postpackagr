@@ -1,3 +1,0 @@
-cp ./_index.scss ./dist 
-cp ./src/app/inobeta-ui/ui/_index.scss ./dist/src/app/inobeta-ui/ui 
-cp ./src/app/inobeta-ui/ui/kai-table/_table-theme.scss ./dist/src/app/inobeta-ui/ui/kai-table/_table-theme.scss
