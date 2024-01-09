@@ -14,6 +14,8 @@ export class IbFilterPipe implements PipeTransform {
       return items;
     }
 
-    return items.filter((i) => i.toLocaleLowerCase().includes(query));
+    return items.filter((i) =>
+      i.toLocaleLowerCase().includes(query.toLocaleLowerCase())
+    );
   }
 }
