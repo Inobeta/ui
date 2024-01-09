@@ -1,5 +1,14 @@
 # Inobeta/UI Changelog
 
+## Unreleased
+
+| Issue ID | Type | Section | Description |
+| -- | -- | -- | -- |
+|DEVK-246|fix|IbDataExport|fix jspdf autotable webpack bundle error|
+|DEVK-248|feat|IbDataExport|Added directive ibDataTransformer|
+|DEVK-249|fix|IbHttp|Removed forced Content-Type header|
+|DEVK-250|feat|All|Copy scss theme assets using ng-packagr|
+
 ## [17.0.0] (2023-12-29)
 
 | Issue ID | Type | Section | Description |

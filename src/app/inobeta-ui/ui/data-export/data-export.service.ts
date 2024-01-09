@@ -75,12 +75,20 @@ export class IbDataExportService {
       displayHeader[column.name] = column.headerText;
     }
 
+    const transformByFormatFn = `${settings.format}transform`;
+    const dataAccessor = (row, column) =>
+      transformByFormatFn in column
+        ? column[transformByFormatFn](column.dataAccessor(row, column.name))
+        : "transform" in column
+        ? column.transform(column.dataAccessor(row, column.name))
+        : column.dataAccessor(row, column.name);
+
     const outputData = [];
     for (const row of data) {
       let outputRow = {};
       for (const column of columns) {
         const header = displayHeader[column.name];
-        const displayValue = column.dataAccessor(row, column.name);
+        const displayValue = dataAccessor(row, column);
         outputRow[header] = displayValue;
       }
       outputData.push(outputRow);
