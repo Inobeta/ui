@@ -1,9 +1,10 @@
-import { Component, Input, ViewChild, ViewEncapsulation } from "@angular/core";
+import { Component, Input, ViewChild, ViewEncapsulation, computed } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MatSelectionList } from "@angular/material/list";
 import { IbFilterDef } from "../../filter.types";
 import { eq, none, or } from "../../filters";
 import { IbFilterBase } from "../base/filter-base";
+import { takeUntil } from "rxjs/operators";
 
 @Component({
   selector: "ib-tag-filter",
@@ -28,6 +29,8 @@ export class IbTagFilter extends IbFilterBase {
   }
   private _options: Set<string> = new Set();
   private isSetByUser = false;
+
+  query: string;
 
   get displayLabel() {
     if (this.rawValue?.length == 1) {
@@ -56,6 +59,15 @@ export class IbTagFilter extends IbFilterBase {
     return this.matSelectionList?.selectedOptions?.selected;
   }
 
+  ngAfterViewInit() {
+    this.button?.trigger.menuClosed
+      .pipe(takeUntil(this._destroyed))
+      .subscribe(() => {
+        this.revertFilter();
+        this.query = "";
+      });
+  }
+  
   initializeFromColumn(data: any[]) {
     if (!this.isSetByUser) {
       this.setOptions(data.map((x) => x[this.name]));
@@ -70,6 +82,7 @@ export class IbTagFilter extends IbFilterBase {
   }
 
   applyFilter() {
+    this.query = "";
     this.filter.update();
     this.button.closeMenu();
   }
