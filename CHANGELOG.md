@@ -8,6 +8,7 @@
 |DEVK-248|feat|IbDataExport|Added directive ibDataTransformer|
 |DEVK-249|fix|IbHttp|Removed forced Content-Type header|
 |DEVK-250|feat|All|Copy scss theme assets using ng-packagr|
+|DEVK-253|fix|IbTable|Use copy of displayed columns array to avoid side-effects|
 
 ## [17.0.0] (2023-12-29)
 
