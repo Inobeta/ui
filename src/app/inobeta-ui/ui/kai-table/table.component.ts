@@ -80,7 +80,7 @@ export class IbTable implements OnDestroy {
   @Input()
   set data(data: any[]) {
     this.dataSource.data = data;
-    this.initializeFilters(data);
+    this.initializeFilters(this.dataSource.data);
   }
 
   @Input()
@@ -129,7 +129,7 @@ export class IbTable implements OnDestroy {
    */
   @Input()
   set displayedColumns(columns: string[]) {
-    this._displayedColumns = columns;
+    this._displayedColumns = columns.map(c => c);
     if (this.selectionColumn) {
       this._displayedColumns.unshift("ib-selection");
     }
