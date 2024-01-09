@@ -59,15 +59,6 @@ export class IbTagFilter extends IbFilterBase {
     return this.matSelectionList?.selectedOptions?.selected;
   }
 
-  ngAfterViewInit() {
-    this.button?.trigger.menuClosed
-      .pipe(takeUntil(this._destroyed))
-      .subscribe(() => {
-        this.revertFilter();
-        this.query = "";
-      });
-  }
-  
   initializeFromColumn(data: any[]) {
     if (!this.isSetByUser) {
       this.setOptions(data.map((x) => x[this.name]));
@@ -82,9 +73,14 @@ export class IbTagFilter extends IbFilterBase {
   }
 
   applyFilter() {
-    this.query = "";
     this.filter.update();
     this.button.closeMenu();
+    this.query = "";
+  }
+
+  revertFilter(): void {
+    this.query = "";
+    super.revertFilter();
   }
 
   build = (): IbFilterDef =>

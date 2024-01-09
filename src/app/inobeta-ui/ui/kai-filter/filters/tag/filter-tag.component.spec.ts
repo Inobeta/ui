@@ -51,7 +51,7 @@ describe("IbTagFilter", () => {
   });
 
   it("should reset with empty selection", () => {
-    component.searchCriteria.setValue(["blue"]);
+    component.searchCriteria.setValue([]);
     component.applyFilter();
     expect(component.build()).toEqual(none());
   });

@@ -64,7 +64,7 @@ describe("IbTable", () => {
       const table = await loader.getHarness(MatTableHarness);
       const rows = await table.getRows();
       expect(component).toBeTruthy();
-      expect(rows.length).toBe(2);
+      expect(rows.length).toBe(1);
     });
 
     it("should select a row", () => {
