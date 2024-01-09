@@ -1,8 +1,10 @@
 import { Directive, Inject, Input, ViewChild } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
+import { Subject } from "rxjs";
 import { IbFilterButton } from "../../filter-button/filter-button.component";
 import { IbFilterDef } from "../../filter.types";
 import { IB_FILTER } from "../../tokens";
+import { takeUntil } from "rxjs/operators";
 
 export interface IFilterBase {
   /** Name that should be used to reference this filter. */
@@ -42,6 +44,8 @@ export class IbFilterBase implements IFilterBase {
     return value != null || value != undefined;
   }
 
+  protected _destroyed = new Subject();
+
   constructor(@Inject(IB_FILTER) public filter: any) {}
 
   ngOnInit() {
@@ -56,15 +60,19 @@ export class IbFilterBase implements IFilterBase {
     this.filter.form.addControl(this.name, this.searchCriteria);
   }
 
+  ngAfterViewInit() {
+    this.button?.trigger.menuClosed
+      .pipe(takeUntil(this._destroyed))
+      .subscribe(() => {
+        this.revertFilter();
+      });
+  }
+
   ngOnDestroy() {
     this.filter.form.removeControl(this.name);
     this.filter.update();
-  }
-
-  ngAfterViewInit() {
-    this.button?.trigger.menuClosed.subscribe(() => {
-      this.revertFilter();
-    });
+    this._destroyed.next();
+    this._destroyed.complete();
   }
 
   revertFilter() {
@@ -74,7 +82,7 @@ export class IbFilterBase implements IFilterBase {
   build(): IbFilterDef {
     throw Error(`Filter ${this.name} has no build method defined.`);
   }
-  
+
   applyFilter() {
     if (!this.searchCriteria.valid) {
       this.searchCriteria.markAllAsTouched();

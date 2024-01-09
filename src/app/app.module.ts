@@ -154,7 +154,6 @@ const reduxStorageSave = ibSetupHydration("__redux-store-inobeta-ui__", [
         deps: [HttpClient],
       },
     }),
-
     MatCardModule,
   ],
   exports: [FlexLayoutModule],

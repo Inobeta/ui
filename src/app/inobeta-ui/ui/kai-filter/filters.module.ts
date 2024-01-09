@@ -1,6 +1,5 @@
 import { Platform } from "@angular/cdk/platform";
 import { PortalModule } from "@angular/cdk/portal";
-import { ScrollingModule } from "@angular/cdk/scrolling";
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
@@ -35,6 +34,7 @@ import { IbNumberFilter } from "./filters/number/filter-number.component";
 import { IbSearchBar } from "./filters/search-bar/search-bar.component";
 import { IbTagFilter } from "./filters/tag/filter-tag.component";
 import { IbTextFilter } from "./filters/text/filter-text.component";
+import { IbFilterPipe } from "../../core";
 
 @NgModule({
   imports: [
@@ -42,7 +42,6 @@ import { IbTextFilter } from "./filters/text/filter-text.component";
     PortalModule,
     FormsModule,
     ReactiveFormsModule,
-    ScrollingModule,
     MatInputModule,
     MatButtonModule,
     MatIconModule,
@@ -60,6 +59,7 @@ import { IbTextFilter } from "./filters/text/filter-text.component";
     TranslateModule.forChild({
       extend: true,
     }),
+    IbFilterPipe
   ],
   exports: [
     IbFilter,
