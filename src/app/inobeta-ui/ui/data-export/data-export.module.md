@@ -1,6 +1,6 @@
 # Data export
 
-# Basic usage with IbTable
+## Basic usage with IbTable
 
 ```typescript
 // example.module.ts
@@ -26,13 +26,82 @@ export class IbExampleModule {}
 </ib-kai-table>
 ```
 
-# Add a custom format
+### Override a data accessor during export
 
-Viene fornita la classe astratta `IbDataExportProvider` per realizzare facilmente exporter di altri formati.
+Use `ibDataTransformer` directive to return a different value derived from the one present in the original dataset.
 
-Attraverso il token `OVERRIDE_EXPORT_FORMATS` è possibile **sostituire** i formati disponibili durante l'esportazione dati, ad esempio nel dialog "Esporta dati" di `ib-table-data-export-action`.
+By default it accepts a function passing a single parameter, the value of a cell.
 
-> Utilizzare questo token svuota la lista di default di formati disponibili, composta da `IbXLXSExportProvider`, `IbPDFExportProvider`, ed `IbCSVExportProvider`.
+In the example below,
+a boolean value is evaluated to string, “SUBSCRIBED” if true, “NOT SUBSCRIBED” if not.
+
+This transformer function will be applied to **all** formats available.
+
+```typescript
+@Component({
+  /* ... */
+})
+class IbTableWithExportTransformer {
+  data = [
+    { name: "alice", subscribed: true },
+    { name: "rabbit", subscribed: false },
+  ];
+
+  subscribedTransformer = (isSubscribed: boolean) => date.getTime();
+}
+```
+
+```html
+<ib-kai-table tableName="users" [data]="data" [displayedColumns]="['name', 'subscribed']">
+  <ib-table-action-group>
+    <ib-table-data-export-action></ib-table-data-export-action>
+  </ib-table-action-group>
+  <ib-text-column name="name" />
+  <ib-column
+    name="subscribed"
+    [ibDataTransformer]="subscribedTransformer"
+  >
+    <ng-container *ibCellDef="let element">
+      <mat-icon [color]="element.subscribed ? 'accent' : ''">{{ element.subscribed ? "done" : "close" }}</mat-icon>
+    </ng-container>
+  </ib-column>
+</ib-kai-table>
+```
+
+Use `ibDataTransformerFor` to apply the transformer function **only** to the format provided.
+
+```html
+<ib-column name="subscribed" [ibDataTransformer]="subscribedTransformer" ibDataTransformerFor="pdf">
+  <ng-container *ibCellDef="let element">
+    <mat-icon [color]="element.subscribed ? 'accent' : ''">{{ element.subscribed ? "done" : "close" }}</mat-icon>
+  </ng-container>
+</ib-column>
+```
+
+To change behaviour across multiple formats, specify a dictionary with where keys represent file formats and values are functions, each function will be assigned to the corresponding format.
+
+```html
+<ib-column
+  name="subscribed"
+  [ibDataTransformer]="{
+    pdf: pdfTransformer,
+    xlsx: xlsxTransformer
+  }"
+>
+  <ng-container *ibCellDef="let element">
+    <mat-icon [color]="element.subscribed ? 'accent' : ''">{{ element.subscribed ? "done" : "close" }}</mat-icon>
+  </ng-container>
+</ib-column>
+```
+
+## Add a custom format
+
+The abstract class `IbDataExportProvider` can be extended to easily implement file exporters for various formats.
+
+Using the token `OVERRIDE_EXPORT_FORMATS`, it is possible to **override** the available formats during data export, for example, in the "Export Data" dialog of `ib-table-data-export-action`
+
+> Using this token empties the default list of available formats  
+> `IbXLXSExportProvider`, `IbPDFExportProvider`, and `IbCSVExportProvider`
 
 ```typescript
 // txt-export.service.ts
@@ -71,7 +140,7 @@ export const IbTextExportProvider = {
 export class IbExampleModule {}
 ```
 
-# PDF customization
+## PDF customization
 
 ```typescript
 // example.module.ts

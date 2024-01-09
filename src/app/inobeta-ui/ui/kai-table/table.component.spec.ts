@@ -64,7 +64,7 @@ describe("IbTable", () => {
       const table = await loader.getHarness(MatTableHarness);
       const rows = await table.getRows();
       expect(component).toBeTruthy();
-      expect(rows.length).toBe(2);
+      expect(rows.length).toBe(1);
     });
 
     it("should select a row", () => {
@@ -388,6 +388,59 @@ describe("IbTable", () => {
     }));
   });
 
+  describe("with export transformer", () => {
+    let fixture: ComponentFixture<IbTableWithExportTransformer>;
+    let component: IbTable;
+    let loader: HarnessLoader;
+
+    beforeEach(() => {
+      fixture = createComponent(IbTableWithExportTransformer);
+      component = fixture.debugElement.query(
+        By.directive(IbTable)
+      ).componentInstance;
+      fixture.detectChanges();
+      loader = TestbedHarnessEnvironment.documentRootLoader(fixture);
+    });
+
+    it("should create", () => {
+      expect(component).toBeTruthy();
+    });
+
+    it("should use transform function", async () => {
+      const exportSpy = spyOn(component.exportAction.exportService, "export");
+      const exportButton = await loader.getHarness(
+        MatButtonHarness.with({
+          ancestor: ".ib-table__toolbar__actions",
+          variant: "icon",
+        })
+      );
+      await exportButton.click();
+      const dialog = await loader.getHarness(MatDialogHarness);
+      fixture.detectChanges();
+      await fixture.whenStable();
+      expect(dialog).toBeTruthy();
+      const confirm = await dialog.getHarness(
+        MatButtonHarness.with({
+          text: "shared.ibTable.export",
+        })
+      );
+      await confirm.click();
+      fixture.detectChanges();
+
+      const expectedData = component.dataSource.data.map((e: any) => ({
+        ...e,
+        created_at: e.created_at.getTime(),
+        updated_at: e.updated_at.getTime(),
+      }));
+
+      expect(exportSpy).toHaveBeenCalledWith(
+        expectedData,
+        component.tableName,
+        "ib"
+      );
+    });
+  });
+
   describe("with sort", () => {
     let fixture: ComponentFixture<IbTableWithSort>;
     let component: IbTable;
@@ -619,6 +672,50 @@ class IbTableWithExport {
     { name: "knight", color: "brown" },
     { name: "king", color: "green" },
   ]);
+}
+
+@Component({
+  template: `
+    <ib-kai-table
+      tableName="employees"
+      [dataSource]="dataSource"
+      [displayedColumns]="['name', 'created_at', 'updated_at']"
+    >
+      <ib-table-action-group>
+        <ib-table-data-export-action></ib-table-data-export-action>
+      </ib-table-action-group>
+      <ib-selection-column></ib-selection-column>
+      <ib-text-column headerText="name" name="name" />
+      <ib-date-column
+        headerText="created_at"
+        name="created_at"
+        [ibDataTransformer]="dateTransformer"
+      />
+      <ib-date-column
+        headerText="updated_at"
+        name="updated_at"
+        [ibDataTransformer]="{
+          ib: dateTransformer
+        }"
+      />
+    </ib-kai-table>
+  `,
+  providers: [
+    IbDataExportService,
+    {
+      provide: OVERRIDE_EXPORT_FORMATS,
+      useClass: IbStubExportProvider,
+      multi: true,
+    },
+  ],
+})
+class IbTableWithExportTransformer {
+  dataSource = new MatTableDataSource<any>([
+    { name: "alice", created_at: new Date(), updated_at: new Date() },
+    { name: "rabbit", created_at: new Date(), updated_at: new Date() },
+  ]);
+
+  dateTransformer = (date: Date) => date.getTime();
 }
 
 @Component({

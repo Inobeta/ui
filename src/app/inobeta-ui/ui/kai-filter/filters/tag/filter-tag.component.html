@@ -4,28 +4,26 @@
     {{ displayLabel | translate : displayLabelParams }}
   </span>
 
+  <mat-form-field class="ib-tag-filter-search" style="width: 100%">
+    <input matInput [(ngModel)]="query" [placeholder]="'shared.ibFilter.search' | translate"/>
+  </mat-form-field>
   <section [formGroup]="filter?.form">
-    <section class="ib-tag-filter" cdkVirtualScrollingElement>
+    <section class="ib-tag-filter">
       <mat-selection-list
         [multiple]="multiple"
         [formControlName]="name"
         disableRipple="true"
       >
-        <cdk-virtual-scroll-viewport
-          appendOnly
-          itemSize="40"
-          minBufferPx="300"
-          maxBufferPx="300"
-        >
+        @for (option of options | filterBy: query; track option) {
           <mat-list-option
             togglePosition="before"
-            checkboxPosition="before"
-            *cdkVirtualFor="let option of options"
             [value]="option"
           >
             {{ option }}
           </mat-list-option>
-        </cdk-virtual-scroll-viewport>
+        } @empty {
+          <mat-list-item disabled>{{ 'shared.ibFilter.noItems' | translate }}</mat-list-item>
+        }
       </mat-selection-list>
     </section>
   </section>

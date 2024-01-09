@@ -1,8 +1,15 @@
 @use "@angular/material" as mat;
 section.ib-tag-filter {
   overflow-y: auto;
-  height: 300px;
+  min-height: 40px;
+  max-height: 300px;
   @include mat.list-density(-4);
+}
+
+.ib-tag-filter-search {
+  margin-top: -8px;
+  padding-bottom: 0 !important;
+  @include mat.form-field-density(-4);
 }
 
 span.ib-filter-value {
@@ -12,8 +19,4 @@ span.ib-filter-value {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-}
-
-:host cdk-virtual-scroll-viewport {
-  height: max-content;
 }

@@ -36,7 +36,7 @@ import { IbColumn } from "./column";
         {{ headerText }}
       </th>
       <td mat-cell *matCellDef="let data" [style.text-align]="'end'">
-        {{ dataAccessor(data, name) }}
+        {{ dataAccessor(data, name) | number : digitsInfo : locale }}
       </td>
       <td mat-footer-cell *matFooterCellDef style="max-width: fit-content">
         <ib-aggregate *ngIf="aggregate"></ib-aggregate>
@@ -58,6 +58,5 @@ export class IbNumberColumn<T> extends IbColumn<T> {
   @Input() digitsInfo = "1.0-2";
   @Input() locale = "it";
 
-  transform = (data) => formatNumber(data, this.locale, this.digitsInfo);
-  dataAccessor = (data: T, name: string) => this.transform((data as any)[name]);
+  dataAccessor = (data: T, name: string) => (data as any)[name];
 }
