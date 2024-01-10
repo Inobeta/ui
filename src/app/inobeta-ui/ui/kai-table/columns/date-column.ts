@@ -55,6 +55,6 @@ export class IbDateColumn<T> extends IbColumn<T> {
   @Input() locale = "it";
 
   /** @ignore */
-  pdftransform = (data) => formatDate(data, this.format, this.locale);
+  transform = { pdf: (data) => formatDate(data, this.format, this.locale) };
   dataAccessor = (data: T, name: string) => (data as any)[name];
 }

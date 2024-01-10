@@ -30,7 +30,7 @@ export class IbTagFilter extends IbFilterBase {
   private _options: Set<string> = new Set();
   private isSetByUser = false;
 
-  query: string;
+  query = "";
 
   get displayLabel() {
     if (this.rawValue?.length == 1) {

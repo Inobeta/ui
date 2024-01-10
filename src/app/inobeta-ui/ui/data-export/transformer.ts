@@ -2,7 +2,10 @@ import { Directive, Input, inject } from "@angular/core";
 import { IbColumn } from "../kai-table/columns/column";
 import type { IbDataExportProvider } from "./provider";
 
-export type IbDataTransformerInput = Record<string, Function> | Function;
+export type IbDataTransformerFunction = (data: unknown) => unknown;
+export type IbDataTransformerInput =
+  | Record<string, IbDataTransformerFunction>
+  | IbDataTransformerFunction;
 
 @Directive({
   selector: "[ibDataTransformer]",
@@ -47,18 +50,18 @@ export class IbDataTransformer {
    */
   @Input() set ibDataTransformer(t: IbDataTransformerInput) {
     if (typeof t === "function") {
-      this.column[`${this.ibDataTransformerFor}transform`] = t;
+      this.column[`transform`] = {
+        [this.ibDataTransformerFor]: t,
+      };
       return;
     }
 
-    for (const [format, fn] of Object.entries(t)) {
-      this.column[`${format}transform`] = fn;
-    }
+    this.column[`transform`] = t;
   }
 
   /**
    * The ibDataTransformerFor input is used to specify the name of the format for which
    * the data transformation functions should be applied.
    */
-  @Input() ibDataTransformerFor = "";
+  @Input() ibDataTransformerFor = "ibAny";
 }
