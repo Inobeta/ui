@@ -39,7 +39,8 @@ export const ibKaiFilterTranslations = {
           "multipleItems": "{{item}} +{{length}}"
         },
         "number": "tra {{min}} e {{max}}"
-      }
+      },
+      noItems: "Nessun elemento."
     },
   }
 }

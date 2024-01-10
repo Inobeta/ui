@@ -1,5 +1,16 @@
 # Inobeta/UI Changelog
 
+## [17.0.1] (2024-01-10)
+
+| Issue ID | Type | Section | Description |
+| -- | -- | -- | -- |
+|DEVK-246|fix|IbDataExport|fix jspdf autotable webpack bundle error|
+|DEVK-248|feat|IbDataExport|Added directive ibDataTransformer|
+|DEVK-249|fix|IbHttp|Removed forced Content-Type header|
+|DEVK-250|feat|All|Copy scss theme assets using ng-packagr|
+|DEVK-251|fix|IbTable|Ux improvements on ib tag filter|
+|DEVK-253|fix|IbTable|Use copy of displayed columns array to avoid side-effects|
+
 ## [17.0.0] (2023-12-29)
 
 | Issue ID | Type | Section | Description |

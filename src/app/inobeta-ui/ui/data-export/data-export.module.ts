@@ -1,6 +1,5 @@
-import { NgModule } from "@angular/core";
-
 import { CommonModule } from "@angular/common";
+import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatDialogModule } from "@angular/material/dialog";
@@ -17,6 +16,7 @@ import { IbPDFExportProvider } from "./formats/pdf-export.service";
 import { IbXLXSExportProvider } from "./formats/xlsx-export.service";
 import { IbTableDataExportDialog } from "./table-data-export-dialog.component";
 import { IbTableDataExportAction } from "./table-data-export.component";
+import { IbDataTransformer } from "./transformer";
 
 @NgModule({
   imports: [
@@ -33,8 +33,16 @@ import { IbTableDataExportAction } from "./table-data-export.component";
     IbTableActionModule,
     TranslateModule.forChild(),
   ],
-  exports: [IbTableDataExportAction, IbTableDataExportDialog],
-  declarations: [IbTableDataExportAction, IbTableDataExportDialog],
+  exports: [
+    IbTableDataExportAction,
+    IbTableDataExportDialog,
+    IbDataTransformer,
+  ],
+  declarations: [
+    IbTableDataExportAction,
+    IbTableDataExportDialog,
+    IbDataTransformer,
+  ],
   providers: [
     IbDataExportService,
     IbXLXSExportProvider,
@@ -42,4 +50,4 @@ import { IbTableDataExportAction } from "./table-data-export.component";
     IbCSVExportProvider,
   ],
 })
-export class IbDataExportModule { }
+export class IbDataExportModule {}

@@ -50,12 +50,12 @@ export class IbDataExportService {
    */
   _exportFromTable(
     tableName: string,
-    columns: IbColumn<any>[],
-    dataSource: MatTableDataSource<any>,
-    selectedRows: any[],
+    columns: IbColumn<Record<string, unknown>>[],
+    dataSource: MatTableDataSource<unknown>,
+    selectedRows: unknown[],
     settings: IDataExportSettings
   ) {
-    let data: any[];
+    let data: unknown[];
     if (settings.dataset === "all") {
       data = dataSource._orderData(dataSource.filteredData);
     }
@@ -70,23 +70,24 @@ export class IbDataExportService {
       );
     }
 
-    const displayHeader = {};
-    for (const column of columns) {
-      displayHeader[column.name] = column.headerText;
-    }
+    const displayHeader = columns.reduce(
+      (acc, column) => ({ ...acc, [column.name]: column.headerText }),
+      {}
+    );
 
-    const outputData = [];
-    for (const row of data) {
-      let outputRow = {};
-      for (const column of columns) {
-        const header = displayHeader[column.name];
-        const displayValue = column.dataAccessor(row, column.name);
-        outputRow[header] = displayValue;
-      }
-      outputData.push(outputRow);
-    }
+    const dataAccessor = this.getDataAccessorForFormat(settings.format);
 
-    this.export(outputData, tableName, settings.format);
+    const output = data.map((row) =>
+      columns.reduce(
+        (acc, column) => ({
+          ...acc,
+          [displayHeader[column.name]]: dataAccessor(row, column),
+        }),
+        {}
+      )
+    );
+
+    this.export(output, tableName, settings.format);
   }
 
   /**
@@ -99,4 +100,16 @@ export class IbDataExportService {
     const provider = this.providers.find((p) => p.format === format);
     return provider.export(data, filename);
   }
+
+  /** @ignore */
+  private getDataAccessorForFormat =
+    (format: string) => (row: unknown, column: IbColumn<unknown>) => {
+      const data = column.dataAccessor(row, column.name);
+      const fn =
+        column?.["transform"]?.[format] ?? column?.["transform"]?.["ibAny"];
+      if (!fn) {
+        return data;
+      }
+      return fn(data);
+    };
 }

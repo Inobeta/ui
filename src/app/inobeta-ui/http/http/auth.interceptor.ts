@@ -46,7 +46,6 @@ export class IbAuthInterceptor implements HttpInterceptor {
 
     let authReq = request.clone({
       headers: request.headers
-        .set("Content-Type", "application/json")
         .set("x-requested-with", "XMLHttpRequest"),
     });
     switch (this.ibHttpAuthType) {

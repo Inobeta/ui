@@ -6,9 +6,15 @@ import {
   Optional,
 } from "@angular/core";
 import jsPDF, { jsPDFOptions } from "jspdf";
-import autoTable, { UserOptions } from "jspdf-autotable";
+import { UserOptions, applyPlugin } from "jspdf-autotable";
 import { OVERRIDE_EXPORT_FORMATS } from "../data-export.service";
 import { IbDataExportProvider } from "../provider";
+
+applyPlugin(jsPDF);
+
+interface jsPDFWithAutotable extends jsPDF {
+  autoTable: (options: UserOptions) => void;
+}
 
 export const IB_DATA_JSPDF_OPTIONS = new InjectionToken<jsPDFOptions>(
   "jsPDFOptions"
@@ -42,13 +48,13 @@ export class IbPDFExportService implements IbDataExportProvider {
     }
 
     if (!pdfUserOptions) {
-      this.pdfUserOptions = {}
+      this.pdfUserOptions = {};
     }
   }
 
   export(data: any[], filename: string): void {
-    const doc = new jsPDF(this.pdfSetup);
-    autoTable(doc, {
+    const doc = new jsPDF(this.pdfSetup) as jsPDFWithAutotable;
+    doc.autoTable({
       ...this.pdfUserOptions,
       body: data,
       columns: this.preparePdfColumns(Object.keys(data[0])),
