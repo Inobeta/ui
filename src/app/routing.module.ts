@@ -16,6 +16,7 @@ import { MaterialFormExampleComponent } from './examples/material-form-example/m
 import { MaterialFormGridExampleComponent } from './examples/material-form-grid-example/material-form-grid-example.component';
 import { AuthExampleComponent } from './examples/http/auth.component';
 import { IbRoleGuard } from './inobeta-ui/http/auth/guard.service';
+import { MaterialFormValueExampleComponent } from './examples/material-form-value-example/material-form.value.component';
 
 const appRoutes: Routes = [
   {
@@ -40,6 +41,11 @@ const appRoutes: Routes = [
             path: 'array',
             component: MaterialFormArrayExampleComponent,
             data: { breadcrumb: 'Array' },
+          },
+          {
+            path: 'value',
+            component: MaterialFormValueExampleComponent,
+            data: { breadcrumb: 'Value' },
           },
           {
             path: 'grid',

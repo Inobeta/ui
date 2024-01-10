@@ -40,6 +40,10 @@
         "link": "/home/forms/array"
       },
       {
+        "label": "examples.ibMainMenu.formValue",
+        "link": "/home/forms/value"
+      },
+      {
         "label": "examples.ibMainMenu.formGrid",
         "link": "/home/forms/grid"
       }
