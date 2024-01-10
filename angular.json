@@ -24,9 +24,7 @@
             ],
             "styles": [
               "src/styles.css",
-              "src/app/inobeta-ui/ui/_index.scss",
-              "src/app/examples/theme.scss",
-              "_index.scss"
+              "src/app/examples/theme.scss"
             ],
             "allowedCommonJsDependencies": [
               "@babel/runtime-corejs3",
@@ -94,7 +92,6 @@
             "karmaConfig": "src/karma.conf.js",
             "styles": [
               "src/styles.css",
-              "src/app/inobeta-ui/ui/_index.scss",
               "src/app/examples/theme.scss"
             ],
             "scripts": [],
