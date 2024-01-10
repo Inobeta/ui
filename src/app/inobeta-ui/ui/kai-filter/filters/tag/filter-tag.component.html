@@ -4,7 +4,7 @@
     {{ displayLabel | translate : displayLabelParams }}
   </span>
 
-  <mat-form-field class="ib-tag-filter-search" style="width: 100%">
+  <mat-form-field class="ib-tag-filter-search">
     <input matInput [(ngModel)]="query" [placeholder]="'shared.ibFilter.search' | translate"/>
   </mat-form-field>
   <section [formGroup]="filter?.form">
