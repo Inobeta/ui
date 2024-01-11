@@ -54,7 +54,6 @@ export class IbFormControlService {
     formArray.patchValue = (value: any[], options) => {
       formArray.controls = [];
       let i = Math.min(Math.max(value.length, 0), source.options.max);
-      console.log(i)
       while (i--) {
         formArray.push(this.toFormGroup(source.fields));
       }

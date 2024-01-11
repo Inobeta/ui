@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { Validators } from "@angular/forms";
-import { BehaviorSubject, Subscription, interval } from "rxjs";
+import { BehaviorSubject } from "rxjs";
 import { IbFormArray } from "src/app/inobeta-ui/ui/forms/array/array";
 import { IbFormField } from "src/app/inobeta-ui/ui/forms/forms.types";
 import {
@@ -13,6 +13,7 @@ import { createNewUser } from "../kai-table-example/users";
 type ContactInfo = {
   fullName: string;
   addresses: { key: string; value: string }[];
+  options: string;
 };
 
 @Component({
@@ -22,7 +23,7 @@ type ContactInfo = {
       <mat-card-header>
         <mat-card-title>Form</mat-card-title>
         <mat-card-subtitle
-          >data will refresh every three seconds</mat-card-subtitle
+          >with value set by parent component</mat-card-subtitle
         >
       </mat-card-header>
       <mat-card-content>
@@ -46,7 +47,6 @@ type ContactInfo = {
 })
 export class MaterialFormValueExampleComponent {
   value$ = new BehaviorSubject<Partial<ContactInfo>>({});
-  interval: Subscription;
 
   formWithArray: IbFormField[] = [
     new IbMatTextboxControl({
@@ -84,31 +84,14 @@ export class MaterialFormValueExampleComponent {
       label: "Search",
     }),
     new IbMatButtonControl({
-      key: "start",
-      label: "start",
-      handler: () => this.start(),
-    }),
-    new IbMatButtonControl({
-      key: "stop",
-      label: "stop",
-      handler: () => this.stop(),
+      key: "refresh",
+      label: "Refresh data",
+      handler: () => this.refresh(),
     }),
   ];
 
   ngOnDestroy() {
-    this.interval?.unsubscribe();
-  }
-
-  start() {
-    if (this.interval) {
-      this.stop();
-    }
-    this.refresh();
-    this.interval = interval(3000).subscribe(() => this.refresh());
-  }
-
-  stop() {
-    this.interval.unsubscribe();
+    this.value$.complete();
   }
 
   refresh() {
