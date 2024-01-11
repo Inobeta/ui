@@ -91,13 +91,11 @@ docs:
   stage: npm:deploy
   script:
     - npm ci --cache .npm --prefer-offline --no-audit --no-fund
-    - npm run doc
-    - dir="$CURRENT_VERSION"
-    - if [ "$CI_COMMIT_REF_SLUG" == "$CI_DEFAULT_BRANCH" ]; then dir="current"; fi;
+    - npm run build-storybook
     - mkdir -p ~/.ssh && echo "$SSH_STAGING" | tr -d '\r' > ~/.ssh/id_rsa && chmod -R 600 ~/.ssh
     - ssh-keyscan -t rsa $STAGING_HOST >> ~/.ssh/known_hosts
-    - ssh $STAGING_USER@$STAGING_HOST "rm -rf ~/Apps/$APPNAME/docs/$dir && mkdir -p ~/Apps/$APPNAME/docs/$dir && cd ~/Apps/$APPNAME/docs/ && sh generate.sh"
-    - scp -r documentation/* $STAGING_USER@$STAGING_HOST:~/Apps/$APPNAME/docs/$dir
+    - ssh $STAGING_USER@$STAGING_HOST "rm -rf ~/Apps/$APPNAME/docs/ && mkdir -p ~/Apps/$APPNAME/docs"
+    - scp -r dist/storybook/ui/* $STAGING_USER@$STAGING_HOST:~/Apps/$APPNAME/docs
   tags:
   - dedicated
   only:
