@@ -74,11 +74,11 @@ export const Simple: Story = {
       ...args,
     },
     template: `
-      <ib-kai-table tableName="products" [displayedColumns]="displayedColumns" [data]="data" [tableDef]="tableDef">
-        <ib-text-column headerText="SKU" name="sku"></ib-text-column>
-        <ib-number-column headerText="Prezzo" name="price"></ib-number-column>
-        <ib-text-column headerText="Categoria" name="category"></ib-text-column>
-        <ib-date-column headerText="Aggiunto il" name="created_at"></ib-date-column>
+      <ib-kai-table tableName="products" [data]="data" [displayedColumns]="displayedColumns" [tableDef]="tableDef">
+        <ib-text-column headerText="SKU" name="sku" />
+        <ib-number-column headerText="Prezzo" name="price" />
+        <ib-text-column headerText="Categoria" name="category" />
+        <ib-date-column headerText="Aggiunto il" name="created_at" />
       </ib-kai-table>
     `,
   }),
@@ -99,10 +99,10 @@ export const WithFilters: Story = {
           <ib-date-filter name="created_at">Aggiunto il</ib-date-filter>
         </ib-filter>
 
-        <ib-text-column headerText="SKU" name="sku"></ib-text-column>
-        <ib-number-column headerText="Prezzo" name="price"></ib-number-column>
-        <ib-text-column headerText="Categoria" name="category"></ib-text-column>
-        <ib-date-column headerText="Aggiunto il" name="created_at"></ib-date-column>
+        <ib-text-column headerText="SKU" name="sku" />
+        <ib-number-column headerText="Prezzo" name="price" />
+        <ib-text-column headerText="Categoria" name="category" />
+        <ib-date-column headerText="Aggiunto il" name="created_at" />
       </ib-kai-table>
     `,
   }),
@@ -118,13 +118,13 @@ export const WithExport: Story = {
     template: `
       <ib-kai-table tableName="products" [displayedColumns]="displayedColumns" [data]="data">
         <ib-table-action-group>
-          <ib-table-data-export-action></ib-table-data-export-action>
+          <ib-table-data-export-action />
         </ib-table-action-group>
 
-        <ib-text-column headerText="SKU" name="sku"></ib-text-column>
-        <ib-number-column headerText="Prezzo" name="price"></ib-number-column>
-        <ib-text-column headerText="Categoria" name="category"></ib-text-column>
-        <ib-date-column headerText="Aggiunto il" name="created_at"></ib-date-column>
+        <ib-text-column headerText="SKU" name="sku" />
+        <ib-number-column headerText="Prezzo" name="price" />
+        <ib-text-column headerText="Categoria" name="category" />
+        <ib-date-column headerText="Aggiunto il" name="created_at" />
       </ib-kai-table>
     `,
   }),

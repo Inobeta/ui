@@ -1,4 +1,10 @@
-<h1>IbTable</h1>
+import { Meta, Canvas } from "@storybook/blocks";
+
+import * as TableStories from './table.stories'
+
+<Meta title="Components/Table/Intro" />
+
+# Table
 
 The `ib-kai-table`, built upon `mat-table` of Angular Material, provides high customization capabilities and out-of-the-box compatibility with other components such as `ib-filter` for filtering, `ib-table-view-group` to manage user-defined views, and much more.
 
@@ -47,9 +53,10 @@ export class SimpleKaiTableExample {
   /* ... */
 })
 export class SimpleKaiTableExample {
-  data = [{column1: 'a value', column2: 'another value'}];
+  data = [{ column1: "a value", column2: "another value" }];
 }
 ```
+
 Next, write your table's column templates.
 
 Each column definition must be given a name. By default, the name of the columns will also used as the header text and data property accessor.
@@ -67,34 +74,30 @@ Finally, tell the table which columns to be rendered.
 Putting it all together, you'll have:
 
 ```typescript
-
 @Component({
   /* ... */
 })
 export class SimpleKaiTableExample {
   data = [
-  {
-    name: "Alice M.",
-    fruit: "apple",
-    hiddenColumn: "this is hidden"
-  },
-  // ...
-];;
+    {
+      name: "Alice M.",
+      fruit: "apple",
+      hiddenColumn: "this is hidden",
+    },
+    // ...
+  ];
   displayedColumns = ["name", "fruit"];
 }
 ```
 
 ```html
-<ib-kai-table
-  [data]="data"
-  [displayedColumns]="displayedColumns"
->
+<ib-kai-table [data]="data" [displayedColumns]="displayedColumns">
   <ib-text-column name="name"></ib-text-column>
   <ib-text-column name="fruit"></ib-text-column>
 </ib-kai-table>
 ```
 
-![simple table](/docs/ib-kai-table/simple.png "Simple IbTable")
+<Canvas of={TableStories.Simple} />
 
 ## Columns
 
@@ -113,8 +116,14 @@ To change the label shown in the header, use `headerText`.
 
 ```html
 <ib-kai-table [dataSource]="dataSource" [displayedColumns]="displayedColumns">
-  <ib-text-column [headerText]="'user.name' | translate" name="name"></ib-text-column>
-  <ib-text-column [headerText]="'user.surname' | translate" name="surname"></ib-text-column>
+  <ib-text-column
+    [headerText]="'user.name' | translate"
+    name="name"
+  ></ib-text-column>
+  <ib-text-column
+    [headerText]="'user.surname' | translate"
+    name="surname"
+  ></ib-text-column>
 </ib-kai-table>
 ```
 
@@ -129,7 +138,11 @@ To change the label shown in the header, use `headerText`.
 ### Number column
 
 ```html
-<ib-number-column name="price" digitsInfo="1.0-2" locale="it"></ib-number-column>
+<ib-number-column
+  name="price"
+  digitsInfo="1.0-2"
+  locale="it"
+></ib-number-column>
 ```
 
 `ib-number-column` displays a decimal value. The decimal representation can be specified with `digitsInfo`, while `locale` will format a value according to locale rules. Since a `DecimalPipe` is used in the implementation, [follow its usage notes to know more](https://angular.io/api/common/DecimalPipe#usage-notes).
@@ -137,7 +150,11 @@ To change the label shown in the header, use `headerText`.
 ### Date column
 
 ```html
-<ib-date-column name="created_at" format="dd/MM/yyyy" locale="it"></ib-date-column>
+<ib-date-column
+  name="created_at"
+  format="dd/MM/yyyy"
+  locale="it"
+></ib-date-column>
 ```
 
 `ib-date-column` shows a formatted date. Since a `DatePipe` is used in the implementation, [follow its usage notes to know more](https://angular.io/api/common/DatePipe#usage-notes).
@@ -147,7 +164,9 @@ To change the label shown in the header, use `headerText`.
 ```html
 <ib-column name="subscribed">
   <ng-container *ibCellDef="let element">
-    <mat-icon [color]="element.subscribed ? 'accent' : ''">{{ element.subscribed ? "done" : "close" }}</mat-icon>
+    <mat-icon [color]="element.subscribed ? 'accent' : ''"
+      >{{ element.subscribed ? "done" : "close" }}</mat-icon
+    >
   </ng-container>
 </ib-column>
 ```
@@ -161,7 +180,10 @@ If custom logic is needed instead, please follow [how to extend a column](#exten
 ### Action column
 
 ```html
-<ib-kai-table [displayedColumns]="['name', 'fruit', 'stock']" [dataSource]="dataSource">
+<ib-kai-table
+  [displayedColumns]="['name', 'fruit', 'stock']"
+  [dataSource]="dataSource"
+>
   <!-- ... -->
   <ib-column ib-action-column>
     <section *ibCellDef="let element">
@@ -236,12 +258,7 @@ export class IbBooleanColumn<T> extends IbColumn<T> {
 
 ```html
 <!-- boolean.column.component.html -->
-<ng-container
-  matColumnDef
-  matSort
-  [sticky]="sticky"
-  [stickyEnd]="stickyEnd"
->
+<ng-container matColumnDef matSort [sticky]="sticky" [stickyEnd]="stickyEnd">
   <th
     class="ib-table__header-cell"
     mat-header-cell
@@ -263,11 +280,12 @@ export class IbBooleanColumn<T> extends IbColumn<T> {
 </ng-container>
 ```
 
-||Info
-|-|-|
-`matColumnDef`|Column definition for the mat-table.
-`matSort`|*Dummy* instance of `matSort`.
-`sticky`; `stickyEnd`|Whether the column should be sticky positioned.
+|                       | Info                                            |
+| --------------------- | ----------------------------------------------- |
+| `matColumnDef`        | Column definition for the mat-table.            |
+| `matSort`             | _Dummy_ instance of `matSort`.                  |
+| `sticky`; `stickyEnd` | Whether the column should be sticky positioned. |
+
 |
 `mat-header-cell`|Header cell template container that adds the right classes and role.
 `*matHeaderCellDef`|Header cell definition for the mat-table. Captures the template of a column's header cell.
@@ -279,21 +297,21 @@ export class IbBooleanColumn<T> extends IbColumn<T> {
 `*matCellDef`|Cell definition for the mat-table.
 `dataAccessor(data, name)`|Accessor function to retrieve the data rendered for each cell.
 
-During declaration, `IbColumn` depends on `MatTableModule`. To add sorting support, import `MatSortModule` as well. 
+During declaration, `IbColumn` depends on `MatTableModule`. To add sorting support, import `MatSortModule` as well.
 
 ```typescript
 @NgModule({
   imports: [
     // ...
     MatTableModule,
-    MatSortModule
+    MatSortModule,
   ],
   declarations: [
     // ..
     IbBooleanColumn,
   ],
 })
-export class CustomColumnExampleModule { }
+export class CustomColumnExampleModule {}
 ```
 
 ## Sorting
@@ -333,26 +351,30 @@ To define filters, first import `IbFilterModule` alongside `IbKaiTableModule`.
 
 ```typescript
 @NgModule({
-  imports: [
-    IbKaiTableModule, 
-    IbFilterModule,
-  ],
+  imports: [IbKaiTableModule, IbFilterModule],
   // ...
 })
-export class TableWithFiltersModule { }
+export class TableWithFiltersModule {}
 ```
 
 Then, add the necessary filters withing your table. Each filter requires a `name` that must match a column defined with the same name.
 
 ```html
-<ib-kai-table [displayedColumns]="['name', 'fruit', 'quantity', 'purchased_at']" [dataSource]="dataSource">
+<ib-kai-table
+  [displayedColumns]="['name', 'fruit', 'quantity', 'purchased_at']"
+  [dataSource]="dataSource"
+>
   <ib-filter>
     <ib-search-bar></ib-search-bar>
 
     <ib-text-filter name="name">{{ 'user.name' | translate }}</ib-text-filter>
     <ib-tag-filter name="fruit">{{ 'fruit.name' | translate }}</ib-tag-filter>
-    <ib-number-filter name="quantity">{{ 'common.quantity' | translate }}</ib-number-filter>
-    <ib-date-filter name="purchased_at">{{ 'common.purchasedAt' | translate }}</ib-date-filter>
+    <ib-number-filter name="quantity"
+      >{{ 'common.quantity' | translate }}</ib-number-filter
+    >
+    <ib-date-filter name="purchased_at"
+      >{{ 'common.purchasedAt' | translate }}</ib-date-filter
+    >
   </ib-filter>
 
   <ib-text-column name="name"></ib-text-column>
@@ -360,24 +382,25 @@ Then, add the necessary filters withing your table. Each filter requires a `name
   <ib-number-column name="quantity"></ib-number-column>
   <ib-date-column name="purchased_at"></ib-date-column>
 </ib-kai-table>
-
 ```
 
 **Filters**
 
-|Name|Usage|
-|--|-|
-`ib-text-filter`|Text-based search.
-`ib-tag-filter`|Selection-based search. By default, a distinct set of options is generated from the column's data. Can be overriden with `options`. Use `[multiple]="false"` to disable mutli selection.
-`ib-number-filter`|Number-based search. By default, the minimum and maximum values are set from the column's data. Can be overriden with `min` and `max`. Use `step` to define the precision of the slider.
-`ib-date-filter`|Date-based search. 
+| Name               | Usage                                                                                                                                                                                    |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ib-text-filter`   | Text-based search.                                                                                                                                                                       |
+| `ib-tag-filter`    | Selection-based search. By default, a distinct set of options is generated from the column's data. Can be overriden with `options`. Use `[multiple]="false"` to disable mutli selection. |
+| `ib-number-filter` | Number-based search. By default, the minimum and maximum values are set from the column's data. Can be overriden with `min` and `max`. Use `step` to define the precision of the slider. |
+| `ib-date-filter`   | Date-based search.                                                                                                                                                                       |
 
 ## Selection
 
 To activate checkbox selection, add an `ib-selection-column` to the table.
 
 ```html
-<ib-selection-column (ibRowSelectionChange)="selectionChange($event)"></ib-selection-column>
+<ib-selection-column
+  (ibRowSelectionChange)="selectionChange($event)"
+></ib-selection-column>
 ```
 
 Listen to `ibRowSelectionChange` in order to obtain the rows selected by the user. The event fires an _array_ containing the selected rows, each element is of type `IbTableRowSelectionChange` declared as follows:
@@ -435,15 +458,12 @@ To enable data export from a table, first import `IbDataExportModule` alongside 
 
 ```typescript
 @NgModule({
-  imports: [
-    IbKaiTableModule,
-    IbTableActionModule,
-    IbDataExportModule,
-  ],
+  imports: [IbKaiTableModule, IbTableActionModule, IbDataExportModule],
   // ...
 })
 export class TableWithExportModule {}
 ```
+
 Then add the export button within `ib-table-action-group` in the table.
 
 ```html
@@ -461,14 +481,8 @@ The formats can be overriden by including the providers desired, as such:
 
 ```typescript
 @NgModule({
-  imports: [
-    IbKaiTableModule,
-    IbTableActionModule,
-    IbDataExportModule,
-  ],
-   providers: [
-    IbXLXSExportProvider,
-  ],
+  imports: [IbKaiTableModule, IbTableActionModule, IbDataExportModule],
+  providers: [IbXLXSExportProvider],
 })
 export class TableWithExportModule {}
 ```
@@ -489,4 +503,4 @@ Use `aggregate` to show a roll-up footer row in your table. Each column has a di
 
 Server-side interactions only available with an instance of `IbDataSource` used as input.
 
-> However, this feature is currently under-construction, and not yet suitable for production. 
+> However, this feature is currently under-construction, and not yet suitable for production.
