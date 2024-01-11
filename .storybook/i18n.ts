@@ -1,27 +1,25 @@
-import { NgModule } from "@angular/core";
-import { TranslateLoader, TranslateModule, TranslateService } from "@ngx-translate/core";
-import { of } from "rxjs";
-
-export const staticTranslateLoader: TranslateLoader = {
-  getTranslation(lang: string) {
-      return of(require('../src/assets/i18n/it.json'));
-  }
-};
+import { HttpClient, HttpClientModule } from "@angular/common/http";
+import { NgModule, importProvidersFrom } from "@angular/core";
+import {
+  TranslateLoader,
+  TranslateModule,
+  TranslateService,
+} from "@ngx-translate/core";
+import { IbTranslateModuleLoader } from "../src/app/inobeta-ui/translate/translate-loader.service";
 
 @NgModule({
   imports: [
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
-        useValue: staticTranslateLoader,
+        useExisting: IbTranslateModuleLoader,
+        deps: [HttpClient],
       },
     }),
   ],
 })
 export class StorybookTranslateModule {
   constructor(translateService: TranslateService) {
-    console.log("Configuring the translation service: ", translateService);
-    console.log("Translations: ", translateService.translations);
     translateService.setDefaultLang("it");
     translateService.use("it");
   }

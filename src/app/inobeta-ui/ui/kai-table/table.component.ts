@@ -74,8 +74,7 @@ export class IbTable implements OnDestroy {
   expandedElement: any;
   actionPortals: Portal<any>[] = [];
 
-  states = IbKaiTableState;
-  state = IbKaiTableState.IDLE;
+  state: IbKaiTableState = "idle";
 
   @Input()
   set data(data: any[]) {
@@ -180,10 +179,6 @@ export class IbTable implements OnDestroy {
     this.aggregateColumns.clear();
     this._destroyed.next();
     this._destroyed.complete();
-  }
-
-  isState(state: IbKaiTableState) {
-    return this.state === state;
   }
 
   private setupFilter() {

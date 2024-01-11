@@ -1,5 +1,4 @@
 import { StorybookTranslateModule } from ".storybook/i18n";
-import { MatTableDataSource } from "@angular/material/table";
 import { provideAnimations } from "@angular/platform-browser/animations";
 import {
   Meta,
@@ -29,7 +28,7 @@ const tableData = [
 ];
 
 const meta: Meta = {
-  title: "IbTable",
+  title: "Components/Table",
   component: IbTable,
   tags: ["autodocs"],
   decorators: [
@@ -68,11 +67,11 @@ export const Simple: Story = {
   },
   render: (args) => ({
     props: {
-      dataSource: new MatTableDataSource(tableData),
+      data: tableData,
       ...args,
     },
     template: `
-      <ib-kai-table tableName="products" [displayedColumns]="displayedColumns" [dataSource]="dataSource" [tableDef]="tableDef">
+      <ib-kai-table tableName="products" [displayedColumns]="displayedColumns" [data]="data" [tableDef]="tableDef">
         <ib-text-column headerText="SKU" name="sku"></ib-text-column>
         <ib-number-column headerText="Prezzo" name="price"></ib-number-column>
         <ib-text-column headerText="Categoria" name="category"></ib-text-column>
@@ -85,11 +84,11 @@ export const Simple: Story = {
 export const WithFilters: Story = {
   render: () => ({
     props: {
-      dataSource: new MatTableDataSource(tableData),
+      data: tableData,
       displayedColumns: ["sku", "price", "category", "created_at"],
     },
     template: `
-      <ib-kai-table tableName="daje" [displayedColumns]="displayedColumns" [dataSource]="dataSource">
+      <ib-kai-table tableName="daje" [displayedColumns]="displayedColumns" [data]="data">
         <ib-filter>
           <ib-text-filter name="sku">SKU</ib-text-filter>
           <ib-number-filter name="price" [step]="0.01">Prezzo</ib-number-filter>
@@ -108,13 +107,13 @@ export const WithFilters: Story = {
 
 export const WithExport: Story = {
   args: {
-    dataSource: new MatTableDataSource(tableData),
+    data: tableData,
     displayedColumns: ["sku", "price", "category", "created_at"],
   },
   render: (args) => ({
     props: args,
     template: `
-      <ib-kai-table tableName="products" [displayedColumns]="displayedColumns" [dataSource]="dataSource">
+      <ib-kai-table tableName="products" [displayedColumns]="displayedColumns" [data]="data">
         <ib-table-action-group>
           <ib-table-data-export-action></ib-table-data-export-action>
         </ib-table-action-group>

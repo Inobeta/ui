@@ -6,8 +6,8 @@
   </section>
 </section>
 <ng-content select="ib-filter"></ng-content>
-<div class="ib-table-scrollable" [class.ib-table-scrollable--loading]="isState(states.LOADING)">
-  <div class="ib-table-progress-bar" *ngIf="isState(states.LOADING)">
+<div class="ib-table-scrollable" [class.ib-table-scrollable--loading]="state === 'loading'">
+  <div class="ib-table-progress-bar" *ngIf="state === 'loading'">
     <mat-progress-bar mode="indeterminate"></mat-progress-bar>
   </div>
   <table
@@ -45,12 +45,12 @@
     <tr *matNoDataRow>
       <td [attr.colspan]="columns.length">
         <div style="display: flex; flex-direction: column; align-items: center; padding: 12px;">
-          <ng-container *ngIf="isState(states.IDLE)">
+          <ng-container *ngIf="state === 'idle'">
             <mat-icon style="color: #888">inbox</mat-icon>
             {{ "common.noItems" | translate }}
           </ng-container>
 
-          <ng-container *ngIf="isState(states.HTTP_ERROR)">
+          <ng-container *ngIf="state === 'http_error'">
             <mat-icon style="color: #888">error</mat-icon>
             {{ "common.httpError" | translate }}
           </ng-container>

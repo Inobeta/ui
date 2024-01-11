@@ -1,5 +1,7 @@
-import type { Preview } from "@storybook/angular";
+import { HttpClientModule } from "@angular/common/http";
+import { importProvidersFrom } from "@angular/core";
 import { setCompodocJson } from "@storybook/addon-docs/angular";
+import { applicationConfig, type Preview } from "@storybook/angular";
 import docJson from "../documentation.json";
 setCompodocJson(docJson);
 
@@ -13,6 +15,11 @@ const preview: Preview = {
       },
     },
   },
+  decorators: [
+    applicationConfig({
+      providers: [importProvidersFrom(HttpClientModule)],
+    }),
+  ],
 };
 
 export default preview;
