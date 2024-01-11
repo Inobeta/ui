@@ -50,7 +50,15 @@ export class IbFormControlService {
 
   toFormArray(source: IbFormArray) {
     const formArray = new UntypedFormArray([]);
-    formArray.push(this.toFormGroup(source.fields));
+    const patchValue = formArray.patchValue;
+    formArray.patchValue = (value: any[], options) => {
+      formArray.controls = [];
+      let i = Math.min(Math.max(value.length, 0), source.options.max);
+      while (i--) {
+        formArray.push(this.toFormGroup(source.fields));
+      }
+      patchValue.call(formArray, value, options);
+    }
     return formArray;
   }
 }

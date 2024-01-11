@@ -16,7 +16,10 @@ export const ibMaterialFormTranslations = {
         "date": "Data non valida"
       },
       "unsavedTitle": "Attenzione",
-      "unsavedMessage": "Questa pagina potrebbe contenere dei dati non salvati, vuoi proseguire?"
+      "unsavedMessage": "Questa pagina potrebbe contenere dei dati non salvati, vuoi proseguire?",
+      array: {
+        add: "Aggiungi un campo"
+      }
     },
   }
 }

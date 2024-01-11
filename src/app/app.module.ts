@@ -62,6 +62,7 @@ import { IbTableModule } from "./inobeta-ui/ui/table/table.module";
 import { IbToastModule } from "./inobeta-ui/ui/toast/toast.module";
 import { IbViewModule } from "./inobeta-ui/ui/views/view.module";
 import { RoutingModule } from "./routing.module";
+import { MaterialFormValueExampleComponent } from "./examples/material-form-value-example/material-form.value.component";
 
 export interface IAppState {
   ibHttpState: IHttpStore;
@@ -101,6 +102,7 @@ const reduxStorageSave = ibSetupHydration("__redux-store-inobeta-ui__", [
     MaterialFormArrayExampleComponent,
     MaterialFormExampleComponent,
     MaterialFormGridExampleComponent,
+    MaterialFormValueExampleComponent
   ],
   imports: [
     CommonModule,

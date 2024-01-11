@@ -30,6 +30,7 @@
       "dynamicFormsDynamicForms": "Dynamic forms (API)",
       "basicForm": "Material Form",
       "formArray": "With Array",
+      "formValue": "With Value",
       "formGrid": "With Grid",
 
       "httpMain": "Http",
