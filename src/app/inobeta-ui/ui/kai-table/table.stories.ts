@@ -1,4 +1,6 @@
 import { StorybookTranslateModule } from ".storybook/i18n";
+import { registerLocaleData } from "@angular/common";
+import localeIt from "@angular/common/locales/it";
 import { provideAnimations } from "@angular/platform-browser/animations";
 import {
   Meta,
@@ -27,6 +29,7 @@ const tableData = [
   },
 ];
 
+registerLocaleData(localeIt);
 const meta: Meta = {
   title: "Components/Table",
   component: IbTable,

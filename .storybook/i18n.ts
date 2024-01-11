@@ -1,5 +1,5 @@
-import { HttpClient, HttpClientModule } from "@angular/common/http";
-import { NgModule, importProvidersFrom } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { NgModule } from "@angular/core";
 import {
   TranslateLoader,
   TranslateModule,
