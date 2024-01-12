@@ -37,7 +37,6 @@ import { IbAggregateCell } from "./cells";
 import { IbDataSource } from "./table-data-source";
 import { IbTable } from "./table.component";
 import { IbKaiTableModule } from "./table.module";
-import { IbKaiTableState } from "./table.types";
 
 describe("IbTable", () => {
   describe("with MatTableDataSource", () => {
@@ -120,7 +119,7 @@ describe("IbTable", () => {
       component.dataSource.refresh();
       tick(1);
       fixture.detectChanges();
-      expect(component.state === IbKaiTableState.HTTP_ERROR).toBeTruthy();
+      expect(component.state === 'http_error').toBeTruthy();
     }));
   });
 
