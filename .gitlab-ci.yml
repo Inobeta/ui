@@ -8,7 +8,7 @@ stages:
   - examples:deploy
 
 cache:
-  key: npm
+  key: $CI_COMMIT_REF_SLUG-$CI_PROJECT_DIR
   policy: pull-push
   paths:
     - .npm/
