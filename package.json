@@ -16,6 +16,7 @@
     "pre-release": "npm version --no-git-tag-version prerelease",
     "storybook": "ng run ui:storybook",
     "build-storybook": "ng run ui:build-storybook",
+    "chromatic": "chromatic --exit-zero-on-changes",
     "patch": "npm version --no-git-tag-version patch",
     "minor": "npm version --no-git-tag-version minor",
     "major": "npm version --no-git-tag-version major"
@@ -50,6 +51,7 @@
     "@types/jasmine": "~3.6.0",
     "@types/jasminewd2": "~2.0.2",
     "@types/node": "^20.10.0",
+    "chromatic": "^10.2.1",
     "jasmine-core": "^4.1.1",
     "jasmine-spec-reporter": "~5.0.0",
     "karma": "~6.3.4",
@@ -102,5 +104,7 @@
     ".": {
       "sass": "./_index.scss"
     }
-  }
+  },
+  "readme": "ERROR: No README data found!",
+  "_id": "@inobeta/ui@17.1.0"
 }

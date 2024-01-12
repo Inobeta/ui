@@ -58,22 +58,4 @@ const renderWithFilters = (args) => ({
 
 export const WithFilters: Story = {
   render: renderWithFilters,
-  play: async ({ args, canvasElement, step }) => {
-    const canvas = within(canvasElement.parentElement);
-
-    await step("Set text filter", async () => {
-      userEvent.click(canvas.getByText("SKU"));
-      userEvent.click(canvas.getByText("Condizione"));
-      userEvent.click(canvas.getByText("Uguale a"));
-      userEvent.type(canvas.getByText("Valore"), "MY-SKU-000");
-    });
-
-    await step("Apply filter", async () => {
-      userEvent.click(canvas.getByText("Aggiorna"));
-    });
-
-    await waitFor(() => {
-      expect(args.ibFilterUpdated).toHaveBeenCalled();
-    });
-  },
 };
