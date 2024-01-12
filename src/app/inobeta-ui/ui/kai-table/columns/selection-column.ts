@@ -14,7 +14,7 @@ import {
   MatFooterCellDef,
   MatHeaderCellDef,
 } from "@angular/material/table";
-import { IbKaiTableState, IbTableRowSelectionChange } from "../table.types";
+import { IbTableRowSelectionChange } from "../table.types";
 import { IB_TABLE } from "../tokens";
 
 @Component({
@@ -111,6 +111,6 @@ export class IbSelectionColumn implements OnInit {
   }
 
   isDisabled() {
-    return !this.table.isState(IbKaiTableState.IDLE);
+    return !(this.table.state !== "idle");
   }
 }

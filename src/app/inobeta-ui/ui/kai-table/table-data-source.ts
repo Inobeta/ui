@@ -83,7 +83,7 @@ export class IbDataSource<
     this._state.next(value);
   }
 
-  _state = new BehaviorSubject<IbKaiTableState>(IbKaiTableState.IDLE);
+  _state = new BehaviorSubject<IbKaiTableState>('idle');
 
   get filter() {
     return this._filter.value;
@@ -127,7 +127,7 @@ export class IbDataSource<
       ),
       debounceTime(0),
       switchMap(() => {
-        this.state = IbKaiTableState.LOADING;
+        this.state = 'loading';
         return this.fetchData(
           this._sort.active,
           this._sort.direction,
@@ -135,7 +135,7 @@ export class IbDataSource<
           this.filter
         ).pipe(
           catchError(() => {
-            this.state = IbKaiTableState.HTTP_ERROR;
+            this.state = 'http_error';
             return of(null);
           })
         );
@@ -145,7 +145,7 @@ export class IbDataSource<
           return [];
         }
 
-        this.state = IbKaiTableState.IDLE;
+        this.state = 'idle';
         this._paginator.length = this.updatePaginator(data);
         return this.mapData(data);
       })

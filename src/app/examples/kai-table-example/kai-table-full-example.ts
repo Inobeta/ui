@@ -22,12 +22,12 @@ import { UserService } from "./users";
         <button mat-icon-button (click)="getUserOrders()">
           <mat-icon>refresh</mat-icon>
         </button>
-        <ib-table-data-export-action></ib-table-data-export-action>
+        <ib-table-data-export-action />
       </ib-table-action-group>
 
-      <ib-table-view-group></ib-table-view-group>
+      <ib-table-view-group />
       <ib-filter>
-        <ib-search-bar></ib-search-bar>
+        <ib-search-bar />
 
         <ib-text-filter name="name">Name</ib-text-filter>
         <ib-tag-filter name="fruit">Fruit</ib-tag-filter>
@@ -35,18 +35,11 @@ import { UserService } from "./users";
         <ib-date-filter name="aDate">Purchased</ib-date-filter>
       </ib-filter>
 
-      <ib-selection-column
-        (ibRowSelectionChange)="selectionChange($event)"
-      ></ib-selection-column>
-      <ib-text-column headerText="Name" name="name" sort></ib-text-column>
-      <ib-text-column headerText="Fruit" name="fruit" sort></ib-text-column>
-      <ib-number-column
-        headerText="Amount"
-        name="number"
-        aggregate
-        sort
-      ></ib-number-column>
-      <ib-date-column headerText="Purchased" name="aDate" sort></ib-date-column>
+      <ib-selection-column (ibRowSelectionChange)="selectionChange($event)" />
+      <ib-text-column headerText="Name" name="name" sort />
+      <ib-text-column headerText="Fruit" name="fruit" sort />
+      <ib-number-column headerText="Amount" name="number" aggregate sort />
+      <ib-date-column headerText="Purchased" name="aDate" sort />
       <ib-column name="subscribed" sort>
         <ng-container *ibCellDef="let element">
           <mat-icon [color]="element.subscribed ? 'accent' : ''">{{

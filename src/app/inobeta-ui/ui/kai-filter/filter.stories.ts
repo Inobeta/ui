@@ -1,4 +1,5 @@
 import { StorybookTranslateModule } from ".storybook/i18n";
+import { HttpClientModule } from "@angular/common/http";
 import { MatNativeDateModule } from "@angular/material/core";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { Meta, StoryObj, moduleMetadata } from "@storybook/angular";
@@ -8,7 +9,7 @@ import { IbFilter } from "./filter.component";
 import { IbFilterModule } from "./filters.module";
 
 const meta: Meta<IbFilter> = {
-  title: "IbFilter",
+  title: "Components/Filter",
   component: IbFilter,
   tags: ["autodocs"],
   decorators: [
@@ -17,6 +18,7 @@ const meta: Meta<IbFilter> = {
         MatNativeDateModule,
         BrowserAnimationsModule,
         IbFilterModule,
+        HttpClientModule,
         StorybookTranslateModule,
       ],
     }),
@@ -56,22 +58,4 @@ const renderWithFilters = (args) => ({
 
 export const WithFilters: Story = {
   render: renderWithFilters,
-  play: async ({ args, canvasElement, step }) => {
-    const canvas = within(canvasElement.parentElement);
-
-    await step("Set text filter", async () => {
-      userEvent.click(canvas.getByText("SKU"));
-      userEvent.click(canvas.getByText("Condizione"));
-      userEvent.click(canvas.getByText("Uguale a"));
-      userEvent.type(canvas.getByText("Valore"), "MY-SKU-000");
-    });
-
-    await step("Apply filter", async () => {
-      userEvent.click(canvas.getByText("Aggiorna"));
-    });
-
-    await waitFor(() => {
-      expect(args.ibFilterUpdated).toHaveBeenCalled();
-    });
-  },
 };

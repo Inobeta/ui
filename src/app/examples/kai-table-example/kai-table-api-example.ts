@@ -7,7 +7,7 @@ import {
   IbTagFilterCriteria,
   IbTextFilterCriteria,
 } from "../../inobeta-ui/ui/kai-filter/filter.types";
-import { IbKaiTableState, IbTableDef } from "../../inobeta-ui/ui/kai-table";
+import { IbTableDef } from "../../inobeta-ui/ui/kai-table";
 import { IbDataSource } from "../../inobeta-ui/ui/kai-table/table-data-source";
 import { IbTable } from "../../inobeta-ui/ui/kai-table/table.component";
 
@@ -79,7 +79,12 @@ class GithubService {
       </button>
       <button mat-raised-button (click)="setState('idle')">set to idle</button>
     </div>
-    <ib-kai-table #table [displayedColumns]="['created', 'state', 'number', 'title']" [dataSource]="dataSource" [tableDef]="tableDef">
+    <ib-kai-table
+      #table
+      [displayedColumns]="['created', 'state', 'number', 'title']"
+      [dataSource]="dataSource"
+      [tableDef]="tableDef"
+    >
       <ib-filter>
         <ib-date-filter name="created">Created</ib-date-filter>
         <ib-tag-filter
@@ -91,7 +96,13 @@ class GithubService {
         <ib-text-filter name="title">Title</ib-text-filter>
       </ib-filter>
 
-      <ib-date-column headerText="Created" name="created" [dataAccessor]="createdAtAccessor" format="d MMM yyyy" sort></ib-date-column>
+      <ib-date-column
+        headerText="Created"
+        name="created"
+        [dataAccessor]="createdAtAccessor"
+        format="d MMM yyyy"
+        sort
+      ></ib-date-column>
       <ib-text-column name="state"></ib-text-column>
       <ib-text-column headerText="#" name="number"></ib-text-column>
       <ib-text-column name="title"></ib-text-column>
@@ -130,7 +141,7 @@ export class IbKaiTableApiExamplePage {
 
   isRateLimitReached = false;
   resultsLength = 0;
-  createdAtAccessor = (data: GithubIssue, name: string) => data.created_at
+  createdAtAccessor = (data: GithubIssue, name: string) => data.created_at;
 
   constructor(private github: GithubService) {}
 
@@ -147,10 +158,10 @@ export class IbKaiTableApiExamplePage {
 
   setState(state: string) {
     if (state === "loading") {
-      return (this.kaiTable.state = IbKaiTableState.LOADING);
+      return (this.kaiTable.state = "loading");
     }
 
-    this.kaiTable.state = IbKaiTableState.IDLE;
+    this.kaiTable.state = "idle";
   }
 
   refresh() {
