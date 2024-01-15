@@ -1,5 +1,11 @@
 # Inobeta/UI Changelog
 
+## Unreleased
+
+| Issue ID | Type | Section | Description |
+| -- | -- | -- | -- |
+|DEVK-261|feat|IbDynamicForm|Added `value` input to `ib-material-form`|
+
 ## [17.0.1] (2024-01-10)
 
 | Issue ID | Type | Section | Description |

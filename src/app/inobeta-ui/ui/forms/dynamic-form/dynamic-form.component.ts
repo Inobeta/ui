@@ -10,8 +10,6 @@ import {
 } from "@angular/core";
 import { UntypedFormGroup } from "@angular/forms";
 import { Observable, Subject } from "rxjs";
-import { IbFormArray } from "../array/array";
-import { IbFormControlBase } from "../controls/form-control-base";
 import { IbFormControlService } from "../form-control.service";
 import { IbFormField } from "../forms.types";
 
@@ -34,6 +32,7 @@ interface IbFormOnChanges {
 })
 export class IbDynamicFormComponent implements OnInit, OnChanges, OnDestroy {
   @Input() fields: IbFormField[] = [];
+  @Input() value: Record<string, unknown> = {};
   @Input() actions: IbFormAction[] = [{ key: "submit", label: "Save" }];
   @Input() cols: number;
   /**
@@ -54,6 +53,7 @@ export class IbDynamicFormComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit() {
     this.form = this.cs.toFormGroup(this.fields);
+    this.form.patchValue(this.value);
     this.onInitSubject.next(this.form);
     if (this.disabledOnInit) {
       this.form.disable();
@@ -67,6 +67,11 @@ export class IbDynamicFormComponent implements OnInit, OnChanges, OnDestroy {
       this.form = this.cs.toFormGroup(fields.currentValue);
     }
 
+    const value = changes.value;
+    if (value && !value.isFirstChange()) {
+      this.form.patchValue(value.currentValue);
+    }
+    
     const cols = changes.cols;
     if (fields && cols) {
       const hasFormArray = (fields.currentValue as IbFormField[]).find(

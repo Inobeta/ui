@@ -4,6 +4,7 @@ import { debounceTime } from 'rxjs/operators';
 import { TemplateRef, Type } from '@angular/core';
 
 export class IbFormControlBase<T> {
+  /** @deprecated Use the `value` input in `ib-material-form` instead */
   public value: T;
   public disabled: boolean;
   public key: string;
