@@ -36,6 +36,7 @@ export class IbDynamicFormComponent implements OnInit, OnChanges, OnDestroy {
   @Input() actions: IbFormAction[] = [{ key: "submit", label: "Save" }];
   @Input() cols: number;
   /**
+   * @ignore
    * @deprecated
    * this input will be removed in a future release.
    * Utilizzare una subscription ad `afterInit()` per eseguire codice immediatamente dopo aver
@@ -45,8 +46,10 @@ export class IbDynamicFormComponent implements OnInit, OnChanges, OnDestroy {
   @Output() ibSubmit = new EventEmitter<any>();
   form: UntypedFormGroup;
 
+  /** @ignore */
   private readonly onInitSubject = new Subject<UntypedFormGroup>();
-
+  
+  /** @ignore */
   private readonly onChangesSubject = new Subject<IbFormOnChanges>();
 
   constructor(private cs: IbFormControlService) {}
@@ -93,11 +96,11 @@ export class IbDynamicFormComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.onInitSubject.unsubscribe();
-    this.onChangesSubject.unsubscribe();
+    this.onInitSubject?.complete();
+    this.onChangesSubject?.complete();
   }
 
-  onSubmit() {
+  handleSubmit() {
     this.ibSubmit.emit(this.form.getRawValue());
   }
 

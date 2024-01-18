@@ -1,0 +1,134 @@
+import { Meta, Canvas, Source } from "@storybook/blocks";
+
+<Meta title="Forms/Controls" />
+
+# Control recepies
+
+## Autocomplete
+
+```typescript
+new IbMatAutocompleteControl({
+  key: "country",
+  label: "Country",
+  options: [
+    { value: "Italy" },
+    { value: "Germany" },
+    { value: "France" },
+    { value: "Spain" },
+  ],
+});
+```
+
+## Button
+
+```typescript
+new IbMatButtonControl({
+  key: "clear",
+  label: "Clear",
+  color: "accent",
+  handler: (form) => form.reset(),
+});
+```
+
+## Checkbox
+
+```typescript
+new IbMatCheckboxControl({
+  key: "eggs",
+  label: "Buy some eggs",
+});
+```
+
+## Datepicker
+
+```typescript
+new IbMatDatepickerControl({
+  type: "date",
+  key: "departureAt",
+  label: "Departure",
+});
+```
+
+## Dropdown
+
+```typescript
+new IbMatDropdownControl({
+  key: "theme",
+  label: "Theme",
+  value: "auto",
+  options: [
+    { key: "auto", value: "System default" },
+    { key: "light", value: "Light" },
+    { key: "dark", value: "Dark" },
+  ],
+});
+```
+
+## Radio
+
+```typescript
+new IbMatRadioControl({
+  key: "newsletter",
+  value: false,
+  label: "Do you want to subscribe to the newsletter?",
+  options: [
+    { key: true, value: "Yes" },
+    { key: false, value: "No" },
+  ],
+});
+```
+
+## Slide toggle
+
+```typescript
+new IbMatSlideToggleControl({
+  key: "storeUserAgent",
+  label: "Remember this device",
+  width: "100%",
+});
+```
+
+## Textarea
+
+```typescript
+new IbMatTextareaControl({
+  key: "textarea",
+  label: "Enter your answer",
+  width: "100%",
+  height: "120px",
+});
+```
+
+## Textbox
+
+```typescript
+new IbMatTextboxControl({
+  key: "name",
+  label: "Name",
+  // type: "text",
+});
+```
+
+```typescript
+new IbMatTextboxControl({
+  key: "email",
+  label: "Email",
+  type: "email",
+});
+```
+
+```typescript
+new IbMatTextboxControl({
+  key: "password",
+  label: "Password",
+  type: "password",
+});
+```
+
+```typescript
+new IbMatTextboxControl({
+  key: "age",
+  label: "Age",
+  type: "number",
+});
+```

@@ -31,7 +31,7 @@ const tableData = [
 
 registerLocaleData(localeIt);
 const meta: Meta = {
-  title: "Components/Table",
+  title: "Table",
   component: IbTable,
   tags: ["autodocs"],
   decorators: [

@@ -1,26 +1,26 @@
 import { StorybookTranslateModule } from ".storybook/i18n";
 import { HttpClientModule } from "@angular/common/http";
 import { MatNativeDateModule } from "@angular/material/core";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { Meta, StoryObj, moduleMetadata } from "@storybook/angular";
-import { expect } from "@storybook/jest";
-import { userEvent, waitFor, within } from "@storybook/testing-library";
+import { provideAnimations } from "@angular/platform-browser/animations";
+import { Meta, StoryObj, applicationConfig, moduleMetadata } from "@storybook/angular";
 import { IbFilter } from "./filter.component";
 import { IbFilterModule } from "./filters.module";
 
 const meta: Meta<IbFilter> = {
-  title: "Components/Filter",
+  title: "Filter",
   component: IbFilter,
   tags: ["autodocs"],
   decorators: [
     moduleMetadata({
       imports: [
         MatNativeDateModule,
-        BrowserAnimationsModule,
         IbFilterModule,
         HttpClientModule,
         StorybookTranslateModule,
       ],
+    }),
+    applicationConfig({
+      providers: [provideAnimations()],
     }),
   ],
   argTypes: {
