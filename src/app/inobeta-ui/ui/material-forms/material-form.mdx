@@ -187,3 +187,50 @@ fields = [
 ```
 
 <Canvas of={MatFormStories.WithFormArray} />
+
+## Form lifecycle hooks
+
+Accessing to a form with `@ViewChild` will let you access to its lifecycle hooks through the observables `afterInit()` and `afterChanges()`
+
+```html
+<!-- form-hooks.component.html -->
+<ib-material-form
+  #form
+  [fields]="fields"
+  [actions]="actions"
+  (ibSubmit)="handleSubmit($event)"
+/>
+```
+
+```typescript
+@Component({
+  selector: "app-form-hooks-example",
+  template: `form-hooks.component.html`,
+})
+export class FormHooksExampleComponent {
+  @ViewChild("form", { static: true })
+  form: IbMaterialFormComponent;
+
+  fields = [
+    // your fields
+  ];
+
+  actions = [
+    // your actions
+  ];
+
+  ngOnInit() {
+    this.form.afterInit().subscribe((form) => {
+      form.disable();
+    });
+
+    this.form.afterChanges().subscribe(({ changes, form }) => {
+      console.log(changes);
+    });
+  }
+
+  handleSubmit(data) {
+    /* ... */
+  }
+}
+```
