@@ -51,7 +51,6 @@ export const Textbox: Story = {
       new IbMatTextboxControl({
         key: "fullName",
         label: "Full name",
-        value: ""
       }),
     ],
   },
@@ -102,6 +101,23 @@ export const SimpleLogin: Story = {
       new IbMatButtonControl({
         key: "submit",
         label: "Login",
+      }),
+    ],
+  },
+};
+
+export const PreInitialized: Story = {
+  render,
+  args: {
+    value: { firstName: "John", lastName: "Doe" },
+    fields: [
+      new IbMatTextboxControl({
+        key: "firstName",
+        label: "First name",
+      }),
+      new IbMatTextboxControl({
+        key: "lastName",
+        label: "Last name",
       }),
     ],
   },

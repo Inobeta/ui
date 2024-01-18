@@ -73,7 +73,7 @@ Each action needs a `key`, `label`, and `handler` (callback) field (except for t
 
 ```typescript
 customActions = [
-  // 👇 this is required! 
+  // 👇 this is required!
   new IbMatButtonControl({
     key: "submit",
     label: "Search",
@@ -97,6 +97,30 @@ customActions = [
   }),
 ];
 ```
+
+## Initialize data
+
+Form data can be initialized, or overwritten at any time, with the `value` input.
+
+> The data passed down through this input is applied calling the `patchValue` method of a `FormGroup`  
+> This means that missing control keys will not be reset on their own
+
+```typescript
+value = { firstName: "John", lastName: "Doe" };
+
+fields = [
+  new IbMatTextboxControl({
+    key: "firstName",
+    label: "First name",
+  }),
+  new IbMatTextboxControl({
+    key: "lastName",
+    label: "Last name",
+  }),
+];
+```
+
+<Canvas of={MatFormStories.PreInitialized} />
 
 ## Validation
 
@@ -132,7 +156,7 @@ fields = [
 ## Form array
 
 With `IbFormArray` define a form array where a user can add a variable amount of lines of pre-defined fields.  
-Same as a form control, it requires a `key` parameter, which corresponds to the key in the FormGroup; 
+Same as a form control, it requires a `key` parameter, which corresponds to the key in the FormGroup;
 and the `fields` parameter accepts any control available.
 
 To limit the maximum amount of lines, set the `options.max` parameter to a value greater than zero.
