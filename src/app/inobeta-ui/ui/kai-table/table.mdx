@@ -2,28 +2,11 @@ import { Meta, Canvas } from "@storybook/blocks";
 
 import * as TableStories from './table.stories'
 
-<Meta title="Components/Table/Intro" />
+<Meta title="Table/Overview" />
 
 # Table
 
 The `ib-kai-table`, built upon `mat-table` of Angular Material, provides high customization capabilities and out-of-the-box compatibility with other components such as `ib-filter` for filtering, `ib-table-view-group` to manage user-defined views, and much more.
-
-- [Getting started](#getting-started)
-- [Columns](#columns)
-  - [Text column](#text-column)
-  - [Number column](#number-column)
-  - [Date column](#date-column)
-  - [Custom column](#custom-column)
-  - [Action column](#action-column)
-  - [Build your own column](#build-your-own-column)
-- [Sorting](#sorting)
-  - [Set initial sort](#set-initial-sort)
-- [Filtering](#filtering)
-- [Selection](#selection)
-- [Pagination](#pagination)
-- [Export](#export)
-- [Aggregation](#aggregation)
-- [Use server-side data as a source](#use-server-side-data-as-a-source)
 
 ## Getting started
 
@@ -175,7 +158,7 @@ To change the label shown in the header, use `headerText`.
 
 This column makes possible formatting data in an arbitrary fashion, without declaring a new component.
 
-If custom logic is needed instead, please follow [how to extend a column](#extending-a-column).
+If custom logic is needed instead, please follow [how to build a column](#build-your-own-column).
 
 ### Action column
 

@@ -1,6 +1,10 @@
-<h1>IbFilter</h1>
+import { Meta, Canvas, Markdown } from "@storybook/blocks";
 
-# Build your own filter
+<Meta title="Filter/Overview" />
+
+# IbFilter
+
+## Build your own filter
 
 ```typescript
 // boolean-filter.components.ts
@@ -25,19 +29,33 @@ export class IbBooleanFilter extends IbFilterBase {
 
 ```html
 <!-- boolean-filter.component.html -->
+<!--
+  ib-filter-button
+  Out-of-the-box component to implement your filter with styles aligned with the filters provided by the library.
+  The implicit content will be assigned as the template for the mat-menu overlay.
+-->
 <ib-filter-button>
+  <!-- Slot for the filter name -->
   <span ib-filter-name><ng-content></ng-content></span>
+  <!-- Slot for the filter's value applied by the user -->
+  <!-- isDirt: Getter that returns a boolean. It should lookup either the raw or compiled filter value, not searchCriteria -->
   <span ib-filter-value *ngIf="isDirty">
     {{ displayValue ? "True" : "False" }}
   </span>
 
+  <!-- Parent form exposed by IbFilter -->
   <section [formGroup]="filter.form" style="padding: 0.5em 1em 0 1em">
+    <!--
+      Name of the searchCriteria form group or control. It should match the name of the filter
+      In this example, a FormControl was used
+    -->
     <mat-radio-group [formControlName]="name">
       <mat-radio-button [value]="true">True</mat-radio-button>
       <mat-radio-button [value]="false">False</mat-radio-button>
     </mat-radio-group>
   </section>
 
+  <!-- Footer for the clear and apply buttons -->
   <ib-filter-actions>
     <button mat-button (click)="clear()" [disabled]="!isDirty">
       {{ "shared.ibFilter.clear" | translate }}
@@ -48,15 +66,3 @@ export class IbBooleanFilter extends IbFilterBase {
   </ib-filter-actions>
 </ib-filter-button>
 ```
-
-||Info
-|-|-|
-`ib-filter-button`|Out-of-the-box component to implement your filter with styles aligned with the filters provided by the library.  The implicit content will be assigned as the template for the `mat-menu` overlay.
-`ib-filter-name`|Slot for the filter name.
-`ib-filter-value`|Slot for the filter's value applied by the user.
-`isDirty`|Getter that returns a boolean. It should lookup either the raw or compiled filter value, not `searchCriteria`.
-|
-`[formGroup]="filter.form"`|Parent form exposed by `IbFilter`
-`[formControlName]="name"`|Name of the `searchCriteria` form group or control. It should match the name of the filter. In this example, a `FormControl` was used.
-|
-`ib-filter-actions`|Footer for the clear and apply buttons.
