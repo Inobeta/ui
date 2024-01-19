@@ -306,6 +306,16 @@ export class IbTextboxWithIconControl extends IbFormControlBase<string> {
 }
 ```
 
+## Form grid layout
+
+By setting the `cols` input in `ib-material-form`, a grid-like layout will be used instead of the flex one.  
+Each control has two parameters `cols` and `rows` that determine how many columns and rows to span.
+
+> ⚠️ About `cols` and `rows` parameters: these will only work when `<ib-material-forms [cols]="3" />` is set.  
+> This feature will most likely be deprecated in the future, so please refrain to use it without a good reason.
+
+<Canvas of={MatFormStories.WithGridLayout} />
+
 ## Form lifecycle hooks
 
 Accessing to a form with `@ViewChild` will let you access to its lifecycle hooks through the observables `afterInit()` and `afterChanges()`
