@@ -195,13 +195,34 @@ The following example extends the common interfaces exposed by the library to cr
 First, create your template, assign the the field's `[formGroup]` with the `data.form` property. It contains the `FormGroup` instance
 this control is part of.
 
+```html
+<mat-form-field appearance="fill" [formGroup]="data.form">
+  <!-- ... -->
+</mat-form-field>
+```
+
 Next, assign the `[formControlName]` with the `data.base.key` property, this is the same `key` that will be passed down to the control.
 
+Listen to the `(keyup)` and `(change)` events, if that's necessary, binding them to the callback available under `data.base.change`
+
+```html
+<!-- textbox-with-icon.component.html -->
+<mat-label>{{ data.base.label | translate }}</mat-label>
+<input
+  matInput
+  [formControlName]="data.base.key"
+  [id]="data.base.key"
+  (keyup)="data.base.change(data.self)"
+  (change)="data.base.change(data.self)"
+/>
+```
+
 ```typescript
+// page-with-form.component.ts
 fields = [
-  new IbMatTextboxControl({
-    key: "email", // 👈 this key
-    label: "Email", // while this is available in `data.base.label`
+  new IbTextboxWithIconControl({
+    key: "textboxWithIcon", // 👈 this key is `data.base.key`
+    label: "With Icon", // while this is available in `data.base.label`
     /**
      * 💁 Every parameter assigned here is available under `data.base`
      */
@@ -209,11 +230,10 @@ fields = [
 ];
 ```
 
-Listen to the `(keyup)` and `(change)` events, if that's necessary, binding them to the callback available under `data.base.change`
-
 Then, add the template outlet `data.formControlErrors` dedicated to the errors. This will make sure that validation errors can be shown.
 
 ```html
+<!-- textbox-with-icon.component.html -->
 <mat-error>
   <ng-container
     *ngTemplateOutlet="data.formControlErrors; context: this"
@@ -232,6 +252,10 @@ Then, add the template outlet `data.formControlErrors` dedicated to the errors. 
     (keyup)="data.base.change(data.self)"
     (change)="data.base.change(data.self)"
   />
+  <!--
+    👇 this is the special part about this control
+    it will render a mat-icon provided by the `iconName` parameter
+  -->
   <mat-icon matSuffix *ngIf="data.base.iconName"
     >{{ data.base.iconName }}</mat-icon
   >
@@ -265,7 +289,7 @@ export type TextboxWithIconParams = IbFormControlBaseParams<string> & {
 };
 ```
 
-Lastly, write the control class, that will be used within the `fields` array like any other available control.  
+Lastly, write the control class that will be used within the `fields` array like any other available control.  
 Extend `IbFormControlBase`, initialize your parameters and assign the custom control component.
 
 ```typescript
