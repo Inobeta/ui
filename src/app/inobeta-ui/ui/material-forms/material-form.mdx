@@ -19,7 +19,7 @@ Lastly, listen to `(ibSubmit)` to, for example, send a request to an endpoint.
 ```typescript
 @Component({
   selector: "app-form-example",
-  template: `form.component.html`,
+  templateUrl: "form.component.html",
 })
 export class FormExampleComponent {
   fields = [
@@ -187,6 +187,100 @@ fields = [
 ```
 
 <Canvas of={MatFormStories.WithFormArray} />
+
+## Build your own control
+
+The following example extends the common interfaces exposed by the library to create a new text form field with an icon.
+
+First, create your template, assign the the field's `[formGroup]` with the `data.form` property. It contains the `FormGroup` instance
+this control is part of.
+
+Next, assign the `[formControlName]` with the `data.base.key` property, this is the same `key` that will be passed down to the control.
+
+```typescript
+fields = [
+  new IbMatTextboxControl({
+    key: "email", // 👈 this key
+    label: "Email", // while this is available in `data.base.label`
+    /**
+     * 💁 Every parameter assigned here is available under `data.base`
+     */
+  }),
+];
+```
+
+Listen to the `(keyup)` and `(change)` events, if that's necessary, binding them to the callback available under `data.base.change`
+
+Then, add the template outlet `data.formControlErrors` dedicated to the errors. This will make sure that validation errors can be shown.
+
+```html
+<mat-error>
+  <ng-container
+    *ngTemplateOutlet="data.formControlErrors; context: this"
+  ></ng-container>
+</mat-error>
+```
+
+```html
+<!-- textbox-with-icon.component.html -->
+<mat-form-field appearance="fill" style="width: 100%;" [formGroup]="data.form">
+  <mat-label>{{ data.base.label | translate }}</mat-label>
+  <input
+    matInput
+    [formControlName]="data.base.key"
+    [id]="data.base.key"
+    (keyup)="data.base.change(data.self)"
+    (change)="data.base.change(data.self)"
+  />
+  <mat-icon matSuffix *ngIf="data.base.iconName"
+    >{{ data.base.iconName }}</mat-icon
+  >
+  <mat-error>
+    <ng-container
+      *ngTemplateOutlet="data.formControlErrors; context: this"
+    ></ng-container>
+  </mat-error>
+</mat-form-field>
+```
+
+Implement the `IbFormControlInterface` interface on your component's class.
+Create a new type by extending the type `IbFormControlBaseParams` to include your own parameters.  
+In this case, the `iconName`
+
+```typescript
+// textbox-with-icon.component.ts
+@Component({
+  selector: "[ib-custom-textbox-with-icon]",
+  templateUrl: "textbox-with-icon.component.html",
+})
+export class IbTextboxWithIconComponent implements IbFormControlInterface {
+  @Input() data: any;
+}
+```
+
+```typescript
+// textbox-with-icon.component.ts
+export type TextboxWithIconParams = IbFormControlBaseParams<string> & {
+  iconName: string;
+};
+```
+
+Lastly, write the control class, that will be used within the `fields` array like any other available control.  
+Extend `IbFormControlBase`, initialize your parameters and assign the custom control component.
+
+```typescript
+// textbox-with-icon.component.ts
+export class IbTextboxWithIconControl extends IbFormControlBase<string> {
+  iconName: string;
+  constructor(options: TextboxWithIconParams) {
+    super(options);
+    this.iconName = options.iconName;
+    this.control = new IbFormControlBaseComponent(IbTextboxWithIconComponent, {
+      base: this,
+    });
+  }
+}
+```
 
 ## Form lifecycle hooks
 
