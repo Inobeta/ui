@@ -7,14 +7,14 @@ import {
   applicationConfig,
   moduleMetadata,
 } from "@storybook/angular";
+import { IbFormArray } from "../forms/array/array";
 import { IbMatButtonControl } from "./controls/button";
 import { IbMatDropdownControl } from "./controls/dropdown";
+import { IbMatLabelControl } from "./controls/label";
 import { IbMatSlideToggleControl } from "./controls/slide-toggle";
 import { IbMatTextboxControl } from "./controls/textbox";
 import { IbMaterialFormModule } from "./material-form.module";
 import { IbMaterialFormComponent } from "./material-form/material-form.component";
-import { IbFormArray } from "../forms/array/array";
-import { IbMatLabelControl } from "./controls/label";
 
 const meta: Meta = {
   title: "Forms",
@@ -159,6 +159,56 @@ export const WithFormArray: Story = {
       new IbMatButtonControl({
         key: "submit",
         label: "Add contact",
+      }),
+    ],
+  },
+};
+
+export const WithGridLayout: Story = {
+  render: (props) => ({
+    props,
+    template: `<ib-material-form [fields]="fields" [actions]="actions" [cols]="cols" (ibSubmit)="ibSubmit($event)" />`,
+  }),
+  args: {
+    cols: 3,
+    fields: [
+      new IbMatLabelControl({
+        label: "This form uses a grid layout.",
+      }),
+      new IbMatTextboxControl({
+        key: "email",
+        label: "Email",
+        type: "email",
+        validators: [Validators.email, Validators.required],
+        width: "100%",
+      }),
+      new IbMatLabelControl({
+        label: "But it is not recommended to be used",
+        rows: 3
+      }),
+      new IbMatLabelControl({
+        label: "",
+      }),
+      new IbMatTextboxControl({
+        key: "password",
+        label: "Password",
+        type: "password",
+        validators: [Validators.required],
+        width: "100%",
+      }),
+      new IbMatLabelControl({
+        label: "",
+      }),
+      new IbMatSlideToggleControl({
+        key: "storeUserAgent",
+        label: "Remember this device",
+        width: "100%",
+      }),
+    ],
+    actions: [
+      new IbMatButtonControl({
+        key: "submit",
+        label: "Login",
       }),
     ],
   },

@@ -106,7 +106,9 @@ export interface IbFormControlBaseParams<T> {
    * */
   width?: string;
   control?: IbFormControlBaseComponent;
+  /** Numbers of columns to span */
   cols?: number;
+  /** Numbers of rows to span */
   rows?: number;
   debounceOnChange?: number;
 }
