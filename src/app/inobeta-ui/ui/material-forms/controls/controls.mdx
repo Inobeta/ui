@@ -1,0 +1,185 @@
+import { Meta, Markdown } from "@storybook/blocks";
+
+<Meta title="Forms/Controls" />
+
+# Controls
+
+## Common parameters
+
+All controls share, and are built upon, the same set of parameters
+
+<Markdown>{`
+|Name|Description|
+|-|-|
+|key|**Required.** Name of a form field
+|label|Label shown for a form field. i18n supported
+|required|If enabled, marks the field as required
+|disabled|Whether or not disable the form field
+|validators|Array of validators
+|width|Width size for a given form field. Supports css size units (es. \`px\`, \`%\`)
+|cols|Numbers of columns to span
+|rows|Numbers of rows to span
+|change|Callback fired after a change within the form field<br>Example:<br>\`change: (form) => {/* do something with form */}\`
+`}</Markdown>
+
+> ⚠️ About `cols` and `rows` parameters: these will only work when `<ib-material-forms [cols]="3" />` is set.  
+> This feature will most likely be deprecated in the future, so please refrain to use it without a good reason.
+
+## Autocomplete
+
+```typescript
+new IbMatAutocompleteControl({
+  key: "country",
+  label: "Country",
+  options: [
+    { value: "Italy" },
+    { value: "Germany" },
+    { value: "France" },
+    { value: "Spain" },
+  ],
+});
+```
+
+#### Parameters
+
+<Markdown>{`
+|Name|Description|
+|-|-|
+|options|Array of filterable options. i18n *not* supported
+`}</Markdown>
+
+## Button
+
+```typescript
+new IbMatButtonControl({
+  key: "clear",
+  label: "Clear",
+  color: "accent",
+  handler: (form) => form.reset(),
+});
+```
+#### Parameters
+
+<Markdown>{`
+|Name|Description|
+|-|-|
+|color|Name of the color palette. (es. \`primary\`, \`accent\`)<br>Same as \`<button mat-button [color]="color" />\`
+|handler|Called upon clicking the button.<br>Example<br>\`handler: (form) => {/* ... */}\`
+|requireValidation|Whether or not the button should be disabled if the form is not valid
+|requireConfirmOnDirty|Whether a confirm dialog should be shown if the form is dirty
+`}</Markdown>
+
+## Checkbox
+
+```typescript
+new IbMatCheckboxControl({
+  key: "eggs",
+  label: "Buy some eggs",
+});
+```
+
+## Datepicker
+
+```typescript
+new IbMatDatepickerControl({
+  type: "date",
+  key: "departureAt",
+  label: "Departure",
+});
+```
+
+## Dropdown
+
+```typescript
+new IbMatDropdownControl({
+  key: "theme",
+  label: "Theme",
+  value: "auto",
+  options: [
+    { key: "light", value: "settings.theme.light" },
+    { key: "dark", value: "settings.theme.dark" },
+  ],
+  emptyRow: { key: "auto", value: "settings.theme.systemDefault" },
+  hintMessage: () => this.translate.instant("settings.theme.help")
+});
+```
+#### Parameters
+
+<Markdown>{`
+|Name|Description|
+|-|-|
+|options|Array of objects with two required parameters<br>\`key\` is the concrete value of an option<br>\`value\` is an i18n label
+|multiple|Whether multiple options can be selected
+|emptyRow|A single option, used as a default value
+|hintMessage|Function returning a string that will be shown as a tooltip
+`}</Markdown>
+
+## Radio
+
+```typescript
+new IbMatRadioControl({
+  key: "newsletter",
+  value: false,
+  label: "Do you want to subscribe to the newsletter?",
+  options: [
+    { key: true, value: "Yes" },
+    { key: false, value: "No" },
+  ],
+});
+```
+
+#### Parameters
+
+<Markdown>{`
+|Name|Description|
+|-|-|
+|options|Array of objects with two required parameters<br>\`key\` is the concrete value of an option<br>\`value\` is an i18n label
+`}</Markdown>
+
+## Slide toggle
+
+```typescript
+new IbMatSlideToggleControl({
+  key: "storeUserAgent",
+  label: "Remember this device",
+  width: "100%",
+});
+```
+
+## Textarea
+
+```typescript
+new IbMatTextareaControl({
+  key: "textarea",
+  label: "Enter your answer",
+  width: "100%",
+  height: "120px",
+});
+```
+
+#### Parameters
+
+<Markdown>{`
+|Name|Description|
+|-|-|
+|height|Height size for the text area. Defaults to \`auto\`
+`}</Markdown>
+
+## Textbox
+
+```typescript
+new IbMatTextboxControl({
+  key: "name",
+  label: "Name",
+  // type: "text" | "email" | "password" | "number",
+});
+```
+
+#### Parameters
+
+<Markdown>{`
+|Name|Description|
+|-|-|
+|type|Changes the input type display. Same as \`<input [type]="type" />\`
+|hintMessage|Function returning a string that will be shown as a tooltip
+`}</Markdown>

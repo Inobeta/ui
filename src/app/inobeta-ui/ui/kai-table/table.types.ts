@@ -22,9 +22,4 @@ export interface IbTableRowSelectionChange<T = any> {
   row: T;
 }
 
-export enum IbKaiTableState {
-  IDLE,
-  LOADING,
-  NO_DATA,
-  HTTP_ERROR,
-}
+export type IbKaiTableState = 'idle' | 'loading' | 'no_data' | 'http_error';

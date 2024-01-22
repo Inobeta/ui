@@ -1,4 +1,4 @@
-<form (ngSubmit)="onSubmit()" [formGroup]="form" class="ibForm">
+<form (ngSubmit)="handleSubmit()" [formGroup]="form" class="ibForm">
 
   <ng-container *ngFor="let field of fields">
     <ng-container [ngSwitch]="field.role">
