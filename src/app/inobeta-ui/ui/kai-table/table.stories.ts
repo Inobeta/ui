@@ -94,7 +94,7 @@ registerLocaleData(localeIt);
       *matCellDef="let data"
       [matTooltip]="dataAccessor(data, name) + ' ms'"
     >
-      {{ dataAccessor(data, name) | date : "MMM d, YYYY 'alle' hh:mm" }}
+      {{ dataAccessor(data, name) | date : "MMM d, YYYY 'at' hh:mm" }}
     </td>
     <td mat-footer-cell *matFooterCellDef style="max-width: fit-content">
       <ib-aggregate *ngIf="aggregate"></ib-aggregate>
@@ -159,6 +159,9 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj<IbTable>;
 
+/**
+ * A simple example with two text columns and pagination
+ */
 export const Simple: Story = {
   args: {
     displayedColumns: ["name", "category"],
@@ -178,8 +181,8 @@ export const Simple: Story = {
     },
     template: `
       <ib-kai-table tableName="products" [data]="data" [displayedColumns]="displayedColumns" [tableDef]="tableDef">
-        <ib-text-column headerText="Nome articolo" name="name" />
-        <ib-text-column headerText="Categoria" name="category" />
+        <ib-text-column headerText="Product name" name="name" />
+        <ib-text-column name="category" />
       </ib-kai-table>
     `,
   }),
@@ -193,7 +196,6 @@ export const WithSort: Story = {
         pageSizeOptions: [5, 10, 25, 100],
         showFirstLastButtons: true,
         pageSize: 5,
-        hide: false,
       },
     },
   },
@@ -205,11 +207,11 @@ export const WithSort: Story = {
     template: `
       <ib-kai-table tableName="products" [data]="data" [displayedColumns]="displayedColumns" [tableDef]="tableDef">
         <ib-text-column headerText="ID" name="id" sort />
-        <ib-text-column headerText="Nome articolo" name="name" sort />
+        <ib-text-column headerText="Product name" name="name" sort />
         <ib-text-column headerText="SKU" name="sku" />
-        <ib-number-column headerText="Prezzo" name="price" sort />
-        <ib-text-column headerText="Categoria" name="category" sort />
-        <ib-date-column headerText="Aggiunto il" name="created_at" sort />
+        <ib-number-column name="price" sort />
+        <ib-text-column  name="category" sort />
+        <ib-date-column headerText="Created at" name="created_at" sort />
       </ib-kai-table>
     `,
   }),
@@ -231,19 +233,19 @@ export const WithFilters: Story = {
     template: `
       <ib-kai-table tableName="products" [displayedColumns]="displayedColumns" [data]="data">
         <ib-filter>
-          <ib-text-filter name="name">Nome articolo</ib-text-filter>
+          <ib-text-filter name="name">Product name</ib-text-filter>
           <ib-text-filter name="sku">SKU</ib-text-filter>
-          <ib-number-filter name="price" [step]="0.01">Prezzo</ib-number-filter>
-          <ib-tag-filter name="category">Categoria</ib-tag-filter>
-          <ib-date-filter name="created_at">Aggiunto il</ib-date-filter>
+          <ib-number-filter name="price" [step]="0.01">Price</ib-number-filter>
+          <ib-tag-filter name="category">Category</ib-tag-filter>
+          <ib-date-filter name="created_at">Created at</ib-date-filter>
         </ib-filter>
 
         <ib-text-column headerText="ID" name="id" sort />
-        <ib-text-column headerText="Nome articolo" name="name" sort />
+        <ib-text-column headerText="Product name" name="name" sort />
         <ib-text-column headerText="SKU" name="sku" />
-        <ib-number-column headerText="Prezzo" name="price" sort />
-        <ib-text-column headerText="Categoria" name="category" sort />
-        <ib-date-column headerText="Aggiunto il" name="created_at" sort />
+        <ib-number-column name="price" sort />
+        <ib-text-column  name="category" sort />
+        <ib-date-column headerText="Created at" name="created_at" sort />
       </ib-kai-table>
     `,
   }),
@@ -263,16 +265,19 @@ export const WithExport: Story = {
         </ib-table-action-group>
 
         <ib-text-column headerText="ID" name="id" sort />
-        <ib-text-column headerText="Nome articolo" name="name" sort />
+        <ib-text-column headerText="Product name" name="name" sort />
         <ib-text-column headerText="SKU" name="sku" />
-        <ib-number-column headerText="Prezzo" name="price" sort />
-        <ib-text-column headerText="Categoria" name="category" sort />
-        <ib-date-column headerText="Aggiunto il" name="created_at" sort />
+        <ib-number-column name="price" sort />
+        <ib-text-column  name="category" sort />
+        <ib-date-column headerText="Created at" name="created_at" sort />
       </ib-kai-table>
     `,
   }),
 };
 
+/**
+ * test
+ */
 export const WithCustomColumn: Story = {
   args: {
     displayedColumns: [
@@ -288,7 +293,6 @@ export const WithCustomColumn: Story = {
         pageSizeOptions: [5, 10, 25, 100],
         showFirstLastButtons: true,
         pageSize: 5,
-        hide: false,
       },
     },
   },
@@ -300,11 +304,11 @@ export const WithCustomColumn: Story = {
     template: `
       <ib-kai-table tableName="products" [data]="data" [displayedColumns]="displayedColumns" [tableDef]="tableDef">
         <ib-text-column headerText="ID" name="id" sort />
-        <ib-text-column headerText="Nome articolo" name="name" sort />
+        <ib-text-column headerText="Product name" name="name" sort />
         <ib-text-column headerText="SKU" name="sku" />
-        <ib-number-column headerText="Prezzo" name="price" sort />
-        <ib-text-column headerText="Categoria" name="category" sort />
-        <ib-timestamp-column headerText="Aggiunto il (custom)" name="created_at_secs" sort />
+        <ib-number-column name="price" sort />
+        <ib-text-column name="category" sort />
+        <ib-timestamp-column headerText="Created at (custom)" name="created_at_secs" sort />
       </ib-kai-table>
     `,
   }),
