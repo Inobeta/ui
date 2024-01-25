@@ -1,0 +1,75 @@
+import { Meta, Canvas, Markdown } from "@storybook/blocks";
+
+<Meta title="Breadcrumbs/Overview" />
+
+# Breadcrumbs
+
+## Getting started
+
+By default, breadcrumbs are generated based on your app's routing.
+Add the component to the a container page and add a `breadcrumb` property in the `data` parameter of a route. It supports i18n labels.
+
+```html
+<ib-material-breadcrumb></ib-material-breadcrumb>
+<router-outlet></router-outlet>
+```
+
+```typescript
+const routes: Routes = [
+  {
+    path: "home",
+    component: HomeComponent,
+    children: [
+      {
+        path: "about-us",
+        data: { breadcrumb: "aboutUs.title" },
+        children: [
+          {
+            path: "company",
+            // component: ...,
+            data: { breadcrumb: "aboutUs.company.title" },
+          },
+          {
+            path: "contacts",
+            // component: ...,
+            data: { breadcrumb: "aboutUs.contacts.title" },
+          },
+        ],
+      },
+    ],
+  },
+];
+```
+
+## Change home button
+
+To change the path to the app's homepage, use the `home` input and set the `url` parameter to a path of your choosing. (Defaults to `'/'`)
+
+```html
+<ib-material-breadcrumb
+  [home]="{ url: '/another-home', icon: 'home' }"
+></ib-material-breadcrumb>
+```
+
+## Static mode
+
+Breadcrumbs can be provided manually by setting `mode="static"` and passing your crumbs to the `items` input.
+
+```typescript
+items = [
+  {
+    url: "/",
+    icon: "home",
+  },
+  {
+    url: "/some-deep/page"
+    label: "page.title"
+  }
+];
+```
+
+```html
+<ib-material-breadcrumb
+  [items]="items"
+></ib-material-breadcrumb>
+```

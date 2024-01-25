@@ -2,13 +2,11 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 
-interface IbBreadcrumbItem {
+type IbBreadcrumbItem = {
   label?: string;
   url?: string;
   icon?: string;
 }
-
-type IbBreadcrumbMode = 'static' | 'auto';
 
 @Component({
   selector: 'ib-breadcrumb',
@@ -17,13 +15,12 @@ type IbBreadcrumbMode = 'static' | 'auto';
 export class IbBreadcrumbComponent implements OnInit {
   static readonly ROUTE_DATA_BREADCRUMB = 'breadcrumb';
   /**
-   * Modifica l'icona o label per il primo elemento.
+   * Edit icon or label of the first crumb
    */
   @Input() home: IbBreadcrumbItem = {url: '/', icon: 'home'};
   @Input() items: IbBreadcrumbItem[] = [];
   /**
-   * Modalità per il render delle breadcrumbs.
-   * Di default, il percorso viene calcolato dalle routes. Per inserire le singole "briciole" usare la modalità `static`
+   * Whether create breadcrumbs looking up the routes (`auto`), or define them through the `items` input ('static')
    */
   @Input() mode: 'static' | 'auto';
 
