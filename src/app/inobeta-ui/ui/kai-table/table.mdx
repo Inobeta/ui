@@ -191,7 +191,7 @@ export class KaiTableRowActionExample {
 ### Build your own column
 
 Normally, every column expects **primitive** types of data, or in the case of `ib-date-column`, a `Date` instance.  
-Working with a *flattened* dataset is always recommended to reduce complexity and save up development time spent
+Working with a _flattened_ dataset is always recommended to reduce complexity and save up development time spent
 adapting your table to the data you're handling.
 
 Unfortunately, in some cases, this is not always possible, and a custom column might be necessary.
@@ -281,7 +281,6 @@ It will be used as a getter function in your template, and might be used during 
 > the `dataAccessor` function and will stop working in a use case similar to the one described.
 
 <Canvas of={TableStories.WithCustomColumn} />
-
 
 ## Sorting
 
@@ -440,12 +439,14 @@ Then add the export button within `ib-table-action-group` in the table.
 ```html
 <ib-kai-table [data]="data" [displayedColumns]="displayedColumns">
   <ib-table-action-group>
-    <ib-table-data-export-action></ib-table-data-export-action>
+    <ib-table-data-export-action />
   </ib-table-action-group>
 
   <!-- ... --->
 </ib-kai-table>
 ```
+
+#### Override formats
 
 By default, there are three available formats: `xlsx`, `csv`, and `pdf`.
 The formats can be overriden by including the providers desired, as such:
@@ -467,8 +468,20 @@ In this example, only `xlsx` export will be allowed.
 Use `aggregate` to show a roll-up footer row in your table. Each column has a different set of functions available. For example, in `ib-number-column` you can estimate the sum, or the average, of a column.
 
 ```html
-<ib-number-column name="firstName" aggregate></ib-number-column>
+<ib-number-column name="price" aggregate></ib-number-column>
 ```
+
+## Row group
+
+A `*ibKaiRowGroup` directive is available to display contextual content for each row. It provides a given row through the `data` variable. This content is hidden by default and can be shown by clicking on a row.
+
+```html
+<ng-container *ibKaiRowGroup="let data">
+  Description for {{ data.name }}: {{ data.description }}
+</ng-container>
+```
+
+<Canvas of={TableStories.WithRowGroup} />
 
 ## Use server-side data as a source
 
