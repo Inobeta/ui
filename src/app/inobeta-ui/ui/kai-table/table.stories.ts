@@ -57,6 +57,7 @@ function generateData() {
       return {
         id: id + 1,
         name: `${getColor(id)} ${p.name}`,
+        description: "The quick brown fox jumps over the lazy dog",
         sku: `${p.category.at(0)}${p.name.at(0)}-${id + 1}00`,
         category: p.category,
         price: ((id + 1) * 5 - 0.01) % 100,
@@ -275,9 +276,6 @@ export const WithExport: Story = {
   }),
 };
 
-/**
- * test
- */
 export const WithCustomColumn: Story = {
   args: {
     displayedColumns: [
@@ -309,6 +307,48 @@ export const WithCustomColumn: Story = {
         <ib-number-column name="price" sort />
         <ib-text-column name="category" sort />
         <ib-timestamp-column headerText="Created at (custom)" name="created_at_secs" sort />
+      </ib-kai-table>
+    `,
+  }),
+};
+
+/**
+ * Example using the `*ibKaiRowGroup` directive.  
+ * Click on a row to reveal its content.
+ */
+export const WithRowGroup: Story = {
+  args: {
+    displayedColumns: [
+      "id",
+      "name",
+      "sku",
+      "category",
+      "price",
+      "created_at",
+    ],
+    tableDef: {
+      paginator: {
+        pageSize: 5
+      },
+    },
+  },
+  render: (args) => ({
+    props: {
+      data: tableData,
+      ...args,
+    },
+    template: `
+      <ib-kai-table tableName="products" [data]="data" [displayedColumns]="displayedColumns" [tableDef]="tableDef">
+        <ng-container *ibKaiRowGroup="let data">
+          Description for {{ data.name }}: {{ data.description }}
+        </ng-container>
+      
+        <ib-text-column headerText="ID" name="id" sort />
+        <ib-text-column headerText="Product name" name="name" sort />
+        <ib-text-column headerText="SKU" name="sku" />
+        <ib-number-column name="price" sort />
+        <ib-text-column name="category" sort />
+        <ib-date-column headerText="Created at" name="created_at" sort />
       </ib-kai-table>
     `,
   }),
