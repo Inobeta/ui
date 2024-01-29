@@ -1,0 +1,39 @@
+import { Meta, ArgTypes, Description } from "@storybook/blocks";
+
+import * as stories from "./login.stories.ts";
+
+# IbLoginService
+
+<Meta title="Features/HTTP/Login" />
+
+<Description of={stories.ibLoginService} />
+<ArgTypes of={stories.ibLoginService} />
+
+## Override parameters
+
+The parameters can be overriden by providing the following tokens
+
+```typescript
+@NgModule({
+  imports: [
+    /** ... */
+    IbHttpModule,
+  ],
+  exports: [
+    /** ... */
+  ],
+  declarations: [
+    /** ... */
+  ],
+  providers: [
+    { provide: "ibHttpGUILoginUrl", useValue: "..." },
+    { provide: "ibHttpAPILoginUrl", useValue: "..." },
+    { provide: "ibHttpAuthType", useValue: "..." },
+    { provide: "ibHttpSessionStorageType", useValue: "..." },
+    { provide: "ibHttpAPIRefreshUrl", useValue: "..." },
+    { provide: "ibHttpJWTClaimsField", useValue: "..." },
+    { provide: "ibHttpJWTRolesField", useValue: "..." },
+  ],
+})
+export class AppModule {}
+```

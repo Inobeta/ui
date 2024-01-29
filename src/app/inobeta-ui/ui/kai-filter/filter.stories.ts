@@ -7,7 +7,7 @@ import { IbFilter } from "./filter.component";
 import { IbFilterModule } from "./filters.module";
 
 const meta: Meta<IbFilter> = {
-  title: "Filter",
+  title: "Components/Filter",
   component: IbFilter,
   tags: ["autodocs"],
   decorators: [
