@@ -2,38 +2,69 @@ import { Meta, ArgTypes, Description } from "@storybook/blocks";
 
 import * as stories from "./login.stories.ts";
 
-# IbLoginService
+# IbLoginService API
 
-<Meta title="Features/HTTP/Login" />
+<Meta title="Features/HTTP/Login/API" />
 
 <Description of={stories.ibLoginService} />
 <ArgTypes of={stories.ibLoginService} />
 
-## Override parameters
+## Injection tokens
 
-The parameters can be overriden by providing the following tokens
+### ibHttpGUILoginUrl
+
+Login page path
 
 ```typescript
-@NgModule({
-  imports: [
-    /** ... */
-    IbHttpModule,
-  ],
-  exports: [
-    /** ... */
-  ],
-  declarations: [
-    /** ... */
-  ],
-  providers: [
-    { provide: "ibHttpGUILoginUrl", useValue: "..." },
-    { provide: "ibHttpAPILoginUrl", useValue: "..." },
-    { provide: "ibHttpAuthType", useValue: "..." },
-    { provide: "ibHttpSessionStorageType", useValue: "..." },
-    { provide: "ibHttpAPIRefreshUrl", useValue: "..." },
-    { provide: "ibHttpJWTClaimsField", useValue: "..." },
-    { provide: "ibHttpJWTRolesField", useValue: "..." },
-  ],
-})
-export class AppModule {}
+{ provide: "ibHttpGUILoginUrl", useValue: "/login" }
+```
+
+### ibHttpAPILoginUrl
+
+API login endpoint
+
+```typescript
+{ provide: "ibHttpAPILoginUrl", useValue: "/api/auth/login" }
+```
+
+### ibHttpAuthType
+
+Authorizazion type. Either bearer token (JWT) or basic
+
+```typescript
+{ provide: "ibHttpAuthType", useValue: IbAuthTypes.JWT }
+// or
+{ provide: "ibHttpAuthType", useValue: IbAuthTypes.BASIC_AUTH }
+```
+
+### ibHttpSessionStorageType
+
+Where to storage the user's access token
+
+```typescript
+{ provide: "ibHttpSessionStorageType", useValue: IbStorageTypes.LOCALSTORAGE }
+```
+
+### ibHttpAPIRefreshUrl
+
+Refresh access token API endpoint
+
+```typescript
+{ provide: "ibHttpAPIRefreshUrl", useValue: "/api/auth/refresh" }
+```
+
+### ibHttpJWTClaimsField
+
+Property name of additional data or claims within the JWT token
+
+```typescript
+{ provide: "ibHttpJWTClaimsField", useValue: "https://hasura.io/jwt/claims" }
+```
+
+### ibHttpJWTRolesField
+
+Property name of the user roles within the JWT claims field
+
+```typescript
+{ provide: "ibHttpJWTClaimsField", useValue: "x-hasura-allowed-roles" }
 ```

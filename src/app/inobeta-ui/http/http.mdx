@@ -1,0 +1,89 @@
+import { Meta, Canvas, Story } from "@storybook/blocks";
+
+import * as loadingStories from "./http/loading-skeleton.stories";
+
+<Meta title="Features/HTTP/Overview" />
+
+# HTTP Overview
+
+## Setup
+
+This modules comes with an application wide store, and is required to provide it's features.  
+First import `IbHttpModule` in your `AppModule`  
+Then add `ibhttpReducers` to your map of reducers  
+Lastly apply the effects provided in `ibHttpEffects`
+
+```typescript
+import { IbHttpModule, ibHttpReducers, ibHttpEffects } from "@inobeta/ui";
+
+const reducers = {
+  ibHttpState: combineReducers(ibHttpReducers),
+  // ...
+};
+
+@NgModule({
+  imports: [
+    /** ... */
+    IbHttpModule,
+    StoreModule.forRoot(reducers),
+    EffectsModule.forRoot([...ibHttpEffects]),
+  ],
+  declarations: [
+    /** ... */
+  ],
+  providers: [
+    /** ... */
+  ],
+})
+export class AppModule {}
+```
+
+## Loading directive `ibLoading`
+
+Directive to conditionally display a loading skeleton or the original content based on the loading state.
+
+```html
+<section *ibLoading="{ size: 4 }">Hello 👋</section>
+```
+
+<Story of={loadingStories.loadingDirective} />
+
+By default, it will intercept any endpoint. To provide a specific endpoint to listen to, add the `endpoint` parameter
+
+```html
+<section
+  *ibLoading="{ endpoint: { url: '/api/data', method: 'GET' } }"
+>
+  <!-- ... -->
+</section>
+```
+
+**Parameters:**
+
+```typescript
+{
+  /** Number of skeletons to display */
+  size: 1,
+  // Width applied to each skeleton. "rand" will randomize their width
+  width: "rand",
+  /** Height of each skeleton */
+  height: "20px",
+  /** Custom CSS class applied to each skeleton */
+  className: "",
+  /** Specific endpoint */
+  endpoint: null,
+}
+```
+
+## Role directive `ibRoleCheck`
+
+Directive to conditionally render content based on user roles.
+
+```html
+<section *ibRoleCheck="['admin', 'workspace_admin']">
+  <!-- Content only visible for users with 'admin' or 'workspace_admin' roles --->
+</section>
+<section *ibRoleCheck="['user']">
+  <!-- Fallback for regular users -->
+</section>
+```

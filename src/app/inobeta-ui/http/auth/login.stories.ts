@@ -1,25 +1,16 @@
 import { StorybookTranslateModule } from ".storybook/i18n";
 import { HttpClientModule } from "@angular/common/http";
-import { MatNativeDateModule } from "@angular/material/core";
-import { provideAnimations } from "@angular/platform-browser/animations";
-import { Meta, StoryObj, applicationConfig, moduleMetadata } from "@storybook/angular";
+import { Meta, StoryObj, moduleMetadata } from "@storybook/angular";
+import { IbHttpModule } from "../http.module";
 import { IbLoginService } from "./login.service";
 import { IbAPITokens } from "./session.model";
-import { IbHttpModule } from "../http.module";
 
 const meta: Meta<IbLoginService<IbAPITokens>> = {
-  title: "Features/HTTP",
+  title: "Features/HTTP/Login",
   component: IbLoginService,
   decorators: [
     moduleMetadata({
-      imports: [
-        HttpClientModule,
-        StorybookTranslateModule,
-        IbHttpModule
-      ],
-    }),
-    applicationConfig({
-      providers: [provideAnimations()],
+      imports: [HttpClientModule, StorybookTranslateModule, IbHttpModule],
     }),
   ],
 };
@@ -29,6 +20,6 @@ type Story = StoryObj<IbLoginService<IbAPITokens>>;
 
 export const ibLoginService: Story = {
   render: () => ({
-    template: ``
-  })
-}
+    template: ``,
+  }),
+};
