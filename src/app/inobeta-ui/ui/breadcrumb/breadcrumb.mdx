@@ -1,6 +1,8 @@
-import { Meta, Canvas, Markdown } from "@storybook/blocks";
+import { Meta, Canvas } from "@storybook/blocks";
 
-<Meta title="Breadcrumbs/Overview" />
+import * as stories from "./breadcrumb.stories";
+
+<Meta title="Components/Breadcrumbs/Overview" />
 
 # Breadcrumbs
 
@@ -69,7 +71,55 @@ items = [
 ```
 
 ```html
-<ib-material-breadcrumb
-  [items]="items"
-></ib-material-breadcrumb>
+<ib-material-breadcrumb [items]="items" />
 ```
+
+## Build your own
+
+Extend `IbBreadcrumbComponent` to write your own breadcrumb component.
+
+In this example, the presentation of the component will be changed in order to display the first crumb (or item) as a title,
+representing a feature, and each following item displayed as a link, representing the sections.
+
+Through the `items` input property, arrange and display your crumbs, for example by applying styles depending on their depth.
+
+```typescript
+// items is of type IbBreadcrumbItem[]
+type IbBreadcrumbItem = {
+  label?: string;
+  url?: string;
+  icon?: string;
+}
+```
+
+```typescript
+@Component({
+  selector: "app-breadbrumb",
+  template: `<ul class="breadcrumbs">
+    <li *ngFor="let item of items" class="breadcrumbs-item">
+      <!-- The first element will always be rendered as a title -->
+      <div class="title" *ngIf="item === items[0]">
+        {{ item.label }}
+      </div>
+
+      <!-- If there are more than two items, then start rendering an arrow --->
+      <mat-icon *ngIf="item !== items[0] && item !== items[1]"
+        >chevron_right</mat-icon
+      >
+
+      <!-- Every item other than the first will be displayed as a link -->
+      <a *ngIf="item !== items[0]" class="section" [routerLink]="[item.url]">
+        {{ item.label }}
+      </a>
+    </li>
+  </ul>`,
+  // remember to style your component
+  styles: ``,
+  providers: [
+    { provide: IbBreadcrumbComponent, useExisting: CustomBreadcrumb },
+  ],
+})
+export class CustomBreadcrumb extends IbBreadcrumbComponent {}
+```
+
+<Canvas of={stories.BuildYourOwn} />
