@@ -1,12 +1,12 @@
 import { Inject, Injectable, InjectionToken } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
-import { MatTableDataSource } from "@angular/material/table";
 import { IbColumn } from "../kai-table/columns/column";
 import { IbDataExportProvider } from "./provider";
 import {
   IbTableDataExportDialog,
   IbTableDataExportDialogData,
 } from "./table-data-export-dialog.component";
+import { IbTableDataSource } from "../kai-table/table-data-source";
 
 export interface IDataExportSettings {
   format: "xlsx" | "pdf" | "csv";
@@ -51,7 +51,7 @@ export class IbDataExportService {
   _exportFromTable(
     tableName: string,
     columns: IbColumn<Record<string, unknown>>[],
-    dataSource: MatTableDataSource<unknown>,
+    dataSource: IbTableDataSource<unknown>,
     selectedRows: unknown[],
     settings: IDataExportSettings
   ) {

@@ -17,7 +17,6 @@ import { MatRadioButtonHarness } from "@angular/material/radio/testing";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatSortModule } from "@angular/material/sort";
 import { MatSortHarness } from "@angular/material/sort/testing";
-import { MatTableDataSource } from "@angular/material/table";
 import { MatTableHarness } from "@angular/material/table/testing";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
@@ -34,12 +33,13 @@ import { IbFilterModule } from "../kai-filter";
 import { IbViewModule } from "../views";
 import { IbTableActionModule } from "./action";
 import { IbAggregateCell } from "./cells";
-import { IbDataSource } from "./table-data-source";
+import { IbRemoteTableDataSource } from "./remote-data-source";
 import { IbTable } from "./table.component";
 import { IbKaiTableModule } from "./table.module";
+import { IbTableDataSource } from "./table-data-source";
 
 describe("IbTable", () => {
-  describe("with MatTableDataSource", () => {
+  describe("with IbTableDataSource", () => {
     let host: IbTableApp;
     let fixture: ComponentFixture<IbTableApp>;
     let component: IbTable;
@@ -83,7 +83,7 @@ describe("IbTable", () => {
     });
   });
 
-  describe("with IbDataSource", () => {
+  describe("with IbRemoteTableDataSource", () => {
     it("should create", fakeAsync(() => {
       const fixture = createComponent(IbTableWithIbDataSourceApp);
       const component = fixture.debugElement.query(
@@ -95,13 +95,13 @@ describe("IbTable", () => {
     }));
 
     it("should create with empty constructor", () => {
-      const dataSource = new IbDataSource();
+      const dataSource = new IbRemoteTableDataSource();
       expect(dataSource).toBeTruthy();
       expect(dataSource.data).toEqual([]);
     });
 
     it("should reset to empty array with non array types", () => {
-      const dataSource = new IbDataSource([{ name: "alice" }]);
+      const dataSource = new IbRemoteTableDataSource([{ name: "alice" }]);
       expect(dataSource).toBeTruthy();
       expect(dataSource.data).toEqual([{ name: "alice" }]);
       dataSource.data = null;
@@ -119,7 +119,7 @@ describe("IbTable", () => {
       component.dataSource.refresh();
       tick(1);
       fixture.detectChanges();
-      expect(component.state === 'http_error').toBeTruthy();
+      expect(component.state === "http_error").toBeTruthy();
     }));
   });
 
@@ -459,7 +459,7 @@ describe("IbTable", () => {
     });
 
     it("should apply", async () => {
-      const dataSource = component.dataSource as MatTableDataSource<any>;
+      const dataSource = component.dataSource as IbTableDataSource<any>;
       const sort = await loader.getHarness(MatSortHarness);
       const [_, number] = await sort.getSortHeaders();
       let active = await sort.getActiveHeader();
@@ -556,10 +556,7 @@ function createComponent<T>(type: Type<T>): ComponentFixture<T> {
 
 @Component({
   template: `
-    <ib-kai-table
-      [dataSource]="dataSource"
-      [displayedColumns]="['name', 'color', 'price']"
-    >
+    <ib-kai-table [data]="data" [displayedColumns]="['name', 'color', 'price']">
       <ib-filter [value]="filterValue">
         <ib-text-filter ibTableColumnName="name">Name</ib-text-filter>
         <ib-tag-filter ibTableColumnName="color">Name</ib-tag-filter>
@@ -574,15 +571,15 @@ function createComponent<T>(type: Type<T>): ComponentFixture<T> {
 })
 class IbTableApp {
   filterValue = { color: ["black"] };
-  dataSource = new MatTableDataSource<any>([
+  data = [
     { name: "alice", color: "white", price: 10 },
     { name: "bob", color: "black", price: 12 },
-  ]);
+  ];
 }
 
 @Component({
   template: `
-    <ib-kai-table [dataSource]="dataSource" [displayedColumns]="['name']">
+    <ib-kai-table [data]="data" [displayedColumns]="['name']">
       <ib-text-column name="name"></ib-text-column>
       <ng-template ibKaiRowGroup let-row="row">
         row data: {{ row | json }}
@@ -591,7 +588,7 @@ class IbTableApp {
   `,
 })
 class IbTableWithRowGroupApp {
-  dataSource = new MatTableDataSource<any>([{ name: "alice" }]);
+  data = [{ name: "alice" }];
 }
 
 @Component({
@@ -603,14 +600,14 @@ class IbTableWithRowGroupApp {
   `,
 })
 class IbTableWithIbDataSourceApp {
-  dataSource = new IbDataSource<any>([{ name: "alice" }]);
+  dataSource = new IbRemoteTableDataSource<any>([{ name: "alice" }]);
 }
 
 @Component({
   template: `
     <ib-kai-table
       tableName="employees"
-      [dataSource]="dataSource"
+      [data]="data"
       [displayedColumns]="['name', 'tag']"
     >
       <ib-table-view-group></ib-table-view-group>
@@ -624,10 +621,10 @@ class IbTableWithIbDataSourceApp {
   `,
 })
 class IbTableWithViewGroupApp {
-  dataSource = new MatTableDataSource<any>([
+  data = [
     { name: "alice", color: "peach" },
     { name: "bob", color: "green" },
-  ]);
+  ];
 }
 
 class IbStubExportProvider implements IbDataExportProvider {
@@ -640,7 +637,7 @@ class IbStubExportProvider implements IbDataExportProvider {
   template: `
     <ib-kai-table
       tableName="employees"
-      [dataSource]="dataSource"
+      [data]="data"
       [tableDef]="{ paginator: { pageSize: 5 } }"
       [displayedColumns]="['name', 'color']"
     >
@@ -662,7 +659,7 @@ class IbStubExportProvider implements IbDataExportProvider {
   ],
 })
 class IbTableWithExport {
-  dataSource = new MatTableDataSource<any>([
+  data = [
     { name: "alice", color: "blue" },
     { name: "rabbit", color: "white" },
     { name: "queen", color: "red" },
@@ -670,14 +667,14 @@ class IbTableWithExport {
     { name: "rook", color: "purple" },
     { name: "knight", color: "brown" },
     { name: "king", color: "green" },
-  ]);
+  ];
 }
 
 @Component({
   template: `
     <ib-kai-table
       tableName="employees"
-      [dataSource]="dataSource"
+      [data]="data"
       [displayedColumns]="['name', 'created_at', 'updated_at']"
     >
       <ib-table-action-group>
@@ -709,10 +706,10 @@ class IbTableWithExport {
   ],
 })
 class IbTableWithExportTransformer {
-  dataSource = new MatTableDataSource<any>([
+  data = [
     { name: "alice", created_at: new Date(), updated_at: new Date() },
     { name: "rabbit", created_at: new Date(), updated_at: new Date() },
-  ]);
+  ];
 
   dateTransformer = (date: Date) => date.getTime();
 }
@@ -720,7 +717,7 @@ class IbTableWithExportTransformer {
 @Component({
   template: `
     <ib-kai-table
-      [dataSource]="dataSource"
+      [data]="data"
       [displayedColumns]="['name', 'amount', 'createdAt']"
     >
       <ib-text-column name="name" [aggregate]="false"></ib-text-column>
@@ -733,16 +730,16 @@ class IbTableWithExportTransformer {
   `,
 })
 class IbTableWithSort {
-  dataSource = new MatTableDataSource<any>([
+  data = [
     { name: "alice", amount: 10, createdAt: new Date() },
     { name: "bob", amount: 20, createdAt: new Date() },
-  ]);
+  ];
 }
 
 @Component({
   template: `
     <ib-kai-table
-      [dataSource]="dataSource"
+      [data]="data"
       [displayedColumns]="['name', 'amount']"
     >
       <ib-text-column name="name"></ib-text-column>
@@ -751,8 +748,8 @@ class IbTableWithSort {
   `,
 })
 class IbTableWithAggregate {
-  dataSource = new MatTableDataSource<any>([
+  data =[
     { name: "alice", amount: 10 },
     { name: "bob", amount: 20 },
-  ]);
+  ];
 }

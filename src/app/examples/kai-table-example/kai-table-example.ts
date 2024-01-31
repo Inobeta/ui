@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
 import { IbTableDef } from '../../inobeta-ui/ui/kai-table/table.types';
 import { createNewUser } from './users';
 

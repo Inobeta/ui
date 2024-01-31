@@ -1,5 +1,4 @@
 import { Component, ViewChild } from "@angular/core";
-import { MatTableDataSource } from "@angular/material/table";
 import { IbSelectionColumn } from "../../inobeta-ui/ui/kai-table/columns/selection-column";
 import { UserService } from "./users";
 
@@ -77,7 +76,6 @@ export class IbKaiTableFullExamplePage {
   @ViewChild(IbSelectionColumn, { static: true })
   selectionColumn: IbSelectionColumn;
 
-  dataSource = new MatTableDataSource<any>();
   data: any[] = [];
   columns = ["name", "fruit", "number", "aDate", "subscribed"];
 
