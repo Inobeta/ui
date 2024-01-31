@@ -1,0 +1,154 @@
+import { Meta, ArgTypes, Description } from "@storybook/blocks";
+
+import * as stories from "./login.stories.ts";
+
+# IbLoginService API
+
+<Meta title="Features/HTTP/Login/API" />
+
+<Description of={stories.ibLoginService} />
+<ArgTypes of={stories.ibLoginService} />
+
+## Usage
+
+It is recommended to implement the login login within a store
+
+```typescript
+// actions.ts
+const login = createAction(
+  "[Auth] login",
+  props<{ payload: Record<string, any> }>()
+);
+const logout = createAction("[Auth] logout");
+```
+
+```typescript
+// effects.ts
+import { Inject, Injectable } from "@angular/core";
+import { Router } from "@angular/router";
+import { IbLoginService, ibAuthActions } from "@inobeta/ui";
+import { Actions, createEffect, ofType } from "@ngrx/effects";
+import { map, mergeMap, switchMap, tap } from "rxjs/operators";
+import { login, logout } from "./actions.ts";
+
+@Injectable({ providedIn: "root" })
+export class AuthEffects {
+  // Effect to handle the login action
+  login$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(login),
+      mergeMap(({ payload }) => this.loginService.login(payload)),
+      // on success, redirect the user to the dashboard
+      tap(() => this.router.navigate([this.ibHttpGUIDashboardUrl])),
+      // and start the timer to refresh the access token once expired
+      switchMap(() => [ibAuthActions.refreshCycle()])
+    );
+  });
+
+  logout$ = createEffect(
+    () => {
+      return this.actions$.pipe(
+        ofType(logout),
+        map(() => this.loginService.logout())
+      );
+    },
+    { dispatch: false }
+  );
+
+  constructor(
+    private actions$: Actions,
+    private loginService: IbLoginService<IbAPITokens>,
+    private router: Router,
+    @Inject("ibHttpGUIDashboardUrl") public ibHttpGUIDashboardUrl: string
+  ) {}
+}
+```
+
+By default, the service expects a response of type `IbAPITokens` from the resource provided by the `ibHttpAPILoginUrl` token.
+
+```typescript
+export interface IbAPITokens {
+  accessToken: string;
+  refreshToken: string;
+}
+```
+
+It is possible to extend the type and add any necessary parameters.
+
+```typescript
+export interface UserData extends IbAPITokens {
+  id: number;
+  fullName: string;
+  email: string;
+}
+```
+
+Remember to include it as a type parameter during dependency injection
+
+```typescript
+export class AuthEffects {
+  constructor(loginService: IbLoginService<UserData>) {}
+
+  /** ... */
+}
+```
+
+## Injection tokens
+
+### ibHttpGUILoginUrl
+
+Login page path
+
+```typescript
+{ provide: "ibHttpGUILoginUrl", useValue: "/login" }
+```
+
+### ibHttpAPILoginUrl
+
+API login endpoint
+
+```typescript
+{ provide: "ibHttpAPILoginUrl", useValue: "/api/auth/login" }
+```
+
+### ibHttpAuthType
+
+Authorizazion type. Either bearer token (JWT) or basic
+
+```typescript
+{ provide: "ibHttpAuthType", useValue: IbAuthTypes.JWT }
+// or
+{ provide: "ibHttpAuthType", useValue: IbAuthTypes.BASIC_AUTH }
+```
+
+### ibHttpSessionStorageType
+
+Where to storage the user's access token
+
+```typescript
+{ provide: "ibHttpSessionStorageType", useValue: IbStorageTypes.LOCALSTORAGE }
+```
+
+### ibHttpAPIRefreshUrl
+
+Refresh access token API endpoint
+
+```typescript
+{ provide: "ibHttpAPIRefreshUrl", useValue: "/api/auth/refresh" }
+```
+
+### ibHttpJWTClaimsField
+
+Property name of additional data or claims within the JWT token
+
+```typescript
+{ provide: "ibHttpJWTClaimsField", useValue: "https://hasura.io/jwt/claims" }
+```
+
+### ibHttpJWTRolesField
+
+Property name of the user roles within the JWT claims field
+
+```typescript
+{ provide: "ibHttpJWTClaimsField", useValue: "x-hasura-allowed-roles" }
+```
