@@ -4,6 +4,26 @@ import { Meta } from "@storybook/blocks";
 
 # HTTP API
 
+## Actions
+
+```typescript
+import { ibAuthActions } from '@inobeta/ui';
+```
+
+### `login`
+
+Note that the name might be confusing. This action should be dispatched as a login success, rather than a login attempt.
+
+Legacy: only stores a token in the storage. Does not call the `login()` function
+
+### `logout`
+
+Dispatch and listen to this action to cleanup the user's session on logout
+
+### `refreshCycle`
+
+Dispatch to start a timer and refresh the access token once expired
+
 ## Injection tokens
 
 ### ibHttpEnableInterceptors
