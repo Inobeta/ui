@@ -9,9 +9,9 @@ import * as loadingStories from "./http/loading-skeleton.stories";
 ## Setup
 
 This modules comes with an application wide store, and is required to provide it's features.  
-First import `IbHttpModule` in your `AppModule`  
-Then add `ibhttpReducers` to your map of reducers  
-Lastly apply the effects provided in `ibHttpEffects`
+- First import `IbHttpModule` in your `AppModule`  
+- Then add `ibhttpReducers` to your map of reducers  
+- Lastly, apply the effects provided in `ibHttpEffects`
 
 ```typescript
 import { IbHttpModule, ibHttpReducers, ibHttpEffects } from "@inobeta/ui";
@@ -38,7 +38,9 @@ const reducers = {
 export class AppModule {}
 ```
 
-## Loading directive `ibLoading`
+## Directives
+
+### Loading directive `ibLoading`
 
 Directive to conditionally display a loading skeleton or the original content based on the loading state.
 
@@ -75,7 +77,7 @@ By default, it will intercept any endpoint. To provide a specific endpoint to li
 }
 ```
 
-## Role directive `ibRoleCheck`
+### Role directive `ibRoleCheck`
 
 Directive to conditionally render content based on user roles.
 
@@ -86,4 +88,67 @@ Directive to conditionally render content based on user roles.
 <section *ibRoleCheck="['user']">
   <!-- Fallback for regular users -->
 </section>
+```
+
+## Route Guards
+
+### IbAuthGuard
+
+Guard routes based on user authentication.
+
+Usage:
+- Include the `IbAuthGuard` in the `canActivate` route guard to protect routes.
+- If the user is not authenticated, they will be redirected to the login page provided by the `ibHttpGUILoginUrl` token.
+
+```typescript
+const routes: Routes = [
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+    canActivate: [IbAuthGuard],
+  },
+  // ... other routes ...
+];
+```
+
+### IbLoginGuard
+
+Guard routes based on user login status.  
+The opposite of IbAuthGuard, the route will activate if a user is **NOT** authenticated
+
+Usage:
+- Include the `IbLoginGuard` in the `canActivate` route guard to protect routes.
+- If the user is authenticated, they will be redirected to a page provided by the `ibHttpGUIDashboardUrl` token
+
+```typescript
+const routes: Routes = [
+  {
+    path: 'login',
+    component: LoginComponent,
+    canActivate: [IbLoginGuard],
+  },
+  // ... other routes ...
+];
+```
+
+### IbRoleGuard
+
+Guard routes based on user roles.
+
+Usage:
+- Include the `IbRoleGuard` in the `canActivate` route guard to protect routes based on user roles.
+- Specify the required roles in the route's data property.
+- If the user is not granted access, they will be redirected to a page provided by the `ibHttpGUIDashboardUrl` token
+
+
+```typescript
+const routes: Routes = [
+  {
+    path: 'admin',
+    component: AdminComponent,
+    canActivate: [IbRoleGuard],
+    data: { roles: ['admin'] }
+  },
+  // ... other routes ...
+];
 ```
