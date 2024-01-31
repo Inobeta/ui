@@ -44,13 +44,13 @@ export class AppModule {}
 Besides offering services and directives, this module provides other out-of-the-box features such as:
 
 - Authentication interceptor
-  - Sets the `Authentication` header of every HTTP requests
+  - Sets the `Authentication` header for every HTTP requests
 - Error interceptor
   - Shows error messages if an HTTP request returns an error
 - Loading interceptor
   - Counts and tracks any pending HTTP request to properly show loading indicators within your app
 
-To know more how to customize the module's behaviour, head over to the [API page](/docs/features-http-api--docs#injection-tokens)
+To know more about customizing the module's behaviour, head over to the [API page](/docs/features-http-api--docs#injection-tokens)
 
 ## Directives
 
@@ -64,7 +64,7 @@ Directive to conditionally display a loading skeleton or the original content ba
 
 <Story of={loadingStories.loadingDirective} />
 
-By default, the content will be replaced for any HTTP request currently in progress.  
+By default, the content will be replaced during any HTTP request currently in progress.  
 To provide a specific endpoint to listen to, add the `endpoint` parameter
 
 ```html
@@ -184,7 +184,7 @@ const routes: Routes = [
 
 ### ibCrudToast
 
-Method decorator for displaying toast notifications and optionally navigating back after a CRUD operation.
+Method decorator for displaying toast notifications, and optionally navigating back after a CRUD operation.
 
 **Parameters:**  
 - enableBackCall: Indicates whether to navigate back after the operation.
