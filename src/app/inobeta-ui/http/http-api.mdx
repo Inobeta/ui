@@ -1,0 +1,80 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="Features/HTTP/API" />
+
+# HTTP API
+
+## Injection tokens
+
+### ibHttpEnableInterceptors
+
+Whether to enable all interceptors
+
+Defaults to `true`
+
+```typescript
+{ provide: "ibHttpEnableInterceptors", useValue: true }
+```
+
+### ibHttpUrlExcludedFromLoader
+
+List of endpoints that, when called, should not show any loading indicators
+
+```typescript
+{
+  provide: "ibHttpUrlExcludedFromLoader",
+  useValue: [{ url: "/path/to/resource", method: "GET" }]
+}
+```
+
+### ibHttpToastOnLoginFailure
+
+Label displayed in the snackbar upon authentication failure
+
+```typescript
+{ provide: "ibHttpToastOnLoginFailure", useValue: "shared.ibHttp.authFailure" }
+```
+
+### ibHttpToastOnGenericFailure
+
+Label displayed in the snackbar upon HTTP error
+
+```typescript
+{ provide: "ibHttpToastOnGenericFailure", useValue: "shared.ibHttp.genericFailure" }
+```
+
+### ibHttpToastErrorField
+
+Parameter name used as getter. In case the error object returned by the server is nested within another object
+
+Defaults to `undefined`
+
+```typescript
+{ provide: "ibHttpToastErrorField", useValue: "customError" }
+```
+
+### ibHttpToastOnStatusCode
+
+Map of labels to display according to the status code returned by the server
+
+Defaults to `{}`
+
+```typescript
+{
+  provide: "ibHttpToastOnStatusCode",
+  useValue: {
+    404: "error.notFound",
+    500: "error.serverError"
+  }
+}
+```
+
+### ibHttpToastErrorCode
+
+Numeric parameter name used as getter
+
+Defaults to `null`
+
+```typescript
+{ provide: "ibHttpToastErrorCode", useValue: 404 }
+```

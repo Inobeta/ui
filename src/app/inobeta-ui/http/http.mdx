@@ -1,4 +1,4 @@
-import { Meta, Canvas, Story } from "@storybook/blocks";
+import { Meta, Story } from "@storybook/blocks";
 
 import * as loadingStories from "./http/loading-skeleton.stories";
 
@@ -8,9 +8,10 @@ import * as loadingStories from "./http/loading-skeleton.stories";
 
 ## Setup
 
-This modules comes with an application wide store, and is required to provide it's features.  
-- First import `IbHttpModule` in your `AppModule`  
-- Then add `ibhttpReducers` to your map of reducers  
+This modules comes with an application wide store, and is required to provide it's features.
+
+- First import `IbHttpModule` in your `AppModule`
+- Then add `ibhttpReducers` to your map of reducers
 - Lastly, apply the effects provided in `ibHttpEffects`
 
 ```typescript
@@ -38,6 +39,19 @@ const reducers = {
 export class AppModule {}
 ```
 
+## Basic features
+
+Besides offering services and directives, this module provides other out-of-the-box features such as:
+
+- Authentication interceptor
+  - Sets the `Authentication` header of every HTTP requests
+- Error interceptor
+  - Shows error messages if an HTTP request returns an error
+- Loading interceptor
+  - Counts and tracks any pending HTTP request to properly show loading indicators within your app
+
+To know more how to customize the module's behaviour, head over to the [API page](/docs/features-http-api--docs#injection-tokens)
+
 ## Directives
 
 ### Loading directive `ibLoading`
@@ -50,12 +64,11 @@ Directive to conditionally display a loading skeleton or the original content ba
 
 <Story of={loadingStories.loadingDirective} />
 
-By default, it will intercept any endpoint. To provide a specific endpoint to listen to, add the `endpoint` parameter
+By default, the content will be replaced for any HTTP request currently in progress.  
+To provide a specific endpoint to listen to, add the `endpoint` parameter
 
 ```html
-<section
-  *ibLoading="{ endpoint: { url: '/api/data', method: 'GET' } }"
->
+<section *ibLoading="{ endpoint: { url: '/api/data', method: 'GET' } }">
   <!-- ... -->
 </section>
 ```
@@ -72,8 +85,8 @@ By default, it will intercept any endpoint. To provide a specific endpoint to li
   height: "20px",
   /** Custom CSS class applied to each skeleton */
   className: "",
-  /** Specific endpoint */
-  endpoint: null,
+  /** Specific endpoint, can be undefined */
+  endpoint: { url: '/path/to/resource', method: 'POST' },
 }
 ```
 
@@ -90,6 +103,18 @@ Directive to conditionally render content based on user roles.
 </section>
 ```
 
+## Components
+
+### Spinner loading
+
+Display a spinner loading animation while HTTP requests are in progress.
+
+```html
+<!-- app.component.html -->
+<router-outlet></router-outlet>
+<ib-spinner-loading />
+```
+
 ## Route Guards
 
 ### IbAuthGuard
@@ -97,13 +122,14 @@ Directive to conditionally render content based on user roles.
 Guard routes based on user authentication.
 
 Usage:
+
 - Include the `IbAuthGuard` in the `canActivate` route guard to protect routes.
 - If the user is not authenticated, they will be redirected to the login page provided by the `ibHttpGUILoginUrl` token.
 
 ```typescript
 const routes: Routes = [
   {
-    path: 'dashboard',
+    path: "dashboard",
     component: DashboardComponent,
     canActivate: [IbAuthGuard],
   },
@@ -114,16 +140,17 @@ const routes: Routes = [
 ### IbLoginGuard
 
 Guard routes based on user login status.  
-The opposite of IbAuthGuard, the route will activate if a user is **NOT** authenticated
+The opposite of IbAuthGuard, the route will activate if the user is **NOT** authenticated
 
 Usage:
+
 - Include the `IbLoginGuard` in the `canActivate` route guard to protect routes.
 - If the user is authenticated, they will be redirected to a page provided by the `ibHttpGUIDashboardUrl` token
 
 ```typescript
 const routes: Routes = [
   {
-    path: 'login',
+    path: "login",
     component: LoginComponent,
     canActivate: [IbLoginGuard],
   },
@@ -136,19 +163,38 @@ const routes: Routes = [
 Guard routes based on user roles.
 
 Usage:
+
 - Include the `IbRoleGuard` in the `canActivate` route guard to protect routes based on user roles.
 - Specify the required roles in the route's data property.
 - If the user is not granted access, they will be redirected to a page provided by the `ibHttpGUIDashboardUrl` token
 
-
 ```typescript
 const routes: Routes = [
   {
-    path: 'admin',
+    path: "admin",
     component: AdminComponent,
     canActivate: [IbRoleGuard],
-    data: { roles: ['admin'] }
+    data: { roles: ["admin"] },
   },
   // ... other routes ...
 ];
+```
+
+## Decorators
+
+### ibCrudToast
+
+Method decorator for displaying toast notifications and optionally navigating back after a CRUD operation.
+
+**Parameters:**  
+- enableBackCall: Indicates whether to navigate back after the operation.
+- successMessage: The success message to be displayed in the toast notification. (i18n)
+- timeoutOnSave: Time in milliseconds to wait before navigating back (if enabled).
+
+```typescript
+@ibCrudToast(true, 'users.edit.success', 500)
+handleSave() {
+  // ... your save logic ...
+  return someObservable;
+}
 ```

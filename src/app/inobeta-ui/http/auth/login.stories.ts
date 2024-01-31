@@ -20,6 +20,6 @@ type Story = StoryObj<IbLoginService<IbAPITokens>>;
 
 export const ibLoginService: Story = {
   render: () => ({
-    template: ``,
+    template: `Documentation only<br>This page is intentionally blank`,
   }),
 };
