@@ -129,7 +129,7 @@ export class IbTimestampColumn<T> extends IbColumn<T> {
 }
 
 const meta: Meta = {
-  title: "Table",
+  title: "Components/Table",
   component: IbTable,
   tags: ["autodocs"],
   decorators: [

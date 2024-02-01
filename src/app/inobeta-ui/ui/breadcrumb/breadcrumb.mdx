@@ -1,0 +1,125 @@
+import { Meta, Canvas } from "@storybook/blocks";
+
+import * as stories from "./breadcrumb.stories";
+
+<Meta title="Components/Breadcrumbs/Overview" />
+
+# Breadcrumbs
+
+## Getting started
+
+By default, breadcrumbs are generated based on your app's routing.
+Add the component to the a container page and add a `breadcrumb` property in the `data` parameter of a route. It supports i18n labels.
+
+```html
+<ib-material-breadcrumb></ib-material-breadcrumb>
+<router-outlet></router-outlet>
+```
+
+```typescript
+const routes: Routes = [
+  {
+    path: "home",
+    component: HomeComponent,
+    children: [
+      {
+        path: "about-us",
+        data: { breadcrumb: "aboutUs.title" },
+        children: [
+          {
+            path: "company",
+            // component: ...,
+            data: { breadcrumb: "aboutUs.company.title" },
+          },
+          {
+            path: "contacts",
+            // component: ...,
+            data: { breadcrumb: "aboutUs.contacts.title" },
+          },
+        ],
+      },
+    ],
+  },
+];
+```
+
+## Change home button
+
+To change the path to the app's homepage, use the `home` input and set the `url` parameter to a path of your choosing. (Defaults to `'/'`)
+
+```html
+<ib-material-breadcrumb
+  [home]="{ url: '/another-home', icon: 'home' }"
+></ib-material-breadcrumb>
+```
+
+## Static mode
+
+Breadcrumbs can be provided manually by setting `mode="static"` and passing your crumbs to the `items` input.
+
+```typescript
+items = [
+  {
+    url: "/",
+    icon: "home",
+  },
+  {
+    url: "/some-deep/page"
+    label: "page.title"
+  }
+];
+```
+
+```html
+<ib-material-breadcrumb [items]="items" />
+```
+
+## Build your own
+
+Extend `IbBreadcrumbComponent` to write your own breadcrumb component.
+
+In this example, the presentation of the component will be changed in order to display the first crumb (or item) as a title,
+representing a feature, and each following item displayed as a link, representing the sections.
+
+Through the `items` input property, arrange and display your crumbs, for example by applying styles depending on their depth.
+
+```typescript
+// items is of type IbBreadcrumbItem[]
+type IbBreadcrumbItem = {
+  label?: string;
+  url?: string;
+  icon?: string;
+}
+```
+
+```typescript
+@Component({
+  selector: "app-breadbrumb",
+  template: `<ul class="breadcrumbs">
+    <li *ngFor="let item of items" class="breadcrumbs-item">
+      <!-- The first element will always be rendered as a title -->
+      <div class="title" *ngIf="item === items[0]">
+        {{ item.label }}
+      </div>
+
+      <!-- If there are more than two items, then start rendering an arrow --->
+      <mat-icon *ngIf="item !== items[0] && item !== items[1]"
+        >chevron_right</mat-icon
+      >
+
+      <!-- Every item other than the first will be displayed as a link -->
+      <a *ngIf="item !== items[0]" class="section" [routerLink]="[item.url]">
+        {{ item.label }}
+      </a>
+    </li>
+  </ul>`,
+  // remember to style your component
+  styles: ``,
+  providers: [
+    { provide: IbBreadcrumbComponent, useExisting: CustomBreadcrumb },
+  ],
+})
+export class CustomBreadcrumb extends IbBreadcrumbComponent {}
+```
+
+<Canvas of={stories.BuildYourOwn} />

@@ -17,7 +17,7 @@ import { IbMaterialFormModule } from "./material-form.module";
 import { IbMaterialFormComponent } from "./material-form/material-form.component";
 
 const meta: Meta = {
-  title: "Forms",
+  title: "Components/Forms",
   component: IbMaterialFormComponent,
   decorators: [
     moduleMetadata({

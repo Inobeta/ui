@@ -19,6 +19,11 @@ const preview: Preview = {
         headingSelector: 'h2, h3',
         ignoreSelector: '#primary, #stories'
       }
+    },
+    options: {
+      storySort: {
+        order: ['Components', 'Features']
+      }
     }
   },
   decorators: [
