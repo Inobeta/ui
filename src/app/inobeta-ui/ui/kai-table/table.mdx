@@ -312,16 +312,22 @@ export class IbKaiTableExamplePage {
 
 #### Sorting data accessor
 
+By default, the data for sorting is retrieved by the same data accessor function used to retireve
+the content to render of each cell (that means `dataAccessor(data, name)`)  
+This behaviour can be overriden with the `sortingDataAccessor` input, available for every type of column.
+
 ```html
 <ib-text-column name="firstName" sort [sortingDataAccessor]="sortingDataAccessor"></ib-text-column>
 ```
+
+For custom columns, you can override the getter function within you component's class.
 
 ```typescript
 @Component({/** ... */})
 export class IbCustomColumn<T> extends IbColumn<T> {
   dataAccessor = (data: T, name: string): any => data[name].somethingNested;
 
-  sortingDataAccessor = (data: T, name: string): any => data[name].somethingNested;
+  sortingDataAccessor = (data: T, name: string): any => data[name].somethingElse;
 }
 ```
 
@@ -377,16 +383,22 @@ Then, add the necessary filters withing your table. Each filter requires a `name
 
 #### Filtering data accessor
 
+By default, the data for filtering is retrieved by the same data accessor function used to retireve
+the content to render of each cell (that means `dataAccessor(data, name)`)  
+This behaviour can be overriden with the `filterDataAccessor` input, available for every type of column.
+
 ```html
-<ib-text-column name="firstName" sort [filterDataAccessor]="filterDataAccessor" />
+<ib-date-column name="firstName" [filterDataAccessor]="filterDataAccessor" />
 ```
+
+For custom columns, you can override the getter function within you component's class.
 
 ```typescript
 @Component({/** ... */})
 export class IbCustomColumn<T> extends IbColumn<T> {
   dataAccessor = (data: T, name: string): any => data[name].somethingNested;
 
-  filterDataAccessor = (data: T, name: string): any => data[name].somethingNested;
+  filterDataAccessor = (data: T, name: string): any => data[name].somethingElse;
 }
 ```
 
