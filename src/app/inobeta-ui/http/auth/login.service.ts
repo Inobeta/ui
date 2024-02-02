@@ -56,7 +56,18 @@ export class IbLoginService<T extends IbAPITokens | IbAPITokens> {
     @Inject("ibHttpJWTRolesField")
     @Optional()
     public ibHttpJWTRolesField = "x-hasura-allowed-roles"
-  ) {}
+  ) {
+    this.ibHttpGUILoginUrl = this.ibHttpGUILoginUrl ?? "/login";
+    this.ibHttpAPILoginUrl = this.ibHttpAPILoginUrl ?? "/api/auth/login";
+    this.ibHttpAPIRefreshUrl = this.ibHttpAPIRefreshUrl ?? "/api/auth/refresh";
+    this.ibHttpAuthType = this.ibHttpAuthType ?? IbAuthTypes.JWT;
+    this.ibHttpSessionStorageType =
+      this.ibHttpSessionStorageType ?? IbStorageTypes.LOCALSTORAGE;
+    this.ibHttpJWTClaimsField =
+      this.ibHttpJWTClaimsField ?? "https://hasura.io/jwt/claims";
+    this.ibHttpJWTRolesField =
+      this.ibHttpJWTRolesField ?? "x-hasura-allowed-roles";
+  }
 
   /**
    * Attempts a login to the server by contacting the endpoint provided by the token {@link ibHttpAPILoginUrl}
