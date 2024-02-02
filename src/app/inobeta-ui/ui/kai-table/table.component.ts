@@ -148,12 +148,6 @@ export class IbTable implements OnDestroy {
   ngOnInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-
-    if (this.dataSource instanceof IbRemoteTableDataSource) {
-      this.dataSource._state
-        .pipe(takeUntil(this._destroyed))
-        .subscribe((s) => (this.state = s));
-    }
   }
 
   ngAfterViewInit() {
@@ -174,6 +168,13 @@ export class IbTable implements OnDestroy {
     if (this.view) {
       this.view.viewGroupName = this.tableName;
     }
+
+    this.dataSource.columns = this.columns.toArray();
+    this.columns.changes
+      .pipe(takeUntil(this._destroyed))
+      .subscribe((columns) => {
+        this.dataSource.columns = columns.toArray();
+      });
   }
 
   ngOnDestroy() {

@@ -1,4 +1,4 @@
-import {MatPaginator, PageEvent} from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from "@angular/material/paginator";
 import {
   BehaviorSubject,
   combineLatest,
@@ -7,11 +7,12 @@ import {
   of as observableOf,
   Subject,
   Subscription,
-} from 'rxjs';
-import {DataSource} from '@angular/cdk/collections';
-import {MatSort, Sort} from '@angular/material/sort';
-import {_isNumberValue} from '@angular/cdk/coercion';
-import {map} from 'rxjs/operators';
+} from "rxjs";
+import { DataSource } from "@angular/cdk/collections";
+import { MatSort, Sort } from "@angular/material/sort";
+import { _isNumberValue } from "@angular/cdk/coercion";
+import { map } from "rxjs/operators";
+import { IbColumn } from "./columns";
 
 /**
  * Corresponds to `Number.MAX_SAFE_INTEGER`. Moved out into a variable here due to
@@ -27,7 +28,10 @@ const MAX_SAFE_INTEGER = 9007199254740991;
  * properties are accessed. Also allows for filter customization by overriding filterPredicate,
  * which defines how row data is converted to a string for filter matching.
  */
-export class IbTableDataSource<T, P extends MatPaginator = MatPaginator> extends DataSource<T> {
+export class IbTableDataSource<
+  T,
+  P extends MatPaginator = MatPaginator
+> extends DataSource<T> {
   /** Stream that emits when a new data array is set on the data source. */
   private readonly _data: BehaviorSubject<T[]>;
 
@@ -35,7 +39,7 @@ export class IbTableDataSource<T, P extends MatPaginator = MatPaginator> extends
   private readonly _renderData = new BehaviorSubject<T[]>([]);
 
   /** Stream that emits when a new filter string is set on the data source. */
-  private readonly _filter = new BehaviorSubject<string>('');
+  private readonly _filter = new BehaviorSubject<string>("");
 
   /** Used to react to internal changes of the paginator that are made by the data source itself. */
   private readonly _internalPageChanges = new Subject<void>();
@@ -122,6 +126,16 @@ export class IbTableDataSource<T, P extends MatPaginator = MatPaginator> extends
 
   private _paginator: P | null;
 
+  get columns() {
+    return this.columns;
+  }
+
+  set columns(columns: IbColumn<unknown>[]) {
+    this._columns = columns.reduce((acc, c) => ({ [c.name]: c, ...acc }), {});
+  }
+
+  private _columns: Record<string, IbColumn<unknown>> = {};
+
   /**
    * Data accessor function that is used for accessing data properties for sorting through
    * the default sortData function.
@@ -133,7 +147,7 @@ export class IbTableDataSource<T, P extends MatPaginator = MatPaginator> extends
    */
   sortingDataAccessor: (data: T, sortHeaderId: string) => string | number = (
     data: T,
-    sortHeaderId: string,
+    sortHeaderId: string
   ): string | number => {
     const value = (data as unknown as Record<string, any>)[sortHeaderId];
 
@@ -157,16 +171,20 @@ export class IbTableDataSource<T, P extends MatPaginator = MatPaginator> extends
    * @param data The array of data that should be sorted.
    * @param sort The connected MatSort that holds the current sort state.
    */
-  sortData: (data: T[], sort: MatSort) => T[] = (data: T[], sort: MatSort): T[] => {
+  sortData: (data: T[], sort: MatSort) => T[] = (
+    data: T[],
+    sort: MatSort
+  ): T[] => {
     const active = sort.active;
     const direction = sort.direction;
-    if (!active || direction == '') {
+    if (!active || direction == "") {
       return data;
     }
 
+    const column = this._columns[active];
     return data.sort((a, b) => {
-      let valueA = this.sortingDataAccessor(a, active);
-      let valueB = this.sortingDataAccessor(b, active);
+      let valueA = column.sortingDataAccessor(a, active);
+      let valueB = column.sortingDataAccessor(b, active);
 
       // If there are data in the column that can be converted to a number,
       // it must be ensured that the rest of the data
@@ -175,11 +193,11 @@ export class IbTableDataSource<T, P extends MatPaginator = MatPaginator> extends
       const valueBType = typeof valueB;
 
       if (valueAType !== valueBType) {
-        if (valueAType === 'number') {
-          valueA += '';
+        if (valueAType === "number") {
+          valueA += "";
         }
-        if (valueBType === 'number') {
-          valueB += '';
+        if (valueBType === "number") {
+          valueB += "";
         }
       }
 
@@ -201,7 +219,7 @@ export class IbTableDataSource<T, P extends MatPaginator = MatPaginator> extends
         comparatorResult = -1;
       }
 
-      return comparatorResult * (direction == 'asc' ? 1 : -1);
+      return comparatorResult * (direction == "asc" ? 1 : -1);
     });
   };
 
@@ -215,7 +233,10 @@ export class IbTableDataSource<T, P extends MatPaginator = MatPaginator> extends
    * @param filter Filter string that has been set on the data source.
    * @returns Whether the filter matches against the data
    */
-  filterPredicate: (data: T, filter: string) => boolean = (data: T, filter: string): boolean => {
+  filterPredicate: (data: T, filter: string) => boolean = (
+    data: T,
+    filter: string
+  ): boolean => {
     // Transform the data into a lowercase string of all property values.
     const dataStr = Object.keys(data as unknown as Record<string, any>)
       .reduce((currentTerm: string, key: string) => {
@@ -225,8 +246,10 @@ export class IbTableDataSource<T, P extends MatPaginator = MatPaginator> extends
         // that has a very low chance of being typed in by somebody in a text field. This one in
         // particular is "White up-pointing triangle with dot" from
         // https://en.wikipedia.org/wiki/List_of_Unicode_characters
-        return currentTerm + (data as unknown as Record<string, any>)[key] + '◬';
-      }, '')
+        return (
+          currentTerm + (data as unknown as Record<string, any>)[key] + "◬"
+        );
+      }, "")
       .toLowerCase();
 
     // Transform the filter by converting it to lowercase and removing whitespace.
@@ -254,31 +277,36 @@ export class IbTableDataSource<T, P extends MatPaginator = MatPaginator> extends
     // pipeline can progress to the next step. Note that the value from these streams are not used,
     // they purely act as a signal to progress in the pipeline.
     const sortChange: Observable<Sort | null | void> = this._sort
-      ? (merge(this._sort.sortChange, this._sort.initialized) as Observable<Sort | void>)
+      ? (merge(
+          this._sort.sortChange,
+          this._sort.initialized
+        ) as Observable<Sort | void>)
       : observableOf(null);
     const pageChange: Observable<PageEvent | null | void> = this._paginator
       ? (merge(
           this._paginator.page,
           this._internalPageChanges,
-          this._paginator.initialized,
+          this._paginator.initialized
         ) as Observable<PageEvent | void>)
       : observableOf(null);
     const dataStream = this._data;
     // Watch for base data or filter changes to provide a filtered set of data.
     const filteredData = combineLatest([dataStream, this._filter]).pipe(
-      map(([data]) => this._filterData(data)),
+      map(([data]) => this._filterData(data))
     );
     // Watch for filtered data or sort changes to provide an ordered set of data.
     const orderedData = combineLatest([filteredData, sortChange]).pipe(
-      map(([data]) => this._orderData(data)),
+      map(([data]) => this._orderData(data))
     );
     // Watch for ordered data or page changes to provide a paged set of data.
     const paginatedData = combineLatest([orderedData, pageChange]).pipe(
-      map(([data]) => this._pageData(data)),
+      map(([data]) => this._pageData(data))
     );
     // Watched for paged data changes and send the result to the table to render.
     this._renderChangesSubscription?.unsubscribe();
-    this._renderChangesSubscription = paginatedData.subscribe(data => this._renderData.next(data));
+    this._renderChangesSubscription = paginatedData.subscribe((data) =>
+      this._renderData.next(data)
+    );
   }
 
   /**
@@ -291,9 +319,9 @@ export class IbTableDataSource<T, P extends MatPaginator = MatPaginator> extends
     // Each data object is converted to a string using the function defined by filterPredicate.
     // May be overridden for customization.
     this.filteredData =
-      this.filter == null || this.filter === ''
+      this.filter == null || this.filter === ""
         ? data
-        : data.filter(obj => this.filterPredicate(obj, this.filter));
+        : data.filter((obj) => this.filterPredicate(obj, this.filter));
 
     if (this.paginator) {
       this._updatePaginator(this.filteredData.length);
@@ -346,7 +374,8 @@ export class IbTableDataSource<T, P extends MatPaginator = MatPaginator> extends
 
       // If the page index is set beyond the page, reduce it to the last page.
       if (paginator.pageIndex > 0) {
-        const lastPageIndex = Math.ceil(paginator.length / paginator.pageSize) - 1 || 0;
+        const lastPageIndex =
+          Math.ceil(paginator.length / paginator.pageSize) - 1 || 0;
         const newPageIndex = Math.min(paginator.pageIndex, lastPageIndex);
 
         if (newPageIndex !== paginator.pageIndex) {

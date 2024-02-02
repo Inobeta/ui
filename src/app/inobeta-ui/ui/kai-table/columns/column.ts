@@ -101,6 +101,10 @@ export class IbColumn<T> implements OnDestroy, OnInit {
    * value defined by the data's `id` property.
    */
   @Input() dataAccessor: (data: T, name: string) => string;
+  /**
+   * Data accessor function that is used to retrieve data properties for sorting
+   */
+  @Input() sortingDataAccessor: (data: T, name: string) => string;
 
   /**
    * Enables sorting for the column.
@@ -170,6 +174,10 @@ export class IbColumn<T> implements OnDestroy, OnInit {
       this.dataAccessor =
         this._options.defaultDataAccessor ||
         ((data: T, name: string) => (data as any)[name]);
+    }
+
+    if (!this.sortingDataAccessor) {
+      this.sortingDataAccessor = this.dataAccessor;
     }
 
     if (this._table) {

@@ -83,7 +83,7 @@ export class IbRemoteTableDataSource<
     this._state.next(value);
   }
 
-  _state = new BehaviorSubject<IbKaiTableState>('idle');
+  _state = new BehaviorSubject<IbKaiTableState>("idle");
 
   get filter() {
     return this._filter.value;
@@ -93,6 +93,8 @@ export class IbRemoteTableDataSource<
     this._filter.next(value);
     this._refresh.next();
   }
+
+  columns = {};
 
   constructor(initialData: T[] = []) {
     super();
@@ -127,7 +129,7 @@ export class IbRemoteTableDataSource<
       ),
       debounceTime(0),
       switchMap(() => {
-        this.state = 'loading';
+        this.state = "loading";
         return this.fetchData(
           this._sort.active,
           this._sort.direction,
@@ -135,7 +137,7 @@ export class IbRemoteTableDataSource<
           this.filter
         ).pipe(
           catchError(() => {
-            this.state = 'http_error';
+            this.state = "http_error";
             return of(null);
           })
         );
@@ -145,7 +147,7 @@ export class IbRemoteTableDataSource<
           return [];
         }
 
-        this.state = 'idle';
+        this.state = "idle";
         this._paginator.length = this.updatePaginator(data);
         return this.mapData(data);
       })

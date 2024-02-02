@@ -111,6 +111,6 @@ export class IbSelectionColumn implements OnInit {
   }
 
   isDisabled() {
-    return !(this.table.state !== "idle");
+    return this.table.state !== "idle";
   }
 }
