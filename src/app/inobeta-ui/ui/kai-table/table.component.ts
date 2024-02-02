@@ -75,7 +75,7 @@ export class IbTable implements OnDestroy {
   expandedElement: any;
   actionPortals: Portal<any>[] = [];
 
-  state: IbKaiTableState = "idle";
+  @Input() state: IbKaiTableState = "idle";
 
   @Input()
   set data(data: any[]) {
@@ -184,16 +184,13 @@ export class IbTable implements OnDestroy {
   }
 
   private setupFilter() {
-    const updateFilter = (filter) => {
-      this.selectionColumn?.selection?.clear();
-      this.dataSource.filter = filter as any;
-    };
-    this.dataSource.filterPredicate = this.filter.filterPredicate;
     this.initializeFilters(this.dataSource.data);
-
     this.filter.ibFilterUpdated
       .pipe(takeUntil(this._destroyed))
-      .subscribe(updateFilter);
+      .subscribe((filter) => {
+        this.selectionColumn?.selection?.clear();
+        this.dataSource.filter = filter;
+      });
   }
 
   private setupViewGroup() {

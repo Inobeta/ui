@@ -10,8 +10,7 @@ import {
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { IbKaiTableAction } from "../kai-table/action";
-import { IbFilterDef, IbFilterSyntax } from "./filter.types";
-import { applyFilter } from "./filters";
+import { IbFilterSyntax } from "./filter.types";
 import { IbFilterBase } from "./filters/base/filter-base";
 import { IB_FILTER } from "./tokens";
 
@@ -99,18 +98,6 @@ export class IbFilter {
   }
 
   /** @ignore */
-  filterPredicate = (data: any, filter: IbFilterSyntax | any) => {
-    const matchesSearchBar = this.applySearchBarFilter(
-      data,
-      filter?.__ibSearchBar
-    );
-    return Object.entries(data).every(([key, value]) => {
-      const condition = filter[key];
-      return applyFilter(condition, value) && matchesSearchBar;
-    });
-  };
-
-  /** @ignore */
   private buildFilter(): IbFilterSyntax {
     let output = {};
     const filters = this.filters.toArray();
@@ -121,22 +108,4 @@ export class IbFilter {
 
     return output;
   }
-
-  /** @ignore */
-  private applySearchBarFilter = (data: any, filter: IbFilterDef) => {
-    if (!filter) {
-      return true;
-    }
-
-    const dataStr = Object.keys(data as unknown as Record<string, any>)
-      .reduce((currentTerm: string, key: string) => {
-        // https://github.com/angular/components/blob/main/src/material/table/table-data-source.ts#L247
-        return (
-          currentTerm + (data as unknown as Record<string, any>)[key] + "◬"
-        );
-      }, "")
-      .toLowerCase();
-
-    return applyFilter(filter, dataStr);
-  };
 }

@@ -1,17 +1,19 @@
+import { _isNumberValue } from "@angular/cdk/coercion";
+import { DataSource } from "@angular/cdk/collections";
 import { MatPaginator, PageEvent } from "@angular/material/paginator";
+import { MatSort, Sort } from "@angular/material/sort";
 import {
   BehaviorSubject,
-  combineLatest,
-  merge,
   Observable,
-  of as observableOf,
   Subject,
   Subscription,
+  combineLatest,
+  merge,
+  of as observableOf,
 } from "rxjs";
-import { DataSource } from "@angular/cdk/collections";
-import { MatSort, Sort } from "@angular/material/sort";
-import { _isNumberValue } from "@angular/cdk/coercion";
 import { map } from "rxjs/operators";
+import { IbFilterDef, IbFilterSyntax } from "../kai-filter/filter.types";
+import { applyFilter } from "../kai-filter/filters";
 import { IbColumn } from "./columns";
 
 /**
@@ -39,7 +41,7 @@ export class IbTableDataSource<
   private readonly _renderData = new BehaviorSubject<T[]>([]);
 
   /** Stream that emits when a new filter string is set on the data source. */
-  private readonly _filter = new BehaviorSubject<string>("");
+  private readonly _filter = new BehaviorSubject<IbFilterSyntax>(null);
 
   /** Used to react to internal changes of the paginator that are made by the data source itself. */
   private readonly _internalPageChanges = new Subject<void>();
@@ -77,11 +79,11 @@ export class IbTableDataSource<
    * Filter term that should be used to filter out objects from the data array. To override how
    * data objects match to this filter string, provide a custom function for filterPredicate.
    */
-  get filter(): string {
+  get filter(): IbFilterSyntax {
     return this._filter.value;
   }
 
-  set filter(filter: string) {
+  set filter(filter: IbFilterSyntax) {
     this._filter.next(filter);
     // Normally the `filteredData` is updated by the re-render
     // subscription, but that won't happen if it's inactive.
@@ -126,8 +128,8 @@ export class IbTableDataSource<
 
   private _paginator: P | null;
 
-  get columns() {
-    return this.columns;
+  get columns(): Record<string, IbColumn<unknown>> {
+    return this._columns;
   }
 
   set columns(columns: IbColumn<unknown>[]) {
@@ -233,29 +235,36 @@ export class IbTableDataSource<
    * @param filter Filter string that has been set on the data source.
    * @returns Whether the filter matches against the data
    */
-  filterPredicate: (data: T, filter: string) => boolean = (
+  filterPredicate: (data: T, filter: IbFilterSyntax) => boolean = (
     data: T,
-    filter: string
+    filter: IbFilterSyntax
   ): boolean => {
-    // Transform the data into a lowercase string of all property values.
+    const matchesSearchBar = this.applySearchBarFilter(
+      data,
+      filter?.__ibSearchBar
+    );
+    return Object.entries(data).every(([key, value]) => {
+      const column = this.columns[key];
+      const filterValue = column ? column.filterDataAccessor(data, key) : value;
+      const condition = filter[key];
+      return applyFilter(condition, filterValue) && matchesSearchBar;
+    });
+  };
+
+  private applySearchBarFilter = (data: any, filter: IbFilterDef) => {
+    if (!filter) {
+      return true;
+    }
+
     const dataStr = Object.keys(data as unknown as Record<string, any>)
       .reduce((currentTerm: string, key: string) => {
-        // Use an obscure Unicode character to delimit the words in the concatenated string.
-        // This avoids matches where the values of two columns combined will match the user's query
-        // (e.g. `Flute` and `Stop` will match `Test`). The character is intended to be something
-        // that has a very low chance of being typed in by somebody in a text field. This one in
-        // particular is "White up-pointing triangle with dot" from
-        // https://en.wikipedia.org/wiki/List_of_Unicode_characters
         return (
           currentTerm + (data as unknown as Record<string, any>)[key] + "◬"
         );
       }, "")
       .toLowerCase();
 
-    // Transform the filter by converting it to lowercase and removing whitespace.
-    const transformedFilter = filter.trim().toLowerCase();
-
-    return dataStr.indexOf(transformedFilter) != -1;
+    return applyFilter(filter, dataStr);
   };
 
   constructor(initialData: T[] = []) {
@@ -319,7 +328,7 @@ export class IbTableDataSource<
     // Each data object is converted to a string using the function defined by filterPredicate.
     // May be overridden for customization.
     this.filteredData =
-      this.filter == null || this.filter === ""
+      this.filter == null
         ? data
         : data.filter((obj) => this.filterPredicate(obj, this.filter));
 

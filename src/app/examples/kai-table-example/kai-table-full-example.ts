@@ -1,6 +1,7 @@
 import { Component, ViewChild } from "@angular/core";
 import { IbSelectionColumn } from "../../inobeta-ui/ui/kai-table/columns/selection-column";
 import { UserService } from "./users";
+import { IbKaiTableState } from "../../inobeta-ui/ui/kai-table/table.types";
 
 @Component({
   selector: "ib-kai-table-full-example",
@@ -9,6 +10,7 @@ import { UserService } from "./users";
       tableName="fullExample"
       [displayedColumns]="columns"
       [data]="data"
+      [state]="state"
     >
       <ib-table-action-group>
         <button
@@ -78,6 +80,7 @@ export class IbKaiTableFullExamplePage {
 
   data: any[] = [];
   columns = ["name", "fruit", "number", "aDate", "subscribed"];
+  state: IbKaiTableState = "idle";
 
   constructor(private userService: UserService) {}
 
@@ -86,9 +89,13 @@ export class IbKaiTableFullExamplePage {
   }
 
   getUserOrders() {
+    this.state = "loading";
     this.userService
       .getUserOrders()
-      .subscribe((orders) => (this.data = orders));
+      .subscribe((orders) => {
+        this.data = orders
+        this.state = "idle";
+      });
   }
 
   selectionChange(data) {
