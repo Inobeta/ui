@@ -25,7 +25,7 @@
     <ng-container matColumnDef="expandedDetail" *ngIf="rowGroup">
       <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
         <div class="ib-table-element-detail"
-             [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+              [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
           <ng-container *ngTemplateOutlet="rowGroup.templateRef; context: {'$implicit': element, 'row': element}" ></ng-container>
         </div>
       </td>
@@ -59,15 +59,13 @@
     </tr>
 
     <ng-container *ngIf="aggregateColumns.size">
-      <tr mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></tr>
+      <tr class="ib-table-rollup" mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></tr>
     </ng-container>
   </table>
 </div>
-<div class="ib-table-paginator">
-  <mat-paginator
-    [style.display]="tableDef.paginator.hide ? 'none' : 'block'"
-    [pageSize]="tableDef.paginator.pageSize"
-    [showFirstLastButtons]="tableDef.paginator.showFirstLastButtons"
-    [pageSizeOptions]="tableDef.paginator.pageSizeOptions">
-  </mat-paginator>
-</div>
+<mat-paginator
+  class="ib-table-paginator"
+  [style.display]="tableDef.paginator.hide ? 'none' : 'block'"
+  [pageSize]="tableDef.paginator.pageSize"
+  [showFirstLastButtons]="tableDef.paginator.showFirstLastButtons"
+  [pageSizeOptions]="tableDef.paginator.pageSizeOptions" />

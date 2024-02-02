@@ -277,9 +277,6 @@ It will be used as a getter function in your template, and might be used during 
 </ng-container>
 ```
 
-> 🚧 Until 17.1, nested data is not fully supported as it breaks filtering and sorting. These features do not take in consideration
-> the `dataAccessor` function and will stop working in a use case similar to the one described.
-
 <Canvas of={TableStories.WithCustomColumn} />
 
 ## Sorting
@@ -292,7 +289,7 @@ By default, sorting is disabled in any column. To enable sorting, use `sort` in 
 <ib-text-column name="firstName" sort></ib-text-column>
 ```
 
-### Set initial sort
+#### Set initial sort
 
 Through the `initialSort` property of `IbTableDef` a sort direction can be activated during the first render of the table. The property `active` corresponds to the `name` of a column, and `direction` can only be either `asc` or `desc`.
 
@@ -310,6 +307,21 @@ export class IbKaiTableExamplePage {
       direction: "asc",
     },
   };
+}
+```
+
+#### Sorting data accessor
+
+```html
+<ib-text-column name="firstName" sort [sortingDataAccessor]="sortingDataAccessor"></ib-text-column>
+```
+
+```typescript
+@Component({/** ... */})
+export class IbCustomColumn<T> extends IbColumn<T> {
+  dataAccessor = (data: T, name: string): any => data[name].somethingNested;
+
+  sortingDataAccessor = (data: T, name: string): any => data[name].somethingNested;
 }
 ```
 
@@ -333,7 +345,7 @@ Then, add the necessary filters withing your table. Each filter requires a `name
   [data]="data"
 >
   <ib-filter>
-    <ib-search-bar></ib-search-bar>
+    <ib-search-bar />
 
     <ib-text-filter name="name">{{ 'user.name' | translate }}</ib-text-filter>
     <ib-tag-filter name="fruit">{{ 'fruit.name' | translate }}</ib-tag-filter>
@@ -345,10 +357,10 @@ Then, add the necessary filters withing your table. Each filter requires a `name
     >
   </ib-filter>
 
-  <ib-text-column name="name"></ib-text-column>
-  <ib-text-column name="fruit"></ib-text-column>
-  <ib-number-column name="quantity"></ib-number-column>
-  <ib-date-column name="purchased_at"></ib-date-column>
+  <ib-text-column name="name" />
+  <ib-text-column name="fruit" />
+  <ib-number-column name="quantity" />
+  <ib-date-column name="purchased_at" />
 </ib-kai-table>
 ```
 
@@ -362,6 +374,21 @@ Then, add the necessary filters withing your table. Each filter requires a `name
 | \`ib-number-filter\` | Number-based search. By default, the minimum and maximum values are set from the column's data. Can be overriden with \`min\` and \`max\`. Use \`step\` to define the precision of the slider. |
 | \`ib-date-filter\`   | Date-based search.                                                                                                                                                                       |
 `}</Markdown>
+
+#### Filtering data accessor
+
+```html
+<ib-text-column name="firstName" sort [filterDataAccessor]="filterDataAccessor" />
+```
+
+```typescript
+@Component({/** ... */})
+export class IbCustomColumn<T> extends IbColumn<T> {
+  dataAccessor = (data: T, name: string): any => data[name].somethingNested;
+
+  filterDataAccessor = (data: T, name: string): any => data[name].somethingNested;
+}
+```
 
 ## Selection
 
@@ -485,6 +512,6 @@ A `*ibKaiRowGroup` directive is available to display contextual content for each
 
 ## Use server-side data as a source
 
-Server-side interactions only available with an instance of `IbDataSource` used as input.
+Server-side interactions are only available with an instance of `IbDataSource` used as input.
 
 > 🚧 However, this feature is currently under-construction, and not yet suitable for production.
