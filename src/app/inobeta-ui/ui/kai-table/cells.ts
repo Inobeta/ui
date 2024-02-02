@@ -6,7 +6,6 @@ import {
   Optional,
   TemplateRef,
 } from "@angular/core";
-import { IbTableDataSource } from "./table-data-source";
 import { IB_AGGREGATE, IB_AGGREGATE_TYPE, IB_COLUMN } from "./tokens";
 
 @Directive({
@@ -21,9 +20,6 @@ interface IbAggregateResult {
   total: string;
 }
 
-/**
- *
- */
 export abstract class IbAggregate {
   /** Unique identifier for the aggregate function. */
   abstract id: string;
@@ -50,7 +46,10 @@ export abstract class IbAggregate {
    * @param column Column name
    */
   aggregate(
-    dataSource: IbTableDataSource<unknown>,
+    /**
+     * Note: this is any to avoid an importing cycle
+     */
+    dataSource: any,
     column: string
   ): IbAggregateResult {
     const dataset = dataSource
