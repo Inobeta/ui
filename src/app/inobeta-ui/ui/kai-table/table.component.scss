@@ -1,6 +1,6 @@
 :host {
   display: block;
-  border: 1px solid rgba(0, 0, 0, 0.33);
+  border: 1px solid rgba(0, 0, 0, 0.12);
   border-radius: 8px;
   overflow: hidden;
 
@@ -24,7 +24,7 @@
 
   &:has(ib-table-view-group),
   &:has(> section:not(:empty)) {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.33);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
   }
 }
 
@@ -88,8 +88,8 @@ tr.ib-table-element-row:not(.ib-table-expanded-row):hover {
 }
 
 .ib-table-rollup {
-  box-shadow: 0 -1px rgba(0, 0, 0, 0.33);
+  box-shadow: 0 -1px rgba(0, 0, 0, 0.12);
 }
 .ib-table-paginator {
-  border-top: 1px solid rgba(0, 0, 0, 0.33);
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
 }

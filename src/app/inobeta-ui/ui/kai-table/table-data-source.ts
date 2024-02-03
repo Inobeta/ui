@@ -17,12 +17,6 @@ import { applyFilter } from "../kai-filter/filters";
 import { IbColumn } from "./columns";
 
 /**
- * Corresponds to `Number.MAX_SAFE_INTEGER`. Moved out into a variable here due to
- * flaky browser support and the value not being defined in Closure's typings.
- */
-const MAX_SAFE_INTEGER = 9007199254740991;
-
-/**
  * Data source that accepts a client-side data array and includes native support of filtering,
  * sorting (using MatSort), and pagination (using MatPaginator).
  *
@@ -139,37 +133,10 @@ export class IbTableDataSource<
   private _columns: Record<string, IbColumn<unknown>> = {};
 
   /**
-   * Data accessor function that is used for accessing data properties for sorting through
-   * the default sortData function.
-   * This default function assumes that the sort header IDs (which defaults to the column name)
-   * matches the data's properties (e.g. column Xyz represents data['Xyz']).
-   * May be set to a custom function for different behavior.
-   * @param data Data object that is being accessed.
-   * @param sortHeaderId The name of the column that represents the data.
-   */
-  sortingDataAccessor: (data: T, sortHeaderId: string) => string | number = (
-    data: T,
-    sortHeaderId: string
-  ): string | number => {
-    const value = (data as unknown as Record<string, any>)[sortHeaderId];
-
-    if (_isNumberValue(value)) {
-      const numberValue = Number(value);
-
-      // Numbers beyond `MAX_SAFE_INTEGER` can't be compared reliably so we
-      // leave them as strings. For more info: https://goo.gl/y5vbSg
-      return numberValue < MAX_SAFE_INTEGER ? numberValue : value;
-    }
-
-    return value;
-  };
-
-  /**
    * Gets a sorted copy of the data array based on the state of the MatSort. Called
    * after changes are made to the filtered data or when sort changes are emitted from MatSort.
    * By default, the function retrieves the active sort and its direction and compares data
-   * by retrieving data using the sortingDataAccessor. May be overridden for a custom implementation
-   * of data ordering.
+   * by retrieving data using the sortingDataAccessor.
    * @param data The array of data that should be sorted.
    * @param sort The connected MatSort that holds the current sort state.
    */
@@ -226,27 +193,23 @@ export class IbTableDataSource<
   };
 
   /**
-   * Checks if a data object matches the data source's filter string. By default, each data object
-   * is converted to a string of its properties and returns true if the filter has
-   * at least one occurrence in that string. By default, the filter string has its whitespace
-   * trimmed and the match is case-insensitive. May be overridden for a custom implementation of
-   * filter matching.
+   * Checks if a data object matches the data source's filter.
    * @param data Data object used to check against the filter.
-   * @param filter Filter string that has been set on the data source.
+   * @param filter Filter that has been set on the data source.
    * @returns Whether the filter matches against the data
    */
   filterPredicate: (data: T, filter: IbFilterSyntax) => boolean = (
     data: T,
     filter: IbFilterSyntax
   ): boolean => {
+    const { ibSearchBar, ...filters } = filter;
     const matchesSearchBar = this.applySearchBarFilter(
       data,
-      filter?.__ibSearchBar
+      ibSearchBar
     );
-    return Object.entries(data).every(([key, value]) => {
-      const column = this.columns[key];
-      const filterValue = column ? column.filterDataAccessor(data, key) : value;
-      const condition = filter[key];
+    return Object.entries(filters).every(([columnName, condition]) => {
+      const column = this.columns[columnName];
+      const filterValue = column.filterDataAccessor(data, columnName);
       return applyFilter(condition, filterValue) && matchesSearchBar;
     });
   };
