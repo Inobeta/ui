@@ -608,15 +608,15 @@ class IbTableWithIbDataSourceApp {
     <ib-kai-table
       tableName="employees"
       [data]="data"
-      [displayedColumns]="['name', 'tag']"
+      [displayedColumns]="['name', 'color']"
     >
       <ib-table-view-group></ib-table-view-group>
       <ib-filter>
-        <ib-tag-filter ibTableColumnName="color">Name</ib-tag-filter>
+        <ib-tag-filter ibTableColumnName="color">Color</ib-tag-filter>
       </ib-filter>
 
       <ib-text-column name="name"></ib-text-column>
-      <ib-text-column name="tag"></ib-text-column>
+      <ib-text-column name="color"></ib-text-column>
     </ib-kai-table>
   `,
 })
