@@ -57,6 +57,4 @@ import { IbColumn } from "./column";
 export class IbNumberColumn<T> extends IbColumn<T> {
   @Input() digitsInfo = "1.0-2";
   @Input() locale = "it";
-
-  dataAccessor = (data: T, name: string) => (data as any)[name];
 }

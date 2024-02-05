@@ -1,4 +1,4 @@
-:host {
+ib-kai-table {
   display: block;
   border: 1px solid rgba(0, 0, 0, 0.12);
   border-radius: 8px;
@@ -51,7 +51,7 @@ tr.ib-table-element-row:not(.ib-table-expanded-row):hover {
   background: whitesmoke;
 }
 
-::ng-deep .ib-table-expanded-row > td {
+.ib-table-expanded-row > td {
   border-bottom-width: 0;
 }
 
@@ -60,15 +60,15 @@ tr.ib-table-element-row:not(.ib-table-expanded-row):hover {
   display: flex;
 }
 
-::ng-deep td.cdk-column-ib-action > :first-child,
-::ng-deep td.mat-column-ib-action > :first-child {
+td.cdk-column-ib-action > :first-child,
+td.mat-column-ib-action > :first-child {
   display: flex;
   gap: 4px;
   justify-content: flex-end;
   align-content: center;
 }
 
-::ng-deep ib-aggregate {
+ib-aggregate {
   display: flex;
   align-items: center;
   justify-content: flex-end;

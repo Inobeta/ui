@@ -65,11 +65,6 @@ import { IbKaiTableState } from "../../inobeta-ui/ui/kai-table/table.types";
         padding: 30px;
         gap: 3em;
       }
-
-      ib-kai-table .ib-table {
-        --ib-table-header-cell-color: lightgrey;
-        --ib-table-header-cell-background-color: #309933;
-      }
     `,
   ],
   providers: [UserService],

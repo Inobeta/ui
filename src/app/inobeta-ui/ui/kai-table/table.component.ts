@@ -15,6 +15,7 @@ import {
   OnDestroy,
   QueryList,
   ViewChild,
+  ViewEncapsulation,
 } from "@angular/core";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
@@ -55,6 +56,7 @@ const defaultTableDef: IbTableDef = {
     ]),
   ],
   providers: [{ provide: IB_TABLE, useExisting: IbTable }],
+  encapsulation: ViewEncapsulation.None
 })
 export class IbTable implements OnDestroy {
   private _destroyed = new Subject();
