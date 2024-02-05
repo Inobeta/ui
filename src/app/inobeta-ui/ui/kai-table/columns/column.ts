@@ -100,15 +100,15 @@ export class IbColumn<T> implements OnDestroy, OnInit {
    * the column's name. For example, if the column is named `id`, then the rendered value will be
    * value defined by the data's `id` property.
    */
-  @Input() dataAccessor: (data: T, name: string) => string;
+  @Input() dataAccessor: (data: T, name: string) => number | string;
   /**
    * Data accessor function that is used to retrieve data properties for sorting
    */
-  @Input() sortingDataAccessor: (data: T, name: string) => string;
+  @Input() sortingDataAccessor: (data: T, name: string) => number | string;
   /**
    * Data accessor function that is used to retrieve data properties for filtering
    */
-  @Input() filterDataAccessor: (data: T, name: string) => string;
+  @Input() filterDataAccessor: (data: T, name: string) => number | string;
 
   /**
    * Enables sorting for the column.

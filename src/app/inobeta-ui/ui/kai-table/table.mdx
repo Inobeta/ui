@@ -317,17 +317,24 @@ the content to render of each cell (that means `dataAccessor(data, name)`)
 This behaviour can be overriden with the `sortingDataAccessor` input, available for every type of column.
 
 ```html
-<ib-text-column name="firstName" sort [sortingDataAccessor]="sortingDataAccessor"></ib-text-column>
+<ib-text-column
+  name="firstName"
+  sort
+  [sortingDataAccessor]="sortingDataAccessor"
+></ib-text-column>
 ```
 
 For custom columns, you can override the getter function within you component's class.
 
 ```typescript
-@Component({/** ... */})
+@Component({
+  /** ... */
+})
 export class IbCustomColumn<T> extends IbColumn<T> {
   dataAccessor = (data: T, name: string): any => data[name].somethingNested;
 
-  sortingDataAccessor = (data: T, name: string): any => data[name].somethingElse;
+  sortingDataAccessor = (data: T, name: string): any =>
+    data[name].somethingElse;
 }
 ```
 
@@ -394,7 +401,9 @@ This behaviour can be overriden with the `filterDataAccessor` input, available f
 For custom columns, you can override the getter function within you component's class.
 
 ```typescript
-@Component({/** ... */})
+@Component({
+  /** ... */
+})
 export class IbCustomColumn<T> extends IbColumn<T> {
   dataAccessor = (data: T, name: string): any => data[name].somethingNested;
 
@@ -521,6 +530,26 @@ A `*ibKaiRowGroup` directive is available to display contextual content for each
 ```
 
 <Canvas of={TableStories.WithRowGroup} />
+
+## Customization
+
+To set an arbitrary style to a column, a css selector is available with the format:
+
+```
+.mat-column-[columnName]
+```
+
+Meaning that a column with `[name]="email"` can be accessed with the following selector
+
+```scss
+ib-kai-table {
+  .ib-table {
+    .mat-column-email {
+      width: 100px;
+    }
+  }
+}
+```
 
 ## Use server-side data as a source
 
