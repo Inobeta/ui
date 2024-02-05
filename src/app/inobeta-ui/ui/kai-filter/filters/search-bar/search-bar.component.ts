@@ -5,7 +5,7 @@ import { IbFilterBase } from "../base/filter-base";
 
 @Component({
   selector: "ib-search-bar",
-  template: ` <mat-form-field
+  template: `<mat-form-field
     [formGroup]="filter?.form"
     style="width: 100%; padding-bottom: 0"
   >
@@ -24,14 +24,11 @@ import { IbFilterBase } from "../base/filter-base";
     >
       <mat-icon>close</mat-icon>
     </button>
-    <!-- <button matSuffix mat-icon-button (click)="showFilters()">
-      <mat-icon>filter_alt</mat-icon>
-    </button> -->
   </mat-form-field>`,
   providers: [{ provide: IbFilterBase, useExisting: IbSearchBar }],
 })
 export class IbSearchBar extends IbFilterBase {
-  name = "__ibSearchBar";
+  name = "ibSearchBar";
   searchCriteria = new FormControl("", { nonNullable: true });
 
   build = () =>

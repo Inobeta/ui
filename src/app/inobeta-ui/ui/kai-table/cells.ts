@@ -6,7 +6,6 @@ import {
   Optional,
   TemplateRef,
 } from "@angular/core";
-import { MatTableDataSource } from "@angular/material/table";
 import { IB_AGGREGATE, IB_AGGREGATE_TYPE, IB_COLUMN } from "./tokens";
 
 @Directive({
@@ -21,9 +20,6 @@ interface IbAggregateResult {
   total: string;
 }
 
-/**
- *
- */
 export abstract class IbAggregate {
   /** Unique identifier for the aggregate function. */
   abstract id: string;
@@ -46,11 +42,14 @@ export abstract class IbAggregate {
    *
    * It takes into account only filtered data.
    *
-   * @param dataSource `MatTableDataSource` compatible data source instance
+   * @param dataSource `IbTableDataSource` compatible data source instance
    * @param column Column name
    */
   aggregate(
-    dataSource: MatTableDataSource<unknown>,
+    /**
+     * Note: this is any to avoid an importing cycle
+     */
+    dataSource: any,
     column: string
   ): IbAggregateResult {
     const dataset = dataSource
