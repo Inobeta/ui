@@ -57,7 +57,7 @@ import { IbToastNotification } from "./toast.service";
       <input matInput [(ngModel)]="duration" type="number" />
     </mat-form-field>
     <br />
-    <button mat-button (click)="openToast()">open toast</button>
+    <button mat-button (click)="openToast()">Open Toast</button>
   `,
   standalone: true,
   imports: [

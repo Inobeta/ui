@@ -73,7 +73,9 @@ export class IbTagFilter extends IbFilterBase {
 
   private setOptions(options: string[]) {
     this._options = new Set(
-      options.toSorted((a, b) => (a.toLowerCase() > b.toLowerCase() ? 1 : -1))
+      options
+        .map((a) => a)
+        .sort((a, b) => (a.toLowerCase() > b.toLowerCase() ? 1 : -1))
     );
   }
 

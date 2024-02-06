@@ -221,8 +221,10 @@ export class IbTableDataSource<
 
     const dataStr = Object.keys(data as unknown as Record<string, any>)
       .reduce((currentTerm: string, key: string) => {
+        const column = this.columns[key];
+        const value = column ? column.filterDataAccessor(data, key) : data[key];
         return (
-          currentTerm + (data as unknown as Record<string, any>)[key] + "◬"
+          currentTerm + value + "◬"
         );
       }, "")
       .toLowerCase();
