@@ -4,6 +4,7 @@ export * from "./columns";
 export * from "./rowgroup";
 export * from "./sort-header";
 export * from "./remote-data-source";
+export * from "./remote-data-provider";
 export * from "./table.component";
 export * from "./table.module";
 export * from "./table.types";

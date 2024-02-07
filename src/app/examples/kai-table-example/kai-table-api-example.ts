@@ -1,15 +1,16 @@
 import { HttpClient } from "@angular/common/http";
-import { Component, Injectable, ViewChild } from "@angular/core";
+import { Component, Injectable, ViewChild, inject } from "@angular/core";
 import { SortDirection } from "@angular/material/sort";
-import { Observable } from "rxjs";
+import { Observable, map, of } from "rxjs";
 import {
   IbDateFilterCriteria,
   IbTagFilterCriteria,
   IbTextFilterCriteria,
 } from "../../inobeta-ui/ui/kai-filter/filter.types";
 import { IbTableDef } from "../../inobeta-ui/ui/kai-table";
-import { IbRemoteTableDataSource } from "../../inobeta-ui/ui/kai-table/remote-data-source";
+import { IbTableRemoteDataSource } from "../../inobeta-ui/ui/kai-table/remote-data-source";
 import { IbTable } from "../../inobeta-ui/ui/kai-table/table.component";
+import { IbTableDataProvider, IbTableData } from "src/app/inobeta-ui/ui/kai-table/remote-data-provider";
 
 type GithubPRState = "open" | "closed";
 
@@ -20,10 +21,12 @@ interface GithubApiQueryFilter {
 }
 
 @Injectable({ providedIn: "root" })
-class GithubService {
+class GithubService extends IbTableDataProvider<GithubIssue> {
   href = "https://api.github.com/search/issues";
 
-  constructor(private _httpClient: HttpClient) {}
+  constructor(private _httpClient: HttpClient) {
+    super();
+  }
 
   getQuery(filter: GithubApiQueryFilter) {
     let q = "";
@@ -38,12 +41,7 @@ class GithubService {
     return q;
   }
 
-  getRepoIssues(
-    sort: string,
-    order: SortDirection,
-    page: number,
-    filter: GithubApiQueryFilter
-  ): Observable<GithubApi> {
+  fetchData(sort: string, order: SortDirection, page: number, filter: GithubApiQueryFilter): Observable<IbTableData<GithubIssue>> {
     const query = this.getQuery(filter);
     const requestUrl = `${
       this.href
@@ -62,7 +60,10 @@ class GithubService {
       "filter",
       filter
     );
-    return this._httpClient.get<GithubApi>(requestUrl);
+    return this._httpClient.get<GithubApi>(requestUrl).pipe(map(result => ({
+      data: result.items,
+      totalCount: result.total_count
+    })));
   }
 }
 
@@ -116,22 +117,13 @@ class GithubService {
         padding: 30px;
         gap: 3em;
       }
-
-      ib-kai-table ::ng-deep .ib-table-scrollable {
-        max-height: 500px;
-      }
-
-      ib-kai-table .ib-table {
-        --ib-table-header-cell-color: lightgrey;
-        --ib-table-header-cell-background-color: #309933;
-      }
     `,
   ],
 })
 export class IbKaiTableApiExamplePage {
   @ViewChild("table", { static: true }) kaiTable: IbTable;
+  dataSource = new IbTableRemoteDataSource(this.github);
 
-  dataSource = new IbRemoteTableDataSource<GithubIssue>();
   tableDef: IbTableDef = {
     paginator: {
       pageSize: 30,
@@ -139,22 +131,9 @@ export class IbKaiTableApiExamplePage {
     },
   };
 
-  isRateLimitReached = false;
-  resultsLength = 0;
   createdAtAccessor = (data: GithubIssue, name: string) => data.created_at;
 
   constructor(private github: GithubService) {}
-
-  ngOnInit() {
-    this.dataSource.fetchData = this.fetchIssues;
-    this.dataSource.mapData = this.mapData;
-    this.dataSource.updatePaginator = (result: GithubApi) => result.total_count;
-  }
-
-  fetchIssues = (sort: string, order: SortDirection, page: number, filter) =>
-    this.github!.getRepoIssues(sort, order, page, filter);
-
-  mapData = (result: GithubApi) => result.items;
 
   setState(state: string) {
     if (state === "loading") {

@@ -1,6 +1,5 @@
-import { DataSource } from "@angular/cdk/collections";
-import { MatPaginator, PageEvent } from "@angular/material/paginator";
-import { MatSort, Sort, SortDirection } from "@angular/material/sort";
+import { PageEvent } from "@angular/material/paginator";
+import { Sort, SortDirection } from "@angular/material/sort";
 import {
   BehaviorSubject,
   Observable,
@@ -17,63 +16,19 @@ import {
   startWith,
   switchMap,
 } from "rxjs/operators";
+import { IbTableDataSource } from "./table-data-source";
 import { IbKaiTableState } from "./table.types";
+import { IbTableDataProvider } from "./remote-data-provider";
 
-export class IbRemoteTableDataSource<
-  T,
-  P extends MatPaginator = MatPaginator
-> extends DataSource<T> {
-  /** Stream that emits when a new data array is set on the data source. */
-  private readonly _data: BehaviorSubject<T[]>;
-
-  /** Stream emitting render data to the table (depends on ordered data changes). */
-  // private readonly _renderData = new BehaviorSubject<T[]>([]);
-
-  /** Stream that emits when a new filter string is set on the data source. */
-  private readonly _filter = new BehaviorSubject<any>({});
-
-  /** Used to react to internal changes of the paginator that are made by the data source itself. */
-  // private readonly _internalPageChanges = new Subject<void>();
-
-  private readonly _refresh = new Subject<void>();
+export class IbTableRemoteDataSource<T> extends IbTableDataSource<T> {
+  private _refresh = new Subject<void>();
 
   _renderChangesSubscription: Subscription | null = null;
 
-  get data() {
-    return this._data.value;
+  set filter(value) {
+    super.filter = value;
+    this._refresh.next();
   }
-
-  set data(data: T[]) {
-    data = Array.isArray(data) ? data : [];
-    this._data.next(data);
-  }
-
-  /** MatTableDataSource compat */
-  get filteredData() {
-    return this._data.value;
-  }
-
-  get sort(): MatSort | null {
-    return this._sort;
-  }
-
-  set sort(sort: MatSort | null) {
-    this._sort = sort;
-    this._updateChangeSubscription();
-  }
-
-  private _sort: MatSort | null;
-
-  get paginator(): P | null {
-    return this._paginator;
-  }
-
-  set paginator(paginator: P | null) {
-    this._paginator = paginator;
-    this._updateChangeSubscription();
-  }
-
-  private _paginator: P | null;
 
   get state() {
     return this._state.value;
@@ -83,115 +38,77 @@ export class IbRemoteTableDataSource<
     this._state.next(value);
   }
 
-  _state = new BehaviorSubject<IbKaiTableState>("idle");
+  readonly _state = new BehaviorSubject<IbKaiTableState>("idle");
 
-  get filter() {
-    return this._filter.value;
-  }
-
-  set filter(value) {
-    this._filter.next(value);
-    this._refresh.next();
-  }
-
-  columns = {};
-
-  constructor(initialData: T[] = []) {
-    super();
-    this._data = new BehaviorSubject<T[]>(initialData);
-    this._updateChangeSubscription();
+  constructor(private dataService: IbTableDataProvider<T>) {
+    super([]);
   }
 
   _updateChangeSubscription() {
-    const sortChange: Observable<Sort | null | void> = this._sort
+    const sortChange: Observable<Sort | null | void> = this.sort
       ? (merge(
-          this._sort.sortChange,
-          this._sort.initialized
+          this.sort.sortChange,
+          this.sort.initialized
         ) as Observable<Sort | void>)
       : of(null);
 
-    const pageChange: Observable<PageEvent | null | void> = this._paginator
+    const pageChange: Observable<PageEvent | null | void> = this.paginator
       ? (merge(
-          this._paginator.page,
+          this.paginator.page,
           // this._internalPageChanges,
-          this._paginator.initialized
+          this.paginator.initialized
         ) as Observable<PageEvent | void>)
       : of(null);
 
-    if (sortChange && this._paginator) {
-      sortChange.subscribe(() => (this._paginator.pageIndex = 0));
+    if (sortChange && this.paginator) {
+      sortChange.subscribe(() => (this.paginator.pageIndex = 0));
     }
 
-    const dataChange = merge(this._refresh, sortChange, pageChange).pipe(
+    const refresh = this._refresh?.asObservable() ?? of(null);
+
+    const dataChange = merge(refresh, sortChange, pageChange).pipe(
       startWith([]),
-      skipWhile(
-        () => this._sort === undefined || this._paginator === undefined
-      ),
+      skipWhile(() => this.sort === undefined || this.paginator === undefined),
       debounceTime(0),
       switchMap(() => {
         this.state = "loading";
-        return this.fetchData(
-          this._sort.active,
-          this._sort.direction,
-          this._paginator.pageIndex,
-          this.filter
-        ).pipe(
-          catchError(() => {
-            this.state = "http_error";
-            return of(null);
-          })
-        );
+        return this.dataService
+          .fetchData(
+            this.sort.active,
+            this.sort.direction,
+            this.paginator.pageIndex,
+            super.filter
+          )
+          .pipe(
+            catchError(() => {
+              this.state = "http_error";
+              return of(null);
+            })
+          );
       }),
-      map((data) => {
-        if (data === null || data === undefined) {
+      map((result) => {
+        if (result === null || result === undefined) {
           return [];
         }
 
         this.state = "idle";
-        this._paginator.length = this.updatePaginator(data);
-        return this.mapData(data);
+        this.paginator.length = result.totalCount;
+        return result.data;
       })
     );
 
     this._renderChangesSubscription?.unsubscribe();
     this._renderChangesSubscription = dataChange.subscribe((data) =>
-      this._data.next(data)
+      this._renderData.next(data)
     );
-  }
-
-  connect(): Observable<readonly T[]> {
-    if (!this._renderChangesSubscription) {
-      this._updateChangeSubscription();
-    }
-
-    return this._data;
-  }
-
-  disconnect(): void {
-    this._data?.unsubscribe();
-    this._renderChangesSubscription?.unsubscribe();
-  }
-
-  filterPredicate() {}
-
-  fetchData(
-    sort: string,
-    order: SortDirection,
-    page: number,
-    filter: Record<string, any>
-  ): Observable<any> {
-    return of(this.data);
-  }
-
-  mapData(result: any): T[] {
-    return result;
   }
 
   refresh() {
     this._refresh.next();
   }
 
-  updatePaginator(result: any): number {
-    return this.mapData(result).length + 1;
+  /** Disable _filterData */
+  _filterData(data: T[]): T[] {
+    return data;
   }
 }

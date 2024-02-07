@@ -533,6 +533,21 @@ A `*ibKaiRowGroup` directive is available to display contextual content for each
 
 ## Customization
 
+#### CSS Variables
+
+```css
+.ib-table__container {
+  /** Maximum height of the table content */
+  --ib-table-content-max-height: 500px;
+  /** Outline color for both container and table content */
+  --ib-table-outline-color: var(--mat-table-row-item-outline-color);
+  /** Whether show a vertical outline for each column (Es. `1px`) */
+  --ib-table-column-outline-width: 0;
+}
+```
+
+#### Column style
+
 To set an arbitrary style to a column, a css selector is available with the format:
 
 ```
@@ -542,11 +557,23 @@ To set an arbitrary style to a column, a css selector is available with the form
 Meaning that a column with `[name]="email"` can be accessed with the following selector
 
 ```css
-ib-kai-table {
-  .ib-table {
-    .mat-column-email {
-      width: 100px;
-    }
+.ib-table__container {
+  .mat-column-email {
+    width: 100px;
+  }
+}
+```
+
+#### Row style
+
+```css
+.ib-table__container {
+  .ib-table__row:nth-child(odd) {
+    background-color: lightgreen;
+  }
+
+  .ib-table__row:nth-child(even) {
+    background-color: purple;
   }
 }
 ```

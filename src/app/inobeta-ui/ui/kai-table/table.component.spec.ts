@@ -1,7 +1,7 @@
 import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { CommonModule } from "@angular/common";
-import { Component, Type } from "@angular/core";
+import { Component, Injectable, Type, inject } from "@angular/core";
 import {
   ComponentFixture,
   TestBed,
@@ -15,14 +15,14 @@ import { MatInputHarness } from "@angular/material/input/testing";
 import { MatMenuHarness } from "@angular/material/menu/testing";
 import { MatRadioButtonHarness } from "@angular/material/radio/testing";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { MatSortModule } from "@angular/material/sort";
+import { MatSortModule, SortDirection } from "@angular/material/sort";
 import { MatSortHarness } from "@angular/material/sort/testing";
 import { MatTableHarness } from "@angular/material/table/testing";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { StoreModule } from "@ngrx/store";
 import { TranslateModule } from "@ngx-translate/core";
-import { throwError } from "rxjs";
+import { Observable, of, throwError } from "rxjs";
 import {
   IbDataExportModule,
   IbDataExportService,
@@ -33,10 +33,11 @@ import { IbFilterModule } from "../kai-filter";
 import { IbViewModule } from "../views";
 import { IbTableActionModule } from "./action";
 import { IbAggregateCell } from "./cells";
-import { IbRemoteTableDataSource } from "./remote-data-source";
+import { IbTableRemoteDataSource } from "./remote-data-source";
+import { IbTableData, IbTableDataProvider } from "./remote-data-provider";
+import { IbTableDataSource } from "./table-data-source";
 import { IbTable } from "./table.component";
 import { IbKaiTableModule } from "./table.module";
-import { IbTableDataSource } from "./table-data-source";
 
 describe("IbTable", () => {
   describe("with IbTableDataSource", () => {
@@ -85,7 +86,7 @@ describe("IbTable", () => {
 
   describe("with IbRemoteTableDataSource", () => {
     it("should create", fakeAsync(() => {
-      const fixture = createComponent(IbTableWithIbDataSourceApp);
+      const fixture = createComponent(IbTableWithRemoteDataApp);
       const component = fixture.debugElement.query(
         By.directive(IbTable)
       ).componentInstance;
@@ -94,28 +95,12 @@ describe("IbTable", () => {
       expect(component).toBeTruthy();
     }));
 
-    it("should create with empty constructor", () => {
-      const dataSource = new IbRemoteTableDataSource();
-      expect(dataSource).toBeTruthy();
-      expect(dataSource.data).toEqual([]);
-    });
-
-    it("should reset to empty array with non array types", () => {
-      const dataSource = new IbRemoteTableDataSource([{ name: "alice" }]);
-      expect(dataSource).toBeTruthy();
-      expect(dataSource.data).toEqual([{ name: "alice" }]);
-      dataSource.data = null;
-      expect(dataSource.data).toEqual([]);
-      dataSource.data = [{ name: "rabbit" }];
-      expect(dataSource.data).toEqual([{ name: "rabbit" }]);
-    });
-
     it("should show error on exception", fakeAsync(() => {
-      const fixture = createComponent(IbTableWithIbDataSourceApp);
+      const fixture = createComponent(IbTableWithRemoteDataApp);
       const component = fixture.debugElement.query(
         By.directive(IbTable)
       ).componentInstance;
-      component.dataSource.fetchData = () => throwError("oh no");
+      fixture.componentInstance.provider.fetchData = () => throwError(() => new Error());
       component.dataSource.refresh();
       tick(1);
       fixture.detectChanges();
@@ -591,6 +576,21 @@ class IbTableWithRowGroupApp {
   data = [{ name: "alice" }];
 }
 
+@Injectable()
+class IbTestDataProvider extends IbTableDataProvider<any> {
+  fetchData(
+    sort: string,
+    order: SortDirection,
+    page: number,
+    filter: Record<string, any>
+  ): Observable<IbTableData<any>> {
+    return of({
+      data: [{ name: "alice" }],
+      totalCount: 1,
+    });
+  }
+}
+
 @Component({
   template: `
     <ib-kai-table [dataSource]="dataSource" [displayedColumns]="['name']">
@@ -598,9 +598,12 @@ class IbTableWithRowGroupApp {
       <ib-text-column name="name"></ib-text-column>
     </ib-kai-table>
   `,
+  providers: [IbTestDataProvider],
 })
-class IbTableWithIbDataSourceApp {
-  dataSource = new IbRemoteTableDataSource<any>([{ name: "alice" }]);
+class IbTableWithRemoteDataApp {
+  provider = inject(IbTestDataProvider);
+
+  dataSource = new IbTableRemoteDataSource<any>(this.provider);
 }
 
 @Component({
@@ -738,17 +741,14 @@ class IbTableWithSort {
 
 @Component({
   template: `
-    <ib-kai-table
-      [data]="data"
-      [displayedColumns]="['name', 'amount']"
-    >
+    <ib-kai-table [data]="data" [displayedColumns]="['name', 'amount']">
       <ib-text-column name="name"></ib-text-column>
       <ib-number-column name="amount" aggregate></ib-number-column>
     </ib-kai-table>
   `,
 })
 class IbTableWithAggregate {
-  data =[
+  data = [
     { name: "alice", amount: 10 },
     { name: "bob", amount: 20 },
   ];

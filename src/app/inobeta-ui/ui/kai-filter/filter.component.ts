@@ -19,11 +19,11 @@ import { IB_FILTER } from "./tokens";
   template: `
     <section
       class="ib-filter"
-      [class.ib-filter__hide]="hideFilters"
+      [class.ib-filter--hidden]="hideFilters"
       [attr.aria-hidden]="hideFilters"
     >
       <ng-content select="ib-search-bar"></ng-content>
-      <section #list class="ib-filter-list">
+      <section #list class="ib-filter__list">
         <mat-icon *ngIf="list.children.length > 1">filter_list</mat-icon>
         <ng-content></ng-content>
       </section>

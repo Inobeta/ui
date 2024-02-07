@@ -6,8 +6,8 @@
   </section>
 </section>
 <ng-content select="ib-filter"></ng-content>
-<div class="ib-table-scrollable" [class.ib-table-scrollable--loading]="state === 'loading'">
-  <div class="ib-table-progress-bar" *ngIf="state === 'loading'">
+<section class="ib-table__content ib-table-scrollable" [class.ib-table__content--loading]="state === 'loading'">
+  <div class="ib-table__content__progress-bar" *ngIf="state === 'loading'">
     <mat-progress-bar mode="indeterminate"></mat-progress-bar>
   </div>
   <table
@@ -35,7 +35,7 @@
     <tr
       mat-row
       *matRowDef="let row; columns: displayedColumns;"
-      class="ib-table-element-row"
+      class="ib-table__row ib-table-element-row"
       [class.ib-table-expanded-row]="expandedElement === row"
       (click)="rowGroup && (expandedElement = expandedElement === row ? null : row)"
     ></tr>
@@ -59,12 +59,12 @@
     </tr>
 
     <ng-container *ngIf="aggregateColumns.size">
-      <tr class="ib-table-rollup" mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></tr>
+      <tr class="ib-table__rollup-row" mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></tr>
     </ng-container>
   </table>
-</div>
+</section>
 <mat-paginator
-  class="ib-table-paginator"
+  class="ib-table__paginator"
   [style.display]="tableDef.paginator.hide ? 'none' : 'block'"
   [pageSize]="tableDef.paginator.pageSize"
   [showFirstLastButtons]="tableDef.paginator.showFirstLastButtons"

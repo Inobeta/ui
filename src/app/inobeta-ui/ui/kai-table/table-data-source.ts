@@ -32,7 +32,7 @@ export class IbTableDataSource<
   private readonly _data: BehaviorSubject<T[]>;
 
   /** Stream emitting render data to the table (depends on ordered data changes). */
-  private readonly _renderData = new BehaviorSubject<T[]>([]);
+  protected readonly _renderData = new BehaviorSubject<T[]>([]);
 
   /** Stream that emits when a new filter string is set on the data source. */
   private readonly _filter = new BehaviorSubject<IbFilterSyntax>(null);
