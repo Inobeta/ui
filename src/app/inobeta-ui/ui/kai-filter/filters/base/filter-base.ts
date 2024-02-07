@@ -44,7 +44,7 @@ export class IbFilterBase implements IFilterBase {
     return value != null || value != undefined;
   }
 
-  protected _destroyed = new Subject();
+  protected _destroyed = new Subject<void>();
 
   constructor(@Inject(IB_FILTER) public filter: any) {}
 

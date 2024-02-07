@@ -1,0 +1,45 @@
+import { Meta, ArgTypes, Description, Story } from "@storybook/blocks";
+
+import * as stories from "./toast.stories.ts";
+
+# Toast
+
+<Meta title="Features/Toast/Overview" />
+
+<Description of={stories.Documentation} />
+<ArgTypes of={stories.Documentation} />
+
+## Customization
+
+```css
+/** Default color scheme */
+.ib-toast-success {
+  --mdc-snackbar-container-color: green;
+  --mdc-snackbar-supporting-text-color: white;
+  --mdc-snackbar-supporting-text-weight: bold;
+}
+
+.ib-toast-warning {
+  --mdc-snackbar-container-color: orange;
+  --mdc-snackbar-supporting-text-color: white;
+  --mdc-snackbar-supporting-text-weight: bold;
+}
+
+.ib-toast-error {
+  --mdc-snackbar-container-color: red;
+  --mdc-snackbar-supporting-text-color: white;
+  --mdc-snackbar-supporting-text-weight: bold;
+}
+
+/** You can also add custom types */
+
+.ib-toast-custom-type {
+  --mdc-snackbar-container-color: lightgreen;
+  --mdc-snackbar-supporting-text-color: white;
+  --mdc-snackbar-supporting-text-weight: bold;
+}
+```
+
+## Example
+
+<Story of={stories.Example} />

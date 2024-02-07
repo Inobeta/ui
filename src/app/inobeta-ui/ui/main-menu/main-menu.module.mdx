@@ -1,6 +1,10 @@
-# Main Menu Module
+import { Meta } from "@storybook/blocks";
 
-This module generates the main menu (desktop version). 
+<Meta title="Components/Main Menu/Overview" />
+
+# Main Menu
+
+This module generates the main menu (desktop version).
 
 ## Introduction
 
@@ -10,31 +14,28 @@ It can be used to easily create a navigation menu for an application, and can su
 
 It consists of a component `<ib-main-menu-bar>` that should be put on the header of the application. This component renders a menu button that on click event triggers the rendering of the dialog component `<ib-main-menu-dialog>` and sends to it the data previously received as inputs, which are required to initialize the menu. The dialog component contains the component `<ib-main-menu-expanded>`, which is the actual menu template that the user will use to navigate through the application.
 
-## Use Case Example
+## Example
 
 ### Component
+
 #### ib-main-menu-example.component.ts
 
-```typescript 
-
-...
-
+```typescript
 @Component({
-  selector: 'ib-main-menu-example',
-  templateUrl: 'ib-main-menu-example.html'  
+  selector: "ib-main-menu-example",
+  templateUrl: "ib-main-menu-example.html",
 })
-export class IbMainMenuExampleComponent  {
-
+export class IbMainMenuExampleComponent {
   // declare icon for <ib-main-menu-bar> button
-  exampleMenuIconBar: string = 'apps';
+  exampleMenuIconBar: string = "apps";
 
   // declare string for app title you want to display in the menu
-  exampleAppTitle: string = 'My App';
-  
-  // declare data for top center button 
+  exampleAppTitle: string = "My App";
+
+  // declare data for top center button
   exampleNavTopCenter: IbMainMenuButton = navTopCenter;
 
-  // declare data for top right buttons  
+  // declare data for top right buttons
   exampleNavUpRight: IbMainMenuButton[] = navUpRightData;
 
   // declare data for first and second levels menu navigation
@@ -42,39 +43,37 @@ export class IbMainMenuExampleComponent  {
 
   // decalre data for bottom left button
   exampleNavBottomLeft: IbMainMenuButton = navBottomLeftData;
-  
-  // declare string you want to display on the bottom right of the menu (like copyright)
-  exampleNavBottomRight: string = '© Acme 2021'
-  
-  constructor() { }
-  ...
-  handleMenuClick(whoHasBeenEmitted){
-    //handling event example
-    console.log('Emitted', whoHasBeenEmitted);
-  }
-  
-  ...
 
+  // declare string you want to display on the bottom right of the menu (like copyright)
+  exampleNavBottomRight: string = "© Acme 2021";
+
+  handleMenuClick(whoHasBeenEmitted) {
+    //handling event example
+    console.log("Emitted", whoHasBeenEmitted);
+  }
+}
 ```
 
 In your component, you just need to declare these variables in order to set up the required data. To know how to set the data correctly with some examples, please visit the interfaces section below.
 After doing that, you need to declare the `<ib-main-menu-bar>` in the template and send to it these data as inputs. As you can see from the example below, this component has an output `(action)` that emits the data related to the component who triggers the event. In this way, you are free to decide what to do when the user clicks on each button of the menu. In our example, the method that manages the click events is `handleMenuClick(whoHasBeenEmitted)`.
 
-### Template 
+### Template
+
 #### ib-main-menu-example.component.html
 
 ```html
 <ib-main-menu-bar
-      [barIcon]="exampleMenuIconBar"
-      [navTitle]="exampleAppTitle"
-      [navButtonTopCenter]="exampleNavTopCenter"
-      [navButtonsUpRight]="exampleNavUpRight"
-      [navData]="exampleNavData"
-      [navBottomLeft]="exampleNavBottomLeft"
-      [navButtonBottomRight]="exampleNavBottomRight"
-      (action)="handleMenuClick($event)"
-    ></ib-main-menu-bar>`
+  [barIcon]="exampleMenuIconBar"
+  [navTitle]="exampleAppTitle"
+  [navButtonTopCenter]="exampleNavTopCenter"
+  [navButtonsUpRight]="exampleNavUpRight"
+  [navData]="exampleNavData"
+  [navBottomLeft]="exampleNavBottomLeft"
+  [navButtonBottomRight]="exampleNavBottomRight"
+  (action)="handleMenuClick($event)"
+/>`
 ```
+
 That's it! Your menu is ready to be used for navigation.
 
 ## Interfaces
@@ -88,29 +87,34 @@ Please note that the `icon` field will display an actual icon only if it refers 
 
 ```typescript
 export interface IbMainMenuButton {
-  label: string,
-  icon?: { label: string, type?: string },
-  link?: string
+  label: string;
+  icon?: { label: string; type?: string };
+  link?: string;
 }
 ```
+
 #### Example
+
 ```typescript
 {
-    label: 'Return to dashboard',
-    link: 'home/dashboard',
-    icon: {label:'dashboard',type:'filled'}
-    },
+  label: 'Return to dashboard',
+  link: 'home/dashboard',
+  icon: {label:'dashboard',type:'filled'}
+}
 ```
+
 ### IbMainMenuData
 
 #### Interface
+
 ```typescript
 export interface IbMainMenuData extends IbMainMenuButton {
-  paths?: IbMainMenuData []
+  paths?: IbMainMenuData[];
 }
 ```
 
 #### Example
+
 ```json
   {
     "label": "First level section 1",
@@ -140,20 +144,25 @@ export interface IbMainMenuData extends IbMainMenuButton {
     ]
   }
 ```
-This data model is designed so you can set a first level menu section with second level menu sections connected to it. The design requires the icon field set for the first levels, where the label refers to the material icon name, and the type to the different styles material icons offers: outlined, two-tone, filled, rounded and sharp. In order to be able to use this variants you must set also your `index.html` file, providing the right link element. For example, to be able to use all the variants, you must add this code:   
-`<link href="https://fonts.googleapis.com/icon?family=Material+Icons%7CMaterial+Icons+Outlined%7CMaterial+Icons+Two+Tone%7CMaterial+Icons+Round%7CMaterial+Icons+Sharp" rel="stylesheet">`
+
+This data model is designed so you can set a first level menu section with second level menu sections connected to it. The design requires the icon field set for the first levels, where the label refers to the material icon name, and the type to the different styles material icons offers: outlined, two-tone, filled, rounded and sharp. In order to be able to use this variants you must set also your `index.html` file, providing the right link element. For example, to be able to use all the variants, you must add this code:  
+```html
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons%7CMaterial+Icons+Outlined%7CMaterial+Icons+Two+Tone%7CMaterial+Icons+Round%7CMaterial+Icons+Sharp" rel="stylesheet">
+```
 
 ### IbMainMenuDataSet
 
 #### Interface
+
 ```typescript
 export interface IbMainMenuDataSet {
-  title: string,
-  topCenter: IbMainMenuButton,
-  upRight: IbMainMenuButton[],
-  navData: IbMainMenuData[],
-  bottomRight: string,
-  bottomLeft: IbMainMenuButton
+  title: string;
+  topCenter: IbMainMenuButton;
+  upRight: IbMainMenuButton[];
+  navData: IbMainMenuData[];
+  bottomRight: string;
+  bottomLeft: IbMainMenuButton;
 }
 ```
- This data model is the composition of the data models the `<ib-main-menu-bar>` receives, so that they can be sent to the `<ib-main-menu-dialog>` as a unique variable.
+
+This data model is the composition of the data models the `<ib-main-menu-bar>` receives, so that they can be sent to the `<ib-main-menu-dialog>` as a unique variable.

@@ -1,4 +1,10 @@
-import { Component, Input, ViewChild, ViewEncapsulation, computed } from "@angular/core";
+import {
+  Component,
+  Input,
+  ViewChild,
+  ViewEncapsulation,
+  computed,
+} from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MatSelectionList } from "@angular/material/list";
 import { IbFilterDef } from "../../filter.types";
@@ -66,10 +72,11 @@ export class IbTagFilter extends IbFilterBase {
   }
 
   private setOptions(options: string[]) {
-    options = options.sort((a, b) =>
-      a.toLowerCase() > b.toLowerCase() ? 1 : -1
+    this._options = new Set(
+      options
+        .map((a) => a)
+        .sort((a, b) => (a.toLowerCase() > b.toLowerCase() ? 1 : -1))
     );
-    this._options = new Set(options);
   }
 
   applyFilter() {

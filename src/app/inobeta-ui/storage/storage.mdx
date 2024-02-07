@@ -1,0 +1,53 @@
+import { Meta } from "@storybook/blocks";
+
+# Storage
+
+<Meta title="Features/Storage/Guide" />
+
+`IbStorageService` is designed to handle storage operations, providing a convenient way to set and get data in either `localStorage` or cookies.
+
+## Usage
+
+Use the `set` method to store data.
+
+```typescript
+const data = { key: "value" };
+this.storageService.set("myKey", data);
+```
+
+Parameters:
+
+- `key`: The key under which to store the data.
+- `object`: The data object to be stored.
+- `storageType`: The type of storage to use (`IbStorageTypes.LOCALSTORAGE` or `IbStorageTypes.COOKIESTORAGE`).
+
+Use the `get` method to retrieve data.
+
+```typescript
+const retrievedData = this.storageService.get("myKey");
+console.log(retrievedData);
+```
+
+Parameters:
+
+- `key`: The key under which the data is stored.
+- `storageType`: The type of storage to use (`IbStorageTypes.LOCALSTORAGE` or `IbStorageTypes.COOKIESTORAGE`).
+
+#### Example
+
+```typescript
+// Save data to localStorage
+const dataToSave = { user: "John Doe", role: "admin" };
+this.storageService.set("userData", dataToSave);
+
+// Retrieve data from cookies
+const retrievedUserData = this.storageService.get("userData", IbStorageTypes.COOKIESTORAGE);
+console.log(retrievedUserData);
+```
+
+This example demonstrates storing user data in `localStorage` and then retrieving it.
+
+#### Additional Notes
+
+By default, the service uses `localStorage` as the storage type. You can specify `IbStorageTypes.COOKIESTORAGE` if you prefer to use cookies.
+The data is stored as a JSON string, so make sure your data is serializable to JSON.

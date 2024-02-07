@@ -1,0 +1,78 @@
+import { Meta, ArgTypes, Description, Story } from "@storybook/blocks";
+
+import * as stories from "./modal.stories.ts";
+
+# Modal
+
+<Meta title="Features/Modal/Overview" />
+
+<Description of={stories.Documentation} />
+<ArgTypes of={stories.Documentation} />
+
+## Examples
+
+### Basic
+
+```typescript
+@Component({
+  selector: "app-modal",
+  template: `<button mat-button (click)="showModal()">Show Modal</button>`,
+  standalone: true,
+  imports: [MatButtonModule],
+})
+export class IbModalExampleComponent {
+  private modalService = inject(IbModalMessageService)
+
+  showModal() {
+    const modalData = {
+      title: "simple.title",
+      message: "simple.description",
+    };
+
+    this.modalService.show(modalData).subscribe((result) => {
+      if (result) {
+        console.log("Modal closed with result: " + result);
+      }
+    });
+  }
+}
+```
+
+<Story of={stories.Simple} />
+
+### Actions
+
+```typescript
+@Component({
+  selector: "app-modal-with-action",
+  template: `<button mat-button (click)="showModal()">Show Custom Modal</button>`,
+  standalone: true,
+  imports: [MatButtonModule],
+})
+export class IbModalExampleComponent {
+  private modalService = inject(IbModalMessageService)
+
+  showModal() {
+    const action = [
+      { label: "Cancel", value: "cancel", color: "accent" },
+      { label: "Next", value: "next", color: "primary" },
+    ];
+
+    const modalData = {
+      title: "custom.title",
+      message: "custom.description",
+      hasYes: false,
+      hasNo: false,
+      actions,
+    };
+
+    this.modalService.show(modalData).subscribe((result) => {
+      if (result) {
+        console.log("Modal closed with result:", result);
+      }
+    });
+  }
+}
+```
+
+<Story of={stories.WithActions} />
