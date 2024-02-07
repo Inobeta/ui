@@ -8,6 +8,11 @@
 |DEVK-264|feat|Docs|Changed compodoc for storybook|
 |DEVK-288|feat|IbTable|Added `sortingDataAccessor` and `filterDataAccessor` to `IbColumn`|
 
+### [17.1.0] - breaks
+
+- Upgraded `rxjs` to version `7.8.0`, please follow the [deprecations & breaking changes](https://rxjs.dev/deprecations/breaking-changes) instructions
+to up your application accordingly
+
 ## [17.0.1] (2024-01-10)
 
 | Issue ID | Type | Section | Description |
