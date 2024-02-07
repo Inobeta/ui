@@ -17,7 +17,7 @@ import { IbAPITokens } from "../auth/session.model";
 })
 export class IbRoleCheckDirective implements OnInit, OnDestroy {
   @Input("ibRoleCheck") roles: string[];
-  destroy: Subject<boolean> = new Subject();
+  destroy: Subject<void> = new Subject();
 
   constructor(
     private tpl: TemplateRef<any>,

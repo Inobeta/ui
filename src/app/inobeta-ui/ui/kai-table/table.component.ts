@@ -59,7 +59,7 @@ const defaultTableDef: IbTableDef = {
   encapsulation: ViewEncapsulation.None
 })
 export class IbTable implements OnDestroy {
-  private _destroyed = new Subject();
+  private _destroyed = new Subject<void>();
 
   @ContentChildren(IbColumn) columns: QueryList<IbColumn<any>>;
   @ContentChild(IbSelectionColumn) selectionColumn!: IbSelectionColumn;
