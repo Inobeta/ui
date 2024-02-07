@@ -14,7 +14,7 @@ section.ib-filter {
 
   &__list {
     display: flex;
-    height: 56px;
+    max-height: 56px;
     padding: 12px 0 12px 12px;
     flex-wrap: wrap;
     align-items: center;

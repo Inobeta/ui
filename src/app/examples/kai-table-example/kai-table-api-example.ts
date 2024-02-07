@@ -1,7 +1,11 @@
 import { HttpClient } from "@angular/common/http";
-import { Component, Injectable, ViewChild, inject } from "@angular/core";
+import { Component, Injectable, ViewChild } from "@angular/core";
 import { SortDirection } from "@angular/material/sort";
-import { Observable, map, of } from "rxjs";
+import { Observable, map } from "rxjs";
+import {
+  IbTableData,
+  IbTableDataProvider,
+} from "src/app/inobeta-ui/ui/kai-table/remote-data-provider";
 import {
   IbDateFilterCriteria,
   IbTagFilterCriteria,
@@ -10,7 +14,6 @@ import {
 import { IbTableDef } from "../../inobeta-ui/ui/kai-table";
 import { IbTableRemoteDataSource } from "../../inobeta-ui/ui/kai-table/remote-data-source";
 import { IbTable } from "../../inobeta-ui/ui/kai-table/table.component";
-import { IbTableDataProvider, IbTableData } from "src/app/inobeta-ui/ui/kai-table/remote-data-provider";
 
 type GithubPRState = "open" | "closed";
 
@@ -21,12 +24,10 @@ interface GithubApiQueryFilter {
 }
 
 @Injectable({ providedIn: "root" })
-class GithubService extends IbTableDataProvider<GithubIssue> {
+class GithubService implements IbTableDataProvider<GithubIssue> {
   href = "https://api.github.com/search/issues";
 
-  constructor(private _httpClient: HttpClient) {
-    super();
-  }
+  constructor(private _httpClient: HttpClient) {}
 
   getQuery(filter: GithubApiQueryFilter) {
     let q = "";
@@ -41,7 +42,12 @@ class GithubService extends IbTableDataProvider<GithubIssue> {
     return q;
   }
 
-  fetchData(sort: string, order: SortDirection, page: number, filter: GithubApiQueryFilter): Observable<IbTableData<GithubIssue>> {
+  fetchData(
+    sort: string,
+    order: SortDirection,
+    page: number,
+    filter: GithubApiQueryFilter
+  ): Observable<IbTableData<GithubIssue>> {
     const query = this.getQuery(filter);
     const requestUrl = `${
       this.href
@@ -60,10 +66,12 @@ class GithubService extends IbTableDataProvider<GithubIssue> {
       "filter",
       filter
     );
-    return this._httpClient.get<GithubApi>(requestUrl).pipe(map(result => ({
-      data: result.items,
-      totalCount: result.total_count
-    })));
+    return this._httpClient.get<GithubApi>(requestUrl).pipe(
+      map((result) => ({
+        data: result.items,
+        totalCount: result.total_count,
+      }))
+    );
   }
 }
 

@@ -577,7 +577,7 @@ class IbTableWithRowGroupApp {
 }
 
 @Injectable()
-class IbTestDataProvider extends IbTableDataProvider<any> {
+class IbTestDataProvider implements IbTableDataProvider<any> {
   fetchData(
     sort: string,
     order: SortDirection,
