@@ -8,7 +8,7 @@ import {
   IbTextFilterCriteria,
 } from "../../inobeta-ui/ui/kai-filter/filter.types";
 import { IbTableDef } from "../../inobeta-ui/ui/kai-table";
-import { IbDataSource } from "../../inobeta-ui/ui/kai-table/table-data-source";
+import { IbRemoteTableDataSource } from "../../inobeta-ui/ui/kai-table/remote-data-source";
 import { IbTable } from "../../inobeta-ui/ui/kai-table/table.component";
 
 type GithubPRState = "open" | "closed";
@@ -131,7 +131,7 @@ class GithubService {
 export class IbKaiTableApiExamplePage {
   @ViewChild("table", { static: true }) kaiTable: IbTable;
 
-  dataSource = new IbDataSource<GithubIssue>();
+  dataSource = new IbRemoteTableDataSource<GithubIssue>();
   tableDef: IbTableDef = {
     paginator: {
       pageSize: 30,

@@ -6,6 +6,7 @@
 | -- | -- | -- | -- |
 |DEVK-261|feat|IbDynamicForm|Added `value` input to `ib-material-form`|
 |DEVK-264|feat|Docs|Changed compodoc for storybook|
+|DEVK-288|feat|IbTable|Added `sortingDataAccessor` and `filterDataAccessor` to `IbColumn`|
 
 ## [17.0.1] (2024-01-10)
 

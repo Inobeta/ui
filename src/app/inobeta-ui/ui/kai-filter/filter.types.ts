@@ -14,23 +14,21 @@ export enum IbFilterOperator {
   OR,
 }
 
-export interface IbFilterDef {
+export type IbFilterDef = {
   operator: IbFilterOperator;
   value: IbFilterDef[] | string | number;
 }
 
-export interface IbFilterSyntax {
-  [key: string]: IbFilterDef;
-}
+export type IbFilterSyntax  = Record<string, IbFilterDef>;
 
-export interface IbTextFilterCriteria {
+export type IbTextFilterCriteria = {
   operator: IbFilterOperator;
   value: string;
 }
 
 export type IbTagFilterCriteria<T = string> = T[];
 
-export interface IbNumberFilterCriteria {
+export type IbNumberFilterCriteria = {
   min: number;
   max: number;
 }
@@ -48,17 +46,17 @@ export enum IbDateFilterPeriod {
   WEEKS,
 }
 
-export interface IbDateFilterPeriodCriteria {
+export type IbDateFilterPeriodCriteria = {
   period: IbDateFilterPeriod;
   value: number;
 }
 
-export interface IbDateFilterRangeCriteria {
+export type IbDateFilterRangeCriteria = {
   start: Date;
   end: Date;
 }
 
-export interface IbDateFilterCriteria {
+export type IbDateFilterCriteria = {
   categorySelected: IbDateFilterCategory;
   moreThan: IbDateFilterPeriodCriteria;
   within: IbDateFilterPeriodCriteria;

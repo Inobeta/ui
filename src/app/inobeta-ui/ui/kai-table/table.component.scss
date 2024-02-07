@@ -1,6 +1,16 @@
+ib-kai-table {
+  display: block;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  overflow: hidden;
+
+  --ib-table-max-height: 500px;
+}
+
 .ib-table-scrollable {
   overflow-y: auto;
   position: relative;
+  max-height: var(--ib-table-max-height);
 
   &--loading {
     overflow: hidden;
@@ -11,6 +21,11 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
+
+  &:has(ib-table-view-group),
+  &:has(> section:not(:empty)) {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  }
 }
 
 .ib-table-progress-bar {
@@ -36,7 +51,7 @@ tr.ib-table-element-row:not(.ib-table-expanded-row):hover {
   background: whitesmoke;
 }
 
-::ng-deep .ib-table-expanded-row > td {
+.ib-table-expanded-row > td {
   border-bottom-width: 0;
 }
 
@@ -45,15 +60,15 @@ tr.ib-table-element-row:not(.ib-table-expanded-row):hover {
   display: flex;
 }
 
-::ng-deep td.cdk-column-ib-action > :first-child,
-::ng-deep td.mat-column-ib-action > :first-child {
+td.cdk-column-ib-action > :first-child,
+td.mat-column-ib-action > :first-child {
   display: flex;
   gap: 4px;
   justify-content: flex-end;
   align-content: center;
 }
 
-::ng-deep ib-aggregate {
+ib-aggregate {
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -68,6 +83,13 @@ tr.ib-table-element-row:not(.ib-table-expanded-row):hover {
   .ib-aggregate__display-value {
     text-align: end;
     font-weight: 500;
-    white-space: nowrap
+    white-space: nowrap;
   }
+}
+
+.ib-table-rollup {
+  box-shadow: 0 -1px rgba(0, 0, 0, 0.12);
+}
+.ib-table-paginator {
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
 }

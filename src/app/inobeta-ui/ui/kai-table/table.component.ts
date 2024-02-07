@@ -15,10 +15,11 @@ import {
   OnDestroy,
   QueryList,
   ViewChild,
+  ViewEncapsulation,
 } from "@angular/core";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
-import { MatTable, MatTableDataSource } from "@angular/material/table";
+import { MatTable } from "@angular/material/table";
 import { Subject, merge } from "rxjs";
 import { filter, takeUntil } from "rxjs/operators";
 import { IbTableDataExportAction } from "../data-export/table-data-export.component";
@@ -26,8 +27,9 @@ import { IbFilter } from "../kai-filter";
 import { ITableViewData, IView, IbTableViewGroup } from "../views";
 import { IbColumn } from "./columns/column";
 import { IbSelectionColumn } from "./columns/selection-column";
+import { IbRemoteTableDataSource } from "./remote-data-source";
 import { IbKaiRowGroupDirective } from "./rowgroup";
-import { IbDataSource } from "./table-data-source";
+import { IbTableDataSource } from "./table-data-source";
 import { IbKaiTableState, IbTableDef } from "./table.types";
 import { IB_TABLE } from "./tokens";
 
@@ -54,6 +56,7 @@ const defaultTableDef: IbTableDef = {
     ]),
   ],
   providers: [{ provide: IB_TABLE, useExisting: IbTable }],
+  encapsulation: ViewEncapsulation.None
 })
 export class IbTable implements OnDestroy {
   private _destroyed = new Subject();
@@ -74,7 +77,7 @@ export class IbTable implements OnDestroy {
   expandedElement: any;
   actionPortals: Portal<any>[] = [];
 
-  state: IbKaiTableState = "idle";
+  @Input() state: IbKaiTableState = "idle";
 
   @Input()
   set data(data: any[]) {
@@ -83,8 +86,8 @@ export class IbTable implements OnDestroy {
   }
 
   @Input()
-  dataSource: MatTableDataSource<unknown> | IbDataSource<unknown> =
-    new MatTableDataSource([]);
+  dataSource: IbTableDataSource<unknown> | IbRemoteTableDataSource<unknown> =
+    new IbTableDataSource([]);
 
   @Input() tableName: string = btoa(
     window.location.pathname + window.location.hash
@@ -128,7 +131,7 @@ export class IbTable implements OnDestroy {
    */
   @Input()
   set displayedColumns(columns: string[]) {
-    this._displayedColumns = columns.map(c => c);
+    this._displayedColumns = columns.map((c) => c);
     if (this.selectionColumn) {
       this._displayedColumns.unshift("ib-selection");
     }
@@ -148,7 +151,7 @@ export class IbTable implements OnDestroy {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
 
-    if (this.dataSource instanceof IbDataSource) {
+    if (this.dataSource instanceof IbRemoteTableDataSource) {
       this.dataSource._state
         .pipe(takeUntil(this._destroyed))
         .subscribe((s) => (this.state = s));
@@ -173,6 +176,13 @@ export class IbTable implements OnDestroy {
     if (this.view) {
       this.view.viewGroupName = this.tableName;
     }
+
+    this.dataSource.columns = this.columns.toArray();
+    this.columns.changes
+      .pipe(takeUntil(this._destroyed))
+      .subscribe((columns) => {
+        this.dataSource.columns = columns.toArray();
+      });
   }
 
   ngOnDestroy() {
@@ -182,16 +192,13 @@ export class IbTable implements OnDestroy {
   }
 
   private setupFilter() {
-    const updateFilter = (filter) => {
-      this.selectionColumn?.selection?.clear();
-      this.dataSource.filter = filter as any;
-    };
-    this.dataSource.filterPredicate = this.filter.filterPredicate;
     this.initializeFilters(this.dataSource.data);
-
     this.filter.ibFilterUpdated
       .pipe(takeUntil(this._destroyed))
-      .subscribe(updateFilter);
+      .subscribe((filter) => {
+        this.selectionColumn?.selection?.clear();
+        this.dataSource.filter = filter;
+      });
   }
 
   private setupViewGroup() {
@@ -239,7 +246,7 @@ export class IbTable implements OnDestroy {
         this.exportAction.exportService._exportFromTable(
           this.tableName,
           this.columns.filter((c) => !c.name.startsWith("ib-")),
-          this.dataSource as MatTableDataSource<any>,
+          this.dataSource as IbTableDataSource<unknown>,
           this.selectionColumn?.selection.selected,
           settings
         );
