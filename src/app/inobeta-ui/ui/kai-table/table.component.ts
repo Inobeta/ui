@@ -46,7 +46,7 @@ const defaultTableDef: IbTableDef = {
   templateUrl: "./table.component.html",
   styleUrls: ["./table.component.scss"],
   host: {
-    'class': 'ib-table__container'
+    class: "ib-table__container",
   },
   animations: [
     trigger("detailExpand", [
@@ -193,11 +193,12 @@ export class IbTable implements OnDestroy {
     this._destroyed.complete();
   }
 
+  // @TODO: move in table-data-source
   private setupFilter() {
     this.initializeFilters(this.dataSource.data);
     let event = this.filter.ibFilterUpdated;
     if (this.dataSource instanceof IbTableRemoteDataSource) {
-      event = this.filter.ibRawFilterUpdated;
+      event = this.filter.ibQueryUpdated;
     }
 
     event.pipe(takeUntil(this._destroyed)).subscribe((filter) => {
@@ -220,7 +221,7 @@ export class IbTable implements OnDestroy {
     });
 
     const changes$ = merge(
-      this.filter.ibRawFilterUpdated,
+      this.filter.ibQueryUpdated,
       this.paginator.page,
       this.aggregate
     ).pipe(takeUntil(this._destroyed));

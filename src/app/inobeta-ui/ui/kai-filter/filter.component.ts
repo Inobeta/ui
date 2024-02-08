@@ -69,7 +69,7 @@ export class IbFilter {
     });
   }
   @Output() ibFilterUpdated = new EventEmitter<IbFilterSyntax>();
-  @Output() ibRawFilterUpdated = new EventEmitter<Record<string, any>>();
+  @Output() ibQueryUpdated = new EventEmitter<Record<string, any>>();
 
   /** @ignore */
   form: FormGroup = new FormGroup<Record<string, any>>({});
@@ -88,13 +88,24 @@ export class IbFilter {
     this.rawFilter = this.form.getRawValue();
     this.filter = this.buildFilter();
     this.ibFilterUpdated.emit(this.filter);
-    this.ibRawFilterUpdated.emit(this.rawFilter);
+    this.ibQueryUpdated.emit(this.toQuery());
   }
 
   reset() {
     this.form.reset();
     this.form.patchValue(this.initialRawValue);
     this.update();
+  }
+
+  toQuery() {
+    let output = {};
+    const filters = this.filters.toArray();
+
+    for (const filter of filters) {
+      output[filter.name] = filter.toQuery();
+    }
+
+    return output;
   }
 
   /** @ignore */

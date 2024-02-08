@@ -1,16 +1,9 @@
-import {
-  Component,
-  Input,
-  ViewChild,
-  ViewEncapsulation,
-  computed,
-} from "@angular/core";
+import { Component, Input, ViewChild, ViewEncapsulation } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MatSelectionList } from "@angular/material/list";
-import { IbFilterDef } from "../../filter.types";
+import { IbFilterDef, IbTagQuery } from "../../filter.types";
 import { eq, none, or } from "../../filters";
 import { IbFilterBase } from "../base/filter-base";
-import { takeUntil } from "rxjs/operators";
 
 @Component({
   selector: "ib-tag-filter",
@@ -92,4 +85,12 @@ export class IbTagFilter extends IbFilterBase {
 
   build = (): IbFilterDef =>
     this.selected?.length ? or(this.selected.map((s) => eq(s.value))) : none();
+
+  toQuery(): IbTagQuery {
+    const items = this.selected.map((s) => s.value);
+    return {
+      items,
+      joined: items.join(","),
+    };
+  }
 }

@@ -1,5 +1,5 @@
 import { PageEvent } from "@angular/material/paginator";
-import { Sort, SortDirection } from "@angular/material/sort";
+import { Sort } from "@angular/material/sort";
 import {
   BehaviorSubject,
   Observable,
@@ -13,12 +13,11 @@ import {
   debounceTime,
   map,
   skipWhile,
-  startWith,
   switchMap,
 } from "rxjs/operators";
+import { IbTableDataProvider } from "./remote-data-provider";
 import { IbTableDataSource } from "./table-data-source";
 import { IbKaiTableState } from "./table.types";
-import { IbTableDataProvider } from "./remote-data-provider";
 
 export class IbTableRemoteDataSource<T> extends IbTableDataSource<T> {
   private _refresh = new Subject<void>();
@@ -67,18 +66,12 @@ export class IbTableRemoteDataSource<T> extends IbTableDataSource<T> {
     const refresh = this._refresh?.asObservable() ?? of(null);
 
     const dataChange = merge(refresh, sortChange, pageChange).pipe(
-      startWith([]),
       skipWhile(() => this.sort === undefined || this.paginator === undefined),
       debounceTime(0),
       switchMap(() => {
         this.state = "loading";
         return this.dataService
-          .fetchData(
-            this.sort.active,
-            this.sort.direction,
-            this.paginator.pageIndex,
-            super.filter
-          )
+          .fetchData(this.sort, this.paginator, super.filter)
           .pipe(
             catchError(() => {
               this.state = "http_error";

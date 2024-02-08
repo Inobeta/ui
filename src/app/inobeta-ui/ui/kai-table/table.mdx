@@ -578,8 +578,40 @@ Meaning that a column with `[name]="email"` can be accessed with the following s
 }
 ```
 
+ib-table-scrollable -> ib-table__content
+ib-table-group-detail-row -> ib-table__row-group
+ib-table-element-row -> ib-table__row
+ib-table-element-detail -> ib-table__cell-detail
+
 ## Use server-side data as a source
 
-Server-side interactions are only available with an instance of `IbDataSource` used as input.
+Server-side interactions are only available with an instance of `IbTableRemoteDataSource` used as input.
 
-> 🚧 However, this feature is currently under-construction, and not yet suitable for production.
+```typescript
+@Injectable()
+class ProductService implements IbTableDataProvider<Product> {
+  constructor(private http: HttpClient) {}
+
+  fetchData(
+    sort: MatSort,
+    page: MatPaginator,
+    filter
+  ): Observable<IbTableData<Product>> {
+    return this.http
+      .get("/products", {
+        params: {
+          sort: sort.active,
+          order: sort.direction,
+          page: page.pageIndex + 1,
+          per_page: page.pageSize,
+        },
+      })
+      .pipe(
+        map((result) => ({
+          data: result.items,
+          totalCount: result.total_count,
+        }))
+      );
+  }
+}
+```

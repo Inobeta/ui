@@ -1,15 +1,16 @@
 import { HttpClient } from "@angular/common/http";
 import { Component, Injectable, ViewChild } from "@angular/core";
-import { SortDirection } from "@angular/material/sort";
+import { MatPaginator } from "@angular/material/paginator";
+import { MatSort } from "@angular/material/sort";
 import { Observable, map } from "rxjs";
 import {
   IbTableData,
   IbTableDataProvider,
 } from "src/app/inobeta-ui/ui/kai-table/remote-data-provider";
 import {
-  IbDateFilterCriteria,
-  IbTagFilterCriteria,
-  IbTextFilterCriteria,
+  IbDateQuery,
+  IbTagQuery,
+  IbTextQuery,
 } from "../../inobeta-ui/ui/kai-filter/filter.types";
 import { IbTableDef } from "../../inobeta-ui/ui/kai-table";
 import { IbTableRemoteDataSource } from "../../inobeta-ui/ui/kai-table/remote-data-source";
@@ -17,61 +18,69 @@ import { IbTable } from "../../inobeta-ui/ui/kai-table/table.component";
 
 type GithubPRState = "open" | "closed";
 
-interface GithubApiQueryFilter {
-  created: IbDateFilterCriteria;
-  title: IbTextFilterCriteria;
-  state: IbTagFilterCriteria<GithubPRState>;
-}
+type GithubApi = {
+  items: GithubIssue[];
+  total_count: number;
+};
+
+type GithubIssue = {
+  created_at: string;
+  number: string;
+  state: string;
+  title: string;
+};
+
+type GithubApiQueryFilter = {
+  created: IbDateQuery;
+  title: IbTextQuery;
+  state: IbTagQuery<GithubPRState>;
+};
 
 @Injectable({ providedIn: "root" })
 class GithubService implements IbTableDataProvider<GithubIssue> {
   href = "https://api.github.com/search/issues";
 
-  constructor(private _httpClient: HttpClient) {}
+  constructor(private http: HttpClient) {}
 
   getQuery(filter: GithubApiQueryFilter) {
     let q = "";
-    if (filter?.title?.value) {
-      q = `${filter?.title?.value} in:title`;
+    if (filter?.title) {
+      q = `${filter?.title.like} in:title`;
     }
 
-    if (filter?.state?.length) {
-      q = `${q} is:${filter?.state[0]}`;
+    if (filter?.state?.items.length) {
+      q = `${q} is:${filter?.state.items[0]}`;
+    }
+
+    if (filter?.created) {
+      q = `${q} created:${filter.created.start}..${filter.created.end}`;
     }
 
     return q;
   }
 
   fetchData(
-    sort: string,
-    order: SortDirection,
-    page: number,
+    sort: MatSort,
+    page: MatPaginator,
     filter: GithubApiQueryFilter
   ): Observable<IbTableData<GithubIssue>> {
     const query = this.getQuery(filter);
-    const requestUrl = `${
-      this.href
-    }?q=repo:angular/components ${query}&sort=${sort}&order=${order}&page=${
-      page + 1
-    }`;
-
-    console.log(
-      "getRepoIssues",
-      "sort:",
-      sort,
-      "order:",
-      order,
-      "page:",
-      page,
-      "filter",
-      filter
-    );
-    return this._httpClient.get<GithubApi>(requestUrl).pipe(
-      map((result) => ({
-        data: result.items,
-        totalCount: result.total_count,
-      }))
-    );
+    return this.http
+      .get<GithubApi>(this.href, {
+        params: {
+          q: `repo:angular/components ${query}`,
+          sort: sort.active,
+          order: sort.direction,
+          page: page.pageIndex + 1,
+          per_page: page.pageSize,
+        },
+      })
+      .pipe(
+        map((result) => ({
+          data: result.items,
+          totalCount: result.total_count,
+        }))
+      );
   }
 }
 
@@ -92,7 +101,6 @@ class GithubService implements IbTableDataProvider<GithubIssue> {
       #table
       [displayedColumns]="['created', 'state', 'number', 'title']"
       [dataSource]="dataSource"
-      [tableDef]="tableDef"
     >
       <ib-filter>
         <ib-date-filter name="created">Created</ib-date-filter>
@@ -163,16 +171,4 @@ export class IbKaiTableApiExamplePage {
       1
     );
   }
-}
-
-interface GithubApi {
-  items: GithubIssue[];
-  total_count: number;
-}
-
-interface GithubIssue {
-  created_at: string;
-  number: string;
-  state: string;
-  title: string;
 }

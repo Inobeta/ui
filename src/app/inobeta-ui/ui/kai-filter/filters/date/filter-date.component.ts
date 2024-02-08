@@ -3,15 +3,15 @@ import { Component, Inject, ViewEncapsulation } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { DateAdapter } from "@angular/material/core";
 import { TranslateService } from "@ngx-translate/core";
-import { IbFilter } from "../../filter.component";
 import {
   IbDateFilterCategory,
   IbDateFilterPeriod,
+  IbDateQuery,
   IbFilterDef,
 } from "../../filter.types";
 import { and, gte, lte, none } from "../../filters";
-import { IbFilterBase } from "../base/filter-base";
 import { IB_FILTER } from "../../tokens";
+import { IbFilterBase } from "../base/filter-base";
 
 @Component({
   selector: "ib-date-filter",
@@ -276,4 +276,75 @@ export class IbDateFilter extends IbFilterBase {
 
     return none();
   };
+
+  private toQueryWithinCategory() {
+    const value = this.searchCriteria.value.within.value;
+    if (!value) {
+      return null;
+    }
+
+    const [then, now] = this.getOffsetTime(
+      value,
+      this.searchCriteria.value.within
+    );
+
+    return {
+      start: formatDate(then, "yyyy-MM-ddTHH:mm:ssZZZZZ", "en"),
+      end: formatDate(now, "yyyy-MM-ddTHH:mm:ssZZZZZ", "en"),
+    };
+  }
+  
+  private toQueryMoreThanCategory() {
+    const value = this.searchCriteria.value.moreThan.value;
+    if (!value) {
+      return null;
+    }
+
+    const [then] = this.getOffsetTime(
+      value,
+      this.searchCriteria.value.moreThan
+    );
+
+    return {
+      start: formatDate(0, "yyyy-MM-ddTHH:mm:ssZZZZZ", "en"),
+      end: formatDate(then, "yyyy-MM-ddTHH:mm:ssZZZZZ", "en"),
+    };
+  }
+
+  private toQueryRangeCategory() {
+    const start = this.searchCriteria.value.range.start;
+    const end = this.searchCriteria.value.range.end;
+    if (!start || !end) {
+      return null;
+    }
+
+    return {
+      start: formatDate(
+        this.searchCriteria.value.range.start,
+        "yyyy-MM-dd",
+        "en"
+      ),
+      end: formatDate(this.searchCriteria.value.range.end, "yyyy-MM-dd", "en"),
+    };
+  }
+
+  toQuery(): IbDateQuery {
+    if (this.getSelected()?.invalid) {
+      return null;
+    }
+
+    if (this.isSelected(IbDateFilterCategory.WITHIN)) {
+      return this.toQueryWithinCategory();
+    }
+
+    if (this.isSelected(IbDateFilterCategory.MORE_THAN)) {
+      return this.toQueryMoreThanCategory();
+    }
+    
+    if (this.isSelected(IbDateFilterCategory.RANGE)) {
+      return this.toQueryRangeCategory();
+    }
+
+    return null;
+  }
 }

@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { IbFilterDef, IbFilterOperator } from "../../filter.types";
+import { IbFilterDef, IbFilterOperator, IbTextQuery } from "../../filter.types";
 import { none } from "../../filters";
 import { IbFilterBase } from "../base/filter-base";
 
@@ -63,5 +63,29 @@ export class IbTextFilter extends IbFilterBase {
       operator: this.searchCriteria.value.operator,
       value: this.searchCriteria.value.value,
     };
-  };
+  }
+
+  toQuery(): IbTextQuery {
+    const value = this.searchCriteria.value.value;
+    if (!value) {
+      return;
+    }
+
+    const operator = this.searchCriteria.value.operator;
+    let q: IbTextQuery;
+    switch (operator) {
+      case IbFilterOperator.CONTAINS:
+        q = {
+          regex: `/.*${value}.*/`,
+          like: `%${value}%`,
+        };
+        break;
+      case IbFilterOperator.STARTS_WITH:
+        q = {
+          regex: `/^${value}.*/`,
+          like: `%${value}`,
+        };
+    }
+    return q;
+  }
 }

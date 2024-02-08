@@ -62,3 +62,23 @@ export type IbDateFilterCriteria = {
   within: IbDateFilterPeriodCriteria;
   range: IbDateFilterRangeCriteria;
 }
+
+export type IbTextQuery = {
+  regex: string;
+  like: string;
+}
+
+export type IbNumberQuery = {
+  min: number;
+  max: number;
+}
+
+export type IbTagQuery<T = string> = {
+  items: T[];
+  joined: string;
+};
+
+export type IbDateQuery = {
+  start: string;
+  end: string;
+}
