@@ -219,6 +219,18 @@ export class IbDateFilter extends IbFilterBase {
     return [then, now];
   }
 
+  private toMidnight(date: Date) {
+    return new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      23,
+      59,
+      59,
+      999
+    );
+  }
+
   private buildWithinCategory() {
     const value = this.searchCriteria.value.within.value;
     if (!value) {
@@ -289,11 +301,11 @@ export class IbDateFilter extends IbFilterBase {
     );
 
     return {
-      start: formatDate(then, "yyyy-MM-ddTHH:mm:ssZZZZZ", "en"),
-      end: formatDate(now, "yyyy-MM-ddTHH:mm:ssZZZZZ", "en"),
+      start: then.toISOString(),
+      end: now.toISOString(),
     };
   }
-  
+
   private toQueryMoreThanCategory() {
     const value = this.searchCriteria.value.moreThan.value;
     if (!value) {
@@ -306,8 +318,8 @@ export class IbDateFilter extends IbFilterBase {
     );
 
     return {
-      start: formatDate(0, "yyyy-MM-ddTHH:mm:ssZZZZZ", "en"),
-      end: formatDate(then, "yyyy-MM-ddTHH:mm:ssZZZZZ", "en"),
+      start: new Date(0).toISOString(),
+      end: then.toISOString(),
     };
   }
 
@@ -319,12 +331,8 @@ export class IbDateFilter extends IbFilterBase {
     }
 
     return {
-      start: formatDate(
-        this.searchCriteria.value.range.start,
-        "yyyy-MM-dd",
-        "en"
-      ),
-      end: formatDate(this.searchCriteria.value.range.end, "yyyy-MM-dd", "en"),
+      start: start.toISOString(),
+      end: this.toMidnight(end).toISOString(),
     };
   }
 
@@ -340,7 +348,7 @@ export class IbDateFilter extends IbFilterBase {
     if (this.isSelected(IbDateFilterCategory.MORE_THAN)) {
       return this.toQueryMoreThanCategory();
     }
-    
+
     if (this.isSelected(IbDateFilterCategory.RANGE)) {
       return this.toQueryRangeCategory();
     }

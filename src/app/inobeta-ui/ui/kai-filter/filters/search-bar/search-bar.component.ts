@@ -1,5 +1,6 @@
 import { Component } from "@angular/core";
 import { FormControl } from "@angular/forms";
+import { IbTextQuery } from "../../filter.types";
 import { contains, none } from "../../filters";
 import { IbFilterBase } from "../base/filter-base";
 
@@ -33,4 +34,11 @@ export class IbSearchBar extends IbFilterBase {
 
   build = () =>
     this.searchCriteria.value ? contains(this.searchCriteria.value) : none();
+
+  toQuery(): IbTextQuery {
+    return {
+      regex: `.*${this.searchCriteria.value}.*`,
+      like: `%${this.searchCriteria.value}%`,
+    };
+  }
 }

@@ -71,21 +71,28 @@ export class IbTextFilter extends IbFilterBase {
       return;
     }
 
+    let regex: string, like: string;
     const operator = this.searchCriteria.value.operator;
-    let q: IbTextQuery;
-    switch (operator) {
-      case IbFilterOperator.CONTAINS:
-        q = {
-          regex: `/.*${value}.*/`,
-          like: `%${value}%`,
-        };
-        break;
-      case IbFilterOperator.STARTS_WITH:
-        q = {
-          regex: `/^${value}.*/`,
-          like: `%${value}`,
-        };
+    if (operator == IbFilterOperator.CONTAINS) {
+      regex = `.*${value}.*`;
+      like = `%${value}%`;
     }
-    return q;
+
+    if (operator == IbFilterOperator.STARTS_WITH) {
+      regex = `^${value}.*`;
+      like = `%${value}`;
+    }
+
+    if (operator == IbFilterOperator.ENDS_WITH) {
+      regex = `.*${value}$`;
+      like = `${value}%`;
+    }
+
+    if (operator == IbFilterOperator.EQUALS) {
+      regex = `^${value}$`;
+      like = value;
+    }
+
+    return { regex, like };
   }
 }

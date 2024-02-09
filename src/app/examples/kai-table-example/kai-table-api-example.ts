@@ -37,7 +37,7 @@ type GithubApiQueryFilter = {
 };
 
 @Injectable({ providedIn: "root" })
-class GithubService implements IbTableDataProvider<GithubIssue> {
+class GithubService implements IbTableDataProvider<GithubIssue, GithubApiQueryFilter> {
   href = "https://api.github.com/search/issues";
 
   constructor(private http: HttpClient) {}
@@ -53,6 +53,7 @@ class GithubService implements IbTableDataProvider<GithubIssue> {
     }
 
     if (filter?.created) {
+      console.log(filter.created)
       q = `${q} created:${filter.created.start}..${filter.created.end}`;
     }
 

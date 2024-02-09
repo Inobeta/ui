@@ -12,7 +12,7 @@ export type IbTableData<T> = {
  * Implement this interface in a service
  * in order to promote it as a data provider for {@link IbTableRemoteDataSource}
  */
-export interface IbTableDataProvider<T> {
+export interface IbTableDataProvider<T, V = Record<string, any>> {
   /**
    * Data fetching strategy
    *
@@ -52,6 +52,6 @@ export interface IbTableDataProvider<T> {
   fetchData(
     sort: MatSort,
     page: MatPaginator,
-    filter: Record<string, any>
+    filter: V
   ): Observable<IbTableData<T>>;
 }

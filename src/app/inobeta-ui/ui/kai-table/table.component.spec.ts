@@ -15,7 +15,7 @@ import { MatInputHarness } from "@angular/material/input/testing";
 import { MatMenuHarness } from "@angular/material/menu/testing";
 import { MatRadioButtonHarness } from "@angular/material/radio/testing";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { MatSortModule, SortDirection } from "@angular/material/sort";
+import { MatSort, MatSortModule, SortDirection } from "@angular/material/sort";
 import { MatSortHarness } from "@angular/material/sort/testing";
 import { MatTableHarness } from "@angular/material/table/testing";
 import { By } from "@angular/platform-browser";
@@ -38,6 +38,7 @@ import { IbTableData, IbTableDataProvider } from "./remote-data-provider";
 import { IbTableDataSource } from "./table-data-source";
 import { IbTable } from "./table.component";
 import { IbKaiTableModule } from "./table.module";
+import { MatPaginator } from "@angular/material/paginator";
 
 describe("IbTable", () => {
   describe("with IbTableDataSource", () => {
@@ -112,7 +113,7 @@ describe("IbTable", () => {
     it("should render", async () => {
       const fixture = createComponent(IbTableWithRowGroupApp);
       const rowGroup = fixture.nativeElement.querySelectorAll(
-        ".ib-table-group-detail-row"
+        ".ib-table__row-group"
       );
       expect(rowGroup.length).toBeTruthy();
     });
@@ -579,10 +580,9 @@ class IbTableWithRowGroupApp {
 @Injectable()
 class IbTestDataProvider implements IbTableDataProvider<any> {
   fetchData(
-    sort: string,
-    order: SortDirection,
-    page: number,
-    filter: Record<string, any>
+    sort: MatSort,
+    page: MatPaginator,
+    filter
   ): Observable<IbTableData<any>> {
     return of({
       data: [{ name: "alice" }],
