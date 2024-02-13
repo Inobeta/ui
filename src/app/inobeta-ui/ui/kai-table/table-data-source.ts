@@ -203,15 +203,15 @@ export class IbTableDataSource<
     filter: IbFilterSyntax
   ): boolean => {
     const { ibSearchBar, ...filters } = filter;
-    const matchesSearchBar = this.applySearchBarFilter(
-      data,
-      ibSearchBar
-    );
-    return Object.entries(filters).every(([columnName, condition]) => {
+    const matchesSearchBar = this.applySearchBarFilter(data, ibSearchBar);
+
+    const matches = Object.entries(filters).every(([columnName, condition]) => {
       const column = this.columns[columnName];
       const filterValue = column.filterDataAccessor(data, columnName);
-      return applyFilter(condition, filterValue) && matchesSearchBar;
+      return applyFilter(condition, filterValue);
     });
+
+    return matches && matchesSearchBar;
   };
 
   private applySearchBarFilter = (data: any, filter: IbFilterDef) => {
@@ -223,9 +223,7 @@ export class IbTableDataSource<
       .reduce((currentTerm: string, key: string) => {
         const column = this.columns[key];
         const value = column ? column.filterDataAccessor(data, key) : data[key];
-        return (
-          currentTerm + value + "◬"
-        );
+        return currentTerm + value + "◬";
       }, "")
       .toLowerCase();
 
