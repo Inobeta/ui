@@ -14,6 +14,11 @@
 
 - Upgraded `rxjs` to version `7.8.0`, please follow the [deprecations & breaking changes](https://rxjs.dev/deprecations/breaking-changes) instructions
 to up your application accordingly
+- The following CSS classes have been renamed:
+  - `.ib-table-scrollable` -> `.ib-table__content`
+  - `.ib-table-group-detail-row` -> `.ib-table__row-group`
+  - `.ib-table-element-row` -> `.ib-table__row`
+  - `.ib-table-element-detail` -> `.ib-table__cell-detail`
 
 ## [17.0.1] (2024-01-10)
 

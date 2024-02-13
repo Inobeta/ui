@@ -546,6 +546,19 @@ A `*ibKaiRowGroup` directive is available to display contextual content for each
 }
 ```
 
+#### Selectors
+
+`.ib-table__container`
+
+Wrapper element that contains the table itself alongside views, actions, filters, and paginator.
+Use this class in your queries in order to override variables and sections of this component.
+
+- `.ib-table__toolbar`
+- `.ib-table__content`
+- `.ib-table__row`
+- `.ib-table__row .mat-mdc-cell`
+- `.ib-table__cell-detail`
+
 #### Column style
 
 To set an arbitrary style to a column, a css selector is available with the format:
@@ -578,14 +591,16 @@ Meaning that a column with `[name]="email"` can be accessed with the following s
 }
 ```
 
-ib-table-scrollable -> ib-table__content
-ib-table-group-detail-row -> ib-table__row-group
-ib-table-element-row -> ib-table__row
-ib-table-element-detail -> ib-table__cell-detail
-
 ## Use server-side data as a source
 
-Server-side interactions are only available with an instance of `IbTableRemoteDataSource` used as input.
+> 🚧 Aggregation, selection, and exporting are not fully supported
+
+Enable server-side interactions with an `IbTableRemoteDataSource` provided to the `dataSource` input.
+
+1. Define a service that implements `IbTableDataProvider`
+
+[sort](https://material.angular.io/components/sort/api#MatSort)
+[paginator](https://material.angular.io/components/paginator/api#MatPaginator)
 
 ```typescript
 @Injectable()
@@ -614,4 +629,20 @@ class ProductService implements IbTableDataProvider<Product> {
       );
   }
 }
+```
+
+2. Instance an `IbTableRemoteDataSource`, and provide your service.
+
+```typescript
+@Component({ /** ... */ })
+export class RemoveDataExample {
+  private productService = inject(ProductService);
+  dataSource = new IbTableRemoteDataSource(this.productService);
+}
+```
+
+```html
+<ib-kai-table [dataSource]="dataSource" [displayedColumns]="displayedColumns">
+  <!-- ... --->
+</ib-kai-table>
 ```

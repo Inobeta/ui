@@ -5,6 +5,7 @@ import {
   Observable,
   Subject,
   Subscription,
+  combineLatest,
   merge,
   of,
 } from "rxjs";
@@ -44,6 +45,10 @@ export class IbTableRemoteDataSource<T> extends IbTableDataSource<T> {
   }
 
   _updateChangeSubscription() {
+    if (!this._state) {
+      return;
+    }
+
     const sortChange: Observable<Sort | null | void> = this.sort
       ? (merge(
           this.sort.sortChange,
@@ -59,15 +64,10 @@ export class IbTableRemoteDataSource<T> extends IbTableDataSource<T> {
         ) as Observable<PageEvent | void>)
       : of(null);
 
-    if (sortChange && this.paginator) {
-      sortChange.subscribe(() => (this.paginator.pageIndex = 0));
-    }
+    const refresh = this._refresh?.asObservable();
+    const pipeline = combineLatest([this._filter, sortChange, pageChange]);
 
-    const refresh = this._refresh?.asObservable() ?? of(null);
-
-    const dataChange = merge(refresh, sortChange, pageChange).pipe(
-      skipWhile(() => this.sort === undefined || this.paginator === undefined),
-      debounceTime(0),
+    const dataChange = merge(refresh, pipeline).pipe(
       switchMap(() => {
         this.state = "loading";
         return this.dataService
@@ -87,7 +87,8 @@ export class IbTableRemoteDataSource<T> extends IbTableDataSource<T> {
         this.state = "idle";
         this.paginator.length = result.totalCount;
         return result.data;
-      })
+      }),
+      map((data) => this._filterData(data))
     );
 
     this._renderChangesSubscription?.unsubscribe();
@@ -102,6 +103,6 @@ export class IbTableRemoteDataSource<T> extends IbTableDataSource<T> {
 
   /** Disable _filterData */
   _filterData(data: T[]): T[] {
-    return data;
+    return (this.filteredData = data);
   }
 }

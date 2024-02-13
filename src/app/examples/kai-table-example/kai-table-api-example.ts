@@ -1,5 +1,5 @@
 import { HttpClient } from "@angular/common/http";
-import { Component, Injectable, ViewChild } from "@angular/core";
+import { Component, Injectable, ViewChild, inject } from "@angular/core";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { Observable, map } from "rxjs";
@@ -12,7 +12,6 @@ import {
   IbTagQuery,
   IbTextQuery,
 } from "../../inobeta-ui/ui/kai-filter/filter.types";
-import { IbTableDef } from "../../inobeta-ui/ui/kai-table";
 import { IbTableRemoteDataSource } from "../../inobeta-ui/ui/kai-table/remote-data-source";
 import { IbTable } from "../../inobeta-ui/ui/kai-table/table.component";
 
@@ -37,10 +36,11 @@ type GithubApiQueryFilter = {
 };
 
 @Injectable({ providedIn: "root" })
-class GithubService implements IbTableDataProvider<GithubIssue, GithubApiQueryFilter> {
+class GithubService
+  implements IbTableDataProvider<GithubIssue, GithubApiQueryFilter>
+{
+  private http: HttpClient = inject(HttpClient);
   href = "https://api.github.com/search/issues";
-
-  constructor(private http: HttpClient) {}
 
   getQuery(filter: GithubApiQueryFilter) {
     let q = "";
@@ -53,7 +53,6 @@ class GithubService implements IbTableDataProvider<GithubIssue, GithubApiQueryFi
     }
 
     if (filter?.created) {
-      console.log(filter.created)
       q = `${q} created:${filter.created.start}..${filter.created.end}`;
     }
 
@@ -114,16 +113,17 @@ class GithubService implements IbTableDataProvider<GithubIssue, GithubApiQueryFi
         <ib-text-filter name="title">Title</ib-text-filter>
       </ib-filter>
 
+      <ib-selection-column />
       <ib-date-column
         headerText="Created"
         name="created"
         [dataAccessor]="createdAtAccessor"
         format="d MMM yyyy"
         sort
-      ></ib-date-column>
-      <ib-text-column name="state"></ib-text-column>
-      <ib-text-column headerText="#" name="number"></ib-text-column>
-      <ib-text-column name="title"></ib-text-column>
+      />
+      <ib-text-column name="state" />
+      <ib-text-column headerText="#" name="number" />
+      <ib-text-column name="title" />
     </ib-kai-table>
   `,
   styles: [
@@ -139,18 +139,10 @@ class GithubService implements IbTableDataProvider<GithubIssue, GithubApiQueryFi
 })
 export class IbKaiTableApiExamplePage {
   @ViewChild("table", { static: true }) kaiTable: IbTable;
+  private github = inject(GithubService);
   dataSource = new IbTableRemoteDataSource(this.github);
 
-  tableDef: IbTableDef = {
-    paginator: {
-      pageSize: 30,
-      pageSizeOptions: [30],
-    },
-  };
-
   createdAtAccessor = (data: GithubIssue, name: string) => data.created_at;
-
-  constructor(private github: GithubService) {}
 
   setState(state: string) {
     if (state === "loading") {

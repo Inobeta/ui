@@ -29,13 +29,13 @@ export class IbTableDataSource<
   P extends MatPaginator = MatPaginator
 > extends DataSource<T> {
   /** Stream that emits when a new data array is set on the data source. */
-  private readonly _data: BehaviorSubject<T[]>;
+  protected readonly _data: BehaviorSubject<T[]>;
 
   /** Stream emitting render data to the table (depends on ordered data changes). */
   protected readonly _renderData = new BehaviorSubject<T[]>([]);
 
   /** Stream that emits when a new filter string is set on the data source. */
-  private readonly _filter = new BehaviorSubject<IbFilterSyntax>(null);
+  protected readonly _filter = new BehaviorSubject<IbFilterSyntax>(null);
 
   /** Used to react to internal changes of the paginator that are made by the data source itself. */
   private readonly _internalPageChanges = new Subject<void>();
