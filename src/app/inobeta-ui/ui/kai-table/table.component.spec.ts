@@ -1,7 +1,7 @@
 import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { CommonModule } from "@angular/common";
-import { Component, Injectable, Type, inject } from "@angular/core";
+import { Component, Injectable, Type } from "@angular/core";
 import {
   ComponentFixture,
   TestBed,
@@ -13,16 +13,17 @@ import { MatButtonHarness } from "@angular/material/button/testing";
 import { MatDialogHarness } from "@angular/material/dialog/testing";
 import { MatInputHarness } from "@angular/material/input/testing";
 import { MatMenuHarness } from "@angular/material/menu/testing";
+import { MatPaginator } from "@angular/material/paginator";
 import { MatRadioButtonHarness } from "@angular/material/radio/testing";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { MatSort, MatSortModule, SortDirection } from "@angular/material/sort";
+import { MatSort, MatSortModule } from "@angular/material/sort";
 import { MatSortHarness } from "@angular/material/sort/testing";
 import { MatTableHarness } from "@angular/material/table/testing";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { StoreModule } from "@ngrx/store";
 import { TranslateModule } from "@ngx-translate/core";
-import { Observable, of, throwError } from "rxjs";
+import { Observable, map, of, throwError, timer } from "rxjs";
 import {
   IbDataExportModule,
   IbDataExportService,
@@ -33,12 +34,13 @@ import { IbFilterModule } from "../kai-filter";
 import { IbViewModule } from "../views";
 import { IbTableActionModule } from "./action";
 import { IbAggregateCell } from "./cells";
-import { IbTableRemoteDataSource } from "./remote-data-source";
-import { IbTableData, IbTableDataProvider } from "./remote-data-provider";
+import {
+  IbFetchDataResponse,
+  IbTableRemoteDataSource,
+} from "./remote-data-source";
 import { IbTableDataSource } from "./table-data-source";
 import { IbTable } from "./table.component";
 import { IbKaiTableModule } from "./table.module";
-import { MatPaginator } from "@angular/material/paginator";
 
 describe("IbTable", () => {
   describe("with IbTableDataSource", () => {
@@ -91,9 +93,9 @@ describe("IbTable", () => {
       const component = fixture.debugElement.query(
         By.directive(IbTable)
       ).componentInstance;
-      component.dataSource.refresh();
-      tick(1);
+      tick(1)
       expect(component).toBeTruthy();
+      expect(component.state).toBe("idle");
     }));
 
     it("should show error on exception", fakeAsync(() => {
@@ -101,11 +103,12 @@ describe("IbTable", () => {
       const component = fixture.debugElement.query(
         By.directive(IbTable)
       ).componentInstance;
-      fixture.componentInstance.provider.fetchData = () => throwError(() => new Error());
+      fixture.componentInstance.dataSource.fetchData = () =>
+        throwError(() => new Error());
       component.dataSource.refresh();
       tick(1);
       fixture.detectChanges();
-      expect(component.state === "http_error").toBeTruthy();
+      expect(component.state).toBe("http_error");
     }));
   });
 
@@ -578,16 +581,15 @@ class IbTableWithRowGroupApp {
 }
 
 @Injectable()
-class IbTestDataProvider implements IbTableDataProvider<any> {
+class IbTestDataSource extends IbTableRemoteDataSource<any> {
   fetchData(
     sort: MatSort,
     page: MatPaginator,
-    filter
-  ): Observable<IbTableData<any>> {
-    return of({
+  ): Observable<IbFetchDataResponse<any>> {
+    return timer(1).pipe(map(() => ({
       data: [{ name: "alice" }],
       totalCount: 1,
-    });
+    })));
   }
 }
 
@@ -598,12 +600,9 @@ class IbTestDataProvider implements IbTableDataProvider<any> {
       <ib-text-column name="name"></ib-text-column>
     </ib-kai-table>
   `,
-  providers: [IbTestDataProvider],
 })
 class IbTableWithRemoteDataApp {
-  provider = inject(IbTestDataProvider);
-
-  dataSource = new IbTableRemoteDataSource<any>(this.provider);
+  dataSource = new IbTestDataSource();
 }
 
 @Component({

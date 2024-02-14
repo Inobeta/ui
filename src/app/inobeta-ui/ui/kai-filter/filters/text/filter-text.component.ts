@@ -80,12 +80,12 @@ export class IbTextFilter extends IbFilterBase {
 
     if (operator == IbFilterOperator.STARTS_WITH) {
       regex = `^${value}.*`;
-      like = `%${value}`;
+      like = `${value}%`;
     }
 
     if (operator == IbFilterOperator.ENDS_WITH) {
       regex = `.*${value}$`;
-      like = `${value}%`;
+      like = `%${value}`;
     }
 
     if (operator == IbFilterOperator.EQUALS) {

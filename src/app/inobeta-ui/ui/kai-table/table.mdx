@@ -591,33 +591,35 @@ Meaning that a column with `[name]="email"` can be accessed with the following s
 }
 ```
 
-## Use server-side data as a source
+## Server-side data
 
 > 🚧 Aggregation, selection, and exporting are not fully supported
 
-Enable server-side interactions with an `IbTableRemoteDataSource` provided to the `dataSource` input.
+Enable server-side interactions, such as data fetching, pagination, sorting, and filtering with an `IbTableRemoteDataSource` provided to the `dataSource` input.
 
-1. Define a service that implements `IbTableDataProvider`
+1. Define your data source
 
-[sort](https://material.angular.io/components/sort/api#MatSort)
-[paginator](https://material.angular.io/components/paginator/api#MatPaginator)
+Your data source must extend `IbTableRemoteDataSource` in order to be compatible with the table. This is an abstract class, as it needs the `fetchData` method
+to be implemented. 
+
+The method `fetchData` will be called with three parameters whenever some data from the server is needed: `sort` is of type `MatSort`¹,
+the current sorted column is available in `sort.active` and the order in `sort.direction`².
+Then, `page` is of type `MatPaginator`³, the requested page index can be accessed with `page.pageIndex`, and the current page size with `page.pageSize`.
 
 ```typescript
-@Injectable()
-class ProductService implements IbTableDataProvider<Product> {
-  constructor(private http: HttpClient) {}
+class ProductDataSource extends IbTableRemoteDataSource<Product> {
+  private http = inject(HttpClient);
 
   fetchData(
     sort: MatSort,
-    page: MatPaginator,
-    filter
-  ): Observable<IbTableData<Product>> {
+    page: MatPaginator
+  ): Observable<IbFetchDataResponse<Product>> {
     return this.http
       .get("/products", {
         params: {
           sort: sort.active,
           order: sort.direction,
-          page: page.pageIndex + 1,
+          page: page.pageIndex,
           per_page: page.pageSize,
         },
       })
@@ -631,13 +633,13 @@ class ProductService implements IbTableDataProvider<Product> {
 }
 ```
 
-2. Instance an `IbTableRemoteDataSource`, and provide your service.
+2. Instance the data source, and provide it to your table
 
 ```typescript
 @Component({ /** ... */ })
-export class RemoveDataExample {
-  private productService = inject(ProductService);
-  dataSource = new IbTableRemoteDataSource(this.productService);
+export class RemoteDataSourceExample {
+  dataSource = new ProductDataSource();
+  displayedColumns = [/** ... */]
 }
 ```
 
@@ -646,3 +648,10 @@ export class RemoveDataExample {
   <!-- ... --->
 </ib-kai-table>
 ```
+
+> Remember: You must instance your data source inside your component's constructor (like the example above), and that you can inject 
+> any service within your data source as long as it is provided in your `AppModule`, feature module, or standalone component.
+
+¹ [More about MatSort](https://material.angular.io/components/sort/api#MatSort)
+² Both are null as per initial state. Can also be empty strings when undefined, please refer to the documentation.
+³ [More about MatPaginator](https://material.angular.io/components/paginator/api#MatPaginator)

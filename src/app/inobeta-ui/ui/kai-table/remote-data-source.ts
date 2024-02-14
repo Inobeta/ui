@@ -1,5 +1,5 @@
-import { PageEvent } from "@angular/material/paginator";
-import { Sort } from "@angular/material/sort";
+import { MatPaginator, PageEvent } from "@angular/material/paginator";
+import { MatSort, Sort } from "@angular/material/sort";
 import {
   BehaviorSubject,
   Observable,
@@ -9,26 +9,22 @@ import {
   merge,
   of,
 } from "rxjs";
-import {
-  catchError,
-  debounceTime,
-  map,
-  skipWhile,
-  switchMap,
-} from "rxjs/operators";
-import { IbTableDataProvider } from "./remote-data-provider";
+import { catchError, map, switchMap } from "rxjs/operators";
 import { IbTableDataSource } from "./table-data-source";
 import { IbKaiTableState } from "./table.types";
 
-export class IbTableRemoteDataSource<T> extends IbTableDataSource<T> {
+export type IbFetchDataResponse<T> = {
+  data: T[];
+  totalCount: number;
+};
+
+export abstract class IbTableRemoteDataSource<
+  T,
+  V = Record<string, any>
+> extends IbTableDataSource<T> {
   private _refresh = new Subject<void>();
 
   _renderChangesSubscription: Subscription | null = null;
-
-  set filter(value) {
-    super.filter = value;
-    this._refresh.next();
-  }
 
   get state() {
     return this._state.value;
@@ -38,11 +34,7 @@ export class IbTableRemoteDataSource<T> extends IbTableDataSource<T> {
     this._state.next(value);
   }
 
-  readonly _state = new BehaviorSubject<IbKaiTableState>("idle");
-
-  constructor(private dataService: IbTableDataProvider<T>) {
-    super([]);
-  }
+  readonly _state = new BehaviorSubject<IbKaiTableState>("loading");
 
   _updateChangeSubscription() {
     if (!this._state) {
@@ -70,14 +62,16 @@ export class IbTableRemoteDataSource<T> extends IbTableDataSource<T> {
     const dataChange = merge(refresh, pipeline).pipe(
       switchMap(() => {
         this.state = "loading";
-        return this.dataService
-          .fetchData(this.sort, this.paginator, super.filter)
-          .pipe(
-            catchError(() => {
-              this.state = "http_error";
-              return of(null);
-            })
-          );
+        return this.fetchData(
+          this.sort,
+          this.paginator,
+          super.filter as V
+        ).pipe(
+          catchError(() => {
+            this.state = "http_error";
+            return of(null);
+          })
+        );
       }),
       map((result) => {
         if (result === null || result === undefined) {
@@ -105,4 +99,43 @@ export class IbTableRemoteDataSource<T> extends IbTableDataSource<T> {
   _filterData(data: T[]): T[] {
     return (this.filteredData = data);
   }
+
+  /**
+   * Data fetching strategy
+   *
+   * ```typescript
+   * class ProductDataSource extends IbTableRemoteDataSource<Product> {
+   *   private http = inject(HttpClient)
+   *
+   *   fetchData(
+   *     sort: MatSort,
+   *     page: MatPaginator
+   *   ): Observable<IbFetchDataResponse<Product>> {
+   *       return this.http.get("/products", {
+   *         params: {
+   *           sort: sort.active,
+   *           order: sort.direction,
+   *           page: page.pageIndex + 1,
+   *           per_page: page.pageSize
+   *         }
+   *       }).pipe(
+   *         map((result) => ({
+   *           data: result.items,
+   *           totalCount: result.total_count
+   *         }))
+   *       );
+   *   }
+   * }
+   * ```
+   *
+   * @param sort Sort state
+   * @param page Paginator state
+   * @param filter Filter applied
+   * @returns Observable of data and total count
+   */
+  abstract fetchData(
+    sort: MatSort,
+    page: MatPaginator,
+    filter?: V
+  ): Observable<IbFetchDataResponse<T>>;
 }
