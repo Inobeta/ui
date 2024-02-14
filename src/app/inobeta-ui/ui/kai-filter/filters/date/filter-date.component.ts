@@ -338,7 +338,7 @@ export class IbDateFilter extends IbFilterBase {
 
   toQuery(): IbDateQuery {
     if (this.getSelected()?.invalid) {
-      return null;
+      return;
     }
 
     if (this.isSelected(IbDateFilterCategory.WITHIN)) {
@@ -353,6 +353,6 @@ export class IbDateFilter extends IbFilterBase {
       return this.toQueryRangeCategory();
     }
 
-    return null;
+    return;
   }
 }

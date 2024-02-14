@@ -14,7 +14,13 @@ import { IbTableDataSource } from "./table-data-source";
 import { IbKaiTableState } from "./table.types";
 
 export type IbFetchDataResponse<T> = {
+  /**
+   * Subset of rows returned by the server.
+   */
   data: T[];
+  /**
+   * Total row count of the query without pagination.
+   */
   totalCount: number;
 };
 

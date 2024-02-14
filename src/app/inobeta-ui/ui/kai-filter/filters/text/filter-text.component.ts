@@ -66,33 +66,33 @@ export class IbTextFilter extends IbFilterBase {
   }
 
   toQuery(): IbTextQuery {
-    const value = this.searchCriteria.value.value;
-    if (!value) {
+    const text = this.searchCriteria.value.value;
+    if (!text) {
       return;
     }
 
     let regex: string, like: string;
-    const operator = this.searchCriteria.value.operator;
-    if (operator == IbFilterOperator.CONTAINS) {
-      regex = `.*${value}.*`;
-      like = `%${value}%`;
+    const condition = this.searchCriteria.value.operator;
+    if (condition == IbFilterOperator.CONTAINS) {
+      regex = `.*${text}.*`;
+      like = `%${text}%`;
     }
 
-    if (operator == IbFilterOperator.STARTS_WITH) {
-      regex = `^${value}.*`;
-      like = `${value}%`;
+    if (condition == IbFilterOperator.STARTS_WITH) {
+      regex = `^${text}.*`;
+      like = `${text}%`;
     }
 
-    if (operator == IbFilterOperator.ENDS_WITH) {
-      regex = `.*${value}$`;
-      like = `%${value}`;
+    if (condition == IbFilterOperator.ENDS_WITH) {
+      regex = `.*${text}$`;
+      like = `%${text}`;
     }
 
-    if (operator == IbFilterOperator.EQUALS) {
-      regex = `^${value}$`;
-      like = value;
+    if (condition == IbFilterOperator.EQUALS) {
+      regex = `^${text}$`;
+      like = text;
     }
 
-    return { regex, like };
+    return { regex, like, condition, text };
   }
 }

@@ -595,19 +595,21 @@ Meaning that a column with `[name]="email"` can be accessed with the following s
 
 > 🚧 Aggregation, selection, and exporting are not fully supported
 
-Enable server-side interactions, such as data fetching, pagination, sorting, and filtering with an `IbTableRemoteDataSource` provided to the `dataSource` input.
+Enable server-side interactions with an `IbTableRemoteDataSource` provided to the `dataSource` input.
 
 1. Define your data source
 
-Your data source must extend `IbTableRemoteDataSource` in order to be compatible with the table. This is an abstract class, as it needs the `fetchData` method
-to be implemented. 
+Your data source must extend `IbTableRemoteDataSource` in order to be compatible with the table. This is an abstract class, and it needs the `fetchData` method
+to be implemented.
 
-The method `fetchData` will be called with three parameters whenever some data from the server is needed: `sort` is of type `MatSort`¹,
-the current sorted column is available in `sort.active` and the order in `sort.direction`².
-Then, `page` is of type `MatPaginator`³, the requested page index can be accessed with `page.pageIndex`, and the current page size with `page.pageSize`.
+The method `fetchData` will be called with two parameters whenever some data from the server is needed:
+
+- `sort` is of type `MatSort`¹, the current sorted column is available in `sort.active` and the order in `sort.direction`².
+- `page` is of type `MatPaginator`³, the requested page index can be accessed with `page.pageIndex`, and the current page size with `page.pageSize`.
 
 ```typescript
-class ProductDataSource extends IbTableRemoteDataSource<Product> {
+// product-data-source.ts
+export class ProductDataSource extends IbTableRemoteDataSource<Product> {
   private http = inject(HttpClient);
 
   fetchData(
@@ -615,7 +617,7 @@ class ProductDataSource extends IbTableRemoteDataSource<Product> {
     page: MatPaginator
   ): Observable<IbFetchDataResponse<Product>> {
     return this.http
-      .get("/products", {
+      .get<ProductReponse>("/products", {
         params: {
           sort: sort.active,
           order: sort.direction,
@@ -633,13 +635,38 @@ class ProductDataSource extends IbTableRemoteDataSource<Product> {
 }
 ```
 
-2. Instance the data source, and provide it to your table
+For reference, here's the `IbFetchDataResponse` object that must be returned
 
 ```typescript
-@Component({ /** ... */ })
+export type IbFetchDataResponse<T> = {
+  /**
+   * Subset of rows returned by the server
+   */
+  data: T[];
+  /**
+   * Total row count of the query without pagination.
+   *
+   * If this value is greater than the current page size,
+   * then the paginator will assume there's more data available
+   */
+  totalCount: number;
+};
+```
+
+2. Instance the data source, and provide it to your table
+
+> Remember: You must instance your data source inside your component's constructor (like the example below), and that you can inject
+> any service within your data source as long as it is provided in your `AppModule`, feature module, or standalone component.
+
+```typescript
+@Component({
+  /** ... */
+})
 export class RemoteDataSourceExample {
   dataSource = new ProductDataSource();
-  displayedColumns = [/** ... */]
+  displayedColumns = [
+    /** ... */
+  ];
 }
 ```
 
@@ -649,9 +676,177 @@ export class RemoteDataSourceExample {
 </ib-kai-table>
 ```
 
-> Remember: You must instance your data source inside your component's constructor (like the example above), and that you can inject 
-> any service within your data source as long as it is provided in your `AppModule`, feature module, or standalone component.
-
-¹ [More about MatSort](https://material.angular.io/components/sort/api#MatSort)
-² Both are null as per initial state. Can also be empty strings when undefined, please refer to the documentation.
+¹ [More about MatSort](https://material.angular.io/components/sort/api#MatSort)  
+² Both are null as per initial state. Can also be empty strings when undefined, please refer to the documentation.  
 ³ [More about MatPaginator](https://material.angular.io/components/paginator/api#MatPaginator)
+
+#### Filtering
+
+Considering the following table as an example:
+
+```html
+<ib-kai-table [dataSource]="dataSource" [displayedColumns]="displayedColumns">
+  <ib-filter>
+    <ib-text-filter name="sku">SKU</ib-text-filter>
+    <ib-date-filter name="created">Created</ib-date-filter>
+    <ib-number-filter name="price">Price</ib-number-filter>
+    <ib-tag-filter name="status">Status</ib-tag-filter>
+  </ib-filter>
+
+  <!-- ... --->
+</ib-kai-table>
+```
+
+1. Describe a type from your filters
+
+For each filter type exists a query object holding the values provided by the user.
+
+<Markdown>{`
+| Filter | Type
+| - | - |
+| \`ib-text-filter\`   | \`IbTextQuery\` |
+| \`ib-date-filter\`   | \`IbDateQuery\` |
+| \`ib-number-filter\` | \`IbNumberQuery\` |
+| \`ib-tag-filter\`    | \`IbTagQuery\`  |
+`}</Markdown>
+
+Meaning that the filters above can be represented with the type:
+
+```typescript
+type ProductQuery = {
+  title: IbTextQuery;
+  created: IbDateQuery;
+  price: IbNumberQuery;
+  status: IbTagQuery;
+};
+```
+
+2. Update your data source
+
+The `IbTableRemoteDataSource` class accepts a second generic type to specify the type for the filter model.
+Also, a third `filter` parameter is provided to the method `fetchData`
+
+```typescript
+class ProductDataSource extends IbTableRemoteDataSource<Product, ProductQuery> {
+  private http = inject(HttpClient);
+
+  fetchData(
+    sort: MatSort,
+    page: MatPaginator,
+    filter: ProductQuery
+  ): Observable<IbFetchDataResponse<Product>> {
+    return this.http
+      .get("/products", {
+        params: {
+          sort: sort.active,
+          order: sort.direction,
+          page: page.pageIndex,
+          per_page: page.pageSize,
+          // use your filters here
+        },
+      })
+      .pipe(
+        map((result) => ({
+          data: result.items,
+          totalCount: result.total_count,
+        }))
+      );
+  }
+}
+```
+
+````typescript
+/**
+ * Text query object.
+ *
+ * Provides a regular expression or a `like` pattern.
+ */
+export type IbTextQuery = {
+  /**
+   * Generated regular expression.
+   * The result depends on the selected condition.
+   *
+   * | Condition   | Regex       |
+   * |-------------|-------------|
+   * | Contains    | `.*apple.*` |
+   * | Starts with | `^apple.*`  |
+   * | Ends with   | `.*apple$`  |
+   * | Equals      | `^apple$`   |
+   */
+  regex: string;
+  /**
+   * Generated pattern to be used in a SQL LIKE operation.
+   * The result depends on the selected condition.
+   *
+   * | Condition   | Pattern   |
+   * |-------------|-----------|
+   * | Contains    | `%apple%` |
+   * | Starts with | `apple%`  |
+   * | Ends with   | `%apple`  |
+   * | Equals      | `apple`   |
+   */
+  like: string;
+  /**
+   * Condition provided by the user
+   *
+   * | Condition   | Operator   |
+   * |-------------|-----------|
+   * | Contains    | IbFilterOperator.CONTAINS    |
+   * | Starts with | IbFilterOperator.STARTS_WITH |
+   * | Ends with   | IbFilterOperator.ENDS_WITH   |
+   * | Equals      | IbFilterOperator.EQUALS      |
+   *
+   * @example
+   * ```typescript
+   * if (filter.title.condition === IbFilterOperator.STARTS_WITH) {
+   *    // your login
+   * }
+   * ```
+   */
+  condition: IbFilterOperator;
+  /** Query provided by the user */
+  text: string;
+};
+````
+
+```typescript
+/**
+ * Date query object.
+ *
+ * Provides a range of a dates.
+ */
+export type IbDateQuery = {
+  /** Start date of the interval in ISO format */
+  start: string;
+  /** End date of the interval in ISO format */
+  end: string;
+};
+```
+
+```typescript
+/**
+ * Number query object.
+ *
+ * Provides a range of numbers.
+ */
+export type IbNumberQuery = {
+  /** Minimum value of the range */
+  min: number;
+  /** Maximum value of the range */
+  max: number;
+};
+```
+
+```typescript
+/**
+ * Options query object.
+ *
+ * Provides a list of options selected.
+ */
+export type IbTagQuery<T = string> = {
+  /** Array of options selected */
+  items: T[];
+  /** String of options separated by a comma */
+  joined: string;
+};
+```

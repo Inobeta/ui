@@ -82,7 +82,7 @@ export type IbTextQuery = {
    */
   regex: string;
   /**
-   * Generated pattern to be used with the SQL LIKE operator.
+   * Generated pattern to be used in a SQL LIKE operation.
    * The result depends on the selected condition.
    *
    * | Condition   | Pattern   |
@@ -93,6 +93,26 @@ export type IbTextQuery = {
    * | Equals      | `apple`   |
    */
   like: string;
+  /**
+   * Condition provided by the user
+   *
+   * | Condition   | Operator   |
+   * |-------------|-----------|
+   * | Contains    | IbFilterOperator.CONTAINS    |
+   * | Starts with | IbFilterOperator.STARTS_WITH |
+   * | Ends with   | IbFilterOperator.ENDS_WITH   |
+   * | Equals      | IbFilterOperator.EQUALS      |
+   *
+   * @example
+   * ```typescript
+   * if (filter.title.condition === IbFilterOperator.STARTS_WITH) {
+   *    // your login
+   * }
+   * ```
+   */
+  condition: IbFilterOperator;
+  /** Query provided by the user */
+  text: string;
 };
 
 /**
@@ -115,13 +135,13 @@ export type IbNumberQuery = {
 export type IbTagQuery<T = string> = {
   /** Array of options selected */
   items: T[];
-  /** List of options separated by a comma */
+  /** String of options separated by a comma */
   joined: string;
 };
 
 /**
  * Date query object.
- * 
+ *
  * Provides a range of a dates.
  */
 export type IbDateQuery = {

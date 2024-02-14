@@ -43,7 +43,7 @@ export class GithubDataSource extends IbTableRemoteDataSource<
   getQuery(filter: GithubApiQueryFilter) {
     let q = "";
     if (filter?.title) {
-      q = `${filter?.title.like} in:title`;
+      q = `${filter?.title.text} in:title`;
     }
 
     if (filter?.state?.items.length) {
