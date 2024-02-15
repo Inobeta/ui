@@ -21,6 +21,7 @@ import { GithubDataSource } from "./github-data-source";
         </button>
       </ib-table-action-group>
 
+      <ib-table-view-group />
       <ib-filter>
         <ib-search-bar async />
         <ib-date-filter name="created">Created</ib-date-filter>

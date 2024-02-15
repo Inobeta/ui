@@ -62,6 +62,7 @@ export class GithubDataSource extends IbTableRemoteDataSource<
     page: MatPaginator,
     filter: GithubApiQueryFilter
   ): Observable<IbFetchDataResponse<GithubIssue>> {
+    console.log('filter', filter)
     const query = this.getQuery(filter);
     return this.http
       .get<GithubApi>(this.href, {
