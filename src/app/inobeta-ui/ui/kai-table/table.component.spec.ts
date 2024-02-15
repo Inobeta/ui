@@ -1,7 +1,7 @@
 import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { CommonModule } from "@angular/common";
-import { Component, Type } from "@angular/core";
+import { Component, Injectable, Type } from "@angular/core";
 import {
   ComponentFixture,
   TestBed,
@@ -13,16 +13,17 @@ import { MatButtonHarness } from "@angular/material/button/testing";
 import { MatDialogHarness } from "@angular/material/dialog/testing";
 import { MatInputHarness } from "@angular/material/input/testing";
 import { MatMenuHarness } from "@angular/material/menu/testing";
+import { MatPaginator } from "@angular/material/paginator";
 import { MatRadioButtonHarness } from "@angular/material/radio/testing";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { MatSortModule } from "@angular/material/sort";
+import { MatSort, MatSortModule } from "@angular/material/sort";
 import { MatSortHarness } from "@angular/material/sort/testing";
 import { MatTableHarness } from "@angular/material/table/testing";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { StoreModule } from "@ngrx/store";
 import { TranslateModule } from "@ngx-translate/core";
-import { throwError } from "rxjs";
+import { Observable, map, of, throwError, timer } from "rxjs";
 import {
   IbDataExportModule,
   IbDataExportService,
@@ -33,10 +34,13 @@ import { IbFilterModule } from "../kai-filter";
 import { IbViewModule } from "../views";
 import { IbTableActionModule } from "./action";
 import { IbAggregateCell } from "./cells";
-import { IbRemoteTableDataSource } from "./remote-data-source";
+import {
+  IbFetchDataResponse,
+  IbTableRemoteDataSource,
+} from "./remote-data-source";
+import { IbTableDataSource } from "./table-data-source";
 import { IbTable } from "./table.component";
 import { IbKaiTableModule } from "./table.module";
-import { IbTableDataSource } from "./table-data-source";
 
 describe("IbTable", () => {
   describe("with IbTableDataSource", () => {
@@ -85,41 +89,26 @@ describe("IbTable", () => {
 
   describe("with IbRemoteTableDataSource", () => {
     it("should create", fakeAsync(() => {
-      const fixture = createComponent(IbTableWithIbDataSourceApp);
+      const fixture = createComponent(IbTableWithRemoteDataApp);
       const component = fixture.debugElement.query(
         By.directive(IbTable)
       ).componentInstance;
-      component.dataSource.refresh();
-      tick(1);
+      tick(1)
       expect(component).toBeTruthy();
+      expect(component.state).toBe("idle");
     }));
 
-    it("should create with empty constructor", () => {
-      const dataSource = new IbRemoteTableDataSource();
-      expect(dataSource).toBeTruthy();
-      expect(dataSource.data).toEqual([]);
-    });
-
-    it("should reset to empty array with non array types", () => {
-      const dataSource = new IbRemoteTableDataSource([{ name: "alice" }]);
-      expect(dataSource).toBeTruthy();
-      expect(dataSource.data).toEqual([{ name: "alice" }]);
-      dataSource.data = null;
-      expect(dataSource.data).toEqual([]);
-      dataSource.data = [{ name: "rabbit" }];
-      expect(dataSource.data).toEqual([{ name: "rabbit" }]);
-    });
-
     it("should show error on exception", fakeAsync(() => {
-      const fixture = createComponent(IbTableWithIbDataSourceApp);
+      const fixture = createComponent(IbTableWithRemoteDataApp);
       const component = fixture.debugElement.query(
         By.directive(IbTable)
       ).componentInstance;
-      component.dataSource.fetchData = () => throwError("oh no");
+      fixture.componentInstance.dataSource.fetchData = () =>
+        throwError(() => new Error());
       component.dataSource.refresh();
       tick(1);
       fixture.detectChanges();
-      expect(component.state === "http_error").toBeTruthy();
+      expect(component.state).toBe("http_error");
     }));
   });
 
@@ -127,7 +116,7 @@ describe("IbTable", () => {
     it("should render", async () => {
       const fixture = createComponent(IbTableWithRowGroupApp);
       const rowGroup = fixture.nativeElement.querySelectorAll(
-        ".ib-table-group-detail-row"
+        ".ib-table__row-group"
       );
       expect(rowGroup.length).toBeTruthy();
     });
@@ -591,6 +580,19 @@ class IbTableWithRowGroupApp {
   data = [{ name: "alice" }];
 }
 
+@Injectable()
+class IbTestDataSource extends IbTableRemoteDataSource<any> {
+  fetchData(
+    sort: MatSort,
+    page: MatPaginator,
+  ): Observable<IbFetchDataResponse<any>> {
+    return timer(1).pipe(map(() => ({
+      data: [{ name: "alice" }],
+      totalCount: 1,
+    })));
+  }
+}
+
 @Component({
   template: `
     <ib-kai-table [dataSource]="dataSource" [displayedColumns]="['name']">
@@ -599,8 +601,8 @@ class IbTableWithRowGroupApp {
     </ib-kai-table>
   `,
 })
-class IbTableWithIbDataSourceApp {
-  dataSource = new IbRemoteTableDataSource<any>([{ name: "alice" }]);
+class IbTableWithRemoteDataApp {
+  dataSource = new IbTestDataSource();
 }
 
 @Component({
@@ -738,17 +740,14 @@ class IbTableWithSort {
 
 @Component({
   template: `
-    <ib-kai-table
-      [data]="data"
-      [displayedColumns]="['name', 'amount']"
-    >
+    <ib-kai-table [data]="data" [displayedColumns]="['name', 'amount']">
       <ib-text-column name="name"></ib-text-column>
       <ib-number-column name="amount" aggregate></ib-number-column>
     </ib-kai-table>
   `,
 })
 class IbTableWithAggregate {
-  data =[
+  data = [
     { name: "alice", amount: 10 },
     { name: "bob", amount: 20 },
   ];

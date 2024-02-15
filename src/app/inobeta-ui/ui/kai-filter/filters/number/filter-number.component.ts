@@ -1,6 +1,6 @@
 import { Component, Input, ViewEncapsulation } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { IbFilterDef } from "../../filter.types";
+import { IbFilterDef, IbNumberQuery } from "../../filter.types";
 import { and, gte, lte, none } from "../../filters";
 import { IbFilterBase } from "../base/filter-base";
 
@@ -100,4 +100,11 @@ export class IbNumberFilter extends IbFilterBase {
 
     return and([gte(this.slider.value.min), lte(this.slider.value.max)]);
   };
+
+  toQuery(): IbNumberQuery {
+    return {
+      min: this.slider.value.min,
+      max: this.slider.value.max,
+    };
+  }
 }

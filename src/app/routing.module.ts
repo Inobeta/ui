@@ -10,7 +10,7 @@ import { NavComponent } from './examples/nav/nav.component';
 import { IbKaiTableExamplePage } from './examples/kai-table-example/kai-table-example';
 import { IbKaiTableActionColumnExamplePage } from './examples/kai-table-example/kai-table-actions-example';
 import { IbKaiTableFullExamplePage } from './examples/kai-table-example/kai-table-full-example';
-import { IbKaiTableApiExamplePage } from './examples/kai-table-example/kai-table-api-example';
+import { IbKaiTableApiExamplePage } from './examples/kai-table-example/server-side/kai-table-api-example';
 import { MaterialFormArrayExampleComponent } from './examples/material-form-array-example/form-array-example.component';
 import { MaterialFormExampleComponent } from './examples/material-form-example/material-form-example.component';
 import { MaterialFormGridExampleComponent } from './examples/material-form-grid-example/material-form-grid-example.component';

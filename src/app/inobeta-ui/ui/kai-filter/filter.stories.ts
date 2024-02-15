@@ -25,7 +25,7 @@ const meta: Meta<IbFilter> = {
   ],
   argTypes: {
     ibFilterUpdated: { control: { disable: true } },
-    ibRawFilterUpdated: { control: { disable: true } },
+    ibQueryUpdated: { control: { disable: true } },
   },
 };
 

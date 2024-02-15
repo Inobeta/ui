@@ -27,7 +27,7 @@ import { IbFilter } from "../kai-filter";
 import { ITableViewData, IView, IbTableViewGroup } from "../views";
 import { IbColumn } from "./columns/column";
 import { IbSelectionColumn } from "./columns/selection-column";
-import { IbRemoteTableDataSource } from "./remote-data-source";
+import { IbTableRemoteDataSource } from "./remote-data-source";
 import { IbKaiRowGroupDirective } from "./rowgroup";
 import { IbTableDataSource } from "./table-data-source";
 import { IbKaiTableState, IbTableDef } from "./table.types";
@@ -45,6 +45,9 @@ const defaultTableDef: IbTableDef = {
   selector: "ib-kai-table",
   templateUrl: "./table.component.html",
   styleUrls: ["./table.component.scss"],
+  host: {
+    class: "ib-table__container",
+  },
   animations: [
     trigger("detailExpand", [
       state("collapsed", style({ height: "0px", minHeight: "0" })),
@@ -56,7 +59,7 @@ const defaultTableDef: IbTableDef = {
     ]),
   ],
   providers: [{ provide: IB_TABLE, useExisting: IbTable }],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class IbTable implements OnDestroy {
   private _destroyed = new Subject<void>();
@@ -86,8 +89,7 @@ export class IbTable implements OnDestroy {
   }
 
   @Input()
-  dataSource: IbTableDataSource<unknown> | IbRemoteTableDataSource<unknown> =
-    new IbTableDataSource([]);
+  dataSource: IbTableDataSource<unknown> = new IbTableDataSource([]);
 
   @Input() tableName: string = btoa(
     window.location.pathname + window.location.hash
@@ -151,7 +153,7 @@ export class IbTable implements OnDestroy {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
 
-    if (this.dataSource instanceof IbRemoteTableDataSource) {
+    if (this.dataSource instanceof IbTableRemoteDataSource) {
       this.dataSource._state
         .pipe(takeUntil(this._destroyed))
         .subscribe((s) => (this.state = s));
@@ -191,14 +193,18 @@ export class IbTable implements OnDestroy {
     this._destroyed.complete();
   }
 
+  // @TODO: move in table-data-source
   private setupFilter() {
     this.initializeFilters(this.dataSource.data);
-    this.filter.ibFilterUpdated
-      .pipe(takeUntil(this._destroyed))
-      .subscribe((filter) => {
-        this.selectionColumn?.selection?.clear();
-        this.dataSource.filter = filter;
-      });
+    let event = this.filter.ibFilterUpdated;
+    if (this.dataSource instanceof IbTableRemoteDataSource) {
+      event = this.filter.ibQueryUpdated;
+    }
+
+    event.pipe(takeUntil(this._destroyed)).subscribe((filter) => {
+      this.selectionColumn?.selection?.clear();
+      this.dataSource.filter = filter;
+    });
   }
 
   private setupViewGroup() {
@@ -215,7 +221,7 @@ export class IbTable implements OnDestroy {
     });
 
     const changes$ = merge(
-      this.filter.ibRawFilterUpdated,
+      this.filter.ibQueryUpdated,
       this.paginator.page,
       this.aggregate
     ).pipe(takeUntil(this._destroyed));
@@ -246,7 +252,7 @@ export class IbTable implements OnDestroy {
         this.exportAction.exportService._exportFromTable(
           this.tableName,
           this.columns.filter((c) => !c.name.startsWith("ib-")),
-          this.dataSource as IbTableDataSource<unknown>,
+          this.dataSource,
           this.selectionColumn?.selection.selected,
           settings
         );

@@ -64,7 +64,7 @@ import { IbKaiTableState } from "../../inobeta-ui/ui/kai-table/table.types";
         flex-direction: column;
         padding: 30px;
         gap: 3em;
-      }
+      }      
     `,
   ],
   providers: [UserService],
