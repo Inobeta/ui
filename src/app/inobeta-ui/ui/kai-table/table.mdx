@@ -34,7 +34,7 @@ Each column definition must be given a name. By default, the name of the columns
 Take the following column as an example.
 
 ```html
-<ib-text-column name="category"></ib-text-column>
+<ib-text-column name="category" />
 ```
 
 This `ib-text-column` component will assume that the type of data to display is a string. The `name` input will be used as a data accessor, the cells will render the value found in the data's property matching the column's name. In this case, if the column is named `category`, then the rendered value will be the value defined by the data's `category` property.
@@ -63,8 +63,8 @@ export class SimpleKaiTableExample {
 
 ```html
 <ib-kai-table [data]="data" [displayedColumns]="displayedColumns">
-  <ib-text-column name="name"></ib-text-column>
-  <ib-text-column name="category"></ib-text-column>
+  <ib-text-column name="name" />
+  <ib-text-column name="category" />
 </ib-kai-table>
 ```
 
@@ -76,8 +76,8 @@ Columns are defined by adding a column component as slots within `ib-kai-table`
 
 ```html
 <ib-kai-table [data]="data" [displayedColumns]="displayedColumns">
-  <ib-text-column name="name"></ib-text-column>
-  <ib-text-column name="surname"></ib-text-column>
+  <ib-text-column name="name" />
+  <ib-text-column name="surname" />
 </ib-kai-table>
 ```
 
@@ -87,21 +87,15 @@ To change the label shown in the header, use `headerText`.
 
 ```html
 <ib-kai-table [data]="data" [displayedColumns]="displayedColumns">
-  <ib-text-column
-    [headerText]="'user.name' | translate"
-    name="name"
-  ></ib-text-column>
-  <ib-text-column
-    [headerText]="'user.surname' | translate"
-    name="surname"
-  ></ib-text-column>
+  <ib-text-column [headerText]="'user.name' | translate" name="name" />
+  <ib-text-column [headerText]="'user.surname' | translate" name="surname" />
 </ib-kai-table>
 ```
 
 ### Text column
 
 ```html
-<ib-text-column name="surname" justify="start"></ib-text-column>
+<ib-text-column name="surname" justify="start" />
 ```
 
 `ib-text-column` displays text content for the row cells. Text justification can be edited with `justify` (`start`, `end`, or `center`)
@@ -109,11 +103,7 @@ To change the label shown in the header, use `headerText`.
 ### Number column
 
 ```html
-<ib-number-column
-  name="price"
-  digitsInfo="1.0-2"
-  locale="it"
-></ib-number-column>
+<ib-number-column name="price" digitsInfo="1.0-2" locale="it" />
 ```
 
 `ib-number-column` displays a decimal value. The decimal representation can be specified with `digitsInfo`, while `locale` will format a value according to locale rules. Since a `DecimalPipe` is used in the implementation, [follow its usage notes to know more](https://angular.io/api/common/DecimalPipe#usage-notes).
@@ -121,11 +111,7 @@ To change the label shown in the header, use `headerText`.
 ### Date column
 
 ```html
-<ib-date-column
-  name="created_at"
-  format="dd/MM/yyyy"
-  locale="it"
-></ib-date-column>
+<ib-date-column name="created_at" format="dd/MM/yyyy" locale="it" />
 ```
 
 `ib-date-column` shows a formatted date. Since a `DatePipe` is used in the implementation, [follow its usage notes to know more](https://angular.io/api/common/DatePipe#usage-notes).
@@ -286,7 +272,7 @@ By default, sorting is disabled in any column. To enable sorting, use `sort` in 
 > Sorting is supported by any column.
 
 ```html
-<ib-text-column name="firstName" sort></ib-text-column>
+<ib-text-column name="firstName" sort />
 ```
 
 #### Set initial sort
@@ -321,7 +307,7 @@ This behaviour can be overriden with the `sortingDataAccessor` input, available 
   name="firstName"
   sort
   [sortingDataAccessor]="sortingDataAccessor"
-></ib-text-column>
+/>
 ```
 
 For custom columns, you can override the getter function within you component's class.
@@ -516,7 +502,7 @@ In this example, only `xlsx` export will be allowed.
 Use `aggregate` to show a roll-up footer row in your table. Each column has a different set of functions available. For example, in `ib-number-column` you can estimate the sum, or the average, of a column.
 
 ```html
-<ib-number-column name="price" aggregate></ib-number-column>
+<ib-number-column name="price" aggregate />
 ```
 
 ## Row group
@@ -726,6 +712,8 @@ type ProductQuery = {
 The `IbTableRemoteDataSource` class accepts a second generic type to specify the type for the filter model.
 Also, a third `filter` parameter is provided to the method `fetchData`
 
+> The parameters of `filter` may be undefined if left untouched by the user.
+
 ```typescript
 class ProductDataSource extends IbTableRemoteDataSource<Product, ProductQuery> {
   private http = inject(HttpClient);
@@ -754,6 +742,15 @@ class ProductDataSource extends IbTableRemoteDataSource<Product, ProductQuery> {
   }
 }
 ```
+
+**Text query reference**
+
+Provides the value of the query in the `text` paramenter, and the selected `condition`, an enum of type `IbFilterOperator`
+that can be either a `CONTAINS`, `STARTS_WITH`, `ENDS_WITH`, or `EQUALS` operator.
+It also includes two generated parameters, a regular expression under `regex`, and a `LIKE` pattern under `like`
+
+The `regex` parameter can be useful in API that uses a NoSQL database under the hood. While the `like` paramenter
+can be used with APIs interfacing with SQL databases instead.
 
 ````typescript
 /**
@@ -795,19 +792,14 @@ export type IbTextQuery = {
    * | Starts with | IbFilterOperator.STARTS_WITH |
    * | Ends with   | IbFilterOperator.ENDS_WITH   |
    * | Equals      | IbFilterOperator.EQUALS      |
-   *
-   * @example
-   * ```typescript
-   * if (filter.title.condition === IbFilterOperator.STARTS_WITH) {
-   *    // your login
-   * }
-   * ```
    */
   condition: IbFilterOperator;
   /** Query provided by the user */
   text: string;
 };
 ````
+
+**Date query reference**
 
 ```typescript
 /**
@@ -823,6 +815,8 @@ export type IbDateQuery = {
 };
 ```
 
+**Number query reference**
+
 ```typescript
 /**
  * Number query object.
@@ -836,6 +830,8 @@ export type IbNumberQuery = {
   max: number;
 };
 ```
+
+**Tag query reference**
 
 ```typescript
 /**
