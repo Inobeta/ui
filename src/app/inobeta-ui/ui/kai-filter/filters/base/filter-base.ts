@@ -18,6 +18,7 @@ export interface IFilterBase {
   clear(): void;
   /** Build filter syntax */
   build(): IbFilterDef;
+  toQuery(): any;
   /**  */
   initializeFromColumn(data: any[]): void;
 }
@@ -81,6 +82,10 @@ export class IbFilterBase implements IFilterBase {
 
   build(): IbFilterDef {
     throw Error(`Filter ${this.name} has no build method defined.`);
+  }
+
+  toQuery() {
+    throw Error(`Filter ${this.name} has no toQuery method defined.`);
   }
 
   applyFilter() {

@@ -8,7 +8,7 @@ Use the `ibSetupHydration` function to setup a persisted state. Provide a unique
 the keys of other stores present in your app that you wish to save on the browser's storage.
 
 It is recommended to provide the following keys on your application:
-- `sessionState`: holds user authentication data
+- `ibHttpState`: holds user authentication data
 - `ibViews`: table views created by the user
 - `ibTable`: *Legacy table* set of features
 
@@ -19,7 +19,7 @@ import { StoreModule } from "@ngrx/store";
 import { ibSetupHydration } from "@inobeta/ui";
 
 const appStorage = ibSetupHydration("app-storage", [
-  "sessionState",
+  "ibHttpState",
   "ibViews",
   "ibTable",
 ]);

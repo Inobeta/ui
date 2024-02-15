@@ -29,13 +29,13 @@ export class IbTableDataSource<
   P extends MatPaginator = MatPaginator
 > extends DataSource<T> {
   /** Stream that emits when a new data array is set on the data source. */
-  private readonly _data: BehaviorSubject<T[]>;
+  protected readonly _data: BehaviorSubject<T[]>;
 
   /** Stream emitting render data to the table (depends on ordered data changes). */
-  private readonly _renderData = new BehaviorSubject<T[]>([]);
+  protected readonly _renderData = new BehaviorSubject<T[]>([]);
 
   /** Stream that emits when a new filter string is set on the data source. */
-  private readonly _filter = new BehaviorSubject<IbFilterSyntax>(null);
+  protected readonly _filter = new BehaviorSubject<IbFilterSyntax>(null);
 
   /** Used to react to internal changes of the paginator that are made by the data source itself. */
   private readonly _internalPageChanges = new Subject<void>();
@@ -203,15 +203,15 @@ export class IbTableDataSource<
     filter: IbFilterSyntax
   ): boolean => {
     const { ibSearchBar, ...filters } = filter;
-    const matchesSearchBar = this.applySearchBarFilter(
-      data,
-      ibSearchBar
-    );
-    return Object.entries(filters).every(([columnName, condition]) => {
+    const matchesSearchBar = this.applySearchBarFilter(data, ibSearchBar);
+
+    const matches = Object.entries(filters).every(([columnName, condition]) => {
       const column = this.columns[columnName];
       const filterValue = column.filterDataAccessor(data, columnName);
-      return applyFilter(condition, filterValue) && matchesSearchBar;
+      return applyFilter(condition, filterValue);
     });
+
+    return matches && matchesSearchBar;
   };
 
   private applySearchBarFilter = (data: any, filter: IbFilterDef) => {
@@ -223,9 +223,7 @@ export class IbTableDataSource<
       .reduce((currentTerm: string, key: string) => {
         const column = this.columns[key];
         const value = column ? column.filterDataAccessor(data, key) : data[key];
-        return (
-          currentTerm + value + "◬"
-        );
+        return currentTerm + value + "◬";
       }, "")
       .toLowerCase();
 

@@ -7,11 +7,18 @@
 |DEVK-261|feat|IbDynamicForm|Added `value` input to `ib-material-form`|
 |DEVK-264|feat|Docs|Changed compodoc for storybook|
 |DEVK-288|feat|IbTable|Added `sortingDataAccessor` and `filterDataAccessor` to `IbColumn`|
+|DEVK-189|feat|IbTable|Add `IbTableRemoteDataSource` and `IbTableDataProvider` for server-side interactions|
+|DEVK-189|feat|IbFilter|Add `ibQueryUpdated`; provides a serialized filter for HTTP queries|
 
 ### [17.1.0] - breaks
 
 - Upgraded `rxjs` to version `7.8.0`, please follow the [deprecations & breaking changes](https://rxjs.dev/deprecations/breaking-changes) instructions
 to up your application accordingly
+- The following CSS classes have been renamed:
+  - `.ib-table-scrollable` -> `.ib-table__content`
+  - `.ib-table-group-detail-row` -> `.ib-table__row-group`
+  - `.ib-table-element-row` -> `.ib-table__row`
+  - `.ib-table-element-detail` -> `.ib-table__cell-detail`
 
 ## [17.0.1] (2024-01-10)
 

@@ -3,15 +3,15 @@ import { Component, Inject, ViewEncapsulation } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { DateAdapter } from "@angular/material/core";
 import { TranslateService } from "@ngx-translate/core";
-import { IbFilter } from "../../filter.component";
 import {
   IbDateFilterCategory,
   IbDateFilterPeriod,
+  IbDateQuery,
   IbFilterDef,
 } from "../../filter.types";
 import { and, gte, lte, none } from "../../filters";
-import { IbFilterBase } from "../base/filter-base";
 import { IB_FILTER } from "../../tokens";
+import { IbFilterBase } from "../base/filter-base";
 
 @Component({
   selector: "ib-date-filter",
@@ -219,6 +219,18 @@ export class IbDateFilter extends IbFilterBase {
     return [then, now];
   }
 
+  private toMidnight(date: Date) {
+    return new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      23,
+      59,
+      59,
+      999
+    );
+  }
+
   private buildWithinCategory() {
     const value = this.searchCriteria.value.within.value;
     if (!value) {
@@ -276,4 +288,71 @@ export class IbDateFilter extends IbFilterBase {
 
     return none();
   };
+
+  private toQueryWithinCategory() {
+    const value = this.searchCriteria.value.within.value;
+    if (!value) {
+      return null;
+    }
+
+    const [then, now] = this.getOffsetTime(
+      value,
+      this.searchCriteria.value.within
+    );
+
+    return {
+      start: then.toISOString(),
+      end: now.toISOString(),
+    };
+  }
+
+  private toQueryMoreThanCategory() {
+    const value = this.searchCriteria.value.moreThan.value;
+    if (!value) {
+      return null;
+    }
+
+    const [then] = this.getOffsetTime(
+      value,
+      this.searchCriteria.value.moreThan
+    );
+
+    return {
+      start: new Date(0).toISOString(),
+      end: then.toISOString(),
+    };
+  }
+
+  private toQueryRangeCategory() {
+    const start = this.searchCriteria.value.range.start;
+    const end = this.searchCriteria.value.range.end;
+    if (!start || !end) {
+      return null;
+    }
+
+    return {
+      start: start.toISOString(),
+      end: this.toMidnight(end).toISOString(),
+    };
+  }
+
+  toQuery(): IbDateQuery {
+    if (this.getSelected()?.invalid) {
+      return;
+    }
+
+    if (this.isSelected(IbDateFilterCategory.WITHIN)) {
+      return this.toQueryWithinCategory();
+    }
+
+    if (this.isSelected(IbDateFilterCategory.MORE_THAN)) {
+      return this.toQueryMoreThanCategory();
+    }
+
+    if (this.isSelected(IbDateFilterCategory.RANGE)) {
+      return this.toQueryRangeCategory();
+    }
+
+    return;
+  }
 }
