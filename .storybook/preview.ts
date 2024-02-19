@@ -3,6 +3,8 @@ import { importProvidersFrom } from "@angular/core";
 import { setCompodocJson } from "@storybook/addon-docs/angular";
 import { applicationConfig, type Preview } from "@storybook/angular";
 import docJson from "../documentation.json";
+import {version} from '../package.json'
+const [major, minor, patch] = version.split('.')
 setCompodocJson(docJson);
 
 const preview: Preview = {
@@ -23,6 +25,16 @@ const preview: Preview = {
     options: {
       storySort: {
         order: ['Components', 'Features']
+      }
+    },
+    version: {
+      major,
+      minor,
+      patch,
+      style: {
+        color: 'navy',
+        'font-weight': '900',
+        'font-size': '24px'
       }
     }
   },
