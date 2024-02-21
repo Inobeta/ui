@@ -19,7 +19,7 @@ to up your application accordingly
   - `.ib-table-group-detail-row` -> `.ib-table__row-group`
   - `.ib-table-element-row` -> `.ib-table__row`
   - `.ib-table-element-detail` -> `.ib-table__cell-detail`
-  - `.ib-filter__hide` -> `.ib-filter__hidden`
+  - `.ib-filter__hide` -> `.ib-filter--hidden`
 
 ## [17.0.1] (2024-01-10)
 

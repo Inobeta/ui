@@ -64,7 +64,7 @@ import { IbKaiTableState } from "../../inobeta-ui/ui/kai-table/table.types";
         flex-direction: column;
         padding: 30px;
         gap: 3em;
-      }      
+      }
     `,
   ],
   providers: [UserService],
@@ -85,12 +85,10 @@ export class IbKaiTableFullExamplePage {
 
   getUserOrders() {
     this.state = "loading";
-    this.userService
-      .getUserOrders()
-      .subscribe((orders) => {
-        this.data = orders
-        this.state = "idle";
-      });
+    this.userService.getUserOrders().subscribe((orders) => {
+      this.data = orders;
+      this.state = "idle";
+    });
   }
 
   selectionChange(data) {
