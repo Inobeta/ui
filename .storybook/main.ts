@@ -5,7 +5,9 @@ const config: StorybookConfig = {
     "@storybook/addon-links",
     "@storybook/addon-essentials",
     "@storybook/addon-interactions",
+    './version-selector'
   ],
+
   framework: {
     name: "@storybook/angular",
     options: {},
