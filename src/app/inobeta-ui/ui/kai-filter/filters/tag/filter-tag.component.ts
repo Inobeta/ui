@@ -1,6 +1,5 @@
-import { Component, Input, ViewChild, ViewEncapsulation } from "@angular/core";
+import { Component, Input, ViewEncapsulation } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { MatSelectionList } from "@angular/material/list";
 import { IbFilterDef, IbTagQuery } from "../../filter.types";
 import { eq, none, or } from "../../filters";
 import { IbFilterBase } from "../base/filter-base";
