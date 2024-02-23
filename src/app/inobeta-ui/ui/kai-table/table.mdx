@@ -521,29 +521,39 @@ A `*ibKaiRowGroup` directive is available to display contextual content for each
 
 #### CSS Variables
 
-```css
-.ib-table__container {
-  /** Maximum height of the table content */
-  --ib-table-content-max-height: calc(56px + 520px);
+
+```scss
+:host {
+  /** Minimum number of rows to be shown. Defaults to 10 */
+  --ib-table-minimum-rows: 10;
+
+  /** Header text color. Defaults to the darker constrast available for the primary palette */
+  --ib-table-header-text-color: mat.get-theme-color($theme, primary, darker-contrast);
+  /** Header text color. Defaults to the brand primary color */
+  --ib-table-header-background-color: mat.get-theme-color($theme, primary, 500);
+
+  /** Text color for even rows. Defaults to the relative contrast from the background color */
+  --ib-table-even-row-text-color: mat.get-theme-color($theme, accent, darker-contrast);
+  /** Background color for even rows. Defaults to the lightest color from the accent palette */
+  --ib-table-even-row-background-color: mat.get-theme-color($theme, accent, 50);
+  /** Text color for odd rows. Default is unset */
+  --ib-table-odd-row-text-color: black;
+  /** Background color for odd rows. Default is unset */
+  --ib-table-odd-row-background-color: transparent;
+
   /** Outline color for both container and table content */
   --ib-table-outline-color: var(--mat-table-row-item-outline-color);
   /** Whether to show a vertical outline for each column (Es. `1px`) */
   --ib-table-column-outline-width: 0;
+
+  /**
+    Maximum height of the table content.
+    By default it takes row density, header, footer,
+    and `ib-table-minimum-rows` into consideration.
+  */
+  --ib-table-content-max-height: 500px;
 }
 ```
-
-#### Selectors
-
-`.ib-table__container`
-
-Wrapper element that contains the table itself alongside views, actions, filters, and paginator.
-Use this class in your queries in order to override variables and sections of this component.
-
-- `.ib-table__toolbar`
-- `.ib-table__content`
-- `.ib-table__row`
-- `.ib-table__row .mat-mdc-cell`
-- `.ib-table__cell-detail`
 
 #### Column style
 
@@ -553,7 +563,7 @@ To set an arbitrary style to a column, a css selector is available with the form
 .mat-column-[columnName]
 ```
 
-Meaning that a column with `[name]="email"` can be accessed with the following selector
+Meaning that a column with `name="email"` can be accessed with the following selector
 
 ```css
 .ib-table__container {
@@ -563,17 +573,18 @@ Meaning that a column with `[name]="email"` can be accessed with the following s
 }
 ```
 
-#### Row style
+#### Table density
 
-```css
-.ib-table__container {
-  .ib-table__row:nth-child(odd) {
-    background-color: lightgreen;
-  }
+To modify density of the table (that means, the height elements like header and rows) you can use
+the `table-density` utility function available from `@angular/material`
 
-  .ib-table__row:nth-child(even) {
-    background-color: purple;
-  }
+Include the rule within your component hosting `ib-kai-table`
+
+```scss
+@use "@angular/material" as mat;
+
+:host {
+  @include mat.table-density(-4);
 }
 ```
 
