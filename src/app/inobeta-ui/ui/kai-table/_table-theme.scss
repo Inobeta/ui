@@ -2,7 +2,7 @@
 @use "@angular/material" as mat;
 
 @mixin color($theme) {
-  .ib-table__header-cell,
+  .mat-mdc-header-cell,
   .mat-sort-header-arrow {
     color: var(
       --ib-table-header-text-color,
@@ -14,20 +14,27 @@
     ) !important;
   }
 
-  .mat-mdc-row:nth-child(even) {
-    color: var(
-      --ib-table-even-row-text-color,
-      mat.get-theme-color($theme, accent, darker-contrast)
-    ) !important;
+  .mat-mdc-row:hover {
     background: var(
-      --ib-table-even-row-background-color,
-      mat.get-theme-color($theme, accent, 50)
+      --ib-table-row-background-color-on-hover,
+      rgba(mat.get-theme-color($theme, accent, darker-contrast), 0.03)
     ) !important;
   }
 
-  .mat-mdc-row:nth-child(odd) {
-    color: var(--ib-table-odd-row-text-color) !important;
-    background: var(--ib-table-odd-row-background-color) !important;
+  .ib-table-striped-rows .mat-mdc-row:nth-child(even) {
+    color: var(
+      --ib-table-even-row-text-color,
+      mat.get-theme-color($theme, accent, darker-contrast)
+    );
+    background: var(
+      --ib-table-even-row-background-color,
+      mat.get-theme-color($theme, primary, 50)
+    );
+  }
+
+  .ib-table-striped-rows .mat-mdc-row:nth-child(odd) {
+    color: var(--ib-table-odd-row-text-color);
+    background: var(--ib-table-odd-row-background-color);
   }
 }
 

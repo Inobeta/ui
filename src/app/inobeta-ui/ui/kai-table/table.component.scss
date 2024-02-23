@@ -92,10 +92,6 @@
     }
 
     .ib-table__row {
-      &:not(&--expanded):hover {
-        filter: brightness(0.95);
-      }
-
       &--expanded {
         .mat-mdc-cell {
           border-bottom-width: 0;

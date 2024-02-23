@@ -11,11 +11,13 @@ import {
   ContentChild,
   ContentChildren,
   EventEmitter,
+  HostBinding,
   Input,
   OnDestroy,
   QueryList,
   ViewChild,
   ViewEncapsulation,
+  booleanAttribute,
 } from "@angular/core";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
@@ -145,6 +147,10 @@ export class IbTable implements OnDestroy {
     return this._displayedColumns;
   }
   private _displayedColumns: string[] = [];
+
+  @HostBinding("class.ib-table-striped-rows")
+  @Input({ transform: booleanAttribute })
+  stripedRows = false;
 
   aggregateColumns = new Set<string>();
   aggregate = new EventEmitter();

@@ -519,6 +519,21 @@ A `*ibKaiRowGroup` directive is available to display contextual content for each
 
 ## Customization
 
+#### Striped rows
+
+You can use the `stripedRows` input to apply alternating styles to the rows.
+
+```html
+<ib-kai-table [data]="data" [displayedColumns]="displayedColumns" stripedRows>
+```
+
+Then you may change the text or background color with the variables: 
+
+* `--ib-table-even-row-text-color`
+* `--ib-table-even-row-background-color`
+* `--ib-table-odd-row-text-color`
+* `--ib-table-odd-row-background-color`
+
 #### CSS Variables
 
 ```css
@@ -527,26 +542,21 @@ A `*ibKaiRowGroup` directive is available to display contextual content for each
   --ib-table-minimum-rows: 10;
 
   /** Header text color. Defaults to the darker constrast available for the primary palette */
-  --ib-table-header-text-color: mat.get-theme-color(
-    $theme,
-    primary,
-    darker-contrast
-  );
+  --ib-table-header-text-color: black;
   /** Header text color. Defaults to the brand primary color */
-  --ib-table-header-background-color: mat.get-theme-color($theme, primary, 500);
+  --ib-table-header-background-color: purple;
 
   /** Text color for even rows. Defaults to the relative contrast from the background color */
-  --ib-table-even-row-text-color: mat.get-theme-color(
-    $theme,
-    accent,
-    darker-contrast
-  );
-  /** Background color for even rows. Defaults to the lightest color from the accent palette */
-  --ib-table-even-row-background-color: mat.get-theme-color($theme, accent, 50);
+  --ib-table-even-row-text-color: black;
+  /** Background color for even rows. Defaults to the lightest color from the primary palette */
+  --ib-table-even-row-background-color: lightpurple;
   /** Text color for odd rows. Default is unset */
   --ib-table-odd-row-text-color: black;
   /** Background color for odd rows. Default is unset */
   --ib-table-odd-row-background-color: transparent;
+
+  /** Background color when hovering rows */
+  --ib-table-row-background-color-on-hover: #111;
 
   /** Outline color for both container and table content */
   --ib-table-outline-color: var(--mat-table-row-item-outline-color);
