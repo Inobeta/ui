@@ -521,19 +521,26 @@ A `*ibKaiRowGroup` directive is available to display contextual content for each
 
 #### CSS Variables
 
-
-```scss
+```css
 :host {
   /** Minimum number of rows to be shown. Defaults to 10 */
   --ib-table-minimum-rows: 10;
 
   /** Header text color. Defaults to the darker constrast available for the primary palette */
-  --ib-table-header-text-color: mat.get-theme-color($theme, primary, darker-contrast);
+  --ib-table-header-text-color: mat.get-theme-color(
+    $theme,
+    primary,
+    darker-contrast
+  );
   /** Header text color. Defaults to the brand primary color */
   --ib-table-header-background-color: mat.get-theme-color($theme, primary, 500);
 
   /** Text color for even rows. Defaults to the relative contrast from the background color */
-  --ib-table-even-row-text-color: mat.get-theme-color($theme, accent, darker-contrast);
+  --ib-table-even-row-text-color: mat.get-theme-color(
+    $theme,
+    accent,
+    darker-contrast
+  );
   /** Background color for even rows. Defaults to the lightest color from the accent palette */
   --ib-table-even-row-background-color: mat.get-theme-color($theme, accent, 50);
   /** Text color for odd rows. Default is unset */
@@ -763,7 +770,7 @@ It also includes two generated parameters, a regular expression under `regex`, a
 The `regex` parameter can be useful in API that uses a NoSQL database under the hood. While the `like` paramenter
 can be used with APIs interfacing with SQL databases instead.
 
-````typescript
+```typescript
 /**
  * Text query object.
  *
@@ -808,7 +815,7 @@ export type IbTextQuery = {
   /** Query provided by the user */
   text: string;
 };
-````
+```
 
 **Date query reference**
 
@@ -856,4 +863,104 @@ export type IbTagQuery<T = string> = {
   /** String of options separated by a comma */
   joined: string;
 };
+```
+
+## Testing with cypress
+
+These are the unique selectors available to interact with the table using Cypress.
+
+#### Filters
+
+Generated selectors for the filters. Substitute `<filterName>` with the `name` input of your filter. For example:
+
+```html
+<ib-text-filter name="description"></ib-text-filter>
+```
+
+Will produce
+
+`ib-text-filter-description`
+
+<Markdown>{`
+| Selector | Description
+| - | - |
+| \`[data-cy="ib-text-filter-<filterName>"]\`                 | Text filter button |
+| \`[data-cy="ib-text-filter-<filterName>-condition"]\`       | \`<mat-select>\` Default is \`Contiene\`. |
+| \`[data-cy="ib-text-filter-<filterName>-value"]\`           | Text query input |
+| \`[data-cy="ib-tag-filter-<filterName>"]\`                  | Tag filter button |
+| \`[data-cy="ib-tag-filter-<filterName>-options"]\`          | List of options |
+| \`[data-cy="ib-number-filter-<filterName>"]\`               | Number filter button |
+| \`[data-cy="ib-number-filter-<filterName>-min"]\`           | Minimum value of the range |
+| \`[data-cy="ib-number-filter-<filterName>-max"]\`           | Maximum value of the range |
+| \`[data-cy="ib-date-filter-<filterName>"]\`                 | Date filter button |
+| \`[data-cy="ib-date-filter-<filterName>-within"] [type="radio"]\`          | Within period option (\`A partire da\`). |
+| \`[data-cy="ib-date-filter-<filterName>-within-value"]\`    | Numeric input value for within category |
+| \`[data-cy="ib-date-filter-<filterName>-within-period"]\`   | \`<mat-select>\` Default is \`minuti\` |
+| \`[data-cy="ib-date-filter-<filterName>-moreThan"] [type="radio"]\`        | More than period option (\`Da oltre\`). |
+| \`[data-cy="ib-date-filter-<filterName>-moreThan-value"]\`  | Numeric input value for more than category |
+| \`[data-cy="ib-date-filter-<filterName>-moreThan-period"]\` | \`<mat-select>\` Default is \`minuti fa\` |
+| \`[data-cy="ib-date-filter-<filterName>-range"] [type="radio"]\`           | Range date option (\`Tra\`). |
+| \`[data-cy="ib-date-filter-<filterName>-range-start"]\`     | Start date input. Edit it with \`.type("dd/mm/yyyy")\` |
+| \`[data-cy="ib-date-filter-<filterName>-range-end"]\`       | End date input. Edit it with \`.type("dd/mm/yyyy")\` |
+| \`[data-cy="ib-filter-update"]\`                            | Update button. Call \`.click()\` to apply the filter |
+| \`[data-cy="ib-filter-clear"]\`                             | Clear button. Call \`.click()\`  reset the filter selected |
+`}</Markdown>
+
+#### Usage with `ib-text-filter`
+
+```typescript
+cy.get('[data-cy="ib-text-filter-name"]').click();
+cy.get('[data-cy="ib-text-filter-name-condition"]')
+  .click()
+  .get("mat-option")
+  .contains("Inizia con")
+  .click();
+cy.get('[data-cy="ib-text-filter-name-value"]').type("Arthur");
+cy.get('[data-cy="ib-filter-update"]').click();
+```
+
+#### Usage with `ib-number-filter`
+
+```typescript
+cy.get('[data-cy="ib-number-filter-price"]').click();
+cy.get('[data-cy="ib-number-filter-price-min"]').clear().type("2");
+cy.get('[data-cy="ib-number-filter-price-max"]').clear().type("20");
+cy.get('[data-cy="ib-filter-update"]').click();
+```
+
+#### Usage with `ib-date-filter`
+
+**Within** or **more than** category:
+
+```typescript
+cy.get('[data-cy="ib-date-filter-created_at"]').click();
+cy.get('[data-cy="ib-date-filter-created_at-within"] [type="radio"]').check();
+cy.get('[data-cy="ib-date-filter-created_at-within-value"]').type("2");
+cy.get('[data-cy="ib-date-filter-created_at-within-period"]')
+  .click()
+  .get("mat-option")
+  .contains("giorni")
+  .click();
+cy.get('[data-cy="ib-filter-update"]').click();
+```
+
+**Range** category:
+
+```typescript
+cy.get('[data-cy="ib-date-filter-created_at"]').click();
+cy.get('[data-cy="ib-date-filter-created_at-range"] [type="radio"]').check();
+cy.get('[data-cy="ib-date-filter-created_at-range-start"]').type("20/02/2024");
+cy.get('[data-cy="ib-date-filter-created_at-range-end"]').type("28/02/2024");
+cy.get('[data-cy="ib-filter-update"]').click();
+```
+
+#### Usage with `ib-tag-filter`
+
+```typescript
+cy.get('[data-cy="ib-tag-filter-category"]').click();
+cy.get('[data-cy="ib-tag-filter-category-options"]')
+  .contains("vegetables")
+  .click();
+cy.get('[data-cy="ib-tag-filter-category-options"]').contains("dairy").click();
+cy.get('[data-cy="ib-filter-update"]').click();
 ```
