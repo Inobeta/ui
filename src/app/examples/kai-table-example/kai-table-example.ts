@@ -5,15 +5,7 @@ import { createNewUser } from "./users";
 @Component({
   selector: "ib-kai-table-example",
   templateUrl: "kai-table-example.html",
-  styles: [
-    `
-      :host {
-        display: flex;
-        flex-direction: column;
-        padding: 30px;
-      }
-    `,
-  ],
+  styleUrl: "./kai-table-example.scss",
 })
 export class IbKaiTableExamplePage {
   data: any[];
@@ -30,9 +22,5 @@ export class IbKaiTableExamplePage {
 
   ngOnInit() {
     this.data = Array.from({ length: 1000 }, (_, k) => createNewUser(k + 1));
-  }
-
-  testClick(ev) {
-    console.log("ev", ev);
   }
 }

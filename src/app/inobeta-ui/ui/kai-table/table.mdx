@@ -519,31 +519,58 @@ A `*ibKaiRowGroup` directive is available to display contextual content for each
 
 ## Customization
 
+#### Striped rows
+
+You can use the `stripedRows` input to apply alternating styles to the rows.
+
+```html
+<ib-kai-table [data]="data" [displayedColumns]="displayedColumns" stripedRows>
+```
+
+Then you may change the text or background color with the variables: 
+
+* `--ib-table-even-row-text-color`
+* `--ib-table-even-row-background-color`
+* `--ib-table-odd-row-text-color`
+* `--ib-table-odd-row-background-color`
+
 #### CSS Variables
 
 ```css
-.ib-table__container {
-  /** Maximum height of the table content */
-  --ib-table-content-max-height: calc(56px + 520px);
+:host {
+  /** Minimum number of rows to be shown. Defaults to 10 */
+  --ib-table-minimum-rows: 10;
+
+  /** Header text color. Defaults to the darker constrast available for the primary palette */
+  --ib-table-header-text-color: black;
+  /** Header text color. Defaults to the brand primary color */
+  --ib-table-header-background-color: purple;
+
+  /** Text color for even rows. Defaults to the relative contrast from the background color */
+  --ib-table-even-row-text-color: black;
+  /** Background color for even rows. Defaults to the lightest color from the primary palette */
+  --ib-table-even-row-background-color: lightpurple;
+  /** Text color for odd rows. Default is unset */
+  --ib-table-odd-row-text-color: black;
+  /** Background color for odd rows. Default is unset */
+  --ib-table-odd-row-background-color: transparent;
+
+  /** Background color when hovering rows */
+  --ib-table-row-background-color-on-hover: #111;
+
   /** Outline color for both container and table content */
   --ib-table-outline-color: var(--mat-table-row-item-outline-color);
   /** Whether to show a vertical outline for each column (Es. `1px`) */
   --ib-table-column-outline-width: 0;
+
+  /**
+    Maximum height of the table content.
+    By default it takes row density, header, footer,
+    and `ib-table-minimum-rows` into consideration.
+  */
+  --ib-table-content-max-height: 500px;
 }
 ```
-
-#### Selectors
-
-`.ib-table__container`
-
-Wrapper element that contains the table itself alongside views, actions, filters, and paginator.
-Use this class in your queries in order to override variables and sections of this component.
-
-- `.ib-table__toolbar`
-- `.ib-table__content`
-- `.ib-table__row`
-- `.ib-table__row .mat-mdc-cell`
-- `.ib-table__cell-detail`
 
 #### Column style
 
@@ -553,7 +580,7 @@ To set an arbitrary style to a column, a css selector is available with the form
 .mat-column-[columnName]
 ```
 
-Meaning that a column with `[name]="email"` can be accessed with the following selector
+Meaning that a column with `name="email"` can be accessed with the following selector
 
 ```css
 .ib-table__container {
@@ -563,17 +590,18 @@ Meaning that a column with `[name]="email"` can be accessed with the following s
 }
 ```
 
-#### Row style
+#### Table density
 
-```css
-.ib-table__container {
-  .ib-table__row:nth-child(odd) {
-    background-color: lightgreen;
-  }
+To modify density of the table (that means, the height elements like header and rows) you can use
+the `table-density` utility function available from `@angular/material`
 
-  .ib-table__row:nth-child(even) {
-    background-color: purple;
-  }
+Include the rule within your component hosting `ib-kai-table`
+
+```scss
+@use "@angular/material" as mat;
+
+:host {
+  @include mat.table-density(-4);
 }
 ```
 
@@ -752,7 +780,7 @@ It also includes two generated parameters, a regular expression under `regex`, a
 The `regex` parameter can be useful in API that uses a NoSQL database under the hood. While the `like` paramenter
 can be used with APIs interfacing with SQL databases instead.
 
-````typescript
+```typescript
 /**
  * Text query object.
  *
@@ -797,7 +825,7 @@ export type IbTextQuery = {
   /** Query provided by the user */
   text: string;
 };
-````
+```
 
 **Date query reference**
 
@@ -845,4 +873,104 @@ export type IbTagQuery<T = string> = {
   /** String of options separated by a comma */
   joined: string;
 };
+```
+
+## Testing with cypress
+
+These are the unique selectors available to interact with the table using Cypress.
+
+#### Filters
+
+Generated selectors for the filters. Substitute `<filterName>` with the `name` input of your filter. For example:
+
+```html
+<ib-text-filter name="description"></ib-text-filter>
+```
+
+Will produce
+
+`ib-text-filter-description`
+
+<Markdown>{`
+| Selector | Description
+| - | - |
+| \`[data-cy="ib-text-filter-<filterName>"]\`                 | Text filter button |
+| \`[data-cy="ib-text-filter-<filterName>-condition"]\`       | \`<mat-select>\` Default is \`Contiene\`. |
+| \`[data-cy="ib-text-filter-<filterName>-value"]\`           | Text query input |
+| \`[data-cy="ib-tag-filter-<filterName>"]\`                  | Tag filter button |
+| \`[data-cy="ib-tag-filter-<filterName>-options"]\`          | List of options |
+| \`[data-cy="ib-number-filter-<filterName>"]\`               | Number filter button |
+| \`[data-cy="ib-number-filter-<filterName>-min"]\`           | Minimum value of the range |
+| \`[data-cy="ib-number-filter-<filterName>-max"]\`           | Maximum value of the range |
+| \`[data-cy="ib-date-filter-<filterName>"]\`                 | Date filter button |
+| \`[data-cy="ib-date-filter-<filterName>-within"] [type="radio"]\`          | Within period option (\`A partire da\`). |
+| \`[data-cy="ib-date-filter-<filterName>-within-value"]\`    | Numeric input value for within category |
+| \`[data-cy="ib-date-filter-<filterName>-within-period"]\`   | \`<mat-select>\` Default is \`minuti\` |
+| \`[data-cy="ib-date-filter-<filterName>-moreThan"] [type="radio"]\`        | More than period option (\`Da oltre\`). |
+| \`[data-cy="ib-date-filter-<filterName>-moreThan-value"]\`  | Numeric input value for more than category |
+| \`[data-cy="ib-date-filter-<filterName>-moreThan-period"]\` | \`<mat-select>\` Default is \`minuti fa\` |
+| \`[data-cy="ib-date-filter-<filterName>-range"] [type="radio"]\`           | Range date option (\`Tra\`). |
+| \`[data-cy="ib-date-filter-<filterName>-range-start"]\`     | Start date input. Edit it with \`.type("dd/mm/yyyy")\` |
+| \`[data-cy="ib-date-filter-<filterName>-range-end"]\`       | End date input. Edit it with \`.type("dd/mm/yyyy")\` |
+| \`[data-cy="ib-filter-update"]\`                            | Update button. Call \`.click()\` to apply the filter |
+| \`[data-cy="ib-filter-clear"]\`                             | Clear button. Call \`.click()\`  reset the filter selected |
+`}</Markdown>
+
+#### Usage with `ib-text-filter`
+
+```typescript
+cy.get('[data-cy="ib-text-filter-name"]').click();
+cy.get('[data-cy="ib-text-filter-name-condition"]')
+  .click()
+  .get("mat-option")
+  .contains("Inizia con")
+  .click();
+cy.get('[data-cy="ib-text-filter-name-value"]').type("Arthur");
+cy.get('[data-cy="ib-filter-update"]').click();
+```
+
+#### Usage with `ib-number-filter`
+
+```typescript
+cy.get('[data-cy="ib-number-filter-price"]').click();
+cy.get('[data-cy="ib-number-filter-price-min"]').clear().type("2");
+cy.get('[data-cy="ib-number-filter-price-max"]').clear().type("20");
+cy.get('[data-cy="ib-filter-update"]').click();
+```
+
+#### Usage with `ib-date-filter`
+
+**Within** or **more than** category:
+
+```typescript
+cy.get('[data-cy="ib-date-filter-created_at"]').click();
+cy.get('[data-cy="ib-date-filter-created_at-within"] [type="radio"]').check();
+cy.get('[data-cy="ib-date-filter-created_at-within-value"]').type("2");
+cy.get('[data-cy="ib-date-filter-created_at-within-period"]')
+  .click()
+  .get("mat-option")
+  .contains("giorni")
+  .click();
+cy.get('[data-cy="ib-filter-update"]').click();
+```
+
+**Range** category:
+
+```typescript
+cy.get('[data-cy="ib-date-filter-created_at"]').click();
+cy.get('[data-cy="ib-date-filter-created_at-range"] [type="radio"]').check();
+cy.get('[data-cy="ib-date-filter-created_at-range-start"]').type("20/02/2024");
+cy.get('[data-cy="ib-date-filter-created_at-range-end"]').type("28/02/2024");
+cy.get('[data-cy="ib-filter-update"]').click();
+```
+
+#### Usage with `ib-tag-filter`
+
+```typescript
+cy.get('[data-cy="ib-tag-filter-category"]').click();
+cy.get('[data-cy="ib-tag-filter-category-options"]')
+  .contains("vegetables")
+  .click();
+cy.get('[data-cy="ib-tag-filter-category-options"]').contains("dairy").click();
+cy.get('[data-cy="ib-filter-update"]').click();
 ```
