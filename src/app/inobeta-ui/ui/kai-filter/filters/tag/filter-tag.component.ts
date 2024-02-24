@@ -1,6 +1,5 @@
-import { Component, Input, ViewChild, ViewEncapsulation } from "@angular/core";
+import { Component, Input, ViewEncapsulation } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { MatSelectionList } from "@angular/material/list";
 import { IbFilterDef, IbTagQuery } from "../../filter.types";
 import { eq, none, or } from "../../filters";
 import { IbFilterBase } from "../base/filter-base";
@@ -13,8 +12,6 @@ import { IbFilterBase } from "../base/filter-base";
   encapsulation: ViewEncapsulation.None,
 })
 export class IbTagFilter extends IbFilterBase {
-  @ViewChild(MatSelectionList) matSelectionList: MatSelectionList;
-
   searchCriteria = new FormControl([], { nonNullable: true });
 
   @Input() multiple = true;
@@ -54,10 +51,6 @@ export class IbTagFilter extends IbFilterBase {
     return this.rawValue?.length && this.rawValue[0];
   }
 
-  get selected() {
-    return this.matSelectionList?.selectedOptions?.selected;
-  }
-
   initializeFromColumn(data: any[]) {
     if (!this.isSetByUser) {
       this.setOptions(data.map((x) => x[this.name]));
@@ -84,10 +77,14 @@ export class IbTagFilter extends IbFilterBase {
   }
 
   build = (): IbFilterDef =>
-    this.selected?.length ? or(this.selected.map((s) => eq(s.value))) : none();
+    this.searchCriteria?.value.length
+      ? or(this.searchCriteria.value.map((s) => eq(s)))
+      : none();
 
   toQuery(): IbTagQuery {
-    const items = this.selected.map((s) => s.value);
+    const items = this.searchCriteria?.value
+      ? this.searchCriteria?.value.map((s) => s)
+      : [];
     return {
       items,
       joined: items.join(","),

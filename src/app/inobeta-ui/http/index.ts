@@ -33,8 +33,6 @@ export * from './auth/session.fixture.spec';
 export * from './http/response-handler.service.stub.spec';
 export * from './http-test.module';
 
-export * from './pages/login.component';
-
 export * from './http/loading-skeleton.directive.stub.spec'
 
 // FIXME error NG3001

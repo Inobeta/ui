@@ -8,7 +8,6 @@ import { IbAuthService } from './auth/auth.service';
 import { IbSessionService } from './auth/session.service';
 import { IbAuthGuard, IbLoginGuard, IbRoleGuard } from './auth/guard.service';
 import { IbSpinnerLoadingComponent } from './http/spinner-loading.component';
-import { IbLoginComponent } from './pages/login.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { IbToastModule } from '../ui/toast/toast.module';
 import { IbAuthInterceptor } from './http/auth.interceptor';
@@ -25,7 +24,6 @@ import { IbRoleCheckDirective } from './http/role-check.directive';
 
 const components = [
   IbSpinnerLoadingComponent,
-  IbLoginComponent,
   IbLoadingDirective,
   IbLoadingSkeletonContainerComponent,
   IbLoadingSkeletonRectComponent
