@@ -9,6 +9,7 @@
 |DEVK-288|feat|IbTable|Added `sortingDataAccessor` and `filterDataAccessor` to `IbColumn`|
 |DEVK-189|feat|IbTable|Add `IbTableRemoteDataSource` and `IbTableDataProvider` for server-side interactions|
 |DEVK-189|feat|IbFilter|Add `ibQueryUpdated`; provides a serialized filter for HTTP queries|
+|DEVK-309|feat|IbTable|Add `stripedRows` to `ib-kai-table`|
 
 ### [17.1.0] - breaks
 
@@ -19,7 +20,7 @@ to up your application accordingly
   - `.ib-table-group-detail-row` -> `.ib-table__row-group`
   - `.ib-table-element-row` -> `.ib-table__row`
   - `.ib-table-element-detail` -> `.ib-table__cell-detail`
-  - `.ib-filter__hide` -> `.ib-filter__hidden`
+  - `.ib-filter__hide` -> `.ib-filter--hidden`
 
 ## [17.0.1] (2024-01-10)
 

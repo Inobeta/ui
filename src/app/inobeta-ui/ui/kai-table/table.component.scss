@@ -1,21 +1,57 @@
 .ib-table__container {
-  --ib-table-content-max-height: calc(56px + 520px);
+  --ib-table-minimum-rows: 10;
+  --ib-table-has-footer-row: 0;
+  --ib-table-filter-max-height: 112px;
+  --ib-table-content-max-height: calc(
+    var(--mat-table-header-container-height) +
+      var(--mat-table-row-item-container-height) *
+      (var(--ib-table-minimum-rows) + var(--ib-table-has-footer-row))
+  );
   --ib-table-outline-color: var(--mat-table-row-item-outline-color);
   --ib-table-column-outline-width: 0;
+
+  &:has(.ib-table__rollup-row) {
+    --ib-table-has-footer-row: 1;
+  }
+
+  display: block;
   border: 1px solid var(--ib-table-outline-color);
-  border-radius: 8px;
   overflow: hidden;
+  border-radius: 8px;
 
   .ib-table__toolbar {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    max-height: 56px;
+    max-height: var(--mat-table-header-container-height);
 
     &:has(ib-table-view-group),
     &:has(> section:not(:empty)) {
       border-bottom: 1px solid var(--ib-table-outline-color);
     }
+
+    &__actions {
+      ib-table-action-group {
+        display: inline-block;
+      }
+    }
+  }
+
+  .ib-filter {
+    &--hidden {
+      max-height: 0;
+      opacity: 0;
+    }
+  }
+
+  ib-filter:not(:has(.ib-filter--hidden)) ~ .ib-table__content {
+    max-height: calc(
+      var(--ib-table-content-max-height) - var(--ib-table-filter-max-height)
+    );
+  }
+
+  ib-filter:has(.ib-filter--hidden) ~ .ib-table__content {
+    max-height: calc(var(--ib-table-content-max-height));
   }
 
   .ib-table__content {
@@ -32,7 +68,7 @@
     &__progress-bar {
       position: sticky;
       height: 0;
-      top: 56px;
+      top: var(--mat-table-header-container-height);
     }
 
     .mat-mdc-header-cell {
@@ -56,10 +92,6 @@
     }
 
     .ib-table__row {
-      &:not(&--expanded):hover {
-        filter: brightness(0.95);
-      }
-
       &--expanded {
         .mat-mdc-cell {
           border-bottom-width: 0;
@@ -74,6 +106,11 @@
 
     .ib-table__row-group {
       height: 0;
+      &--hidden {
+        .mat-mdc-cell {
+          border-bottom-width: 0;
+        }
+      }
     }
 
     .mat-mdc-no-data-row > td > div {

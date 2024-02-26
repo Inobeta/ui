@@ -1,4 +1,4 @@
-<ib-filter-button>
+<ib-filter-button [attr.data-cy]="'ib-tag-filter-' + name">
   <span ib-filter-name *ngIf="!isDirty"><ng-content></ng-content></span>
   <span ib-filter-value>
     {{ displayLabel | translate : displayLabelParams }}
@@ -13,6 +13,7 @@
         [multiple]="multiple"
         [formControlName]="name"
         disableRipple="true"
+        [attr.data-cy]="'ib-tag-filter-' + name + '-options'"
       >
         @for (option of options | filterBy: query; track option) {
           <mat-list-option
@@ -29,10 +30,10 @@
   </section>
 
   <ib-filter-actions>
-    <button mat-button (click)="clear()" [disabled]="!isDirty">
+    <button mat-button (click)="clear()" [disabled]="!isDirty" [attr.data-cy]="'ib-filter-clear'">
       {{ "shared.ibFilter.clear" | translate }}
     </button>
-    <button mat-button color="primary" (click)="applyFilter()">
+    <button mat-button color="primary" (click)="applyFilter()" [attr.data-cy]="'ib-filter-update'">
       {{ "shared.ibFilter.update" | translate }}
     </button>
   </ib-filter-actions>

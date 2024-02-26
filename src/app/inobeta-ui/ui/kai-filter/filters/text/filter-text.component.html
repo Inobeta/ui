@@ -1,4 +1,4 @@
-<ib-filter-button>
+<ib-filter-button [attr.data-cy]="'ib-text-filter-' + name">
   <span ib-filter-name><ng-content></ng-content></span>
   <span ib-filter-value *ngIf="isDirty">
     {{ displayCondition | translate | lowercase }} "{{ displayValue }}"
@@ -8,35 +8,28 @@
     <section [formGroupName]="name">
       <mat-form-field style="width: 100%">
         <mat-label>{{ "shared.ibFilter.condition" | translate }}</mat-label>
-        <mat-select formControlName="operator">
-          <mat-option
-            *ngFor="let operator of operators"
-            [value]="operator.value"
-          >
+        <mat-select formControlName="operator" [attr.data-cy]="'ib-text-filter-' + name + '-condition'">
+          <mat-option *ngFor="let operator of operators" [value]="operator.value">
             {{ operator.displayValue | translate }}
           </mat-option>
         </mat-select>
-        <mat-error
-          >{{ "shared.ibFilter.condition" | translate }}
-          {{ "shared.ibKaiFilter.required" | translate }}</mat-error
-        >
+        <mat-error>{{ "shared.ibFilter.condition" | translate }}
+          {{ "shared.ibKaiFilter.required" | translate }}</mat-error>
       </mat-form-field>
       <mat-form-field style="width: 100%">
         <mat-label>{{ "shared.ibFilter.value" | translate }}</mat-label>
-        <input matInput formControlName="value" />
-        <mat-error
-          >{{ "shared.ibFilter.value" | translate }}
-          {{ "shared.ibKaiFilter.required" | translate }}</mat-error
-        >
+        <input matInput formControlName="value" [attr.data-cy]="'ib-text-filter-' + name + '-value'" />
+        <mat-error>{{ "shared.ibFilter.value" | translate }}
+          {{ "shared.ibKaiFilter.required" | translate }}</mat-error>
       </mat-form-field>
     </section>
   </section>
 
   <ib-filter-actions>
-    <button mat-button (click)="clear()" [disabled]="!isDirty">
+    <button mat-button (click)="clear()" [disabled]="!isDirty" [attr.data-cy]="'ib-filter-clear'">
       {{ "shared.ibFilter.clear" | translate }}
     </button>
-    <button mat-button color="primary" (click)="applyFilter()">
+    <button mat-button color="primary" (click)="applyFilter()" [attr.data-cy]="'ib-filter-update'">
       {{ "shared.ibFilter.update" | translate }}
     </button>
   </ib-filter-actions>

@@ -33,9 +33,10 @@ import { IB_FILTER } from "./tokens";
       *ibTableAction
       mat-icon-button
       [matTooltip]="'shared.ibTableView.showFilters' | translate"
+      [color]="!hideFilters ? 'primary' : '' "
       (click)="hideFilters = !hideFilters"
     >
-      <mat-icon>{{ !hideFilters ? "filter_alt" : "filter_alt_off" }}</mat-icon>
+      <mat-icon>{{ "filter_alt" }}</mat-icon>
     </button>
   `,
   styleUrls: ["./filter.component.scss"],

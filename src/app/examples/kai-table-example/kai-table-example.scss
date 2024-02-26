@@ -1,0 +1,8 @@
+@use "@angular/material" as mat;
+
+:host {
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  @include mat.table-density(-4);
+}
