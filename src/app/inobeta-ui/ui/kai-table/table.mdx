@@ -505,6 +505,33 @@ Use `aggregate` to show a roll-up footer row in your table. Each column has a di
 <ib-number-column name="price" aggregate />
 ```
 
+## Action group
+
+To add a set of buttons to a table's toolbar, first import `IbTableActionModule` alongside `IbKaiTableModule`.
+
+```typescript
+@NgModule({
+  imports: [IbKaiTableModule, IbTableActionModule],
+  // ...
+})
+export class TableWithActionsModule {}
+```
+
+Then add the `ib-table-action-group` component within `ib-kai-table`, it is recommended to only use `mat-icon-button`s
+in order to maintain a cohesive design.
+
+```html
+<ib-kai-table [data]="data" [displayedColumns]="displayedColumns">
+  <ib-table-action-group>
+    <button mat-icon-button (click)="refreshData()">
+      <mat-icon>refresh</mat-icon>
+    </button>
+  </ib-table-action-group>
+
+  <!-- ... --->
+</ib-kai-table>
+```
+
 ## Row group
 
 A `*ibKaiRowGroup` directive is available to display contextual content for each row. It provides a given row through the `data` variable. This content is hidden by default and can be shown by clicking on a row.
