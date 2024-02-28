@@ -3,6 +3,7 @@ body {
   height: 100%;
   margin: 0;
   word-wrap: break-word;
+  background-color: var(--mat-sidenav-content-background-color);
 }
 
 html {

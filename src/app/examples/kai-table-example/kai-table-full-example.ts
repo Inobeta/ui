@@ -7,7 +7,6 @@ import { IbKaiTableState } from "../../inobeta-ui/ui/kai-table/table.types";
   selector: "ib-kai-table-full-example",
   template: `
     <ib-kai-table
-      stripedRows
       tableName="fullExample"
       [displayedColumns]="columns"
       [data]="data"
