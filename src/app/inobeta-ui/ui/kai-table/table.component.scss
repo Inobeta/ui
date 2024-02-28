@@ -1,21 +1,30 @@
 .ib-table__container {
-  --ib-table-minimum-rows: 10;
+  --ib-table-minimum-rows-private: var(--ib-table-minimum-rows, 10);
   --ib-table-has-footer-row: 0;
   --ib-table-filter-max-height: 112px;
-  --ib-table-content-max-height: calc(
-    var(--mat-table-header-container-height) +
-      var(--mat-table-row-item-container-height) *
-      (var(--ib-table-minimum-rows) + var(--ib-table-has-footer-row))
+  --ib-table-content-max-height-private: var(
+    --ib-table-content-max-height,
+    calc(
+      var(--mat-table-header-container-height) +
+        var(--mat-table-row-item-container-height) *
+        (var(--ib-table-minimum-rows-private) + var(--ib-table-has-footer-row))
+    )
   );
-  --ib-table-outline-color: var(--mat-table-row-item-outline-color);
-  --ib-table-column-outline-width: 0;
+  --ib-table-outline-color-private: var(
+    --ib-table-outline-color,
+    var(--mat-table-row-item-outline-color)
+  );
+  --ib-table-column-outline-width-private: var(
+    --ib-table-column-outline-width,
+    0
+  );
 
   &:has(.ib-table__rollup-row) {
     --ib-table-has-footer-row: 1;
   }
 
   display: block;
-  border: 1px solid var(--ib-table-outline-color);
+  border: 1px solid var(--ib-table-outline-color-private);
   overflow: hidden;
   border-radius: 8px;
 
@@ -27,7 +36,7 @@
 
     &:has(ib-table-view-group),
     &:has(> section:not(:empty)) {
-      border-bottom: 1px solid var(--ib-table-outline-color);
+      border-bottom: 1px solid var(--ib-table-outline-color-private);
     }
 
     &__actions {
@@ -46,18 +55,19 @@
 
   ib-filter:not(:has(.ib-filter--hidden)) ~ .ib-table__content {
     max-height: calc(
-      var(--ib-table-content-max-height) - var(--ib-table-filter-max-height)
+      var(--ib-table-content-max-height-private) -
+        var(--ib-table-filter-max-height)
     );
   }
 
   ib-filter:has(.ib-filter--hidden) ~ .ib-table__content {
-    max-height: calc(var(--ib-table-content-max-height));
+    max-height: calc(var(--ib-table-content-max-height-private));
   }
 
   .ib-table__content {
     overflow-y: auto;
     position: relative;
-    max-height: var(--ib-table-content-max-height);
+    max-height: var(--ib-table-content-max-height-private);
 
     &--loading {
       pointer-events: none;
@@ -72,8 +82,8 @@
     }
 
     .mat-mdc-header-cell {
-      border-right-color: var(--ib-table-outline-color);
-      border-right-width: var(--ib-table-column-outline-width);
+      border-right-color: var(--ib-table-outline-color-private);
+      border-right-width: var(--ib-table-column-outline-width-private);
       border-right-style: solid;
 
       &:last-child {
@@ -82,8 +92,8 @@
     }
 
     .mat-mdc-cell {
-      border-right-color: var(--ib-table-outline-color);
-      border-right-width: var(--ib-table-column-outline-width);
+      border-right-color: var(--ib-table-outline-color-private);
+      border-right-width: var(--ib-table-column-outline-width-private);
       border-right-style: solid;
 
       &:last-child {
@@ -142,10 +152,10 @@
   }
 
   .ib-table__rollup-row {
-    box-shadow: 0 -1px var(--ib-table-outline-color);
+    box-shadow: 0 -1px var(--ib-table-outline-color-private);
   }
   .ib-table__paginator {
-    border-top: 1px solid var(--ib-table-outline-color);
+    border-top: 1px solid var(--ib-table-outline-color-private);
   }
 }
 
