@@ -21,14 +21,14 @@ echo @inobeta:registry=https://gitlab.com/api/v4/packages/npm/ >> .npmrc
 npm i --save @inobeta/ui
 ```
 
-3. Include the provided theme
+3. Apply your theme to the library's components
 
 ```scss
 @use "@angular/material" as mat;
-@use "@inobeta-ui/ui";
+@use "@inobeta/ui" as ui;
 @include mat.core();
 
-// Define the default theme
+// Define your theme
 $app-primary: mat.define-palette(mat.$deep-purple-palette);
 $app-accent: mat.define-palette(mat.$amber-palette, A200, A100, A400);
 $app-warning: mat.define-palette(mat.$red-palette);
@@ -49,7 +49,33 @@ $app-theme: mat.define-light-theme(
 // ...
 ```
 
-4. Wait for translations to be loaded
+4. Setup translations
+
+- Create a file located in `src/assets/i18n/it.json` for your app's translations
+- Import `TranslateModule` in `app.module.ts`
+
+```typescript
+// app.module.ts
+import { HttpClient } from "@angular/common/http";
+import { IbTranslateModuleLoader } from "@inobeta/ui";
+import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
+
+@NgModule({
+  imports: [
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useExisting: IbTranslateModuleLoader,
+        deps: [HttpClient],
+      },
+    }),
+  ],
+  /** ... */
+})
+export class AppModule { }
+```
+
+5. Wait for translations to be loaded
 
 ```typescript
 // app.component.ts

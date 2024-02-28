@@ -153,6 +153,34 @@ fields = [
 
 <Canvas of={MatFormStories.SimpleLogin} />
 
+#### Custom validators
+
+Take this custom validator as an example.
+This validator checks if the date in the field `from` is older than the one in the field `to`.
+
+Returns an object with a `customError` paramenter. To display a message, include an i18n label in the `customError.message` parameter,
+and in `customError.params` any variable for the label if needed.
+
+```typescript
+export function dateValidator(): ValidatorFn {
+  return (control: AbstractControl): { [key: string]: any } | null => {
+    if (!control.parent) {
+      return;
+    }
+    const from = control.parent.controls["from"];
+    const to = control.parent.controls["to"];
+    if (from.value && to.value && from.value > to.value) {
+      return {
+        customError: {
+          message: 'dateRange.error', // Date "{{from}}" cannot be older than "{{to}}"
+          params: { from: from.value, to: to.value }
+        },
+      };
+    }
+  };
+}
+```
+
 ## Form array
 
 With `IbFormArray` define a form array where a user can add a variable amount of lines of pre-defined fields.  
