@@ -112,8 +112,8 @@ docs_publish:
     - if [ "$CI_COMMIT_REF_SLUG" == "$CI_DEFAULT_BRANCH" ]; then dir="current"; fi;
     - mkdir -p ~/.ssh && echo "$SSH_STAGING" | tr -d '\r' > ~/.ssh/id_rsa && chmod -R 600 ~/.ssh
     - ssh-keyscan -t rsa $STAGING_HOST >> ~/.ssh/known_hosts
-    - ssh $STAGING_USER@$STAGING_HOST "rm -rf ~/Apps/$APPNAME/docs/$dir && mkdir -p ~/Apps/$APPNAME/docs/$dir"
-    - scp -r dist/storybook/ui/* $STAGING_USER@$STAGING_HOST:~/Apps/$APPNAME/docs/$dir
+    - ssh $STAGING_USER@$STAGING_HOST "rm -rf ~/Apps/$APPNAME/docs/v/$dir && mkdir -p ~/Apps/$APPNAME/docs/v/$dir"
+    - scp -r dist/storybook/ui/* $STAGING_USER@$STAGING_HOST:~/Apps/$APPNAME/docs/v/$dir
   tags:
     - dedicated
   interruptible: true
