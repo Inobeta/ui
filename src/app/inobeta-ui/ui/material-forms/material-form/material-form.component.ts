@@ -32,7 +32,7 @@ export class IbMaterialFormComponent
 
   ngOnChanges(changes) {
     super.ngOnChanges(changes);
-    if (changes.actions) {
+    if (changes.actions && changes.actions.currentValue) {
       this.simpleActions = changes.actions.currentValue.filter(
         (a) => a.key !== "submit"
       );

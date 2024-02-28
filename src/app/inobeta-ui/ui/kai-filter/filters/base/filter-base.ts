@@ -18,6 +18,7 @@ export interface IFilterBase {
   clear(): void;
   /** Build filter syntax */
   build(): IbFilterDef;
+  toQuery(): any;
   /**  */
   initializeFromColumn(data: any[]): void;
 }
@@ -44,7 +45,7 @@ export class IbFilterBase implements IFilterBase {
     return value != null || value != undefined;
   }
 
-  protected _destroyed = new Subject();
+  protected _destroyed = new Subject<void>();
 
   constructor(@Inject(IB_FILTER) public filter: any) {}
 
@@ -81,6 +82,10 @@ export class IbFilterBase implements IFilterBase {
 
   build(): IbFilterDef {
     throw Error(`Filter ${this.name} has no build method defined.`);
+  }
+
+  toQuery() {
+    throw Error(`Filter ${this.name} has no toQuery method defined.`);
   }
 
   applyFilter() {

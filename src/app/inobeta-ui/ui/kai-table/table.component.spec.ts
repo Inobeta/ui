@@ -1,7 +1,7 @@
 import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { CommonModule } from "@angular/common";
-import { Component, Type } from "@angular/core";
+import { Component, Injectable, Type } from "@angular/core";
 import {
   ComponentFixture,
   TestBed,
@@ -13,17 +13,17 @@ import { MatButtonHarness } from "@angular/material/button/testing";
 import { MatDialogHarness } from "@angular/material/dialog/testing";
 import { MatInputHarness } from "@angular/material/input/testing";
 import { MatMenuHarness } from "@angular/material/menu/testing";
+import { MatPaginator } from "@angular/material/paginator";
 import { MatRadioButtonHarness } from "@angular/material/radio/testing";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { MatSortModule } from "@angular/material/sort";
+import { MatSort, MatSortModule } from "@angular/material/sort";
 import { MatSortHarness } from "@angular/material/sort/testing";
-import { MatTableDataSource } from "@angular/material/table";
 import { MatTableHarness } from "@angular/material/table/testing";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { StoreModule } from "@ngrx/store";
 import { TranslateModule } from "@ngx-translate/core";
-import { throwError } from "rxjs";
+import { Observable, map, of, throwError, timer } from "rxjs";
 import {
   IbDataExportModule,
   IbDataExportService,
@@ -34,13 +34,16 @@ import { IbFilterModule } from "../kai-filter";
 import { IbViewModule } from "../views";
 import { IbTableActionModule } from "./action";
 import { IbAggregateCell } from "./cells";
-import { IbDataSource } from "./table-data-source";
+import {
+  IbFetchDataResponse,
+  IbTableRemoteDataSource,
+} from "./remote-data-source";
+import { IbTableDataSource } from "./table-data-source";
 import { IbTable } from "./table.component";
 import { IbKaiTableModule } from "./table.module";
-import { IbKaiTableState } from "./table.types";
 
 describe("IbTable", () => {
-  describe("with MatTableDataSource", () => {
+  describe("with IbTableDataSource", () => {
     let host: IbTableApp;
     let fixture: ComponentFixture<IbTableApp>;
     let component: IbTable;
@@ -84,43 +87,28 @@ describe("IbTable", () => {
     });
   });
 
-  describe("with IbDataSource", () => {
+  describe("with IbRemoteTableDataSource", () => {
     it("should create", fakeAsync(() => {
-      const fixture = createComponent(IbTableWithIbDataSourceApp);
+      const fixture = createComponent(IbTableWithRemoteDataApp);
       const component = fixture.debugElement.query(
         By.directive(IbTable)
       ).componentInstance;
-      component.dataSource.refresh();
-      tick(1);
+      tick(1)
       expect(component).toBeTruthy();
+      expect(component.state).toBe("idle");
     }));
 
-    it("should create with empty constructor", () => {
-      const dataSource = new IbDataSource();
-      expect(dataSource).toBeTruthy();
-      expect(dataSource.data).toEqual([]);
-    });
-
-    it("should reset to empty array with non array types", () => {
-      const dataSource = new IbDataSource([{ name: "alice" }]);
-      expect(dataSource).toBeTruthy();
-      expect(dataSource.data).toEqual([{ name: "alice" }]);
-      dataSource.data = null;
-      expect(dataSource.data).toEqual([]);
-      dataSource.data = [{ name: "rabbit" }];
-      expect(dataSource.data).toEqual([{ name: "rabbit" }]);
-    });
-
     it("should show error on exception", fakeAsync(() => {
-      const fixture = createComponent(IbTableWithIbDataSourceApp);
+      const fixture = createComponent(IbTableWithRemoteDataApp);
       const component = fixture.debugElement.query(
         By.directive(IbTable)
       ).componentInstance;
-      component.dataSource.fetchData = () => throwError("oh no");
+      fixture.componentInstance.dataSource.fetchData = () =>
+        throwError(() => new Error());
       component.dataSource.refresh();
       tick(1);
       fixture.detectChanges();
-      expect(component.state === IbKaiTableState.HTTP_ERROR).toBeTruthy();
+      expect(component.state).toBe("http_error");
     }));
   });
 
@@ -128,7 +116,7 @@ describe("IbTable", () => {
     it("should render", async () => {
       const fixture = createComponent(IbTableWithRowGroupApp);
       const rowGroup = fixture.nativeElement.querySelectorAll(
-        ".ib-table-group-detail-row"
+        ".ib-table__row-group"
       );
       expect(rowGroup.length).toBeTruthy();
     });
@@ -460,7 +448,7 @@ describe("IbTable", () => {
     });
 
     it("should apply", async () => {
-      const dataSource = component.dataSource as MatTableDataSource<any>;
+      const dataSource = component.dataSource as IbTableDataSource<any>;
       const sort = await loader.getHarness(MatSortHarness);
       const [_, number] = await sort.getSortHeaders();
       let active = await sort.getActiveHeader();
@@ -557,10 +545,7 @@ function createComponent<T>(type: Type<T>): ComponentFixture<T> {
 
 @Component({
   template: `
-    <ib-kai-table
-      [dataSource]="dataSource"
-      [displayedColumns]="['name', 'color', 'price']"
-    >
+    <ib-kai-table [data]="data" [displayedColumns]="['name', 'color', 'price']">
       <ib-filter [value]="filterValue">
         <ib-text-filter ibTableColumnName="name">Name</ib-text-filter>
         <ib-tag-filter ibTableColumnName="color">Name</ib-tag-filter>
@@ -575,15 +560,15 @@ function createComponent<T>(type: Type<T>): ComponentFixture<T> {
 })
 class IbTableApp {
   filterValue = { color: ["black"] };
-  dataSource = new MatTableDataSource<any>([
+  data = [
     { name: "alice", color: "white", price: 10 },
     { name: "bob", color: "black", price: 12 },
-  ]);
+  ];
 }
 
 @Component({
   template: `
-    <ib-kai-table [dataSource]="dataSource" [displayedColumns]="['name']">
+    <ib-kai-table [data]="data" [displayedColumns]="['name']">
       <ib-text-column name="name"></ib-text-column>
       <ng-template ibKaiRowGroup let-row="row">
         row data: {{ row | json }}
@@ -592,7 +577,20 @@ class IbTableApp {
   `,
 })
 class IbTableWithRowGroupApp {
-  dataSource = new MatTableDataSource<any>([{ name: "alice" }]);
+  data = [{ name: "alice" }];
+}
+
+@Injectable()
+class IbTestDataSource extends IbTableRemoteDataSource<any> {
+  fetchData(
+    sort: MatSort,
+    page: MatPaginator,
+  ): Observable<IbFetchDataResponse<any>> {
+    return timer(1).pipe(map(() => ({
+      data: [{ name: "alice" }],
+      totalCount: 1,
+    })));
+  }
 }
 
 @Component({
@@ -603,32 +601,32 @@ class IbTableWithRowGroupApp {
     </ib-kai-table>
   `,
 })
-class IbTableWithIbDataSourceApp {
-  dataSource = new IbDataSource<any>([{ name: "alice" }]);
+class IbTableWithRemoteDataApp {
+  dataSource = new IbTestDataSource();
 }
 
 @Component({
   template: `
     <ib-kai-table
       tableName="employees"
-      [dataSource]="dataSource"
-      [displayedColumns]="['name', 'tag']"
+      [data]="data"
+      [displayedColumns]="['name', 'color']"
     >
       <ib-table-view-group></ib-table-view-group>
       <ib-filter>
-        <ib-tag-filter ibTableColumnName="color">Name</ib-tag-filter>
+        <ib-tag-filter ibTableColumnName="color">Color</ib-tag-filter>
       </ib-filter>
 
       <ib-text-column name="name"></ib-text-column>
-      <ib-text-column name="tag"></ib-text-column>
+      <ib-text-column name="color"></ib-text-column>
     </ib-kai-table>
   `,
 })
 class IbTableWithViewGroupApp {
-  dataSource = new MatTableDataSource<any>([
+  data = [
     { name: "alice", color: "peach" },
     { name: "bob", color: "green" },
-  ]);
+  ];
 }
 
 class IbStubExportProvider implements IbDataExportProvider {
@@ -641,7 +639,7 @@ class IbStubExportProvider implements IbDataExportProvider {
   template: `
     <ib-kai-table
       tableName="employees"
-      [dataSource]="dataSource"
+      [data]="data"
       [tableDef]="{ paginator: { pageSize: 5 } }"
       [displayedColumns]="['name', 'color']"
     >
@@ -663,7 +661,7 @@ class IbStubExportProvider implements IbDataExportProvider {
   ],
 })
 class IbTableWithExport {
-  dataSource = new MatTableDataSource<any>([
+  data = [
     { name: "alice", color: "blue" },
     { name: "rabbit", color: "white" },
     { name: "queen", color: "red" },
@@ -671,14 +669,14 @@ class IbTableWithExport {
     { name: "rook", color: "purple" },
     { name: "knight", color: "brown" },
     { name: "king", color: "green" },
-  ]);
+  ];
 }
 
 @Component({
   template: `
     <ib-kai-table
       tableName="employees"
-      [dataSource]="dataSource"
+      [data]="data"
       [displayedColumns]="['name', 'created_at', 'updated_at']"
     >
       <ib-table-action-group>
@@ -710,10 +708,10 @@ class IbTableWithExport {
   ],
 })
 class IbTableWithExportTransformer {
-  dataSource = new MatTableDataSource<any>([
+  data = [
     { name: "alice", created_at: new Date(), updated_at: new Date() },
     { name: "rabbit", created_at: new Date(), updated_at: new Date() },
-  ]);
+  ];
 
   dateTransformer = (date: Date) => date.getTime();
 }
@@ -721,7 +719,7 @@ class IbTableWithExportTransformer {
 @Component({
   template: `
     <ib-kai-table
-      [dataSource]="dataSource"
+      [data]="data"
       [displayedColumns]="['name', 'amount', 'createdAt']"
     >
       <ib-text-column name="name" [aggregate]="false"></ib-text-column>
@@ -734,26 +732,23 @@ class IbTableWithExportTransformer {
   `,
 })
 class IbTableWithSort {
-  dataSource = new MatTableDataSource<any>([
+  data = [
     { name: "alice", amount: 10, createdAt: new Date() },
     { name: "bob", amount: 20, createdAt: new Date() },
-  ]);
+  ];
 }
 
 @Component({
   template: `
-    <ib-kai-table
-      [dataSource]="dataSource"
-      [displayedColumns]="['name', 'amount']"
-    >
+    <ib-kai-table [data]="data" [displayedColumns]="['name', 'amount']">
       <ib-text-column name="name"></ib-text-column>
       <ib-number-column name="amount" aggregate></ib-number-column>
     </ib-kai-table>
   `,
 })
 class IbTableWithAggregate {
-  dataSource = new MatTableDataSource<any>([
+  data = [
     { name: "alice", amount: 10 },
     { name: "bob", amount: 20 },
-  ]);
+  ];
 }

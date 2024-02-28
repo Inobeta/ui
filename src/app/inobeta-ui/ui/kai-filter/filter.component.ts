@@ -10,8 +10,7 @@ import {
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { IbKaiTableAction } from "../kai-table/action";
-import { IbFilterDef, IbFilterSyntax } from "./filter.types";
-import { applyFilter } from "./filters";
+import { IbFilterSyntax } from "./filter.types";
 import { IbFilterBase } from "./filters/base/filter-base";
 import { IB_FILTER } from "./tokens";
 
@@ -20,11 +19,11 @@ import { IB_FILTER } from "./tokens";
   template: `
     <section
       class="ib-filter"
-      [class.ib-filter__hide]="hideFilters"
+      [class.ib-filter--hidden]="hideFilters"
       [attr.aria-hidden]="hideFilters"
     >
       <ng-content select="ib-search-bar"></ng-content>
-      <section #list class="ib-filter-list">
+      <section #list class="ib-filter__list">
         <mat-icon *ngIf="list.children.length > 1">filter_list</mat-icon>
         <ng-content></ng-content>
       </section>
@@ -34,9 +33,10 @@ import { IB_FILTER } from "./tokens";
       *ibTableAction
       mat-icon-button
       [matTooltip]="'shared.ibTableView.showFilters' | translate"
+      [color]="!hideFilters ? 'primary' : '' "
       (click)="hideFilters = !hideFilters"
     >
-      <mat-icon>{{ !hideFilters ? "filter_alt" : "filter_alt_off" }}</mat-icon>
+      <mat-icon>{{ "filter_alt" }}</mat-icon>
     </button>
   `,
   styleUrls: ["./filter.component.scss"],
@@ -70,7 +70,7 @@ export class IbFilter {
     });
   }
   @Output() ibFilterUpdated = new EventEmitter<IbFilterSyntax>();
-  @Output() ibRawFilterUpdated = new EventEmitter<Record<string, any>>();
+  @Output() ibQueryUpdated = new EventEmitter<Record<string, any>>();
 
   /** @ignore */
   form: FormGroup = new FormGroup<Record<string, any>>({});
@@ -89,7 +89,7 @@ export class IbFilter {
     this.rawFilter = this.form.getRawValue();
     this.filter = this.buildFilter();
     this.ibFilterUpdated.emit(this.filter);
-    this.ibRawFilterUpdated.emit(this.rawFilter);
+    this.ibQueryUpdated.emit(this.toQuery());
   }
 
   reset() {
@@ -98,17 +98,16 @@ export class IbFilter {
     this.update();
   }
 
-  /** @ignore */
-  filterPredicate = (data: any, filter: IbFilterSyntax | any) => {
-    const matchesSearchBar = this.applySearchBarFilter(
-      data,
-      filter?.__ibSearchBar
-    );
-    return Object.entries(data).every(([key, value]) => {
-      const condition = filter[key];
-      return applyFilter(condition, value) && matchesSearchBar;
-    });
-  };
+  toQuery() {
+    let output = {};
+    const filters = this.filters.toArray();
+
+    for (const filter of filters) {
+      output[filter.name] = filter.toQuery();
+    }
+
+    return output;
+  }
 
   /** @ignore */
   private buildFilter(): IbFilterSyntax {
@@ -121,22 +120,4 @@ export class IbFilter {
 
     return output;
   }
-
-  /** @ignore */
-  private applySearchBarFilter = (data: any, filter: IbFilterDef) => {
-    if (!filter) {
-      return true;
-    }
-
-    const dataStr = Object.keys(data as unknown as Record<string, any>)
-      .reduce((currentTerm: string, key: string) => {
-        // https://github.com/angular/components/blob/main/src/material/table/table-data-source.ts#L247
-        return (
-          currentTerm + (data as unknown as Record<string, any>)[key] + "◬"
-        );
-      }, "")
-      .toLowerCase();
-
-    return applyFilter(filter, dataStr);
-  };
 }

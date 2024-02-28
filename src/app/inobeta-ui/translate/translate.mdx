@@ -1,0 +1,27 @@
+import { Meta } from "@storybook/blocks";
+
+# Translations
+
+<Meta title="Features/Translations/Usage" />
+
+## Usage
+
+```typescript
+import { HttpClient } from "@angular/common/http";
+import { IbTranslateModuleLoader } from "@inobeta/ui";
+import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
+
+@NgModule({
+  imports: [
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useExisting: IbTranslateModuleLoader,
+        deps: [HttpClient],
+      },
+    }),
+  ],
+  /** ... */
+})
+export class AppModule { }
+```

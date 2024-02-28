@@ -1,6 +1,10 @@
-import type { Preview } from "@storybook/angular";
+import { HttpClientModule } from "@angular/common/http";
+import { importProvidersFrom } from "@angular/core";
 import { setCompodocJson } from "@storybook/addon-docs/angular";
+import { applicationConfig, type Preview } from "@storybook/angular";
 import docJson from "../documentation.json";
+import {version} from '../package.json'
+const [major, minor, patch] = version.split('.')
 setCompodocJson(docJson);
 
 const preview: Preview = {
@@ -12,7 +16,33 @@ const preview: Preview = {
         date: /Date$/,
       },
     },
+    docs: {
+      toc: {
+        headingSelector: 'h2, h3',
+        ignoreSelector: '#primary, #stories'
+      }
+    },
+    options: {
+      storySort: {
+        order: ['Getting started', 'Components', 'Features']
+      }
+    },
+    version: {
+      major,
+      minor,
+      patch,
+      style: {
+        color: 'navy',
+        'font-weight': '900',
+        'font-size': '24px'
+      }
+    }
   },
+  decorators: [
+    applicationConfig({
+      providers: [importProvidersFrom(HttpClientModule)],
+    }),
+  ],
 };
 
 export default preview;

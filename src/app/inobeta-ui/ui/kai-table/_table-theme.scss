@@ -2,26 +2,44 @@
 @use "@angular/material" as mat;
 
 @mixin color($theme) {
-  // Get the color config from the theme.
-  $color-config: mat.get-color-config($theme);
-
-  // Get the primary color palette from the color-config.
-  $primary-palette: map.get($color-config, "primary");
-
-
-  .ib-table__header-cell,
+  .mat-mdc-header-cell,
   .mat-sort-header-arrow {
-    color: var(--ib-table-header-color, mat.get-color-from-palette($primary-palette, darker-contrast)) !important;
+    color: var(
+      --ib-table-header-text-color,
+      mat.get-theme-color($theme, primary, darker-contrast)
+    ) !important;
+    background: var(
+      --ib-table-header-background-color,
+      mat.get-theme-color($theme, primary, 500)
+    ) !important;
   }
 
-  .ib-table__header-cell {
-    background: var(--ib-table-header-bg-color, mat.get-color-from-palette($primary-palette, 500)) !important;
+  .mat-mdc-row:hover {
+    background: var(
+      --ib-table-row-background-color-on-hover,
+      rgba(mat.get-theme-color($theme, accent, darker-contrast), 0.03)
+    ) !important;
+  }
+
+  .ib-table-striped-rows .mat-mdc-row:nth-child(even) {
+    color: var(
+      --ib-table-even-row-text-color,
+      mat.get-theme-color($theme, accent, darker-contrast)
+    );
+    background: var(
+      --ib-table-even-row-background-color,
+      mat.get-theme-color($theme, primary, 50)
+    );
+  }
+
+  .ib-table-striped-rows .mat-mdc-row:nth-child(odd) {
+    color: var(--ib-table-odd-row-text-color);
+    background: var(--ib-table-odd-row-background-color);
   }
 }
 
 @mixin theme($theme) {
-  $color-config: mat.get-color-config($theme);
-  @if $color-config != null {
+  @if mat.theme-has($theme, color) {
     @include color($theme);
   }
 }

@@ -5,7 +5,9 @@ const config: StorybookConfig = {
     "@storybook/addon-links",
     "@storybook/addon-essentials",
     "@storybook/addon-interactions",
+    './version-selector'
   ],
+
   framework: {
     name: "@storybook/angular",
     options: {},
@@ -14,7 +16,8 @@ const config: StorybookConfig = {
     autodocs: "tag",
   },
   core: {
-    disableTelemetry: true
-  }
+    disableTelemetry: true,
+  },
+  staticDirs: [{ from: "../src/assets", to: "assets" }],
 };
 export default config;

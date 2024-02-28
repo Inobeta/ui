@@ -1,4 +1,4 @@
-<form (ngSubmit)="onSubmit()" [formGroup]="form" class="ibForm">
+<form (ngSubmit)="handleSubmit()" [formGroup]="form" class="ibForm">
   <div
     class="ibFormActions"
     fxLayout="row"
@@ -11,12 +11,14 @@
       class="ibFormRow"
       [base]="action"
       [form]="form"
+      [attr.data-cy]="action.key"
     ></ib-material-form-control>
     <ib-material-form-control
       *ngIf="submitAction"
       class="ibFormRow"
       [base]="submitAction"
       [form]="form"
+      [attr.data-cy]="submitAction.key"
     ></ib-material-form-control>
   </div>
 
@@ -32,6 +34,7 @@
             [base]="field | asFormControl"
             [form]="form"
             [fxFlex]="field.width"
+            [attr.data-cy]="field?.key"
           ></ib-material-form-control>
         </ng-container>
     </mat-grid-tile>
@@ -46,6 +49,7 @@
           [base]="field | asFormControl"
           [form]="form"
           [fxFlex]="field.width"
+          [attr.data-cy]="field?.key"
         ></ib-material-form-control>
         <ib-material-form-array
           *ngSwitchCase="'array'"
@@ -53,6 +57,7 @@
           [base]="field | asFormArray"
           [form]="form"
           [fxFlex]="field.width"
+          [attr.data-cy]="field?.key"
         ></ib-material-form-array>
       </ng-container>
     </ng-container>
@@ -70,12 +75,14 @@
       class="ibFormRow"
       [base]="action"
       [form]="form"
+      [attr.data-cy]="action.key"
     ></ib-material-form-control>
     <ib-material-form-control
       *ngIf="submitAction"
       class="ibFormRow"
       [base]="submitAction"
       [form]="form"
+      [attr.data-cy]="submitAction.key"
     ></ib-material-form-control>
   </div>
 </form>

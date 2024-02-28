@@ -11,14 +11,17 @@ import {
   ContentChild,
   ContentChildren,
   EventEmitter,
+  HostBinding,
   Input,
   OnDestroy,
   QueryList,
   ViewChild,
+  ViewEncapsulation,
+  booleanAttribute,
 } from "@angular/core";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
-import { MatTable, MatTableDataSource } from "@angular/material/table";
+import { MatTable } from "@angular/material/table";
 import { Subject, merge } from "rxjs";
 import { filter, takeUntil } from "rxjs/operators";
 import { IbTableDataExportAction } from "../data-export/table-data-export.component";
@@ -26,8 +29,9 @@ import { IbFilter } from "../kai-filter";
 import { ITableViewData, IView, IbTableViewGroup } from "../views";
 import { IbColumn } from "./columns/column";
 import { IbSelectionColumn } from "./columns/selection-column";
+import { IbTableRemoteDataSource } from "./remote-data-source";
 import { IbKaiRowGroupDirective } from "./rowgroup";
-import { IbDataSource } from "./table-data-source";
+import { IbTableDataSource } from "./table-data-source";
 import { IbKaiTableState, IbTableDef } from "./table.types";
 import { IB_TABLE } from "./tokens";
 
@@ -43,6 +47,9 @@ const defaultTableDef: IbTableDef = {
   selector: "ib-kai-table",
   templateUrl: "./table.component.html",
   styleUrls: ["./table.component.scss"],
+  host: {
+    class: "ib-table__container",
+  },
   animations: [
     trigger("detailExpand", [
       state("collapsed", style({ height: "0px", minHeight: "0" })),
@@ -54,9 +61,10 @@ const defaultTableDef: IbTableDef = {
     ]),
   ],
   providers: [{ provide: IB_TABLE, useExisting: IbTable }],
+  encapsulation: ViewEncapsulation.None,
 })
 export class IbTable implements OnDestroy {
-  private _destroyed = new Subject();
+  private _destroyed = new Subject<void>();
 
   @ContentChildren(IbColumn) columns: QueryList<IbColumn<any>>;
   @ContentChild(IbSelectionColumn) selectionColumn!: IbSelectionColumn;
@@ -74,8 +82,7 @@ export class IbTable implements OnDestroy {
   expandedElement: any;
   actionPortals: Portal<any>[] = [];
 
-  states = IbKaiTableState;
-  state = IbKaiTableState.IDLE;
+  @Input() state: IbKaiTableState = "idle";
 
   @Input()
   set data(data: any[]) {
@@ -84,8 +91,7 @@ export class IbTable implements OnDestroy {
   }
 
   @Input()
-  dataSource: MatTableDataSource<unknown> | IbDataSource<unknown> =
-    new MatTableDataSource([]);
+  dataSource: IbTableDataSource<unknown> = new IbTableDataSource([]);
 
   @Input() tableName: string = btoa(
     window.location.pathname + window.location.hash
@@ -129,7 +135,7 @@ export class IbTable implements OnDestroy {
    */
   @Input()
   set displayedColumns(columns: string[]) {
-    this._displayedColumns = columns.map(c => c);
+    this._displayedColumns = columns.map((c) => c);
     if (this.selectionColumn) {
       this._displayedColumns.unshift("ib-selection");
     }
@@ -142,6 +148,10 @@ export class IbTable implements OnDestroy {
   }
   private _displayedColumns: string[] = [];
 
+  @HostBinding("class.ib-table-striped-rows")
+  @Input({ transform: booleanAttribute })
+  stripedRows = false;
+
   aggregateColumns = new Set<string>();
   aggregate = new EventEmitter();
 
@@ -149,7 +159,7 @@ export class IbTable implements OnDestroy {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
 
-    if (this.dataSource instanceof IbDataSource) {
+    if (this.dataSource instanceof IbTableRemoteDataSource) {
       this.dataSource._state
         .pipe(takeUntil(this._destroyed))
         .subscribe((s) => (this.state = s));
@@ -174,6 +184,13 @@ export class IbTable implements OnDestroy {
     if (this.view) {
       this.view.viewGroupName = this.tableName;
     }
+
+    this.dataSource.columns = this.columns.toArray();
+    this.columns.changes
+      .pipe(takeUntil(this._destroyed))
+      .subscribe((columns) => {
+        this.dataSource.columns = columns.toArray();
+      });
   }
 
   ngOnDestroy() {
@@ -182,21 +199,18 @@ export class IbTable implements OnDestroy {
     this._destroyed.complete();
   }
 
-  isState(state: IbKaiTableState) {
-    return this.state === state;
-  }
-
+  // @TODO: move in table-data-source
   private setupFilter() {
-    const updateFilter = (filter) => {
-      this.selectionColumn?.selection?.clear();
-      this.dataSource.filter = filter as any;
-    };
-    this.dataSource.filterPredicate = this.filter.filterPredicate;
     this.initializeFilters(this.dataSource.data);
+    let event = this.filter.ibFilterUpdated;
+    if (this.dataSource instanceof IbTableRemoteDataSource) {
+      event = this.filter.ibQueryUpdated;
+    }
 
-    this.filter.ibFilterUpdated
-      .pipe(takeUntil(this._destroyed))
-      .subscribe(updateFilter);
+    event.pipe(takeUntil(this._destroyed)).subscribe((filter) => {
+      this.selectionColumn?.selection?.clear();
+      this.dataSource.filter = filter;
+    });
   }
 
   private setupViewGroup() {
@@ -213,7 +227,7 @@ export class IbTable implements OnDestroy {
     });
 
     const changes$ = merge(
-      this.filter.ibRawFilterUpdated,
+      this.filter.ibQueryUpdated,
       this.paginator.page,
       this.aggregate
     ).pipe(takeUntil(this._destroyed));
@@ -244,7 +258,7 @@ export class IbTable implements OnDestroy {
         this.exportAction.exportService._exportFromTable(
           this.tableName,
           this.columns.filter((c) => !c.name.startsWith("ib-")),
-          this.dataSource as MatTableDataSource<any>,
+          this.dataSource,
           this.selectionColumn?.selection.selected,
           settings
         );

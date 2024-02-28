@@ -1,5 +1,6 @@
 
 body {
+  height: 100%;
   margin: 0;
   word-wrap: break-word;
 }
@@ -10,11 +11,7 @@ html {
   font-size: 100%;
 }
 
-html, body {
-  height: 100%;
-}
-
-*, html {
+* {
   box-sizing: border-box;
 }
 

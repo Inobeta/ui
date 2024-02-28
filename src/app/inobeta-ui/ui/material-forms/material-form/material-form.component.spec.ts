@@ -266,7 +266,7 @@ describe('IbMaterialFormComponent', () => {
     ];
     fixture.detectChanges();
 
-    component.onSubmit();
+    component.handleSubmit();
     component.handleActionClick({
       key: 'submit',
       label: 'submit',

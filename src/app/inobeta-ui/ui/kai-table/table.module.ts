@@ -14,7 +14,6 @@ import { MatSortModule } from "@angular/material/sort";
 import { MatTableModule } from "@angular/material/table";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import { ibMatPaginatorTranslate } from "../table";
 import {
   IbAggregateCell,
   IbAverageAggregateProvider,
@@ -27,6 +26,7 @@ import { IbDateColumn } from "./columns/date-column";
 import { IbNumberColumn } from "./columns/number-column";
 import { IbSelectionColumn } from "./columns/selection-column";
 import { IbTextColumn } from "./columns/text-column";
+import { IbTablePaginatorIntl } from "./paginator-intl";
 import { IbKaiRowGroupDirective } from "./rowgroup";
 import { IbSortHeader } from "./sort-header";
 import { IbTable } from "./table.component";
@@ -78,7 +78,7 @@ import { IbTable } from "./table.component";
     {
       provide: MatPaginatorIntl,
       deps: [TranslateService],
-      useFactory: ibMatPaginatorTranslate,
+      useClass: IbTablePaginatorIntl,
     },
     IbSumAggregateProvider,
     IbAverageAggregateProvider,

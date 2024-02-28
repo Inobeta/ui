@@ -1,0 +1,49 @@
+import { Meta } from "@storybook/blocks";
+
+# Developer guide
+
+<Meta title="Features/Translations/Developer guide" />
+
+## Add translations to new components
+
+1. Withing the component's directory, add a `translations.ts` file
+
+```typescript
+// translations.ts
+export const ibExampleComponentTranslations = {
+  it: {
+    "example": {
+      "hello": "world"
+    }
+  }
+}
+```
+
+2. Include the translations in the loader service
+
+```typescript
+// translate-loader.service
+@Injectable({providedIn: 'root'})
+export class IbTranslateModuleLoader implements TranslateLoader{
+  constructor(private http: HttpClient){}
+  getTranslation(lang: string): Observable<any> {
+    return this.http.get(`./assets/i18n/${lang}.json`).pipe(
+      map(tran => ({
+        ...tran,
+        shared: {
+          ...ibHttpTranslations[lang],
+          ...ibTableTranslations[lang],
+          ...ibMaterialFormTranslations[lang],
+          ...ibKaiFilterTranslations[lang],
+          ...ibViewTranslations[lang],
+          ...ibKaiTableTranslations[lang],
+          ...ibModalTranslations[lang],
+          /** Add the translations here */
+          ...ibExampleComponentTranslations[lang],
+          ...(tran['shared'] ?? {})
+        }
+      }))
+    )
+  }
+}
+```
