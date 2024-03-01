@@ -1,6 +1,8 @@
 @use "sass:map";
 @use "@angular/material" as mat;
 
+@mixin base($theme) {}
+
 @mixin color($theme) {
   .mat-mdc-header-cell,
   .mat-sort-header-arrow {
@@ -44,8 +46,19 @@
 
 }
 
+@mixin typography($theme) {}
+
+@mixin density($theme) {}
+
 @mixin theme($theme) {
+  @include base($theme);
   @if mat.theme-has($theme, color) {
     @include color($theme);
+  }
+  @if mat.theme-has($theme, density) {
+    @include density($theme);
+  }
+  @if mat.theme-has($theme, typography) {
+    @include typography($theme);
   }
 }
