@@ -1,11 +1,12 @@
 # Inobeta/UI Changelog
 
-## Unreleased
+## [17.1.0] (2024-03-01)
 
 | Issue ID | Type | Section | Description |
 | -- | -- | -- | -- |
 |DEVK-261|feat|IbDynamicForm|Added `value` input to `ib-material-form`|
-|DEVK-264|feat|Docs|Changed compodoc for storybook|
+|DEVK-264|docs|Docs|Changed compodoc for storybook|
+|DEVK-297|docs|Docs|Docs feedbacks|
 |DEVK-288|feat|IbTable|Added `sortingDataAccessor` and `filterDataAccessor` to `IbColumn`|
 |DEVK-189|feat|IbTable|Add `IbTableRemoteDataSource` and `IbTableDataProvider` for server-side interactions|
 |DEVK-189|feat|IbFilter|Add `ibQueryUpdated`; provides a serialized filter for HTTP queries|

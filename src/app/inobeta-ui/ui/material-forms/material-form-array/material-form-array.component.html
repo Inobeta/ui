@@ -5,7 +5,9 @@
     <ng-container *ngFor="let field of base.fields">
       <ng-container [ngSwitch]="field.role">
         <ib-material-form-control *ngSwitchCase="'control'" class="ibFormRow" [base]="field" [form]="getGroupAt(index)"
-          [style.flex]="'1 1 ' + field.width" [style.max-width]="field.width"></ib-material-form-control>
+          [style.flex]="'1 1 ' + field.width" [style.max-width]="field.width"
+          [attr.data-cy]="field.key"
+          ></ib-material-form-control>
       </ng-container>
     </ng-container>
     <div class="ibFormArrayActions">

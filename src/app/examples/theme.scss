@@ -7,7 +7,7 @@ $app-primary: mat.define-palette(mat.$deep-purple-palette);
 $app-accent: mat.define-palette(mat.$amber-palette, A200, A100, A400);
 $app-warning: mat.define-palette(mat.$red-palette);
 
-$app-theme: mat.define-light-theme((
+$light-theme: mat.define-light-theme((
   color: (
     primary: $app-primary,
     accent: $app-accent,
@@ -15,5 +15,18 @@ $app-theme: mat.define-light-theme((
   )
 ));
 
+$dark-theme: mat.define-dark-theme((
+ color: (
+   primary: mat.define-palette(mat.$purple-palette),
+   accent: mat.define-palette(mat.$amber-palette),
+   warning: $app-warning
+ ),
+));
+
 // Include the default theme styles.
-@include ui.theme($app-theme);
+@include ui.theme($light-theme);
+
+@media (prefers-color-scheme: dark) {
+  @include ui.all-component-colors($dark-theme);
+  @include mat.all-component-colors($dark-theme);
+}

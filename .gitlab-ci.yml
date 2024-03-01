@@ -4,6 +4,8 @@ stages:
   - quality
   - install
   - npm:deploy
+  - docs:build
+  - docs:deploy
   - examples:build
   - examples:deploy
 
@@ -32,12 +34,12 @@ test_unit:
   image: inobeta/node-chrome:20
   stage: quality
   script:
-  - npm ci --cache .npm --prefer-offline --no-audit --no-fund && npm run test-ci
+    - npm ci --cache .npm --prefer-offline --no-audit --no-fund && npm run test-ci
   allow_failure: true
   artifacts:
     paths: [./src/coverage]
   tags:
-  - docker
+    - docker
   except:
     - /^[0-9]+\.[0-9]+\.[0-9]+$/
 
@@ -87,11 +89,33 @@ test_package_creation:
     - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
     - /^[0-9]+\.[0-9]+\.[0-9]+$/
 
-chromatic_publish:
-  stage: npm:deploy
+docs_build:
+  stage: docs:build
   script:
     - npm ci --cache .npm --prefer-offline --no-audit --no-fund
-    - npm run chromatic -- --auto-accept-changes
+    - npm run build-storybook
+  artifacts:
+    paths:
+      - dist
+    when: on_success
+    expire_in: "30 mins"
+  only:
+    - master
+    - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
+    - /^canary\/[0-9]+\.[0-9]+\.[0-9]+$/
+    - /^[0-9]+\.[0-9]+\.[0-9]+$/
+
+docs_publish:
+  stage: docs:deploy
+  script:
+    - dir="$CURRENT_VERSION"
+    - if [ "$CI_COMMIT_REF_SLUG" == "$CI_DEFAULT_BRANCH" ]; then dir="current"; fi;
+    - mkdir -p ~/.ssh && echo "$SSH_STAGING" | tr -d '\r' > ~/.ssh/id_rsa && chmod -R 600 ~/.ssh
+    - ssh-keyscan -t rsa $STAGING_HOST >> ~/.ssh/known_hosts
+    - ssh $STAGING_USER@$STAGING_HOST "rm -rf ~/Apps/$APPNAME/docs/v/$dir && mkdir -p ~/Apps/$APPNAME/docs/v/$dir"
+    - scp -r dist/storybook/ui/* $STAGING_USER@$STAGING_HOST:~/Apps/$APPNAME/docs/v/$dir
+  tags:
+    - dedicated
   interruptible: true
   only:
     - master
@@ -123,11 +147,12 @@ examples:deploy:
     - prepare_staging
     - service_pullrestart_staging $IMAGE $CURRENT_VERSION $SERVICE
   tags:
-  - dedicated
+    - dedicated
   environment:
     name: examples
     url: $STAGING_URL
   only:
+    - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
     - /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 .inobeta_pkg: &inobeta_pkg |
@@ -159,8 +184,6 @@ examples:deploy:
     ssh $STAGING_USER@$STAGING_HOST "cd ~/Apps/$APPNAME && docker login -u $GITLAB_USER -p $AUTH_TOKEN registry.gitlab.com && docker pull $1:$2 && docker-compose stop $3 && docker-compose up -d $3"
   }
 
-
 before_script:
   - *inobeta_pkg
   - set_current_version
-

@@ -1,6 +1,8 @@
 @use "sass:map";
 @use "@angular/material" as mat;
 
+@mixin base($theme) {}
+
 @mixin color($theme) {
   .mat-mdc-header-cell,
   .mat-sort-header-arrow {
@@ -36,10 +38,27 @@
     color: var(--ib-table-odd-row-text-color);
     background: var(--ib-table-odd-row-background-color);
   }
+
+  .ib-table__container {
+    color: mat.get-theme-color($theme, background, text);
+    background-color: mat.get-theme-color($theme, background, card);
+  }
+
 }
 
+@mixin typography($theme) {}
+
+@mixin density($theme) {}
+
 @mixin theme($theme) {
+  @include base($theme);
   @if mat.theme-has($theme, color) {
     @include color($theme);
+  }
+  @if mat.theme-has($theme, density) {
+    @include density($theme);
+  }
+  @if mat.theme-has($theme, typography) {
+    @include typography($theme);
   }
 }
