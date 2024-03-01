@@ -27,6 +27,6 @@ $dark-theme: mat.define-dark-theme((
 @include ui.theme($light-theme);
 
 @media (prefers-color-scheme: dark) {
-  @include ui.theme($dark-theme);
+  @include ui.all-component-colors($dark-theme);
   @include mat.all-component-colors($dark-theme);
 }

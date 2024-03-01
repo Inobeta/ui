@@ -22,6 +22,10 @@
   @include table.theme($app-theme);
 }
 
+@mixin all-component-colors($theme) {
+  @include table.color($theme);
+}
+
 /*global patches for material breaks on v15**/
 @include mat.checkbox-density(-1);
 @include mat.radio-density(-1);
