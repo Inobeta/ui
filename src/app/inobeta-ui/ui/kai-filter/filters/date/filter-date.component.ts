@@ -242,7 +242,7 @@ export class IbDateFilter extends IbFilterBase {
       this.searchCriteria.value.within
     );
 
-    return and([gte(then), lte(now)]);
+    return and([gte(then.toISOString()), lte(now.toISOString())]);
   }
 
   private buildMoreThanCategory() {
@@ -256,7 +256,7 @@ export class IbDateFilter extends IbFilterBase {
       this.searchCriteria.value.moreThan
     );
 
-    return lte(then);
+    return lte(then.toISOString());
   }
 
   private buildRangeCategory() {
@@ -266,7 +266,7 @@ export class IbDateFilter extends IbFilterBase {
       return none();
     }
 
-    return and([gte(new Date(start)), lte(new Date(end))]);
+    return and([gte(new Date(start).toISOString()), lte(new Date(end).toISOString())]);
   }
 
   build = (): IbFilterDef => {

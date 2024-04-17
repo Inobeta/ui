@@ -7,8 +7,7 @@ export interface IbUserExample {
   name: string;
   fruit: string;
   number: number;
-  aDate?: Date;
-  aDateString?: string;
+  created_at?: string;
   subscribed: boolean;
 }
 
@@ -77,13 +76,13 @@ export function createNewUser(
 
   const min = Math.round(Math.random() * 10) + 1;
   const max = min + Math.round(Math.random() * 30);
+  const created_at = getRandomDate(UserService.minDate, UserService.maxDate);
   return {
     id: id.toString(),
     name,
     fruit: fruits[Math.round(Math.random() * (fruits.length - 1))],
     number: Math.round(Math.random() * max) + 1,
-    aDate: getRandomDate(UserService.minDate, UserService.maxDate),
-    aDateString: "2023-01-01T12:53:12.000Z",
+    created_at: `${created_at.getFullYear()}-${created_at.getMonth()}-${created_at.getDate()}`,
     subscribed: Math.round(Math.random() * 10) % 2 === 0,
   };
 }
