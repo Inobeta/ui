@@ -40,6 +40,7 @@ export const ibKaiFilterTranslations = {
         },
         "number": "tra {{min}} e {{max}}"
       },
+      includeEmpty: "Includi senza valore",
       noItems: "Nessun elemento."
     },
   }

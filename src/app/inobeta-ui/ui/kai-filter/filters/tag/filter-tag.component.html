@@ -15,6 +15,14 @@
         disableRipple="true"
         [attr.data-cy]="'ib-tag-filter-' + name + '-options'"
       >
+        @if (hasNullishValues) {
+          <mat-list-option
+            togglePosition="before"
+            [value]="'__empty'"
+          >
+            {{ 'shared.ibFilter.includeEmpty' | translate }}
+          </mat-list-option>
+        }
         @for (option of options | filterBy: query; track option) {
           <mat-list-option
             togglePosition="before"

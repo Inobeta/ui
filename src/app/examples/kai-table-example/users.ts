@@ -30,6 +30,9 @@ export class UserService {
     "apple",
     "pear",
     "orange",
+    null,
+    undefined,
+    ""
   ];
 
   static names: string[] = [
