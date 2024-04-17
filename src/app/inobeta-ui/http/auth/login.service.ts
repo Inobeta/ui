@@ -72,31 +72,33 @@ export class IbLoginService<T extends IbAPITokens | IbAPITokens> {
   /**
    * Attempts a login to the server by contacting the endpoint provided by the token {@link ibHttpAPILoginUrl}
    */
-  public login(u: IbUserLogin) {
+  public login(user: IbUserLogin) {
     this.srvAuth.activeSession = null;
     const activeSession = new IbSession<T>();
-    if (u) {
+
+    if (user) {
       if (this.ibHttpAuthType === IbAuthTypes.BASIC_AUTH) {
         activeSession.serverData.accessToken = window.btoa(
-          u.email + ":" + u.password
+          user.email + ":" + user.password
         );
       }
       activeSession.valid = false;
-      activeSession.user = u;
+      activeSession.user = {
+        ...user,
+        password: "",
+      };
     }
-    return this.httpClient.post<T>(this.ibHttpAPILoginUrl, u).pipe(
-      map((x) => {
-        activeSession.user.password = "";
+
+    return this.httpClient.post<T>(this.ibHttpAPILoginUrl, user).pipe(
+      map((token) => {
         activeSession.valid = true;
-        activeSession.serverData = x;
+        activeSession.serverData = token;
         this.store.dispatch(
           ibAuthActions.login({ activeSession: activeSession })
         );
-        return x;
+        return token;
       }),
-      catchError((err) => {
-        return throwError(err);
-      })
+      catchError((err) => throwError(() => new Error(err)))
     );
   }
 
