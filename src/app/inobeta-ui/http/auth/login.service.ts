@@ -1,5 +1,5 @@
 import { HttpClient } from "@angular/common/http";
-import { Inject, Injectable, Optional } from "@angular/core";
+import { Inject, Injectable } from "@angular/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Router } from "@angular/router";
 import { Store } from "@ngrx/store";
@@ -30,44 +30,26 @@ export class IbLoginService<T extends IbAPITokens | IbAPITokens> {
     private snackBar: MatSnackBar,
     /** Login page path */
     @Inject("ibHttpGUILoginUrl")
-    @Optional()
     public ibHttpGUILoginUrl = "/login",
     /** API login endpoint */
     @Inject("ibHttpAPILoginUrl")
-    @Optional()
     public ibHttpAPILoginUrl = "/api/auth/login",
     /** Authorizazion type. Either bearer token (JWT) or basic */
     @Inject("ibHttpAuthType")
-    @Optional()
     public ibHttpAuthType = IbAuthTypes.JWT,
     /** Where to storage the user's access token */
     @Inject("ibHttpSessionStorageType")
-    @Optional()
     public ibHttpSessionStorageType = IbStorageTypes.LOCALSTORAGE,
     /** Refresh access token API endpoint */
     @Inject("ibHttpAPIRefreshUrl")
-    @Optional()
     public ibHttpAPIRefreshUrl = "/api/auth/refresh",
     /** Property name of additional data or claims within the JWT token */
     @Inject("ibHttpJWTClaimsField")
-    @Optional()
     public ibHttpJWTClaimsField = "https://hasura.io/jwt/claims",
     /** Property name of the user roles within the JWT claims field */
     @Inject("ibHttpJWTRolesField")
-    @Optional()
     public ibHttpJWTRolesField = "x-hasura-allowed-roles"
-  ) {
-    this.ibHttpGUILoginUrl = this.ibHttpGUILoginUrl ?? "/login";
-    this.ibHttpAPILoginUrl = this.ibHttpAPILoginUrl ?? "/api/auth/login";
-    this.ibHttpAPIRefreshUrl = this.ibHttpAPIRefreshUrl ?? "/api/auth/refresh";
-    this.ibHttpAuthType = this.ibHttpAuthType ?? IbAuthTypes.JWT;
-    this.ibHttpSessionStorageType =
-      this.ibHttpSessionStorageType ?? IbStorageTypes.LOCALSTORAGE;
-    this.ibHttpJWTClaimsField =
-      this.ibHttpJWTClaimsField ?? "https://hasura.io/jwt/claims";
-    this.ibHttpJWTRolesField =
-      this.ibHttpJWTRolesField ?? "x-hasura-allowed-roles";
-  }
+  ) {}
 
   /**
    * Attempts a login to the server by contacting the endpoint provided by the token {@link ibHttpAPILoginUrl}
