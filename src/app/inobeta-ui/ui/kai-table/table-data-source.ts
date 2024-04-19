@@ -207,6 +207,10 @@ export class IbTableDataSource<
 
     const matches = Object.entries(filters).every(([columnName, condition]) => {
       const column = this.columns[columnName];
+      if (!column) {
+        throw Error(`ib-filter: column ${columnName} not found`);
+      }
+
       const filterValue = column.filterDataAccessor(data, columnName);
       return applyFilter(condition, filterValue);
     });

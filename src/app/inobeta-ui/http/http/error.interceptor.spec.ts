@@ -24,6 +24,23 @@ describe('IbErrorInterceptor', () => {
         IbToastTestModule
       ],
       providers: [
+        { provide: "ibHttpEnableInterceptors", useValue: true },
+        {
+          provide: "ibHttpToastOnGenericFailure",
+          useValue: "shared.ibHttp.genericFailure",
+        },
+        {
+          provide: "ibHttpToastOnStatusCode",
+          useValue: {},
+        },
+        {
+          provide: "ibHttpToastErrorCode",
+          useValue: null,
+        },
+        {
+          provide: "ibHttpToastErrorField",
+          useValue: null,
+        },
         IbErrorInterceptor
       ]
     }).compileComponents();
