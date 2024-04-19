@@ -4,6 +4,7 @@ body {
   margin: 0;
   word-wrap: break-word;
   background-color: var(--mat-sidenav-content-background-color);
+  color: var(--mat-sidenav-container-text-color);
 }
 
 html {
