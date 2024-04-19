@@ -1,5 +1,10 @@
 # Inobeta/UI Changelog
 
+## [17.1.1] (unreleased)
+
+| Issue ID | Type | Section | Description |
+| -- | -- | -- | -- |
+
 ## [17.1.0] (2024-03-01)
 
 | Issue ID | Type | Section | Description |
