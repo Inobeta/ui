@@ -24,11 +24,11 @@ export class IbAuthInterceptor implements HttpInterceptor {
     private ibToast: IbToastNotification,
     private login: IbLoginService<IbAPITokens>,
     @Inject("ibHttpEnableInterceptors")
-    public ibHttpEnableInterceptors?: boolean,
-    @Inject("ibHttpAPILoginUrl") public ibHttpAPILoginUrl?: string,
+    public ibHttpEnableInterceptors: boolean,
+    @Inject("ibHttpAPILoginUrl") public ibHttpAPILoginUrl: string,
     @Inject("ibHttpToastOnLoginFailure")
-    public ibHttpToastOnLoginFailure?: string,
-    @Inject("ibHttpAuthType") public ibHttpAuthType?: IbAuthTypes
+    public ibHttpToastOnLoginFailure: string,
+    @Inject("ibHttpAuthType") public ibHttpAuthType: IbAuthTypes
   ) {}
 
   intercept(

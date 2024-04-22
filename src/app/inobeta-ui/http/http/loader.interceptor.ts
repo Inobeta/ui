@@ -16,9 +16,9 @@ export class IbLoaderInterceptor implements HttpInterceptor {
   constructor(
     private store: Store,
     @Inject("ibHttpEnableInterceptors")
-    public ibHttpEnableInterceptors?: boolean,
+    public ibHttpEnableInterceptors: boolean,
     @Inject("ibHttpUrlExcludedFromLoader")
-    public ibHttpUrlExcludedFromLoader?: IbHttpRequestDefinition[]
+    public ibHttpUrlExcludedFromLoader: IbHttpRequestDefinition[]
   ) {}
 
   intercept(

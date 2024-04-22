@@ -16,12 +16,12 @@ export class IbErrorInterceptor implements HttpInterceptor {
     private ibToast: IbToastNotification,
     private translate: TranslateService,
     @Inject("ibHttpEnableInterceptors")
-    public ibHttpEnableInterceptors?: boolean,
+    public ibHttpEnableInterceptors: boolean,
     @Inject("ibHttpToastOnGenericFailure")
-    public ibHttpToastOnGenericFailure?: string,
-    @Inject("ibHttpToastErrorField") public ibHttpToastErrorField?: string,
-    @Inject("ibHttpToastOnStatusCode") public ibHttpToastOnStatusCode?: any,
-    @Inject("ibHttpToastErrorCode") public ibHttpToastErrorCode?: string
+    public ibHttpToastOnGenericFailure: string,
+    @Inject("ibHttpToastErrorField") public ibHttpToastErrorField: string,
+    @Inject("ibHttpToastOnStatusCode") public ibHttpToastOnStatusCode: any,
+    @Inject("ibHttpToastErrorCode") public ibHttpToastErrorCode: string
   ) {}
 
   intercept(
