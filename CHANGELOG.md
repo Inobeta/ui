@@ -4,6 +4,11 @@
 
 | Issue ID | Type | Section | Description |
 | -- | -- | -- | -- |
+|DEVK-331|fix|ibHttpModule|Default value of injection token refactoring|
+|DEVK-333|fix|IbFilterModule|Fix errors when filter referencies on non existing column|
+|DEVK-336|refactor|ibHttpModule|ibLoginService.login was not a pure function|
+|DEVK-339|fix|IbFilterModule|Some types was not exported|
+|DEVK-345|fix|IbMaterialFormModule|Dropdown "select all" option was not working|
 
 ## [17.1.0] (2024-03-01)
 
