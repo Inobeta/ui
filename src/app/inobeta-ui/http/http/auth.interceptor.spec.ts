@@ -11,6 +11,7 @@ import { IbLoginService } from '../auth/login.service';
 import { IbLoginServiceStub } from '../auth/login.service.stub.spec';
 import { HttpRequest } from '@angular/common/http';
 import { provideMockStore } from '@ngrx/store/testing';
+import { IbAuthTypes } from '../auth/session.model';
 
 @Component({
   selector: 'login-dummy',
@@ -38,11 +39,21 @@ describe('IbAuthInterceptor', () => {
           { path: 'login', component: LoginDummyComponent},
         ]),
         IbToolTestModule,
-        IbToastTestModule
+        IbToastTestModule,
       ],
       declarations: [LoginDummyComponent],
       providers: [
         { provide: IbLoginService, useClass: IbLoginServiceStub},
+        { provide: "ibHttpEnableInterceptors", useValue: true },
+        { provide: "ibHttpAuthType", useValue: IbAuthTypes.JWT },
+        {
+          provide: "ibHttpAPILoginUrl",
+          useValue: "/api/auth/login",
+        },
+        {
+          provide: "ibHttpToastOnLoginFailure",
+          useValue: "shared.ibHttp.authFailure",
+        },
         IbAuthInterceptor,
         provideMockStore({  }),
       ]
