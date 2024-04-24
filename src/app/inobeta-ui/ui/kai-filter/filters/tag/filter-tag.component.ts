@@ -31,6 +31,9 @@ export class IbTagFilter extends IbFilterBase {
 
   get displayLabel() {
     if (this.rawValue?.length == 1) {
+      if (this.rawValue[0] === "__empty") {
+        return "shared.ibFilter.label.tag.empty";
+      }
       return "shared.ibFilter.label.tag.singleItem";
     }
 
@@ -49,7 +52,10 @@ export class IbTagFilter extends IbFilterBase {
   }
 
   get displayValue() {
-    return this.rawValue?.length && this.rawValue[0];
+    if (!Array.isArray(this.rawValue)) {
+      return "";
+    }
+    return this.rawValue[0] === "__empty" ? this.rawValue[1] : this.rawValue[0];
   }
 
   initializeFromColumn(data: any[]) {
@@ -91,7 +97,7 @@ export class IbTagFilter extends IbFilterBase {
     if (this.searchCriteria.value.includes("__empty")) {
       items = [...items, eq(null), eq(undefined), eq("")];
     }
-    
+
     return or(items);
   };
 

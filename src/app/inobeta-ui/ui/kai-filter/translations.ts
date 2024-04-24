@@ -35,6 +35,7 @@ export const ibKaiFilterTranslations = {
         "text": "{{condition}} \"{{value}}\"",
         "tag": {
           "default": "{{name}}",
+          "empty": "senza valore",
           "singleItem": "{{item}}",
           "multipleItems": "{{item}} +{{length}}"
         },
