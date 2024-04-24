@@ -1,102 +1,102 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed, waitForAsync } from "@angular/core/testing";
 
-import { IbToolTestModule } from '../../../tools';
-import { CommonModule } from '@angular/common';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { IbDynamicFormsModule } from '../../forms';
-import { MatOptionModule } from '@angular/material/core';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatSelectModule } from '@angular/material/select';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FlexLayoutModule } from '@Inobeta/flex-layout';
-import {  IbMatDropdownComponent } from '../controls/dropdown';
+import { Component } from "@angular/core";
+import {
+  FormsModule,
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
+} from "@angular/forms";
+import { By } from "@angular/platform-browser";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
+import { TranslateModule } from "@ngx-translate/core";
+import { IbToolTestModule } from "../../../tools";
+import {
+  IbMatDropdownComponent,
+  IbMatDropdownControl,
+} from "../controls/dropdown";
+import { IbMaterialFormModule } from "../material-form.module";
+import { HarnessLoader } from "@angular/cdk/testing";
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
+import { get } from "http";
+import { MatSelectHarness } from "@angular/material/select/testing";
 
+@Component({
+  selector: "ib-dropdown-app",
+  template: ` <ib-material-form [fields]="fields" /> `,
+})
+class IbDropdownApp {
+  fields = [
+    new IbMatDropdownControl({
+      key: "test",
+      options: [
+        { key: "test1", value: "value1" },
+        { key: "test2", value: "value2" },
+      ],
+      multiple: true,
+      change: () => {},
+    }),
+  ];
+}
 
-
-describe('IbMatDropdownComponent', () => {
+fdescribe("IbMatDropdownComponent", () => {
   let component: IbMatDropdownComponent;
   let formBuilder: UntypedFormBuilder;
   let control: UntypedFormControl;
+  let loader: HarnessLoader;
   let form: UntypedFormGroup;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        IbMatDropdownComponent,
-      ],
+      declarations: [IbDropdownApp],
       imports: [
         IbToolTestModule,
-        CommonModule,
         FormsModule,
-        ReactiveFormsModule,
-        IbDynamicFormsModule,
-        MatFormFieldModule,
-        MatOptionModule,
-        MatSelectModule,
         NoopAnimationsModule,
-        FlexLayoutModule,
-        MatIconModule,
-        MatTooltipModule
-      ]
-    })
-    .compileComponents();
+        IbMaterialFormModule,
+        TranslateModule.forRoot({
+          extend: true,
+        }),
+      ],
+    }).compileComponents();
     formBuilder = TestBed.inject(UntypedFormBuilder);
-    control = new UntypedFormControl('control');
+    control = new UntypedFormControl("control");
     form = formBuilder.group(control);
+    const fixture = TestBed.createComponent(IbDropdownApp);
+    fixture.detectChanges();
+    component = fixture.debugElement.query(
+      By.directive(IbMatDropdownComponent)
+    ).componentInstance;
+    loader = TestbedHarnessEnvironment.loader(fixture);
   }));
 
-  beforeEach(() => {
-    const componentRef = TestBed.createComponent(IbMatDropdownComponent);
-    component = componentRef.componentInstance;
-    component.data = {
-      self: control,
-      base: {
-        options: [
-          { key: 'test1', value: 'value1' },
-          { key: 'test2', value: 'value2' }
-        ],
-        multiple: true,
-        change: () => {}
-      },
-      form,
-      hasError: null,
-      formControlErrors: null
-    };
-  });
-
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 
-
-  it('should select and deselect all', () => {
-    const spy = spyOn(component.data.self, 'setValue').and.callThrough();
+  it("should select and deselect all", () => {
+    const spy = spyOn(component.data.self, "setValue").and.callThrough();
     component.selectAll();
-    expect(spy).toHaveBeenCalledWith(['test1', 'test2']);
+    expect(spy).toHaveBeenCalledWith(["test1", "test2"]);
     spy.calls.reset();
     component.selectAll();
     expect(spy).toHaveBeenCalledWith([]);
     spy.calls.reset();
   });
 
+  it("should handle selection when multiple", async () => {
+    const spy = spyOn(component.data.base, "change").and.callThrough();
+    const select = await loader.getHarness(MatSelectHarness);
+    await select.open();
 
-
-  it('should handle selection when multiple', () => {
-    const spy = spyOn(component.data.base, 'change').and.callThrough();
-    component.handleSelection({value: []});
+    await select.clickOptions({ text: "value1" });
     expect(spy).toHaveBeenCalled();
-    spy.calls.reset();
-    component.handleSelection({value: ['something']});
+    expect(component.data.self.value).toEqual(["test1"]);
+    await select.clickOptions({ text: "shared.ibDropdown.selectAll" });
     expect(spy).toHaveBeenCalled();
-    spy.calls.reset();
-    component.data.base.multiple = false;
-    component.handleSelection({value: []});
+    expect(component.data.self.value).toEqual(["test1", "test2"]);
+    await select.clickOptions({ text: "shared.ibDropdown.selectNone" });
     expect(spy).toHaveBeenCalled();
-    spy.calls.reset();
-    control.setValue(['test1', 'test2']);
-    component.handleSelection({value: ['test1', 'test2']});
+    expect(component.data.self.value).toEqual([]);
   });
-
 });

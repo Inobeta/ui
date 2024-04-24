@@ -4,7 +4,7 @@ import {
   HttpInterceptor,
   HttpRequest,
 } from "@angular/common/http";
-import { Inject, Injectable, Optional, inject } from "@angular/core";
+import { Inject, Injectable, inject } from "@angular/core";
 import { Store } from "@ngrx/store";
 import { Observable, throwError } from "rxjs";
 import { catchError, mergeMap, take } from "rxjs/operators";
@@ -24,20 +24,13 @@ export class IbAuthInterceptor implements HttpInterceptor {
     private ibToast: IbToastNotification,
     private login: IbLoginService<IbAPITokens>,
     @Inject("ibHttpEnableInterceptors")
-    @Optional()
-    public ibHttpEnableInterceptors?: boolean,
-    @Inject("ibHttpAPILoginUrl") @Optional() public ibHttpAPILoginUrl?: string,
+    public ibHttpEnableInterceptors: boolean,
+    @Inject("ibHttpAPILoginUrl") public ibHttpAPILoginUrl: string,
     @Inject("ibHttpToastOnLoginFailure")
-    @Optional()
-    public ibHttpToastOnLoginFailure?: string,
-    @Inject("ibHttpAuthType") @Optional() public ibHttpAuthType?: IbAuthTypes
-  ) {
-    this.ibHttpEnableInterceptors = this.ibHttpEnableInterceptors ?? true;
-    this.ibHttpAPILoginUrl = this.ibHttpAPILoginUrl || "/api/login";
-    this.ibHttpToastOnLoginFailure =
-      this.ibHttpToastOnLoginFailure || "shared.ibHttp.authFailure";
-    this.ibHttpAuthType = this.ibHttpAuthType || IbAuthTypes.JWT;
-  }
+    public ibHttpToastOnLoginFailure: string,
+    @Inject("ibHttpAuthType") public ibHttpAuthType: IbAuthTypes
+  ) {}
+
   intercept(
     request: HttpRequest<any>,
     next: HttpHandler
@@ -68,13 +61,13 @@ export class IbAuthInterceptor implements HttpInterceptor {
       }),
       catchError((err) => {
         if (!this.ibHttpEnableInterceptors) {
-          return throwError(err);
+          return throwError(() => new Error(err));
         }
         if (request.url !== this.ibHttpAPILoginUrl && err.status === 401) {
           this.ibToast.open(this.ibHttpToastOnLoginFailure, "warning");
           this.login.logout(false);
         }
-        return throwError(err);
+        return throwError(() => new Error(err));
       })
     );
   }
