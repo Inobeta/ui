@@ -33,14 +33,14 @@ import { IbKaiTableState } from "../../inobeta-ui/ui/kai-table/table.types";
         <ib-text-filter name="name">Name</ib-text-filter>
         <ib-tag-filter name="fruit">Fruit</ib-tag-filter>
         <ib-number-filter name="number">Amount</ib-number-filter>
-        <ib-date-filter name="aDate">Purchased</ib-date-filter>
+        <ib-date-filter name="created_at">Purchased</ib-date-filter>
       </ib-filter>
 
       <ib-selection-column (ibRowSelectionChange)="selectionChange($event)" />
       <ib-text-column headerText="Name" name="name" sort />
       <ib-text-column headerText="Fruit" name="fruit" sort />
       <ib-number-column headerText="Amount" name="number" aggregate sort />
-      <ib-date-column headerText="Purchased" name="aDate" sort />
+      <ib-date-column headerText="Purchased" name="created_at" sort />
       <ib-column name="subscribed" sort>
         <ng-container *ibCellDef="let element">
           <mat-icon [color]="element.subscribed ? 'accent' : ''">{{
@@ -74,7 +74,7 @@ export class IbKaiTableFullExamplePage {
   selectionColumn: IbSelectionColumn;
 
   data: any[] = [];
-  columns = ["name", "fruit", "number", "aDate", "subscribed"];
+  columns = ["name", "fruit", "number", "created_at", "subscribed"];
   state: IbKaiTableState = "idle";
 
   constructor(private userService: UserService) {}

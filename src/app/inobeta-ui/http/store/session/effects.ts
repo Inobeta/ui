@@ -78,10 +78,6 @@ export class IbSessionEffects {
     private login: IbLoginService<IbAPITokens>,
     private authLegacy: IbAuthService<IbAPITokens>,
     @Inject("ibHttpSessionStorageType")
-    @Optional()
-    public ibHttpSessionStorageType?: IbStorageTypes
-  ) {
-    this.ibHttpSessionStorageType =
-      this.ibHttpSessionStorageType ?? IbStorageTypes.LOCALSTORAGE;
-  }
+    public ibHttpSessionStorageType: IbStorageTypes
+  ) {}
 }

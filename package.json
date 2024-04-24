@@ -1,6 +1,6 @@
 {
   "name": "@inobeta/ui",
-  "version": "17.1.0",
+  "version": "17.1.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --disable-host-check",
@@ -105,6 +105,5 @@
       "sass": "./_index.scss"
     }
   },
-  "readme": "ERROR: No README data found!",
-  "_id": "@inobeta/ui@17.1.0"
+  "readme": "ERROR: No README data found!"
 }
