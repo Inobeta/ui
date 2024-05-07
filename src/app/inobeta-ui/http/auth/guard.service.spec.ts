@@ -16,7 +16,9 @@ describe('IbAuthGuard & IbLoginGuard with no session', () => {
           ibHttpState: null
         }}),
         IbAuthGuard,
-        IbLoginGuard
+        IbLoginGuard,
+        { provide: "ibHttpGUIDashboardUrl", useValue: "/home" },
+        { provide: "ibHttpGUILoginUrl", useValue: "/login" },
       ]
     }).compileComponents();
   });
@@ -86,7 +88,9 @@ describe('IbAuthGuard & IbLoginGuard with a session', () => {
           ibHttpState: mockStore
         }}),
         IbAuthGuard,
-        IbLoginGuard
+        IbLoginGuard,
+        { provide: "ibHttpGUIDashboardUrl", useValue: "/home" },
+        { provide: "ibHttpGUILoginUrl", useValue: "/login" },
       ]
     }).compileComponents();
   });
@@ -117,7 +121,7 @@ describe('IbAuthGuard & IbLoginGuard with a session', () => {
     const lguard = TestBed.inject(IbLoginGuard);
     lguard.canActivate().subscribe(() => {
       expect(routerSpy.navigateByUrl).toHaveBeenCalledTimes(1);
-      expect (routerSpy.navigateByUrl).toHaveBeenCalledWith ('/dashboard');
+      expect (routerSpy.navigateByUrl).toHaveBeenCalledWith ('/home');
       done()
     })
   });
