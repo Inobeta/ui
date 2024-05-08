@@ -199,6 +199,12 @@ export class IbColumn<T> implements OnDestroy, OnInit {
     }
   }
 
+  ngAfterViewInit() {
+    if (this._table.isRemote && this.aggregateCell) {
+      this.aggregateCell.showTotal = false;
+    }
+  }
+  
   ngOnDestroy() {
     if (this._table) {
       this._table.matTable.removeColumnDef(this.columnDef);
