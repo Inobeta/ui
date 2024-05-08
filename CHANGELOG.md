@@ -4,6 +4,7 @@
 
 | Issue ID | Type | Section | Description |
 | -- | -- | -- | -- |
+|DEVK-340|feat|IbFilter|Added `ib-boolean-filter`|
 
 ## [17.1.0] (2024-03-01)
 
