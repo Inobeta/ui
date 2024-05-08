@@ -32,7 +32,7 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    max-height: var(--mat-table-header-container-height);
+    height: var(--mat-table-header-container-height);
 
     &:has(ib-table-view-group),
     &:has(> section:not(:empty)) {

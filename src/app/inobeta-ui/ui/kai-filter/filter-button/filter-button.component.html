@@ -3,12 +3,15 @@
     <ng-content select="[ib-filter-name]"></ng-content>
     <ng-content select="[ib-filter-value]"></ng-content>
   </section>
-  <mat-icon  iconPositionEnd>arrow_drop_down</mat-icon>
+  <mat-icon iconPositionEnd>arrow_drop_down</mat-icon>
 </button>
 
 <mat-menu #menu="matMenu">
   <section (click)="$event.stopPropagation();" style="width: 280px">
     <ng-content></ng-content>
-    <ng-content select="ib-filter-actions"></ng-content>
+    <mat-divider></mat-divider>
+    <section style="display:flex; justify-content: flex-end; margin-right: 1em; margin-top: 0.5em">
+      <ng-content select="ib-filter-action-group"></ng-content>
+    </section>
   </section>
 </mat-menu>

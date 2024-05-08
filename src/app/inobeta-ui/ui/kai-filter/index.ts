@@ -1,4 +1,4 @@
-export * from "./filter-actions/filter-actions.component";
+export * from "./filter-button/filter-actiong-group.component";
 export * from "./filter-button/filter-button.component";
 export * from "./filter.component";
 export * from "./filter.types";

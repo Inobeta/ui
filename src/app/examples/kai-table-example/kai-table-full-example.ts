@@ -1,7 +1,7 @@
 import { Component, ViewChild } from "@angular/core";
 import { IbSelectionColumn } from "../../inobeta-ui/ui/kai-table/columns/selection-column";
-import { UserService } from "./users";
 import { IbKaiTableState } from "../../inobeta-ui/ui/kai-table/table.types";
+import { UserService } from "./users";
 
 @Component({
   selector: "ib-kai-table-full-example",
@@ -34,6 +34,7 @@ import { IbKaiTableState } from "../../inobeta-ui/ui/kai-table/table.types";
         <ib-tag-filter name="fruit">Fruit</ib-tag-filter>
         <ib-number-filter name="number">Amount</ib-number-filter>
         <ib-date-filter name="created_at">Purchased</ib-date-filter>
+        <ib-boolean-filter name="subscribed">Subscribed</ib-boolean-filter>
       </ib-filter>
 
       <ib-selection-column (ibRowSelectionChange)="selectionChange($event)" />
