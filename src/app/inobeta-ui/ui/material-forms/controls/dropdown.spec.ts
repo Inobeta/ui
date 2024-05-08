@@ -39,7 +39,7 @@ class IbDropdownApp {
   ];
 }
 
-fdescribe("IbMatDropdownComponent", () => {
+describe("IbMatDropdownComponent", () => {
   let component: IbMatDropdownComponent;
   let formBuilder: UntypedFormBuilder;
   let control: UntypedFormControl;
