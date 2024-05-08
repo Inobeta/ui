@@ -10,3 +10,4 @@ export * from "./filters/number/filter-number.component";
 export * from "./filters/search-bar/search-bar.component";
 export * from "./filters/tag/filter-tag.component";
 export * from "./filters/text/filter-text.component";
+export * from "./filters/boolean/boolean-filter.component";
