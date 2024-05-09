@@ -140,7 +140,7 @@ export const IbAverageAggregateProvider = {
         {{ result.currentPage }}
       </div>
 
-      <div>
+      <div *ngIf="showTotal">
         <span class="mat-caption">{{
           "shared.aggregate.total" | translate
         }}</span>
@@ -161,6 +161,8 @@ export class IbAggregateCell {
     return `${this.result.currentPage} (${this.result.total})`;
   }
 
+  showTotal = true;
+  
   availableFunctions: IbAggregate[] = [];
 
   constructor(
