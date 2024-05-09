@@ -87,6 +87,10 @@ export function evalOperation(
   const valueType = typeof value;
   const filterValueType = typeof filterValue;
 
+  if (filterValue instanceof Date) {
+    filterValue = filterValue.toISOString();
+  }
+
   if (valueType == "string") {
     value = (value as string).trim().toLowerCase();
   }

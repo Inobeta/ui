@@ -147,7 +147,10 @@ describe("IbDateFilter", () => {
     start.setTime(now.getTime() - 1 * 60_000 * 60 * 24);
     start.setHours(0);
     end.setTime(now.getTime() + 1 * 60_000 * 60 * 24);
-    end.setHours(0);
+    end.setHours(23);
+    end.setMinutes(59);
+    end.setSeconds(59);
+    end.setMilliseconds(999);
 
     expect(component.build()).toEqual(and([gte(start), lte(end)]));
   });

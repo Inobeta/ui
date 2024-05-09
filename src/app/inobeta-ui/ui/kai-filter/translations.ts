@@ -35,12 +35,16 @@ export const ibKaiFilterTranslations = {
         "text": "{{condition}} \"{{value}}\"",
         "tag": {
           "default": "{{name}}",
+          "empty": "senza valore",
           "singleItem": "{{item}}",
           "multipleItems": "{{item}} +{{length}}"
         },
         "number": "tra {{min}} e {{max}}"
       },
-      noItems: "Nessun elemento."
+      includeEmpty: "Includi senza valore",
+      noItems: "Nessun elemento.",
+      true: "Vero",
+      false: "Falso"
     },
   }
 }

@@ -19,6 +19,7 @@ import { GithubDataSource } from "./github-data-source";
         <button mat-icon-button (click)="refresh()" matTooltip="Refresh data">
           <mat-icon>refresh</mat-icon>
         </button>
+        <ib-table-data-export-action />
       </ib-table-action-group>
 
       <ib-table-view-group />
@@ -42,7 +43,7 @@ import { GithubDataSource } from "./github-data-source";
         sort
       />
       <ib-text-column name="state" />
-      <ib-text-column headerText="#" name="number" />
+      <ib-number-column headerText="#" name="number" aggregate />
       <ib-text-column name="title" />
     </ib-kai-table>
   `,

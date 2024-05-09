@@ -1,4 +1,4 @@
-export * from "./filter-actions/filter-actions.component";
+export * from "./filter-button/filter-actiong-group.component";
 export * from "./filter-button/filter-button.component";
 export * from "./filter.component";
 export * from "./filter.types";
@@ -10,3 +10,4 @@ export * from "./filters/number/filter-number.component";
 export * from "./filters/search-bar/search-bar.component";
 export * from "./filters/tag/filter-tag.component";
 export * from "./filters/text/filter-text.component";
+export * from "./filters/boolean/boolean-filter.component";

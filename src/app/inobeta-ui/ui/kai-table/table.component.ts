@@ -155,11 +155,14 @@ export class IbTable implements OnDestroy {
   aggregateColumns = new Set<string>();
   aggregate = new EventEmitter();
 
+  isRemote = false;
+
   ngOnInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
 
     if (this.dataSource instanceof IbTableRemoteDataSource) {
+      this.isRemote = true;
       this.dataSource._state
         .pipe(takeUntil(this._destroyed))
         .subscribe((s) => (this.state = s));
@@ -252,6 +255,7 @@ export class IbTable implements OnDestroy {
 
   private setupExportAction() {
     this.exportAction.showSelectedRowsOption = !!this.selectionColumn;
+    this.exportAction.showAllRowsOption = !this.isRemote;
     this.exportAction.ibDataExport
       .pipe(takeUntil(this._destroyed))
       .subscribe((settings) => {

@@ -26,10 +26,14 @@ export class IbTagFilter extends IbFilterBase {
   private _options: Set<string> = new Set();
   private isSetByUser = false;
 
+  hasNullishValues = false;
   query = "";
 
   get displayLabel() {
     if (this.rawValue?.length == 1) {
+      if (this.rawValue[0] === "__empty") {
+        return "shared.ibFilter.label.tag.empty";
+      }
       return "shared.ibFilter.label.tag.singleItem";
     }
 
@@ -48,7 +52,10 @@ export class IbTagFilter extends IbFilterBase {
   }
 
   get displayValue() {
-    return this.rawValue?.length && this.rawValue[0];
+    if (!Array.isArray(this.rawValue)) {
+      return "";
+    }
+    return this.rawValue[0] === "__empty" ? this.rawValue[1] : this.rawValue[0];
   }
 
   initializeFromColumn(data: any[]) {
@@ -58,9 +65,11 @@ export class IbTagFilter extends IbFilterBase {
   }
 
   private setOptions(options: string[]) {
+    this.hasNullishValues = options.some((a) => !a);
     this._options = new Set(
       options
         .map((a) => a)
+        .filter((a) => a)
         .sort((a, b) => (a.toLowerCase() > b.toLowerCase() ? 1 : -1))
     );
   }
@@ -76,14 +85,25 @@ export class IbTagFilter extends IbFilterBase {
     super.revertFilter();
   }
 
-  build = (): IbFilterDef =>
-    this.searchCriteria?.value.length
-      ? or(this.searchCriteria.value.map((s) => eq(s)))
-      : none();
+  build = (): IbFilterDef => {
+    if (!this.searchCriteria?.value.length) {
+      return none();
+    }
+
+    let items = this.searchCriteria.value
+      .filter((s) => s != "__empty")
+      .map((s) => eq(s));
+
+    if (this.searchCriteria.value.includes("__empty")) {
+      items = [...items, eq(null), eq(undefined), eq("")];
+    }
+
+    return or(items);
+  };
 
   toQuery(): IbTagQuery {
     const items = this.searchCriteria?.value
-      ? this.searchCriteria?.value.map((s) => s)
+      ? this.searchCriteria?.value.filter((s) => s != "__empty").map((s) => s)
       : [];
     return {
       items,

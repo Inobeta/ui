@@ -6,7 +6,6 @@ import { Store } from "@ngrx/store";
 import { jwtDecode } from "jwt-decode";
 import { Observable, throwError } from "rxjs";
 import { catchError, filter, map } from "rxjs/operators";
-import { IbStorageTypes } from "../../storage";
 import { ibAuthActions } from "../store/session/actions";
 import { ibSelectActiveSession } from "../store/session/selectors";
 import { IbAuthService } from "./auth.service";
@@ -30,25 +29,25 @@ export class IbLoginService<T extends IbAPITokens | IbAPITokens> {
     private snackBar: MatSnackBar,
     /** Login page path */
     @Inject("ibHttpGUILoginUrl")
-    public ibHttpGUILoginUrl = "/login",
+    public ibHttpGUILoginUrl,
     /** API login endpoint */
     @Inject("ibHttpAPILoginUrl")
-    public ibHttpAPILoginUrl = "/api/auth/login",
+    public ibHttpAPILoginUrl,
     /** Authorizazion type. Either bearer token (JWT) or basic */
     @Inject("ibHttpAuthType")
-    public ibHttpAuthType = IbAuthTypes.JWT,
+    public ibHttpAuthType,
     /** Where to storage the user's access token */
     @Inject("ibHttpSessionStorageType")
-    public ibHttpSessionStorageType = IbStorageTypes.LOCALSTORAGE,
+    public ibHttpSessionStorageType,
     /** Refresh access token API endpoint */
     @Inject("ibHttpAPIRefreshUrl")
-    public ibHttpAPIRefreshUrl = "/api/auth/refresh",
+    public ibHttpAPIRefreshUrl,
     /** Property name of additional data or claims within the JWT token */
     @Inject("ibHttpJWTClaimsField")
-    public ibHttpJWTClaimsField = "https://hasura.io/jwt/claims",
+    public ibHttpJWTClaimsField,
     /** Property name of the user roles within the JWT claims field */
     @Inject("ibHttpJWTRolesField")
-    public ibHttpJWTRolesField = "x-hasura-allowed-roles"
+    public ibHttpJWTRolesField
   ) {}
 
   /**
