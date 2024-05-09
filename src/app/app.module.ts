@@ -11,6 +11,7 @@ import { MatGridListModule } from "@angular/material/grid-list";
 import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
 import { MatMenuModule } from "@angular/material/menu";
+import { MatTooltipModule } from "@angular/material/tooltip";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { EffectsModule } from "@ngrx/effects";
 import { ActionReducerMap, StoreModule, combineReducers } from "@ngrx/store";
@@ -23,14 +24,15 @@ import { DynamicFormsExampleComponent } from "./examples/dynamic-forms-example/d
 import { AuthExampleComponent } from "./examples/http/auth.component";
 import { HttpExampleComponent } from "./examples/http/http-example.component";
 import { IbKaiTableActionColumnExamplePage } from "./examples/kai-table-example/kai-table-actions-example";
-import { IbKaiTableApiExamplePage } from "./examples/kai-table-example/server-side/kai-table-api-example";
 import { IbKaiTableExamplePage } from "./examples/kai-table-example/kai-table-example";
 import { IbKaiTableFullExamplePage } from "./examples/kai-table-example/kai-table-full-example";
+import { IbKaiTableApiExamplePage } from "./examples/kai-table-example/server-side/kai-table-api-example";
 import { IbMainMenuExampleComponent } from "./examples/main-menu-example/main-menu-example.component";
 import { MaterialFormArrayExampleComponent } from "./examples/material-form-array-example/form-array-example.component";
 import { MaterialFormExampleComponent } from "./examples/material-form-example/material-form-example.component";
 import { MyCustomTextboxComponent } from "./examples/material-form-example/my-custom-textbox.model";
 import { MaterialFormGridExampleComponent } from "./examples/material-form-grid-example/material-form-grid-example.component";
+import { MaterialFormValueExampleComponent } from "./examples/material-form-value-example/material-form.value.component";
 import { NavComponent } from "./examples/nav/nav.component";
 import {
   ICounterState,
@@ -62,8 +64,6 @@ import { IbTableModule } from "./inobeta-ui/ui/table/table.module";
 import { IbToastModule } from "./inobeta-ui/ui/toast/toast.module";
 import { IbViewModule } from "./inobeta-ui/ui/views/view.module";
 import { RoutingModule } from "./routing.module";
-import { MaterialFormValueExampleComponent } from "./examples/material-form-value-example/material-form.value.component";
-import { MatTooltipModule } from "@angular/material/tooltip";
 
 export interface IAppState {
   ibHttpState: IHttpStore;
@@ -103,7 +103,7 @@ const reduxStorageSave = ibSetupHydration("__redux-store-inobeta-ui__", [
     MaterialFormArrayExampleComponent,
     MaterialFormExampleComponent,
     MaterialFormGridExampleComponent,
-    MaterialFormValueExampleComponent
+    MaterialFormValueExampleComponent,
   ],
   imports: [
     CommonModule,
@@ -158,7 +158,7 @@ const reduxStorageSave = ibSetupHydration("__redux-store-inobeta-ui__", [
       },
     }),
     MatCardModule,
-    MatTooltipModule
+    MatTooltipModule,
   ],
   exports: [FlexLayoutModule],
   providers: [

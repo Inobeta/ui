@@ -22,19 +22,20 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatSliderModule } from "@angular/material/slider";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { IbFilterPipe } from "../../core";
 import { IbTableActionModule } from "../kai-table/action";
 import { IbMatDateAdapter } from "../material-forms/intl/datepicker.intl";
 import { ibMatDatepickerTranslate } from "../material-forms/material-form.module";
-import { IbFilterActions } from "./filter-actions/filter-actions.component";
+import { IbFilterActionGroup } from "./filter-button/filter-actiong-group.component";
 import { IbFilterButton } from "./filter-button/filter-button.component";
 import { IbFilter } from "./filter.component";
 import { IbFilterBase } from "./filters/base/filter-base";
+import { IbBooleanFilter } from "./filters/boolean/boolean-filter.component";
 import { IbDateFilter } from "./filters/date/filter-date.component";
 import { IbNumberFilter } from "./filters/number/filter-number.component";
 import { IbSearchBar } from "./filters/search-bar/search-bar.component";
 import { IbTagFilter } from "./filters/tag/filter-tag.component";
 import { IbTextFilter } from "./filters/text/filter-text.component";
-import { IbFilterPipe } from "../../core";
 
 @NgModule({
   imports: [
@@ -59,7 +60,10 @@ import { IbFilterPipe } from "../../core";
     TranslateModule.forChild({
       extend: true,
     }),
-    IbFilterPipe
+    IbFilterPipe,
+    IbFilterButton,
+    IbFilterActionGroup,
+    IbBooleanFilter,
   ],
   exports: [
     IbFilter,
@@ -69,18 +73,17 @@ import { IbFilterPipe } from "../../core";
     IbTagFilter,
     IbNumberFilter,
     IbDateFilter,
-    IbFilterActions,
     IbSearchBar,
+    IbBooleanFilter,
+    IbFilterActionGroup,
   ],
   declarations: [
     IbFilter,
     IbFilterBase,
-    IbFilterButton,
     IbTextFilter,
     IbTagFilter,
     IbNumberFilter,
     IbDateFilter,
-    IbFilterActions,
     IbSearchBar,
   ],
   providers: [

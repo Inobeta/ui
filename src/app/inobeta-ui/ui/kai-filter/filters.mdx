@@ -1,4 +1,4 @@
-import { Meta, Canvas, Markdown } from "@storybook/blocks";
+import { Meta, Markdown } from "@storybook/blocks";
 
 <Meta title="Components/Filter/Overview" />
 
@@ -7,11 +7,23 @@ import { Meta, Canvas, Markdown } from "@storybook/blocks";
 ## Build your own filter
 
 ```typescript
-// boolean-filter.components.ts
+// boolean-filter.component.ts
 @Component({
+  standalone: true,
+  imports: [
+    NgIf,
+    IbFilterButton,
+    IbFilterActionGroup,
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatButtonToggleModule,
+    MatRadioModule,
+    TranslateModule,
+    LowerCasePipe,
+  ],
   selector: "ib-boolean-filter",
   templateUrl: "boolean-filter.component.html",
-  // Provide this class with an `IbFilterBase` token so that can be read by `IbFilter`
+  // Important: provide IbFilterBase so that can be used within `ib-filter`
   providers: [{ provide: IbFilterBase, useExisting: IbBooleanFilter }],
 })
 export class IbBooleanFilter extends IbFilterBase {
@@ -22,47 +34,125 @@ export class IbBooleanFilter extends IbFilterBase {
   }
 
   build(): IbFilterDef {
-    return none();
+    if (this.searchCriteria.value === null) {
+      return none();
+    }
+
+    return eq(this.searchCriteria.value);
+  }
+
+  toQuery() {
+    return this.searchCriteria.value;
   }
 }
 ```
+**What's `searchCriteria`?**
+
+It is a `FormControl` or `FormGroup` that is used to store the value of the filter that will be then used to build the filter definition in the `build()` method.
+
+**What's `rawValue`?**
+
+`rawValue` is a property that is automatically set by the `IbFilterBase` class.
+It contains the value of the filter previously applied the user.
+It can be used to display the current value of the filter in the UI.
+
+**What's `build()`?**
+
+`build()` is a method that is used to build the portion of a filter.  
+It is called when the filter is applied.
 
 ```html
-<!-- boolean-filter.component.html -->
-<!--
-  ib-filter-button
-  Out-of-the-box component to implement your filter with styles aligned with the filters provided by the library.
-  The implicit content will be assigned as the template for the mat-menu overlay.
--->
+<!-- boolean-filter.component.ts -->
 <ib-filter-button>
-  <!-- Slot for the filter name -->
   <span ib-filter-name><ng-content></ng-content></span>
-  <!-- Slot for the filter's value applied by the user -->
-  <!-- isDirt: Getter that returns a boolean. It should lookup either the raw or compiled filter value, not searchCriteria -->
   <span ib-filter-value *ngIf="isDirty">
-    {{ displayValue ? "True" : "False" }}
+    {{ (displayValue ? "shared.ibFilter.true" : "shared.ibFilter.false") |
+    translate | lowercase }}
   </span>
 
-  <!-- Parent form exposed by IbFilter -->
-  <section [formGroup]="filter.form" style="padding: 0.5em 1em 0 1em">
-    <!--
-      Name of the searchCriteria form group or control. It should match the name of the filter
-      In this example, a FormControl was used
-    -->
-    <mat-radio-group [formControlName]="name">
-      <mat-radio-button [value]="true">True</mat-radio-button>
-      <mat-radio-button [value]="false">False</mat-radio-button>
-    </mat-radio-group>
+  <section [formGroup]="filter.form" style="padding: .5em 1em 0 1em">
+    <mat-button-toggle-group [formControlName]="name" style="width: 100%;">
+      <mat-button-toggle [value]="true" style="width: 100%;"
+        >{{ "shared.ibFilter.true" | translate }}</mat-button-toggle
+      >
+      <mat-button-toggle [value]="false" style="width: 100%;">
+        {{ "shared.ibFilter.false" | translate }}</mat-button-toggle
+      >
+    </mat-button-toggle-group>
   </section>
 
-  <!-- Footer for the clear and apply buttons -->
-  <ib-filter-actions>
+  <ib-filter-action-group>
     <button mat-button (click)="clear()" [disabled]="!isDirty">
       {{ "shared.ibFilter.clear" | translate }}
     </button>
     <button mat-button color="primary" (click)="applyFilter()">
       {{ "shared.ibFilter.update" | translate }}
     </button>
-  </ib-filter-actions>
+  </ib-filter-action-group>
 </ib-filter-button>
+```
+
+```html
+<ib-filter>
+  <!-- ... -->
+  <ib-boolean-filter name="subscribed">Subscribed</ib-boolean-filter>
+</ib-filter>
+```
+
+### Operators & conditions
+
+The `build()` method requires you to return an `IbFilterDef` object.
+This object is a representation of the filter that, in the context of `ib-kai-table`, will be evaluated against the value of each cell.
+The `IbFilterDef` object is a tree structure that can be built using the following functions:
+
+<Markdown>{`
+| Function | Description | Example |
+| --- | --- | --- |
+| \`none()\` | Undefined state of the filter. Do not filter against this field. | \`none()\` |
+| \`eq(value: any)\` | Filter for equality. | \`eq(true)\` |
+| \`neq(value: any)\` | Filter for inequality. | \`neq(true)\` |
+| \`gt(value: any)\` | Filter for greater than. | \`gt(10)\` |
+| \`gte(value: any)\` | Filter for greater than or equal. | \`gte(10)\` |
+| \`lt(value: any)\` | Filter for less than. | \`lt(10)\` |
+| \`lte(value: any)\` | Filter for less than or equal. | \`lte(10)\` |
+| \`contains(value: any)\` | Filter for string contains. | \`contains("foo")\` |
+| \`ncontains(value: any)\` | Filter for string does not contain. | \`ncontains("foo")\` |
+| \`startsWith(value: any)\` | Filter for string starts with. | \`startsWith("foo")\` |
+| \`endsWith(value: any)\` | Filter for string ends with. | \`endsWith("foo")\` |
+`}</Markdown>
+
+Operators can be combined using the `and` and `or` functions:
+
+```typescript
+// Filter for values greater than 5 and less than 10
+and(gt(5), lt(10));
+// Filter for values 2, 3, or 5
+or(eq(2), eq(3), eq(5));
+```
+
+### About `toQuery`
+
+The `toQuery` method is used to convert the filter value to a query that can be sent to the server.  
+This method is called when the filter is applied and the `fetchData` method is called on the data source.
+The query is then passed to the `fetchData` method as the `filter` parameter.
+
+The value returned by `toQuery` should be a serializable value useful for APIs, such as a REST API call, or a GraphQL query.
+
+```typescript
+type UserQuery = {
+  subscribed: boolean;
+};
+
+class UserDataSource extends IbTableRemoteDataSource<User, UserQuery> {
+  private http = inject(HttpClient);
+
+  fetchData(
+    sort: MatSort,
+    page: MatPaginator,
+    filter: UserQuery
+  ): Observable<IbFetchDataResponse<User>> {
+    console.log(filter.subscribed); // true or false
+    // ...
+  }
+}
 ```
