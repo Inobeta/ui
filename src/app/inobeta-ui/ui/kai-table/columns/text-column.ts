@@ -39,7 +39,6 @@ import { IbColumn } from "./column";
         {{ dataAccessor(data, name) }}
       </td>
       <td mat-footer-cell *matFooterCellDef style="max-width: fit-content">
-        <ib-aggregate *ngIf="aggregate"></ib-aggregate>
       </td>
     </ng-container>
   `,
