@@ -26,7 +26,7 @@ import { IbFilterPipe } from "../../core";
 import { IbTableActionModule } from "../kai-table/action";
 import { IbMatDateAdapter } from "../material-forms/intl/datepicker.intl";
 import { ibMatDatepickerTranslate } from "../material-forms/material-form.module";
-import { IbFilterActionGroup } from "./filter-button/filter-actiong-group.component";
+import { IbFilterActionGroup } from "./filter-button/filter-action-group.component";
 import { IbFilterButton } from "./filter-button/filter-button.component";
 import { IbFilter } from "./filter.component";
 import { IbFilterBase } from "./filters/base/filter-base";
