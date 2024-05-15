@@ -79,7 +79,7 @@ export class IbLoginService<T extends IbAPITokens | IbAPITokens> {
         );
         return token;
       }),
-      catchError((err) => throwError(() => new Error(err)))
+      catchError((err) => throwError(() => err))
     );
   }
 
