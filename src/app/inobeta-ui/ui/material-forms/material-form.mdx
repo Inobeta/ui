@@ -239,7 +239,6 @@ Listen to the `(keyup)` and `(change)` events, if that's necessary, binding them
 <input
   matInput
   [formControlName]="data.base.key"
-  [id]="data.base.key"
   (keyup)="data.base.change(data.self)"
   (change)="data.base.change(data.self)"
 />
@@ -276,7 +275,6 @@ Then, add the template outlet `data.formControlErrors` dedicated to the errors. 
   <input
     matInput
     [formControlName]="data.base.key"
-    [id]="data.base.key"
     (keyup)="data.base.change(data.self)"
     (change)="data.base.change(data.self)"
   />

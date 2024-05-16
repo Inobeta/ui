@@ -9,7 +9,6 @@ import { Component, Input } from '@angular/core';
     <input
       matInput
       [formControlName]="data.base.key"
-      [id]="data.base.key"
       [type]="data.base.type"
       (keyup)="data.base.change(data.self)"
       (change)="data.base.change(data.self)"
