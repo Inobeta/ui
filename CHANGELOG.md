@@ -7,13 +7,16 @@
 |DEVK-331|fix|ibHttpModule|Default value of injection token refactoring|
 |DEVK-333|fix|IbFilterModule|Fix errors when filter referencies on non existing column|
 |DEVK-336|refactor|ibHttpModule|ibLoginService.login was not a pure function|
+|DEVK-337|fix|IbDynamicForm|Patch form value on field definition change|
 |DEVK-339|fix|IbFilterModule|Some types was not exported|
-|DEVK-340|docs|IbFilterModule|Custom filter explained|
+|DEVK-340|docs|IbFilterModule|Custom filter explained & Added `ib-boolean-filter`|
 |DEVK-341|fix|IbFilterModule|Empty value added on filter tag|
+|DEVK-343|docs|IbViewModule|Missing doc added|
 |DEVK-344|fix|IbFilterModule|ISO8601 Date support|
 |DEVK-345|fix|IbMaterialFormModule|Dropdown "select all" option was not working|
 |DEVK-340|feat|IbFilter|Added `ib-boolean-filter`|
 |DEVK-338|fix|IbFilter|Workaround for tailwind overriding base styles|
+|DEVK-353|fix|IbMaterialFormModule|Input focus was not working inside a form array|
 
 ## [17.1.0] (2024-03-01)
 

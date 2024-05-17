@@ -31,7 +31,7 @@ export class IbErrorInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       catchError((err) => {
         if (!this.ibHttpEnableInterceptors) {
-          return throwError(() => new Error(err));
+          return throwError(() => err);
         }
         if ([200, 401].indexOf(err.status) === -1) {
           let errorMessage = this.ibHttpToastOnGenericFailure;
@@ -66,7 +66,7 @@ export class IbErrorInterceptor implements HttpInterceptor {
           }
           this.ibToast.open(errorMessage, "error");
         }
-        return throwError(() => new Error(err));
+        return throwError(() => err);
       })
     );
   }
