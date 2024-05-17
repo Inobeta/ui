@@ -67,13 +67,15 @@ describe('IbAuthInterceptor', () => {
   });
 
   it('Should detect 401', (done) => {
-    httpHandlerSpy.handle.and.returnValue(throwError(
-        {
-          status: 401,
-          error:
-            {message: 'test-error'}
-        }
-    ));
+    httpHandlerSpy.handle.and.returnValue(
+      throwError(
+        () =>
+          ({
+            status: 401,
+            error: { message: "test-error" },
+          })
+      )
+    );
     const requestMock = new HttpRequest('GET', '/test');
     service.intercept(requestMock, httpHandlerSpy).subscribe(() => {
       done();
@@ -86,13 +88,15 @@ describe('IbAuthInterceptor', () => {
 
 
   it('Should ignore other errors', (done) => {
-    httpHandlerSpy.handle.and.returnValue(throwError(
-        {
-          status: 404,
-          error:
-            {message: 'test-error'}
-        }
-    ));
+    httpHandlerSpy.handle.and.returnValue(
+      throwError(
+        () =>
+          ({
+            status: 404,
+            error: { message: "test-error" },
+          })
+      )
+    );
     const requestMock = new HttpRequest('GET', '/test');
     console.log('service.ibHttpAPILoginUrl', service.ibHttpAPILoginUrl)
     service.intercept(requestMock, httpHandlerSpy).subscribe(() => {
