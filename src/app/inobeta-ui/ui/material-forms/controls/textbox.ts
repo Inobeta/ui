@@ -15,7 +15,6 @@ import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, 
       matInput
       *ngIf="data.base.type === 'number'"
       [formControlName]="data.base.key"
-      [id]="data.base.key"
       [min]="minValidator"
       [max]="maxValidator"
       type="number"
@@ -26,7 +25,6 @@ import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, 
       matInput
       *ngIf="data.base.type === 'text'"
       [formControlName]="data.base.key"
-      [id]="data.base.key"
       [maxlength]="maxLengthValidator"
       type="text"
       (keyup)="data.base.change(data.self)"
@@ -36,7 +34,6 @@ import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, 
       matInput
       *ngIf="data.base.type === 'email'"
       [formControlName]="data.base.key"
-      [id]="data.base.key"
       type="email"
       (keyup)="data.base.change(data.self)"
       (change)="data.base.change(data.self)"
@@ -45,7 +42,6 @@ import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, 
       matInput
       *ngIf="data.base.type === 'password'"
       [formControlName]="data.base.key"
-      [id]="data.base.key"
       type="password"
       (keyup)="data.base.change(data.self)"
       (change)="data.base.change(data.self)"
@@ -54,7 +50,6 @@ import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, 
       matInput
       *ngIf="data.base.type === 'date'"
       [formControlName]="data.base.key"
-      [id]="data.base.key"
       type="date"
       (keyup)="data.base.change(data.self)"
       (change)="data.base.change(data.self)"
