@@ -72,12 +72,12 @@ describe('IbErrorInterceptor', () => {
 
 
   it('Should ignore 401', (done) => {
-    httpHandlerSpy.handle.and.returnValue(throwError(
+    httpHandlerSpy.handle.and.returnValue(throwError(() => (
         {
           status: 401,
           error:
             {message: 'test-error'}
-        }
+        })
     ));
 
     service.intercept(httpRequestSpy, httpHandlerSpy).subscribe(() => {

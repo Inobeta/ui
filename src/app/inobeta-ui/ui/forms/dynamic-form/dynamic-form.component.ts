@@ -68,6 +68,7 @@ export class IbDynamicFormComponent implements OnInit, OnChanges, OnDestroy {
 
     if (fields && !fields.isFirstChange()) {
       this.form = this.cs.toFormGroup(fields.currentValue);
+      this.form.patchValue(this.value);
     }
 
     const value = changes.value;

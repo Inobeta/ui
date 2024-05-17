@@ -456,6 +456,35 @@ export class IbKaiTableExamplePage {
 }
 ```
 
+## Views
+
+To add views to a table, first import `IbViewModule` alongside `IbKaiTableModule`, `IbTableActionModule`, and `IbFilterModule`.
+
+```typescript
+@NgModule({
+  imports: [IbKaiTableModule, IbTableActionModule, IbViewModule, IbFilterModule],
+  // ...
+})
+export class TableWithViewsModule {}
+```
+
+> ⚠️ An `ib-filter` component is required to use `ib-table-view-group`.
+> Also, the `tableName` property must be set in the `ib-kai-table` component as it is used as a reference for the views.
+
+Then add the `ib-table-view-group` component within `ib-kai-table`.
+
+```html
+<ib-kai-table tableName="products" [data]="data" [displayedColumns]="displayedColumns">
+  <ib-table-view-group />
+
+  <ib-filter>
+    <!-- ... -->
+  </ib-filter>
+
+  <!-- ... --->
+</ib-kai-table>
+```
+
 ## Export
 
 To enable data export from a table, first import `IbDataExportModule` alongside `IbKaiTableModule` and `IbTableActionModule`.
@@ -468,10 +497,11 @@ To enable data export from a table, first import `IbDataExportModule` alongside 
 export class TableWithExportModule {}
 ```
 
+Make sure to have set the `tableName` property in the `ib-kai-table` component. This will be used as the filename of the exported file.  
 Then add the export button within `ib-table-action-group` in the table.
 
 ```html
-<ib-kai-table [data]="data" [displayedColumns]="displayedColumns">
+<ib-kai-table tableName="products" [data]="data" [displayedColumns]="displayedColumns">
   <ib-table-action-group>
     <ib-table-data-export-action />
   </ib-table-action-group>
