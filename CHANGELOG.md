@@ -13,6 +13,7 @@
 |DEVK-344|fix|IbFilterModule|ISO8601 Date support|
 |DEVK-345|fix|IbMaterialFormModule|Dropdown "select all" option was not working|
 |DEVK-340|feat|IbFilter|Added `ib-boolean-filter`|
+|DEVK-338|fix|IbFilter|Workaround for tailwind overriding base styles|
 
 ## [17.1.0] (2024-03-01)
 

@@ -11,7 +11,7 @@
   justify-content: space-between;
 
   mat-form-field {
-    @include mat.form-field-density(-5);
+    @include mat.form-field-density(-1);
   }
 
   input[type="number"] {
