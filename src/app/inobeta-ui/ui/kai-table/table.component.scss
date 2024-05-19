@@ -35,7 +35,7 @@
 
     &:has(ib-table-view-group),
     &:has(> section:not(:empty)) {
-      height: var(--mat-table-header-container-height);
+      height: 56px;
       border-bottom: 1px solid var(--ib-table-outline-color-private);
     }
 

@@ -14,6 +14,8 @@
 |DEVK-343|docs|IbViewModule|Missing doc added|
 |DEVK-344|fix|IbFilterModule|ISO8601 Date support|
 |DEVK-345|fix|IbMaterialFormModule|Dropdown "select all" option was not working|
+|DEVK-340|feat|IbFilter|Added `ib-boolean-filter`|
+|DEVK-338|feat|Docs|Added workaround instructions for tailwind overriding base styles|
 |DEVK-353|fix|IbMaterialFormModule|Input focus was not working inside a form array|
 
 ## [17.1.0] (2024-03-01)
