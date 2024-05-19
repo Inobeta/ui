@@ -1,10 +1,10 @@
 import { Directive, Inject, Input, ViewChild } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 import { IbFilterButton } from "../../filter-button/filter-button.component";
 import { IbFilterDef } from "../../filter.types";
 import { IB_FILTER } from "../../tokens";
-import { takeUntil } from "rxjs/operators";
 
 export interface IFilterBase {
   /** Name that should be used to reference this filter. */
@@ -41,7 +41,7 @@ export class IbFilterBase implements IFilterBase {
   }
 
   get isDirty() {
-    const value = this.filter.filter[this.name]?.value;
+    const value = this.filter.value[this.name]?.value;
     return value != null || value != undefined;
   }
 

@@ -62,8 +62,13 @@ export abstract class IbTableRemoteDataSource<
         ) as Observable<PageEvent | void>)
       : of(null);
 
+    const filterChange: Observable<Record<string, any> | null | void> = this
+      .filter
+      ? merge(this.filter.ibQueryUpdated, this.filter.initialized)
+      : of(null);
+
     const refresh = this._refresh?.asObservable();
-    const pipeline = combineLatest([this._filter, sortChange, pageChange]);
+    const pipeline = combineLatest([filterChange, sortChange, pageChange]);
 
     const dataChange = merge(refresh, pipeline).pipe(
       switchMap(() => {
@@ -71,7 +76,7 @@ export abstract class IbTableRemoteDataSource<
         return this.fetchData(
           this.sort,
           this.paginator,
-          super.filter as V
+          this.filter.query as V
         ).pipe(
           catchError(() => {
             this.state = "http_error";

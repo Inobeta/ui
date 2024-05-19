@@ -10,7 +10,6 @@ import {
   Component,
   ContentChild,
   ContentChildren,
-  EventEmitter,
   HostBinding,
   Input,
   OnDestroy,
@@ -87,7 +86,6 @@ export class IbTable implements OnDestroy {
   @Input()
   set data(data: any[]) {
     this.dataSource.data = data;
-    this.initializeFilters(this.dataSource.data);
   }
 
   @Input()
@@ -177,9 +175,8 @@ export class IbTable implements OnDestroy {
   }
 
   ngAfterContentInit() {
-    if (this.filter) {
-      this.setupFilter();
-    }
+    this.dataSource.selectionColumn = this.selectionColumn;
+    this.dataSource.filter = this.filter;
 
     if (this.view) {
       this.view.viewGroupName = this.tableName;
@@ -196,20 +193,6 @@ export class IbTable implements OnDestroy {
   ngOnDestroy() {
     this._destroyed.next();
     this._destroyed.complete();
-  }
-
-  // @TODO: move in table-data-source
-  private setupFilter() {
-    this.initializeFilters(this.dataSource.data);
-    let event = this.filter.ibFilterUpdated;
-    if (this.dataSource instanceof IbTableRemoteDataSource) {
-      event = this.filter.ibQueryUpdated;
-    }
-
-    event.pipe(takeUntil(this._destroyed)).subscribe((filter) => {
-      this.selectionColumn?.selection?.clear();
-      this.dataSource.filter = filter;
-    });
   }
 
   private setupViewGroup() {
@@ -257,22 +240,16 @@ export class IbTable implements OnDestroy {
       .subscribe((settings) => {
         this.exportAction.exportService._exportFromTable(
           this.tableName,
-          this.columns.filter((c) => !c.name.startsWith("ib-")),
           this.dataSource,
-          this.selectionColumn?.selection.selected,
           settings
         );
       });
   }
 
-  private initializeFilters(data: any[]) {
-    this.filter?.filters.forEach((f) => f.initializeFromColumn(data));
-  }
-
   private handleChangeView = (view: IView<ITableViewData>) => {
     this.paginator.firstPage();
     this.paginator.pageSize = view.data.pageSize;
-    this.dataSource.aggregatedColumns = {...view.data.aggregatedColumns};
+    this.dataSource.aggregatedColumns = { ...view.data.aggregatedColumns };
     this.filter.value = view.data.filter;
   };
 }

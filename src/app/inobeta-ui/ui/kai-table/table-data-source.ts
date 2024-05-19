@@ -12,10 +12,11 @@ import {
   of as observableOf,
 } from "rxjs";
 import { map } from "rxjs/operators";
+import { IbFilter } from "../kai-filter/filter.component";
 import { IbFilterDef, IbFilterSyntax } from "../kai-filter/filter.types";
 import { applyFilter } from "../kai-filter/filters";
 import { IbAggregateResult } from "./cells";
-import { IbColumn } from "./columns";
+import { IbColumn, IbSelectionColumn } from "./columns";
 import { IB_AGGREGATE } from "./tokens";
 
 /**
@@ -35,9 +36,6 @@ export class IbTableDataSource<
 
   /** Stream emitting render data to the table (depends on ordered data changes). */
   protected readonly _renderData = new BehaviorSubject<T[]>([]);
-
-  /** Stream that emits when a new filter string is set on the data source. */
-  protected readonly _filter = new BehaviorSubject<IbFilterSyntax>(null);
 
   /** Used to react to internal changes of the paginator that are made by the data source itself. */
   private readonly _internalPageChanges = new Subject<void>();
@@ -64,6 +62,7 @@ export class IbTableDataSource<
   set data(data: T[]) {
     data = Array.isArray(data) ? data : [];
     this._data.next(data);
+    this._initializeFilters(data);
     // Normally the `filteredData` is updated by the re-render
     // subscription, but that won't happen if it's inactive.
     if (!this._renderChangesSubscription) {
@@ -72,21 +71,20 @@ export class IbTableDataSource<
   }
 
   /**
-   * Filter term that should be used to filter out objects from the data array. To override how
-   * data objects match to this filter string, provide a custom function for filterPredicate.
+   * Instance of the IbFilter component used by the table to filter its data. Filter changes
+   * emitted by the IbFilter will trigger an update to the table's rendered data.
    */
-  get filter(): IbFilterSyntax {
-    return this._filter.value;
+  get filter(): IbFilter | null {
+    return this._filter;
   }
 
-  set filter(filter: IbFilterSyntax) {
-    this._filter.next(filter);
-    // Normally the `filteredData` is updated by the re-render
-    // subscription, but that won't happen if it's inactive.
-    if (!this._renderChangesSubscription) {
-      this._filterData(this.data);
-    }
+  set filter(f: IbFilter | null) {
+    this._filter = f;
+    this._initializeFilters(this.data);
+    this._updateChangeSubscription();
   }
+
+  private _filter: IbFilter | null;
 
   /**
    * Instance of the MatSort directive used by the table to control its sorting. Sort changes
@@ -158,6 +156,8 @@ export class IbTableDataSource<
   get shouldDisplayAggregationFooter() {
     return Object.values(this.columns).filter((c) => c.aggregate).length > 0;
   }
+
+  selectionColumn: IbSelectionColumn | null;
 
   /**
    * Gets a sorted copy of the data array based on the state of the MatSort. Called
@@ -274,6 +274,10 @@ export class IbTableDataSource<
     });
   }
 
+  private _initializeFilters(data: any[]) {
+    this.filter?.filters.forEach((f) => f.initializeFromColumn(data));
+  }
+
   /**
    * Subscribe to changes that should trigger an update to the table's rendered rows. When the
    * changes occur, process the current state of the filter, sort, and pagination along with
@@ -299,9 +303,12 @@ export class IbTableDataSource<
           this._paginator.initialized
         ) as Observable<PageEvent | void>)
       : observableOf(null);
+    const filterChange: Observable<IbFilterSyntax | null | void> = this._filter
+      ? merge(this._filter.ibFilterUpdated, this._filter.initialized)
+      : observableOf(null);
     const dataStream = this._data;
     // Watch for base data or filter changes to provide a filtered set of data.
-    const filteredData = combineLatest([dataStream, this._filter]).pipe(
+    const filteredData = combineLatest([dataStream, filterChange]).pipe(
       map(([data]) => this._filterData(data)),
       map((data) => this._aggregateData(data))
     );
@@ -322,18 +329,14 @@ export class IbTableDataSource<
   }
 
   /**
-   * Returns a filtered data array where each filter object contains the filter string within
-   * the result of the filterPredicate function. If no filter is set, returns the data array
-   * as provided.
+   * Returns a filtered data array where each row satisfies the filter.
+   * If no filter is set, returns the data array as provided.
    */
   _filterData(data: T[]) {
-    // If there is a filter string, filter out data that does not contain it.
-    // Each data object is converted to a string using the function defined by filterPredicate.
-    // May be overridden for customization.
-    this.filteredData =
-      this.filter == null
-        ? data
-        : data.filter((obj) => this.filterPredicate(obj, this.filter));
+    this.selectionColumn?.selection.clear();
+    this.filteredData = !this.filter?.value
+      ? data
+      : data.filter((obj) => this.filterPredicate(obj, this.filter.value));
 
     if (this.paginator) {
       this._updatePaginator(this.filteredData.length);

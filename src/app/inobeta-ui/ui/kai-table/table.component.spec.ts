@@ -95,7 +95,7 @@ describe("IbTable", () => {
       ).componentInstance;
       tick(1)
       expect(component).toBeTruthy();
-      expect(component.state).toBe("idle");
+      expect(component.dataSource.state).toBe("idle");
     }));
 
     it("should show error on exception", fakeAsync(() => {
@@ -596,7 +596,9 @@ class IbTestDataSource extends IbTableRemoteDataSource<any> {
 @Component({
   template: `
     <ib-kai-table [dataSource]="dataSource" [displayedColumns]="['name']">
-      <ib-filter></ib-filter>
+      <ib-filter>
+        <ib-text-filter name="name">Name</ib-text-filter>
+      </ib-filter>
       <ib-text-column name="name"></ib-text-column>
     </ib-kai-table>
   `,
