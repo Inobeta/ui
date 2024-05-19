@@ -166,6 +166,7 @@ export class IbTable implements OnDestroy {
 
   ngAfterViewInit() {
     if (this.view && this.filter) {
+      this.dataSource.view = this.view;
       this.setupViewGroup();
     }
 
@@ -196,32 +197,6 @@ export class IbTable implements OnDestroy {
   }
 
   private setupViewGroup() {
-    this.view.defaultView.data = {
-      filter: this.filter.initialRawValue,
-      pageSize: this.tableDef.paginator.pageSize,
-      aggregatedColumns: this.dataSource.aggregatedColumns,
-    };
-
-    this.view.viewDataAccessor = () => ({
-      filter: this.filter.rawFilter,
-      pageSize: this.paginator.pageSize,
-      aggregatedColumns: this.dataSource.aggregatedColumns,
-    });
-
-    const changes$ = merge(
-      this.filter.ibQueryUpdated,
-      this.paginator.page,
-      this.dataSource.aggregate
-    ).pipe(takeUntil(this._destroyed));
-    this.view.handleStateChanges(changes$);
-
-    this.view._activeView
-      .pipe(
-        filter((view) => !!view),
-        takeUntil(this._destroyed)
-      )
-      .subscribe(this.handleChangeView);
-
     for (const action of [
       this.filter.hideFilterAction,
       ...this.view.actions.toArray(),
@@ -245,11 +220,4 @@ export class IbTable implements OnDestroy {
         );
       });
   }
-
-  private handleChangeView = (view: IView<ITableViewData>) => {
-    this.paginator.firstPage();
-    this.paginator.pageSize = view.data.pageSize;
-    this.dataSource.aggregatedColumns = { ...view.data.aggregatedColumns };
-    this.filter.value = view.data.filter;
-  };
 }

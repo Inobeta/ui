@@ -547,9 +547,9 @@ function createComponent<T>(type: Type<T>): ComponentFixture<T> {
   template: `
     <ib-kai-table [data]="data" [displayedColumns]="['name', 'color', 'price']">
       <ib-filter [value]="filterValue">
-        <ib-text-filter ibTableColumnName="name">Name</ib-text-filter>
-        <ib-tag-filter ibTableColumnName="color">Name</ib-tag-filter>
-        <ib-number-filter ibTableColumnName="price">Name</ib-number-filter>
+        <ib-text-filter name="name">Name</ib-text-filter>
+        <ib-tag-filter name="color">Name</ib-tag-filter>
+        <ib-number-filter name="price">Name</ib-number-filter>
       </ib-filter>
       <ib-selection-column></ib-selection-column>
       <ib-text-column name="name"></ib-text-column>
@@ -616,7 +616,7 @@ class IbTableWithRemoteDataApp {
     >
       <ib-table-view-group></ib-table-view-group>
       <ib-filter>
-        <ib-tag-filter ibTableColumnName="color">Color</ib-tag-filter>
+        <ib-tag-filter name="color">Color</ib-tag-filter>
       </ib-filter>
 
       <ib-text-column name="name"></ib-text-column>

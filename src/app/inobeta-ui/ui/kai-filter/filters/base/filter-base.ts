@@ -1,8 +1,9 @@
-import { Directive, Inject, Input, ViewChild } from "@angular/core";
+import { Directive, Input, ViewChild, inject } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { IbFilterButton } from "../../filter-button/filter-button.component";
+import { IbFilter } from "../../filter.component";
 import { IbFilterDef } from "../../filter.types";
 import { IB_FILTER } from "../../tokens";
 
@@ -30,14 +31,11 @@ export class IbFilterBase implements IFilterBase {
   @ViewChild(IbFilterButton) button: IbFilterButton;
 
   @Input() name: string;
-  @Input() set ibTableColumnName(value) {
-    this.name = value;
-  }
 
   searchCriteria: FormGroup | FormControl;
 
   get rawValue() {
-    return this.filter?.rawFilter[this.name];
+    return this.filter?.selectedCriteria[this.name];
   }
 
   get isDirty() {
@@ -46,8 +44,7 @@ export class IbFilterBase implements IFilterBase {
   }
 
   protected _destroyed = new Subject<void>();
-
-  constructor(@Inject(IB_FILTER) public filter: any) {}
+  filter: IbFilter = inject(IB_FILTER);
 
   ngOnInit() {
     if (!this.name) {

@@ -1,5 +1,5 @@
 import { formatDate } from "@angular/common";
-import { Component, Inject, ViewEncapsulation } from "@angular/core";
+import { Component, ViewEncapsulation } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { DateAdapter } from "@angular/material/core";
 import { TranslateService } from "@ngx-translate/core";
@@ -10,7 +10,6 @@ import {
   IbFilterDef,
 } from "../../filter.types";
 import { and, gte, lte, none } from "../../filters";
-import { IB_FILTER } from "../../tokens";
 import { IbFilterBase } from "../base/filter-base";
 
 @Component({
@@ -156,11 +155,10 @@ export class IbDateFilter extends IbFilterBase {
   }
 
   constructor(
-    @Inject(IB_FILTER) public filter: any,
     private adapter: DateAdapter<any>,
     private translate: TranslateService
   ) {
-    super(filter);
+    super();
     this.adapter.setLocale(this.translate.currentLang);
     this.translate.onTranslationChange.subscribe((ev) => {
       this.adapter.setLocale(ev.lang);

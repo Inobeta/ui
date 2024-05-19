@@ -85,7 +85,7 @@ export class IbFilter implements HasInitialized {
   form: FormGroup = new FormGroup<Record<string, any>>({});
 
   initialRawValue: Record<string, any> = {};
-  rawFilter: Record<string, any> = {};
+  selectedCriteria: Record<string, any> = {};
   query: Record<string, any> = {};
 
   hideFilters = false;
@@ -97,11 +97,11 @@ export class IbFilter implements HasInitialized {
   }
 
   ngAfterViewInit() {
-    this.initialRawValue = this.rawFilter = this.form.getRawValue();
+    this.initialRawValue = this.selectedCriteria = this.form.getRawValue();
   }
 
   update() {
-    this.rawFilter = this.form.getRawValue();
+    this.selectedCriteria = this.form.getRawValue();
     this._value = this.buildFilter();
     this.query = this.toQuery();
     this.ibFilterUpdated.emit(this._value);
@@ -110,7 +110,7 @@ export class IbFilter implements HasInitialized {
 
   reset() {
     this.form.reset();
-    this.form.patchValue(this.initialRawValue);
+    // this.form.patchValue(this.initialRawValue);
     this.update();
   }
 

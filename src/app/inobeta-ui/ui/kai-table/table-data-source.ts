@@ -11,10 +11,12 @@ import {
   merge,
   of as observableOf,
 } from "rxjs";
-import { map } from "rxjs/operators";
+import { filter, map } from "rxjs/operators";
 import { IbFilter } from "../kai-filter/filter.component";
 import { IbFilterDef, IbFilterSyntax } from "../kai-filter/filter.types";
 import { applyFilter } from "../kai-filter/filters";
+import { IbTableViewGroup } from "../views/components/table-view-group/table-view-group.component";
+import { ITableViewData, IView } from "../views/store/views/table-view";
 import { IbAggregateResult } from "./cells";
 import { IbColumn, IbSelectionColumn } from "./columns";
 import { IB_AGGREGATE } from "./tokens";
@@ -45,6 +47,8 @@ export class IbTableDataSource<
    * as filtering, sorting, pagination, or base data changes.
    */
   _renderChangesSubscription: Subscription | null = null;
+
+  _viewChangesSubscription: Subscription | null = null;
 
   /**
    * The filtered set of data that has been matched by the filter string, or all the data if there
@@ -131,6 +135,17 @@ export class IbTableDataSource<
   }
 
   private _columns: Record<string, IbColumn<unknown>> = {};
+
+  set view(view: IbTableViewGroup | null) {
+    this._view = view;
+    this._updateViewChangeSubscription();
+  }
+
+  get view() {
+    return this._view;
+  }
+
+  private _view: IbTableViewGroup | null;
 
   /**
    * Aggregated data by column name.
@@ -323,10 +338,43 @@ export class IbTableDataSource<
     );
     // Watched for paged data changes and send the result to the table to render.
     this._renderChangesSubscription?.unsubscribe();
-    this._renderChangesSubscription = paginatedData.subscribe((data) =>
-      this._renderData.next(data)
-    );
+    this._renderChangesSubscription = paginatedData.subscribe((data) => {
+      this._renderData.next(data);
+    });
   }
+
+  private _updateViewChangeSubscription() {
+    this.view.defaultView.data = {
+      filter: this.filter.initialRawValue,
+      pageSize: this.paginator.pageSize,
+      aggregatedColumns: this.aggregatedColumns,
+    };
+
+    this.view.viewDataAccessor = () => ({
+      filter: this.filter.selectedCriteria,
+      pageSize: this.paginator.pageSize,
+      aggregatedColumns: this.aggregatedColumns,
+    });
+
+    const changes$ = merge(
+      this.filter.ibQueryUpdated,
+      this.paginator.page,
+      this.aggregate
+    );
+    this.view.handleStateChanges(changes$);
+
+    this._viewChangesSubscription?.unsubscribe();
+    this._viewChangesSubscription = this.view._activeView
+      .pipe(filter((view) => !!view))
+      .subscribe(this.handleViewChange);
+  }
+
+  private handleViewChange = (view: IView<ITableViewData>) => {
+    this.paginator.firstPage();
+    this.paginator.pageSize = view.data.pageSize;
+    this.aggregatedColumns = { ...view.data.aggregatedColumns };
+    this.filter.value = view.data.filter;
+  };
 
   /**
    * Returns a filtered data array where each row satisfies the filter.
@@ -447,6 +495,7 @@ export class IbTableDataSource<
    * Used by the MatTable. Called when it disconnects from the data source.
    */
   disconnect() {
+    this._viewChangesSubscription?.unsubscribe();
     this._renderChangesSubscription?.unsubscribe();
     this._renderChangesSubscription = null;
   }
