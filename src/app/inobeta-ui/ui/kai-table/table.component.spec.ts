@@ -502,10 +502,10 @@ describe("IbTable", () => {
       await button.click();
       const functionMenu = await footerLoader.getHarness(MatMenuHarness);
       await functionMenu.clickItem({ text: "shared.aggregate.sum.label" });
-      expect(ibAggregate.result.currentPage).toBe("30");
+      expect(ibAggregate.result.currentPage).toBe(30);
 
       await functionMenu.clickItem({ text: "shared.aggregate.avg.label" });
-      expect(ibAggregate.result.currentPage).toBe("15");
+      expect(ibAggregate.result.currentPage).toBe(15);
     });
   });
 });

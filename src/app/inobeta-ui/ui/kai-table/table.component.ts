@@ -152,9 +152,6 @@ export class IbTable implements OnDestroy {
   @Input({ transform: booleanAttribute })
   stripedRows = false;
 
-  aggregateColumns = new Set<string>();
-  aggregate = new EventEmitter();
-
   isRemote = false;
 
   ngOnInit() {
@@ -197,7 +194,6 @@ export class IbTable implements OnDestroy {
   }
 
   ngOnDestroy() {
-    this.aggregateColumns.clear();
     this._destroyed.next();
     this._destroyed.complete();
   }
@@ -220,19 +216,19 @@ export class IbTable implements OnDestroy {
     this.view.defaultView.data = {
       filter: this.filter.initialRawValue,
       pageSize: this.tableDef.paginator.pageSize,
-      aggregate: this.getAggregateCells(),
+      aggregatedColumns: this.dataSource.aggregatedColumns,
     };
 
     this.view.viewDataAccessor = () => ({
       filter: this.filter.rawFilter,
       pageSize: this.paginator.pageSize,
-      aggregate: this.getAggregateCells(),
+      aggregatedColumns: this.dataSource.aggregatedColumns,
     });
 
     const changes$ = merge(
       this.filter.ibQueryUpdated,
       this.paginator.page,
-      this.aggregate
+      this.dataSource.aggregate
     ).pipe(takeUntil(this._destroyed));
     this.view.handleStateChanges(changes$);
 
@@ -276,18 +272,7 @@ export class IbTable implements OnDestroy {
   private handleChangeView = (view: IView<ITableViewData>) => {
     this.paginator.firstPage();
     this.paginator.pageSize = view.data.pageSize;
+    this.dataSource.aggregatedColumns = {...view.data.aggregatedColumns};
     this.filter.value = view.data.filter;
-    view.data.aggregate.forEach((a) => {
-      const column = this.columns.find((c) => a.name === c.name);
-      column?.aggregateCell?.apply(a.function);
-    });
   };
-
-  private getAggregateCells = () =>
-    this.columns
-      .filter((c) => !!c.aggregateCell)
-      .map((c) => ({
-        name: c.name,
-        function: c.aggregateCell.function,
-      }));
 }

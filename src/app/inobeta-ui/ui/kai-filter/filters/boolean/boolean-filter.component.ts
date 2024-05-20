@@ -5,7 +5,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatRadioModule } from "@angular/material/radio";
 import { TranslateModule } from "@ngx-translate/core";
-import { IbFilterActionGroup } from "../../filter-button/filter-actiong-group.component";
+import { IbFilterActionGroup } from "../../filter-button/filter-action-group.component";
 import { IbFilterButton } from "../../filter-button/filter-button.component";
 import { IbFilterDef } from "../../filter.types";
 import { eq, none } from "../../filters";

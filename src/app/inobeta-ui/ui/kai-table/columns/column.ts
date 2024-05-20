@@ -10,7 +10,6 @@ import {
   booleanAttribute,
   inject,
 } from "@angular/core";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MatSortModule } from "@angular/material/sort";
 import {
   MatCellDef,
@@ -21,6 +20,7 @@ import {
 } from "@angular/material/table";
 import { IbAggregateCell, IbCellDef } from "../cells";
 import { IbSortHeader } from "../sort-header";
+import { IbTable } from "../table.component";
 import { IB_COLUMN_OPTIONS, IB_TABLE, IbColumnOptions } from "../tokens";
 
 /**
@@ -122,19 +122,15 @@ export class IbColumn<T> implements OnDestroy, OnInit {
   @Input({ transform: booleanAttribute }) stickyEnd = false;
 
   /** Whether this column should display in the roll-up footer. */
-  @Input({ transform: booleanAttribute })
-  get aggregate() {
-    return this._aggregate;
+  @Input({ transform: booleanAttribute }) aggregate = false;
+
+  get aggregationFunction() {
+    return this._table.dataSource.aggregatedColumns[this.name];
   }
-  set aggregate(value: boolean) {
-    this._aggregate = value;
-    if (this._aggregate) {
-      this._table.aggregateColumns.add(this.name);
-    } else {
-      this._table.aggregateColumns.delete(this.name);
-    }
+
+  get aggregatedData() {
+    return this._table.dataSource.aggregatedData[this.name];
   }
-  private _aggregate = false;
 
   @ContentChild(IbCellDef, { static: true }) ibCellDef: IbCellDef;
 
@@ -159,13 +155,9 @@ export class IbColumn<T> implements OnDestroy, OnInit {
     return this._table.sort;
   }
 
-  _table: any = inject(IB_TABLE, { optional: true });
+  _table: IbTable = inject(IB_TABLE, { optional: true });
   _options: IbColumnOptions<T> =
     inject(IB_COLUMN_OPTIONS, { optional: true }) || {};
-
-  constructor() {
-    this.handleStateChanges();
-  }
 
   ngOnInit() {
     this._syncColumnDefName();
@@ -199,12 +191,6 @@ export class IbColumn<T> implements OnDestroy, OnInit {
     }
   }
 
-  ngAfterViewInit() {
-    if (this._table.isRemote && this.aggregateCell) {
-      this.aggregateCell.showTotal = false;
-    }
-  }
-  
   ngOnDestroy() {
     if (this._table) {
       this._table.matTable.removeColumnDef(this.columnDef);
@@ -229,19 +215,17 @@ export class IbColumn<T> implements OnDestroy, OnInit {
     return name[0].toUpperCase() + name.slice(1);
   }
 
+  handleAggregationChange(fun: string) {
+    this._table.dataSource.aggregate.next({
+      columnName: this.name,
+      function: fun,
+    });
+  }
+
   /** Synchronizes the column definition name with the text column name. */
   private _syncColumnDefName() {
     if (this.columnDef) {
       this.columnDef.name = this.name;
     }
-  }
-
-  private handleStateChanges() {
-    this._table.dataSource
-      .connect()
-      .pipe(takeUntilDestroyed())
-      .subscribe(() => {
-        this.aggregateCell?.aggregate();
-      });
   }
 }

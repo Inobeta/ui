@@ -1,5 +1,5 @@
-import { _isNumberValue } from "@angular/cdk/coercion";
 import { DataSource } from "@angular/cdk/collections";
+import { inject } from "@angular/core";
 import { MatPaginator, PageEvent } from "@angular/material/paginator";
 import { MatSort, Sort } from "@angular/material/sort";
 import {
@@ -14,7 +14,9 @@ import {
 import { map } from "rxjs/operators";
 import { IbFilterDef, IbFilterSyntax } from "../kai-filter/filter.types";
 import { applyFilter } from "../kai-filter/filters";
+import { IbAggregateResult } from "./cells";
 import { IbColumn } from "./columns";
+import { IB_AGGREGATE } from "./tokens";
 
 /**
  * Data source that accepts a client-side data array and includes native support of filtering,
@@ -133,6 +135,31 @@ export class IbTableDataSource<
   private _columns: Record<string, IbColumn<unknown>> = {};
 
   /**
+   * Aggregated data by column name.
+   */
+  aggregatedData: Record<string, IbAggregateResult> = {};
+  /**
+   * Dictionary of columns to aggregate and the function (function id) to apply.
+   * Note: this structure is serialized within a view
+   */
+  aggregatedColumns: Record<string, string> = {};
+  aggregationFunctions = inject(IB_AGGREGATE);
+
+  /**
+   * Used to trigger the aggregation of a column by the user.
+   *
+   * IbTableViewGroup listens to this stream to detect state changes
+   */
+  aggregate = new Subject<{ columnName: string; function: string }>();
+  /**
+   * Whether the table should display the aggregation footer.
+   * (this reeks...)
+   */
+  get shouldDisplayAggregationFooter() {
+    return Object.values(this.columns).filter((c) => c.aggregate).length > 0;
+  }
+
+  /**
    * Gets a sorted copy of the data array based on the state of the MatSort. Called
    * after changes are made to the filtered data or when sort changes are emitted from MatSort.
    * By default, the function retrieves the active sort and its direction and compares data
@@ -238,6 +265,13 @@ export class IbTableDataSource<
     super();
     this._data = new BehaviorSubject<T[]>(initialData);
     this._updateChangeSubscription();
+    this.aggregate.subscribe((target) => {
+      this.aggregatedColumns[target.columnName] = target.function;
+      this._aggregateData(this.filteredData);
+      this._aggregatePaginatedData(
+        this._pageData(this._orderData(this.filteredData))
+      );
+    });
   }
 
   /**
@@ -268,7 +302,8 @@ export class IbTableDataSource<
     const dataStream = this._data;
     // Watch for base data or filter changes to provide a filtered set of data.
     const filteredData = combineLatest([dataStream, this._filter]).pipe(
-      map(([data]) => this._filterData(data))
+      map(([data]) => this._filterData(data)),
+      map((data) => this._aggregateData(data))
     );
     // Watch for filtered data or sort changes to provide an ordered set of data.
     const orderedData = combineLatest([filteredData, sortChange]).pipe(
@@ -276,7 +311,8 @@ export class IbTableDataSource<
     );
     // Watch for ordered data or page changes to provide a paged set of data.
     const paginatedData = combineLatest([orderedData, pageChange]).pipe(
-      map(([data]) => this._pageData(data))
+      map(([data]) => this._pageData(data)),
+      map((data) => this._aggregatePaginatedData(data))
     );
     // Watched for paged data changes and send the result to the table to render.
     this._renderChangesSubscription?.unsubscribe();
@@ -363,6 +399,34 @@ export class IbTableDataSource<
         }
       }
     });
+  }
+
+  _aggregateData(data: T[]): T[] {
+    for (const [columnName, fun] of Object.entries(this.aggregatedColumns)) {
+      const f = this.aggregationFunctions.find((f) => f.id === fun);
+      if (!f) {
+        continue;
+      }
+      this.aggregatedData[columnName] = {
+        ...(this.aggregatedData[columnName] ?? {}),
+        total: f.aggregateData(data.map((i) => i[columnName])),
+      };
+    }
+    return data;
+  }
+
+  _aggregatePaginatedData(data: T[]): T[] {
+    for (const [columnName, fun] of Object.entries(this.aggregatedColumns)) {
+      const f = this.aggregationFunctions.find((f) => f.id === fun);
+      if (!f) {
+        continue;
+      }
+      this.aggregatedData[columnName] = {
+        ...(this.aggregatedData[columnName] ?? {}),
+        currentPage: f.aggregateData(data.map((i) => i[columnName])),
+      };
+    }
+    return data;
   }
 
   /**
