@@ -39,7 +39,6 @@ import { IbColumn } from "./column";
         {{ dataAccessor(data, name) | date : format : undefined : locale }}
       </td>
       <td mat-footer-cell *matFooterCellDef>
-        <ib-aggregate *ngIf="aggregate"></ib-aggregate>
       </td>
     </ng-container>
   `,

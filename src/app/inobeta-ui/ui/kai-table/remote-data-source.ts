@@ -88,7 +88,8 @@ export abstract class IbTableRemoteDataSource<
         this.paginator.length = result.totalCount;
         return result.data;
       }),
-      map((data) => this._filterData(data))
+      map((data) => this._filterData(data)),
+      map((data) => this._aggregatePaginatedData(data))
     );
 
     this._renderChangesSubscription?.unsubscribe();

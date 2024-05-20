@@ -52,7 +52,7 @@
       </td>
     </tr>
 
-    <ng-container *ngIf="aggregateColumns.size">
+    <ng-container *ngIf="dataSource.shouldDisplayAggregationFooter">
       <tr class="ib-table__rollup-row" mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></tr>
     </ng-container>
   </table>
