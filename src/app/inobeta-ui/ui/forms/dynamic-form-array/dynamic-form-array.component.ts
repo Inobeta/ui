@@ -31,9 +31,12 @@ export class IbDynamicFormArrayComponent {
 
   addField() {
     this.array.push(this.cs.toFormGroup(this.base.fields));
+    this.base.addRow(this.array, this.lines)
   }
 
   removeField(index: number) {
+    const removedData = structuredClone(this.getGroupAt(index)?.getRawValue())
     this.array.removeAt(index);
+    this.base.removeRow(this.array, this.lines, index, removedData);
   }
 }

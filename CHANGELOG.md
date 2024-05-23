@@ -17,6 +17,7 @@
 |DEVK-340|feat|IbFilter|Added `ib-boolean-filter`|
 |DEVK-338|feat|Docs|Added workaround instructions for tailwind overriding base styles|
 |DEVK-353|fix|IbMaterialFormModule|Input focus was not working inside a form array|
+|DEVK-354|fix|IbMaterialFormModule|Missing hook added on form array|
 
 ## [17.1.0] (2024-03-01)
 
