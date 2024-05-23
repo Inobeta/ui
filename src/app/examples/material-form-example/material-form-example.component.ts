@@ -307,20 +307,16 @@ export class MaterialFormExampleComponent {
     new IbMatButtonControl({
       key: "disable",
       label: "Disable",
-      handler: (form) => form.disable(),
+      handler: () => (this.disabled = true),
     }),
     new IbMatButtonControl({
       key: "enable",
       label: "Enable",
-      handler: (form) => form.enable(),
+      handler: () => (this.disabled = false),
     }),
   ];
-  
-  ngOnInit() {
-    this.customForm.afterInit().subscribe((form) => {
-      form.disable();
-    });
-  }
+
+  disabled = true;
 
   onSubmit(data) {
     console.log(data);

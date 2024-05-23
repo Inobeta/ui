@@ -43,12 +43,13 @@ export class IbDynamicFormComponent implements OnInit, OnChanges, OnDestroy {
    * inizializzato il `FormGroup` (come `form.disable()`)
    */
   @Input() disabledOnInit = false;
+  @Input() disabled = false;
   @Output() ibSubmit = new EventEmitter<any>();
   form: UntypedFormGroup;
 
   /** @ignore */
   private readonly onInitSubject = new Subject<UntypedFormGroup>();
-  
+
   /** @ignore */
   private readonly onChangesSubject = new Subject<IbFormOnChanges>();
 
@@ -56,6 +57,11 @@ export class IbDynamicFormComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit() {
     this.form = this.cs.toFormGroup(this.fields);
+    if (this.disabled) {
+      this.form?.disable();
+    } else {
+      this.form?.enable();
+    }
     this.form.patchValue(this.value);
     this.onInitSubject.next(this.form);
     if (this.disabledOnInit) {
@@ -75,7 +81,13 @@ export class IbDynamicFormComponent implements OnInit, OnChanges, OnDestroy {
     if (value && !value.isFirstChange()) {
       this.form.patchValue(value.currentValue);
     }
-    
+
+    if (this.disabled) {
+      this.form?.disable();
+    } else {
+      this.form?.enable();
+    }
+
     const cols = changes.cols;
     if (fields && cols) {
       const hasFormArray = (fields.currentValue as IbFormField[]).find(

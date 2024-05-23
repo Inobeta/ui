@@ -8,6 +8,7 @@ import { UserService } from "./users";
   template: `
     <ib-kai-table
       tableName="fullExample"
+      [tableDef]="tableDef"
       [displayedColumns]="columns"
       [data]="data"
       [state]="state"
@@ -78,6 +79,11 @@ export class IbKaiTableFullExamplePage {
   columns = ["name", "fruit", "number", "created_at", "subscribed"];
   state: IbKaiTableState = "idle";
 
+  tableDef = {
+    paginator: {
+      pageSize: 5
+    }
+  }
   constructor(private userService: UserService) {}
 
   ngOnInit() {
