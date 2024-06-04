@@ -18,6 +18,7 @@
   <mat-card-content>
     <ib-material-form
       #customForm
+      [disabled]="disabled"
       [actions]="customFormActions"
       [fields]="customFormFields"
       (ibSubmit)="onSubmit($event)"></ib-material-form>
