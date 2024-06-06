@@ -37,6 +37,8 @@ export class MaterialFormArrayExampleComponent implements OnInit {
       options: {
         max: 2,
       },
+      addRow: (formArray, newLength) => console.log("addRow", formArray, newLength),
+      removeRow: (formArray, newLength, removedIndex, removedData) => console.log("removeRow", formArray, newLength, removedIndex, removedData),
       fields: [
         new IbMatTextboxControl({
           key: "key",

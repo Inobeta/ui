@@ -1,3 +1,4 @@
+import { UntypedFormArray } from "@angular/forms";
 import { IbFormControlBase } from "../controls/form-control-base";
 
 export interface IFormArrayOptions {
@@ -16,6 +17,8 @@ export interface IFormArray {
   cols?: number;
   rows?: number;
   width?: string;
+  addRow?: (c: UntypedFormArray, newLength: number) => void;
+  removeRow?: (c: UntypedFormArray, newLength: number, removedIndex: number, removedData: Record<string, unknown>) => void;
 }
 
 export class IbFormArray implements IFormArray {
@@ -25,6 +28,8 @@ export class IbFormArray implements IFormArray {
   cols: number;
   rows: number;
   width: string;
+  addRow: (c: UntypedFormArray, newLength: number) => void;
+  removeRow: (c: UntypedFormArray, newLength: number, removedIndex: number, removedData: Record<string, unknown>) => void;
   readonly role = "array";
 
   constructor(options: IFormArray) {
@@ -38,5 +43,7 @@ export class IbFormArray implements IFormArray {
     this.cols = options.cols ?? 1;
     this.rows = options.rows ?? 1;
     this.width = options.width || '100%'
+    this.addRow = options.addRow ?? (() => {});
+    this.removeRow = options.removeRow ?? (() => {});
   }
 }
