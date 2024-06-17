@@ -125,7 +125,7 @@ export class IbColumn<T> implements OnDestroy, OnInit {
   @Input({ transform: booleanAttribute }) aggregate = false;
 
   get aggregationFunction() {
-    return this._table.dataSource.aggregatedColumns[this.name];
+    return this._table.dataSource.aggregatedColumns?.[this.name];
   }
 
   get aggregatedData() {

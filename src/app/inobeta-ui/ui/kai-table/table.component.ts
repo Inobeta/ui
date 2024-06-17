@@ -17,15 +17,16 @@ import {
   ViewChild,
   ViewEncapsulation,
   booleanAttribute,
+  inject,
 } from "@angular/core";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { MatTable } from "@angular/material/table";
-import { Subject, merge } from "rxjs";
-import { filter, takeUntil } from "rxjs/operators";
+import { Subject} from "rxjs";
+import { takeUntil } from "rxjs/operators";
 import { IbTableDataExportAction } from "../data-export/table-data-export.component";
 import { IbFilter } from "../kai-filter";
-import { ITableViewData, IView, IbTableViewGroup } from "../views";
+import { IbTableViewGroup } from "../views";
 import { IbColumn } from "./columns/column";
 import { IbSelectionColumn } from "./columns/selection-column";
 import { IbTableRemoteDataSource } from "./remote-data-source";
@@ -33,6 +34,9 @@ import { IbKaiRowGroupDirective } from "./rowgroup";
 import { IbTableDataSource } from "./table-data-source";
 import { IbKaiTableState, IbTableDef } from "./table.types";
 import { IB_TABLE } from "./tokens";
+import { IbTableUrlService } from "./table-url.service";
+import { Store } from "@ngrx/store";
+import { urlStateActions } from "./store/url-state/actions";
 
 const defaultTableDef: IbTableDef = {
   paginator: {
@@ -95,6 +99,9 @@ export class IbTable implements OnDestroy {
     window.location.pathname + window.location.hash
   );
 
+  tableUrl = inject(IbTableUrlService);
+  private store = inject(Store);
+
   /**
    * Configuration for the table and its inner components. Currently supports only
    * `paginator` and `sort` parameters.
@@ -110,6 +117,8 @@ export class IbTable implements OnDestroy {
    *     hide: false,
    *   }
    * }
+   *
+   * NB: querystring override these values
    * ```
    */
   @Input()
@@ -122,7 +131,8 @@ export class IbTable implements OnDestroy {
   get tableDef() {
     return this._tableDef;
   }
-  private _tableDef: IbTableDef = defaultTableDef;
+  private _tableDef: IbTableDef = {...defaultTableDef};
+
 
   /**
    * Columns to be displayed.
@@ -152,9 +162,16 @@ export class IbTable implements OnDestroy {
 
   isRemote = false;
 
+
   ngOnInit() {
+    const paginatorFromUrl = this.tableUrl.getPaginator(this.tableName);
+    this.tableDef.paginator = {
+      ...this.tableDef.paginator,
+      ...paginatorFromUrl,
+    }
+    this.dataSource.tableName = this.tableName;
     this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+
 
     if (this.dataSource instanceof IbTableRemoteDataSource) {
       this.isRemote = true;
@@ -165,24 +182,51 @@ export class IbTable implements OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (this.view && this.filter) {
-      this.dataSource.view = this.view;
-      this.setupViewGroup();
-    }
-
     if (this.exportAction) {
       this.setupExportAction();
     }
   }
 
   ngAfterContentInit() {
-    this.dataSource.selectionColumn = this.selectionColumn;
-    this.dataSource.filter = this.filter;
 
-    if (this.view) {
+    const viewInit = () => {
       this.view.viewGroupName = this.tableName;
+      this.dataSource.view = this.view;
+      this.setupViewGroup();
     }
 
+    const dsInit = () => {
+      this.dataSource.sort = this.sort;
+      this.dataSource.aggregatedColumns = this.tableUrl.getAggregatedColumns(this.tableName);
+      this.dataSource.sortState = {
+        ...this.tableDef.initialSort,
+        ...this.tableUrl.getSort(this.tableName),
+      };
+    }
+
+
+    this.dataSource.selectionColumn = this.selectionColumn;
+    this.dataSource.filter = this.filter;
+    this.filter?.initialized.subscribe(() => {
+      this.tableUrl.emptyFilterSchema[this.tableName] = structuredClone(this.filter.initialRawValue);
+      dsInit();
+
+      const filtersFromUrl = this.tableUrl.getFilters(this.tableName)
+      this.filter.value = filtersFromUrl
+      if (this.view) {
+        //NG0100
+        setTimeout(() => viewInit())
+      }
+    })
+
+    // If there is no filter, we need to set the viewGroupName to the table name
+    if (this.view && !this.filter) {
+      viewInit()
+    }
+
+    if(!this.filter){
+      dsInit();
+    }
     this.dataSource.columns = this.columns.toArray();
     this.columns.changes
       .pipe(takeUntil(this._destroyed))
@@ -196,6 +240,9 @@ export class IbTable implements OnDestroy {
     this._destroyed.complete();
   }
 
+  setPaginatorState(params){
+    this.store.dispatch(urlStateActions.setPaginator({tableName: this.tableName, params}))
+  }
   private setupViewGroup() {
     for (const action of [
       this.filter.hideFilterAction,

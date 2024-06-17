@@ -22,14 +22,14 @@ export class IbViewService {
   ) {}
 
   addView(viewDef: Partial<IView>) {
-    const view = new IbView<any>(viewDef);
+    const view = new IbView(viewDef);
     this.store.dispatch(TableViewActions.addView({ view }));
     this.toast.open("shared.ibTableView.view.added");
     return view;
   }
 
   duplicateView(viewDef: Partial<IView>) {
-    const view = new IbView<any>(viewDef);
+    const view = new IbView(viewDef);
     this.store.dispatch(TableViewActions.addView({ view }));
     this.toast.open("shared.ibTableView.view.duplicated");
     return view;
@@ -66,26 +66,6 @@ export class IbViewService {
 
     this.toast.open("shared.ibTableView.view.renamed");
     return { ...view, name };
-  }
-
-  pinView(view: IView) {
-    this.store.dispatch(
-      TableViewActions.pinView({
-        groupName: view.groupName,
-        id: view.id,
-      })
-    );
-    this.toast.open("shared.ibTableView.view.pinned");
-  }
-
-  unpinView(view: IView) {
-    this.store.dispatch(
-      TableViewActions.unpinView({
-        groupName: view.groupName,
-        id: view.id,
-      })
-    );
-    this.toast.open("shared.ibTableView.view.unpinned");
   }
 
   openDialog(data: IbTableViewDialogData) {

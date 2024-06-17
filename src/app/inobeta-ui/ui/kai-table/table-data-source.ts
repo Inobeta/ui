@@ -16,10 +16,12 @@ import { IbFilter } from "../kai-filter/filter.component";
 import { IbFilterDef, IbFilterSyntax } from "../kai-filter/filter.types";
 import { applyFilter } from "../kai-filter/filters";
 import { IbTableViewGroup } from "../views/components/table-view-group/table-view-group.component";
-import { ITableViewData, IView } from "../views/store/views/table-view";
+import { IView } from "../views/store/views/table-view";
 import { IbAggregateResult } from "./cells";
 import { IbColumn, IbSelectionColumn } from "./columns";
 import { IB_AGGREGATE } from "./tokens";
+import { Store } from "@ngrx/store";
+import { urlStateActions } from "./store/url-state/actions";
 
 /**
  * Data source that accepts a client-side data array and includes native support of filtering,
@@ -50,6 +52,7 @@ export class IbTableDataSource<
 
   _viewChangesSubscription: Subscription | null = null;
 
+  tableName: string;
   /**
    * The filtered set of data that has been matched by the filter string, or all the data if there
    * is no filter. Useful for knowing the set of data the table represents.
@@ -105,6 +108,23 @@ export class IbTableDataSource<
 
   private _sort: MatSort | null;
 
+  _sortState: Sort = {
+    active: "",
+    direction: "",
+  }
+  get sortState(){
+    return {
+      active: this._sortState.direction !== '' ? this._sortState.active : '',
+      direction: this._sortState.direction
+    }
+  }
+  set sortState(sort: Sort){
+    this._sortState = {
+      active: sort.active ?? '',
+      direction: sort.direction ?? ''
+    };
+  }
+
   /**
    * Instance of the paginator component used by the table to control what page of the data is
    * displayed. Page changes emitted by the paginator will trigger an update to the
@@ -157,6 +177,7 @@ export class IbTableDataSource<
    */
   aggregatedColumns: Record<string, string> = {};
   aggregationFunctions = inject(IB_AGGREGATE);
+  private store = inject(Store);
 
   /**
    * Used to trigger the aggregation of a column by the user.
@@ -282,6 +303,7 @@ export class IbTableDataSource<
     this._updateChangeSubscription();
     this.aggregate.subscribe((target) => {
       this.aggregatedColumns[target.columnName] = target.function;
+      this.store.dispatch(urlStateActions.setAggregatedColumns({tableName: this.tableName, params: {...this.aggregatedColumns}}));
       this._aggregateData(this.filteredData);
       this._aggregatePaginatedData(
         this._pageData(this._orderData(this.filteredData))
@@ -307,8 +329,8 @@ export class IbTableDataSource<
     // they purely act as a signal to progress in the pipeline.
     const sortChange: Observable<Sort | null | void> = this._sort
       ? (merge(
-          this._sort.sortChange,
-          this._sort.initialized
+          this.sort.sortChange,
+          this.sort.initialized
         ) as Observable<Sort | void>)
       : observableOf(null);
     const pageChange: Observable<PageEvent | null | void> = this._paginator
@@ -324,12 +346,23 @@ export class IbTableDataSource<
     const dataStream = this._data;
     // Watch for base data or filter changes to provide a filtered set of data.
     const filteredData = combineLatest([dataStream, filterChange]).pipe(
-      map(([data]) => this._filterData(data)),
+      map(([data, filterChange]) => {
+        if(this.filter?.initialized){
+          this.store.dispatch(urlStateActions.setFilters({tableName: this.tableName, params: this.filter?.selectedCriteria ?? {}}));
+        }
+        return this._filterData(data)
+      }),
       map((data) => this._aggregateData(data))
     );
     // Watch for filtered data or sort changes to provide an ordered set of data.
     const orderedData = combineLatest([filteredData, sortChange]).pipe(
-      map(([data]) => this._orderData(data))
+      map(([data, sort]) => {
+        if(sort){
+          this.sortState = this.sort;
+          this.store.dispatch(urlStateActions.setSort({tableName: this.tableName, params: this.sortState}));
+        }
+        return this._orderData(data);
+      })
     );
     // Watch for ordered data or page changes to provide a paged set of data.
     const paginatedData = combineLatest([orderedData, pageChange]).pipe(
@@ -348,32 +381,57 @@ export class IbTableDataSource<
       filter: this.filter.initialRawValue,
       pageSize: this.paginator.pageSize,
       aggregatedColumns: this.aggregatedColumns,
+      sort: {
+        ...this.sortState
+      }
     };
 
-    this.view.viewDataAccessor = () => ({
-      filter: this.filter.selectedCriteria,
-      pageSize: this.paginator.pageSize,
-      aggregatedColumns: this.aggregatedColumns,
-    });
+    this.view.viewDataAccessor = () => {
+      return {
+        filter: this.filter.selectedCriteria,
+        pageSize: this.paginator.pageSize,
+        aggregatedColumns: this.aggregatedColumns,
+        sort: {
+          ...this.sortState
+        },
+      }
+    };
 
     const changes$ = merge(
       this.filter.ibQueryUpdated,
       this.paginator.page,
-      this.aggregate
+      this.aggregate,
+      this.sort.sortChange
     );
     this.view.handleStateChanges(changes$);
 
     this._viewChangesSubscription?.unsubscribe();
     this._viewChangesSubscription = this.view._activeView
-      .pipe(filter((view) => !!view))
+     // Skip initial view, initialization come from querystring
+      .pipe(filter((view) => !!view && !view.initial))
       .subscribe(this.handleViewChange);
   }
 
-  private handleViewChange = (view: IView<ITableViewData>) => {
+  private handleViewChange = (view: IView) => {
     this.paginator.firstPage();
     this.paginator.pageSize = view.data.pageSize;
     this.aggregatedColumns = { ...view.data.aggregatedColumns };
     this.filter.value = view.data.filter;
+    this.sortState = view.data.sort;
+    this.store.dispatch(urlStateActions.handleViewChange({
+      tableName: this.tableName,
+      params: {
+        view: view.id,
+        pageSize: view.data.pageSize,
+        page: 0,
+        filters: view.data.filter,
+        aggregatedColumns: view.data.aggregatedColumns,
+        sort: {
+          active: view.data.sort.active,
+          direction: view.data.sort.direction,
+        },
+      }
+    }));
   };
 
   /**

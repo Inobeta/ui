@@ -9,7 +9,6 @@ import { IView } from "../../store/views/table-view";
 export class IbViewList {
   @Input() defaultView: IView;
   @Input() activeView: IView;
-  @Input() pinnedView: IView;
   @Input() views: IView[];
   @Input() dirty: boolean = false;
 
@@ -18,8 +17,4 @@ export class IbViewList {
   @Output() ibRenameView = new EventEmitter<IView>();
   @Output() ibDuplicateView = new EventEmitter<IView>();
   @Output() ibChangeView = new EventEmitter<IView>();
-  @Output() ibPinView = new EventEmitter<{
-    view: IView;
-    pinned: boolean;
-  }>();
 }

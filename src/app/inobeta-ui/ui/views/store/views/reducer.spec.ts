@@ -65,10 +65,23 @@ describe("IbViewReducer", () => {
         name: 'Lorem Dim Sum',
         groupName: 'test'
       })
-      const newView = { ...view, data: { test: 123 } }
+      const newView: IbView = {
+        ...view,
+        data: {
+          filter: {},
+          pageSize: 5,
+          aggregatedColumns: {},
+          sort: { active: 'name', direction: 'asc'}
+        }
+      }
       const initialState = [{ ...view }]
       const newState = [newView]
-      const action = TableViewActions.saveView({ id: view.id, data: { test: 123 } })
+      const action = TableViewActions.saveView({ id: view.id, data: {
+        filter: {},
+        pageSize: 5,
+        aggregatedColumns: {},
+        sort: { active: 'name', direction: 'asc'}
+      } })
       const state = fromReducer.viewsReducer(initialState, action)
       expect(state).toEqual(newState)
     })
@@ -80,7 +93,12 @@ describe("IbViewReducer", () => {
       })
       const initialState = []
       const newState = []
-      const action = TableViewActions.saveView({ id: view.id, data: { test: 123 } })
+      const action = TableViewActions.saveView({ id: view.id, data: {
+        filter: {},
+        pageSize: 5,
+        aggregatedColumns: {},
+        sort: { active: 'name', direction: 'asc'}
+      } })
       const state = fromReducer.viewsReducer(initialState, action)
       expect(state).toEqual(newState)
     })

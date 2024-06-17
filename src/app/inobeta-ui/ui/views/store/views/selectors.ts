@@ -10,5 +10,5 @@ export const selectViews = createSelector(
 
 export const selectTableViews = (tableName: string) =>
   createSelector(selectViews, (views: IView[]) =>
-    views.filter((v) => v.groupName === tableName)
+    views.filter((v) => v.groupName === tableName).sort((a, b) => a.name.localeCompare(b.name))
   );

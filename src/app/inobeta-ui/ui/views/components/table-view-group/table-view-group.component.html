@@ -1,7 +1,6 @@
 <ib-view-list
   [views]="views$ | async"
   [defaultView]="defaultView"
-  [pinnedView]="pinned$ | async"
   [activeView]="activeView"
   [dirty]="dirty"
   (ibAddView)="handleAddView()"
@@ -9,7 +8,6 @@
   (ibRemoveView)="handleRemoveView($event)"
   (ibRenameView)="handleRenameView($event)"
   (ibDuplicateView)="handleDuplicateView($event)"
-  (ibPinView)="handlePinView($event)"
 ></ib-view-list>
 
 <button

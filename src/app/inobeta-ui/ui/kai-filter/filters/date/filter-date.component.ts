@@ -264,7 +264,7 @@ export class IbDateFilter extends IbFilterBase {
       return none();
     }
 
-    return and([gte(new Date(start)), lte(this.toMidnight(end))]);
+    return and([gte(new Date(start)), lte(this.toMidnight(new Date(end)))]);
   }
 
   build = (): IbFilterDef => {
@@ -329,8 +329,8 @@ export class IbDateFilter extends IbFilterBase {
     }
 
     return {
-      start: start.toISOString(),
-      end: this.toMidnight(end).toISOString(),
+      start: new Date(start).toISOString(),
+      end: this.toMidnight(new Date(end)).toISOString(),
     };
   }
 
