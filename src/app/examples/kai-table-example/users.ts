@@ -6,6 +6,7 @@ export interface IbUserExample {
   id: string;
   name: string;
   fruit: string;
+  amount: number;
   number: number;
   created_at?: string;
   subscribed: boolean;
@@ -84,6 +85,7 @@ export function createNewUser(
     id: id.toString(),
     name,
     fruit: fruits[Math.round(Math.random() * (fruits.length - 1))],
+    amount: Math.round(Math.random() * max) + 1,
     number: Math.round(Math.random() * max) + 1,
     created_at: `${created_at.getFullYear()}-${created_at.getMonth()}-${created_at.getDate()}`,
     subscribed: Math.round(Math.random() * 10) % 2 === 0,

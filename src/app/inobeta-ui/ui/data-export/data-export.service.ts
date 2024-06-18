@@ -1,12 +1,12 @@
 import { Inject, Injectable, InjectionToken } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { IbColumn } from "../kai-table/columns/column";
+import { IbTableDataSource } from "../kai-table/table-data-source";
 import { IbDataExportProvider } from "./provider";
 import {
   IbTableDataExportDialog,
   IbTableDataExportDialogData,
 } from "./table-data-export-dialog.component";
-import { IbTableDataSource } from "../kai-table/table-data-source";
 
 export interface IDataExportSettings {
   format: "xlsx" | "pdf" | "csv";
@@ -50,9 +50,7 @@ export class IbDataExportService {
    */
   _exportFromTable(
     tableName: string,
-    columns: IbColumn<Record<string, unknown>>[],
     dataSource: IbTableDataSource<unknown>,
-    selectedRows: unknown[],
     settings: IDataExportSettings
   ) {
     let data: unknown[];
@@ -61,7 +59,9 @@ export class IbDataExportService {
     }
 
     if (settings.dataset === "selected") {
-      data = dataSource._orderData(selectedRows);
+      data = dataSource._orderData(
+        dataSource.selectionColumn?.selection.selected
+      );
     }
 
     if (settings.dataset === "current") {
@@ -70,6 +70,9 @@ export class IbDataExportService {
       );
     }
 
+    const columns = Object.values(dataSource.columns).filter(
+      (c) => !c.name.startsWith("ib-")
+    );
     const displayHeader = columns.reduce(
       (acc, column) => ({ ...acc, [column.name]: column.headerText }),
       {}

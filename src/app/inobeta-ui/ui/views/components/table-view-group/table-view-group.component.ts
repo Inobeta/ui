@@ -2,48 +2,82 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnDestroy,
   Output,
   QueryList,
   ViewChildren,
+  inject,
 } from "@angular/core";
 import { Store } from "@ngrx/store";
-import { BehaviorSubject, Observable } from "rxjs";
-import { tap } from "rxjs/operators";
+import { BehaviorSubject, Observable, Subject } from "rxjs";
+import { takeUntil, tap } from "rxjs/operators";
 import { IbKaiTableAction } from "../../../kai-table/action";
-import { selectPinnedView } from "../../store/pinned-view/selectors";
-import { IView, selectTableViews } from "../../store/views";
+import { ITableViewData, IView, selectTableViews } from "../../store/views";
 import { IbViewService } from "../../view.service";
+import { IbTableUrlService } from "../../../kai-table/table-url.service";
 
 @Component({
   selector: "ib-view-group, ib-table-view-group",
   templateUrl: "table-view-group.component.html",
   styleUrls: ["table-view-group.component.scss"],
 })
-export class IbTableViewGroup {
+export class IbTableViewGroup implements OnDestroy  {
   @ViewChildren(IbKaiTableAction) actions: QueryList<IbKaiTableAction>;
 
-  defaultView: IView = {
-    id: "__ibTableView__all",
-    name: "",
-    groupName: "",
-    data: {},
+  private _destroyed = new Subject<void>();
+  tableUrl = inject(IbTableUrlService);
+
+  get defaultView(): IView{
+    return {
+      id: "__ibTableView__all",
+      name: "",
+      groupName: "",
+      data: {
+        filter: this.tableUrl.emptyFilterSchema[this.viewGroupName],
+        pageSize: 10,
+        aggregatedColumns: {},
+        sort: {
+          active: "",
+          direction: "",
+        }
+      },
+    }
   };
 
-  _activeView = new BehaviorSubject<IView>(this.defaultView);
+  _activeView = new BehaviorSubject<IView>({
+    ...this.defaultView,
+    initial: true
+  });
   get activeView() {
-    return this._activeView.value;
+    return {
+      ...this._activeView.value,
+      initial: false
+    };
   }
 
-  @Input() viewDataAccessor = () => {};
+
+  @Input() viewDataAccessor: () => ITableViewData = () => structuredClone(this.defaultView.data);
+
   @Output() ibViewChanged = new EventEmitter<IView>();
   @Output() ibResetView = new EventEmitter();
 
   @Input() set viewGroupName(name) {
     this._viewGroupName = name;
-    this.views$ = this.store.select(selectTableViews(this._viewGroupName));
-    this.pinned$ = this.store
-      .select(selectPinnedView(this.viewGroupName))
-      .pipe(tap((view) => view && this._activeView.next(view)));
+    const activeView = this.tableUrl.getActiveView(name);
+    this.views$ = this.store.select(selectTableViews(this._viewGroupName)).pipe(
+      tap((views) => {
+        if (activeView) {
+          let view = views.find((v) => v.id === activeView);
+          if (!view) {
+            view = this.defaultView;
+          }
+          this._activeView.next({
+            ...view,
+            initial: true,
+          });
+        }
+      })
+    );
   }
   get viewGroupName() {
     return this._viewGroupName;
@@ -52,24 +86,35 @@ export class IbTableViewGroup {
 
   dirty = false;
   views$: Observable<IView[]>;
-  pinned$: Observable<IView>;
 
   constructor(private store: Store, public viewService: IbViewService) {}
 
-  ngOnInit() {
-    this.views$ = this.store.select(selectTableViews(this.viewGroupName));
+
+  ngOnDestroy() {
+    this._destroyed.next();
+    this._destroyed.complete();
   }
+
 
   checkViewDataChanges(): boolean {
     const current = this.viewDataAccessor();
     if (current === undefined) {
       return false;
     }
+
+    // FIXME: this check is really bad, we should use a deep comparison and schema initializer must be done in a better way
+    if(JSON.stringify(this.activeView.data.filter) == '{}'){
+      this.activeView.data.filter = structuredClone(this.tableUrl.emptyFilterSchema[this.viewGroupName])
+    }
+
+
     return JSON.stringify(current) != JSON.stringify(this.activeView.data);
   }
 
   handleStateChanges(changes$: Observable<unknown>) {
-    changes$.subscribe(() => (this.dirty = this.checkViewDataChanges()));
+    changes$
+      .pipe(takeUntil(this._destroyed))
+      .subscribe(() => (this.dirty = this.checkViewDataChanges()));
   }
 
   handleAddView(data = this.defaultView.data) {
@@ -148,14 +193,6 @@ export class IbTableViewGroup {
         }
         this._activeView.next(view);
       });
-  }
-
-  handlePinView({ view, pinned }) {
-    if (pinned) {
-      this.viewService.pinView(view);
-    } else {
-      this.viewService.unpinView(view);
-    }
   }
 
   handleDiscardChanges() {

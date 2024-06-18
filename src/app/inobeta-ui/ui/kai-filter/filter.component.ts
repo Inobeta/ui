@@ -7,10 +7,13 @@ import {
   QueryList,
   ViewChild,
   ViewEncapsulation,
+  inject,
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
+import { HasInitialized } from "@angular/material/core";
+import { ReplaySubject } from "rxjs";
 import { IbKaiTableAction } from "../kai-table/action";
-import { IbFilterSyntax } from "./filter.types";
+import { IbFilterSyntax, IbFilterSyntaxExtended } from "./filter.types";
 import { IbFilterBase } from "./filters/base/filter-base";
 import { IB_FILTER } from "./tokens";
 
@@ -33,7 +36,7 @@ import { IB_FILTER } from "./tokens";
       *ibTableAction
       mat-icon-button
       [matTooltip]="'shared.ibTableView.showFilters' | translate"
-      [color]="!hideFilters ? 'primary' : '' "
+      [color]="!hideFilters ? 'primary' : ''"
       (click)="hideFilters = !hideFilters"
     >
       <mat-icon>{{ "filter_alt" }}</mat-icon>
@@ -43,7 +46,7 @@ import { IB_FILTER } from "./tokens";
   encapsulation: ViewEncapsulation.None,
   providers: [{ provide: IB_FILTER, useExisting: IbFilter }],
 })
-export class IbFilter {
+export class IbFilter implements HasInitialized {
   /** @ignore */
   @ContentChildren(IbFilterBase)
   filters: QueryList<IbFilterBase>;
@@ -58,7 +61,7 @@ export class IbFilter {
    * { category: ['pants'] }
    * */
   @Input()
-  set value(value: Record<string, any>) {
+  set value(value: IbFilterSyntaxExtended) {
     if (!value) {
       return;
     }
@@ -69,38 +72,51 @@ export class IbFilter {
       this.update();
     });
   }
-  @Output() ibFilterUpdated = new EventEmitter<IbFilterSyntax>();
+
+  get value(): IbFilterSyntaxExtended {
+    return this._value;
+  }
+
+  private _value: IbFilterSyntaxExtended = {};
+
+  @Output() ibFilterUpdated = new EventEmitter<IbFilterSyntaxExtended>();
   @Output() ibQueryUpdated = new EventEmitter<Record<string, any>>();
 
-  /** @ignore */
-  form: FormGroup = new FormGroup<Record<string, any>>({});
+  form: FormGroup = new FormGroup({});
 
-  initialRawValue: Record<string, any> = {};
-  rawFilter: Record<string, any> = {};
-  filter: IbFilterSyntax = {};
+  initialRawValue: IbFilterSyntaxExtended = {};
+  get selectedCriteria(){
+    return this.form.getRawValue();
+  }
+  query: Record<string, any> = {};
 
   hideFilters = false;
 
+  initialized = new ReplaySubject<void>(1);
+
+  ngOnInit() {
+  }
+
   ngAfterViewInit() {
-    this.initialRawValue = this.rawFilter = this.form.getRawValue();
+    this.initialRawValue = this.form.getRawValue();
+    this._markInitialized();
   }
 
   update() {
-    this.rawFilter = this.form.getRawValue();
-    this.filter = this.buildFilter();
-    this.ibFilterUpdated.emit(this.filter);
-    this.ibQueryUpdated.emit(this.toQuery());
+    this._value = this.buildFilter();
+    this.query = this.toQuery();
+    this.ibFilterUpdated.emit(this._value);
+    this.ibQueryUpdated.emit(this.query);
   }
 
   reset() {
     this.form.reset();
-    this.form.patchValue(this.initialRawValue);
     this.update();
   }
 
   toQuery() {
     let output = {};
-    const filters = this.filters.toArray();
+    const filters = this.filters?.toArray() ?? [];
 
     for (const filter of filters) {
       output[filter.name] = filter.toQuery();
@@ -112,12 +128,17 @@ export class IbFilter {
   /** @ignore */
   private buildFilter(): IbFilterSyntax {
     let output = {};
-    const filters = this.filters.toArray();
+    const filters = this.filters?.toArray() ?? [];
 
     for (const filter of filters) {
       output[filter.name] = filter.build();
     }
 
     return output;
+  }
+
+  _markInitialized() {
+    this.initialized.next();
+    this.initialized.complete();
   }
 }

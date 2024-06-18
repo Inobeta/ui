@@ -3,6 +3,8 @@ import { Sort } from "@angular/material/sort";
 
 export interface IbPaginatorOptions extends MatPaginatorDefaultOptions {
   hide?: boolean;
+   //TODO please add support to pageIndex it is overrided by _updatePaginator in table datasource
+  pageIndex?: number;
 }
 
 export interface IbTableDef {

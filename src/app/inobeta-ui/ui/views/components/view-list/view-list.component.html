@@ -7,12 +7,10 @@
   [view]="view"
   [selected]="activeView?.id === view.id"
   [dirty]="dirty"
-  [pinned]="view.id === pinnedView?.id"
   (ibChangeView)="ibChangeView.emit($event)"
   (ibRemoveView)="ibRemoveView.emit($event)"
   (ibRenameView)="ibRenameView.emit($event)"
   (ibDuplicateView)="ibDuplicateView.emit($event)"
-  (ibPinView)="ibPinView.emit($event)"
 ></ib-table-view>
 
 <button mat-icon-button (click)="ibAddView.emit()">

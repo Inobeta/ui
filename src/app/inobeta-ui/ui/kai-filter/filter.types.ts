@@ -20,6 +20,8 @@ export type IbFilterDef = {
 };
 
 export type IbFilterSyntax = Record<string, IbFilterDef>;
+//FIXME: why ibSearchBar is not in IbFilterSyntax? It should be a text filter with operator "contains"
+export type IbFilterSyntaxExtended = IbFilterSyntax & { ibSearchBar?: string };
 
 export type IbTextFilterCriteria = {
   operator: IbFilterOperator;

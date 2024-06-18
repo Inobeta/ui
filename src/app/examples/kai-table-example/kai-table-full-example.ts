@@ -32,7 +32,7 @@ import { UserService } from "./users";
 
         <ib-text-filter name="name">Name</ib-text-filter>
         <ib-tag-filter name="fruit">Fruit</ib-tag-filter>
-        <ib-number-filter name="number">Amount</ib-number-filter>
+        <ib-number-filter name="amount">Amount</ib-number-filter>
         <ib-date-filter name="created_at">Purchased</ib-date-filter>
         <ib-boolean-filter name="subscribed">Subscribed</ib-boolean-filter>
       </ib-filter>
@@ -40,7 +40,7 @@ import { UserService } from "./users";
       <ib-selection-column (ibRowSelectionChange)="selectionChange($event)" />
       <ib-text-column headerText="Name" name="name" sort />
       <ib-text-column headerText="Fruit" name="fruit" sort />
-      <ib-number-column headerText="Amount" name="number" aggregate sort />
+      <ib-number-column headerText="Amount" name="amount" aggregate sort />
       <ib-date-column headerText="Purchased" name="created_at" sort />
       <ib-column name="subscribed" sort>
         <ng-container *ibCellDef="let element">
@@ -75,7 +75,7 @@ export class IbKaiTableFullExamplePage {
   selectionColumn: IbSelectionColumn;
 
   data: any[] = [];
-  columns = ["name", "fruit", "number", "created_at", "subscribed"];
+  columns = ["name", "fruit", "amount", "created_at", "subscribed"];
   state: IbKaiTableState = "idle";
 
   constructor(private userService: UserService) {}

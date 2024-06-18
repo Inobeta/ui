@@ -1,5 +1,5 @@
 import { createActionGroup, props } from "@ngrx/store";
-import { IView } from "./views/table-view";
+import { ITableViewData, IView } from "./views/table-view";
 
 export const TableViewActions = createActionGroup({
   source: "TableView",
@@ -7,10 +7,8 @@ export const TableViewActions = createActionGroup({
     "Add View": props<{
       view: IView;
     }>(),
-    "Save View": props<{ id: string; data: any }>(),
+    "Save View": props<{ id: string; data: ITableViewData }>(),
     "Rename View": props<{ id: string; name: string }>(),
-    "Delete View": props<{ id: string }>(),
-    "Pin View": props<{ groupName: string; id: string }>(),
-    "Unpin View": props<{ groupName: string; id: string }>(),
+    "Delete View": props<{ id: string }>()
   },
 });

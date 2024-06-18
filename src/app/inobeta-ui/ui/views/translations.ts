@@ -6,8 +6,6 @@ export const ibViewTranslations = {
       "remove": "Elimina vista",
       "rename": "Rinomina vista",
       "duplicate": "Duplica vista",
-      "pin": "Rendi predefinita",
-      "unpin": "Rimuovi",
       "duplicatePlaceholder": "Copia di {{viewName}}",
       "save": "Salva",
       "undo": "Annulla modifiche",
@@ -28,8 +26,6 @@ export const ibViewTranslations = {
         "duplicated": "Vista duplicata",
         "renamed": "Vista rinominata",
         "saved": "Vista salvata",
-        "pinned": "Vista salvata come predefinita",
-        "unpinned": "Vista rimossa dai predefiniti"
       },
       "showFilters": "Mostra filtri"
     },
