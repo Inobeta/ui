@@ -78,8 +78,11 @@ export class IbKaiTableApiExamplePage {
     this.dataSource.href = "oops";
     this.dataSource.refresh();
     setTimeout(
-      () => (this.dataSource.href = "https://api.github.com/search/issues"),
-      1
+      () => {
+        this.dataSource.href = "https://api.github.com/search/issues";
+        this.dataSource.refresh();
+      },
+      1000
     );
   }
 }

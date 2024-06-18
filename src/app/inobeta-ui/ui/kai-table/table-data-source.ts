@@ -120,8 +120,8 @@ export class IbTableDataSource<
   }
   set sortState(sort: Sort){
     this._sortState = {
-      active: sort.active ?? '',
-      direction: sort.direction ?? ''
+      active: sort?.active ?? '',
+      direction: sort?.direction ?? ''
     };
   }
 
@@ -177,7 +177,7 @@ export class IbTableDataSource<
    */
   aggregatedColumns: Record<string, string> = {};
   aggregationFunctions = inject(IB_AGGREGATE);
-  private store = inject(Store);
+  protected store = inject(Store);
 
   /**
    * Used to trigger the aggregation of a column by the user.

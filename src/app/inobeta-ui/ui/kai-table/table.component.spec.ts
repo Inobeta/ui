@@ -101,7 +101,7 @@ describe("IbTable", () => {
       const component = fixture.debugElement.query(
         By.directive(IbTable)
       ).componentInstance;
-      tick(1)
+      tick(1000) //DEVK-346 we add a debounceTime time of 500ms in order to avoid multiple requests
       expect(component).toBeTruthy();
       expect(component.dataSource.state).toBe("idle");
     }));
@@ -114,7 +114,7 @@ describe("IbTable", () => {
       fixture.componentInstance.dataSource.fetchData = () =>
         throwError(() => new Error());
       component.dataSource.refresh();
-      tick(1);
+      tick(500);
       fixture.detectChanges();
       expect(component.state).toBe("http_error");
     }));

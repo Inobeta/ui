@@ -127,6 +127,20 @@ export class IbTableUrlService {
       sort: this.getSort(tableName)
     }
   }
+
+  setFilterAndSort(tableName: string, ibfilter: IbFilterSyntaxExtended, sort: Sort) {
+    const ibsort = sort.direction !== '' ? sort : null
+    this.router.navigate([], {
+      queryParams: {
+        [tableName]: JSON.stringify({
+          ...this.getRawParams(tableName),
+          ibfilter,
+          ibsort
+        })
+      },
+      queryParamsHandling: 'merge',
+    });
+  }
 }
 
 

@@ -68,8 +68,8 @@ export class GithubDataSource extends IbTableRemoteDataSource<
       .get<GithubApi>(this.href, {
         params: {
           q: `repo:angular/components ${query}`,
-          sort: sort.active,
-          order: sort.direction,
+          sort: sort?.active,
+          order: sort?.direction,
           page: page.pageIndex + 1,
           per_page: page.pageSize,
         },

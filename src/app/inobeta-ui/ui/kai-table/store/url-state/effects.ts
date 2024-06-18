@@ -53,4 +53,13 @@ export class UrlStateEffects {
   }, {
     dispatch: false
   });
+
+  setRemoteDatasourceParams$ = createEffect(():any => {
+    return this.actions$.pipe(
+      ofType(urlStateActions.setRemoteDatasourceParams),
+      tap((action) => this.tableUrlService.setFilterAndSort(action.tableName, action.filters, action.sort))
+    )
+  }, {
+    dispatch: false
+  });
 }

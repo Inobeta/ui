@@ -9,9 +9,10 @@ import {
   merge,
   of,
 } from "rxjs";
-import { catchError, map, switchMap } from "rxjs/operators";
+import { catchError, debounceTime, map, switchMap } from "rxjs/operators";
 import { IbTableDataSource } from "./table-data-source";
 import { IbKaiTableState } from "./table.types";
+import { urlStateActions } from "./store/url-state/actions";
 
 export type IbFetchDataResponse<T> = {
   /**
@@ -31,7 +32,6 @@ export abstract class IbTableRemoteDataSource<
   private _refresh = new Subject<void>();
 
   _renderChangesSubscription: Subscription | null = null;
-
   get state() {
     return this._state.value;
   }
@@ -71,6 +71,24 @@ export abstract class IbTableRemoteDataSource<
     const pipeline = combineLatest([filterChange, sortChange, pageChange]);
 
     const dataChange = merge(refresh, pipeline).pipe(
+      map(() => this.state = "loading"),
+      debounceTime(500),
+      map((v) => {
+        if(this.sort?.active !== this.sortState?.active || this.sort?.direction !== this.sortState?.direction){
+          this.sortState = this.sort;
+        }
+        if(this.filter?.initialized){
+          this.store.dispatch(urlStateActions.setRemoteDatasourceParams({
+            tableName: this.tableName,
+            filters: this.filter?.selectedCriteria ?? {},
+            sort: this.sortState ?? {active: '', direction: ''}
+          }));
+        }
+        else if(this.sort?.active !== this.sortState?.active || this.sort?.direction !== this.sortState?.direction){
+          this.store.dispatch(urlStateActions.setSort({tableName: this.tableName, params: this.sortState}));
+        }
+        return v
+      }),
       switchMap(() => {
         this.state = "loading";
         return this.fetchData(

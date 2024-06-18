@@ -10,6 +10,7 @@ export const urlStateActions = createActionGroup({
     'Set Paginator': props<{ tableName: string; params: {pageIndex: number, pageSize: number} }>(),
     'Set Aggregated Columns': props<{ tableName: string; params: Record<string, string> }>(),
     'Set Sort': props<{ tableName: string; params: Sort }>(),
+    'Set Remote Datasource Params': props<{ tableName: string; filters: IbFilterSyntaxExtended, sort: Sort }>(),
     'Handle View Change': props<{tableName: string; params: Omit<IbKaiTableParams, 'tableName'> & {view: string}}>()
   },
 });

@@ -209,7 +209,8 @@ export class IbTable implements OnDestroy {
     this.dataSource.filter = this.filter;
     this.filter?.initialized.subscribe(() => {
       this.tableUrl.emptyFilterSchema[this.tableName] = structuredClone(this.filter.initialRawValue);
-      dsInit();
+      //NG0100
+      setTimeout(() => dsInit())
 
       const filtersFromUrl = this.tableUrl.getFilters(this.tableName)
       this.filter.value = filtersFromUrl
@@ -221,11 +222,11 @@ export class IbTable implements OnDestroy {
 
     // If there is no filter, we need to set the viewGroupName to the table name
     if (this.view && !this.filter) {
-      viewInit()
+      setTimeout(() => viewInit())
     }
 
     if(!this.filter){
-      dsInit();
+      setTimeout(() => dsInit())
     }
     this.dataSource.columns = this.columns.toArray();
     this.columns.changes
