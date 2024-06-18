@@ -8,4 +8,5 @@ export * from "./table.component";
 export * from "./table.module";
 export * from "./table.types";
 export * from "./table-url.service";
+export * from "./store/url-state/actions";
 export * from "./store/url-state/selectors";
