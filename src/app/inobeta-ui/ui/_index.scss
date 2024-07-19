@@ -4,20 +4,6 @@
 @use "./kai-table/table-theme" as table;
 
 @mixin theme($app-theme) {
-  $typography: mat.define-typography-config(
-    $button:
-      mat.define-typography-level(
-        $font-family: Roboto,
-        $font-size: 14px,
-        $font-weight: 500,
-        $line-height: 1,
-        $letter-spacing: 0.04rem,
-      ),
-  );
-  @include mat.all-component-typographies($typography);
-
-  @include mat.all-component-themes($app-theme);
-  @include ib-table($app-theme);
   @include ib-main-menu($app-theme);
   @include table.theme($app-theme);
 }
@@ -105,66 +91,6 @@
 }
 .mat-mdc-tooltip {
   white-space: pre-line;
-}
-
-@mixin ib-table($theme) {
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-
-  .table-header {
-    background-color: mat.get-color-from-palette($primary, 500);
-  }
-
-  .filter-button,
-  button.mat-sort-header-button,
-  .table-header-title,
-  .table-header-title-custom,
-  ib-table .mat-sort-header-arrow,
-  ib-table .table-sort-indicator {
-    color: mat.get-color-from-palette($primary, default-contrast);
-  }
-
-  .ib-table-header-button {
-    color: mat.get-color-from-palette($accent, default-contrast);
-    background-color: mat.get-color-from-palette($accent, 500);
-    padding: 8px;
-    border-radius: 5px;
-    font-size: 22px;
-    cursor: pointer;
-    overflow: hidden;
-    position: relative;
-  }
-
-  .ib-table-row-button {
-    color: mat.get-color-from-palette($primary, default-contrast);
-    background-color: mat.get-color-from-palette($primary, 500);
-    padding: 8px;
-    border-radius: 5px;
-    font-size: 22px;
-    cursor: pointer;
-    overflow: hidden;
-    position: relative;
-  }
-  ib-table td {
-    border-bottom: 1px solid #ccc;
-    background-color: mat.get-color-from-palette($primary, default-contrast);
-    padding: 5px 5px !important;
-  }
-
-  .ib-table-column-type-number {
-    text-align: right !important;
-    padding-right: 20px !important;
-  }
-
-  .ib-footer-sticky,
-  .ib-footer-sticky td,
-  .ib-table-total-row-cell,
-  .ib-total-row-avg-cell,
-  .ib-total-row-sum-cell {
-    color: mat.get-color-from-palette($accent, default-contrast);
-    background-color: mat.get-color-from-palette($accent, 100);
-  }
 }
 
 .ib-material-form-grid ib-material-form-control {

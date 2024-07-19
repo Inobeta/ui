@@ -23,10 +23,12 @@ $dark-theme: mat.define-dark-theme((
  ),
 ));
 
-// Include the default theme styles.
-@include ui.theme($light-theme);
-
-@media (prefers-color-scheme: dark) {
-  @include ui.all-component-colors($dark-theme);
-  @include mat.all-component-colors($dark-theme);
+html {
+  @include mat.all-component-themes($light-theme);
+  @include ui.theme($light-theme);
+  
+  @media (prefers-color-scheme: dark) {
+    @include ui.all-component-colors($dark-theme);
+    @include mat.all-component-colors($dark-theme);
+  }
 }
