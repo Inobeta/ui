@@ -8,25 +8,25 @@
   .mat-sort-header-arrow {
     color: var(
       --ib-table-header-text-color,
-      mat.get-theme-color($theme, primary, darker-contrast)
+      mat.get-theme-color($theme, on-primary)
     ) !important;
     background: var(
       --ib-table-header-background-color,
-      mat.get-theme-color($theme, primary, 500)
+      mat.get-theme-color($theme, primary)
     ) !important;
   }
 
   .mat-mdc-row:hover {
     background: var(
       --ib-table-row-background-color-on-hover,
-      rgba(mat.get-theme-color($theme, accent, darker-contrast), 0.03)
+      rgba(mat.get-theme-color($theme, primary), 0.03)
     ) !important;
   }
 
   .ib-table-striped-rows .mat-mdc-row:nth-child(even) {
     color: var(
       --ib-table-even-row-text-color,
-      mat.get-theme-color($theme, accent, darker-contrast)
+      mat.get-theme-color($theme, on-primary)
     );
     background: var(
       --ib-table-even-row-background-color,
@@ -40,8 +40,8 @@
   }
 
   .ib-table__container {
-    color: mat.get-theme-color($theme, background, text);
-    background-color: mat.get-theme-color($theme, background, card);
+    color: mat.get-theme-color($theme, on-surface);
+    background-color: mat.get-theme-color($theme, surface-container-lowest);
   }
 
 }

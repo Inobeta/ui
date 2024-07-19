@@ -2,25 +2,32 @@
 @use '../inobeta-ui/ui' as ui;
 @include mat.core();
 
-// Define the default theme (same as the example above).
-$app-primary: mat.m2-define-palette(mat.$m2-deep-purple-palette);
-$app-accent: mat.m2-define-palette(mat.$m2-amber-palette, A200, A100, A400);
-$app-warning: mat.m2-define-palette(mat.$m2-red-palette);
-
-$light-theme: mat.m2-define-light-theme((
+// Define a dark theme
+$dark-theme: mat.define-theme((
   color: (
-    primary: $app-primary,
-    accent: $app-accent,
-    warning: $app-warning
+    theme-type: dark,
+    primary: mat.$violet-palette,
+  ),
+  typography: (
+    brand-family: 'Roboto',
+  ),
+  density: (
+    scale: 0
   )
 ));
 
-$dark-theme: mat.m2-define-dark-theme((
- color: (
-   primary: mat.m2-define-palette(mat.$m2-purple-palette),
-   accent: mat.m2-define-palette(mat.$m2-amber-palette),
-   warning: $app-warning
- ),
+// Define a light theme
+$light-theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: mat.$violet-palette,
+  ),
+  typography: (
+    brand-family: 'Roboto',
+  ),
+  density: (
+    scale: 0
+  )
 ));
 
 html {

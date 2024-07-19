@@ -26,7 +26,7 @@
   display: block;
   border: 1px solid var(--ib-table-outline-color-private);
   overflow: hidden;
-  border-radius: 4px;
+  border-radius: 28px;
 
   .ib-table__toolbar {
     display: flex;
@@ -40,6 +40,7 @@
     }
 
     &__actions {
+      padding-right: 8px;
       ib-table-action-group {
         display: inline-block;
       }

@@ -1,15 +1,14 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
-import { FlexLayoutModule } from '@Inobeta/flex-layout';
-import { MatDialogModule } from '@angular/material/dialog';
+import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { IbMainMenuBarComponent } from './components/main-menu-bar/main-menu-bar.component';
-import { IbMainMenuExpandedComponent } from './components/main-menu-expanded/main-menu-expanded.component';
-import { IbMainMenuDialogComponent } from './components/main-menu-dialog/main-menu-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { IbMainMenuBarComponent } from './components/main-menu-bar/main-menu-bar.component';
+import { IbMainMenuDialogComponent } from './components/main-menu-dialog/main-menu-dialog.component';
 import { IbMainMenuHeaderFooterButtonsComponent } from './components/main-menu-expanded/header-footer-buttons.component';
+import { IbMainMenuExpandedComponent } from './components/main-menu-expanded/main-menu-expanded.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +22,6 @@ import { IbMainMenuHeaderFooterButtonsComponent } from './components/main-menu-e
     MatIconModule,
     MatDialogModule,
     MatButtonModule,
-    FlexLayoutModule,
     RouterModule,
     TranslateModule.forChild({
       extend: true

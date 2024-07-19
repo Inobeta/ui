@@ -3,9 +3,9 @@
 
 @use "./kai-table/table-theme" as table;
 
-@mixin theme($app-theme) {
-  @include ib-main-menu($app-theme);
-  @include table.theme($app-theme);
+@mixin theme($theme) {
+  @include ib-main-menu($theme);
+  @include table.theme($theme);
 }
 
 @mixin all-component-colors($theme) {
@@ -121,7 +121,6 @@ div[ib-mat-slide-toggle] {
 }
 
 @mixin ib-main-menu($theme) {
-  $ib-main-menu-active: map-get($theme, primary);
   $ib-main-menu-main: (
     50: #e7e7e7,
     100: #c3c3c3,
@@ -191,7 +190,7 @@ div[ib-mat-slide-toggle] {
   }
   .ib-main-menu-box-active-box {
     border-color: rgba(
-      mat.m2-get-color-from-palette($ib-main-menu-active, 500),
+      mat.get-theme-color($theme, primary),
       0.75
     );
   }
@@ -248,9 +247,9 @@ div[ib-mat-slide-toggle] {
 
   .active-row-ie-secondLevel,
   .active-header-footer-button {
-    background: mat.m2-get-color-from-palette(
-      $ib-main-menu-active,
-      500
+    background: mat.get-theme-color(
+      $theme,
+      primary
     ) !important;
   }
 

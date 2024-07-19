@@ -4,20 +4,14 @@ import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, 
 @Component({
   selector: '[ib-mat-label]',
   template: `
-    <div fxFlex style="width:100%;height:50px;;"  fxLayout="row" fxFlexAlign="center" >
+    <div style="width:100%;height:50px;">
       <div
         *ngIf="data.base.label"
         style="padding-right:10px;"
-        fxLayout="row"
-        fxFlexAlign="center"
-        fxFlex="40%"
       >{{data.base.label | translate}}: </div>
       <div
         *ngIf="data.base.value"
         style="font-weight:bold;"
-        fxLayout="row"
-        fxFlexAlign="center"
-        fxFlex="60%"
       >{{ data.base.value }}</div>
 </div>
   `

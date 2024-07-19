@@ -4,7 +4,7 @@ import { IView } from "../../store/views/table-view";
 @Component({
   selector: "ib-view-list",
   templateUrl: "./view-list.component.html",
-  styleUrls: ["./view-list.component.css"],
+  styleUrls: ["./view-list.component.scss"],
 })
 export class IbViewList {
   @Input() defaultView: IView;

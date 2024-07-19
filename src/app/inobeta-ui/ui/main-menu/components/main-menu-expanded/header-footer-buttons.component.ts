@@ -17,12 +17,10 @@ import { IbMainMenuButton } from '../../models/main-menu-button.model'
     <div
       *ngIf="type === 'topCenter'"
       id="ib-main-menu-expanded-header-closeButton-wrapper"
-      fxLayout="row"
-      fxLayoutAlign="space-around center">
+      style="display:flex;flex-direction:row;justify-content: space-around; align-items: center;align-content: center">
       <button mat-button>
         <div
-          fxLayout="row"
-          fxLayoutAlign="space-evenly center">
+          style="display:flex;flex-direction:row;justify-content: space-evenly; align-items: center;align-content: center">
           <mat-icon class="{{element.icon.type?'material-icons-' + element.icon.type + ' ' + element.icon.type : null}}">
             {{element.icon.label}}
           </mat-icon>
@@ -51,8 +49,7 @@ import { IbMainMenuButton } from '../../models/main-menu-button.model'
     >
       <div
         id="ib-main-menu-expanded-footer-support-button-wrapper"
-        fxLayout="row"
-        fxLayoutAlign="center center"
+        style="display:flex;flex-direction:row;justify-content: center; align-items: center;align-content: center"
       >
         <mat-icon class="{{element.icon.type?'material-icons-' + element.icon.type: null}}">
           {{element.icon.label}}

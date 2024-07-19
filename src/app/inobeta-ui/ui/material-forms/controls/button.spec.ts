@@ -1,15 +1,14 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
 
-import { IbToolTestModule } from '../../../tools';
 import { CommonModule } from '@angular/common';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IbDynamicFormsModule } from '../../forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FlexLayoutModule } from '@Inobeta/flex-layout';
 import { IbMatButtonComponent } from './button';
 import { IbModalTestModule } from '../../modal/modal-test.module';
+import { TranslateModule } from "@ngx-translate/core";
 
 
 
@@ -25,16 +24,17 @@ describe('IbMatButtonComponent', () => {
         IbMatButtonComponent,
       ],
       imports: [
-        IbToolTestModule,
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
         IbDynamicFormsModule,
         MatFormFieldModule,
         NoopAnimationsModule,
-        FlexLayoutModule,
         MatButtonModule,
-        IbModalTestModule
+        IbModalTestModule,
+        TranslateModule.forRoot({
+          extend: true,
+        }),
       ]
     })
     .compileComponents();

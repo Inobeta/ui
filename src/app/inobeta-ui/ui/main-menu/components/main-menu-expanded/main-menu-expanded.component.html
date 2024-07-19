@@ -1,9 +1,12 @@
 <!--header---------------------------------------------------------------------->
-<div id="ib-main-menu-expanded-header" fxLayout="row" fxLayoutAlign="space-between center">
-  <div id="ib-main-menu-expanded-header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
+<div id="ib-main-menu-expanded-header"
+  style="display:flex;flex-direction:row;justify-content: space-between; align-items: center;align-content: center">
+  <div id="ib-main-menu-expanded-header-wrapper"
+  style="display:flex;flex-direction:row;justify-content: space-between; align-items: center;align-content: center">
 
     <!-- header > title --------------------------------------->
-    <div id="ib-main-menu-expanded-header-title-wrapper" fxLayout="row" fxLayoutAlign="start center">
+    <div id="ib-main-menu-expanded-header-title-wrapper"
+    style="display:flex;flex-direction:row;justify-content: flex-start; align-items: center;align-content: center">
       <p>{{navDataSet.title | translate }}</p>
     </div>
 
@@ -15,8 +18,10 @@
     </ib-main-menu-header-footer-buttons>
 
     <!-- header > upRight buttons ------------------------------>
-    <div id="ib-main-menu-expanded-header-settingsLogout-wrapper" fxLayout="row" fxLayoutAlign="end center">
-      <div id="ib-main-menu-expanded-header-settingsLogout-box" fxLayout="row" fxLayoutAlign="space-evenly center">
+    <div id="ib-main-menu-expanded-header-settingsLogout-wrapper"
+    style="display:flex;flex-direction:row;justify-content: flex-end; align-items: center;align-content: center">
+      <div id="ib-main-menu-expanded-header-settingsLogout-box"
+      style="display:flex;flex-direction:row;justify-content: space-evenly; align-items: center;align-content: center">
         <ng-container *ngFor="let upRight of navDataSet.upRight">
           <ib-main-menu-header-footer-buttons
           class="ib-main-menu-upRight-item"
@@ -34,7 +39,8 @@
 
 <!--body---------------------------------------------------------------------->
 <div id="ib-main-menu-expanded-body">
-  <div id="ib-main-menu-expanded-body-wrapper" fxLayout="row wrap" fxLayoutGap="16px" fxLayoutAlign="start center" >
+  <div id="ib-main-menu-expanded-body-wrapper"
+  style="display:flex;flex-direction:row;flex-wrap:wrap;justify-content: flex-start; align-items: center;align-content: center;gap:16px">
     <ng-container *ngFor="let firstLevel of navDataSet.navData">
 
       <!-- body > box ----------------------------------------->
@@ -51,14 +57,16 @@
 
         <!-- body > box > firstLevel -------------------->
         <div class="ib-main-menu-expanded-body-box-firstLevel">
-            <div class="ib-main-menu-expanded-body-box-firstLevel-box" fxLayout="row" fxLayoutAlign="start center">
+            <div class="ib-main-menu-expanded-body-box-firstLevel-box"
+            style="display:flex;flex-direction:row;justify-content: start; align-items: center;align-content: center">
               <mat-icon class="{{firstLevel.icon.type?'material-icons-' + firstLevel.icon.type: null}}">{{firstLevel.icon.label}}</mat-icon>
               <p> {{firstLevel.label |translate}} </p>
             </div>
         </div>
 
         <!-- body > box > secondLevel ------------------>
-        <div class="ib-main-menu-expanded-body-box-secondLevel" fxLayout="column wrap" fxLayoutAlign="start start" style="height: 85%;">
+        <div class="ib-main-menu-expanded-body-box-secondLevel" style="height: 85%;"
+        style="display:flex;flex-direction:column;flex-wrap: wrap;justify-content: flex-start; align-items: flex-start;align-content: flex-start">
           <ng-container *ngFor="let secondLevel of firstLevel.paths; let i = index">
             <div
               routerLink="{{ ( secondLevel.link === undefined) ? null : secondLevel.link }}"
@@ -70,7 +78,7 @@
             <button
               mat-button
               class="{{(rla.isActive && secondLevel.link !== undefined)? 'active-row-ie-secondLevel' : null}}"
-              fxFlex="18"
+              style="flex:1 1 18"
               [ngStyle]="{'width': calcSecondLevelWidth(firstLevel.paths.length)}"
               (click)="emitAction($event, secondLevel)"
             >
@@ -88,7 +96,8 @@
 
 <!--footer--------------------------------------------------------------------------------------------->
 <div id="ib-main-menu-expanded-footer">
-  <div id="ib-main-menu-expanded-footer-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
+  <div id="ib-main-menu-expanded-footer-wrapper"
+  style="display:flex;flex-direction:row;justify-content: space-between; align-items: center;align-content: center">
 
       <!-- footer > bottomLeft button ------------------------>
       <ib-main-menu-header-footer-buttons

@@ -1,4 +1,3 @@
-import { FlexLayoutModule } from "@Inobeta/flex-layout";
 import { CommonModule, registerLocaleData } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { NgModule } from "@angular/core";
@@ -116,7 +115,6 @@ const reduxStorageSave = ibSetupHydration("__redux-store-inobeta-ui__", [
     FormsModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
-    FlexLayoutModule,
     IbHttpModule,
     IbModalModule,
     MatFormFieldModule,
@@ -159,7 +157,6 @@ const reduxStorageSave = ibSetupHydration("__redux-store-inobeta-ui__", [
     MatCardModule,
     MatTooltipModule,
   ],
-  exports: [FlexLayoutModule],
   providers: [
     //{provide: 'ibSessionStorageKey', useValue: '__redux-store-inobeta-ui__'},
     //{provide: 'ibReduxPersistKeys', useValue: ['sessionState', 'ibTable', 'lazyLoaded']},

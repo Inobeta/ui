@@ -6,7 +6,7 @@ import { IbModalMessageService } from '../../modal/modal-message.service';
 @Component({
   selector: '[ib-mat-button]',
   template: `
-<div fxLayout="row" fxLayout="space-around center" style="padding-top:5px;padding-bottom:5px;height:45px;">
+<div style="padding-top:5px;padding-bottom:5px;height:45px;">
   <button
     (click)="handleActionClick()"
     [type]="(data.base.key === 'submit') ? 'submit' : 'button'"
