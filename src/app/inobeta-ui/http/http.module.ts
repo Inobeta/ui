@@ -1,11 +1,7 @@
 import { Injector, ModuleWithProviders, NgModule } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
-import { IbHttpClientService } from "./http/http-client.service";
 import { CommonModule } from "@angular/common";
 import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
-import { IbResponseHandlerService } from "./http/response-handler.service";
-import { IbAuthService } from "./auth/auth.service";
-import { IbSessionService } from "./auth/session.service";
 import { IbAuthGuard, IbLoginGuard, IbRoleGuard } from "./auth/guard.service";
 import { IbSpinnerLoadingComponent } from "./http/spinner-loading.component";
 import { ReactiveFormsModule } from "@angular/forms";
@@ -43,9 +39,7 @@ const components = [
   exports: [...components, IbRoleCheckDirective],
   declarations: [...components],
   providers: [
-    IbHttpClientService,
     IbLoginService,
-    IbResponseHandlerService,
     { provide: "ibHttpAuthType", useValue: IbAuthTypes.JWT },
     {
       provide: "ibHttpUrlExcludedFromLoader",
@@ -107,9 +101,7 @@ export class IbHttpModule {
     return {
       ngModule: IbHttpModule,
       providers: [
-        IbAuthService,
         IbLoginService,
-        IbSessionService,
         IbAuthGuard,
         IbLoginGuard,
         IbRoleGuard,
