@@ -1,6 +1,6 @@
 # Inobeta/UI Changelog
 
-## [17.1.1] (unreleased)
+## [17.1.1] (2024-07-19)
 
 | Issue ID | Type | Section | Description |
 | -- | -- | -- | -- |
@@ -16,7 +16,7 @@
 |DEVK-343|docs|IbViewModule|Missing doc added|
 |DEVK-344|fix|IbFilterModule|ISO8601 Date support|
 |DEVK-345|fix|IbViewModule|Massive refactoring & url qs addes|
-|DEVK-346|fix|IbFilterModule|ISO8601 Date support|
+|DEVK-346|feat|IbKaiTableModule|Add state management from querystring|
 |DEVK-353|fix|IbMaterialFormModule|Input focus was not working inside a form array|
 |DEVK-354|fix|IbMaterialFormModule|Missing hook added on form array|
 
