@@ -95,7 +95,7 @@ registerLocaleData(localeIt);
       *matCellDef="let data"
       [matTooltip]="dataAccessor(data, name) + ' ms'"
     >
-      {{ dataAccessor(data, name) | date : "MMM d, YYYY 'at' hh:mm" }}
+      {{ dataAccessor(data, name) | date: "MMM d, YYYY 'at' hh:mm" }}
     </td>
     <td mat-footer-cell *matFooterCellDef style="max-width: fit-content">
       <ib-aggregate *ngIf="aggregate"></ib-aggregate>
@@ -313,22 +313,15 @@ export const WithCustomColumn: Story = {
 };
 
 /**
- * Example using the `*ibKaiRowGroup` directive.  
+ * Example using the `*ibKaiRowGroup` directive.
  * Click on a row to reveal its content.
  */
 export const WithRowGroup: Story = {
   args: {
-    displayedColumns: [
-      "id",
-      "name",
-      "sku",
-      "category",
-      "price",
-      "created_at",
-    ],
+    displayedColumns: ["id", "name", "sku", "category", "price", "created_at"],
     tableDef: {
       paginator: {
-        pageSize: 5
+        pageSize: 5,
       },
     },
   },
