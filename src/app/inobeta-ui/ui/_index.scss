@@ -157,25 +157,25 @@ div[ib-mat-slide-toggle] {
 
   /* Header */
   #ib-main-menu-expanded-header {
-    background: mat.get-color-from-palette($ib-main-menu-main, 700);
+    background: mat.m2-get-color-from-palette($ib-main-menu-main, 700);
     background: linear-gradient(
       0deg,
-      rgba(mat.get-color-from-palette($ib-main-menu-main, 500), 0) 0%,
-      rgba(mat.get-color-from-palette($ib-main-menu-main, 400), 0.907) 75%,
-      rgba(mat.get-color-from-palette($ib-main-menu-main, 600), 0.907) 100%
+      rgba(mat.m2-get-color-from-palette($ib-main-menu-main, 500), 0) 0%,
+      rgba(mat.m2-get-color-from-palette($ib-main-menu-main, 400), 0.907) 75%,
+      rgba(mat.m2-get-color-from-palette($ib-main-menu-main, 600), 0.907) 100%
     );
   }
   #ib-main-menu-expanded-header-closeButton-wrapper button {
     border-color: rgba(
-      mat.get-color-from-palette($ib-main-menu-main, 200),
+      mat.m2-get-color-from-palette($ib-main-menu-main, 200),
       0.75
     );
   }
 
   #ib-main-menu-expanded-header-settingsLogout-box {
-    background: rgba(mat.get-color-from-palette($ib-main-menu-main, 500), 0.25);
+    background: rgba(mat.m2-get-color-from-palette($ib-main-menu-main, 500), 0.25);
     border-color: rgba(
-      mat.get-color-from-palette($ib-main-menu-main, 200),
+      mat.m2-get-color-from-palette($ib-main-menu-main, 200),
       0.75
     );
   }
@@ -183,21 +183,21 @@ div[ib-mat-slide-toggle] {
   /* Body */
 
   .ib-main-menu-expanded-body-box {
-    background: rgba(mat.get-color-from-palette($ib-main-menu-main, 700), 0.25);
+    background: rgba(mat.m2-get-color-from-palette($ib-main-menu-main, 700), 0.25);
     border-color: rgba(
-      mat.get-color-from-palette($ib-main-menu-main, 200),
+      mat.m2-get-color-from-palette($ib-main-menu-main, 200),
       0.75
     );
   }
   .ib-main-menu-box-active-box {
     border-color: rgba(
-      mat.get-color-from-palette($ib-main-menu-active, 500),
+      mat.m2-get-color-from-palette($ib-main-menu-active, 500),
       0.75
     );
   }
   .ib-main-menu-expanded-body-box-firstLevel {
     border-bottom-color: rgba(
-      mat.get-color-from-palette($ib-main-menu-main, 200),
+      mat.m2-get-color-from-palette($ib-main-menu-main, 200),
       0.75
     );
   }
@@ -205,21 +205,21 @@ div[ib-mat-slide-toggle] {
   /* Footer */
 
   #ib-main-menu-expanded-footer {
-    background: mat.get-color-from-palette($ib-main-menu-main, 700);
+    background: mat.m2-get-color-from-palette($ib-main-menu-main, 700);
     background: linear-gradient(
       180deg,
-      rgba(mat.get-color-from-palette($ib-main-menu-main, 500), 0) 0%,
-      rgba(mat.get-color-from-palette($ib-main-menu-main, 400), 0.907) 75%,
-      rgba(mat.get-color-from-palette($ib-main-menu-main, 600), 0.907) 100%
+      rgba(mat.m2-get-color-from-palette($ib-main-menu-main, 500), 0) 0%,
+      rgba(mat.m2-get-color-from-palette($ib-main-menu-main, 400), 0.907) 75%,
+      rgba(mat.m2-get-color-from-palette($ib-main-menu-main, 600), 0.907) 100%
     );
   }
 
   #ib-main-menu-expanded-footer-support-button {
     border-color: rgba(
-      mat.get-color-from-palette($ib-main-menu-main, 200),
+      mat.m2-get-color-from-palette($ib-main-menu-main, 200),
       0.75
     );
-    background: rgba(mat.get-color-from-palette($ib-main-menu-main, 500), 0.55);
+    background: rgba(mat.m2-get-color-from-palette($ib-main-menu-main, 500), 0.55);
   }
 
   /* Common */
@@ -228,13 +228,13 @@ div[ib-mat-slide-toggle] {
   #ib-main-menu-expanded-header-settingsLogout-box .mat-mdc-button:hover,
   .ib-main-menu-expanded-body-box-secondLevel button:hover,
   #ib-main-menu-expanded-footer-support-button:hover {
-    background: rgba(mat.get-color-from-palette($ib-main-menu-main, 300), 0.7);
+    background: rgba(mat.m2-get-color-from-palette($ib-main-menu-main, 300), 0.7);
   }
 
   #ib-main-menu-expanded-header p,
   #ib-main-menu-expanded-body p,
   #ib-main-menu-expanded-footer p {
-    color: mat.get-color-from-palette($ib-main-menu-main, A700);
+    color: mat.m2-get-color-from-palette($ib-main-menu-main, A700);
   }
 
   ib-main-menu-expanded mat-icon {
@@ -248,7 +248,7 @@ div[ib-mat-slide-toggle] {
 
   .active-row-ie-secondLevel,
   .active-header-footer-button {
-    background: mat.get-color-from-palette(
+    background: mat.m2-get-color-from-palette(
       $ib-main-menu-active,
       500
     ) !important;
@@ -257,7 +257,7 @@ div[ib-mat-slide-toggle] {
   /* ib-main-menu dialog custom class */
 
   .mat-dialog-container-for-ib-main-menu .mat-mdc-dialog-container {
-    background: rgba(mat.get-color-from-palette($ib-main-menu-main, 500), 0.5);
+    background: rgba(mat.m2-get-color-from-palette($ib-main-menu-main, 500), 0.5);
     padding: 0px !important;
   }
   .mat-dialog-container-for-ib-main-menu

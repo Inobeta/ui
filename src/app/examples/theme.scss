@@ -3,11 +3,11 @@
 @include mat.core();
 
 // Define the default theme (same as the example above).
-$app-primary: mat.define-palette(mat.$deep-purple-palette);
-$app-accent: mat.define-palette(mat.$amber-palette, A200, A100, A400);
-$app-warning: mat.define-palette(mat.$red-palette);
+$app-primary: mat.m2-define-palette(mat.$m2-deep-purple-palette);
+$app-accent: mat.m2-define-palette(mat.$m2-amber-palette, A200, A100, A400);
+$app-warning: mat.m2-define-palette(mat.$m2-red-palette);
 
-$light-theme: mat.define-light-theme((
+$light-theme: mat.m2-define-light-theme((
   color: (
     primary: $app-primary,
     accent: $app-accent,
@@ -15,10 +15,10 @@ $light-theme: mat.define-light-theme((
   )
 ));
 
-$dark-theme: mat.define-dark-theme((
+$dark-theme: mat.m2-define-dark-theme((
  color: (
-   primary: mat.define-palette(mat.$purple-palette),
-   accent: mat.define-palette(mat.$amber-palette),
+   primary: mat.m2-define-palette(mat.$m2-purple-palette),
+   accent: mat.m2-define-palette(mat.$m2-amber-palette),
    warning: $app-warning
  ),
 ));
