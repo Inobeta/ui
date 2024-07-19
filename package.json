@@ -40,7 +40,7 @@
     "@babel/preset-env": "^7.15.0",
     "@compodoc/compodoc": "^1.1.22",
     "@inobeta/cli": "^17.0.1",
-    "@ngrx/schematics": "^17.0.1",
+    "@ngrx/schematics": "^18.0.1",
     "@storybook/addon-essentials": "^8.2.4",
     "@storybook/addon-interactions": "^8.2.4",
     "@storybook/addon-links": "^8.2.4",
@@ -66,9 +66,9 @@
   },
   "peerDependencies": {
     "@Inobeta/flex-layout": "^15.0.0-inobeta",
-    "@ngrx/effects": "^17.x.x",
-    "@ngrx/store": "^17.x.x",
-    "@ngrx/store-devtools": "^17.x.x",
+    "@ngrx/effects": "^18.0.1",
+    "@ngrx/store": "^18.0.1",
+    "@ngrx/store-devtools": "^18.0.1",
     "@ngx-translate/core": "^15.x.x",
     "@ngx-translate/http-loader": "^8.x.x",
     "jspdf": "^2.5.1",
@@ -83,7 +83,8 @@
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.1/xlsx-0.20.1.tgz"
   },
   "dependencies": {
-    "tslib": "^2.4.0"
+    "tslib": "^2.4.0",
+    "@ngrx/operators": "^18.0.0"
   },
   "publishConfig": {
     "@inobeta:registry": "https://gitlab.com/api/v4/projects/8604184/packages/npm/"
