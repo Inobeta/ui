@@ -197,6 +197,18 @@ fields = [
     options: {
       max: 2,
     },
+    addRow: (c: UntypedFormArray, newLength: number) => {
+      // event fired when the user adds a new row
+      // c is the reference to the form array
+      // newLength is the new size of the form array
+    },
+    removeRow: (c: UntypedFormArray, newLength: number, removedIndex: number, removedData: Record<string, unknown>) => {
+      // event fired when the user removes an existing row
+      // c is the reference to the form array
+      // newLength is the new size of the form array
+      // removedIndex is the position of the deleted row
+      // removedData contains the value of the deleted row
+    },
     fields: [
       new IbMatTextboxControl({
         key: "key",
