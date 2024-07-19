@@ -53,12 +53,12 @@
     </section>
   </section>
 
-  <ib-filter-actions>
+  <ib-filter-action-group>
     <button mat-button (click)="clear()" [disabled]="!isDirty" [attr.data-cy]="'ib-filter-clear'">
       {{ "shared.ibFilter.clear" | translate }}
     </button>
     <button mat-button color="primary" (click)="applyFilter()" [attr.data-cy]="'ib-filter-update'">
       {{ "shared.ibFilter.update" | translate }}
     </button>
-  </ib-filter-actions>
+  </ib-filter-action-group>
 </ib-filter-button>

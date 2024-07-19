@@ -7,13 +7,11 @@
       [ngSwitch]="base.controlType"
       *ngSwitchCase="'textbox'"
       [formControlName]="base.key"
-      [id]="base.key"
       [type]="base.type"
       (keyup)="base.change(self)"
     >
 
     <select
-      [id]="base.key"
       *ngSwitchCase="'dropdown'"
       [formControlName]="base.key"
       (change)="base.change(self)"

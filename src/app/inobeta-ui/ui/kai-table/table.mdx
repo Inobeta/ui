@@ -176,13 +176,13 @@ export class KaiTableRowActionExample {
 
 ### Build your own column
 
-Normally, every column expects **primitive** types of data, or in the case of `ib-date-column`, a `Date` instance.  
+Normally, every column expects **primitive** types of data, or in the case of `ib-date-column`, a `Date` instance.
 Working with a _flattened_ dataset is always recommended to reduce complexity and save up development time spent
 adapting your table to the data you're handling.
 
 Unfortunately, in some cases, this is not always possible, and a custom column might be necessary.
 
-Writing a custom column is achieved by extending the `IbColumn` component.  
+Writing a custom column is achieved by extending the `IbColumn` component.
 Here's an example of a column for a special kind of timestamp object, defined as:
 
 ```typescript
@@ -299,7 +299,7 @@ export class IbKaiTableExamplePage {
 #### Sorting data accessor
 
 By default, the data for sorting is retrieved by the same data accessor function used to retireve
-the content to render of each cell (that means `dataAccessor(data, name)`)  
+the content to render of each cell (that means `dataAccessor(data, name)`)
 This behaviour can be overriden with the `sortingDataAccessor` input, available for every type of column.
 
 ```html
@@ -377,7 +377,7 @@ Then, add the necessary filters withing your table. Each filter requires a `name
 #### Filtering data accessor
 
 By default, the data for filtering is retrieved by the same data accessor function used to retireve
-the content to render of each cell (that means `dataAccessor(data, name)`)  
+the content to render of each cell (that means `dataAccessor(data, name)`)
 This behaviour can be overriden with the `filterDataAccessor` input, available for every type of column.
 
 ```html
@@ -456,6 +456,35 @@ export class IbKaiTableExamplePage {
 }
 ```
 
+## Views
+
+To add views to a table, first import `IbViewModule` alongside `IbKaiTableModule`, `IbTableActionModule`, and `IbFilterModule`.
+
+```typescript
+@NgModule({
+  imports: [IbKaiTableModule, IbTableActionModule, IbViewModule, IbFilterModule],
+  // ...
+})
+export class TableWithViewsModule {}
+```
+
+> ⚠️ An `ib-filter` component is required to use `ib-table-view-group`.
+> Also, the `tableName` property must be set in the `ib-kai-table` component as it is used as a reference for the views.
+
+Then add the `ib-table-view-group` component within `ib-kai-table`.
+
+```html
+<ib-kai-table tableName="products" [data]="data" [displayedColumns]="displayedColumns">
+  <ib-table-view-group />
+
+  <ib-filter>
+    <!-- ... -->
+  </ib-filter>
+
+  <!-- ... --->
+</ib-kai-table>
+```
+
 ## Export
 
 To enable data export from a table, first import `IbDataExportModule` alongside `IbKaiTableModule` and `IbTableActionModule`.
@@ -468,10 +497,11 @@ To enable data export from a table, first import `IbDataExportModule` alongside 
 export class TableWithExportModule {}
 ```
 
+Make sure to have set the `tableName` property in the `ib-kai-table` component. This will be used as the filename of the exported file.
 Then add the export button within `ib-table-action-group` in the table.
 
 ```html
-<ib-kai-table [data]="data" [displayedColumns]="displayedColumns">
+<ib-kai-table tableName="products" [data]="data" [displayedColumns]="displayedColumns">
   <ib-table-action-group>
     <ib-table-data-export-action />
   </ib-table-action-group>
@@ -554,7 +584,7 @@ You can use the `stripedRows` input to apply alternating styles to the rows.
 <ib-kai-table [data]="data" [displayedColumns]="displayedColumns" stripedRows>
 ```
 
-Then you may change the text or background color with the variables: 
+Then you may change the text or background color with the variables:
 
 * `--ib-table-even-row-text-color`
 * `--ib-table-even-row-background-color`
@@ -717,8 +747,8 @@ export class RemoteDataSourceExample {
 </ib-kai-table>
 ```
 
-¹ [More about MatSort](https://material.angular.io/components/sort/api#MatSort)  
-² Both are null as per initial state. Can also be empty strings when undefined, please refer to the documentation.  
+¹ [More about MatSort](https://material.angular.io/components/sort/api#MatSort)
+² Both are null as per initial state. Can also be empty strings when undefined, please refer to the documentation.
 ³ [More about MatPaginator](https://material.angular.io/components/paginator/api#MatPaginator)
 
 #### Filtering
@@ -1001,3 +1031,34 @@ cy.get('[data-cy="ib-tag-filter-category-options"]')
 cy.get('[data-cy="ib-tag-filter-category-options"]').contains("dairy").click();
 cy.get('[data-cy="ib-filter-update"]').click();
 ```
+
+
+## Url state manager
+
+The following feature are always serialized in url bar:
+- current sort
+- applied filters
+- paginator settings (only page size)
+- active view
+
+In order to recover previous state, you have to use history.back() call that will preserve url querystring and the table will be reinizialized.
+
+Is it possibile to recover the last table state also by using `ibTableSelectLastQueryString` selector as follow:
+
+```typescript
+
+tableState = this.store.selectSignal(ibTableSelectLastQueryString('YOUR_TABLE_NAME'))
+
+///......
+
+
+this.router.navigate([your path], {
+  queryParams: {
+    'YOUR_TABLE_NAME': this.tableState()
+  },
+  queryParamsHandling: 'merge'
+})
+
+```
+
+Multiple tables on the same page are supported as long as different table names are used.

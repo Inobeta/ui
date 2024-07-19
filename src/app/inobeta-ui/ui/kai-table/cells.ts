@@ -1,9 +1,11 @@
-import { formatNumber } from "@angular/common";
 import {
   Component,
   Directive,
+  EventEmitter,
   Inject,
+  Input,
   Optional,
+  Output,
   TemplateRef,
 } from "@angular/core";
 import { IB_AGGREGATE, IB_AGGREGATE_TYPE, IB_COLUMN } from "./tokens";
@@ -15,9 +17,9 @@ export class IbCellDef {
   constructor(public templateRef: TemplateRef<unknown>) {}
 }
 
-interface IbAggregateResult {
-  currentPage: string;
-  total: string;
+export interface IbAggregateResult {
+  currentPage?: number | string | undefined;
+  total?: number | string | undefined;
 }
 
 export abstract class IbAggregate {
@@ -25,8 +27,6 @@ export abstract class IbAggregate {
   abstract id: string;
   /** Function name displayed before the results. i18n supported. */
   abstract name: string;
-  /** Text shown hovering the result of the function. i18n supported. */
-  abstract help: string;
   /** Menu item label. i18n supported. */
   abstract label: string;
   /**
@@ -66,21 +66,19 @@ export abstract class IbAggregate {
    * An aggregate function.
    *
    * @param data Data array of a given column.
-   * @returns A string representation of the value. In case of a numeric result, use `formatNumber` or `formatCurrency.`
+   * @returns Aggregated value.
    */
-  abstract aggregateData(data: any[]): string;
+  abstract aggregateData(data: any[]): number | string;
 }
 
 class IbSumAggregate extends IbAggregate {
   id = "sum";
   name = "shared.aggregate.sum.name";
   label = "shared.aggregate.sum.label";
-  help = "shared.aggregate.sum.help";
   type = "number";
 
   aggregateData(data: number[]) {
-    const total = data.reduce((acc, cur) => acc + cur, 0);
-    return formatNumber(total, "it");
+    return data.reduce((acc, cur) => acc + cur, 0);
   }
 }
 
@@ -94,13 +92,11 @@ class IbAverageAggregate extends IbAggregate {
   id = "avg";
   name = "shared.aggregate.avg.name";
   label = "shared.aggregate.avg.label";
-  help = "shared.aggregate.avg.help";
   type = "number";
 
   aggregateData(data: number[]) {
     const length = Math.max(data.length, 1);
-    const average = data.reduce((acc, cur) => acc + cur, 0) / length;
-    return formatNumber(average, "it");
+    return data.reduce((acc, cur) => acc + cur, 0) / length;
   }
 }
 
@@ -111,7 +107,7 @@ export const IbAverageAggregateProvider = {
 };
 
 @Component({
-  selector: "ib-aggregate, [ib-aggregate]",
+  selector: "ib-aggregate",
   template: `
     <section class="ib-aggregate__function">
       <button
@@ -127,7 +123,7 @@ export const IbAverageAggregateProvider = {
       <button
         *ngFor="let function of availableFunctions"
         mat-menu-item
-        (click)="apply(function.id, true)"
+        (click)="apply(function.id)"
       >
         {{ function.label | translate }}
       </button>
@@ -137,31 +133,32 @@ export const IbAverageAggregateProvider = {
         <span class="mat-caption">{{
           "shared.aggregate.currentPage" | translate
         }}</span>
-        {{ result.currentPage }}
+        {{ result?.currentPage ? (result.currentPage | number) : "--" }}
       </div>
 
-      <div>
+      <div *ngIf="showTotal">
         <span class="mat-caption">{{
           "shared.aggregate.total" | translate
         }}</span>
-        {{ result.total }}
+        {{ result?.total ? (result.total | number) : "--" }}
       </div>
     </section>
   `,
 })
 export class IbAggregateCell {
-  function: string;
-  displayName = "";
-  help = "shared.aggregate.help";
-  result: IbAggregateResult = {
-    currentPage: "--",
-    total: "--",
-  };
-  get displayValue() {
-    return `${this.result.currentPage} (${this.result.total})`;
+  @Input() set function(fun: string) {
+    this.updateDisplayName(fun);
   }
+  @Input() result: IbAggregateResult = {
+    currentPage: undefined,
+    total: undefined,
+  };
+
+  @Input() showTotal = true;
+  @Output() ibFunctionChange = new EventEmitter<string>();
 
   availableFunctions: IbAggregate[] = [];
+  displayName = "";
 
   constructor(
     @Inject(IB_COLUMN) private column: any,
@@ -171,28 +168,18 @@ export class IbAggregateCell {
     this.availableFunctions = functions.filter((f) => f.type === type);
   }
 
-  apply(fun: string, update = false) {
-    this.function = fun;
-    update && this.aggregate();
-    update && this.column._table.aggregate.emit();
+  apply(fun: string) {
+    this.ibFunctionChange.emit(fun);
   }
 
-  aggregate() {
-    const strategy = this.availableFunctions.find(
-      (f) => f.id === this.function
-    );
+  updateDisplayName(fun: string) {
+    const strategy = this.availableFunctions.find((f) => f.id === fun);
     if (!strategy) {
       this.displayName = "";
-      this.help = "shared.aggregate.help";
-      this.result = { currentPage: "--", total: "--" };
+      this.result = { currentPage: undefined, total: undefined };
       return;
     }
 
     this.displayName = strategy.name;
-    this.help = strategy.help;
-    this.result = strategy.aggregate(
-      this.column._table.dataSource,
-      this.column.name
-    );
   }
 }

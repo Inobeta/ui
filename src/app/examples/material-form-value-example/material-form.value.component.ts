@@ -28,6 +28,7 @@ type ContactInfo = {
       </mat-card-header>
       <mat-card-content>
         <ib-material-form
+          [disabled]="disabled"
           [value]="value$ | async"
           [actions]="actions"
           [fields]="formWithArray"
@@ -46,6 +47,7 @@ type ContactInfo = {
   `,
 })
 export class MaterialFormValueExampleComponent {
+  disabled = false;
   value$ = new BehaviorSubject<Partial<ContactInfo>>({});
 
   formWithArray: IbFormField[] = [
@@ -87,6 +89,11 @@ export class MaterialFormValueExampleComponent {
       key: "refresh",
       label: "Refresh data",
       handler: () => this.refresh(),
+    }),
+    new IbMatButtonControl({
+      key: "disabled",
+      label: "Toggle disabled",
+      handler: () => (this.disabled = !this.disabled),
     }),
   ];
 

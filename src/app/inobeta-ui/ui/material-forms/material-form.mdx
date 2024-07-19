@@ -197,6 +197,18 @@ fields = [
     options: {
       max: 2,
     },
+    addRow: (c: UntypedFormArray, newLength: number) => {
+      // event fired when the user adds a new row
+      // c is the reference to the form array
+      // newLength is the new size of the form array
+    },
+    removeRow: (c: UntypedFormArray, newLength: number, removedIndex: number, removedData: Record<string, unknown>) => {
+      // event fired when the user removes an existing row
+      // c is the reference to the form array
+      // newLength is the new size of the form array
+      // removedIndex is the position of the deleted row
+      // removedData contains the value of the deleted row
+    },
     fields: [
       new IbMatTextboxControl({
         key: "key",
@@ -239,7 +251,6 @@ Listen to the `(keyup)` and `(change)` events, if that's necessary, binding them
 <input
   matInput
   [formControlName]="data.base.key"
-  [id]="data.base.key"
   (keyup)="data.base.change(data.self)"
   (change)="data.base.change(data.self)"
 />
@@ -276,7 +287,6 @@ Then, add the template outlet `data.formControlErrors` dedicated to the errors. 
   <input
     matInput
     [formControlName]="data.base.key"
-    [id]="data.base.key"
     (keyup)="data.base.change(data.self)"
     (change)="data.base.change(data.self)"
   />
@@ -345,6 +355,9 @@ Each control has two parameters `cols` and `rows` that determine how many column
 <Canvas of={MatFormStories.WithGridLayout} />
 
 ## Form lifecycle hooks
+
+> ⚠️ This pattern is no longer recommended.
+> To disable a form, use the `disabled` input in `ib-material-form`.
 
 Accessing to a form with `@ViewChild` will let you access to its lifecycle hooks through the observables `afterInit()` and `afterChanges()`
 

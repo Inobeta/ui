@@ -1,21 +1,26 @@
-export interface IView<T = any> {
+import { Sort } from "@angular/material/sort";
+import { IbFilterSyntaxExtended } from "../../../kai-filter";
+
+export interface IView {
   id: string;
   name: string;
   groupName: string;
-  data: T;
+  data: ITableViewData;
+  initial?: boolean;
 }
 
 export interface ITableViewData {
-  filter?: Record<string, any>;
-  pageSize?: number;
-  aggregate?: Record<string, any>;
+  filter: IbFilterSyntaxExtended;
+  pageSize: number;
+  aggregatedColumns: Record<string, string>;
+  sort: Sort;
 }
 
-export class IbView<T> implements IView {
+export class IbView implements IView {
   id: string;
   name: string;
   groupName: string;
-  data: T;
+  data: ITableViewData;
 
   constructor(view: Partial<IView>) {
     this.id = view?.id ?? btoa(Math.random().toString());

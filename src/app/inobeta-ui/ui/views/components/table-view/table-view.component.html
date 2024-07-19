@@ -21,22 +21,7 @@
     <mat-icon>content_copy</mat-icon>
     {{ "shared.ibTableView.duplicate" | translate }}
   </button>
-  <button
-    *ngIf="!pinned"
-    mat-menu-item
-    (click)="ibPinView.emit({ view, pinned: true })"
-  >
-    <mat-icon>bookmark_border</mat-icon>
-    {{ "shared.ibTableView.pin" | translate }}
-  </button>
-  <button
-    *ngIf="pinned"
-    mat-menu-item
-    (click)="ibPinView.emit({ view, pinned: false })"
-  >
-    <mat-icon color="accent">bookmark</mat-icon>
-    {{ "shared.ibTableView.unpin" | translate }}
-  </button>
+
   <button mat-menu-item (click)="ibRemoveView.emit(view)">
     <mat-icon color="warn">delete_forever</mat-icon>
     {{ "shared.ibTableView.remove" | translate }}

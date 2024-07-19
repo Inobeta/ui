@@ -23,9 +23,9 @@ describe("IbFilter", () => {
     const textFilter = contains("123");
     component.form.patchValue({ sku: textFilter });
     component.update();
-    expect(component.rawFilter["sku"]).toEqual(textFilter);
+    expect(component.selectedCriteria["sku"]).toEqual(textFilter);
     component.reset();
-    expect(component.rawFilter["sku"]).toEqual(contains(null));
+    expect(component.selectedCriteria["sku"]).toEqual(contains(null));
   });
 
   it("should not update with falsey values", () => {

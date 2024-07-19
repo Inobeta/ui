@@ -1,12 +1,11 @@
 import { HttpClient } from "@angular/common/http";
-import { Inject, Injectable, Optional } from "@angular/core";
+import { Inject, Injectable } from "@angular/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Router } from "@angular/router";
 import { Store } from "@ngrx/store";
 import { jwtDecode } from "jwt-decode";
 import { Observable, throwError } from "rxjs";
 import { catchError, filter, map } from "rxjs/operators";
-import { IbStorageTypes } from "../../storage";
 import { ibAuthActions } from "../store/session/actions";
 import { ibSelectActiveSession } from "../store/session/selectors";
 import { IbAuthService } from "./auth.service";
@@ -30,73 +29,57 @@ export class IbLoginService<T extends IbAPITokens | IbAPITokens> {
     private snackBar: MatSnackBar,
     /** Login page path */
     @Inject("ibHttpGUILoginUrl")
-    @Optional()
-    public ibHttpGUILoginUrl = "/login",
+    public ibHttpGUILoginUrl,
     /** API login endpoint */
     @Inject("ibHttpAPILoginUrl")
-    @Optional()
-    public ibHttpAPILoginUrl = "/api/auth/login",
+    public ibHttpAPILoginUrl,
     /** Authorizazion type. Either bearer token (JWT) or basic */
     @Inject("ibHttpAuthType")
-    @Optional()
-    public ibHttpAuthType = IbAuthTypes.JWT,
+    public ibHttpAuthType,
     /** Where to storage the user's access token */
     @Inject("ibHttpSessionStorageType")
-    @Optional()
-    public ibHttpSessionStorageType = IbStorageTypes.LOCALSTORAGE,
+    public ibHttpSessionStorageType,
     /** Refresh access token API endpoint */
     @Inject("ibHttpAPIRefreshUrl")
-    @Optional()
-    public ibHttpAPIRefreshUrl = "/api/auth/refresh",
+    public ibHttpAPIRefreshUrl,
     /** Property name of additional data or claims within the JWT token */
     @Inject("ibHttpJWTClaimsField")
-    @Optional()
-    public ibHttpJWTClaimsField = "https://hasura.io/jwt/claims",
+    public ibHttpJWTClaimsField,
     /** Property name of the user roles within the JWT claims field */
     @Inject("ibHttpJWTRolesField")
-    @Optional()
-    public ibHttpJWTRolesField = "x-hasura-allowed-roles"
-  ) {
-    this.ibHttpGUILoginUrl = this.ibHttpGUILoginUrl ?? "/login";
-    this.ibHttpAPILoginUrl = this.ibHttpAPILoginUrl ?? "/api/auth/login";
-    this.ibHttpAPIRefreshUrl = this.ibHttpAPIRefreshUrl ?? "/api/auth/refresh";
-    this.ibHttpAuthType = this.ibHttpAuthType ?? IbAuthTypes.JWT;
-    this.ibHttpSessionStorageType =
-      this.ibHttpSessionStorageType ?? IbStorageTypes.LOCALSTORAGE;
-    this.ibHttpJWTClaimsField =
-      this.ibHttpJWTClaimsField ?? "https://hasura.io/jwt/claims";
-    this.ibHttpJWTRolesField =
-      this.ibHttpJWTRolesField ?? "x-hasura-allowed-roles";
-  }
+    public ibHttpJWTRolesField
+  ) {}
 
   /**
    * Attempts a login to the server by contacting the endpoint provided by the token {@link ibHttpAPILoginUrl}
    */
-  public login(u: IbUserLogin) {
+  public login(user: IbUserLogin) {
     this.srvAuth.activeSession = null;
     const activeSession = new IbSession<T>();
-    if (u) {
+
+    if (user) {
       if (this.ibHttpAuthType === IbAuthTypes.BASIC_AUTH) {
         activeSession.serverData.accessToken = window.btoa(
-          u.email + ":" + u.password
+          user.email + ":" + user.password
         );
       }
       activeSession.valid = false;
-      activeSession.user = u;
+      activeSession.user = {
+        ...user,
+        password: "",
+      };
     }
-    return this.httpClient.post<T>(this.ibHttpAPILoginUrl, u).pipe(
-      map((x) => {
-        activeSession.user.password = "";
+
+    return this.httpClient.post<T>(this.ibHttpAPILoginUrl, user).pipe(
+      map((token) => {
         activeSession.valid = true;
-        activeSession.serverData = x;
+        activeSession.serverData = token;
         this.store.dispatch(
           ibAuthActions.login({ activeSession: activeSession })
         );
-        return x;
+        return token;
       }),
-      catchError((err) => {
-        return throwError(err);
-      })
+      catchError((err) => throwError(() => err))
     );
   }
 

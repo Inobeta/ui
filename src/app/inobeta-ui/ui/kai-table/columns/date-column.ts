@@ -39,7 +39,6 @@ import { IbColumn } from "./column";
         {{ dataAccessor(data, name) | date : format : undefined : locale }}
       </td>
       <td mat-footer-cell *matFooterCellDef>
-        <ib-aggregate *ngIf="aggregate"></ib-aggregate>
       </td>
     </ng-container>
   `,
@@ -53,6 +52,7 @@ import { IbColumn } from "./column";
 export class IbDateColumn<T> extends IbColumn<T> {
   @Input() format = "dd/MM/yyyy HH:mm z";
   @Input() locale = "it";
+  filterDataAccessor = (data: T, name: string) => new Date(this.dataAccessor(data, name)).getTime();
 
   /** @ignore */
   transform = { pdf: (data) => formatDate(data, this.format, this.locale) };

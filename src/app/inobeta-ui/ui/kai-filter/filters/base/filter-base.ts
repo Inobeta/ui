@@ -1,10 +1,11 @@
-import { Directive, Inject, Input, ViewChild } from "@angular/core";
+import { Directive, Input, ViewChild, inject } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 import { IbFilterButton } from "../../filter-button/filter-button.component";
+import { IbFilter } from "../../filter.component";
 import { IbFilterDef } from "../../filter.types";
 import { IB_FILTER } from "../../tokens";
-import { takeUntil } from "rxjs/operators";
 
 export interface IFilterBase {
   /** Name that should be used to reference this filter. */
@@ -30,24 +31,20 @@ export class IbFilterBase implements IFilterBase {
   @ViewChild(IbFilterButton) button: IbFilterButton;
 
   @Input() name: string;
-  @Input() set ibTableColumnName(value) {
-    this.name = value;
-  }
 
   searchCriteria: FormGroup | FormControl;
 
   get rawValue() {
-    return this.filter?.rawFilter[this.name];
+    return this.filter?.selectedCriteria[this.name];
   }
 
   get isDirty() {
-    const value = this.filter.filter[this.name]?.value;
+    const value = this.filter.value[this.name]?.value;
     return value != null || value != undefined;
   }
 
   protected _destroyed = new Subject<void>();
-
-  constructor(@Inject(IB_FILTER) public filter: any) {}
+  filter: IbFilter = inject(IB_FILTER);
 
   ngOnInit() {
     if (!this.name) {

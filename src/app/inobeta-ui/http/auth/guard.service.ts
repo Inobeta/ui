@@ -35,10 +35,8 @@ export class IbAuthGuard {
 
   constructor(
     private router: Router,
-    @Inject("ibHttpGUILoginUrl") @Optional() public ibHttpGUILoginUrl?: string
-  ) {
-    this.ibHttpGUILoginUrl = this.ibHttpGUILoginUrl || "/login";
-  }
+    @Inject("ibHttpGUILoginUrl") public ibHttpGUILoginUrl: string
+  ) {}
 
   canActivate() {
     return this.session$.pipe(
@@ -85,11 +83,8 @@ export class IbLoginGuard {
   constructor(
     private router: Router,
     @Inject("ibHttpGUIDashboardUrl")
-    @Optional()
-    public ibHttpGUIDashboardUrl?: string
-  ) {
-    this.ibHttpGUIDashboardUrl = this.ibHttpGUIDashboardUrl || "/dashboard";
-  }
+    public ibHttpGUIDashboardUrl: string
+  ) {}
 
   canActivate() {
     return this.session$.pipe(
@@ -136,11 +131,8 @@ export class IbRoleGuard {
     private router: Router,
     private login: IbLoginService<IbAPITokens>,
     @Inject("ibHttpGUIDashboardUrl")
-    @Optional()
-    public ibHttpGUIDashboardUrl?: string
-  ) {
-    this.ibHttpGUIDashboardUrl = this.ibHttpGUIDashboardUrl || "/dashboard";
-  }
+    public ibHttpGUIDashboardUrl: string
+  ) {}
 
   canActivate(route: ActivatedRouteSnapshot) {
     return this.login.hasRoles(route.data.roles).pipe(

@@ -1,4 +1,3 @@
-import { formatNumber } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   Component,
@@ -39,7 +38,13 @@ import { IbColumn } from "./column";
         {{ dataAccessor(data, name) | number : digitsInfo : locale }}
       </td>
       <td mat-footer-cell *matFooterCellDef style="max-width: fit-content">
-        <ib-aggregate *ngIf="aggregate"></ib-aggregate>
+        <ib-aggregate
+          *ngIf="aggregate"
+          [showTotal]="!_table.isRemote"
+          [result]="aggregatedData"
+          [function]="aggregationFunction"
+          (ibFunctionChange)="handleAggregationChange($event)"
+        />
       </td>
     </ng-container>
   `,

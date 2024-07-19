@@ -13,8 +13,8 @@
     <mat-progress-bar mode="indeterminate" />
   </div>
 
-  <table class="ib-table" mat-table matSort multiTemplateDataRows [matSortActive]="this.tableDef.initialSort?.active"
-    [matSortDirection]="this.tableDef.initialSort?.direction" [dataSource]="dataSource">
+  <table class="ib-table" mat-table matSort multiTemplateDataRows [matSortActive]="this.dataSource.sortState.active"
+    [matSortDirection]="this.dataSource.sortState.direction" [dataSource]="dataSource">
     <ng-content select="ib-selection-column" />
     <ng-content />
 
@@ -52,12 +52,16 @@
       </td>
     </tr>
 
-    <ng-container *ngIf="aggregateColumns.size">
+    <ng-container *ngIf="dataSource.shouldDisplayAggregationFooter">
       <tr class="ib-table__rollup-row" mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></tr>
     </ng-container>
   </table>
 </section>
-<mat-paginator class="ib-table__paginator" [disabled]="state !== 'idle'"
-  [style.display]="tableDef.paginator.hide ? 'none' : 'block'" [pageSize]="tableDef.paginator.pageSize"
+<mat-paginator class="ib-table__paginator"
+  [disabled]="state !== 'idle'"
+  [style.display]="tableDef.paginator.hide ? 'none' : 'block'"
+  [pageSize]="tableDef.paginator.pageSize"
   [showFirstLastButtons]="tableDef.paginator.showFirstLastButtons"
-  [pageSizeOptions]="tableDef.paginator.pageSizeOptions" />
+  [pageSizeOptions]="tableDef.paginator.pageSizeOptions"
+  (page)="setPaginatorState({ pageIndex: $event.pageIndex, pageSize: $event.pageSize })"
+  />

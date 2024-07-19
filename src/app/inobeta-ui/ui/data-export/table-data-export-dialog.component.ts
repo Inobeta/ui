@@ -3,6 +3,7 @@ import { FormControl, FormGroup } from "@angular/forms";
 import { MAT_DIALOG_DATA } from "@angular/material/dialog";
 
 export interface IbTableDataExportDialogData {
+  showAllRowsOption: boolean;
   showSelectedRowsOption: boolean;
   formats: { value: string, label: string }[]
 }
@@ -29,7 +30,7 @@ export interface IbTableDataExportDialogData {
         formControlName="dataset"
         style="display:flex;flex-direction:column;margin: 10px 0;"
       >
-        <mat-radio-button value="all">{{
+        <mat-radio-button value="all"*ngIf="data?.showAllRowsOption">{{
           "shared.ibTable.exportData.all" | translate
         }}</mat-radio-button>
         <mat-radio-button value="selected" *ngIf="data?.showSelectedRowsOption">
@@ -55,7 +56,7 @@ export class IbTableDataExportDialog {
   data: IbTableDataExportDialogData = inject(MAT_DIALOG_DATA);
   _settings = new FormGroup({
     format: new FormControl(this.data.formats[0].value),
-    dataset: new FormControl("all"),
+    dataset: new FormControl(this.data.showAllRowsOption ? "all" : "current"),
   });
 
   get settings() {

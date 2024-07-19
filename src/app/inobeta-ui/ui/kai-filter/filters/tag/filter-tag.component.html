@@ -1,5 +1,5 @@
 <ib-filter-button [attr.data-cy]="'ib-tag-filter-' + name">
-  <span ib-filter-name *ngIf="!isDirty"><ng-content></ng-content></span>
+  <span ib-filter-name><ng-content></ng-content></span>
   <span ib-filter-value>
     {{ displayLabel | translate : displayLabelParams }}
   </span>
@@ -15,6 +15,14 @@
         disableRipple="true"
         [attr.data-cy]="'ib-tag-filter-' + name + '-options'"
       >
+        @if (hasNullishValues) {
+          <mat-list-option
+            togglePosition="before"
+            [value]="'__empty'"
+          >
+            {{ 'shared.ibFilter.includeEmpty' | translate }}
+          </mat-list-option>
+        }
         @for (option of options | filterBy: query; track option) {
           <mat-list-option
             togglePosition="before"
@@ -29,12 +37,12 @@
     </section>
   </section>
 
-  <ib-filter-actions>
+  <ib-filter-action-group>
     <button mat-button (click)="clear()" [disabled]="!isDirty" [attr.data-cy]="'ib-filter-clear'">
       {{ "shared.ibFilter.clear" | translate }}
     </button>
     <button mat-button color="primary" (click)="applyFilter()" [attr.data-cy]="'ib-filter-update'">
       {{ "shared.ibFilter.update" | translate }}
     </button>
-  </ib-filter-actions>
+  </ib-filter-action-group>
 </ib-filter-button>

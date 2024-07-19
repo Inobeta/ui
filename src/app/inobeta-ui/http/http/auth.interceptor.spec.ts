@@ -11,6 +11,7 @@ import { IbLoginService } from '../auth/login.service';
 import { IbLoginServiceStub } from '../auth/login.service.stub.spec';
 import { HttpRequest } from '@angular/common/http';
 import { provideMockStore } from '@ngrx/store/testing';
+import { IbAuthTypes } from '../auth/session.model';
 
 @Component({
   selector: 'login-dummy',
@@ -38,11 +39,21 @@ describe('IbAuthInterceptor', () => {
           { path: 'login', component: LoginDummyComponent},
         ]),
         IbToolTestModule,
-        IbToastTestModule
+        IbToastTestModule,
       ],
       declarations: [LoginDummyComponent],
       providers: [
         { provide: IbLoginService, useClass: IbLoginServiceStub},
+        { provide: "ibHttpEnableInterceptors", useValue: true },
+        { provide: "ibHttpAuthType", useValue: IbAuthTypes.JWT },
+        {
+          provide: "ibHttpAPILoginUrl",
+          useValue: "/api/auth/login",
+        },
+        {
+          provide: "ibHttpToastOnLoginFailure",
+          useValue: "shared.ibHttp.authFailure",
+        },
         IbAuthInterceptor,
         provideMockStore({  }),
       ]
@@ -56,13 +67,15 @@ describe('IbAuthInterceptor', () => {
   });
 
   it('Should detect 401', (done) => {
-    httpHandlerSpy.handle.and.returnValue(throwError(
-        {
-          status: 401,
-          error:
-            {message: 'test-error'}
-        }
-    ));
+    httpHandlerSpy.handle.and.returnValue(
+      throwError(
+        () =>
+          ({
+            status: 401,
+            error: { message: "test-error" },
+          })
+      )
+    );
     const requestMock = new HttpRequest('GET', '/test');
     service.intercept(requestMock, httpHandlerSpy).subscribe(() => {
       done();
@@ -75,13 +88,15 @@ describe('IbAuthInterceptor', () => {
 
 
   it('Should ignore other errors', (done) => {
-    httpHandlerSpy.handle.and.returnValue(throwError(
-        {
-          status: 404,
-          error:
-            {message: 'test-error'}
-        }
-    ));
+    httpHandlerSpy.handle.and.returnValue(
+      throwError(
+        () =>
+          ({
+            status: 404,
+            error: { message: "test-error" },
+          })
+      )
+    );
     const requestMock = new HttpRequest('GET', '/test');
     console.log('service.ibHttpAPILoginUrl', service.ibHttpAPILoginUrl)
     service.intercept(requestMock, httpHandlerSpy).subscribe(() => {

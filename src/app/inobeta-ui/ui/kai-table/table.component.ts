@@ -10,7 +10,6 @@ import {
   Component,
   ContentChild,
   ContentChildren,
-  EventEmitter,
   HostBinding,
   Input,
   OnDestroy,
@@ -18,15 +17,16 @@ import {
   ViewChild,
   ViewEncapsulation,
   booleanAttribute,
+  inject,
 } from "@angular/core";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { MatTable } from "@angular/material/table";
-import { Subject, merge } from "rxjs";
-import { filter, takeUntil } from "rxjs/operators";
+import { Subject} from "rxjs";
+import { takeUntil } from "rxjs/operators";
 import { IbTableDataExportAction } from "../data-export/table-data-export.component";
 import { IbFilter } from "../kai-filter";
-import { ITableViewData, IView, IbTableViewGroup } from "../views";
+import { IbTableViewGroup } from "../views";
 import { IbColumn } from "./columns/column";
 import { IbSelectionColumn } from "./columns/selection-column";
 import { IbTableRemoteDataSource } from "./remote-data-source";
@@ -34,6 +34,9 @@ import { IbKaiRowGroupDirective } from "./rowgroup";
 import { IbTableDataSource } from "./table-data-source";
 import { IbKaiTableState, IbTableDef } from "./table.types";
 import { IB_TABLE } from "./tokens";
+import { IbTableUrlService } from "./table-url.service";
+import { Store } from "@ngrx/store";
+import { urlStateActions } from "./store/url-state/actions";
 
 const defaultTableDef: IbTableDef = {
   paginator: {
@@ -87,7 +90,6 @@ export class IbTable implements OnDestroy {
   @Input()
   set data(data: any[]) {
     this.dataSource.data = data;
-    this.initializeFilters(this.dataSource.data);
   }
 
   @Input()
@@ -96,6 +98,9 @@ export class IbTable implements OnDestroy {
   @Input() tableName: string = btoa(
     window.location.pathname + window.location.hash
   );
+
+  tableUrl = inject(IbTableUrlService);
+  private store = inject(Store);
 
   /**
    * Configuration for the table and its inner components. Currently supports only
@@ -112,6 +117,8 @@ export class IbTable implements OnDestroy {
    *     hide: false,
    *   }
    * }
+   *
+   * NB: querystring override these values
    * ```
    */
   @Input()
@@ -124,7 +131,8 @@ export class IbTable implements OnDestroy {
   get tableDef() {
     return this._tableDef;
   }
-  private _tableDef: IbTableDef = defaultTableDef;
+  private _tableDef: IbTableDef = {...defaultTableDef};
+
 
   /**
    * Columns to be displayed.
@@ -152,14 +160,21 @@ export class IbTable implements OnDestroy {
   @Input({ transform: booleanAttribute })
   stripedRows = false;
 
-  aggregateColumns = new Set<string>();
-  aggregate = new EventEmitter();
+  isRemote = false;
+
 
   ngOnInit() {
+    const paginatorFromUrl = this.tableUrl.getPaginator(this.tableName);
+    this.tableDef.paginator = {
+      ...this.tableDef.paginator,
+      ...paginatorFromUrl,
+    }
+    this.dataSource.tableName = this.tableName;
     this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+
 
     if (this.dataSource instanceof IbTableRemoteDataSource) {
+      this.isRemote = true;
       this.dataSource._state
         .pipe(takeUntil(this._destroyed))
         .subscribe((s) => (this.state = s));
@@ -167,24 +182,52 @@ export class IbTable implements OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (this.view && this.filter) {
-      this.setupViewGroup();
-    }
-
     if (this.exportAction) {
       this.setupExportAction();
     }
   }
 
   ngAfterContentInit() {
-    if (this.filter) {
-      this.setupFilter();
-    }
 
-    if (this.view) {
+    const viewInit = () => {
       this.view.viewGroupName = this.tableName;
+      this.dataSource.view = this.view;
+      this.setupViewGroup();
     }
 
+    const dsInit = () => {
+      this.dataSource.sort = this.sort;
+      this.dataSource.aggregatedColumns = this.tableUrl.getAggregatedColumns(this.tableName);
+      this.dataSource.sortState = {
+        ...this.tableDef.initialSort,
+        ...this.tableUrl.getSort(this.tableName),
+      };
+    }
+
+
+    this.dataSource.selectionColumn = this.selectionColumn;
+    this.dataSource.filter = this.filter;
+    this.filter?.initialized.subscribe(() => {
+      this.tableUrl.emptyFilterSchema[this.tableName] = structuredClone(this.filter.initialRawValue);
+      //NG0100
+      setTimeout(() => dsInit())
+
+      const filtersFromUrl = this.tableUrl.getFilters(this.tableName)
+      this.filter.value = filtersFromUrl
+      if (this.view) {
+        //NG0100
+        setTimeout(() => viewInit())
+      }
+    })
+
+    // If there is no filter, we need to set the viewGroupName to the table name
+    if (this.view && !this.filter) {
+      setTimeout(() => viewInit())
+    }
+
+    if(!this.filter){
+      setTimeout(() => dsInit())
+    }
     this.dataSource.columns = this.columns.toArray();
     this.columns.changes
       .pipe(takeUntil(this._destroyed))
@@ -194,52 +237,14 @@ export class IbTable implements OnDestroy {
   }
 
   ngOnDestroy() {
-    this.aggregateColumns.clear();
     this._destroyed.next();
     this._destroyed.complete();
   }
 
-  // @TODO: move in table-data-source
-  private setupFilter() {
-    this.initializeFilters(this.dataSource.data);
-    let event = this.filter.ibFilterUpdated;
-    if (this.dataSource instanceof IbTableRemoteDataSource) {
-      event = this.filter.ibQueryUpdated;
-    }
-
-    event.pipe(takeUntil(this._destroyed)).subscribe((filter) => {
-      this.selectionColumn?.selection?.clear();
-      this.dataSource.filter = filter;
-    });
+  setPaginatorState(params){
+    this.store.dispatch(urlStateActions.setPaginator({tableName: this.tableName, params}))
   }
-
   private setupViewGroup() {
-    this.view.defaultView.data = {
-      filter: this.filter.initialRawValue,
-      pageSize: this.tableDef.paginator.pageSize,
-      aggregate: this.getAggregateCells(),
-    };
-
-    this.view.viewDataAccessor = () => ({
-      filter: this.filter.rawFilter,
-      pageSize: this.paginator.pageSize,
-      aggregate: this.getAggregateCells(),
-    });
-
-    const changes$ = merge(
-      this.filter.ibQueryUpdated,
-      this.paginator.page,
-      this.aggregate
-    ).pipe(takeUntil(this._destroyed));
-    this.view.handleStateChanges(changes$);
-
-    this.view._activeView
-      .pipe(
-        filter((view) => !!view),
-        takeUntil(this._destroyed)
-      )
-      .subscribe(this.handleChangeView);
-
     for (const action of [
       this.filter.hideFilterAction,
       ...this.view.actions.toArray(),
@@ -252,38 +257,15 @@ export class IbTable implements OnDestroy {
 
   private setupExportAction() {
     this.exportAction.showSelectedRowsOption = !!this.selectionColumn;
+    this.exportAction.showAllRowsOption = !this.isRemote;
     this.exportAction.ibDataExport
       .pipe(takeUntil(this._destroyed))
       .subscribe((settings) => {
         this.exportAction.exportService._exportFromTable(
           this.tableName,
-          this.columns.filter((c) => !c.name.startsWith("ib-")),
           this.dataSource,
-          this.selectionColumn?.selection.selected,
           settings
         );
       });
   }
-
-  private initializeFilters(data: any[]) {
-    this.filter?.filters.forEach((f) => f.initializeFromColumn(data));
-  }
-
-  private handleChangeView = (view: IView<ITableViewData>) => {
-    this.paginator.firstPage();
-    this.paginator.pageSize = view.data.pageSize;
-    this.filter.value = view.data.filter;
-    view.data.aggregate.forEach((a) => {
-      const column = this.columns.find((c) => a.name === c.name);
-      column?.aggregateCell?.apply(a.function);
-    });
-  };
-
-  private getAggregateCells = () =>
-    this.columns
-      .filter((c) => !!c.aggregateCell)
-      .map((c) => ({
-        name: c.name,
-        function: c.aggregateCell.function,
-      }));
 }

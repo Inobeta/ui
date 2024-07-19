@@ -24,6 +24,23 @@ describe('IbErrorInterceptor', () => {
         IbToastTestModule
       ],
       providers: [
+        { provide: "ibHttpEnableInterceptors", useValue: true },
+        {
+          provide: "ibHttpToastOnGenericFailure",
+          useValue: "shared.ibHttp.genericFailure",
+        },
+        {
+          provide: "ibHttpToastOnStatusCode",
+          useValue: {},
+        },
+        {
+          provide: "ibHttpToastErrorCode",
+          useValue: null,
+        },
+        {
+          provide: "ibHttpToastErrorField",
+          useValue: null,
+        },
         IbErrorInterceptor
       ]
     }).compileComponents();
@@ -55,12 +72,12 @@ describe('IbErrorInterceptor', () => {
 
 
   it('Should ignore 401', (done) => {
-    httpHandlerSpy.handle.and.returnValue(throwError(
+    httpHandlerSpy.handle.and.returnValue(throwError(() => (
         {
           status: 401,
           error:
             {message: 'test-error'}
-        }
+        })
     ));
 
     service.intercept(httpRequestSpy, httpHandlerSpy).subscribe(() => {

@@ -97,3 +97,26 @@ export class AppComponent {
   }
 }
 ```
+
+## Known issues
+
+### Tailwind
+
+While using Tailwind, you need to add the following code after the `@tailwind base` directive in your `styles.scss` file:
+
+```scss
+@layer base {
+  *,
+  ::before,
+  ::after {
+    /*
+    https://github.com/tailwindlabs/tailwindcss/discussions/9993
+    https://github.com/angular/components/issues/26787
+     Only reason why Tailwind sets it to "solid" is so you don't have to specify border style together with "border[-x]" class.
+     That's something we can live without.
+     please specify border-style explicitly if you need it
+     */
+    border-style: none;
+  }
+}
+```
