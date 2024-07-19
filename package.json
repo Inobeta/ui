@@ -1,6 +1,6 @@
 {
   "name": "@inobeta/ui",
-  "version": "17.1.1",
+  "version": "18.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --disable-host-check",
