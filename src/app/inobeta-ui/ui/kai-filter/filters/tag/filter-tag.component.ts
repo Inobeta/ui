@@ -27,7 +27,7 @@ export class IbTagFilter extends IbFilterBase {
   private isSetByUser = false;
 
   hasNullishValues = false;
-  query = "";
+  query = new FormControl("", { nonNullable: true });
 
   get displayLabel() {
     if (this.rawValue?.length == 1) {
@@ -77,11 +77,11 @@ export class IbTagFilter extends IbFilterBase {
   applyFilter() {
     this.filter.update();
     this.button.closeMenu();
-    this.query = "";
+    this.query.setValue("");
   }
 
   revertFilter(): void {
-    this.query = "";
+    this.query.setValue("");
     super.revertFilter();
   }
 

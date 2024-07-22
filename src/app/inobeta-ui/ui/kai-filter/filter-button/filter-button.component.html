@@ -7,7 +7,7 @@
 </button>
 
 <mat-menu #menu="matMenu">
-  <section (click)="$event.stopPropagation();" style="width: 280px">
+  <section (click)="$event.stopPropagation();" style="display:flex;flex-direction: column; width: 280px">
     <ng-content></ng-content>
     <mat-divider></mat-divider>
     <section style="display:flex; justify-content: flex-end; margin-right: 1em; margin-top: 0.5em">

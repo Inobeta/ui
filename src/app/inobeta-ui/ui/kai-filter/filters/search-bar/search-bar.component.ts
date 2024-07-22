@@ -9,6 +9,7 @@ import { IbFilterBase } from "../base/filter-base";
   selector: "ib-search-bar",
   template: `<mat-form-field
     [formGroup]="filter?.form"
+    subscriptSizing="dynamic"
     style="width: 100%; padding-bottom: 0"
   >
     <mat-icon matPrefix>search</mat-icon>

@@ -76,25 +76,29 @@ then, define your theme.scss with this example (customize your palette)
 ```scss
 @use '@angular/material' as mat;
 @use '@inobeta-ui/ui';
+@use "/path/to/my-theme";
+
 @include mat.core();
 
-// Define the default theme
-$app-primary: mat.define-palette(mat.$deep-purple-palette);
-$app-accent: mat.define-palette(mat.$amber-palette, A200, A100, A400);
-$app-warning: mat.define-palette(mat.$red-palette);
+html {
+  @include mat.all-component-themes(my-theme.$light-theme);
 
-$app-theme: mat.define-light-theme((
-  color: (
-    primary: $app-primary,
-    accent: $app-accent,
-    warning: $app-warning
-  )
-));
+  @include mat.color-variants-backwards-compatibility(my-theme.$light-theme);
 
-// Include the default theme styles.
-@include ui.theme($app-theme);
-// Overwrites and other styles here
-// ...
+  @include ui.main-menu-theme(my-theme.$light-theme);
+  @include ui.table-theme(my-theme.$light-theme);
+  @include ui.toast-theme(my-theme.$light-theme);
+
+  @media (prefers-color-scheme: dark) {
+    @include mat.all-component-colors(my-theme.$dark-theme);
+
+    @include mat.color-variants-backwards-compatibility(my-theme.$dark-theme);
+
+    @include ui.main-menu-color(my-theme.$dark-theme);
+    @include ui.table-color(my-theme.$dark-theme);
+    @include ui.toast-color(my-theme.$dark-theme);
+  }
+}
 ```
 
 Last, force translate loading on app.component:

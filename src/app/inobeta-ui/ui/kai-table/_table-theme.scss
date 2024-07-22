@@ -1,11 +1,55 @@
 @use "sass:map";
 @use "@angular/material" as mat;
 
-@mixin base($theme) {}
+@mixin base($theme) {
+}
+
+@mixin m2-color($theme) {
+  .mat-mdc-header-cell,
+  .mat-sort-header-arrow {
+    color: var(
+      --ib-table-header-text-color,
+      mat.get-theme-color($theme, primary, darker-contrast)
+    ) !important;
+    background: var(
+      --ib-table-header-background-color,
+      mat.get-theme-color($theme, primary, 500)
+    ) !important;
+  }
+
+  .mat-mdc-row:hover {
+    background: var(
+      --ib-table-row-background-color-on-hover,
+      rgba(mat.get-theme-color($theme, accent, darker-contrast), 0.03)
+    ) !important;
+  }
+
+  .ib-table-striped-rows .mat-mdc-row:nth-child(even) {
+    color: var(
+      --ib-table-even-row-text-color,
+      mat.get-theme-color($theme, accent, darker-contrast)
+    );
+    background: var(
+      --ib-table-even-row-background-color,
+      mat.get-theme-color($theme, primary, 50)
+    );
+  }
+
+  .ib-table-striped-rows .mat-mdc-row:nth-child(odd) {
+    color: var(--ib-table-odd-row-text-color);
+    background: var(--ib-table-odd-row-background-color);
+  }
+
+  .ib-table__container {
+    color: mat.get-theme-color($theme, background, text);
+    background-color: mat.get-theme-color($theme, background, card);
+  }
+}
 
 @mixin color($theme) {
   .mat-mdc-header-cell,
   .mat-sort-header-arrow {
+    --mdc-checkbox-unselected-icon-color: #{mat.get-theme-color($theme, on-primary)};
     color: var(
       --ib-table-header-text-color,
       mat.get-theme-color($theme, on-primary)
@@ -26,11 +70,11 @@
   .ib-table-striped-rows .mat-mdc-row:nth-child(even) {
     color: var(
       --ib-table-even-row-text-color,
-      mat.get-theme-color($theme, on-primary)
+      mat.get-theme-color($theme, on-surface)
     );
     background: var(
       --ib-table-even-row-background-color,
-      mat.get-theme-color($theme, primary, 50)
+      rgba(mat.get-theme-color($theme, secondary), 0.06)
     );
   }
 
@@ -41,24 +85,31 @@
 
   .ib-table__container {
     color: mat.get-theme-color($theme, on-surface);
-    background-color: mat.get-theme-color($theme, surface-container-lowest);
+    background-color: mat.get-theme-color($theme, surface);
   }
-
 }
 
-@mixin typography($theme) {}
+@mixin typography($theme) {
+}
 
-@mixin density($theme) {}
+@mixin density($theme) {
+}
 
 @mixin theme($theme) {
-  @include base($theme);
-  @if mat.theme-has($theme, color) {
-    @include color($theme);
-  }
-  @if mat.theme-has($theme, density) {
-    @include density($theme);
-  }
-  @if mat.theme-has($theme, typography) {
-    @include typography($theme);
+  @if (mat.get-theme-version($theme) == 1) {
+    @include base($theme);
+    @if mat.theme-has($theme, color) {
+      @include color($theme);
+    }
+    @if mat.theme-has($theme, density) {
+      @include density($theme);
+    }
+    @if mat.theme-has($theme, typography) {
+      @include typography($theme);
+    }
+  } @else {
+    @if mat.theme-has($theme, color) {
+      @include m2-color($theme);
+    }
   }
 }

@@ -1,0 +1,226 @@
+@use "sass:map";
+@use "@angular/material" as mat;
+
+@mixin private-base-color() {
+  $ib-main-menu-main: (
+    50: #e7e7e7,
+    100: #c3c3c3,
+    200: #9c9c9c,
+    300: #747474,
+    400: #565656,
+    500: #383838,
+    600: #323232,
+    700: #2b2b2b,
+    800: #242424,
+    900: #171717,
+    A100: #ef7171,
+    A200: #ea4343,
+    A400: #fa0000,
+    A700: #ffffff,
+    contrast: (
+      50: #000000,
+      100: #000000,
+      200: #000000,
+      300: #ffffff,
+      400: #ffffff,
+      500: #ffffff,
+      600: #ffffff,
+      700: #ffffff,
+      800: #ffffff,
+      900: #ffffff,
+      A100: #000000,
+      A200: #ffffff,
+      A400: #ffffff,
+      A700: #ffffff,
+    ),
+  );
+
+  /* Header */
+  #ib-main-menu-expanded-header {
+    background: mat.m2-get-color-from-palette($ib-main-menu-main, 700);
+    background: linear-gradient(
+      0deg,
+      rgba(mat.m2-get-color-from-palette($ib-main-menu-main, 500), 0) 0%,
+      rgba(mat.m2-get-color-from-palette($ib-main-menu-main, 400), 0.907) 75%,
+      rgba(mat.m2-get-color-from-palette($ib-main-menu-main, 600), 0.907) 100%
+    );
+  }
+  #ib-main-menu-expanded-header-closeButton-wrapper button {
+    border-color: rgba(
+      mat.m2-get-color-from-palette($ib-main-menu-main, 200),
+      0.75
+    );
+  }
+
+  #ib-main-menu-expanded-header-settingsLogout-box {
+    background: rgba(
+      mat.m2-get-color-from-palette($ib-main-menu-main, 500),
+      0.25
+    );
+    border-color: rgba(
+      mat.m2-get-color-from-palette($ib-main-menu-main, 200),
+      0.75
+    );
+  }
+
+  /* Body */
+
+  .ib-main-menu-expanded-body-box {
+    background: rgba(
+      mat.m2-get-color-from-palette($ib-main-menu-main, 700),
+      0.25
+    );
+    border-color: rgba(
+      mat.m2-get-color-from-palette($ib-main-menu-main, 200),
+      0.75
+    );
+  }
+
+  .ib-main-menu-expanded-body-box-firstLevel {
+    border-bottom-color: rgba(
+      mat.m2-get-color-from-palette($ib-main-menu-main, 200),
+      0.75
+    );
+  }
+
+  /* Footer */
+
+  #ib-main-menu-expanded-footer {
+    background: mat.m2-get-color-from-palette($ib-main-menu-main, 700);
+    background: linear-gradient(
+      180deg,
+      rgba(mat.m2-get-color-from-palette($ib-main-menu-main, 500), 0) 0%,
+      rgba(mat.m2-get-color-from-palette($ib-main-menu-main, 400), 0.907) 75%,
+      rgba(mat.m2-get-color-from-palette($ib-main-menu-main, 600), 0.907) 100%
+    );
+  }
+
+  #ib-main-menu-expanded-footer-support-button {
+    border-color: rgba(
+      mat.m2-get-color-from-palette($ib-main-menu-main, 200),
+      0.75
+    );
+    background: rgba(
+      mat.m2-get-color-from-palette($ib-main-menu-main, 500),
+      0.55
+    );
+  }
+
+  /* Common */
+
+  #ib-main-menu-expanded-header-closeButton-wrapper button:hover,
+  #ib-main-menu-expanded-header-settingsLogout-box .mat-mdc-button:hover,
+  .ib-main-menu-expanded-body-box-secondLevel button:hover,
+  #ib-main-menu-expanded-footer-support-button:hover {
+    background: rgba(
+      mat.m2-get-color-from-palette($ib-main-menu-main, 300),
+      0.7
+    );
+  }
+
+  #ib-main-menu-expanded-header p,
+  #ib-main-menu-expanded-body p,
+  #ib-main-menu-expanded-footer p {
+    color: mat.m2-get-color-from-palette($ib-main-menu-main, A700);
+  }
+
+  ib-main-menu-expanded mat-icon {
+    color: white;
+  }
+  ib-main-menu-expanded .material-icons-two-tone {
+    color: black !important;
+    -webkit-filter: contrast(4) invert(1);
+    filter: contrast(4) invert(1);
+  }
+
+  /* ib-main-menu dialog custom class */
+
+  .mat-dialog-container-for-ib-main-menu .mat-mdc-dialog-container {
+    background: rgba(
+      mat.m2-get-color-from-palette($ib-main-menu-main, 500),
+      0.5
+    );
+    padding: 0px !important;
+  }
+  .mat-dialog-container-for-ib-main-menu
+    .mat-mdc-dialog-container
+    .mdc-dialog__surface {
+    background-color: transparent !important;
+  }
+
+  .mat-dialog-container-for-ib-main-menu .mdc-dialog .mdc-dialog__content {
+    padding: 0px !important;
+  }
+
+  .mat-dialog-container-for-ib-main-menu
+    .mat-dialog-container
+    .mat-mdc-dialog-content {
+    min-height: 100%;
+    max-width: 100%;
+    margin: 0px;
+    padding: 0px;
+  }
+
+  .mat-dialog-container-for-ib-main-menu .mdc-button__label {
+    width: 100%;
+  }
+
+  .blur-effect {
+    filter: blur(15px);
+    animation: open 0.3s linear 0s;
+    height: 100%;
+  }
+  @keyframes open {
+    from {
+      filter: blur(0px);
+    }
+    to {
+      filter: blur(15px);
+    }
+  }
+}
+
+@mixin color($theme) {
+  @if (mat.get-theme-version($theme) == 1) {
+    @if mat.theme-has($theme, color) {
+      @include m3-color($theme);
+    }
+  } @else {
+    @if mat.theme-has($theme, color) {
+      @include m2-color($theme);
+    }
+  }
+}
+
+@mixin m3-color($theme) {
+  .ib-main-menu-box-active-box {
+    border-color: rgba(mat.get-theme-color($theme, primary), 0.75);
+  }
+  .active-row-ie-secondLevel,
+  .active-header-footer-button {
+    background: mat.get-theme-color($theme, primary) !important;
+  }
+}
+
+@mixin m2-color($theme) {
+  $ib-main-menu-active: map-get($theme, primary);
+
+  .ib-main-menu-box-active-box {
+    border-color: rgba(
+      mat.m2-get-color-from-palette($ib-main-menu-active, 500),
+      0.75
+    );
+  }
+  .active-row-ie-secondLevel,
+  .active-header-footer-button {
+    background: mat.m2-get-color-from-palette(
+      $ib-main-menu-active,
+      500
+    ) !important;
+  }
+}
+
+@mixin theme($theme) {
+  @include private-base-color();
+  @include color($theme);
+}

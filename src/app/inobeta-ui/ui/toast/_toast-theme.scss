@@ -1,0 +1,56 @@
+@use "sass:map";
+@use "@angular/material" as mat;
+
+@mixin m3-color($theme) {
+  .ib-toast-warning {
+    --mdc-snackbar-container-color: #{mat.get-theme-color($theme, tertiary)};
+    --mdc-snackbar-supporting-text-color: #{mat.get-theme-color(
+        $theme,
+        on-tertiary
+      )};
+  }
+
+  .ib-toast-error {
+    --mdc-snackbar-container-color: #{mat.get-theme-color($theme, error)};
+    --mdc-snackbar-supporting-text-color: #{mat.get-theme-color(
+        $theme,
+        on-error
+      )};
+  }
+}
+
+@mixin m2-color($theme) {
+  .ib-toast-success {
+    --mdc-snackbar-container-color: green;
+    --mdc-snackbar-supporting-text-color: white;
+    --mdc-snackbar-supporting-text-weight: bold;
+  }
+
+  .ib-toast-warning {
+    --mdc-snackbar-container-color: orange;
+    --mdc-snackbar-supporting-text-color: white;
+    --mdc-snackbar-supporting-text-weight: bold;
+  }
+
+  .ib-toast-error {
+    --mdc-snackbar-container-color: red;
+    --mdc-snackbar-supporting-text-color: white;
+    --mdc-snackbar-supporting-text-weight: bold;
+  }
+}
+
+@mixin color($theme) {
+  @if (mat.get-theme-version($theme) == 1) {
+    @if mat.theme-has($theme, color) {
+      @include m3-color($theme);
+    }
+  } @else {
+    @if mat.theme-has($theme, color) {
+      @include m2-color($theme);
+    }
+  }
+}
+
+@mixin theme($theme) {
+  @include color($theme);
+}

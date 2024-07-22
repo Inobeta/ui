@@ -1,5 +1,15 @@
 # Inobeta/UI Changelog
 
+## [18.0.0] (unreleased)
+
+| Issue ID | Type | Section | Description |
+| -- | -- | -- | -- |
+|DEVK-363|BREAKING CHANGE|IbTable|Removed `<ib-table>`|
+|DEVK-363|BREAKING CHANGE|IbHttpModule|Removed deprecations|
+|DEVK-363|BREAKING CHANGE|theming|Removed `ui.theme()` mixin|
+|DEVK-363|feat|theming|Removed `all-component-colors` mixin call from the library|
+|DEVK-363|feat|theming|Added 2 theme mixin for `main-menu` and `toast`|
+
 ## [17.1.1] (2024-07-19)
 
 | Issue ID | Type | Section | Description |

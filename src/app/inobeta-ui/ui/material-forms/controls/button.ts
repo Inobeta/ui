@@ -11,7 +11,7 @@ import { IbModalMessageService } from '../../modal/modal-message.service';
     (click)="handleActionClick()"
     [type]="(data.base.key === 'submit') ? 'submit' : 'button'"
     [disabled]="data.base.disabled || ((data.base.requireValidation) && !data.form.valid)"
-    mat-raised-button
+    mat-flat-button
     [color]="data.base.color"
   >{{data.base.label | translate}}</button>
 </div>

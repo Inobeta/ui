@@ -1,41 +1,25 @@
-@use '@angular/material' as mat;
-@use '../inobeta-ui/ui' as ui;
+@use "@angular/material" as mat;
+@use "../inobeta-ui/ui" as ui;
+@use "./red-palette";
+
 @include mat.core();
 
-// Define a dark theme
-$dark-theme: mat.define-theme((
-  color: (
-    theme-type: dark,
-    primary: mat.$violet-palette,
-  ),
-  typography: (
-    brand-family: 'Roboto',
-  ),
-  density: (
-    scale: 0
-  )
-));
-
-// Define a light theme
-$light-theme: mat.define-theme((
-  color: (
-    theme-type: light,
-    primary: mat.$violet-palette,
-  ),
-  typography: (
-    brand-family: 'Roboto',
-  ),
-  density: (
-    scale: 0
-  )
-));
-
 html {
-  @include mat.all-component-themes($light-theme);
-  @include ui.theme($light-theme);
-  
+  @include mat.all-component-themes(red-palette.$light-theme);
+
+  @include mat.color-variants-backwards-compatibility(red-palette.$light-theme);
+
+  @include ui.main-menu-theme(red-palette.$light-theme);
+  @include ui.table-theme(red-palette.$light-theme);
+  @include ui.toast-theme(red-palette.$light-theme);
+
   @media (prefers-color-scheme: dark) {
-    @include ui.all-component-colors($dark-theme);
-    @include mat.all-component-colors($dark-theme);
+    @include mat.all-component-colors(red-palette.$dark-theme);
+
+    @include mat.color-variants-backwards-compatibility(red-palette.$dark-theme);
+
+    @include ui.main-menu-color(red-palette.$dark-theme);
+    @include ui.table-color(red-palette.$dark-theme);
+    @include ui.toast-color(red-palette.$dark-theme);
   }
 }
