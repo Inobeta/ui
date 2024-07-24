@@ -2,6 +2,13 @@
 @use "@angular/material" as mat;
 
 @mixin base($theme) {
+  .ib-table__container {
+    @if (mat.get-theme-version($theme) == 1) {
+      border-radius: 28px;
+    } @else {
+      border-radius: 4px;
+    }
+  }
 }
 
 @mixin m2-color($theme) {
@@ -109,6 +116,7 @@
     }
   } @else {
     @if mat.theme-has($theme, color) {
+      @include base($theme);
       @include m2-color($theme);
     }
   }
