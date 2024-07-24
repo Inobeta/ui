@@ -15,16 +15,22 @@ are optimized to have enough contrast to be more accessible.
 ng generate @angular/material:m3-theme
 ```
 
-The `theme()` mixin has been deprecated
+The `ui.theme()` mixin has been deprecated
 
-```css
+```scss
 /** ❌ Removed */
 @include ui.theme($theme)
 ```
 
-There are 3 new theme mixin available for `@inobeta/ui` components:
+It must be replaced with the Angular Material `mat.all-component-themes()` mixin
 
-```css
+```scss
+@include mat.all-component-themes($theme);
+```
+
+And with one of the three new theme mixin available for `@inobeta/ui` components:
+
+```scss
 @use "@inobeta/ui" as ui;
 
 @include ui.main-menu-theme(app-theme.$light-theme);
@@ -34,7 +40,16 @@ There are 3 new theme mixin available for `@inobeta/ui` components:
 
 > ⚠️ Include only the components that are beign actually used
 
-```css
+### Upgrade to Material 3
+
+[Official guide](https://material.angular.io/guide/material-2-theming#how-to-migrate-an-app-from-material-2-to-material-3)
+
+1. Generate a new palette with the schematic mentioned above
+2. Apply the palette within the `html` selector
+3. Add `mat.color-variants-backwards-compatibility()` to support the `color` input available for some components (for example `mat-button`)
+
+```scss
+/** styles.scss */
 @use "@angular/material" as mat;
 @use "@inobeta/ui" as ui;
 @use "/path/to/app-theme";
