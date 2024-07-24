@@ -10,6 +10,13 @@
 |DEVK-363|feat|theming|Removed `all-component-colors` mixin call from the library|
 |DEVK-363|feat|theming|Added 2 theme mixin for `main-menu` and `toast`|
 
+### [18.0.0] - Breaking changes
+
+- The `ui.theme($theme)` mixin has been removed. It must be replaced by `mat.all-component-themes($theme)` followed by these mixins:
+  - `ui.table-theme($theme)` for `<ib-kai-table>`
+  - `ui.main-menu-theme($theme)` for `<ib-main-menu>`
+  - `ui.toast-theme($theme)` for the toast message
+
 ## [17.1.1] (2024-07-19)
 
 | Issue ID | Type | Section | Description |
