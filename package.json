@@ -65,9 +65,19 @@
     "typescript": "~5.5.3"
   },
   "peerDependencies": {
-    "@ngrx/effects": "^18.0.1",
-    "@ngrx/store": "^18.0.1",
-    "@ngrx/store-devtools": "^18.0.1",
+    "@angular/animations": "^18.x.x",
+    "@angular/cdk": "^18.x.x",
+    "@angular/common": "^18.x.x",
+    "@angular/compiler": "^18.x.x",
+    "@angular/core": "^18.x.x",
+    "@angular/forms": "^18.x.x",
+    "@angular/material": "^18.x.x",
+    "@angular/platform-browser": "^18.x.x",
+    "@angular/platform-browser-dynamic": "^18.x.x",
+    "@angular/router": "^18.x.x",
+    "@ngrx/effects": "^18.x.x",
+    "@ngrx/store": "^18.x.x",
+    "@ngrx/store-devtools": "^18.x.x",
     "@ngx-translate/core": "^15.x.x",
     "@ngx-translate/http-loader": "^8.x.x",
     "jspdf": "^2.5.1",
@@ -90,5 +100,8 @@
       "sass": "./_index.scss"
     }
   },
-  "readme": "ERROR: No README data found!"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/inobeta/ui.git"
+  }
 }
