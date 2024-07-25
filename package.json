@@ -85,9 +85,6 @@
     "@ngrx/operators": "^18.0.0",
     "tslib": "^2.4.0"
   },
-  "publishConfig": {
-    "@inobeta:registry": "https://gitlab.com/api/v4/projects/8604184/packages/npm/"
-  },
   "exports": {
     ".": {
       "sass": "./_index.scss"
