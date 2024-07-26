@@ -11,7 +11,6 @@ import {
   withLatestFrom,
 } from "rxjs/operators";
 import { IbStorageTypes } from "../../../storage/storage.service";
-import { IbAuthService } from "../../auth/auth.service";
 import { IbLoginService } from "../../auth/login.service";
 import { IbAPITokens, IbSession } from "../../auth/session.model";
 import { ibAuthActions } from "./actions";
@@ -21,23 +20,6 @@ import { ibSelectAccessTokenExp, ibSelectActiveSession } from "./selectors";
 export class IbSessionEffects {
   private actions$ = inject(Actions);
   private store = inject(Store);
-
-  login$ = createEffect(
-    () => {
-      return this.actions$.pipe(
-        ofType(ibAuthActions.login),
-        map((action) => {
-          this.authLegacy.activeSession = action.activeSession;
-          if (this.ibHttpSessionStorageType === IbStorageTypes.LOCALSTORAGE) {
-            this.authLegacy.storeSession();
-          } else {
-            this.authLegacy.cookieSession();
-          }
-        })
-      );
-    },
-    { dispatch: false }
-  );
 
   refreshCycle$ = createEffect(() => {
     return this.actions$.pipe(
@@ -76,7 +58,6 @@ export class IbSessionEffects {
 
   constructor(
     private login: IbLoginService<IbAPITokens>,
-    private authLegacy: IbAuthService<IbAPITokens>,
     @Inject("ibHttpSessionStorageType")
     public ibHttpSessionStorageType: IbStorageTypes
   ) {}

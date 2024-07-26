@@ -1,15 +1,14 @@
-import {
-  HttpEvent,
-  HttpHandler,
-  HttpInterceptor,
-  HttpRequest,
-} from "@angular/common/http";
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from "@angular/common/http";
 import { Inject, Injectable } from "@angular/core";
 import { Store } from "@ngrx/store";
 import { Observable } from "rxjs";
 import { delay, finalize } from "rxjs/operators";
 import { ibLoaderActions } from "../store/loader/actions";
-import { IbHttpRequestDefinition } from "./http-client.service";
+
+export interface IbHttpRequestDefinition {
+  url: string;
+  method: string;
+}
 
 @Injectable({ providedIn: "root" })
 export class IbLoaderInterceptor implements HttpInterceptor {

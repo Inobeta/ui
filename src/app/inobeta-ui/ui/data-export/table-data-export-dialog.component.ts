@@ -46,7 +46,7 @@ export interface IbTableDataExportDialogData {
       <button mat-button mat-dialog-close>
         {{ "shared.ibModal.close" | translate }}
       </button>
-      <button mat-button color="primary" [mat-dialog-close]="settings">
+      <button mat-button [mat-dialog-close]="settings">
         {{ "shared.ibTable.export" | translate }}
       </button>
     </mat-dialog-actions>

@@ -5,16 +5,15 @@ const config: StorybookConfig = {
     "@storybook/addon-links",
     "@storybook/addon-essentials",
     "@storybook/addon-interactions",
-    './version-selector'
+    './version-selector',
+    "@storybook/addon-mdx-gfm"
   ],
 
   framework: {
     name: "@storybook/angular",
     options: {},
   },
-  docs: {
-    autodocs: "tag",
-  },
+  docs: {},
   core: {
     disableTelemetry: true,
   },

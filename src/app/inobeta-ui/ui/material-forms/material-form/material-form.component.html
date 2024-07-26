@@ -1,9 +1,7 @@
 <form (ngSubmit)="handleSubmit()" [formGroup]="form" class="ibForm">
   <div
     class="ibFormActions"
-    fxLayout="row"
-    fxLayoutAlign="end"
-    fxLayoutGap="20px"
+    style="display:flex;flex-direction:row;justify-content: end; gap:10px"
     *ngIf="[ibMatActionsPosition.BOTH, ibMatActionsPosition.TOP].indexOf(actionsPosition) > -1"
     >
     <ib-material-form-control
@@ -33,14 +31,14 @@
             class="ibFormRow"
             [base]="field | asFormControl"
             [form]="form"
-            [fxFlex]="field.width"
+            [ngStyle]="{ flex: '1 1 ' + field.width }"
             [attr.data-cy]="field?.key"
           ></ib-material-form-control>
         </ng-container>
     </mat-grid-tile>
   </mat-grid-list>
 
-  <div fxLayout="row wrap"  *ngIf="!cols">
+  <div style="display:flex;flex-direction:row;flex-wrap: wrap" *ngIf="!cols">
     <ng-container *ngFor="let field of fields">
       <ng-container [ngSwitch]="field.role">
         <ib-material-form-control
@@ -48,7 +46,7 @@
           class="ibFormRow"
           [base]="field | asFormControl"
           [form]="form"
-          [fxFlex]="field.width"
+          [ngStyle]="{ flex: '1 1 ' + field.width }"
           [attr.data-cy]="field?.key"
         ></ib-material-form-control>
         <ib-material-form-array
@@ -56,7 +54,7 @@
           class="ibFormRow"
           [base]="field | asFormArray"
           [form]="form"
-          [fxFlex]="field.width"
+          [ngStyle]="{ flex: '1 1 ' + field.width }"
           [attr.data-cy]="field?.key"
         ></ib-material-form-array>
       </ng-container>
@@ -65,9 +63,7 @@
 
   <div
     class="ibFormActions"
-    fxLayout="row"
-    fxLayoutAlign="end"
-    fxLayoutGap="20px"
+    style="display:flex;flex-direction:row;justify-content: end; gap:10px"
     *ngIf="[ibMatActionsPosition.BOTH, ibMatActionsPosition.BOTTOM].indexOf(actionsPosition) > -1"
     >
     <ib-material-form-control

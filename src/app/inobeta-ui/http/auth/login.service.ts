@@ -8,7 +8,6 @@ import { Observable, throwError } from "rxjs";
 import { catchError, filter, map } from "rxjs/operators";
 import { ibAuthActions } from "../store/session/actions";
 import { ibSelectActiveSession } from "../store/session/selectors";
-import { IbAuthService } from "./auth.service";
 import {
   IbAPITokens,
   IbAuthTypes,
@@ -20,10 +19,6 @@ import {
 export class IbLoginService<T extends IbAPITokens | IbAPITokens> {
   constructor(
     private httpClient: HttpClient,
-    /**
-     * @deprecated: this is a fallback that will be removed in next major
-     */
-    private srvAuth: IbAuthService<T>,
     private store: Store,
     private srvRouter: Router,
     private snackBar: MatSnackBar,
@@ -54,7 +49,6 @@ export class IbLoginService<T extends IbAPITokens | IbAPITokens> {
    * Attempts a login to the server by contacting the endpoint provided by the token {@link ibHttpAPILoginUrl}
    */
   public login(user: IbUserLogin) {
-    this.srvAuth.activeSession = null;
     const activeSession = new IbSession<T>();
 
     if (user) {
@@ -97,9 +91,7 @@ export class IbLoginService<T extends IbAPITokens | IbAPITokens> {
    * @param makeSnack Whether to show a snackbar message when logging out
    */
   public logout(makeSnack: boolean = true) {
-    this.srvAuth.activeSession = null;
     this.store.dispatch(ibAuthActions.logout());
-    this.srvAuth.logout();
     this.srvRouter.navigateByUrl(this.ibHttpGUILoginUrl);
     if (makeSnack) {
       this.snackBar.open("Logout completed", null, { duration: 2000 });

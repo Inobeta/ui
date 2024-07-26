@@ -13,6 +13,6 @@ export const ibSelectIsHttpLoading = createSelector(
 export const ibSelectIsHttpUrlLoading = (endpoint: { url: string, method: string}) => createSelector(
   selectFeature,
   (state: IHttpStore): boolean => {
-    return state?.loader?.pendingRequestList.findIndex(pl => pl.url === endpoint.url && pl.method === endpoint.method) >= 0 ?? false
+    return state.loader.pendingRequestList.findIndex(pl => pl.url === endpoint.url && pl.method === endpoint.method) >= 0
   }
 )

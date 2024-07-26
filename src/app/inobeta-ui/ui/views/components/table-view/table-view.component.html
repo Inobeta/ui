@@ -1,11 +1,10 @@
-<button *ngIf="!selected" mat-flat-button (click)="ibChangeView.emit(view)">
+<button *ngIf="!selected" mat-button (click)="ibChangeView.emit(view)">
   {{ view.name }}
 </button>
 
 <button
   *ngIf="selected"
   mat-flat-button
-  color="primary"
   [matMenuTriggerFor]="menu"
 >
   {{ view.name }} {{ dirty ? "*" : "" }}

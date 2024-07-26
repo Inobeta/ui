@@ -3,10 +3,8 @@ import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@an
 @Component ({
   selector: 'ib-uploader',
   template: `
-    <div fxFlex fxLayout="column" fxLayoutAlign="center center">
-      <input (change)="onChooseChange()" #uploader style="display:none;"type="file"/>
-      <button fxFlex mat-button (click)="onChooseClick()" >{{textKey | translate}}</button>
-    </div>
+    <input (change)="onChooseChange()" #uploader style="display:none;"type="file"/>
+    <button mat-button (click)="onChooseClick()" >{{textKey | translate}}</button>
   `
 })
 export class IbUploaderComponent {

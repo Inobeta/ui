@@ -10,7 +10,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FlexLayoutModule } from '@Inobeta/flex-layout';
 import { IbMatAutocompleteComponent } from './autocomplete';
 
 
@@ -36,7 +35,6 @@ describe('IbMatAutocompleteComponent', () => {
         MatOptionModule,
         MatAutocompleteModule,
         NoopAnimationsModule,
-        FlexLayoutModule,
         MatIconModule
       ]
     })

@@ -1,27 +1,43 @@
 <ng-template formControlHost></ng-template>
 <ng-template #formControlErrors>
-  <mat-error *ngIf="hasError('minlength')">
-    {{base.label | translate}} {{ 'shared.ibForms.errors.minlength' | translate:{v:self.errors.minlength.requiredLength} }}
-  </mat-error>
-  <mat-error *ngIf="hasError('maxlength')">
-    {{base.label | translate}} {{ 'shared.ibForms.errors.maxlength' | translate:{v:self.errors.maxlength.requiredLength} }}
-  </mat-error>
-  <mat-error *ngIf="hasError('required')">
-    {{base.label | translate}} {{ 'shared.ibForms.errors.required' | translate }}
-  </mat-error>
-  <mat-error *ngIf="hasError('min')">
-    {{base.label | translate}} {{ 'shared.ibForms.errors.min' | translate:{v:self.errors.min.min} }}
-  </mat-error>
-  <mat-error *ngIf="hasError('max')">
-    {{base.label | translate}} {{ 'shared.ibForms.errors.max' | translate:{v:self.errors.max.max} }}
-  </mat-error>
-  <mat-error *ngIf="hasError('email')">
-    {{ 'shared.ibForms.errors.email' | translate }}
-  </mat-error>
-  <mat-error *ngIf="hasError('matDatepickerParse')">
-    {{ 'shared.ibForms.errors.date' | translate:{v:self.errors.matDatepickerParse.matDatepickerParse} }}
-  </mat-error>
-  <mat-error *ngIf="hasError('customError')">
-    {{ self.errors.customError.message | translate:self.errors.customError.params }}
-  </mat-error>
+  @if (hasError('required')) {
+    <span>
+      {{base.label | translate}} {{ 'shared.ibForms.errors.required' | translate }}
+    </span>
+  }
+  @else if (hasError('minlength')) {
+    <span>
+      {{base.label | translate}} {{ 'shared.ibForms.errors.minlength' | translate:{v:self.errors.minlength.requiredLength} }}
+    </span>
+  }
+  @else if (hasError('maxlength')) {
+    <span>
+      {{base.label | translate}} {{ 'shared.ibForms.errors.maxlength' | translate:{v:self.errors.maxlength.requiredLength} }}
+    </span>
+  }
+  @else if (hasError('min')) {
+    <span>
+      {{base.label | translate}} {{ 'shared.ibForms.errors.min' | translate:{v:self.errors.min.min} }}
+    </span>
+  }
+  @else if (hasError('max')) {
+    <span>
+      {{base.label | translate}} {{ 'shared.ibForms.errors.max' | translate:{v:self.errors.max.max} }}
+    </span>
+  }
+  @else if (hasError('email')) {
+    <span>
+      {{ 'shared.ibForms.errors.email' | translate }}
+    </span>
+  }
+  @else if (hasError('matDatepickerParse')) {
+    <span>
+      {{ 'shared.ibForms.errors.date' | translate:{v:self.errors.matDatepickerParse.matDatepickerParse} }}
+    </span>
+  }
+  @else if (hasError('customError')) {
+    <span>
+      {{ self.errors.customError.message | translate:self.errors.customError.params }}
+    </span>
+  }
 </ng-template>

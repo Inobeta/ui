@@ -40,53 +40,53 @@ import { IbBreadcrumbModule } from "./breadcrumb.module";
     </li>
   </ul>`,
   styles: `
-  .ibBreadcrumbs {
-    padding: 5px 10px 5px 0px;
-    border-radius: 4px;
-    margin: 0px;
-    list-style: none;
-    display: flex;
-  }
-  .ibBreadcrumbs-link {
-    display: flex;
-    align-items: center;
-  }
-  .ibBreadcrumbs-link {
-    a {
-      background-color: transparent;
-      text-decoration: none;
-      line-height: 24px;
-      padding: 0px;
+    .ibBreadcrumbs {
+      padding: 5px 10px 5px 0px;
+      border-radius: 4px;
       margin: 0px;
-      height: 33px;
-      font-weight: 500;
-      font-size: 14px;
-      line-height: 14px;
+      list-style: none;
+      display: flex;
+    }
+    .ibBreadcrumbs-link {
       display: flex;
       align-items: center;
-      text-align: center;
-      letter-spacing: 0.002em;
-      color: #030303;
     }
+    .ibBreadcrumbs-link {
+      a {
+        background-color: transparent;
+        text-decoration: none;
+        line-height: 24px;
+        padding: 0px;
+        margin: 0px;
+        height: 33px;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 14px;
+        display: flex;
+        align-items: center;
+        text-align: center;
+        letter-spacing: 0.002em;
+        color: #030303;
+      }
 
-    a:hover {
-      text-decoration: underline;
+      a:hover {
+        text-decoration: underline;
+      }
     }
-  }
-  .ibBreadcrumbs-link:nth-child(1) {
-    font-size: 20px;
-    line-height: 22px;
-    margin-right: 20px;
-    padding: 0px 5px 0px 10px;
-  }
-  .ibBreadcrumbs-link > mat-icon {
-    color: #A3A0A0;
-    margin: 0px;
-    height: 33px;
-    width: 24px;
-    text-align: center;
-    line-height: 35px;
-  }
+    .ibBreadcrumbs-link:nth-child(1) {
+      font-size: 20px;
+      line-height: 22px;
+      margin-right: 20px;
+      padding: 0px 5px 0px 10px;
+    }
+    .ibBreadcrumbs-link > mat-icon {
+      color: #a3a0a0;
+      margin: 0px;
+      height: 33px;
+      width: 24px;
+      text-align: center;
+      line-height: 35px;
+    }
   `,
   providers: [
     { provide: IbBreadcrumbComponent, useExisting: CustomBreadcrumb },

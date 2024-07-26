@@ -184,7 +184,7 @@ export const WithGridLayout: Story = {
       }),
       new IbMatLabelControl({
         label: "But it is not recommended to be used",
-        rows: 3
+        rows: 3,
       }),
       new IbMatLabelControl({
         label: "",

@@ -68,8 +68,6 @@ describe('IbAuthGuard & IbLoginGuard with a session', () => {
       activeSession: {
         valid: true,
         serverData: null,
-        userData: null,
-        authToken: null,
         user: {
           email: 'pippo',
           password: '',
