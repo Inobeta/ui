@@ -39,7 +39,6 @@
     "@angular/router": "^18.1.1",
     "@babel/preset-env": "^7.15.0",
     "@compodoc/compodoc": "^1.1.22",
-    "@inobeta/cli": "^17.0.1",
     "@ngrx/schematics": "^18.0.1",
     "@storybook/addon-essentials": "^8.2.4",
     "@storybook/addon-interactions": "^8.2.4",
