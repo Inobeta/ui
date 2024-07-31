@@ -102,5 +102,6 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/inobeta/ui.git"
-  }
+  },
+  "license": "MIT"
 }
