@@ -1,17 +1,23 @@
 # Inobeta/UI Changelog
 
-## [18.0.0] (unreleased)
+## [18.0.1] (unreleased)
 
 | Issue ID | Type | Section | Description |
 | -- | -- | -- | -- |
 |DEVK-363|feat|all|Added support for Angular 18|
 
-### [18.0.0] - Breaking changes
+### [18.0.1] - Breaking changes
 
 - The `ui.theme($theme)` mixin has been removed. It must be replaced by `mat.all-component-themes($theme)` followed by these mixins:
   - `ui.table-theme($theme)` for `<ib-kai-table>`
   - `ui.main-menu-theme($theme)` for `<ib-main-menu>`
   - `ui.toast-theme($theme)` for the toast message
+- Component `ib-table` and all related stuff has been removed, please use `ib-kai-table`
+- Deprecated stuff from `IbHttpModule` has been removed
+
+## [18.0.0] (version skipped)
+
+This version was developed for internal test only. The first `@18` available version is `18.0.1`.
 
 ## [17.1.1] (2024-07-19)
 
