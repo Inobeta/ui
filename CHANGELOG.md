@@ -1,5 +1,18 @@
 # Inobeta/UI Changelog
 
+## [18.0.0] (unreleased)
+
+| Issue ID | Type | Section | Description |
+| -- | -- | -- | -- |
+|DEVK-363|feat|all|Added support for Angular 18|
+
+### [18.0.0] - Breaking changes
+
+- The `ui.theme($theme)` mixin has been removed. It must be replaced by `mat.all-component-themes($theme)` followed by these mixins:
+  - `ui.table-theme($theme)` for `<ib-kai-table>`
+  - `ui.main-menu-theme($theme)` for `<ib-main-menu>`
+  - `ui.toast-theme($theme)` for the toast message
+
 ## [17.1.1] (2024-07-19)
 
 | Issue ID | Type | Section | Description |

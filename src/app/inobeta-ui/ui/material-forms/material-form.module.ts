@@ -1,4 +1,3 @@
-import { FlexLayoutModule } from "@Inobeta/flex-layout";
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
@@ -82,7 +81,6 @@ export function ibMatDatepickerTranslate() {
     MatAutocompleteModule,
     MatIconModule,
     MatGridListModule,
-    FlexLayoutModule,
     MatTooltipModule,
     MatSlideToggleModule,
     IbModalModule,

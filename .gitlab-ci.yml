@@ -51,7 +51,7 @@ deploy:
     - npm ci --cache .npm --prefer-offline --no-audit --no-fund
     - npm run packagr
     - npm pack dist/
-    - npm publish inobeta-ui-$CURRENT_VERSION.tgz --tag latest
+    - npm publish inobeta-ui-$CURRENT_VERSION.tgz --tag latest --access public
   tags:
     - gitlab-org-docker
   only:
@@ -64,7 +64,7 @@ deploy_unstable:
     - npm ci --cache .npm --prefer-offline --no-audit --no-fund
     - npm run packagr
     - npm pack dist/
-    - npm publish inobeta-ui-$TEMP_VERSION.tgz --tag unstable
+    - npm publish inobeta-ui-$TEMP_VERSION.tgz --tag unstable --access public
   tags:
     - gitlab-org-docker
   only:
@@ -77,7 +77,7 @@ deploy_testing:
     - npm ci --cache .npm --prefer-offline --no-audit --no-fund
     - npm run packagr
     - npm pack dist/
-    - npm publish inobeta-ui-$TEMP_VERSION.tgz --tag testing
+    - npm publish inobeta-ui-$TEMP_VERSION.tgz --tag testing --access public
   tags:
     - gitlab-org-docker
   except:

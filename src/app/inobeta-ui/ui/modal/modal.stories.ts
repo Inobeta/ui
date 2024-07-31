@@ -40,7 +40,9 @@ export class IbModalApp {
 
 @Component({
   selector: "app-modal-actions",
-  template: ` <button mat-button (click)="showModal()">Show Modal with Actions</button> `,
+  template: `
+    <button mat-button (click)="showModal()">Show Modal with Actions</button>
+  `,
   standalone: true,
   imports: [MatButtonModule],
 })

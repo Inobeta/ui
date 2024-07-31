@@ -4,7 +4,6 @@ import { TranslateLoader } from "@ngx-translate/core";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { ibHttpTranslations } from "../http/translations";
-import { ibTableTranslations } from "../ui/table/translations";
 import { ibMaterialFormTranslations } from "../ui/material-forms/translations";
 import { ibKaiFilterTranslations } from "../ui/kai-filter/translations";
 import { ibViewTranslations } from "../ui/views/translations";
@@ -20,7 +19,6 @@ export class IbTranslateModuleLoader implements TranslateLoader{
         ...tran,
         shared: {
           ...ibHttpTranslations[lang],
-          ...ibTableTranslations[lang],
           ...ibMaterialFormTranslations[lang],
           ...ibKaiFilterTranslations[lang],
           ...ibViewTranslations[lang],

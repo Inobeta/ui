@@ -2,7 +2,12 @@ import { StorybookTranslateModule } from ".storybook/i18n";
 import { HttpClientModule } from "@angular/common/http";
 import { MatNativeDateModule } from "@angular/material/core";
 import { provideAnimations } from "@angular/platform-browser/animations";
-import { Meta, StoryObj, applicationConfig, moduleMetadata } from "@storybook/angular";
+import {
+  Meta,
+  StoryObj,
+  applicationConfig,
+  moduleMetadata,
+} from "@storybook/angular";
 import { IbFilter } from "./filter.component";
 import { IbFilterModule } from "./filters.module";
 

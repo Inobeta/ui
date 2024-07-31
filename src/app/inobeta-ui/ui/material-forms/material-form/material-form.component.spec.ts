@@ -23,7 +23,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { Component } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
-import { FlexLayoutModule } from '@Inobeta/flex-layout';
 import { IbMatTextboxControl, IbMatTextboxComponent } from '../controls/textbox';
 import { IbMatCheckboxControl, IbMatCheckboxComponent } from '../controls/checkbox';
 import { IbMatRadioControl, IbMatRadioComponent } from '../controls/radio';
@@ -229,7 +228,6 @@ describe('IbMaterialFormComponent', () => {
         MatInputModule,
         MatButtonModule,
         NoopAnimationsModule,
-        FlexLayoutModule,
         MatDatepickerModule,
         MatAutocompleteModule,
         MatIconModule,

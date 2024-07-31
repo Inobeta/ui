@@ -1,5 +1,4 @@
-import { FlexLayoutModule } from "@Inobeta/flex-layout";
-import { CommonModule } from "@angular/common";
+import { CommonModule, registerLocaleData } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
@@ -59,11 +58,12 @@ import {
 import { IbMainMenuModule } from "./inobeta-ui/ui/main-menu/main-menu.module";
 import { IbMaterialFormModule } from "./inobeta-ui/ui/material-forms/material-form.module";
 import { IbModalModule } from "./inobeta-ui/ui/modal";
-import { TableEffects } from "./inobeta-ui/ui/table/store/effects/table.effects";
-import { IbTableModule } from "./inobeta-ui/ui/table/table.module";
 import { IbToastModule } from "./inobeta-ui/ui/toast/toast.module";
 import { IbViewModule } from "./inobeta-ui/ui/views/view.module";
 import { RoutingModule } from "./routing.module";
+import localeIt from '@angular/common/locales/it';
+
+registerLocaleData(localeIt);
 
 export interface IAppState {
   ibHttpState: IHttpStore;
@@ -107,7 +107,6 @@ const reduxStorageSave = ibSetupHydration("__redux-store-inobeta-ui__", [
   ],
   imports: [
     CommonModule,
-    IbTableModule,
     IbMainMenuModule,
     IbBreadcrumbModule,
     IbDynamicFormsModule,
@@ -116,7 +115,6 @@ const reduxStorageSave = ibSetupHydration("__redux-store-inobeta-ui__", [
     FormsModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
-    FlexLayoutModule,
     IbHttpModule,
     IbModalModule,
     MatFormFieldModule,
@@ -136,7 +134,6 @@ const reduxStorageSave = ibSetupHydration("__redux-store-inobeta-ui__", [
       metaReducers: reduxStorageSave.metareducers,
     }),
     EffectsModule.forRoot([
-      TableEffects,
       ...reduxStorageSave.effects,
       ...ibHttpEffects,
     ]),
@@ -160,7 +157,6 @@ const reduxStorageSave = ibSetupHydration("__redux-store-inobeta-ui__", [
     MatCardModule,
     MatTooltipModule,
   ],
-  exports: [FlexLayoutModule],
   providers: [
     //{provide: 'ibSessionStorageKey', useValue: '__redux-store-inobeta-ui__'},
     //{provide: 'ibReduxPersistKeys', useValue: ['sessionState', 'ibTable', 'lazyLoaded']},

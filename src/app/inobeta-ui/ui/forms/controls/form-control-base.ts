@@ -83,7 +83,7 @@ export class IbFormControlBase<T> {
 export interface IbFormControlBaseParams<T> {
   /** @deprecated Use the `value` input in `ib-material-form` instead */
   value?: T;
-  /** Whether or not disable the form field */
+  /** @deprecated should not be used with the `disabled` input of `ib-material-form` */
   disabled?: boolean;
   /** Form field name. Same as a FormGroup key */
   key?: string;

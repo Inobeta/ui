@@ -1,0 +1,13 @@
+@use "@angular/material" as mat;
+:host {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+ib-default-table-view,
+ib-table-view {
+  @include mat.button-density(-2);
+}

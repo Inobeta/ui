@@ -1,5 +1,5 @@
 import {TestBed} from '@angular/core/testing';
-import {HttpClientTestingModule} from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { IbAuthInterceptor } from './auth.interceptor';
 import { RouterTestingModule } from '@angular/router/testing';
 import { IbToolTestModule } from '../../tools/tools-test.module';
@@ -9,7 +9,7 @@ import { throwError } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { IbLoginService } from '../auth/login.service';
 import { IbLoginServiceStub } from '../auth/login.service.stub.spec';
-import { HttpRequest } from '@angular/common/http';
+import { HttpRequest, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideMockStore } from '@ngrx/store/testing';
 import { IbAuthTypes } from '../auth/session.model';
 
@@ -33,31 +33,30 @@ describe('IbAuthInterceptor', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        RouterTestingModule.withRoutes([
-          { path: 'login', component: LoginDummyComponent},
+    declarations: [LoginDummyComponent],
+    imports: [RouterTestingModule.withRoutes([
+            { path: 'login', component: LoginDummyComponent },
         ]),
         IbToolTestModule,
-        IbToastTestModule,
-      ],
-      declarations: [LoginDummyComponent],
-      providers: [
-        { provide: IbLoginService, useClass: IbLoginServiceStub},
+        IbToastTestModule],
+    providers: [
+        { provide: IbLoginService, useClass: IbLoginServiceStub },
         { provide: "ibHttpEnableInterceptors", useValue: true },
         { provide: "ibHttpAuthType", useValue: IbAuthTypes.JWT },
         {
-          provide: "ibHttpAPILoginUrl",
-          useValue: "/api/auth/login",
+            provide: "ibHttpAPILoginUrl",
+            useValue: "/api/auth/login",
         },
         {
-          provide: "ibHttpToastOnLoginFailure",
-          useValue: "shared.ibHttp.authFailure",
+            provide: "ibHttpToastOnLoginFailure",
+            useValue: "shared.ibHttp.authFailure",
         },
         IbAuthInterceptor,
-        provideMockStore({  }),
-      ]
-    }).compileComponents();
+        provideMockStore({}),
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
     service = TestBed.inject(IbAuthInterceptor);
     routerCall = spyOn(TestBed.inject(IbLoginService), 'logout').and.callThrough();
   });

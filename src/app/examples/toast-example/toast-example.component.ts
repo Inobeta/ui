@@ -4,7 +4,7 @@ import { IbToastNotification } from 'src/app/inobeta-ui/ui/toast/toast.service';
 @Component({
   selector: 'ib-toast-example',
   template: `
-  <div fxLayout="column" fxLayoutGap="10px" fxFlex="30%">
+  <div>
     <button (click)="open()">open success toast</button>
     <button (click)="open('warning')">open warning toast</button>
     <button (click)="open('error')">open error toast</button>

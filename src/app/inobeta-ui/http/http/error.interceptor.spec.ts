@@ -1,5 +1,5 @@
 import {TestBed} from '@angular/core/testing';
-import {HttpClientTestingModule} from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { IbToolTestModule } from '../../tools/tools-test.module';
 import { IbToastTestModule } from '../../ui/toast/toast-test.module';
@@ -7,6 +7,7 @@ import { throwError } from 'rxjs';
 import { IbErrorInterceptor } from './error.interceptor';
 import { IbToastNotification } from '../../ui/toast/toast.service';
 import { TranslateService } from '@ngx-translate/core';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('IbErrorInterceptor', () => {
 
@@ -17,33 +18,32 @@ describe('IbErrorInterceptor', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        RouterTestingModule,
+    imports: [RouterTestingModule,
         IbToolTestModule,
-        IbToastTestModule
-      ],
-      providers: [
+        IbToastTestModule],
+    providers: [
         { provide: "ibHttpEnableInterceptors", useValue: true },
         {
-          provide: "ibHttpToastOnGenericFailure",
-          useValue: "shared.ibHttp.genericFailure",
+            provide: "ibHttpToastOnGenericFailure",
+            useValue: "shared.ibHttp.genericFailure",
         },
         {
-          provide: "ibHttpToastOnStatusCode",
-          useValue: {},
+            provide: "ibHttpToastOnStatusCode",
+            useValue: {},
         },
         {
-          provide: "ibHttpToastErrorCode",
-          useValue: null,
+            provide: "ibHttpToastErrorCode",
+            useValue: null,
         },
         {
-          provide: "ibHttpToastErrorField",
-          useValue: null,
+            provide: "ibHttpToastErrorField",
+            useValue: null,
         },
-        IbErrorInterceptor
-      ]
-    }).compileComponents();
+        IbErrorInterceptor,
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+    ]
+}).compileComponents();
     service = TestBed.inject(IbErrorInterceptor);
     toastCall = spyOn(TestBed.inject(IbToastNotification), 'open').and.callThrough();
     toastCall.calls.reset();

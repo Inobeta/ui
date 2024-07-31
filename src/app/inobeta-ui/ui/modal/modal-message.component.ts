@@ -10,20 +10,20 @@ import { IbModalMessage } from './modal-message.model';
     <mat-dialog-actions align="end">
       <button
         *ngFor="let btn of data.actions"
-        mat-raised-button
+        mat-button
         [color]="btn.color || 'basic'"
         [mat-dialog-close]="btn.value">
         {{ btn.label | translate }}
       </button>
       <button
         *ngIf="data.hasNo"
-        mat-raised-button
+        mat-button
         [mat-dialog-close]="false">
         {{ 'shared.ibModal.no' | translate }}
       </button>
       <button
         *ngIf="data.hasYes"
-        mat-raised-button
+        mat-button
         color="primary"
         [mat-dialog-close]="true">
         {{ 'shared.ibModal.yes' | translate }}

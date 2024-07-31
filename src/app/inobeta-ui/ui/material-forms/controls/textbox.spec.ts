@@ -1,6 +1,5 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
 
-import { IbToolTestModule } from '../../../tools';
 import { CommonModule } from '@angular/common';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IbDynamicFormsModule } from '../../forms';
@@ -10,9 +9,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FlexLayoutModule } from '@Inobeta/flex-layout';
 import { IbMatTextboxComponent } from './textbox';
-
+import { TranslateModule } from "@ngx-translate/core";
 
 
 describe('IbMatTextboxComponent', () => {
@@ -27,18 +25,19 @@ describe('IbMatTextboxComponent', () => {
         IbMatTextboxComponent,
       ],
       imports: [
-        IbToolTestModule,
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
         IbDynamicFormsModule,
         MatFormFieldModule,
         NoopAnimationsModule,
-        FlexLayoutModule,
         MatButtonModule,
         MatInputModule,
         MatIconModule,
-        MatTooltipModule
+        MatTooltipModule,
+        TranslateModule.forRoot({
+          extend: true,
+        }),
       ]
     })
     .compileComponents();

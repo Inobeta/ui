@@ -51,7 +51,7 @@ import { IbToastNotification } from "./toast.service";
         <mat-option value="bottom">Bottom</mat-option>
       </mat-select>
     </mat-form-field>
-    <br>
+    <br />
     <mat-form-field>
       <mat-label>Duration</mat-label>
       <input matInput [(ngModel)]="duration" type="number" />
@@ -82,7 +82,7 @@ export class IbToastNotificationApp {
       this.type,
       this.duration,
       this.horizontalPosition,
-      this.verticalPosition
+      this.verticalPosition,
     );
   }
 }

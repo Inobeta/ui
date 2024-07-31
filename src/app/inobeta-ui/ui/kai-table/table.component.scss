@@ -18,15 +18,15 @@
     --ib-table-column-outline-width,
     0
   );
+  --ib-table-border-width: 1px;
 
   &:has(.ib-table__rollup-row) {
     --ib-table-has-footer-row: 1;
   }
 
   display: block;
-  border: 1px solid var(--ib-table-outline-color-private);
+  border: var(--ib-table-border-width) solid var(--ib-table-outline-color-private);
   overflow: hidden;
-  border-radius: 4px;
 
   .ib-table__toolbar {
     display: flex;
@@ -40,6 +40,7 @@
     }
 
     &__actions {
+      padding-right: 8px;
       ib-table-action-group {
         display: inline-block;
       }
