@@ -21,6 +21,7 @@ export interface IFormArray {
   removeRow?: (c: UntypedFormArray, newLength: number, removedIndex: number, removedData: Record<string, unknown>) => void;
 }
 
+/** @deprecated */
 export class IbFormArray implements IFormArray {
   key: string;
   options: Partial<IFormArrayOptions> = {};

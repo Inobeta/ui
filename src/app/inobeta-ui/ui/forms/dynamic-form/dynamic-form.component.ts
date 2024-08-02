@@ -26,6 +26,7 @@ interface IbFormOnChanges {
   form: UntypedFormGroup;
 }
 
+/** @deprecated */
 @Component({
   selector: "ib-form",
   templateUrl: "./dynamic-form.component.html",

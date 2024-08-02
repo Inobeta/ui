@@ -3,6 +3,7 @@ import { UntypedFormArray, UntypedFormGroup } from "@angular/forms";
 import { IbFormArray } from "../array/array";
 import { IbFormControlService } from "../form-control.service";
 
+/** @deprecated */
 @Component({
   selector: "ib-dynamic-form-array",
   templateUrl: "dynamic-form-array.component.html",

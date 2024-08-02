@@ -9,6 +9,7 @@ import {
 import { IbFormField } from "./forms.types";
 import { IbFormArray } from "./array/array";
 
+/** @deprecated */
 @Injectable({ providedIn: "root" })
 export class IbFormControlService {
   constructor() {}

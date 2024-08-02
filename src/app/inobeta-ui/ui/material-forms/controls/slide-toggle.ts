@@ -25,7 +25,7 @@ export class IbMatSlideToggleComponent implements IbFormControlInterface {
   @Input() data: IbFormControlData;
 }
 
-
+/** @deprecated */
 export class IbMatSlideToggleControl extends IbFormControlBase<boolean | number | string> {
   constructor(options: IbFormControlBaseParams<boolean | number | string>) {
     if (!options.value) {

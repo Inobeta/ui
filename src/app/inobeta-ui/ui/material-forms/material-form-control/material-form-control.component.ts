@@ -18,6 +18,7 @@ export class IbFormControlDirective {
   constructor(public viewContainerRef: ViewContainerRef) {}
 }
 
+/** @deprecated */
 @Component({
   selector: "ib-material-form-control",
   templateUrl: "./material-form-control.component.html",

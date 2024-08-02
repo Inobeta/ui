@@ -3,6 +3,7 @@ import { UntypedFormGroup } from '@angular/forms';
 import { IbFormControlBase, IbFormControlBaseComponent, IbFormControlBaseParams, IbFormControlData, IbFormControlInterface } from '../../forms/controls/form-control-base';
 import { IbModalMessageService } from '../../modal/modal-message.service';
 
+/** @deprecated */
 @Component({
   selector: '[ib-mat-button]',
   template: `
@@ -43,7 +44,7 @@ export class IbMatButtonComponent implements IbFormControlInterface {
   }
 }
 
-
+/** @deprecated */
 export class IbMatButtonControl extends IbFormControlBase<string> {
   color;
   handler;
@@ -63,6 +64,7 @@ export class IbMatButtonControl extends IbFormControlBase<string> {
 
 }
 
+/** @deprecated */
 export interface IbMatButtonParams extends IbFormControlBaseParams<string> {
   color?: string;
   requireValidation?: boolean;
@@ -72,6 +74,7 @@ export interface IbMatButtonParams extends IbFormControlBaseParams<string> {
 
 
 
+/** @deprecated */
 export interface IbMatButtonData extends IbFormControlData {
   base: IbMatButtonParams;
 }
