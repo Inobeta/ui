@@ -25,7 +25,7 @@ export class IbMatTextareaComponent implements IbFormControlInterface {
   @Input() data: IbMatTextareaData;
 }
 
-
+/** @deprecated */
 export class IbMatTextareaControl extends IbFormControlBase<string>{
   height = 'auto'
   constructor(options: IbMatTextareaParams){

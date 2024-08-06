@@ -16,6 +16,7 @@ export enum IbMatActionsPosition {
   BOTTOM,
 }
 
+/** @deprecated */
 @Component({
   selector: "ib-material-form",
   templateUrl: "./material-form.component.html",

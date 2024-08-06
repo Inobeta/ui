@@ -123,7 +123,7 @@ export class IbMatTextboxComponent implements IbFormControlInterface {
   }
 }
 
-
+/** @deprecated */
 export class IbMatTextboxControl extends IbFormControlBase<number | string> {
   hintMessage;
 

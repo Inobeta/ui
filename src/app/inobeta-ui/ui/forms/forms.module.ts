@@ -7,6 +7,7 @@ import { IbDynamicFormComponent } from "./dynamic-form/dynamic-form.component";
 import { IbFormControlService } from "./form-control.service";
 import { IbFormPipeModule } from "./forms.pipes";
 
+/** @deprecated */
 @NgModule({
   declarations: [
     IbDynamicFormControlComponent,

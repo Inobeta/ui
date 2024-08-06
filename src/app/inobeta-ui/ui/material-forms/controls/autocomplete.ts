@@ -2,6 +2,7 @@ import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseParams,
   IbFormControlBaseComponent, IbFormControlData } from '../../forms/controls/form-control-base';
 import { Component, Input } from '@angular/core';
 
+/** @deprecated */
 @Component({
   selector: '[ib-mat-autocomplete]',
   template: `
@@ -58,7 +59,7 @@ export class IbMatAutocompleteComponent implements IbFormControlInterface {
   }
 }
 
-
+/** @deprecated */
 export class IbMatAutocompleteControl extends IbFormControlBase<string> {
   constructor(options: IbFormControlBaseParams<string>) {
     super(options);

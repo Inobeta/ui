@@ -3,6 +3,7 @@ import { IbFormArray } from './array/array';
 import { IbFormControlBase } from './controls/form-control-base';
 import { IbFormField } from './forms.types';
 
+/** @deprecated */
 @Pipe({
   name: 'asFormControl'
 })
@@ -12,6 +13,7 @@ export class IbFormControlPipe implements PipeTransform {
   }
 }
 
+/** @deprecated */
 @Pipe({
   name: 'asFormArray',
 })
@@ -21,6 +23,7 @@ export class IbFormArrayPipe implements PipeTransform {
   }
 }
 
+/** @deprecated */
 @NgModule({
   exports: [IbFormArrayPipe, IbFormControlPipe],
   declarations: [IbFormArrayPipe, IbFormControlPipe],

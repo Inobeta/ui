@@ -65,8 +65,8 @@
         </div>
 
         <!-- body > box > secondLevel ------------------>
-        <div class="ib-main-menu-expanded-body-box-secondLevel" style="height: 85%;"
-        style="display:flex;flex-direction:column;flex-wrap: wrap;justify-content: flex-start; align-items: flex-start;align-content: flex-start">
+        <div class="ib-main-menu-expanded-body-box-secondLevel"
+        style="height: 85%;display:flex;flex-direction:column;flex-wrap: wrap;justify-content: flex-start; align-items: flex-start;align-content: flex-start">
           <ng-container *ngFor="let secondLevel of firstLevel.paths; let i = index">
             <div
               routerLink="{{ ( secondLevel.link === undefined) ? null : secondLevel.link }}"

@@ -4,6 +4,7 @@
 
 | Issue ID | Type | Section | Description |
 | -- | -- | -- | -- |
+|DEVK-262|feat|Forms|Added `ib-form-control-errors` component and `[ibPatchFormValue]` directive|
 |DEVK-363|feat|all|Added support for Angular 18|
 
 ### [18.0.1] - Breaking changes
