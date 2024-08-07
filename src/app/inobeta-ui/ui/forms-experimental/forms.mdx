@@ -18,6 +18,24 @@ Read carefully the respective guides before implementing your own forms
 
 ### Appling styles
 
+#### Do(s)
+
+> ✅ Use the form utilities provided by the library by including the mixin `ui.form-utilities()` within your theme
+
+```scss
+@use "@inobeta/ui" as ui;
+
+html {
+  /** ... */
+  @include ui.form-utilities();
+}
+```
+
+This mixin will include two global CSS classes: `.ib-form` and `.ib-form-row`. Use `.ib-form` on your `<form>` container,
+and `ib-form-row` on a `<section>` or `<div>` to place two form fields in a row.
+
+#### Don't(s)
+
 > ❌ Do not apply styles directly to Angular Material components, like `mat-form-field`,
 > except for styles that affect the positioning or layout of that component,
 > such as `margin`, `position`, `top`, `left`, `transform`, and `z-index`  
@@ -25,11 +43,7 @@ Read carefully the respective guides before implementing your own forms
 
 ### Layout
 
-<Canvas of={FormStories.DoNotGrowHorizontally} />
-
-> ❌ Do not let the form grow horizontally. It makes it difficult to read on large screen devices.
-
-> ❌ [Do not use fixed margins on large devices](https://m3.material.io/components/text-fields/guidelines#7fb524c4-8f1e-45a2-a660-459dc902b3ad)
+#### Do(s)
 
 <Canvas of={FormStories.GrowVertically} />
 
@@ -40,6 +54,12 @@ Read carefully the respective guides before implementing your own forms
 <Canvas of={FormStories.Example} />
 
 > ✅ Divide the form in distinct sections with a label to improve readability
+
+#### Don't(s)
+
+> ❌ Do not let the form grow horizontally. It makes it difficult to read on large screen devices.
+
+> ❌ [Do not use fixed margins on large devices](https://m3.material.io/components/text-fields/guidelines#7fb524c4-8f1e-45a2-a660-459dc902b3ad)
 
 ## Utilities
 

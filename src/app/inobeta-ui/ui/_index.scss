@@ -5,6 +5,8 @@
 @use "./main-menu/main-menu-theme";
 @use "./toast/toast-theme";
 
+@forward "./forms-experimental/form-utilities" as form-* show form-utilities;
+
 @forward "./kai-table/table-theme" as table-* show table-theme, table-color;
 @forward "./main-menu/main-menu-theme" as main-menu-* show main-menu-theme,
   main-menu-color;
