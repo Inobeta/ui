@@ -9,6 +9,7 @@ import { ibKaiFilterTranslations } from "../ui/kai-filter/translations";
 import { ibViewTranslations } from "../ui/views/translations";
 import { ibKaiTableTranslations } from "../ui/kai-table/translations";
 import { ibModalTranslations } from "../ui/modal/translations";
+import { ibFormTranslations } from "../ui/forms-experimental/translations";
 
 @Injectable({providedIn: 'root'})
 export class IbTranslateModuleLoader implements TranslateLoader{
@@ -24,6 +25,7 @@ export class IbTranslateModuleLoader implements TranslateLoader{
           ...ibViewTranslations[lang],
           ...ibKaiTableTranslations[lang],
           ...ibModalTranslations[lang],
+          ...ibFormTranslations[lang],
           ...(tran['shared'] ?? {})
         }
       }))

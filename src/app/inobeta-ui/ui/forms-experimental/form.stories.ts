@@ -24,58 +24,7 @@ import { IbPatchFormValue } from "public_api";
 
 @Component({
   selector: "ib-form-story",
-  template: `
-    <form class="form" [formGroup]="form">
-      <section class="form-row">
-        <mat-form-field>
-          <mat-label>Name</mat-label>
-          <input matInput type="text" formControlName="name" />
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Surname</mat-label>
-          <input matInput type="text" formControlName="surname" />
-        </mat-form-field>
-      </section>
-
-      <span class="mat-headline-large">Contacts</span>
-      <mat-form-field>
-        <mat-label>Address</mat-label>
-        <input matInput type="text" />
-      </mat-form-field>
-      <section class="form-row">
-        <mat-form-field>
-          <mat-label>Country</mat-label>
-          <mat-select>
-            <mat-option value="">US</mat-option>
-            <mat-option value="">Italy</mat-option>
-            <mat-option value="">Germany</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Phone number</mat-label>
-          <input matInput type="text" />
-        </mat-form-field>
-      </section>
-    </form>
-  `,
-  styles: `
-    .form {
-      max-width: 400px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .form-row {
-      flex: 1;
-      display: flex;
-      gap: 6px;
-
-      mat-form-field {
-        flex: 1;
-      }
-    }
-  `,
+  template: ``,
 })
 class IbFormStoryComponent {
   private fb = inject(FormBuilder);
@@ -98,7 +47,7 @@ const meta: Meta<IbFormStoryComponent> = {
         MatSelectModule,
         StorybookTranslateModule,
         IbFormControlErrors,
-        IbPatchFormValue
+        IbPatchFormValue,
       ],
     }),
     applicationConfig({
@@ -110,48 +59,48 @@ const meta: Meta<IbFormStoryComponent> = {
 export default meta;
 type Story = StoryObj<IbFormStoryComponent>;
 
-export const Example: Story = {};
-
-export const DoNotGrowHorizontally: Story = {
+export const Example: Story = {
   render: () => ({
     template: `
-    <form class="form">
+    <form class="ib-form" [formGroup]="form">
+      <section class="ib-form-row">
+        <mat-form-field>
+          <mat-label>Name</mat-label>
+          <input matInput type="text" formControlName="name" />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Surname</mat-label>
+          <input matInput type="text" formControlName="surname" />
+        </mat-form-field>
+      </section>
+
+      <span class="mat-body-large">Contacts</span>
       <mat-form-field>
-        <mat-label>Field #1</mat-label>
-        <input matInput type="text">
+        <mat-label>Address</mat-label>
+        <input matInput type="text" />
       </mat-form-field>
-      <mat-form-field>
-        <mat-label>Field #2</mat-label>
-        <input matInput type="text">
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Field #3</mat-label>
-        <input matInput type="text">
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Field #4</mat-label>
-        <input matInput type="text">
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Field #5</mat-label>
-        <input matInput type="text">
-      </mat-form-field>
+      <section class="ib-form-row">
+        <mat-form-field>
+          <mat-label>Country</mat-label>
+          <mat-select>
+            <mat-option value="">US</mat-option>
+            <mat-option value="">Italy</mat-option>
+            <mat-option value="">Germany</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Phone number</mat-label>
+          <input matInput type="text" />
+        </mat-form-field>
+      </section>
     </form>`,
-    styles: [
-      `
-      .form {
-        display: flex;
-        gap: 6px;
-      }
-    `,
-    ],
   }),
 };
 
 export const GrowVertically: Story = {
   render: () => ({
     template: `
-    <form class="form">
+    <form class="ib-form">
       <mat-form-field>
         <mat-label>Field #1</mat-label>
         <input matInput type="text">
@@ -164,7 +113,7 @@ export const GrowVertically: Story = {
         <mat-label>Field #3</mat-label>
         <input matInput type="text">
       </mat-form-field>
-      <section class="form-row">
+      <section class="ib-form-row">
         <mat-form-field>
           <mat-label>Field #4</mat-label>
           <mat-select>
@@ -179,26 +128,6 @@ export const GrowVertically: Story = {
         </mat-form-field>
       </section>
     </form>`,
-    styles: [
-      `
-      .form {
-        max-width: 400px;
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-      }
-
-      .form-row {
-        flex: 1;
-        display: flex;
-        gap: 6px;
-
-        mat-form-field {
-          flex: 1;
-        }
-      }
-    `,
-    ],
   }),
 };
 
@@ -206,13 +135,17 @@ export const WithFormErrors: Story = {
   render: (props) => ({
     props: {
       form: new FormGroup({
-        name: new FormControl("", [Validators.required, Validators.minLength(8), Validators.maxLength(30)]),
+        name: new FormControl("", [
+          Validators.required,
+          Validators.minLength(4),
+          Validators.maxLength(8),
+        ]),
       }),
     },
     template: `
-    <form class="form" [formGroup]="form">
+    <form class="ib-form" [formGroup]="form">
       <mat-form-field>
-        <mat-label>Name</mat-label>
+        <mat-label>Username</mat-label>
         <input matInput type="text" formControlName="name">
         <mat-error>
           <ib-form-control-errors for="name" />

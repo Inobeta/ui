@@ -1,0 +1,27 @@
+@mixin utilities() {
+  .ib-form {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .ib-form-row {
+    flex: 1;
+    display: flex;
+    gap: 6px;
+
+    mat-form-field {
+      flex: 1;
+    }
+  }
+
+  @media only screen and (min-width: 600px) {
+    .ib-form {
+      max-width: 400px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+  }
+  
+}

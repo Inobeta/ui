@@ -6,9 +6,11 @@
 
 html {
   @include mat.all-component-themes(red-palette.$light-theme);
+  @include mat.typography-hierarchy(red-palette.$light-theme);
 
   @include mat.color-variants-backwards-compatibility(red-palette.$light-theme);
 
+  @include ui.form-utilities();
   @include ui.main-menu-theme(red-palette.$light-theme);
   @include ui.table-theme(red-palette.$light-theme);
   @include ui.toast-theme(red-palette.$light-theme);
