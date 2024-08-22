@@ -70,12 +70,8 @@ export class IbDataExportService {
       );
     }
 
-    const columns = Object.values(dataSource.columns).filter(
+    const columns = dataSource.sortedColumns.filter(
       (c) => !c.name.startsWith("ib-")
-    );
-    const displayHeader = columns.reduce(
-      (acc, column) => ({ ...acc, [column.name]: column.headerText }),
-      {}
     );
 
     const dataAccessor = this.getDataAccessorForFormat(settings.format);
@@ -84,7 +80,7 @@ export class IbDataExportService {
       columns.reduce(
         (acc, column) => ({
           ...acc,
-          [displayHeader[column.name]]: dataAccessor(row, column),
+          [column.headerText]: dataAccessor(row, column),
         }),
         {}
       )

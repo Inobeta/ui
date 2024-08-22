@@ -152,9 +152,21 @@ export class IbTableDataSource<
 
   set columns(columns: IbColumn<unknown>[]) {
     this._columns = columns.reduce((acc, c) => ({ [c.name]: c, ...acc }), {});
+    this._sortedColumns = columns;
+  }
+
+  get sortedColumns() {
+    return this._sortedColumns;
+  }
+
+  public applySortOnColumn(sorted: string[]){
+    this._sortedColumns = this._sortedColumns.sort((a, b) => {
+      return sorted.indexOf(a.name) - sorted.indexOf(b.name);
+    })
   }
 
   private _columns: Record<string, IbColumn<unknown>> = {};
+  private _sortedColumns: IbColumn<unknown>[] = [];
 
   set view(view: IbTableViewGroup | null) {
     this._view = view;

@@ -229,10 +229,12 @@ export class IbTable implements OnDestroy {
       setTimeout(() => dsInit())
     }
     this.dataSource.columns = this.columns.toArray();
+    this.dataSource.applySortOnColumn(this.displayedColumns);
     this.columns.changes
       .pipe(takeUntil(this._destroyed))
       .subscribe((columns) => {
         this.dataSource.columns = columns.toArray();
+        this.dataSource.applySortOnColumn(this.displayedColumns);
       });
   }
 
