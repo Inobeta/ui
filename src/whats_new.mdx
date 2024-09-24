@@ -79,3 +79,41 @@ html {
   }
 }
 ```
+## Form utilities
+
+The component `<ib-form-control-errors />` has been added to quickly display the error messages for a given form field.
+
+A new SCSS mixin `ui.form-utilities()` has been added to provide global CSS classes for your forms.
+
+[Read more in the new Forms section](https://ui-docs.inobeta.net/18.0.1/?path=/docs/components-forms-new-guide--docs#forms)
+
+# Breaking changes
+
+## IbTable
+
+Deprecated `<ib-table />` component has been removed from the library. Use `<ib-kai-table />` instead
+
+## IbHttpModule
+
+Removed deprecated services from `IbHttpModule`:
+
+* IbHttpClientService - use the standard `HttpClient` instead
+* IbAuthService - use `IbLoginService`
+* IbSessionService - use `IbLoginService`
+
+## IbDynamicForm
+
+`disabledOnInit` property has been removed from `IbDynamicForm`
+
+## Angular Flex Layout
+
+Removed `@inobeta/flex-layout` dependency
+
+# Changelog
+
+| Issue ID | Type | Section | Description |
+| -- | -- | -- | -- |
+|DEVK-262|feat|Forms|Added `ib-form-control-errors` component and `[ibPatchFormValue]` directive|
+|DEVK-357|fix|IbModalMessage|Hardcoded width & height exposed|
+|DEVK-363|feat|all|Added support for Angular 18|
+|DEVK-405|fix|IbMaterialForms|Disabled fields ambiguity resolved|
