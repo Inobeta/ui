@@ -5,6 +5,7 @@
 | Issue ID | Type | Section | Description |
 | -- | -- | -- | -- |
 |DEVK-262|feat|Forms|Added `ib-form-control-errors` component and `[ibPatchFormValue]` directive|
+|DEVK-357|fix|IbModalMessage|Hardcoded width & height exposed|
 |DEVK-363|feat|all|Added support for Angular 18|
 |DEVK-405|fix|IbMaterialForms|Disabled fields ambiguity resolved|
 
@@ -16,6 +17,7 @@
   - `ui.toast-theme($theme)` for the toast message
 - Component `ib-table` and all related stuff has been removed, please use `ib-kai-table`
 - Deprecated stuff from `IbHttpModule` has been removed
+- `disabledOnInit` property was removed from `IbDynamicForm`
 
 ## [18.0.0] (version skipped)
 

@@ -25,7 +25,9 @@ export class DialogExampleComponent implements OnInit {
         actions: [
           { label: 'Accent action', value: 'abc', color: 'accent'},
           { label: 'Basic action', value: 'basic'}
-        ]
+        ],
+        minWidth: '500px',
+        minHeight: '50vh'
     }).subscribe(result => {
       this.response = `Clicked on ${result}`;
     });
