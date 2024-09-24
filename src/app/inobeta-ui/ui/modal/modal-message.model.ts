@@ -1,4 +1,4 @@
-export interface IbModalMessage {
+export type IbModalMessage = {
   /** Display title heading. Supports i18n. */
   title: string;
   /** Display message. Supports i18n. */
@@ -25,4 +25,8 @@ export interface IbModalMessage {
    * ```
    */
   actions?: { label: string; value: any; color?: string }[];
+  /** Defaults to 350px */
+  minWidth?: string;
+  /** Defaults to 10vh */
+  minHeight?: string;
 }

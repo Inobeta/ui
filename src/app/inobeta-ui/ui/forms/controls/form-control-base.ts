@@ -9,6 +9,7 @@ import { Subject } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 import { TemplateRef, Type } from "@angular/core";
 
+/** @deprecated */
 export class IbFormControlBase<T> {
   /** @deprecated Use the `value` input in `ib-material-form` instead */
   public value: T;
@@ -80,6 +81,7 @@ export class IbFormControlBase<T> {
   }
 }
 
+/** @deprecated */
 export interface IbFormControlBaseParams<T> {
   /** @deprecated Use the `value` input in `ib-material-form` instead */
   value?: T;
@@ -113,14 +115,17 @@ export interface IbFormControlBaseParams<T> {
   debounceOnChange?: number;
 }
 
+/** @deprecated */
 export interface IbFormControlInterface {
   data: IbFormControlData;
 }
 
+/** @deprecated */
 export class IbFormControlBaseComponent {
   constructor(public component: Type<any>, public data: IbFormControlData) {}
 }
 
+/** @deprecated */
 export interface IbFormControlData {
   base: IbFormControlBaseParams<any>;
   self?: UntypedFormControl;

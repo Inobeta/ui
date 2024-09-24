@@ -5,6 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent,
   IbFormControlBaseParams, IbFormControlData } from '../../forms/controls/form-control-base';
 
+/** @deprecated */
 @Component({
   selector: '[ib-mat-datepicker]',
   template: `
@@ -40,7 +41,7 @@ export class IbMatDatepickerComponent implements IbFormControlInterface {
   }
 }
 
-
+/** @deprecated */
 export class IbMatDatepickerControl extends IbFormControlBase<string | Date> {
   constructor(options: IbFormControlBaseParams<string | Date>) {
     if (options.value && typeof options.value === 'string') {

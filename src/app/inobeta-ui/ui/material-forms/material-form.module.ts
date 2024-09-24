@@ -63,6 +63,7 @@ export function ibMatDatepickerTranslate() {
   return new IbMatDatepickerI18n().getDateFormats();
 }
 
+/** @deprecated */
 @NgModule({
   imports: [
     CommonModule,

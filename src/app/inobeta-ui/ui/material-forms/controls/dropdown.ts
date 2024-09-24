@@ -94,6 +94,7 @@ export class IbMatDropdownComponent implements IbFormControlInterface {
   }
 }
 
+/** @deprecated */
 export class IbMatDropdownControl extends IbFormControlBase<
   string | string[] | number | number[]
 > {

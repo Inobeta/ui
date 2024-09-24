@@ -1,0 +1,151 @@
+import { Meta, Canvas } from "@storybook/blocks";
+
+import * as FormStories from "./form.stories";
+
+<Meta title="Components/Forms (new)/Guide" />
+
+# Forms
+
+To build forms, you'll be using [reactive forms](https://angular.dev/guide/forms/reactive-forms) and Angular Material components such as:
+
+- [Form field](https://material.angular.io/components/form-field/overview)
+- [Input](https://material.angular.io/components/input/overview)
+- [Select](https://material.angular.io/components/select/overview)
+
+Read carefully the respective guides before implementing your own forms
+
+## Styles & Layout
+
+### Appling styles
+
+#### Do(s)
+
+> ✅ Use the form utilities provided by the library by including the mixin `ui.form-utilities()` within your theme
+
+```scss
+@use "@inobeta/ui" as ui;
+
+html {
+  /** ... */
+  @include ui.form-utilities();
+}
+```
+
+This mixin will include two global CSS classes: `.ib-form` and `.ib-form-row`. Use `.ib-form` on your `<form>` container,
+and `ib-form-row` on a `<section>` or `<div>` to place two form fields in a row.
+
+#### Don't(s)
+
+> ❌ Do not apply styles directly to Angular Material components, like `mat-form-field`,
+> except for styles that affect the positioning or layout of that component,
+> such as `margin`, `position`, `top`, `left`, `transform`, and `z-index`  
+> [Read more here](https://material.angular.io/guide/customizing-component-styles)
+
+### Layout
+
+#### Do(s)
+
+<Canvas of={FormStories.GrowVertically} />
+
+> ✅ Place each form field on an individual row. With a maximum of two fields per row if the content of those fields is expected to be contained in size.
+
+> ✅ Limit the maximum width of the form container to 350-400px on large screens
+
+<Canvas of={FormStories.Example} />
+
+> ✅ Divide the form in distinct sections with a label to improve readability
+
+#### Don't(s)
+
+> ❌ Do not let the form grow horizontally. It makes it difficult to read on large screen devices.
+
+> ❌ [Do not use fixed margins on large devices](https://m3.material.io/components/text-fields/guidelines#7fb524c4-8f1e-45a2-a660-459dc902b3ad)
+
+## Utilities
+
+### Form control errors collection
+
+Use the `<ib-form-control-errors />` component to quickly display the error messages for a given form field.
+
+Include the component within `mat-error`, then set the `for` input the same as the `formControlName` of the given form field.
+
+```typescript
+form = this.fb.group({
+  name: ["", { validators: [Validators.required] }],
+  surname: [""],
+});
+```
+
+```html
+<form [formGroup]="form">
+  <mat-form-field>
+    <mat-label>Name</mat-label>
+    <input matInput type="text" formControlName="name" />
+    <mat-error>
+      <ib-form-control-errors for="name" />
+    </mat-error>
+  </mat-form-field>
+</form>
+```
+
+It contains messages for the following errors:
+
+- `required`
+- `minlength`
+- `maxlength`
+- `min`
+- `max`
+- `email`
+- `customError`
+
+<Canvas of={FormStories.WithFormErrors} />
+
+#### Adding more error messages
+
+First, add the new errors to display, then, inside the `@else` block, add `<ib-form-control-errors />`
+
+```html
+<form [formGroup]="form">
+  <mat-form-field>
+    <mat-label>Name</mat-label>
+    <input matInput type="text" formControlName="name" />
+    <mat-error>
+      @if (form.get('name').hasError('myError')) {
+        {{ "myError.message" | translate }}
+      } @else {
+        <ib-form-control-errors for="name" />
+      }
+    </mat-error>
+  </mat-form-field>
+</form>
+```
+
+### Patch value directive
+
+The `[ibPatchFormValue]` directive allows to set a value to a `formGroup` without calling `patchValue` directly.
+
+```typescript
+form = this.fb.group({
+  name: ["", { validators: [Validators.required] }],
+  surname: [""],
+});
+
+// This might be an external signal, observable, or API response.
+value = {
+  name: "Alice",
+  surname: "Liddle",
+};
+```
+
+```html
+<form [formGroup]="form" [ibPatchFormValue]="value">
+  <mat-form-field>
+    <mat-label>Name</mat-label>
+    <input matInput type="text" formControlName="name" />
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Surname</mat-label>
+    <input matInput type="text" formControlName="surname" />
+  </mat-form-field>
+</form>
+```

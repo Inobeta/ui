@@ -14,7 +14,7 @@ import { IbToolTestModule } from "../../../tools";
 import {
   IbMatDropdownComponent,
   IbMatDropdownControl,
-} from "../controls/dropdown";
+} from "./dropdown";
 import { IbMaterialFormModule } from "../material-form.module";
 import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";

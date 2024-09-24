@@ -25,7 +25,7 @@ export class IbMatRadioComponent implements IbFormControlInterface {
   @Input() data: IbFormControlData;
 }
 
-
+/** @deprecated */
 export class IbMatRadioControl extends IbFormControlBase<string>{
   constructor(options: IbFormControlBaseParams<string>){
     super(options);

@@ -1,17 +1,27 @@
 # Inobeta/UI Changelog
 
-## [18.0.0] (unreleased)
+## [18.0.1] (2024-09-24)
 
 | Issue ID | Type | Section | Description |
 | -- | -- | -- | -- |
+|DEVK-262|feat|Forms|Added `ib-form-control-errors` component and `[ibPatchFormValue]` directive|
+|DEVK-357|fix|IbModalMessage|Hardcoded width & height exposed|
 |DEVK-363|feat|all|Added support for Angular 18|
+|DEVK-405|fix|IbMaterialForms|Disabled fields ambiguity resolved|
 
-### [18.0.0] - Breaking changes
+### [18.0.1] - Breaking changes
 
 - The `ui.theme($theme)` mixin has been removed. It must be replaced by `mat.all-component-themes($theme)` followed by these mixins:
   - `ui.table-theme($theme)` for `<ib-kai-table>`
   - `ui.main-menu-theme($theme)` for `<ib-main-menu>`
   - `ui.toast-theme($theme)` for the toast message
+- Component `ib-table` and all related stuff has been removed, please use `ib-kai-table`
+- Deprecated stuff from `IbHttpModule` has been removed
+- `disabledOnInit` property was removed from `IbDynamicForm`
+
+## [18.0.0] (version skipped)
+
+This version was developed for internal test only. The first `@18` available version is `18.0.1`.
 
 ## [17.1.1] (2024-07-19)
 
