@@ -36,15 +36,7 @@ export class IbDynamicFormComponent implements OnInit, OnChanges, OnDestroy {
   @Input() value: Record<string, unknown> = {};
   @Input() actions: IbFormAction[] = [{ key: "submit", label: "Save" }];
   @Input() cols: number;
-  /**
-   * @ignore
-   * @deprecated
-   * this input will be removed in a future release.
-   * Utilizzare una subscription ad `afterInit()` per eseguire codice immediatamente dopo aver
-   * inizializzato il `FormGroup` (come `form.disable()`)
-   */
-  @Input() disabledOnInit = false;
-  @Input() disabled = false;
+  @Input() disabled: boolean | undefined = undefined;
   @Output() ibSubmit = new EventEmitter<any>();
   form: UntypedFormGroup;
 
@@ -58,16 +50,15 @@ export class IbDynamicFormComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit() {
     this.form = this.cs.toFormGroup(this.fields);
-    if (this.disabled) {
+    if (this.disabled === true) {
+      this.fieldsHasDisabled()
       this.form?.disable();
-    } else {
+    } else if (this.disabled === false) {
+      this.fieldsHasDisabled()
       this.form?.enable();
     }
     this.form.patchValue(this.value);
     this.onInitSubject.next(this.form);
-    if (this.disabledOnInit) {
-      this.form.disable();
-    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -83,9 +74,11 @@ export class IbDynamicFormComponent implements OnInit, OnChanges, OnDestroy {
       this.form.patchValue(value.currentValue);
     }
 
-    if (this.disabled) {
+    if (this.disabled === true) {
+      this.fieldsHasDisabled()
       this.form?.disable();
-    } else {
+    } else if (this.disabled === false) {
+      this.fieldsHasDisabled()
       this.form?.enable();
     }
 
@@ -131,5 +124,13 @@ export class IbDynamicFormComponent implements OnInit, OnChanges, OnDestroy {
 
   afterChanges(): Observable<IbFormOnChanges> {
     return this.onChangesSubject;
+  }
+
+  fieldsHasDisabled() {
+    if(this.fields.some((f) => f['disabled'])){
+      console.warn(`[@inobeta/ui -> IbMaterialForms] The fields "${this.fields.filter((f) => f['disabled']).map((f) => f['key']).join(', ')}" use the deprecated property 'disabled', which will be ignored.
+The 'disabled' property of the <ib-material-form> takes priority.
+      `);
+    }
   }
 }
