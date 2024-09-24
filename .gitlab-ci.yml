@@ -137,24 +137,31 @@ docs_publish:
 
 examples:build:
   image: docker:latest
-  stage: examples:build
   services:
-    - docker:dind
+  - docker:dind
+  stage: examples:build
   script:
+    - echo "building image $IMAGE:$CURRENT_VERSION"
     - docker build -t $IMAGE:$CURRENT_VERSION .
+    - echo "image build done"
     - docker login -u $GITLAB_USER -p $AUTH_TOKEN registry.gitlab.com
     - docker push $IMAGE:$CURRENT_VERSION
+    - echo "image push done"
+    - echo "VERSION_BUILD=$CURRENT_VERSION" >> build.env
   tags:
-    - gitlab-org-docker
+  - gitlab-org-docker
   only:
     - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
     - /^[0-9]+\.[0-9]+\.[0-9]+$/
+  artifacts:
+    reports:
+      dotenv: build.env
 
 examples:deploy:
   image: docker:latest
   stage: examples:deploy
   services:
-    - docker:dind
+  - docker:dind
   script:
     - prepare_staging
     - service_pullrestart_staging $IMAGE $CURRENT_VERSION $SERVICE
