@@ -29,10 +29,9 @@ install:
   tags:
     - gitlab-org-docker
   only:
-    - never
-#    - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
-#    - /^[0-9]+\.[0-9]+\.[0-9]+$/
-#    - master
+    - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
+    - /^[0-9]+\.[0-9]+\.[0-9]+$/
+    - master
 
 test_unit:
   image: inobeta/node-chrome:20
@@ -45,9 +44,8 @@ test_unit:
   tags:
     - gitlab-org-docker
   only:
-    - never
-#  except:
-#    - /^[0-9]+\.[0-9]+\.[0-9]+$/
+  except:
+    - /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 deploy:
   stage: npm:deploy
@@ -59,8 +57,7 @@ deploy:
   tags:
     - gitlab-org-docker
   only:
-    - never
-#    - /^[0-9]+\.[0-9]+\.[0-9]+$/
+    - /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 deploy_unstable:
   stage: npm:deploy
@@ -73,8 +70,7 @@ deploy_unstable:
   tags:
     - gitlab-org-docker
   only:
-    - never
-#    - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
+    - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
 
 deploy_testing:
   stage: npm:deploy
@@ -118,11 +114,10 @@ docs_build:
   tags:
     - gitlab-org-docker
   only:
-    - never
-#    - master
-#    - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
-#    - /^canary\/[0-9]+\.[0-9]+\.[0-9]+$/
-#    - /^[0-9]+\.[0-9]+\.[0-9]+$/
+    - master
+    - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
+    - /^canary\/[0-9]+\.[0-9]+\.[0-9]+$/
+    - /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 docs_publish:
   stage: docs:deploy
@@ -137,11 +132,10 @@ docs_publish:
     - dedicated
   interruptible: true
   only:
-    - never
-#    - master
-#    - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
-#    - /^canary\/[0-9]+\.[0-9]+\.[0-9]+$/
-#    - /^[0-9]+\.[0-9]+\.[0-9]+$/
+    - master
+    - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
+    - /^canary\/[0-9]+\.[0-9]+\.[0-9]+$/
+    - /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 examples:build:
   stage: examples:build
@@ -168,10 +162,6 @@ examples:image:
     DOCKER_HOST: tcp://docker:2375
     DOCKER_TLS_CERTDIR: ""
   script:
-    - set -x
-    - echo "building image"
-    - echo "building image $IMAGE"
-    - echo "building image $CURRENT_VERSION"
     - echo "building image $IMAGE:$CURRENT_VERSION"
     - docker login -u $GITLAB_USER -p $AUTH_TOKEN registry.gitlab.com || { echo "Docker login failed"; exit 1; }
     - DOCKER_BUILDKIT=1 docker build --memory 128m --progress=plain --push -t $IMAGE:$CURRENT_VERSION . || { echo "Docker build failed with exit code $?"; true; }
