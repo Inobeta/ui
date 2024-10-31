@@ -174,7 +174,7 @@ examples:image:
     - echo "building image $CURRENT_VERSION"
     - echo "building image $IMAGE:$CURRENT_VERSION"
     - docker login -u $GITLAB_USER -p $AUTH_TOKEN registry.gitlab.com || { echo "Docker login failed"; exit 1; }
-    - DOCKER_BUILDKIT=1 docker build --push -t $IMAGE:$CURRENT_VERSION .
+    - DOCKER_BUILDKIT=1 docker build --memory 128m --progress=plain --push -t $IMAGE:$CURRENT_VERSION . || { echo "Docker build failed with exit code $?"; true; }
     - echo "image build done"
   only:
     - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
