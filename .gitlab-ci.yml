@@ -7,6 +7,7 @@ stages:
   - docs:build
   - docs:deploy
   - examples:build
+  - examples:image
   - examples:deploy
 
 cache:
@@ -151,11 +152,8 @@ examples:build:
     - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
     - /^[0-9]+\.[0-9]+\.[0-9]+$/
 
-examples:deploy:
-  image: docker:latest
-  stage: examples:deploy
-  services:
-  - docker:dind
+examples:image:
+  stage: examples:image
   script:
     - echo "building image $IMAGE:$CURRENT_VERSION"
     - docker build -t $IMAGE:$CURRENT_VERSION .
@@ -163,6 +161,18 @@ examples:deploy:
     - docker login -u $GITLAB_USER -p $AUTH_TOKEN registry.gitlab.com
     - docker push $IMAGE:$CURRENT_VERSION
     - echo "image push done"
+  tags:
+  - gitlab-org-docker
+  only:
+    - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
+    - /^[0-9]+\.[0-9]+\.[0-9]+$/
+
+examples:deploy:
+  image: docker:latest
+  stage: examples:deploy
+  services:
+  - docker:dind
+  script:
     - prepare_staging
     - service_pullrestart_staging $IMAGE $CURRENT_VERSION $SERVICE
   tags:
