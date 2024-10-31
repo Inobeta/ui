@@ -44,8 +44,10 @@ test_unit:
     paths: [./src/coverage]
   tags:
     - gitlab-org-docker
-  except:
-    - /^[0-9]+\.[0-9]+\.[0-9]+$/
+  only:
+    - never
+#  except:
+#    - /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 deploy:
   stage: npm:deploy
@@ -163,17 +165,17 @@ examples:image:
   - docker:dind
   stage: examples:image
   script:
-    - echo "building image $IMAGE:$CURRENT_VERSION"
-    - docker build -t $IMAGE:$CURRENT_VERSION .
-    - echo "image build done"
-    - docker login -u $GITLAB_USER -p $AUTH_TOKEN registry.gitlab.com
-    - docker push $IMAGE:$CURRENT_VERSION
-    - echo "image push done"
-  tags:
-  - gitlab-org-docker
+    - echo "building image"
+  #  - docker build -t $IMAGE:$CURRENT_VERSION .
+  #  - echo "image build done"
+  #  - docker login -u $GITLAB_USER -p $AUTH_TOKEN registry.gitlab.com
+  #  - docker push $IMAGE:$CURRENT_VERSION
+  #  - echo "image push done"
   only:
     - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
     - /^[0-9]+\.[0-9]+\.[0-9]+$/
+  tags:
+  - gitlab-org-docker
 
 examples:deploy:
   image: docker:latest
