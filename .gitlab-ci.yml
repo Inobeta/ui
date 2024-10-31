@@ -169,11 +169,9 @@ examples:image:
     - echo "building image $IMAGE"
     - echo "building image $CURRENT_VERSION"
     - echo "building image $IMAGE:$CURRENT_VERSION"
-  #  - docker build -t $IMAGE:$CURRENT_VERSION .
+    - docker login -u $GITLAB_USER -p $AUTH_TOKEN registry.gitlab.com
+    - docker build --push -t $IMAGE:$CURRENT_VERSION .
     - echo "image build done"
-  #  - docker login -u $GITLAB_USER -p $AUTH_TOKEN registry.gitlab.com
-  #  - docker push $IMAGE:$CURRENT_VERSION
-  #  - echo "image push done"
   only:
     - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
     - /^[0-9]+\.[0-9]+\.[0-9]+$/
