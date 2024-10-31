@@ -103,7 +103,7 @@ To change the label shown in the header, use `headerText`.
 ### Number column
 
 ```html
-<ib-number-column name="price" digitsInfo="1.0-2" locale="it" />
+<ib-number-column name="price" digitsInfo="1.0-2" locale="it" um="€" umPosition="left" />
 ```
 
 `ib-number-column` displays a decimal value. The decimal representation can be specified with `digitsInfo`, while `locale` will format a value according to locale rules. Since a `DecimalPipe` is used in the implementation, [follow its usage notes to know more](https://angular.io/api/common/DecimalPipe#usage-notes).

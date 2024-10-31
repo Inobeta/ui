@@ -1,5 +1,11 @@
 # Inobeta/UI Changelog
 
+## [18.1.0] (unreleased)
+
+| Issue ID | Type | Section | Description |
+| -- | -- | -- | -- |
+|DEVK-358|feat|IbkaiTable|added symbol on number columns|
+
 ## [18.0.1] (2024-09-24)
 
 | Issue ID | Type | Section | Description |
