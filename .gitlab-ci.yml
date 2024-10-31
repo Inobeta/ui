@@ -165,9 +165,9 @@ examples:image:
   - docker:dind
   stage: examples:image
   script:
-    - echo "building image"
-  #  - docker build -t $IMAGE:$CURRENT_VERSION .
-  #  - echo "image build done"
+    - echo "building image $IMAGE:$CURRENT_VERSION"
+    - docker build -t $IMAGE:$CURRENT_VERSION .
+    - echo "image build done"
   #  - docker login -u $GITLAB_USER -p $AUTH_TOKEN registry.gitlab.com
   #  - docker push $IMAGE:$CURRENT_VERSION
   #  - echo "image push done"
