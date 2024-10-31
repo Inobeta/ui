@@ -29,9 +29,10 @@ install:
   tags:
     - gitlab-org-docker
   only:
-    - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
-    - /^[0-9]+\.[0-9]+\.[0-9]+$/
-    - master
+    - never
+#    - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
+#    - /^[0-9]+\.[0-9]+\.[0-9]+$/
+#    - master
 
 test_unit:
   image: inobeta/node-chrome:20
@@ -56,7 +57,8 @@ deploy:
   tags:
     - gitlab-org-docker
   only:
-    - /^[0-9]+\.[0-9]+\.[0-9]+$/
+    - never
+#    - /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 deploy_unstable:
   stage: npm:deploy
@@ -69,7 +71,8 @@ deploy_unstable:
   tags:
     - gitlab-org-docker
   only:
-    - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
+    - never
+#    - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
 
 deploy_testing:
   stage: npm:deploy
@@ -113,10 +116,11 @@ docs_build:
   tags:
     - gitlab-org-docker
   only:
-    - master
-    - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
-    - /^canary\/[0-9]+\.[0-9]+\.[0-9]+$/
-    - /^[0-9]+\.[0-9]+\.[0-9]+$/
+    - never
+#    - master
+#    - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
+#    - /^canary\/[0-9]+\.[0-9]+\.[0-9]+$/
+#    - /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 docs_publish:
   stage: docs:deploy
@@ -131,10 +135,11 @@ docs_publish:
     - dedicated
   interruptible: true
   only:
-    - master
-    - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
-    - /^canary\/[0-9]+\.[0-9]+\.[0-9]+$/
-    - /^[0-9]+\.[0-9]+\.[0-9]+$/
+    - never
+#    - master
+#    - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
+#    - /^canary\/[0-9]+\.[0-9]+\.[0-9]+$/
+#    - /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 examples:build:
   stage: examples:build
@@ -153,6 +158,9 @@ examples:build:
     - /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 examples:image:
+  image: docker:latest
+  services:
+  - docker:dind
   stage: examples:image
   script:
     - echo "building image $IMAGE:$CURRENT_VERSION"
