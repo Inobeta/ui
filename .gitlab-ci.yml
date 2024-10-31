@@ -160,17 +160,21 @@ examples:build:
     - /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 examples:image:
-  image: docker:latest
+  image: docker:20.10
   services:
-  - docker:dind
+    - docker:20.10-dind
   stage: examples:image
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
   script:
+    - set -x
     - echo "building image"
     - echo "building image $IMAGE"
     - echo "building image $CURRENT_VERSION"
     - echo "building image $IMAGE:$CURRENT_VERSION"
-    - docker login -u $GITLAB_USER -p $AUTH_TOKEN registry.gitlab.com
-    - docker build --push -t $IMAGE:$CURRENT_VERSION .
+    - docker login -u $GITLAB_USER -p $AUTH_TOKEN registry.gitlab.com || { echo "Docker login failed"; exit 1; }
+    - DOCKER_BUILDKIT=1 docker build --push -t $IMAGE:$CURRENT_VERSION .
     - echo "image build done"
   only:
     - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
