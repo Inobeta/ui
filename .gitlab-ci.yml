@@ -160,9 +160,9 @@ examples:build:
     - /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 examples:image:
-  image: docker:20.10
+  image: docker:27.1.1
   services:
-    - docker:20.10-dind
+    - docker:27.1.1-dind
   stage: examples:image
   variables:
     DOCKER_HOST: tcp://docker:2375
