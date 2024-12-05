@@ -1,6 +1,6 @@
 export const ibFormTranslations = {
   it: {
-    "ibFormsExperimental": {
+    "ibFormsUtilities": {
       "errors": {
         "minlength": "Sono richiesti almeno {{v}} caratteri",
         "maxlength": "Sono richiesti non più di {{v}} caratteri",

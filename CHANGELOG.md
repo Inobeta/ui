@@ -5,6 +5,7 @@
 | Issue ID | Type | Section | Description |
 | -- | -- | -- | -- |
 |DEVK-358|feat|IbKaiTable|added symbol on number columns|
+|DEVK-408|fix|Forms Utility|Removed experimental notice|
 |DEVK-409|feat|IbTranslate|added injection token for assets path|
 
 ## [18.0.1] (2024-09-24)

@@ -154,3 +154,32 @@ export const WithFormErrors: Story = {
     </form>`,
   }),
 };
+
+
+
+
+export const PatchValue: Story = {
+  render: (props) => ({
+    props: {
+      form: new FormGroup({
+        name: new FormControl(),
+        surname: new FormControl(),
+      }),
+      value: {
+        name: "Alice",
+        surname: "Liddle",
+      }
+    },
+    template: `
+    <form class="ib-form" [formGroup]="form" [ibPatchFormValue]="value">
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input matInput type="text" formControlName="name" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Surname</mat-label>
+        <input matInput type="text" formControlName="surname" />
+      </mat-form-field>
+    </form>`,
+  }),
+};

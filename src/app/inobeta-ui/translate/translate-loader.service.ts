@@ -9,7 +9,7 @@ import { ibKaiFilterTranslations } from "../ui/kai-filter/translations";
 import { ibViewTranslations } from "../ui/views/translations";
 import { ibKaiTableTranslations } from "../ui/kai-table/translations";
 import { ibModalTranslations } from "../ui/modal/translations";
-import { ibFormTranslations } from "../ui/forms-experimental/translations";
+import { ibFormTranslations } from "../ui/forms-utilities/translations";
 
 
 export const IB_TRANSLATE_ASSETS_PATH = new InjectionToken<string>('ibTranslateAssetsPath');

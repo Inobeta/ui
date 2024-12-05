@@ -38,7 +38,7 @@ and `ib-form-row` on a `<section>` or `<div>` to place two form fields in a row.
 
 > ❌ Do not apply styles directly to Angular Material components, like `mat-form-field`,
 > except for styles that affect the positioning or layout of that component,
-> such as `margin`, `position`, `top`, `left`, `transform`, and `z-index`  
+> such as `margin`, `position`, `top`, `left`, `transform`, and `z-index`
 > [Read more here](https://material.angular.io/guide/customizing-component-styles)
 
 ### Layout
@@ -123,29 +123,16 @@ First, add the new errors to display, then, inside the `@else` block, add `<ib-f
 ### Patch value directive
 
 The `[ibPatchFormValue]` directive allows to set a value to a `formGroup` without calling `patchValue` directly.
-
+<Canvas of={FormStories.PatchValue} />
 ```typescript
-form = this.fb.group({
-  name: ["", { validators: [Validators.required] }],
-  surname: [""],
-});
+form = new FormGroup({
+    name: new FormControl(),
+    surname: new FormControl(),
+  })
 
 // This might be an external signal, observable, or API response.
 value = {
   name: "Alice",
   surname: "Liddle",
 };
-```
-
-```html
-<form [formGroup]="form" [ibPatchFormValue]="value">
-  <mat-form-field>
-    <mat-label>Name</mat-label>
-    <input matInput type="text" formControlName="name" />
-  </mat-form-field>
-  <mat-form-field>
-    <mat-label>Surname</mat-label>
-    <input matInput type="text" formControlName="surname" />
-  </mat-form-field>
-</form>
 ```
