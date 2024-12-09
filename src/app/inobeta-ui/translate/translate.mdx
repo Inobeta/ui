@@ -8,7 +8,7 @@ import { Meta } from "@storybook/blocks";
 
 ```typescript
 import { HttpClient } from "@angular/common/http";
-import { IbTranslateModuleLoader } from "@inobeta/ui";
+import { IbTranslateModuleLoader, IB_TRANSLATE_ASSETS_PATH } from "@inobeta/ui";
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 
 @NgModule({
@@ -21,6 +21,10 @@ import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
       },
     }),
   ],
+  providers: [{
+    // this injection token is optional. Default value: './assets/i18n/'
+    { provide: IB_TRANSLATE_ASSETS_PATH, useValue: '/public/shared/i18n/' }
+  }]
   /** ... */
 })
 export class AppModule { }

@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  input,
   Input,
   ViewEncapsulation,
 } from "@angular/core";
@@ -35,7 +36,14 @@ import { IbColumn } from "./column";
         {{ headerText }}
       </th>
       <td mat-cell *matCellDef="let data" [style.text-align]="'end'">
+        @if(umPosition() === 'left') {
+          {{ um() }}&nbsp;
+        }
         {{ dataAccessor(data, name) | number : digitsInfo : locale }}
+
+        @if(umPosition() === 'right') {
+          {{ um() }}
+        }
       </td>
       <td mat-footer-cell *matFooterCellDef style="max-width: fit-content">
         <ib-aggregate
@@ -62,4 +70,6 @@ import { IbColumn } from "./column";
 export class IbNumberColumn<T> extends IbColumn<T> {
   @Input() digitsInfo = "1.0-2";
   @Input() locale = "it";
+  um = input<string>("");
+  umPosition = input<'right' | 'left'>("right");
 }

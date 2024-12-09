@@ -8,27 +8,27 @@ import { TranslateModule } from "@ngx-translate/core";
   selector: "ib-form-control-errors",
   template: `
     @if (control().hasError("required")) {
-      {{ "shared.ibFormsExperimental.errors.required" | translate }}
+      {{ "shared.ibFormsUtilities.errors.required" | translate }}
     } @else if (control().hasError("minlength")) {
       {{
-        "shared.ibFormsExperimental.errors.minlength"
+        "shared.ibFormsUtilities.errors.minlength"
           | translate: { v: control().errors.minlength.requiredLength }
       }}
     } @else if (control().hasError("maxlength")) {
       {{
-        "shared.ibFormsExperimental.errors.maxlength"
+        "shared.ibFormsUtilities.errors.maxlength"
           | translate: { v: control().errors.maxlength.requiredLength }
       }}
     } @else if (control().hasError("min")) {
       {{
-        "shared.ibFormsExperimental.errors.min" | translate: { v: control().errors.min.min }
+        "shared.ibFormsUtilities.errors.min" | translate: { v: control().errors.min.min }
       }}
     } @else if (control().hasError("max")) {
       {{
-        "shared.ibFormsExperimental.errors.max" | translate: { v: control().errors.max.max }
+        "shared.ibFormsUtilities.errors.max" | translate: { v: control().errors.max.max }
       }}
     } @else if (control().hasError("email")) {
-      {{ "shared.ibFormsExperimental.errors.email" | translate }}
+      {{ "shared.ibFormsUtilities.errors.email" | translate }}
     } @else if (control().hasError("customError")) {
       {{
         control().errors.customError.message
