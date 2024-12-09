@@ -1,6 +1,6 @@
 # Inobeta/UI Changelog
 
-## [18.1.0] (2024-12-08)
+## [18.1.0] (2024-12-09)
 
 | Issue ID | Type | Section | Description |
 | -- | -- | -- | -- |
