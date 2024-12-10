@@ -91,7 +91,6 @@
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },
   "dependencies": {
-    "@ngrx/operators": "^18.0.0",
     "tslib": "^2.4.0"
   },
   "exports": {
