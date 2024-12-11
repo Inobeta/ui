@@ -4,8 +4,9 @@ import { Observable } from 'rxjs';
 import { CounterActions } from './counter.action';
 
 @Component({
-  selector: 'ib-my-counter',
-  templateUrl: './my-counter.component.html'
+    selector: 'ib-my-counter',
+    templateUrl: './my-counter.component.html',
+    standalone: false
 })
 export class MyCounterComponent {
   count$: Observable<number>;

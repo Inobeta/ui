@@ -16,8 +16,8 @@ import { IbColumn } from "./column";
  * input.
  */
 @Component({
-  selector: "ib-text-column",
-  template: `
+    selector: "ib-text-column",
+    template: `
     <ng-container
       matColumnDef
       matSort
@@ -42,13 +42,14 @@ import { IbColumn } from "./column";
       </td>
     </ng-container>
   `,
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.Default,
-  providers: [
-    { provide: IbColumn, useExisting: IbTextColumn },
-    { provide: IB_COLUMN, useExisting: IbTextColumn },
-    { provide: IB_AGGREGATE_TYPE, useValue: "string" },
-  ],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Default,
+    providers: [
+        { provide: IbColumn, useExisting: IbTextColumn },
+        { provide: IB_COLUMN, useExisting: IbTextColumn },
+        { provide: IB_AGGREGATE_TYPE, useValue: "string" },
+    ],
+    standalone: false
 })
 export class IbTextColumn<T> extends IbColumn<T> {
   /** Alignment of the cell values. */

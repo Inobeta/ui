@@ -5,11 +5,12 @@ import { and, gte, lte, none } from "../../filters";
 import { IbFilterBase } from "../base/filter-base";
 
 @Component({
-  selector: "ib-number-filter",
-  templateUrl: "filter-number.component.html",
-  styleUrls: ["./filter-number.component.scss"],
-  encapsulation: ViewEncapsulation.None,
-  providers: [{ provide: IbFilterBase, useExisting: IbNumberFilter }],
+    selector: "ib-number-filter",
+    templateUrl: "filter-number.component.html",
+    styleUrls: ["./filter-number.component.scss"],
+    encapsulation: ViewEncapsulation.None,
+    providers: [{ provide: IbFilterBase, useExisting: IbNumberFilter }],
+    standalone: false
 })
 export class IbNumberFilter extends IbFilterBase {
   @Input() min: number = 0;

@@ -26,9 +26,10 @@ import {
 } from "./validators";
 
 @Component({
-  selector: "app-material-form-example",
-  templateUrl: "./material-form-example.component.html",
-  styleUrls: ["./material-form-example.component.css"],
+    selector: "app-material-form-example",
+    templateUrl: "./material-form-example.component.html",
+    styleUrls: ["./material-form-example.component.css"],
+    standalone: false
 })
 export class MaterialFormExampleComponent {
   @ViewChild("customForm", { static: true })

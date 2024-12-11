@@ -4,8 +4,8 @@ import { IbKaiTableState } from "../../inobeta-ui/ui/kai-table/table.types";
 import { UserService } from "./users";
 
 @Component({
-  selector: "ib-kai-table-full-example",
-  template: `
+    selector: "ib-kai-table-full-example",
+    template: `
     <ib-kai-table
       tableName="fullExample"
       [displayedColumns]="columns"
@@ -58,8 +58,8 @@ import { UserService } from "./users";
       </ib-column>
     </ib-kai-table>
   `,
-  styles: [
-    `
+    styles: [
+        `
       :host {
         display: flex;
         flex-direction: column;
@@ -67,8 +67,9 @@ import { UserService } from "./users";
         gap: 3em;
       }
     `,
-  ],
-  providers: [UserService],
+    ],
+    providers: [UserService],
+    standalone: false
 })
 export class IbKaiTableFullExamplePage {
   @ViewChild(IbSelectionColumn, { static: true })

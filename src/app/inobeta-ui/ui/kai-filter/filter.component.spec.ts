@@ -64,11 +64,12 @@ function createComponent<T>(type: Type<T>): ComponentFixture<T> {
 export const createFilterComponent = createComponent;
 
 @Component({
-  template: `
+    template: `
     <ib-filter>
       <ib-search-bar></ib-search-bar>
       <ib-text-filter name="sku">SKU</ib-text-filter>
     </ib-filter>
   `,
+    standalone: false
 })
 class IbFilterApp {}

@@ -2,8 +2,9 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { IView } from "../../store/views/table-view";
 
 @Component({
-  selector: "ib-table-view",
-  templateUrl: "./table-view.component.html",
+    selector: "ib-table-view",
+    templateUrl: "./table-view.component.html",
+    standalone: false
 })
 export class IbTableView {
   @Input() view: Readonly<IView>;

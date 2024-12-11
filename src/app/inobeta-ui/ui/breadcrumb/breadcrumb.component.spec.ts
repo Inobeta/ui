@@ -11,10 +11,11 @@ import { Component } from '@angular/core';
 
 
 @Component({
-  selector: 'host-test',
-  template: `
+    selector: 'host-test',
+    template: `
   <ib-breadcrumb></ib-breadcrumb>
-  `
+  `,
+    standalone: false
 })
 
 export class TestHostComponent {

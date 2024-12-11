@@ -8,17 +8,18 @@ import { IbMatLabelControl } from "src/app/inobeta-ui/ui/material-forms/controls
 import { IbMatTextboxControl } from "src/app/inobeta-ui/ui/material-forms/controls/textbox";
 
 @Component({
-  selector: "app-form-array-example",
-  templateUrl: "form-array-example.component.html",
-  styles: [
-    `
+    selector: "app-form-array-example",
+    templateUrl: "form-array-example.component.html",
+    styles: [
+        `
       .customForm ::ng-deep .ibFormArrayItem {
         border-bottom: 1px solid #888;
         margin-bottom: 1em;
         padding-bottom: 0.33em;
       }
     `,
-  ],
+    ],
+    standalone: false
 })
 export class MaterialFormArrayExampleComponent implements OnInit {
   @ViewChild("arrayForm", { static: true }) arrayForm: IbMaterialFormComponent;

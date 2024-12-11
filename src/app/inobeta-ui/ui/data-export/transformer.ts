@@ -8,7 +8,8 @@ export type IbDataTransformerInput =
   | IbDataTransformerFunction;
 
 @Directive({
-  selector: "[ibDataTransformer]",
+    selector: "[ibDataTransformer]",
+    standalone: false
 })
 export class IbDataTransformer {
   /** @ignore */

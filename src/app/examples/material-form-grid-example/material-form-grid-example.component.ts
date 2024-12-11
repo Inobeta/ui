@@ -21,9 +21,10 @@ import {
 } from "../material-form-example/validators";
 
 @Component({
-  selector: "app-material-form-grid-example",
-  templateUrl: "./material-form-grid-example.component.html",
-  styleUrls: ["./material-form-grid-example.component.css"],
+    selector: "app-material-form-grid-example",
+    templateUrl: "./material-form-grid-example.component.html",
+    styleUrls: ["./material-form-grid-example.component.css"],
+    standalone: false
 })
 export class MaterialFormGridExampleComponent {
   customFormFields: IbFormField[] = [

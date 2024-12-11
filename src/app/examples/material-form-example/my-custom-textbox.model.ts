@@ -2,8 +2,8 @@ import { IbFormControlBase, IbFormControlBaseParams, IbFormControlInterface, IbF
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: '[ib-my-custom-textbox]',
-  template: `
+    selector: '[ib-my-custom-textbox]',
+    template: `
   <mat-form-field appearance="fill" style="width: 100%;" [formGroup]="data.form">
     <mat-label>{{data.base.label | translate}} {{data.base.testField}}</mat-label>
     <input
@@ -18,7 +18,8 @@ import { Component, Input } from '@angular/core';
       <ng-container *ngTemplateOutlet="data.formControlErrors;context: this"></ng-container>
     </mat-error>
   </mat-form-field>
-  `
+  `,
+    standalone: false
 })
 
 export class MyCustomTextboxComponent implements IbFormControlInterface {

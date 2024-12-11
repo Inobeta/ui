@@ -14,8 +14,9 @@ import { provideMockStore } from '@ngrx/store/testing';
 import { IbAuthTypes } from '../auth/session.model';
 
 @Component({
-  selector: 'login-dummy',
-  template: ``
+    selector: 'login-dummy',
+    template: ``,
+    standalone: false
 })
 
 export class LoginDummyComponent implements OnInit {

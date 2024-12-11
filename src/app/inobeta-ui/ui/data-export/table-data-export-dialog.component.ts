@@ -9,8 +9,8 @@ export interface IbTableDataExportDialogData {
 }
 
 @Component({
-  selector: "ib-table-data-export-dialog",
-  template: `
+    selector: "ib-table-data-export-dialog",
+    template: `
     <h2 mat-dialog-title>
       {{ "shared.ibTable.exportData.title" | translate }}
     </h2>
@@ -51,6 +51,7 @@ export interface IbTableDataExportDialogData {
       </button>
     </mat-dialog-actions>
   `,
+    standalone: false
 })
 export class IbTableDataExportDialog {
   data: IbTableDataExportDialogData = inject(MAT_DIALOG_DATA);

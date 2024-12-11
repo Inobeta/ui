@@ -3,8 +3,8 @@ import { IbFormControlBase, IbFormControlBaseComponent,
   IbFormControlBaseParams, IbFormControlData, IbFormControlInterface } from '../../forms/controls/form-control-base';
 
 @Component({
-  selector: '[ib-mat-slide-toggle]',
-  template: `
+    selector: '[ib-mat-slide-toggle]',
+    template: `
     <div style="width: 100%;" [formGroup]="data.form">
         <mat-slide-toggle
             [formControlName]="data.base.key"
@@ -18,7 +18,8 @@ import { IbFormControlBase, IbFormControlBaseComponent,
             </ng-container>
         </mat-error>
     </div>
-  `
+  `,
+    standalone: false
 })
 
 export class IbMatSlideToggleComponent implements IbFormControlInterface {

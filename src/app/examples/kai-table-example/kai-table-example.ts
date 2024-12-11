@@ -3,9 +3,10 @@ import { IbTableDef } from "../../inobeta-ui/ui/kai-table/table.types";
 import { createNewUser } from "./users";
 
 @Component({
-  selector: "ib-kai-table-example",
-  templateUrl: "kai-table-example.html",
-  styleUrl: "./kai-table-example.scss",
+    selector: "ib-kai-table-example",
+    templateUrl: "kai-table-example.html",
+    styleUrl: "./kai-table-example.scss",
+    standalone: false
 })
 export class IbKaiTableExamplePage {
   data: any[];

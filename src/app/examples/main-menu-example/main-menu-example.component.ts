@@ -4,8 +4,8 @@ import { IbMainMenuData } from 'src/app/inobeta-ui/ui/main-menu/models/main-menu
 import * as mainMenuData from './main-menu-data.json';
 
 @Component({
-  selector: 'ib-main-menu-example',
-  template: `
+    selector: 'ib-main-menu-example',
+    template: `
     <ib-main-menu-bar
       [barIcon]="exMenuIconBar"
       [navTitle]="exAppTitle"
@@ -15,7 +15,8 @@ import * as mainMenuData from './main-menu-data.json';
       [navBottomLeft]="exNavBottomLeft"
       [navButtonBottomRight]="exNavBottomRight"
       (action)="handleMenuClick($event)"
-    ></ib-main-menu-bar>`
+    ></ib-main-menu-bar>`,
+    standalone: false
 })
 export class IbMainMenuExampleComponent {
 

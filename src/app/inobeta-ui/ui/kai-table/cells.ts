@@ -11,7 +11,8 @@ import {
 import { IB_AGGREGATE, IB_AGGREGATE_TYPE, IB_COLUMN } from "./tokens";
 
 @Directive({
-  selector: "[ibCellDef]",
+    selector: "[ibCellDef]",
+    standalone: false
 })
 export class IbCellDef {
   constructor(public templateRef: TemplateRef<unknown>) {}
@@ -107,8 +108,8 @@ export const IbAverageAggregateProvider = {
 };
 
 @Component({
-  selector: "ib-aggregate",
-  template: `
+    selector: "ib-aggregate",
+    template: `
     <section class="ib-aggregate__function">
       <button
         mat-icon-button
@@ -144,6 +145,7 @@ export const IbAverageAggregateProvider = {
       </div>
     </section>
   `,
+    standalone: false
 })
 export class IbAggregateCell {
   @Input() set function(fun: string) {

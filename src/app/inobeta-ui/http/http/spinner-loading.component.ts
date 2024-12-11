@@ -4,8 +4,8 @@ import { Observable } from 'rxjs';
 import { ibSelectIsHttpLoading } from '../store/loader/selectors';
 
 @Component({
-  selector: 'ib-spinner-loading',
-  styles: [`
+    selector: 'ib-spinner-loading',
+    styles: [`
     .spinner {
       width: 40px;
       height: 40px;
@@ -61,14 +61,15 @@ import { ibSelectIsHttpLoading } from '../store/loader/selectors';
       background-color: rgba(0, 0, 0, 0.4);
     }
   `],
-  template: `
+    template: `
     <div *ngIf="showLoading$ | async" class="modal-spinner">
       <div class="spinner">
         <div class="double-bounce1"></div>
         <div class="double-bounce2"></div>
       </div>
     </div>`,
-  encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 
 export class IbSpinnerLoadingComponent {

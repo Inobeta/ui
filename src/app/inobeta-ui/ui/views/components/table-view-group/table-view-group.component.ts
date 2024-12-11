@@ -17,9 +17,10 @@ import { IbViewService } from "../../view.service";
 import { IbTableUrlService } from "../../../kai-table/table-url.service";
 
 @Component({
-  selector: "ib-view-group, ib-table-view-group",
-  templateUrl: "table-view-group.component.html",
-  styleUrls: ["table-view-group.component.scss"],
+    selector: "ib-view-group, ib-table-view-group",
+    templateUrl: "table-view-group.component.html",
+    styleUrls: ["table-view-group.component.scss"],
+    standalone: false
 })
 export class IbTableViewGroup implements OnDestroy  {
   @ViewChildren(IbKaiTableAction) actions: QueryList<IbKaiTableAction>;

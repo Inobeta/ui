@@ -5,15 +5,14 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule, MatMenuTrigger } from "@angular/material/menu";
 
 @Component({
-  standalone: true,
-  imports: [
-    MatButtonModule,
-    MatIconModule,
-    MatMenuModule,
-    MatDividerModule
-  ],
-  selector: "ib-filter-button",
-  templateUrl: "filter-button.component.html",
+    imports: [
+        MatButtonModule,
+        MatIconModule,
+        MatMenuModule,
+        MatDividerModule
+    ],
+    selector: "ib-filter-button",
+    templateUrl: "filter-button.component.html"
 })
 export class IbFilterButton {
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;

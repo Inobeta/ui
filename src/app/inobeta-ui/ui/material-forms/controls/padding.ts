@@ -2,8 +2,9 @@ import { Component, Input } from '@angular/core';
 import { IbFormControlBase, IbFormControlBaseComponent, IbFormControlBaseParams, IbFormControlData, IbFormControlInterface } from '../../forms/controls/form-control-base';
 /** @deprecated */
 @Component({
-  selector: '[ib-mat-padding]',
-  template: ``
+    selector: '[ib-mat-padding]',
+    template: ``,
+    standalone: false
 })
 export class IbMatPaddingComponent implements IbFormControlInterface {
   @Input() data: IbFormControlData;

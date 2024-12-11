@@ -22,8 +22,9 @@ import { get } from "http";
 import { MatSelectHarness } from "@angular/material/select/testing";
 
 @Component({
-  selector: "ib-dropdown-app",
-  template: ` <ib-material-form [fields]="fields" /> `,
+    selector: "ib-dropdown-app",
+    template: ` <ib-material-form [fields]="fields" /> `,
+    standalone: false
 })
 class IbDropdownApp {
   fields = [

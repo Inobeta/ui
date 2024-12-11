@@ -2,8 +2,9 @@ import { Component } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 
 @Component({
-  selector: "ib-root",
-  template: `<router-outlet *ngIf="translateLoaded"></router-outlet> `,
+    selector: "ib-root",
+    template: `<router-outlet *ngIf="translateLoaded"></router-outlet> `,
+    standalone: false
 })
 export class AppComponent {
   translateLoaded = false;

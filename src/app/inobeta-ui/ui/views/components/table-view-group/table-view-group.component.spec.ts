@@ -193,10 +193,11 @@ function createComponent<T>(type: Type<T>): ComponentFixture<T> {
 export const createViewComponent = createComponent;
 
 @Component({
-  template: `<ib-view-group
+    template: `<ib-view-group
     viewGroupName="issues"
     [viewDataAccessor]="viewDataAccessor"
   ></ib-view-group>`,
+    standalone: false
 })
 class IbViewApp {
   filter = { };

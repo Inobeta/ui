@@ -2,9 +2,10 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { IView } from "../../store/views/table-view";
 
 @Component({
-  selector: "ib-view-list",
-  templateUrl: "./view-list.component.html",
-  styleUrls: ["./view-list.component.scss"],
+    selector: "ib-view-list",
+    templateUrl: "./view-list.component.html",
+    styleUrls: ["./view-list.component.scss"],
+    standalone: false
 })
 export class IbViewList {
   @Input() defaultView: IView;

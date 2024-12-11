@@ -19,7 +19,7 @@ import { MatSort, MatSortHeader } from "@angular/material/sort";
 export class IbSortHeader {
   @Input("ibSortHeaderFor") set matSort(matSort: MatSort) {
     this.matSortHeader._sort = matSort;
-    this.matSortHeader["_handleStateChanges"]();
+    //this.matSortHeader["_handleStateChanges"]();
   }
 
   constructor(public matSortHeader: MatSortHeader) {}

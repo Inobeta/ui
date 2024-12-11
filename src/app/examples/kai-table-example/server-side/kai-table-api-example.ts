@@ -2,8 +2,8 @@ import { Component } from "@angular/core";
 import { GithubDataSource } from "./github-data-source";
 
 @Component({
-  selector: "ib-kai-table-api-example",
-  template: `
+    selector: "ib-kai-table-api-example",
+    template: `
     <ib-kai-table
       [displayedColumns]="['created', 'state', 'number', 'title']"
       [dataSource]="dataSource"
@@ -47,15 +47,16 @@ import { GithubDataSource } from "./github-data-source";
       <ib-text-column name="title" />
     </ib-kai-table>
   `,
-  styles: [
-    `
+    styles: [
+        `
       :host {
         display: flex;
         flex-direction: column;
         padding: 30px;
       }
     `,
-  ],
+    ],
+    standalone: false
 })
 export class IbKaiTableApiExamplePage {
   dataSource = new GithubDataSource();

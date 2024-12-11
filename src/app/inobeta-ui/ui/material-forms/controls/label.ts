@@ -3,8 +3,8 @@ import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, 
 
 /** @deprecated */
 @Component({
-  selector: '[ib-mat-label]',
-  template: `
+    selector: '[ib-mat-label]',
+    template: `
     <div style="width:100%;height:50px;">
       <div
         *ngIf="data.base.label"
@@ -15,7 +15,8 @@ import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, 
         style="font-weight:bold;"
       >{{ data.base.value }}</div>
 </div>
-  `
+  `,
+    standalone: false
 })
 
 export class IbMatLabelComponent implements IbFormControlInterface {

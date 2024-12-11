@@ -1,5 +1,11 @@
 # Inobeta/UI Changelog
 
+## [19.0.0] (unreleased)
+
+| Issue ID | Type | Section | Description |
+| -- | -- | -- | -- |
+|DEVK-427|feat|all|added support to angular 19|
+
 ## [18.1.0] (2024-12-09)
 
 | Issue ID | Type | Section | Description |

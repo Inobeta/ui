@@ -7,8 +7,8 @@ import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent,
 
 /** @deprecated */
 @Component({
-  selector: '[ib-mat-datepicker]',
-  template: `
+    selector: '[ib-mat-datepicker]',
+    template: `
   <mat-form-field appearance="fill" style="width: 100%;" [formGroup]="data.form">
     <mat-label>{{data.base.label | translate}}</mat-label>
     <input
@@ -25,7 +25,8 @@ import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent,
       <ng-container *ngTemplateOutlet="data.formControlErrors;context: this"></ng-container>
     </mat-error>
   </mat-form-field>
-  `
+  `,
+    standalone: false
 })
 
 export class IbMatDatepickerComponent implements IbFormControlInterface {

@@ -3,11 +3,12 @@ import { IbFormControlBase } from '../controls/form-control-base';
 import { UntypedFormGroup, UntypedFormControl } from '@angular/forms';
 
 @Component({
-  selector: 'ib-dynamic-form-control',
-  templateUrl: './dynamic-form-control.component.html',
-  host: {
-    class: 'ibFormControl'
-  },
+    selector: 'ib-dynamic-form-control',
+    templateUrl: './dynamic-form-control.component.html',
+    host: {
+        class: 'ibFormControl'
+    },
+    standalone: false
 })
 /**
  * @deprecated Do not use this component. It will be removed in a future release

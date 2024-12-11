@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'ib-loading-skeleton-container',
-  template: `
+    selector: 'ib-loading-skeleton-container',
+    template: `
   <div class="ib-skeleton-container">
     <ib-loading-skeleton-rect
       *ngFor="let s of skeletons"
@@ -12,7 +12,7 @@ import { Component, Input, OnInit } from '@angular/core';
     ></ib-loading-skeleton-rect>
   </div>
   `,
-  styles: [`
+    styles: [`
   :host{
     flex: 1;
     width: 100%;
@@ -22,7 +22,8 @@ import { Component, Input, OnInit } from '@angular/core';
     flex-direction: column;
   }
 
-  `]
+  `],
+    standalone: false
 })
 
 export class IbLoadingSkeletonContainerComponent implements OnInit {

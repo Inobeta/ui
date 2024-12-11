@@ -2,8 +2,8 @@ import { Component, Input } from '@angular/core';
 import { IbMainMenuButton } from '../../models/main-menu-button.model'
 
 @Component({
-  selector: 'ib-main-menu-header-footer-buttons',
-  template: `
+    selector: 'ib-main-menu-header-footer-buttons',
+    template: `
   <ng-container>
     <div
       routerLink="{{ ( element.link === undefined) ? null : element.link }}"
@@ -152,7 +152,8 @@ import { IbMainMenuButton } from '../../models/main-menu-button.model'
       margin: 0px 10px 0px 0px;
       line-height: 28px;
     }
-    `]
+    `],
+    standalone: false
 })
 export class IbMainMenuHeaderFooterButtonsComponent {
   @Input() type: string;

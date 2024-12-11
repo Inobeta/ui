@@ -97,22 +97,24 @@ class IbStubExportProvider implements IbDataExportProvider {
 }
 
 @Component({
-  template: ``,
-  providers: [
-    IbDataExportService,
-    {
-      provide: OVERRIDE_EXPORT_FORMATS,
-      useClass: IbStubExportProvider,
-      multi: true,
-    },
-  ],
+    template: ``,
+    providers: [
+        IbDataExportService,
+        {
+            provide: OVERRIDE_EXPORT_FORMATS,
+            useClass: IbStubExportProvider,
+            multi: true,
+        },
+    ],
+    standalone: false
 })
 class IbDataExportWithOverrideApp {
   constructor(public exportService: IbDataExportService) {}
 }
 
 @Component({
-  template: ``,
+    template: ``,
+    standalone: false
 })
 class IbDataExportApp {
   constructor(public exportService: IbDataExportService) {}

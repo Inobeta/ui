@@ -47,24 +47,22 @@ const defaultTableDef: IbTableDef = {
 };
 
 @Component({
-  selector: "ib-kai-table",
-  templateUrl: "./table.component.html",
-  styleUrls: ["./table.component.scss"],
-  host: {
-    class: "ib-table__container",
-  },
-  animations: [
-    trigger("detailExpand", [
-      state("collapsed", style({ height: "0px", minHeight: "0" })),
-      state("expanded", style({ height: "*" })),
-      transition(
-        "expanded <=> collapsed",
-        animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)")
-      ),
-    ]),
-  ],
-  providers: [{ provide: IB_TABLE, useExisting: IbTable }],
-  encapsulation: ViewEncapsulation.None,
+    selector: "ib-kai-table",
+    templateUrl: "./table.component.html",
+    styleUrls: ["./table.component.scss"],
+    host: {
+        class: "ib-table__container",
+    },
+    animations: [
+        trigger("detailExpand", [
+            state("collapsed", style({ height: "0px", minHeight: "0" })),
+            state("expanded", style({ height: "*" })),
+            transition("expanded <=> collapsed", animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)")),
+        ]),
+    ],
+    providers: [{ provide: IB_TABLE, useExisting: IbTable }],
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class IbTable implements OnDestroy {
   private _destroyed = new Subject<void>();

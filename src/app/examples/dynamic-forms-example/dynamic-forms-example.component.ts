@@ -10,9 +10,10 @@ import {
 } from "src/app/inobeta-ui/ui/material-forms/material-form/material-form.component";
 
 @Component({
-  selector: "app-dynamic-forms-example",
-  templateUrl: "./dynamic-forms-example.component.html",
-  styleUrls: ["./dynamic-forms-example.component.css"],
+    selector: "app-dynamic-forms-example",
+    templateUrl: "./dynamic-forms-example.component.html",
+    styleUrls: ["./dynamic-forms-example.component.css"],
+    standalone: false
 })
 export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
   @ViewChild("emptyForm", { static: true }) emptyForm: IbMaterialFormComponent;

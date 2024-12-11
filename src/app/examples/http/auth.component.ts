@@ -4,8 +4,8 @@ import { IbAPITokens, IbSession } from 'src/app/inobeta-ui/http/auth/session.mod
 import { Store } from '@ngrx/store';
 
 @Component({
-  selector: 'app-http-auth',
-  template: `
+    selector: 'app-http-auth',
+    template: `
 <div style="padding: 20px;">
 
   Insert access token
@@ -29,7 +29,8 @@ import { Store } from '@ngrx/store';
 </div>
 
 
-  `
+  `,
+    standalone: false
 })
 
 export class AuthExampleComponent implements OnInit {

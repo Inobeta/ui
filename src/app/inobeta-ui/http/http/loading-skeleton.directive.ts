@@ -23,7 +23,10 @@ const defaultConfig = {
   endpoint: null,
 };
 
-@Directive({ selector: "[ibLoading]" })
+@Directive({
+    selector: "[ibLoading]",
+    standalone: false
+})
 export class IbLoadingDirective implements OnInit, OnDestroy {
   store = inject(Store);
   isLoading$ = this.store.select(ibSelectIsHttpLoading);

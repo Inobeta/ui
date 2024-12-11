@@ -5,9 +5,10 @@ import { none } from "../../filters";
 import { IbFilterBase } from "../base/filter-base";
 
 @Component({
-  selector: "ib-text-filter",
-  templateUrl: "filter-text.component.html",
-  providers: [{ provide: IbFilterBase, useExisting: IbTextFilter }],
+    selector: "ib-text-filter",
+    templateUrl: "filter-text.component.html",
+    providers: [{ provide: IbFilterBase, useExisting: IbTextFilter }],
+    standalone: false
 })
 export class IbTextFilter extends IbFilterBase {
   searchCriteria = new FormGroup({

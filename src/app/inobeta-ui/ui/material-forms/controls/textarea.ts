@@ -2,8 +2,8 @@ import { Component, Input } from '@angular/core';
 import { IbFormControlBase, IbFormControlBaseComponent, IbFormControlBaseParams, IbFormControlData, IbFormControlInterface } from '../../forms/controls/form-control-base';
 
 @Component({
-  selector: '[ib-mat-textarea]',
-  template: `
+    selector: '[ib-mat-textarea]',
+    template: `
   <mat-form-field appearance="fill" style="width: 100%;" [formGroup]="data.form">
     <mat-label>{{data.base.label | translate}}</mat-label>
     <textarea
@@ -18,7 +18,8 @@ import { IbFormControlBase, IbFormControlBaseComponent, IbFormControlBaseParams,
       <ng-container *ngTemplateOutlet="data.formControlErrors;context: this"></ng-container>
     </mat-error>
   </mat-form-field>
-  `
+  `,
+    standalone: false
 })
 
 export class IbMatTextareaComponent implements IbFormControlInterface {

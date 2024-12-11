@@ -186,10 +186,11 @@ describe("IbDateFilter", () => {
 });
 
 @Component({
-  template: `
+    template: `
     <ib-filter>
       <ib-date-filter name="updated"></ib-date-filter>
     </ib-filter>
   `,
+    standalone: false
 })
 class IbDateFilterApp {}

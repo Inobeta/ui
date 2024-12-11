@@ -18,8 +18,8 @@ import { IbTableRowSelectionChange } from "../table.types";
 import { IB_TABLE } from "../tokens";
 
 @Component({
-  selector: "ib-selection-column",
-  template: `
+    selector: "ib-selection-column",
+    template: `
     <ng-container matColumnDef="ib-selection">
       <th
         style="width: 40px"
@@ -47,6 +47,7 @@ import { IB_TABLE } from "../tokens";
       <td mat-footer-cell *matFooterCellDef></td>
     </ng-container>
   `,
+    standalone: false
 })
 export class IbSelectionColumn implements OnInit {
   /** @ignore */

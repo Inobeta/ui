@@ -4,8 +4,8 @@ import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent,
 
   /** @deprecated */
 @Component({
-  selector: '[ib-mat-checkbox]',
-  template: `
+    selector: '[ib-mat-checkbox]',
+    template: `
   <div style="width: 100%;" [formGroup]="data.form">
       <mat-checkbox
         [formControlName]="data.base.key"
@@ -15,7 +15,8 @@ import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent,
       <ng-container *ngTemplateOutlet="data.formControlErrors;context: this"></ng-container>
     </mat-error>
 </div>
-  `
+  `,
+    standalone: false
 })
 
 export class IbMatCheckboxComponent implements IbFormControlInterface {

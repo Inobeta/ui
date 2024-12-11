@@ -33,8 +33,8 @@ import { IB_COLUMN_OPTIONS, IB_TABLE, IbColumnOptions } from "../tokens";
  * the `dataAccessor` input.
  */
 @Component({
-  selector: "ib-column",
-  template: `
+    selector: "ib-column",
+    template: `
     <ng-container
       matColumnDef
       matSort
@@ -63,15 +63,14 @@ import { IB_COLUMN_OPTIONS, IB_TABLE, IbColumnOptions } from "../tokens";
       <td mat-footer-cell *matFooterCellDef></td>
     </ng-container>
   `,
-  // Change detection is intentionally not set to OnPush. This component's template will be provided
-  // to the table to be inserted into its view. This is problematic when change detection runs since
-  // the bindings in this template will be evaluated _after_ the table's view is evaluated, which
-  // mean's the template in the table's view will not have the updated value (and in fact will cause
-  // an ExpressionChangedAfterItHasBeenCheckedError).
-  // tslint:disable-next-line:validate-decorators
-  changeDetection: ChangeDetectionStrategy.Default,
-  standalone: true,
-  imports: [MatSortModule, MatTableModule, IbSortHeader, NgTemplateOutlet],
+    // Change detection is intentionally not set to OnPush. This component's template will be provided
+    // to the table to be inserted into its view. This is problematic when change detection runs since
+    // the bindings in this template will be evaluated _after_ the table's view is evaluated, which
+    // mean's the template in the table's view will not have the updated value (and in fact will cause
+    // an ExpressionChangedAfterItHasBeenCheckedError).
+    // tslint:disable-next-line:validate-decorators
+    changeDetection: ChangeDetectionStrategy.Default,
+    imports: [MatSortModule, MatTableModule, IbSortHeader, NgTemplateOutlet]
 })
 export class IbColumn<T> implements OnDestroy, OnInit {
   /** Column name that should be used to reference this column. */

@@ -5,11 +5,12 @@ import { eq, none, or } from "../../filters";
 import { IbFilterBase } from "../base/filter-base";
 
 @Component({
-  selector: "ib-tag-filter",
-  templateUrl: "./filter-tag.component.html",
-  styleUrls: ["./filter-tag.component.scss"],
-  providers: [{ provide: IbFilterBase, useExisting: IbTagFilter }],
-  encapsulation: ViewEncapsulation.None,
+    selector: "ib-tag-filter",
+    templateUrl: "./filter-tag.component.html",
+    styleUrls: ["./filter-tag.component.scss"],
+    providers: [{ provide: IbFilterBase, useExisting: IbTagFilter }],
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class IbTagFilter extends IbFilterBase {
   searchCriteria = new FormControl([], { nonNullable: true });

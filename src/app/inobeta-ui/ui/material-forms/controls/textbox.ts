@@ -3,8 +3,8 @@ import { AbstractControl, Validators } from '@angular/forms';
 import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, IbFormControlBaseParams, IbFormControlData } from '../../forms/controls/form-control-base';
 
 @Component({
-  selector: '[ib-mat-textbox]',
-  template: `
+    selector: '[ib-mat-textbox]',
+    template: `
   <mat-form-field appearance="fill" style="width: 100%;" [formGroup]="data.form">
     <mat-label>{{data.base.label | translate}}</mat-label>
     <!--
@@ -65,7 +65,8 @@ import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, 
       <ng-container *ngTemplateOutlet="data.formControlErrors;context: this"></ng-container>
     </mat-error>
   </mat-form-field>
-  `
+  `,
+    standalone: false
 })
 
 export class IbMatTextboxComponent implements IbFormControlInterface {

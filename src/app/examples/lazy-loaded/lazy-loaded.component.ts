@@ -5,12 +5,13 @@ import { exampleActions } from "./store/example/actions";
 import { selectExampleValue } from "./store/example/selectors";
 
 @Component({
-  selector: "ib-lazy",
-  template: `
+    selector: "ib-lazy",
+    template: `
     redux hydration test
     <pre>{{ exampleValue$ | async }}</pre>
     <button (click)="setValue()">set a value</button>
   `,
+    standalone: false
 })
 export class LazyLoadedComponent implements OnInit {
   exampleValue$: Observable<string>;

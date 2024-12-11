@@ -41,10 +41,11 @@ import { IbFormPipeModule } from '../../forms/forms.pipes';
 
 
 @Component({
-  selector: 'host-test',
-  template: `
+    selector: 'host-test',
+    template: `
   <ib-material-form #customForm [actions]="customFormActions" [fields]="customFormFields" (ibSubmit)="onSubmit($event)"></ib-material-form>
-  `
+  `,
+    standalone: false
 })
 
 export class TestHostComponent {

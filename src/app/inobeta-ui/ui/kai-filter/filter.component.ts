@@ -7,10 +7,8 @@ import {
   QueryList,
   ViewChild,
   ViewEncapsulation,
-  inject,
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { HasInitialized } from "@angular/material/core";
 import { ReplaySubject } from "rxjs";
 import { IbKaiTableAction } from "../kai-table/action";
 import { IbFilterSyntax, IbFilterSyntaxExtended } from "./filter.types";
@@ -45,8 +43,9 @@ import { IB_FILTER } from "./tokens";
   styleUrls: ["./filter.component.scss"],
   encapsulation: ViewEncapsulation.None,
   providers: [{ provide: IB_FILTER, useExisting: IbFilter }],
+  standalone: false,
 })
-export class IbFilter implements HasInitialized {
+export class IbFilter {
   /** @ignore */
   @ContentChildren(IbFilterBase)
   filters: QueryList<IbFilterBase>;
