@@ -1,5 +1,11 @@
 # Inobeta/UI Changelog
 
+## [18.1.1] (unreleased)
+
+| Issue ID | Type | Section | Description |
+| -- | -- | -- | -- |
+|DEVK-467|fix|IbKaiTable|State url nullish access fix|
+
 ## [18.1.0] (2024-12-09)
 
 | Issue ID | Type | Section | Description |
