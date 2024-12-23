@@ -2,11 +2,14 @@ import { Component } from '@angular/core';
 import {Store, select} from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { CounterActions } from './counter.action';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'ib-my-counter',
     templateUrl: './my-counter.component.html',
-    standalone: false
+    imports: [
+      AsyncPipe
+    ]
 })
 export class MyCounterComponent {
   count$: Observable<number>;

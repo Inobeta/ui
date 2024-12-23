@@ -1,5 +1,9 @@
 import { Component, OnInit } from "@angular/core";
 import { IbUserExample, createNewUser } from "./users";
+import { IbKaiTableModule } from "public_api";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatIconModule } from "@angular/material/icon";
+import { MatIconButton } from "@angular/material/button";
 
 @Component({
     selector: "ib-kai-table-context-action-example",
@@ -37,7 +41,9 @@ import { IbUserExample, createNewUser } from "./users";
       }
     `,
     ],
-    standalone: false
+    imports: [
+      IbKaiTableModule, MatMenuModule, MatIconModule, MatIconButton
+    ]
 })
 export class IbKaiTableActionColumnExamplePage implements OnInit {
   data: IbUserExample[];

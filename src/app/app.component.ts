@@ -1,10 +1,13 @@
+import { NgIf } from "@angular/common";
 import { Component } from "@angular/core";
+import { RouterOutlet } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
 
 @Component({
     selector: "ib-root",
     template: `<router-outlet *ngIf="translateLoaded"></router-outlet> `,
-    standalone: false
+    standalone: true,
+    imports: [RouterOutlet, NgIf]
 })
 export class AppComponent {
   translateLoaded = false;

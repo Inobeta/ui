@@ -1,6 +1,4 @@
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {RouterModule, Routes} from '@angular/router';
+
 import { DynamicFormsExampleComponent } from './examples/dynamic-forms-example/dynamic-forms-example.component';
 import { HttpExampleComponent } from './examples/http/http-example.component';
 import { MyCounterComponent } from './examples/redux-example/my-counter.component';
@@ -17,8 +15,9 @@ import { MaterialFormGridExampleComponent } from './examples/material-form-grid-
 import { AuthExampleComponent } from './examples/http/auth.component';
 import { IbRoleGuard } from './inobeta-ui/http/auth/guard.service';
 import { MaterialFormValueExampleComponent } from './examples/material-form-value-example/material-form.value.component';
+import { Routes } from '@angular/router';
 
-const appRoutes: Routes = [
+export const appRoutes: Routes = [
   {
     path: 'home',
     component: NavComponent,
@@ -152,16 +151,3 @@ const appRoutes: Routes = [
     pathMatch: 'full'
   }
 ];
-
-@NgModule({
-  declarations: [],
-  imports: [
-    CommonModule,
-    RouterModule.forRoot(appRoutes, {})
-  ],
-  exports: [
-    RouterModule
-  ],
-})
-export class RoutingModule {}
-

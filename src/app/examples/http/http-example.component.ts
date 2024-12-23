@@ -4,6 +4,8 @@ import { Store } from '@ngrx/store';
 import { map } from 'rxjs/operators';
 import { ibCrudToast } from '../../inobeta-ui/http/http/messages.decorator';
 import { ibLoaderActions } from '../../inobeta-ui/http/store/loader/actions';
+import { MatGridList, MatGridTile } from '@angular/material/grid-list';
+import { JsonPipe } from '@angular/common';
 
 @Component({
     selector: 'app-test',
@@ -39,7 +41,9 @@ import { ibLoaderActions } from '../../inobeta-ui/http/store/loader/actions';
     flex: 1;
   }
   `],
-    standalone: false
+  imports: [
+    MatGridList, MatGridTile, JsonPipe
+  ]
 })
 
 export class HttpExampleComponent implements OnInit {

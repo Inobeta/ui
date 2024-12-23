@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { IbToastModule } from 'public_api';
 import { IbToastNotification } from 'src/app/inobeta-ui/ui/toast/toast.service';
 
 @Component({
@@ -10,7 +11,9 @@ import { IbToastNotification } from 'src/app/inobeta-ui/ui/toast/toast.service';
     <button (click)="open('error')">open error toast</button>
   </div>
   `,
-    standalone: false
+    imports: [
+      IbToastModule
+    ]
 })
 
 export class IbToastExampleComponent {

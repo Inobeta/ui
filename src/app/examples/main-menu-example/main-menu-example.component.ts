@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IbMainMenuButton } from 'src/app/inobeta-ui/ui/main-menu/models/main-menu-button.model';
 import { IbMainMenuData } from 'src/app/inobeta-ui/ui/main-menu/models/main-menu-data.model';
 import * as mainMenuData from './main-menu-data.json';
+import { IbMainMenuModule } from 'public_api';
 
 @Component({
     selector: 'ib-main-menu-example',
@@ -16,7 +17,9 @@ import * as mainMenuData from './main-menu-data.json';
       [navButtonBottomRight]="exNavBottomRight"
       (action)="handleMenuClick($event)"
     ></ib-main-menu-bar>`,
-    standalone: false
+    imports: [
+      IbMainMenuModule
+    ]
 })
 export class IbMainMenuExampleComponent {
 

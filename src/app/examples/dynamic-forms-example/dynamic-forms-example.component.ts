@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
-import { IbDropdown, IbFormArray } from "public_api";
+import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from "@angular/material/card";
+import { IbDropdown, IbDynamicFormsModule, IbFormArray, IbMaterialFormModule } from "public_api";
 import { IbTextbox } from "src/app/inobeta-ui/ui/forms/controls/textbox";
 import { IbFormField } from "src/app/inobeta-ui/ui/forms/forms.types";
 import { IbMatButtonControl } from "src/app/inobeta-ui/ui/material-forms/controls/button";
@@ -13,7 +14,9 @@ import {
     selector: "app-dynamic-forms-example",
     templateUrl: "./dynamic-forms-example.component.html",
     styleUrls: ["./dynamic-forms-example.component.css"],
-    standalone: false
+    imports: [
+      IbDynamicFormsModule, MatCard, MatCardHeader, MatCardTitle, MatCardContent, IbMaterialFormModule
+    ]
 })
 export class DynamicFormsExampleComponent implements OnInit, AfterViewInit {
   @ViewChild("emptyForm", { static: true }) emptyForm: IbMaterialFormComponent;

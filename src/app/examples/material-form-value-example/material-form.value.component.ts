@@ -5,10 +5,13 @@ import { IbFormArray } from "src/app/inobeta-ui/ui/forms/array/array";
 import { IbFormField } from "src/app/inobeta-ui/ui/forms/forms.types";
 import {
   IbMatButtonControl,
+  IbMaterialFormModule,
   IbMatLabelControl,
   IbMatTextboxControl,
 } from "src/app/inobeta-ui/ui/material-forms";
 import { createNewUser } from "../kai-table-example/users";
+import { AsyncPipe } from "@angular/common";
+import { MatCardModule } from "@angular/material/card";
 
 type ContactInfo = {
   fullName: string;
@@ -45,7 +48,9 @@ type ContactInfo = {
       gap: 2em;
     }
   `,
-    standalone: false
+    imports: [
+      IbMaterialFormModule, AsyncPipe, MatCardModule
+    ]
 })
 export class MaterialFormValueExampleComponent {
   disabled = false;

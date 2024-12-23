@@ -1,5 +1,8 @@
 import { Component } from "@angular/core";
 import { GithubDataSource } from "./github-data-source";
+import { IbDataExportModule, IbFilterModule, IbKaiTableModule, IbTableActionModule, IbViewModule } from "public_api";
+import { MatIconModule } from "@angular/material/icon";
+import { MatIconButton } from "@angular/material/button";
 
 @Component({
     selector: "ib-kai-table-api-example",
@@ -56,7 +59,9 @@ import { GithubDataSource } from "./github-data-source";
       }
     `,
     ],
-    standalone: false
+    imports: [
+      IbKaiTableModule, IbFilterModule, IbViewModule, IbDataExportModule, MatIconModule, IbTableActionModule, MatIconButton
+    ]
 })
 export class IbKaiTableApiExamplePage {
   dataSource = new GithubDataSource();
