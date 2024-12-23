@@ -196,10 +196,14 @@ export class IbTable implements OnDestroy {
     const dsInit = () => {
       this.dataSource.sort = this.sort;
       this.dataSource.aggregatedColumns = this.tableUrl.getAggregatedColumns(this.tableName);
-      this.dataSource.sortState = {
-        ...this.tableDef.initialSort,
-        ...this.tableUrl.getSort(this.tableName),
+      let sortState = {
+        ...this.tableDef.initialSort
       };
+      const sortFromUrl = this.tableUrl.getSort(this.tableName)
+      if(sortFromUrl.active !== '' && sortFromUrl.active !== undefined){
+        sortState = {...sortFromUrl}
+      }
+      this.dataSource.initializeSortState(sortState);
     }
 
 

@@ -125,6 +125,16 @@ export class IbTableDataSource<
     };
   }
 
+  public initializeSortState(sort: Sort){
+    this.sortState = sort;
+
+    this._sort?.sort({
+      id : this._sortState.active,
+      start : this._sortState.direction,
+      disableClear : true
+    });
+  }
+
   /**
    * Instance of the paginator component used by the table to control what page of the data is
    * displayed. Page changes emitted by the paginator will trigger an update to the
