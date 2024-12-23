@@ -9,7 +9,6 @@ export * from './store/session/interfaces';
 export * from './store/loader/actions';
 export * from './store/session/actions';
 export * from './store/loader/selectors';
-export * from './store/session/selectors';
 export * from './store/session/effects';
 export * from './store/loader/reducers';
 export * from './store/session/reducers';

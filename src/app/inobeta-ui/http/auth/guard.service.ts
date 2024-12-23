@@ -3,7 +3,7 @@ import { ActivatedRouteSnapshot, Router } from "@angular/router";
 import { Store } from "@ngrx/store";
 import { Observable } from "rxjs";
 import { map, take } from "rxjs/operators";
-import { ibSelectActiveSession } from "../store/session/selectors";
+import { ibSelectActiveSession } from "../store/";
 import { IbLoginService } from "./login.service";
 import { IbAPITokens, IbSession } from "./session.model";
 

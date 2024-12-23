@@ -6,7 +6,7 @@ import { catchError, mergeMap, take } from "rxjs/operators";
 import { IbToastNotification } from "../../ui/toast/toast.service";
 import { IbLoginService } from "../auth/login.service";
 import { IbAPITokens, IbAuthTypes, IbSession } from "../auth/session.model";
-import { ibSelectActiveSession } from "../store/session/selectors";
+import { ibSelectActiveSession } from "../store/";
 
 @Injectable({ providedIn: "root" })
 export class IbAuthInterceptor implements HttpInterceptor {

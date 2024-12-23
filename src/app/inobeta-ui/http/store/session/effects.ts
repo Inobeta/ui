@@ -14,7 +14,7 @@ import { IbStorageTypes } from "../../../storage/storage.service";
 import { IbLoginService } from "../../auth/login.service";
 import { IbAPITokens, IbSession } from "../../auth/session.model";
 import { ibAuthActions } from "./actions";
-import { ibSelectAccessTokenExp, ibSelectActiveSession } from "./selectors";
+import { ibSelectAccessTokenExp, ibSelectActiveSession } from "../";
 
 @Injectable({ providedIn: "root" })
 export class IbSessionEffects {

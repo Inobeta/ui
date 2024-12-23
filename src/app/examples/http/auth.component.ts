@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ibAuthActions } from '../../inobeta-ui/http/store/session/actions';
 import { IbAPITokens, IbSession } from 'src/app/inobeta-ui/http/auth/session.model';
 import { Store } from '@ngrx/store';
+import { IbRoleCheckDirective } from 'public_api';
 
 @Component({
     selector: 'app-http-auth',
@@ -30,7 +31,9 @@ import { Store } from '@ngrx/store';
 
 
   `,
-    standalone: false
+    imports: [
+      IbRoleCheckDirective
+    ]
 })
 
 export class AuthExampleComponent implements OnInit {

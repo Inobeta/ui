@@ -63,12 +63,14 @@ export const appConfig: ApplicationConfig = {
     ),
     provideAnimationsAsync(),
     provideHttpClient(),
-   /* provideTranslateService({
-      loader: {
-        provide: TranslateLoader,
-        useClass: IbTranslateModuleLoader,
-        deps: [HttpClient],
-      },
+
+    //FIXME: This should work according to the ngx-translate documentation, but it doesn't work at all.
+    /*provideTranslateService({
+        loader: {
+          provide: TranslateLoader,
+          useExisting: IbTranslateModuleLoader,
+          deps: [HttpClient],
+        },
     }),*/
 
     // @important! This is a hack for @inobeta/ui, especially IbKaiTable.
