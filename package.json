@@ -40,13 +40,13 @@
     "@babel/preset-env": "^7.15.0",
     "@compodoc/compodoc": "^1.1.22",
     "@ngrx/schematics": "^18.0.1",
-    "@storybook/addon-essentials": "^8.2.4",
-    "@storybook/addon-interactions": "^8.2.4",
-    "@storybook/addon-links": "^8.2.4",
-    "@storybook/addon-mdx-gfm": "^8.2.4",
+    "@storybook/addon-essentials": "^8.4.7",
+    "@storybook/addon-interactions": "^8.4.7",
+    "@storybook/addon-links": "^8.4.7",
+    "@storybook/addon-mdx-gfm": "^8.4.7",
     "@storybook/angular": "^8.4.7",
-    "@storybook/blocks": "^8.2.4",
-    "@storybook/test": "^8.2.4",
+    "@storybook/blocks": "^8.4.7",
+    "@storybook/test": "^8.4.7",
     "@types/jasmine": "~3.6.0",
     "@types/jasminewd2": "~2.0.2",
     "@types/node": "^20.10.0",
@@ -78,7 +78,8 @@
     "zone.js": "~0.15.0"
   },
   "overrides": {
-    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz",
+    "protractor": "0.0.0"
   },
   "dependencies": {
     "tslib": "^2.4.0"
