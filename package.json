@@ -60,9 +60,9 @@
     "typescript": "~5.5.3"
   },
   "peerDependencies": {
-    "@ngrx/effects": "^19.0.0-rc.0",
-    "@ngrx/store": "^19.0.0-rc.0",
-    "@ngrx/store-devtools": "^19.0.0-rc.0",
+    "@ngrx/effects": "^19.x.x",
+    "@ngrx/store": "^19.x.x",
+    "@ngrx/store-devtools": "^19.x.x",
     "@ngx-translate/core": "^15.x.x",
     "@ngx-translate/http-loader": "^8.x.x",
     "jspdf": "^2.5.1",
