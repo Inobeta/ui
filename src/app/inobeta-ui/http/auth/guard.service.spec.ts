@@ -32,13 +32,11 @@ describe('IbAuthGuard & IbLoginGuard with no session', () => {
     expect(guard).toBeTruthy();
   });
 
-  it('IbAuthGuard should be use canActivate and return to login', (done) => {
+  it('IbAuthGuard should be use canActivate and return to login', () => {
     const lguard = TestBed.inject(IbAuthGuard);
-    lguard.canActivate().subscribe(() => {
-      expect(routerSpy.navigateByUrl).toHaveBeenCalledTimes(1);
-      expect (routerSpy.navigateByUrl).toHaveBeenCalledWith ('/login');
-      done()
-    })
+    lguard.canActivate()
+    expect(routerSpy.navigateByUrl).toHaveBeenCalledTimes(1);
+    expect (routerSpy.navigateByUrl).toHaveBeenCalledWith ('/login');
   });
 
   it('IbLoginGuard should be created', () => {
@@ -46,12 +44,10 @@ describe('IbAuthGuard & IbLoginGuard with no session', () => {
     expect(lguard).toBeTruthy();
   });
 
-  it('IbLoginGuard should be use canActivate', (done) => {
+  it('IbLoginGuard should be use canActivate', () => {
     const lguard = TestBed.inject(IbLoginGuard);
-    lguard.canActivate().subscribe(() => {
-      expect(routerSpy.navigateByUrl).toHaveBeenCalledTimes(0);
-      done()
-    })
+    lguard.canActivate()
+    expect(routerSpy.navigateByUrl).toHaveBeenCalledTimes(0);
   });
 
 });
@@ -79,11 +75,13 @@ describe('IbAuthGuard & IbLoginGuard with a session', () => {
   const routerSpy = { navigateByUrl: jasmine.createSpy('navigateByUrl')};
 
   beforeEach(async () => {
+    routerSpy.navigateByUrl.calls.reset();
     TestBed.configureTestingModule({
       providers: [
         { provide: Router, useValue: routerSpy },
         provideMockStore({initialState: {
-          ibHttpState: mockStore
+          ibHttpSessionState: mockStore.session,
+          ibHttpLoaderState: mockStore.loader,
         }}),
         IbAuthGuard,
         IbLoginGuard,
@@ -93,21 +91,16 @@ describe('IbAuthGuard & IbLoginGuard with a session', () => {
     }).compileComponents();
   });
 
-  beforeEach(() => {
-    routerSpy.navigateByUrl.calls.reset();
-  });
 
   it('IbAuthGuard should be created', () => {
     const guard = TestBed.inject(IbAuthGuard);
     expect(guard).toBeTruthy();
   });
 
-  it('IbAuthGuard should be use canActivate', (done) => {
+  it('IbAuthGuard should be use canActivate', () => {
     const lguard = TestBed.inject(IbAuthGuard);
-    lguard.canActivate().subscribe(() => {
-      expect(routerSpy.navigateByUrl).toHaveBeenCalledTimes(0);
-      done()
-    })
+    lguard.canActivate()
+    expect(routerSpy.navigateByUrl).toHaveBeenCalledTimes(0);
   });
 
   it('IbLoginGuard should be created', () => {
@@ -115,13 +108,11 @@ describe('IbAuthGuard & IbLoginGuard with a session', () => {
     expect(lguard).toBeTruthy();
   });
 
-  it('IbLoginGuard should be use canActivate', (done) => {
+  it('IbLoginGuard should be use canActivate', () => {
     const lguard = TestBed.inject(IbLoginGuard);
-    lguard.canActivate().subscribe(() => {
-      expect(routerSpy.navigateByUrl).toHaveBeenCalledTimes(1);
-      expect (routerSpy.navigateByUrl).toHaveBeenCalledWith ('/home');
-      done()
-    })
+    lguard.canActivate()
+    expect(routerSpy.navigateByUrl).toHaveBeenCalledTimes(1);
+    expect (routerSpy.navigateByUrl).toHaveBeenCalledWith ('/home');
   });
 
 });

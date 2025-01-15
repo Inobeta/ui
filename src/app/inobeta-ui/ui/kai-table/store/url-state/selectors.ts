@@ -1,38 +1,38 @@
-import { createFeatureSelector, createSelector } from "@ngrx/store";
-import { kaiTableFeatureKey } from "../const";
-import { IKaiTableStore } from "..";
-import { IbKaiTableNamedParams, IUrlStateState } from "./interfaces";
+import { createSelector } from "@ngrx/store";
+import { IbKaiTableNamedParams } from "./interfaces";
 import { IbTableQsParams } from "../../table-url.service";
 
-const selectFeature = createFeatureSelector<IKaiTableStore>(kaiTableFeatureKey);
 
-const selectAllUrlStateStore = createSelector(
-  selectFeature,
-  (state: IKaiTableStore): IUrlStateState => {
-    return state?.urlState
+const selectUrlState = (tableName: string) => (tables: IbKaiTableNamedParams[]): IbKaiTableNamedParams => {
+  return tables?.find((table) => table.tableName === tableName)
+}
+
+const selectLastQueryStringRaw = (state?: IbKaiTableNamedParams): IbTableQsParams => ({
+  ibfilter: state?.filters,
+  ibpage: state?.page,
+  ibpagesize: state?.pageSize,
+  ibaggregatedcolumns: state?.aggregatedColumns,
+  ibsort: state?.sort,
+  ibview: state?.view
+})
+
+const selectLastQueryString = (state: IbTableQsParams): string => JSON.stringify(state)
+
+
+export const ibKaiTableExtraSelectors = ({ selectTables }) => {
+  const ibTableSelectUrlState = (tableName: string) => createSelector(selectTables, selectUrlState(tableName))
+
+  const ibTableSelectLastQueryStringRaw =  (tableName: string) => createSelector(
+    ibTableSelectUrlState(tableName),
+    selectLastQueryStringRaw
+  )
+  const ibTableSelectLastQueryString = (tableName: string) => createSelector(
+    ibTableSelectLastQueryStringRaw(tableName),
+    selectLastQueryString
+  )
+  return {
+    ibTableSelectUrlState,
+    ibTableSelectLastQueryStringRaw,
+    ibTableSelectLastQueryString
   }
-)
-
-const selectUrlState = (tableName: string) => createSelector(
-  selectAllUrlStateStore,
-  (state: IUrlStateState) => {
-    return state?.tables?.find((table) => table.tableName === tableName)
-  }
-)
-
-export const ibTableSelectLastQueryStringRaw = (tableName: string) => createSelector(
-  selectUrlState(tableName),
-  (state?: IbKaiTableNamedParams): IbTableQsParams => ({
-    ibfilter: state?.filters,
-    ibpage: state?.page,
-    ibpagesize: state?.pageSize,
-    ibaggregatedcolumns: state?.aggregatedColumns,
-    ibsort: state?.sort,
-    ibview: state?.view
-  })
-)
-
-export const ibTableSelectLastQueryString = (tableName: string) => createSelector(
-  ibTableSelectLastQueryStringRaw(tableName),
-  (state): string => JSON.stringify(state)
-)
+}

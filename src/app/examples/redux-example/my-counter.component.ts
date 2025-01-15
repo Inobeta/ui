@@ -1,22 +1,16 @@
-import { Component } from '@angular/core';
-import {Store, select} from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { CounterActions } from './counter.action';
-import { AsyncPipe } from '@angular/common';
+import { Component, inject } from '@angular/core';
+import {Store} from '@ngrx/store';
+import { CounterActions, selectDoubleCounter, selectNumber } from './counter.feature';
 
 @Component({
     selector: 'ib-my-counter',
-    templateUrl: './my-counter.component.html',
-    imports: [
-      AsyncPipe
-    ]
+    templateUrl: './my-counter.component.html'
 })
 export class MyCounterComponent {
-  count$: Observable<number>;
+  store = inject(Store);
+  count$$ = this.store.selectSignal(selectNumber);
+  doubleCount$$ = this.store.selectSignal(selectDoubleCounter);
 
-  constructor(private store: Store<any>) {
-    this.count$ = store.pipe(select(rootState => rootState.countState.number));
-  }
 
   increment() {
     this.store.dispatch (CounterActions.increment());

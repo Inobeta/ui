@@ -8,12 +8,9 @@ import {
   inject,
 } from "@angular/core";
 import { Store } from "@ngrx/store";
-import {
-  ibSelectIsHttpLoading,
-  ibSelectIsHttpUrlLoading,
-} from "../store/loader/selectors";
 import { Observable, Subscription } from "rxjs";
 import { IbLoadingSkeletonContainerComponent } from "./loading-skeleton-container.component";
+import { ibSelectIsHttpLoading, ibSelectIsHttpUrlLoading } from "public_api";
 
 const defaultConfig = {
   size: 1,

@@ -1,5 +1,5 @@
 
-import { Action, createReducer, on } from "@ngrx/store";
+import { createReducer, on } from "@ngrx/store";
 import { exampleActions } from "./actions";
 import { IExampleState } from "./interfaces";
 
@@ -8,7 +8,7 @@ const INITIAL: IExampleState = {
   value: ''
 }
 
-const main = createReducer(INITIAL,
+export const exampleMainReducer = createReducer(INITIAL,
   on(exampleActions.exampleAction, (state, action) => {
     return {
       ...state,
@@ -16,8 +16,3 @@ const main = createReducer(INITIAL,
     }
   }),
 );
-
-
-export function exampleReducer(state: IExampleState = INITIAL, action: Action){
-  return main(state, action)
-}

@@ -1,7 +1,7 @@
 import {Component, ViewEncapsulation, inject} from '@angular/core';
 import { Store } from '@ngrx/store';
+import { ibSelectIsHttpLoading } from 'public_api';
 import { Observable } from 'rxjs';
-import { ibSelectIsHttpLoading } from '../store/loader/selectors';
 
 @Component({
     selector: 'ib-spinner-loading',

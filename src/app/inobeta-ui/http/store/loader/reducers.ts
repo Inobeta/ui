@@ -9,7 +9,7 @@ const INITIAL: IbLoaderState = {
   pendingRequestList: []
 }
 
-const main = createReducer(INITIAL,
+export const ibLoaderReducerMain = createReducer(INITIAL,
   on(ibLoaderActions.incLoading, (state, {url, method}) => {
     const pendingRequestList = [...state.pendingRequestList, {url, method} ]
     return {
@@ -37,8 +37,3 @@ const main = createReducer(INITIAL,
     skipShow: true
   })),
 );
-
-
-export function loaderReducer(state: IbLoaderState = INITIAL, action: Action){
-  return main(state, action)
-}

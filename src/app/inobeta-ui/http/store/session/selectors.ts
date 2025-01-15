@@ -3,7 +3,7 @@ import { jwtDecode } from 'jwt-decode';
 import { IbAPITokens, IbSession } from '../../auth/session.model';
 import { createSelector } from '@ngrx/store';
 
-export const selectTokenExpiry = function(activeSession): number{
+const selectTokenExpiry = function(activeSession): number{
   const token = activeSession?.serverData?.accessToken
   if(!token) return 0
   const decoded: {
@@ -15,7 +15,7 @@ export const selectTokenExpiry = function(activeSession): number{
   return  exp
 }
 
-export const selectDecodedData = function<T>(activeSession): T {
+const selectDecodedData = function<T>(activeSession): T {
   const token = activeSession?.serverData?.accessToken
   if(!token) return null
   return jwtDecode(activeSession.serverData.accessToken) as T;

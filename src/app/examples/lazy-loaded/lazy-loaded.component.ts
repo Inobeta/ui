@@ -1,23 +1,20 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, inject, OnInit } from "@angular/core";
 import { Store } from "@ngrx/store";
-import { Observable } from "rxjs";
 import { exampleActions } from "./store/example/actions";
-import { selectExampleValue } from "./store/example/selectors";
+import { selectValue } from "./store";
 
 @Component({
     selector: "ib-lazy",
     template: `
     redux hydration test
-    <pre>{{ exampleValue$ | async }}</pre>
+    <pre>{{ exampleValue$$() }}</pre>
     <button (click)="setValue()">set a value</button>
   `,
     standalone: false
 })
 export class LazyLoadedComponent implements OnInit {
-  exampleValue$: Observable<string>;
-  constructor(private store: Store) {
-    this.exampleValue$ = store.select(selectExampleValue);
-  }
+  store = inject(Store);
+  exampleValue$$ = this.store.selectSignal(selectValue);
 
   ngOnInit() {}
 

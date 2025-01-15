@@ -5,7 +5,6 @@ import { Component, Type, inject } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { StoreModule } from "@ngrx/store";
 import { MockStore, provideMockStore } from "@ngrx/store/testing";
 import { TranslateModule } from "@ngx-translate/core";
 import { of } from "rxjs";
@@ -15,6 +14,7 @@ import { IbViewModule } from "../../view.module";
 import { IbTableViewGroup } from "./table-view-group.component";
 import { IbTableUrlService } from "../../../kai-table";
 import { RouterTestingModule } from "@angular/router/testing";
+import { provideStore } from "@ngrx/store";
 
 const initialState: IViewState = {
   views: [],
@@ -169,14 +169,18 @@ function configureModule<T>(type: Type<T>) {
       BrowserAnimationsModule,
       IbToastModule,
       IbViewModule,
-      StoreModule.forRoot({}),
       TranslateModule.forRoot({
         extend: true,
       }),
       RouterTestingModule.withRoutes([])
     ],
     providers: [
-      provideMockStore({ initialState }),
+      provideStore(),
+      provideMockStore({
+        initialState: {
+          ibViews: initialState
+        }
+      }),
       IbTableUrlService
     ],
   }).compileComponents();

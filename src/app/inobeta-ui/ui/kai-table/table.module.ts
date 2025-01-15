@@ -1,5 +1,4 @@
-import { kaiTableFeatureKey } from "./store/const";
-import { kaiTableReducers, kaiTableEffects } from "./store";
+import { kaiTableEffects, ibKaiTableFeature } from "./store";
 import { PortalModule } from "@angular/cdk/portal";
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
@@ -32,8 +31,8 @@ import { IbTablePaginatorIntl } from "./paginator-intl";
 import { IbKaiRowGroupDirective } from "./rowgroup";
 import { IbSortHeader } from "./sort-header";
 import { IbTable } from "./table.component";
-import { StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
+import { provideState } from '@ngrx/store';
+import {  provideEffects } from '@ngrx/effects';
 
 @NgModule({
   exports: [
@@ -77,8 +76,6 @@ import { EffectsModule } from '@ngrx/effects';
     TranslateModule.forChild({
       extend: true,
     }),
-    StoreModule.forFeature(kaiTableFeatureKey, kaiTableReducers),
-    EffectsModule.forFeature(kaiTableEffects),
   ],
   providers: [
     {
@@ -88,6 +85,8 @@ import { EffectsModule } from '@ngrx/effects';
     },
     IbSumAggregateProvider,
     IbAverageAggregateProvider,
+    provideState(ibKaiTableFeature),
+    provideEffects(kaiTableEffects),
   ],
 })
 export class IbKaiTableModule {}

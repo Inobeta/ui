@@ -1,19 +1,16 @@
 import { registerLocaleData } from "@angular/common";
 import { HttpClient, provideHttpClient } from "@angular/common/http";
 import { ApplicationConfig, importProvidersFrom, isDevMode, provideZoneChangeDetection } from "@angular/core";
-import { EffectsModule } from "@ngrx/effects";
-import { ActionReducerMap, StoreModule, combineReducers } from "@ngrx/store";
+import { provideEffects } from "@ngrx/effects";
+import { provideState, provideStore } from "@ngrx/store";
 import { provideStoreDevtools} from "@ngrx/store-devtools";
 import { provideTranslateService, TranslateLoader, TranslateModule } from "@ngx-translate/core";
-import {
-  ICounterState,
-  counterReducer,
-} from "./examples/redux-example/counter.reducer";
+
 import { IbHttpModule } from "./inobeta-ui/http/http.module";
 import {
-  IHttpStore,
   ibHttpEffects,
-  ibHttpReducers,
+  ibLoaderFeature,
+  ibSessionFeature,
 } from "./inobeta-ui/http/store";
 import { ibSetupHydration } from "./inobeta-ui/hydration";
 import { IbTranslateModuleLoader } from "./inobeta-ui/translate/translate-loader.service";
@@ -21,26 +18,18 @@ import { appRoutes } from "./routing.module";
 import localeIt from '@angular/common/locales/it';
 import { PreloadAllModules, provideRouter, withComponentInputBinding, withPreloading } from "@angular/router";
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { ibCounterExampleFeature } from "./examples/redux-example/counter.feature";
 
 
 registerLocaleData(localeIt);
 
-export interface IAppState {
-  ibHttpState: IHttpStore;
-  countState: ICounterState;
-}
-
-const reducers: ActionReducerMap<IAppState> = {
-  countState: counterReducer,
-  ibHttpState: combineReducers(ibHttpReducers),
-};
 
 export const statusErrorMessages = { 404: "Risorsa non trovata" };
 
 const reduxStorageSave = ibSetupHydration("__redux-store-inobeta-ui__", [
-  "sessionState",
+  "ibHttpSessionState",
+  "exampleLazyFeature",
   "ibTable",
-  "lazyLoaded",
   "ibViews",
 ]);
 
@@ -76,13 +65,6 @@ export const appConfig: ApplicationConfig = {
     // @important! This is a hack for @inobeta/ui, especially IbKaiTable.
     // Change this to Standalone API providers in v19
     importProvidersFrom([
-      StoreModule.forRoot(reducers, {
-        metaReducers: reduxStorageSave.metareducers,
-      }),
-      EffectsModule.forRoot([
-        ...reduxStorageSave.effects,
-        ...ibHttpEffects,
-      ]),
       TranslateModule.forRoot({
         loader: {
           provide: TranslateLoader,
@@ -93,6 +75,12 @@ export const appConfig: ApplicationConfig = {
       IbHttpModule
       ]
     ),
+    provideStore(undefined, { metaReducers: reduxStorageSave.metareducers }),
+    provideState(ibSessionFeature),
+    provideState(ibLoaderFeature),
+    provideState(ibCounterExampleFeature),
+    provideEffects(ibHttpEffects),
+    provideEffects(reduxStorageSave.effects),
     provideStoreDevtools({
       maxAge: 25,
       logOnly: !isDevMode(),
