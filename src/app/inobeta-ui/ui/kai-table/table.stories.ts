@@ -25,6 +25,8 @@ import { IbSortHeader } from "./sort-header";
 import { IbTable } from "./table.component";
 import { IbKaiTableModule } from "./table.module";
 import { IB_AGGREGATE_TYPE, IB_COLUMN } from "./tokens";
+import { provideStore } from "@ngrx/store";
+import { PreloadAllModules, provideRouter, withComponentInputBinding, withPreloading } from "@angular/router";
 
 const origin = new Date("2024-01-01");
 const colors = ["Black", "Purple", "Brown", "Cyan", "White", "Pink"];
@@ -144,7 +146,15 @@ const meta: Meta = {
       ],
     }),
     applicationConfig({
-      providers: [provideAnimations()],
+      providers: [
+        provideStore(),
+        provideAnimations(),
+        provideRouter(
+          [],
+          withComponentInputBinding(),
+          withPreloading(PreloadAllModules)
+        ),
+      ],
     }),
   ],
   argTypes: {
@@ -335,7 +345,7 @@ export const WithRowGroup: Story = {
         <ng-container *ibKaiRowGroup="let data">
           Description for {{ data.name }}: {{ data.description }}
         </ng-container>
-      
+
         <ib-text-column headerText="ID" name="id" sort />
         <ib-text-column headerText="Product name" name="name" sort />
         <ib-text-column headerText="SKU" name="sku" />

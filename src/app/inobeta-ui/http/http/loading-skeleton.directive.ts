@@ -10,7 +10,7 @@ import {
 import { Store } from "@ngrx/store";
 import { Observable, Subscription } from "rxjs";
 import { IbLoadingSkeletonContainerComponent } from "./loading-skeleton-container.component";
-import { ibSelectIsHttpLoading, ibSelectIsHttpUrlLoading } from "public_api";
+import { ibSelectIsHttpLoading, ibSelectIsHttpUrlLoading } from "../store/index";
 
 const defaultConfig = {
   size: 1,

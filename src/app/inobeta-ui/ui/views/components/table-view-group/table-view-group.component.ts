@@ -15,7 +15,7 @@ import { IbKaiTableAction } from "../../../kai-table/action";
 import { ITableViewData, IView } from "../../store/views";
 import { IbViewService } from "../../view.service";
 import { IbTableUrlService } from "../../../kai-table/table-url.service";
-import { selectTableViews } from "public_api";
+import { selectTableViews } from "../../store/index";
 
 @Component({
     selector: "ib-view-group, ib-table-view-group",

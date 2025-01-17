@@ -1,6 +1,6 @@
 import {Component, ViewEncapsulation, inject} from '@angular/core';
 import { Store } from '@ngrx/store';
-import { ibSelectIsHttpLoading } from 'public_api';
+import { ibSelectIsHttpLoading } from '../store/index';
 import { Observable } from 'rxjs';
 
 @Component({

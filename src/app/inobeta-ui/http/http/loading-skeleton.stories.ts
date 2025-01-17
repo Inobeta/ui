@@ -5,7 +5,7 @@ import {
   Input,
   inject,
 } from "@angular/core";
-import {  provideState } from "@ngrx/store";
+import {  provideState, provideStore } from "@ngrx/store";
 import {
   Meta,
   StoryObj,
@@ -41,9 +41,8 @@ const meta: Meta<IbLoadingScreen> = {
   component: IbLoadingScreen,
   decorators: [
     moduleMetadata({
-      declarations: [IbLoadingScreen],
+      declarations: [],
       imports: [
-        HttpClientModule,
         StorybookTranslateModule,
         IbHttpModule,
         MatButtonModule,
@@ -51,6 +50,7 @@ const meta: Meta<IbLoadingScreen> = {
     }),
     applicationConfig({
       providers: [
+        provideStore(),
         provideState(ibLoaderFeature),
         provideAnimations(),
       ],

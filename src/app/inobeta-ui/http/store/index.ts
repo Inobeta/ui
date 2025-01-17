@@ -4,7 +4,8 @@ import { IbSessionEffects } from './session/effects';
 import { IbLoaderState } from './loader/interfaces';
 import { ibSessionExtraSelectors } from './session/selectors';
 import { IbSessionState } from './session/interfaces';
-import { ibLoaderExtraSelectors, ibLoaderReducerMain } from 'public_api';
+import { ibLoaderReducerMain } from './loader/reducers';
+import { ibLoaderExtraSelectors } from './loader/selectors';
 
 export interface IHttpStore{
   session: IbSessionState;
