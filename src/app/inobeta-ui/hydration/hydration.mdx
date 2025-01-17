@@ -8,33 +8,31 @@ Use the `ibSetupHydration` function to setup a persisted state. Provide a unique
 the keys of other stores present in your app that you wish to save on the browser's storage.
 
 It is recommended to provide the following keys on your application:
-- `ibHttpState`: holds user authentication data
+- `ibSessionFeature`: holds user authentication data
 - `ibViews`: table views created by the user
 - `ibTable`: *Legacy table* set of features
 
 ```typescript
 // app.module.ts
-import { EffectsModule } from "@ngrx/effects";
-import { StoreModule } from "@ngrx/store";
 import { ibSetupHydration } from "@inobeta/ui";
 
 const appStorage = ibSetupHydration("app-storage", [
-  "ibHttpState",
+  "ibHttpSessionState",
   "ibViews",
   "ibTable",
 ]);
 
 @NgModule({
   imports: [
-    StoreModule.forRoot(reducers, {
-      metaReducers: appStorage.metareducers,
-    }),
-    EffectsModule.forRoot([
-      TableEffects,
-      ...appStorage.effects,
-      ...ibHttpEffects,
-    ]),
+    /** ... */
   ],
+  providers: [
+    provideStore(undefined, { metaReducers: appStorage.metareducers }),
+    provideState(ibSessionFeature),
+    provideState(ibLoaderFeature),
+    provideEffects(ibHttpEffects),
+    provideEffects(appStorage.effects),
+  ]
   /** ... */
 })
 export class AppModule {}

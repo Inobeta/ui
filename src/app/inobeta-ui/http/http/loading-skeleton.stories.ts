@@ -3,11 +3,9 @@ import { HttpClient, HttpClientModule } from "@angular/common/http";
 import {
   Component,
   Input,
-  OnInit,
-  importProvidersFrom,
   inject,
 } from "@angular/core";
-import { Store, StoreModule, combineReducers } from "@ngrx/store";
+import {  provideState } from "@ngrx/store";
 import {
   Meta,
   StoryObj,
@@ -15,13 +13,9 @@ import {
   moduleMetadata,
 } from "@storybook/angular";
 import { IbHttpModule } from "../http.module";
-import { ibHttpReducers } from "../store";
+import { ibHttpReducers, ibLoaderFeature } from "../store";
 import { provideAnimations } from "@angular/platform-browser/animations";
 import { MatButtonModule } from "@angular/material/button";
-
-const reducers = {
-  ibHttpState: combineReducers(ibHttpReducers),
-};
 
 @Component({
   selector: "ib-loading-screen",
@@ -57,7 +51,7 @@ const meta: Meta<IbLoadingScreen> = {
     }),
     applicationConfig({
       providers: [
-        importProvidersFrom(StoreModule.forRoot(reducers)),
+        provideState(ibLoaderFeature),
         provideAnimations(),
       ],
     }),

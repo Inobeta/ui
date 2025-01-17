@@ -11,7 +11,7 @@ import * as loadingStories from "./http/loading-skeleton.stories";
 This modules comes with an application wide store, and is required to provide it's features.
 
 - First import `IbHttpModule` in your `AppModule`
-- Then add `ibhttpReducers` to your map of reducers
+- Then add `provideState` for `ibSessionFeature`, and `ibLoaderFeature`
 - Lastly, apply the effects provided in `ibHttpEffects`
 
 ```typescript
@@ -25,15 +25,16 @@ const reducers = {
 @NgModule({
   imports: [
     /** ... */
-    IbHttpModule,
-    StoreModule.forRoot(reducers),
-    EffectsModule.forRoot([...ibHttpEffects]),
+    IbHttpModule
   ],
   declarations: [
     /** ... */
   ],
   providers: [
-    /** ... */
+    /** ... */,
+    provideState(ibSessionFeature),
+    provideState(ibLoaderFeature),
+    provideEffects(ibHttpEffects),
   ],
 })
 export class AppModule {}
@@ -64,7 +65,7 @@ Directive to conditionally display a loading skeleton or the original content ba
 
 <Story of={loadingStories.loadingDirective} />
 
-By default, the content will be replaced during any HTTP request currently in progress.  
+By default, the content will be replaced during any HTTP request currently in progress.
 To provide a specific endpoint to listen to, add the `endpoint` parameter
 
 ```html
@@ -139,7 +140,7 @@ const routes: Routes = [
 
 ### IbLoginGuard
 
-Guard routes based on user login status.  
+Guard routes based on user login status.
 The opposite of IbAuthGuard, the route will activate if the user is **NOT** authenticated
 
 Usage:
@@ -186,7 +187,7 @@ const routes: Routes = [
 
 Method decorator for displaying toast notifications, and optionally navigating back after a CRUD operation.
 
-**Parameters:**  
+**Parameters:**
 - enableBackCall: Indicates whether to navigate back after the operation.
 - successMessage: The success message to be displayed in the toast notification. (i18n)
 - timeoutOnSave: Time in milliseconds to wait before navigating back (if enabled).
