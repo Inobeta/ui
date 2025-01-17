@@ -329,11 +329,13 @@ export class IbCustomColumn<T> extends IbColumn<T> {
 To define filters, first import `IbFilterModule` alongside `IbKaiTableModule`.
 
 ```typescript
-@NgModule({
+@Component({
+  standalone: true,
+  template: ``,
   imports: [IbKaiTableModule, IbFilterModule],
   // ...
 })
-export class TableWithFiltersModule {}
+export class TableWithFiltersComponent {}
 ```
 
 Then, add the necessary filters withing your table. Each filter requires a `name` that must match a column defined with the same name.
@@ -461,11 +463,11 @@ export class IbKaiTableExamplePage {
 To add views to a table, first import `IbViewModule` alongside `IbKaiTableModule`, `IbTableActionModule`, and `IbFilterModule`.
 
 ```typescript
-@NgModule({
+@Component({
   imports: [IbKaiTableModule, IbTableActionModule, IbViewModule, IbFilterModule],
   // ...
 })
-export class TableWithViewsModule {}
+export class TableWithViewsComponent {}
 ```
 
 > ⚠️ An `ib-filter` component is required to use `ib-table-view-group`.
@@ -490,11 +492,11 @@ Then add the `ib-table-view-group` component within `ib-kai-table`.
 To enable data export from a table, first import `IbDataExportModule` alongside `IbKaiTableModule` and `IbTableActionModule`.
 
 ```typescript
-@NgModule({
+@Component({
   imports: [IbKaiTableModule, IbTableActionModule, IbDataExportModule],
   // ...
 })
-export class TableWithExportModule {}
+export class TableWithExportComponent {}
 ```
 
 Make sure to have set the `tableName` property in the `ib-kai-table` component. This will be used as the filename of the exported file.
@@ -516,11 +518,11 @@ By default, there are three available formats: `xlsx`, `csv`, and `pdf`.
 The formats can be overriden by including the providers desired, as such:
 
 ```typescript
-@NgModule({
+@Component({
   imports: [IbKaiTableModule, IbTableActionModule, IbDataExportModule],
   providers: [IbXLXSExportProvider],
 })
-export class TableWithExportModule {}
+export class TableWithExportComponent {}
 ```
 
 In this example, only `xlsx` export will be allowed.
@@ -540,11 +542,11 @@ Use `aggregate` to show a roll-up footer row in your table. Each column has a di
 To add a set of buttons to a table's toolbar, first import `IbTableActionModule` alongside `IbKaiTableModule`.
 
 ```typescript
-@NgModule({
+@Component({
   imports: [IbKaiTableModule, IbTableActionModule],
   // ...
 })
-export class TableWithActionsModule {}
+export class TableWithActionsComponent {}
 ```
 
 Then add the `ib-table-action-group` component within `ib-kai-table`, it is recommended to only use `mat-icon-button`s

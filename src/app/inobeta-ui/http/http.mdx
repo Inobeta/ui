@@ -15,28 +15,20 @@ This modules comes with an application wide store, and is required to provide it
 - Lastly, apply the effects provided in `ibHttpEffects`
 
 ```typescript
-import { IbHttpModule, ibHttpReducers, ibHttpEffects } from "@inobeta/ui";
 
-const reducers = {
-  ibHttpState: combineReducers(ibHttpReducers),
-  // ...
-};
 
-@NgModule({
-  imports: [
-    /** ... */
-    IbHttpModule
-  ],
-  declarations: [
-    /** ... */
-  ],
+export const appConfig: ApplicationConfig = {
   providers: [
     /** ... */,
     provideState(ibSessionFeature),
     provideState(ibLoaderFeature),
     provideEffects(ibHttpEffects),
+    importProvidersFrom([
+      IbHttpModule
+      ]
+    ),
   ],
-})
+}
 export class AppModule {}
 ```
 

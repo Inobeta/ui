@@ -22,10 +22,7 @@ const appStorage = ibSetupHydration("app-storage", [
   "ibTable",
 ]);
 
-@NgModule({
-  imports: [
-    /** ... */
-  ],
+export const appConfig: ApplicationConfig = {
   providers: [
     provideStore(undefined, { metaReducers: appStorage.metareducers }),
     provideState(ibSessionFeature),
@@ -34,6 +31,5 @@ const appStorage = ibSetupHydration("app-storage", [
     provideEffects(appStorage.effects),
   ]
   /** ... */
-})
-export class AppModule {}
+}
 ```
