@@ -5,10 +5,6 @@
 | Issue ID | Type | Section | Description |
 | -- | -- | -- | -- |
 |DEVK-427|feat|all|added support to angular 19|
-## [18.1.1] (unreleased)
-
-| Issue ID | Type | Section | Description |
-| -- | -- | -- | -- |
 |DEVK-467|fix|IbKaiTable|State url nullish access fix|
 
 ## [18.1.0] (2024-12-09)
