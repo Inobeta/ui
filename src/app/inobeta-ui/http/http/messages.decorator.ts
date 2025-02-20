@@ -19,6 +19,11 @@ import { IbHttpModule } from '../http.module';
  * }
  * ```
  */
+/**
+ * @deprecated support of this decorator will be removed in the next major version,
+ * you can use it together with IbHttpModule but there is no alternative provided
+ * in future versions of this library.
+ */
 export function ibCrudToast(
   enableBackCall = false,
   successMessage = 'shared.ibCrudToast.success',

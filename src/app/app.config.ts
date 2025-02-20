@@ -1,12 +1,12 @@
 import { registerLocaleData } from "@angular/common";
 import { HttpClient, provideHttpClient } from "@angular/common/http";
-import { ApplicationConfig, importProvidersFrom, isDevMode, provideZoneChangeDetection } from "@angular/core";
+import { ApplicationConfig, isDevMode, provideZoneChangeDetection } from "@angular/core";
 import { provideEffects } from "@ngrx/effects";
 import { provideState, provideStore } from "@ngrx/store";
 import { provideStoreDevtools} from "@ngrx/store-devtools";
-import { provideTranslateService, TranslateLoader, TranslateModule } from "@ngx-translate/core";
+import { provideTranslateService, TranslateLoader } from "@ngx-translate/core";
 
-import { IbHttpModule } from "./inobeta-ui/http/http.module";
+import { provideIbHttp } from "./inobeta-ui/http/http.module";
 import {
   ibHttpEffects,
   ibLoaderFeature,
@@ -52,29 +52,14 @@ export const appConfig: ApplicationConfig = {
     ),
     provideAnimationsAsync(),
     provideHttpClient(),
-
-    //FIXME: This should work according to the ngx-translate documentation, but it doesn't work at all.
-    /*provideTranslateService({
-        loader: {
-          provide: TranslateLoader,
-          useExisting: IbTranslateModuleLoader,
-          deps: [HttpClient],
-        },
-    }),*/
-
-    // @important! This is a hack for @inobeta/ui, especially IbKaiTable.
-    // Change this to Standalone API providers in v19
-    importProvidersFrom([
-      TranslateModule.forRoot({
-        loader: {
-          provide: TranslateLoader,
-          useExisting: IbTranslateModuleLoader,
-          deps: [HttpClient],
-        },
-      }),
-      IbHttpModule
-      ]
-    ),
+    provideIbHttp(),
+    provideTranslateService({
+      loader: {
+        provide: TranslateLoader,
+        useExisting: IbTranslateModuleLoader,
+        deps: [HttpClient],
+      },
+    }),
     provideStore(undefined, { metaReducers: reduxStorageSave.metareducers }),
     provideState(ibSessionFeature),
     provideState(ibLoaderFeature),

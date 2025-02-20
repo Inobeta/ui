@@ -10,7 +10,7 @@ import * as loadingStories from "./http/loading-skeleton.stories";
 
 This modules comes with an application wide store, and is required to provide it's features.
 
-- First import `IbHttpModule` in your `AppModule`
+- add `provideIbHttp()`
 - Then add `provideState` for `ibSessionFeature`, and `ibLoaderFeature`
 - Lastly, apply the effects provided in `ibHttpEffects`
 
@@ -23,10 +23,7 @@ export const appConfig: ApplicationConfig = {
     provideState(ibSessionFeature),
     provideState(ibLoaderFeature),
     provideEffects(ibHttpEffects),
-    importProvidersFrom([
-      IbHttpModule
-      ]
-    ),
+    provideIbHttp()
   ],
 }
 export class AppModule {}
@@ -185,7 +182,7 @@ Method decorator for displaying toast notifications, and optionally navigating b
 - timeoutOnSave: Time in milliseconds to wait before navigating back (if enabled).
 
 ```typescript
-@ibCrudToast(true, 'users.edit.success', 500)
+@ibCrudToast(inject(IbToastNotification), true, 'users.edit.success', 500)
 handleSave() {
   // ... your save logic ...
   return someObservable;

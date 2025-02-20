@@ -22,7 +22,7 @@ const defaultConfig = {
 
 @Directive({
     selector: "[ibLoading]",
-    standalone: false
+    standalone: true
 })
 export class IbLoadingDirective implements OnInit, OnDestroy {
   store = inject(Store);

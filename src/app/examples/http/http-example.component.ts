@@ -6,7 +6,7 @@ import { ibCrudToast } from '../../inobeta-ui/http/http/messages.decorator';
 import { ibLoaderActions } from '../../inobeta-ui/http/store/loader/actions';
 import { MatGridList, MatGridTile } from '@angular/material/grid-list';
 import { JsonPipe } from '@angular/common';
-import { IbHttpModule } from 'public_api';
+import { IbLoadingDirective } from 'public_api';
 
 @Component({
     selector: 'app-test',
@@ -43,7 +43,7 @@ import { IbHttpModule } from 'public_api';
   }
   `],
   imports: [
-    MatGridList, MatGridTile, JsonPipe, IbHttpModule
+    MatGridList, MatGridTile, JsonPipe, IbLoadingDirective
   ]
 })
 

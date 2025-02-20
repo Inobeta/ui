@@ -1,4 +1,6 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
+import { IbLoadingSkeletonRectComponent } from './loading-skeleton.component';
 
 @Component({
     selector: 'ib-loading-skeleton-container',
@@ -23,7 +25,9 @@ import { Component, Input, OnInit } from '@angular/core';
   }
 
   `],
-    standalone: false
+  imports: [
+    CommonModule, IbLoadingSkeletonRectComponent
+  ]
 })
 
 export class IbLoadingSkeletonContainerComponent implements OnInit {

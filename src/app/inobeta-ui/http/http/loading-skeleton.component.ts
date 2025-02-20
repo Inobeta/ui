@@ -15,8 +15,7 @@ import { Component, ElementRef, Input } from "@angular/core";
       margin-bottom: 5px;
     }
 
-  `],
-    standalone: false
+  `]
 })
 export class IbLoadingSkeletonRectComponent {
   @Input() width: string;

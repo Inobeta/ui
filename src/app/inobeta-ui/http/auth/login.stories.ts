@@ -1,7 +1,6 @@
 import { StorybookTranslateModule } from ".storybook/i18n";
-import { HttpClientModule } from "@angular/common/http";
-import { Meta, StoryObj, moduleMetadata } from "@storybook/angular";
-import { IbHttpModule } from "../http.module";
+import { Meta, StoryObj, applicationConfig, moduleMetadata } from "@storybook/angular";
+import { provideIbHttp } from "../http.module";
 import { IbLoginService } from "./login.service";
 import { IbAPITokens } from "./session.model";
 
@@ -10,7 +9,12 @@ const meta: Meta<IbLoginService<IbAPITokens>> = {
   component: IbLoginService,
   decorators: [
     moduleMetadata({
-      imports: [HttpClientModule, StorybookTranslateModule, IbHttpModule],
+      imports: [StorybookTranslateModule],
+    }),
+    applicationConfig({
+      providers: [
+        provideIbHttp()
+      ],
     }),
   ],
 };

@@ -12,8 +12,8 @@ import {
   applicationConfig,
   moduleMetadata,
 } from "@storybook/angular";
-import { IbHttpModule } from "../http.module";
-import { ibHttpReducers, ibLoaderFeature } from "../store";
+import { provideIbHttp } from "../http.module";
+import { ibLoaderFeature } from "../store";
 import { provideAnimations } from "@angular/platform-browser/animations";
 import { MatButtonModule } from "@angular/material/button";
 
@@ -44,7 +44,6 @@ const meta: Meta<IbLoadingScreen> = {
       declarations: [],
       imports: [
         StorybookTranslateModule,
-        IbHttpModule,
         MatButtonModule,
       ],
     }),
@@ -53,6 +52,7 @@ const meta: Meta<IbLoadingScreen> = {
         provideStore(),
         provideState(ibLoaderFeature),
         provideAnimations(),
+        provideIbHttp()
       ],
     }),
   ],
