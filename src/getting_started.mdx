@@ -92,22 +92,19 @@ $app-theme: mat.m2-define-light-theme(
 // app.module.ts
 import { HttpClient } from "@angular/common/http";
 import { IbTranslateModuleLoader } from "@inobeta/ui";
-import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
+import { TranslateLoader, provideTranslateService } from "@ngx-translate/core";
 
 export const appConfig: ApplicationConfig = {
   providers: [{
     // this injection token is optional. Default value: './assets/i18n/'
     { provide: IB_TRANSLATE_ASSETS_PATH, useValue: '/public/shared/i18n/' },
-    importProvidersFrom([
-      TranslateModule.forRoot({
+    provideTranslateService({
         loader: {
           provide: TranslateLoader,
           useExisting: IbTranslateModuleLoader,
           deps: [HttpClient],
         },
-      })
-      ]
-    ),
+    }),
   }]
   /** ... */
 }

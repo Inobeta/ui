@@ -4,7 +4,7 @@ import { ApplicationConfig, importProvidersFrom, isDevMode, provideZoneChangeDet
 import { provideEffects } from "@ngrx/effects";
 import { provideState, provideStore } from "@ngrx/store";
 import { provideStoreDevtools} from "@ngrx/store-devtools";
-import { provideTranslateService, TranslateLoader, TranslateModule } from "@ngx-translate/core";
+import { provideTranslateService, TranslateLoader } from "@ngx-translate/core";
 
 import { IbHttpModule } from "./inobeta-ui/http/http.module";
 import {
@@ -52,29 +52,14 @@ export const appConfig: ApplicationConfig = {
     ),
     provideAnimationsAsync(),
     provideHttpClient(),
-
-    //FIXME: This should work according to the ngx-translate documentation, but it doesn't work at all.
-    /*provideTranslateService({
+    importProvidersFrom([ IbHttpModule ]),
+    provideTranslateService({
         loader: {
           provide: TranslateLoader,
           useExisting: IbTranslateModuleLoader,
           deps: [HttpClient],
         },
-    }),*/
-
-    // @important! This is a hack for @inobeta/ui, especially IbKaiTable.
-    // Change this to Standalone API providers in v19
-    importProvidersFrom([
-      TranslateModule.forRoot({
-        loader: {
-          provide: TranslateLoader,
-          useExisting: IbTranslateModuleLoader,
-          deps: [HttpClient],
-        },
-      }),
-      IbHttpModule
-      ]
-    ),
+    }),
     provideStore(undefined, { metaReducers: reduxStorageSave.metareducers }),
     provideState(ibSessionFeature),
     provideState(ibLoaderFeature),
