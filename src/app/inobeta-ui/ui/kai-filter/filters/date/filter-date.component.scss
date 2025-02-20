@@ -18,7 +18,6 @@
 
     mat-form-field {
       @include mat.form-field-density(-5);
-      padding-bottom: 0;
     }
 
     input[type="number"] {

@@ -9,23 +9,20 @@ import { Meta } from "@storybook/blocks";
 ```typescript
 import { HttpClient } from "@angular/common/http";
 import { IbTranslateModuleLoader, IB_TRANSLATE_ASSETS_PATH } from "@inobeta/ui";
-import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
+import { TranslateLoader, provideTranslateService } from "@ngx-translate/core";
 
-@NgModule({
-  imports: [
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useExisting: IbTranslateModuleLoader,
-        deps: [HttpClient],
-      },
-    }),
-  ],
+export const appConfig: ApplicationConfig = {
   providers: [{
     // this injection token is optional. Default value: './assets/i18n/'
-    { provide: IB_TRANSLATE_ASSETS_PATH, useValue: '/public/shared/i18n/' }
+    { provide: IB_TRANSLATE_ASSETS_PATH, useValue: '/public/shared/i18n/' },
+    provideTranslateService({
+        loader: {
+          provide: TranslateLoader,
+          useExisting: IbTranslateModuleLoader,
+          deps: [HttpClient],
+        },
+    }),
   }]
   /** ... */
-})
-export class AppModule { }
+}
 ```

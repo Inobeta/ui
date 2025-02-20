@@ -106,13 +106,7 @@
           "options": {
             "configDir": ".storybook",
             "browserTarget": "ui:build",
-            "compodoc": true,
-            "compodocArgs": [
-              "-e",
-              "json",
-              "-d",
-              "."
-            ],
+            "compodoc": false,
             "port": 6006
           }
         },
@@ -121,13 +115,7 @@
           "options": {
             "configDir": ".storybook",
             "browserTarget": "ui:build",
-            "compodoc": true,
-            "compodocArgs": [
-              "-e",
-              "json",
-              "-d",
-              "."
-            ],
+            "compodoc": false,
             "outputDir": "dist/storybook/ui"
           }
         }

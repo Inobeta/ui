@@ -20,6 +20,7 @@ export class IbTranslateModuleLoader implements TranslateLoader{
   private http = inject(HttpClient);
 
   getTranslation(lang: string): Observable<any> {
+    console.log('module translate loading')
     return this.http.get(`${this.ibTranslateAssetsPath}${lang}.json`).pipe(
       map(tran => ({
         ...tran,

@@ -1,24 +1,28 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { Validators } from "@angular/forms";
+import { MatCardModule } from "@angular/material/card";
 import { IbFormArray } from "src/app/inobeta-ui/ui/forms/array/array";
 import { IbFormField } from "src/app/inobeta-ui/ui/forms/forms.types";
-import { IbMaterialFormComponent } from "src/app/inobeta-ui/ui/material-forms";
+import { IbMaterialFormComponent, IbMaterialFormModule } from "src/app/inobeta-ui/ui/material-forms";
 import { IbMatButtonControl } from "src/app/inobeta-ui/ui/material-forms/controls/button";
 import { IbMatLabelControl } from "src/app/inobeta-ui/ui/material-forms/controls/label";
 import { IbMatTextboxControl } from "src/app/inobeta-ui/ui/material-forms/controls/textbox";
 
 @Component({
-  selector: "app-form-array-example",
-  templateUrl: "form-array-example.component.html",
-  styles: [
-    `
+    selector: "app-form-array-example",
+    templateUrl: "form-array-example.component.html",
+    styles: [
+        `
       .customForm ::ng-deep .ibFormArrayItem {
         border-bottom: 1px solid #888;
         margin-bottom: 1em;
         padding-bottom: 0.33em;
       }
     `,
-  ],
+    ],
+    imports: [
+      IbMaterialFormModule, MatCardModule
+    ]
 })
 export class MaterialFormArrayExampleComponent implements OnInit {
   @ViewChild("arrayForm", { static: true }) arrayForm: IbMaterialFormComponent;

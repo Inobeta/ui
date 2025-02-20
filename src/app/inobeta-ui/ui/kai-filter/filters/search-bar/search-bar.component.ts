@@ -6,8 +6,8 @@ import { contains, none } from "../../filters";
 import { IbFilterBase } from "../base/filter-base";
 
 @Component({
-  selector: "ib-search-bar",
-  template: `<mat-form-field
+    selector: "ib-search-bar",
+    template: `<mat-form-field
     [formGroup]="filter?.form"
     subscriptSizing="dynamic"
     style="width: 100%; padding-bottom: 0"
@@ -27,7 +27,8 @@ import { IbFilterBase } from "../base/filter-base";
       <mat-icon>close</mat-icon>
     </button>
   </mat-form-field>`,
-  providers: [{ provide: IbFilterBase, useExisting: IbSearchBar }],
+    providers: [{ provide: IbFilterBase, useExisting: IbSearchBar }],
+    standalone: false
 })
 export class IbSearchBar extends IbFilterBase {
   name = "ibSearchBar";

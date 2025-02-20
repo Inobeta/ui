@@ -2,7 +2,8 @@ import { Directive } from "@angular/core";
 import { IbColumn } from "./column";
 
 @Directive({
-  selector: "[ib-action-column]",
+    selector: "[ib-action-column]",
+    standalone: false
 })
 export class IbActionColumn {
   constructor(public ibColumn: IbColumn<unknown>) {

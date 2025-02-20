@@ -1,9 +1,14 @@
 import { IbFormControlBase, IbFormControlBaseParams, IbFormControlInterface, IbFormControlBaseComponent } from 'src/app/inobeta-ui/ui/forms';
 import { Component, Input } from '@angular/core';
+import { MatError } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { ReactiveFormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
-  selector: '[ib-my-custom-textbox]',
-  template: `
+    selector: '[ib-my-custom-textbox]',
+    template: `
   <mat-form-field appearance="fill" style="width: 100%;" [formGroup]="data.form">
     <mat-label>{{data.base.label | translate}} {{data.base.testField}}</mat-label>
     <input
@@ -18,7 +23,10 @@ import { Component, Input } from '@angular/core';
       <ng-container *ngTemplateOutlet="data.formControlErrors;context: this"></ng-container>
     </mat-error>
   </mat-form-field>
-  `
+  `,
+    imports: [
+      MatError, MatIcon, MatInputModule, ReactiveFormsModule, TranslatePipe
+    ]
 })
 
 export class MyCustomTextboxComponent implements IbFormControlInterface {

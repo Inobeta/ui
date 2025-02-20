@@ -5,7 +5,8 @@ import { IbFormField } from './forms.types';
 
 /** @deprecated */
 @Pipe({
-  name: 'asFormControl'
+    name: 'asFormControl',
+    standalone: false
 })
 export class IbFormControlPipe implements PipeTransform {
   transform(value: IbFormField): IbFormControlBase<string> {
@@ -15,7 +16,8 @@ export class IbFormControlPipe implements PipeTransform {
 
 /** @deprecated */
 @Pipe({
-  name: 'asFormArray',
+    name: 'asFormArray',
+    standalone: false
 })
 export class IbFormArrayPipe implements PipeTransform {
   transform(value: IbFormField): IbFormArray {

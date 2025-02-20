@@ -9,6 +9,7 @@ import {
   IbMatSlideToggleControl,
   IbMatTextareaControl,
   IbMaterialFormComponent,
+  IbMaterialFormModule,
 } from "public_api";
 import { IbFormField } from "src/app/inobeta-ui/ui/forms/forms.types";
 import { IbMatButtonControl } from "src/app/inobeta-ui/ui/material-forms/controls/button";
@@ -24,11 +25,15 @@ import {
   forceValueValidator,
   multipleCustomExample,
 } from "./validators";
+import { MatCardModule } from "@angular/material/card";
 
 @Component({
-  selector: "app-material-form-example",
-  templateUrl: "./material-form-example.component.html",
-  styleUrls: ["./material-form-example.component.css"],
+    selector: "app-material-form-example",
+    templateUrl: "./material-form-example.component.html",
+    styleUrls: ["./material-form-example.component.css"],
+    imports: [
+      IbMaterialFormModule, MatCardModule
+    ]
 })
 export class MaterialFormExampleComponent {
   @ViewChild("customForm", { static: true })

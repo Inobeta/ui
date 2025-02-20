@@ -92,21 +92,22 @@ $app-theme: mat.m2-define-light-theme(
 // app.module.ts
 import { HttpClient } from "@angular/common/http";
 import { IbTranslateModuleLoader } from "@inobeta/ui";
-import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
+import { TranslateLoader, provideTranslateService } from "@ngx-translate/core";
 
-@NgModule({
-  imports: [
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useExisting: IbTranslateModuleLoader,
-        deps: [HttpClient],
-      },
+export const appConfig: ApplicationConfig = {
+  providers: [{
+    // this injection token is optional. Default value: './assets/i18n/'
+    { provide: IB_TRANSLATE_ASSETS_PATH, useValue: '/public/shared/i18n/' },
+    provideTranslateService({
+        loader: {
+          provide: TranslateLoader,
+          useExisting: IbTranslateModuleLoader,
+          deps: [HttpClient],
+        },
     }),
-  ],
+  }]
   /** ... */
-})
-export class AppModule { }
+}
 ```
 
 4. Wait for translations to be loaded

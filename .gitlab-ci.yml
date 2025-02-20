@@ -19,6 +19,7 @@ cache:
 install:
   stage: install
   script:
+    - set_current_version
     - npm ci --cache .npm --prefer-offline --no-audit --no-fund
     - npm run build
     - rm -rf node_modules
@@ -37,6 +38,7 @@ test_unit:
   image: inobeta/node-chrome:20
   stage: quality
   script:
+    - set_current_version
     - npm ci --cache .npm --prefer-offline --no-audit --no-fund && npm run test-ci
   allow_failure: true
   artifacts:
@@ -50,6 +52,7 @@ test_unit:
 deploy:
   stage: npm:deploy
   script:
+    - set_current_version
     - npm ci --cache .npm --prefer-offline --no-audit --no-fund
     - npm run packagr
     - npm pack dist/
@@ -62,6 +65,7 @@ deploy:
 deploy_unstable:
   stage: npm:deploy
   script:
+    - set_current_version
     - create_temp_version
     - npm ci --cache .npm --prefer-offline --no-audit --no-fund
     - npm run packagr
@@ -75,6 +79,7 @@ deploy_unstable:
 deploy_testing:
   stage: npm:deploy
   script:
+    - set_current_version
     - create_temp_version
     - npm ci --cache .npm --prefer-offline --no-audit --no-fund
     - npm run packagr
@@ -90,6 +95,7 @@ deploy_testing:
 test_package_creation:
   stage: quality
   script:
+    - set_current_version
     - create_temp_version
     - npm ci --cache .npm --prefer-offline --no-audit --no-fund
     - npm run packagr
@@ -104,6 +110,7 @@ test_package_creation:
 docs_build:
   stage: docs:build
   script:
+    - set_current_version
     - npm ci --cache .npm --prefer-offline --no-audit --no-fund
     - npm run build-storybook
   artifacts:
@@ -122,6 +129,7 @@ docs_build:
 docs_publish:
   stage: docs:deploy
   script:
+    - set_current_version
     - dir="$CURRENT_VERSION"
     - if [ "$CI_COMMIT_REF_SLUG" == "$CI_DEFAULT_BRANCH" ]; then dir="current"; fi;
     - mkdir -p ~/.ssh && echo "$SSH_STAGING" | tr -d '\r' > ~/.ssh/id_rsa && chmod -R 600 ~/.ssh
@@ -140,6 +148,7 @@ docs_publish:
 examples:build:
   stage: examples:build
   script:
+    - set_current_version
     - npm ci --cache .npm --prefer-offline --no-audit --no-fund
     - npm run build
   artifacts:
@@ -162,9 +171,9 @@ examples:image:
     DOCKER_HOST: tcp://docker:2375
     DOCKER_TLS_CERTDIR: ""
   script:
-    - echo "building image $IMAGE:$CURRENT_VERSION"
+    - echo "building image $IMAGE:latest"
     - docker login -u $GITLAB_USER -p $AUTH_TOKEN registry.gitlab.com || { echo "Docker login failed"; exit 1; }
-    - DOCKER_BUILDKIT=1 docker build --memory 128m --progress=plain --push -t $IMAGE:$CURRENT_VERSION . || { echo "Docker build failed with exit code $?"; true; }
+    - DOCKER_BUILDKIT=1 docker build --memory 128m --progress=plain --push -t $IMAGE:latest . || { echo "Docker build failed with exit code $?"; true; }
     - echo "image build done"
   only:
     - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
@@ -179,7 +188,7 @@ examples:deploy:
   - docker:dind
   script:
     - prepare_staging
-    - service_pullrestart_staging $IMAGE $CURRENT_VERSION $SERVICE
+    - service_pullrestart_staging $IMAGE latest $SERVICE
   tags:
     - dedicated
   environment:
@@ -209,7 +218,7 @@ examples:deploy:
     scp docker-compose.yml $STAGING_USER@$STAGING_HOST:~/Apps/$APPNAME
     echo "IMAGE=$IMAGE" >> ".env"
     echo "EXTERNALPORT_HTTP=$EXTERNALPORT_HTTP" >> ".env"
-    echo "version=$CURRENT_VERSION" >> ".env"
+    echo "version=latest" >> ".env"
     scp .env $STAGING_USER@$STAGING_HOST:~/Apps/$APPNAME
   }
 
@@ -220,4 +229,3 @@ examples:deploy:
 
 before_script:
   - *inobeta_pkg
-  - set_current_version

@@ -3,7 +3,8 @@ import { IbDynamicFormArrayComponent } from "../../forms/dynamic-form-array/dyna
 
 /** @deprecated */
 @Component({
-  selector: "ib-material-form-array",
-  templateUrl: "material-form-array.component.html",
+    selector: "ib-material-form-array",
+    templateUrl: "material-form-array.component.html",
+    standalone: false
 })
 export class IbMaterialFormArrayComponent extends IbDynamicFormArrayComponent {}

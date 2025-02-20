@@ -6,8 +6,9 @@ import { IbMainMenuData } from '../../models/main-menu-data.model';
 
 
 @Component({
-  selector: 'ib-main-menu-bar',
-  template: ''
+    selector: 'ib-main-menu-bar',
+    template: '',
+    standalone: false
 })
 export class IbMainMenuBarStubComponent {
 

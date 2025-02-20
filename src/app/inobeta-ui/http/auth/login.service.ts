@@ -7,7 +7,7 @@ import { jwtDecode } from "jwt-decode";
 import { Observable, throwError } from "rxjs";
 import { catchError, filter, map } from "rxjs/operators";
 import { ibAuthActions } from "../store/session/actions";
-import { ibSelectActiveSession } from "../store/session/selectors";
+import { ibSelectActiveSession } from "../store/";
 import {
   IbAPITokens,
   IbAuthTypes,

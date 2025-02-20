@@ -11,10 +11,11 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 
 @Component({
-  selector: 'host-test',
-  template: `
+    selector: 'host-test',
+    template: `
   <ib-material-breadcrumb></ib-material-breadcrumb>
-  `
+  `,
+    standalone: false
 })
 
 export class TestHostComponent {

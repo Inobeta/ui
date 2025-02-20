@@ -4,8 +4,8 @@ import { Component, Input } from '@angular/core';
 
 /** @deprecated */
 @Component({
-  selector: '[ib-mat-autocomplete]',
-  template: `
+    selector: '[ib-mat-autocomplete]',
+    template: `
   <mat-form-field appearance="fill" style="width: 100%;" [formGroup]="data.form">
     <mat-label>{{data.base.label | translate}}</mat-label>
     <input
@@ -37,7 +37,8 @@ import { Component, Input } from '@angular/core';
       <ng-container *ngTemplateOutlet="data.formControlErrors;context: this"></ng-container>
     </mat-error>
   </mat-form-field>
-  `
+  `,
+    standalone: false
 })
 
 export class IbMatAutocompleteComponent implements IbFormControlInterface {

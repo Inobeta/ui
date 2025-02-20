@@ -9,8 +9,8 @@ import {
 } from "../../forms/controls/form-control-base";
 
 @Component({
-  selector: "[ib-mat-dropdown]",
-  template: `
+    selector: "[ib-mat-dropdown]",
+    template: `
     <mat-form-field
       appearance="fill"
       style="width: 100%;"
@@ -54,13 +54,14 @@ import {
       </mat-error>
     </mat-form-field>
   `,
-  styles: [
-    `
+    styles: [
+        `
       .ib-mat-dropdown-select-all ::ng-deep mat-pseudo-checkbox {
         display: none;
       }
     `,
-  ],
+    ],
+    standalone: false
 })
 export class IbMatDropdownComponent implements IbFormControlInterface {
   @Input() data: IbDropdownData;

@@ -2,8 +2,8 @@ import { Component, Input } from '@angular/core';
 import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, IbFormControlBaseParams, IbFormControlData } from '../../forms/controls/form-control-base';
 
 @Component({
-  selector: '[ib-mat-radio]',
-  template: `
+    selector: '[ib-mat-radio]',
+    template: `
   <div style="width: 100%;" [formGroup]="data.form">
     <mat-label [attr.for]="data.base.key" style="display: block">{{data.base.label | translate}} {{(data.base.required) ? '*' : ''}}</mat-label>
         <mat-radio-group
@@ -18,7 +18,8 @@ import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, 
       <ng-container *ngTemplateOutlet="data.formControlErrors;context: this"></ng-container>
     </mat-error>
 </div>
-  `
+  `,
+    standalone: false
 })
 
 export class IbMatRadioComponent implements IbFormControlInterface {

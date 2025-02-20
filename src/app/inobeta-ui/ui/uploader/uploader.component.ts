@@ -1,11 +1,12 @@
 import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 
 @Component ({
-  selector: 'ib-uploader',
-  template: `
+    selector: 'ib-uploader',
+    template: `
     <input (change)="onChooseChange()" #uploader style="display:none;"type="file"/>
     <button mat-button (click)="onChooseClick()" >{{textKey | translate}}</button>
-  `
+  `,
+    standalone: false
 })
 export class IbUploaderComponent {
   @ViewChild('uploader') uploader !: ElementRef;

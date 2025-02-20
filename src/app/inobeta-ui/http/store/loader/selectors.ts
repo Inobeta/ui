@@ -1,18 +1,18 @@
 import { createSelector } from '@ngrx/store';
-import { IHttpStore } from '..';
-
-const selectFeature = (state) => state.ibHttpState;
-
-export const ibSelectIsHttpLoading = createSelector(
-  selectFeature,
-  (state: IHttpStore): boolean => {
-    return state?.loader?.showLoading ?? false
+import { ibRequestHttp } from './interfaces';
+const isHttpLoading =
+  (showLoading: boolean): boolean => {
+    return showLoading ?? false
   }
-)
 
-export const ibSelectIsHttpUrlLoading = (endpoint: { url: string, method: string}) => createSelector(
-  selectFeature,
-  (state: IHttpStore): boolean => {
-    return state.loader.pendingRequestList.findIndex(pl => pl.url === endpoint.url && pl.method === endpoint.method) >= 0
+const isHttpUrlLoading = (endpoint: { url: string, method: string})  => (pendingRequestList: ibRequestHttp[]): boolean => {
+  return pendingRequestList.findIndex(pl => pl.url === endpoint.url && pl.method === endpoint.method) >= 0
+}
+
+
+export function ibLoaderExtraSelectors({ selectShowLoading, selectPendingRequestList }){
+  return {
+    ibSelectIsHttpLoading: createSelector(selectShowLoading, isHttpLoading),
+    ibSelectIsHttpUrlLoading: (endpoint: { url: string, method: string})  => createSelector(selectPendingRequestList, isHttpUrlLoading(endpoint))
   }
-)
+}

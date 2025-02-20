@@ -118,7 +118,8 @@ describe("IbViewService", () => {
 });
 
 @Component({
-  template: ``,
+    template: ``,
+    standalone: false
 })
 class IbViewServiceApp {
   constructor(public viewService: IbViewService) {}

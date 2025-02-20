@@ -1,11 +1,8 @@
 import { HttpClientModule } from "@angular/common/http";
 import { importProvidersFrom } from "@angular/core";
-import { setCompodocJson } from "@storybook/addon-docs/angular";
 import { applicationConfig, type Preview } from "@storybook/angular";
-import docJson from "../documentation.json";
 import {version} from '../package.json'
 const [major, minor, patch] = version.split('.')
-setCompodocJson(docJson);
 
 const preview: Preview = {
   parameters: {

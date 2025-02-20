@@ -8,12 +8,9 @@ import {
   inject,
 } from "@angular/core";
 import { Store } from "@ngrx/store";
-import {
-  ibSelectIsHttpLoading,
-  ibSelectIsHttpUrlLoading,
-} from "../store/loader/selectors";
 import { Observable, Subscription } from "rxjs";
 import { IbLoadingSkeletonContainerComponent } from "./loading-skeleton-container.component";
+import { ibSelectIsHttpLoading, ibSelectIsHttpUrlLoading } from "../store/index";
 
 const defaultConfig = {
   size: 1,
@@ -23,7 +20,10 @@ const defaultConfig = {
   endpoint: null,
 };
 
-@Directive({ selector: "[ibLoading]" })
+@Directive({
+    selector: "[ibLoading]",
+    standalone: false
+})
 export class IbLoadingDirective implements OnInit, OnDestroy {
   store = inject(Store);
   isLoading$ = this.store.select(ibSelectIsHttpLoading);

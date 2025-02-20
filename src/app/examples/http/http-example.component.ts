@@ -4,10 +4,13 @@ import { Store } from '@ngrx/store';
 import { map } from 'rxjs/operators';
 import { ibCrudToast } from '../../inobeta-ui/http/http/messages.decorator';
 import { ibLoaderActions } from '../../inobeta-ui/http/store/loader/actions';
+import { MatGridList, MatGridTile } from '@angular/material/grid-list';
+import { JsonPipe } from '@angular/common';
+import { IbHttpModule } from 'public_api';
 
 @Component({
-  selector: 'app-test',
-  template: `
+    selector: 'app-test',
+    template: `
 <mat-grid-list [cols]="4"  class="ib-material-form-grid" rowHeight="60px">
   <mat-grid-tile [colspan]="1" [rowspan]="1">
     <button mat-raised-button color="primary" (click)="decoratorTest()">Test decorator (success)</button>
@@ -31,14 +34,17 @@ import { ibLoaderActions } from '../../inobeta-ui/http/store/loader/actions';
   </pre>
 </div>
   `,
-  styles:[`
+    styles: [`
   .display-container{
     display: flex;
   }
   .display-container pre{
     flex: 1;
   }
-  `]
+  `],
+  imports: [
+    MatGridList, MatGridTile, JsonPipe, IbHttpModule
+  ]
 })
 
 export class HttpExampleComponent implements OnInit {

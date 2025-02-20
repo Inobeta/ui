@@ -11,10 +11,11 @@ import { IbToolTestModule, serviceDialogStub } from '../../tools';
 
 
 @Component({
-  selector: 'host-test',
-  template: `
+    selector: 'host-test',
+    template: `
   <ib-modal-message></ib-modal-message>
-  `
+  `,
+    standalone: false
 })
 
 export class TestHostComponent {

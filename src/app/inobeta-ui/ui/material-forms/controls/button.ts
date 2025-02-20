@@ -5,8 +5,8 @@ import { IbModalMessageService } from '../../modal/modal-message.service';
 
 /** @deprecated */
 @Component({
-  selector: '[ib-mat-button]',
-  template: `
+    selector: '[ib-mat-button]',
+    template: `
 <div style="padding-top:5px;padding-bottom:5px;height:45px;">
   <button
     (click)="handleActionClick()"
@@ -16,7 +16,8 @@ import { IbModalMessageService } from '../../modal/modal-message.service';
     [color]="data.base.color"
   >{{data.base.label | translate}}</button>
 </div>
-  `
+  `,
+    standalone: false
 })
 
 export class IbMatButtonComponent implements IbFormControlInterface {

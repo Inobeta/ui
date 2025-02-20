@@ -5,8 +5,9 @@ import { IbFormControlService } from "../form-control.service";
 
 /** @deprecated */
 @Component({
-  selector: "ib-dynamic-form-array",
-  templateUrl: "dynamic-form-array.component.html",
+    selector: "ib-dynamic-form-array",
+    templateUrl: "dynamic-form-array.component.html",
+    standalone: false
 })
 export class IbDynamicFormArrayComponent {
   @Input() base: IbFormArray;

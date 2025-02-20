@@ -20,7 +20,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from "@angular/forms";
-import { IbPatchFormValue } from "public_api";
+import { IbPatchFormValue } from "./patch-value.directive";
 
 @Component({
   selector: "ib-form-story",

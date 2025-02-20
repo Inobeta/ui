@@ -3,8 +3,8 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { IbModalMessage } from './modal-message.model';
 
 @Component({
-  selector: 'ib-modal-message',
-  template: `
+    selector: 'ib-modal-message',
+    template: `
     <h2 mat-dialog-title>{{ data.title | translate }}</h2>
     <mat-dialog-content
       [ngStyle]="{
@@ -34,6 +34,7 @@ import { IbModalMessage } from './modal-message.model';
         {{ 'shared.ibModal.yes' | translate }}
       </button>
     </mat-dialog-actions>`,
+    standalone: false
 })
 export class IbModalMessageComponent {
 

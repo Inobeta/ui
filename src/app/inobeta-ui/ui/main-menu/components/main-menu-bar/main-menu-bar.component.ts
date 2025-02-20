@@ -7,9 +7,10 @@ import { IbMainMenuDialogComponent } from '../main-menu-dialog/main-menu-dialog.
 
 
 @Component({
-  selector: 'ib-main-menu-bar',
-  templateUrl: './main-menu-bar.component.html',
-  styleUrls: ['./main-menu-bar.component.css']
+    selector: 'ib-main-menu-bar',
+    templateUrl: './main-menu-bar.component.html',
+    styleUrls: ['./main-menu-bar.component.css'],
+    standalone: false
 })
 export class IbMainMenuBarComponent  {
 /**

@@ -1,7 +1,8 @@
 import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
-  name: 'translate'
+    name: 'translate',
+    standalone: false
 })
 export class IbMockTranslatePipeDirective implements PipeTransform {
   public name = 'translate';

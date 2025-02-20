@@ -6,8 +6,9 @@ import { IbFormAction } from '../../forms/dynamic-form/dynamic-form.component';
 import { IbMatActionsPosition } from './material-form.component';
 
 @Component({
-  selector: 'ib-material-form',
-  template: ``,
+    selector: 'ib-material-form',
+    template: ``,
+    standalone: false
 })
 export class IbMaterialFormStubComponent {
   @Input() fields: IbFormControlBase<string>[] = [];

@@ -80,11 +80,12 @@ describe("IbTagFilter", () => {
 });
 
 @Component({
-  template: `
+    template: `
     <ib-filter>
       <ib-tag-filter name="colour" [options]="options"></ib-tag-filter>
     </ib-filter>
   `,
+    standalone: false
 })
 class IbTagFilterApp {
   options = ["blue", "white", "pink", "black"];

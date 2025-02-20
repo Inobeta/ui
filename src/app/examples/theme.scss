@@ -2,7 +2,8 @@
 @use "../inobeta-ui/ui" as ui;
 @use "./red-palette";
 
-@include mat.core();
+@include mat.elevation-classes();
+@include mat.app-background();
 
 html {
   @include mat.all-component-themes(red-palette.$light-theme);

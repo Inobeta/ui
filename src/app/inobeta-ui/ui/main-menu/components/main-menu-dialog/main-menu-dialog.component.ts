@@ -4,8 +4,8 @@ import { Router } from '@angular/router';
 import { IbMainMenuDataSet } from '../../models/main-menu-data-set.model';
 
 @Component({
-  selector: 'ib-main-menu-dialog',
-  template: `
+    selector: 'ib-main-menu-dialog',
+    template: `
     <mat-dialog-content (click)="this.dialogRef.close()">
       <ib-main-menu-expanded
         [navDataSet]="data"
@@ -14,7 +14,8 @@ import { IbMainMenuDataSet } from '../../models/main-menu-data-set.model';
       </ib-main-menu-expanded >
     </mat-dialog-content>
   `,
-  styleUrls: ['./main-menu-dialog.component.css']
+    styleUrls: ['./main-menu-dialog.component.css'],
+    standalone: false
 })
 export class IbMainMenuDialogComponent {
   constructor(

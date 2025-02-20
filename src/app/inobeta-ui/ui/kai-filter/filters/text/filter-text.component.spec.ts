@@ -84,11 +84,12 @@ describe("IbTextFilter", () => {
 });
 
 @Component({
-  template: `
+    template: `
     <ib-filter>
       <ib-text-filter name="sku"></ib-text-filter>
     </ib-filter>
-  `
+  `,
+    standalone: false
 })
 class IbTextFilterApp {
 }

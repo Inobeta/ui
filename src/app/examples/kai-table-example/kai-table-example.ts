@@ -1,11 +1,16 @@
 import { Component } from "@angular/core";
 import { IbTableDef } from "../../inobeta-ui/ui/kai-table/table.types";
 import { createNewUser } from "./users";
+import { JsonPipe } from "@angular/common";
+import { IbKaiTableModule } from "public_api";
 
 @Component({
-  selector: "ib-kai-table-example",
-  templateUrl: "kai-table-example.html",
-  styleUrl: "./kai-table-example.scss",
+    selector: "ib-kai-table-example",
+    templateUrl: "kai-table-example.html",
+    styleUrl: "./kai-table-example.scss",
+    imports: [
+      JsonPipe, IbKaiTableModule
+    ]
 })
 export class IbKaiTableExamplePage {
   data: any[];

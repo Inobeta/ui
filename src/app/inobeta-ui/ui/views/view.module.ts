@@ -8,14 +8,14 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatTooltipModule } from "@angular/material/tooltip";
-import { StoreModule } from "@ngrx/store";
+import { provideState } from "@ngrx/store";
 import { TranslateModule } from "@ngx-translate/core";
 import { IbDefaultTableView } from "./components/default-table-view/default-table-view.component";
 import { IbTableViewGroup } from "./components/table-view-group/table-view-group.component";
 import { IbTableView } from "./components/table-view/table-view.component";
 import { IbTableViewDialog } from "./components/view-dialog/view-dialog.component";
 import { IbViewList } from "./components/view-list/view-list.component";
-import { reducers } from "./store/reducer";
+import { ibViewsFeature } from "./store/reducer";
 import { IbViewService } from "./view.service";
 import { IbTableActionModule } from "../kai-table/action";
 
@@ -46,11 +46,13 @@ import { IbTableActionModule } from "../kai-table/action";
     MatFormFieldModule,
     ReactiveFormsModule,
     IbTableActionModule,
-    StoreModule.forFeature("ibViews", reducers),
     TranslateModule.forChild({
       extend: true,
     }),
   ],
-  providers: [IbViewService],
+  providers: [
+    provideState(ibViewsFeature),
+    IbViewService
+  ],
 })
 export class IbViewModule {}

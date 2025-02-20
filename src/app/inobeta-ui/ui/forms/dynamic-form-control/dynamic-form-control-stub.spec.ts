@@ -3,8 +3,9 @@ import { IbFormControlBase } from '..';
 import { UntypedFormGroup } from '@angular/forms';
 
 @Component({
-  selector: 'ib-dynamic-form-control',
-  template: ``
+    selector: 'ib-dynamic-form-control',
+    template: ``,
+    standalone: false
 })
 
 export class DynamicFormControlStubComponent {

@@ -79,10 +79,11 @@ describe("IbNumberFilter", () => {
 });
 
 @Component({
-  template: `
+    template: `
     <ib-filter>
       <ib-number-filter name="price" [min]="0" [max]="100"></ib-number-filter>
     </ib-filter>
   `,
+    standalone: false
 })
 class IbNumberFilterApp {}

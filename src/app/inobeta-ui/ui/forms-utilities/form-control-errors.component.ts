@@ -3,10 +3,9 @@ import { FormGroupDirective } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
 
 @Component({
-  standalone: true,
-  imports: [TranslateModule],
-  selector: "ib-form-control-errors",
-  template: `
+    imports: [TranslateModule],
+    selector: "ib-form-control-errors",
+    template: `
     @if (control().hasError("required")) {
       {{ "shared.ibFormsUtilities.errors.required" | translate }}
     } @else if (control().hasError("minlength")) {
@@ -35,7 +34,7 @@ import { TranslateModule } from "@ngx-translate/core";
           | translate: control().errors.customError.params
       }}
     }
-  `,
+  `
 })
 export class IbFormControlErrors {
   formDirective = inject(FormGroupDirective);

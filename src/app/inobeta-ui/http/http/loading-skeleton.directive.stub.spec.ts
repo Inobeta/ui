@@ -1,6 +1,9 @@
 import { Directive, Input } from "@angular/core";
 
-@Directive({ selector: '[ibLoading]' })
+@Directive({
+    selector: '[ibLoading]',
+    standalone: false
+})
 export class IbLoadingStubDirective {
   @Input('ibLoading') config = {
     size: 1,

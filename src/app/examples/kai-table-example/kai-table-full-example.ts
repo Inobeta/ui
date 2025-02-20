@@ -2,10 +2,14 @@ import { Component, ViewChild } from "@angular/core";
 import { IbSelectionColumn } from "../../inobeta-ui/ui/kai-table/columns/selection-column";
 import { IbKaiTableState } from "../../inobeta-ui/ui/kai-table/table.types";
 import { UserService } from "./users";
+import { MatIconModule } from "@angular/material/icon";
+import { IbDataExportModule, IbFilterModule, IbKaiTableModule, IbTableActionModule, IbViewModule } from "public_api";
+import { CommonModule } from "@angular/common";
+import { MatIconButton } from "@angular/material/button";
 
 @Component({
-  selector: "ib-kai-table-full-example",
-  template: `
+    selector: "ib-kai-table-full-example",
+    template: `
     <ib-kai-table
       tableName="fullExample"
       [displayedColumns]="columns"
@@ -58,8 +62,8 @@ import { UserService } from "./users";
       </ib-column>
     </ib-kai-table>
   `,
-  styles: [
-    `
+    styles: [
+        `
       :host {
         display: flex;
         flex-direction: column;
@@ -67,8 +71,11 @@ import { UserService } from "./users";
         gap: 3em;
       }
     `,
-  ],
-  providers: [UserService],
+    ],
+    providers: [UserService],
+    imports: [
+      MatIconModule, IbKaiTableModule, IbFilterModule, IbViewModule, IbTableActionModule, IbDataExportModule, CommonModule, MatIconButton
+    ]
 })
 export class IbKaiTableFullExamplePage {
   @ViewChild(IbSelectionColumn, { static: true })

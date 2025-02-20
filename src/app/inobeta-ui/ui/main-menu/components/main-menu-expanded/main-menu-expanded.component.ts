@@ -3,9 +3,10 @@ import { EventEmitter } from '@angular/core';
 import { IbMainMenuDataSet } from '../../models/main-menu-data-set.model';
 
 @Component({
-  selector: 'ib-main-menu-expanded',
-  templateUrl: './main-menu-expanded.component.html',
-  styleUrls: ['./main-menu-expanded.component.css']
+    selector: 'ib-main-menu-expanded',
+    templateUrl: './main-menu-expanded.component.html',
+    styleUrls: ['./main-menu-expanded.component.css'],
+    standalone: false
 })
 export class IbMainMenuExpandedComponent {
   @Input() navDataSet: IbMainMenuDataSet;

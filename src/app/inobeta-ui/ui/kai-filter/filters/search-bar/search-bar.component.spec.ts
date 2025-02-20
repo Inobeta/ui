@@ -41,10 +41,11 @@ describe("IbSearchBar", () => {
 });
 
 @Component({
-  template: `
+    template: `
     <ib-filter>
       <ib-search-bar></ib-search-bar>
     </ib-filter>
   `,
+    standalone: false
 })
 class IbFilterSearchBarApp {}

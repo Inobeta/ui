@@ -17,8 +17,8 @@ import { IbColumn } from "./column";
  * `digitsInfo` input. Same as `DecimalPipe` or `formatNumber` function.
  */
 @Component({
-  selector: "ib-number-column",
-  template: `
+    selector: "ib-number-column",
+    template: `
     <ng-container
       matColumnDef
       matSort
@@ -56,16 +56,17 @@ import { IbColumn } from "./column";
       </td>
     </ng-container>
   `,
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.Default,
-  providers: [
-    {
-      provide: IbColumn,
-      useExisting: IbNumberColumn,
-    },
-    { provide: IB_COLUMN, useExisting: IbNumberColumn },
-    { provide: IB_AGGREGATE_TYPE, useValue: "number" },
-  ],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Default,
+    providers: [
+        {
+            provide: IbColumn,
+            useExisting: IbNumberColumn,
+        },
+        { provide: IB_COLUMN, useExisting: IbNumberColumn },
+        { provide: IB_AGGREGATE_TYPE, useValue: "number" },
+    ],
+    standalone: false
 })
 export class IbNumberColumn<T> extends IbColumn<T> {
   @Input() digitsInfo = "1.0-2";

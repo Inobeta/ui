@@ -19,8 +19,8 @@ export interface IbTableViewDialogData {
 }
 
 @Component({
-  selector: "ib-table-view-dialog",
-  template: `
+    selector: "ib-table-view-dialog",
+    template: `
     <h2 mat-dialog-title>{{ data?.title | translate }}</h2>
 
     <mat-dialog-content>
@@ -59,6 +59,7 @@ export interface IbTableViewDialogData {
       </button>
     </div>
   `,
+    standalone: false
 })
 export class IbTableViewDialog {
   viewName = new FormControl("");

@@ -9,8 +9,9 @@ type IbBreadcrumbItem = {
 }
 
 @Component({
-  selector: 'ib-breadcrumb',
-  templateUrl: './breadcrumb.component.html',
+    selector: 'ib-breadcrumb',
+    templateUrl: './breadcrumb.component.html',
+    standalone: false
 })
 export class IbBreadcrumbComponent implements OnInit {
   static readonly ROUTE_DATA_BREADCRUMB = 'breadcrumb';

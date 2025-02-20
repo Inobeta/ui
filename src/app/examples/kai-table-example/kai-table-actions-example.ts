@@ -1,9 +1,13 @@
 import { Component, OnInit } from "@angular/core";
 import { IbUserExample, createNewUser } from "./users";
+import { IbKaiTableModule } from "public_api";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatIconModule } from "@angular/material/icon";
+import { MatIconButton } from "@angular/material/button";
 
 @Component({
-  selector: "ib-kai-table-context-action-example",
-  template: `
+    selector: "ib-kai-table-context-action-example",
+    template: `
     <ib-kai-table
       style="text-direction: rtl"
       [displayedColumns]="['name', 'fruit', 'number']"
@@ -28,15 +32,18 @@ import { IbUserExample, createNewUser } from "./users";
       </ib-column>
     </ib-kai-table>
   `,
-  styles: [
-    `
+    styles: [
+        `
       :host {
         display: flex;
         flex-direction: column;
         padding: 30px;
       }
     `,
-  ],
+    ],
+    imports: [
+      IbKaiTableModule, MatMenuModule, MatIconModule, MatIconButton
+    ]
 })
 export class IbKaiTableActionColumnExamplePage implements OnInit {
   data: IbUserExample[];

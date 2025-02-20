@@ -18,8 +18,9 @@ export enum IbMatActionsPosition {
 
 /** @deprecated */
 @Component({
-  selector: "ib-material-form",
-  templateUrl: "./material-form.component.html",
+    selector: "ib-material-form",
+    templateUrl: "./material-form.component.html",
+    standalone: false
 })
 export class IbMaterialFormComponent
   extends IbDynamicFormComponent

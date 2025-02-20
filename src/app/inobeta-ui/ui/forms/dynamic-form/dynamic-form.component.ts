@@ -28,8 +28,9 @@ interface IbFormOnChanges {
 
 /** @deprecated */
 @Component({
-  selector: "ib-form",
-  templateUrl: "./dynamic-form.component.html",
+    selector: "ib-form",
+    templateUrl: "./dynamic-form.component.html",
+    standalone: false
 })
 export class IbDynamicFormComponent implements OnInit, OnChanges, OnDestroy {
   @Input() fields: IbFormField[] = [];

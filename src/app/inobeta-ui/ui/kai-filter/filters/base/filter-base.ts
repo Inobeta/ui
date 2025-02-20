@@ -25,7 +25,8 @@ export interface IFilterBase {
 }
 
 @Directive({
-  selector: "ib-filter-base",
+    selector: "ib-filter-base",
+    standalone: false
 })
 export class IbFilterBase implements IFilterBase {
   @ViewChild(IbFilterButton) button: IbFilterButton;

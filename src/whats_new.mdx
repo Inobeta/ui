@@ -4,20 +4,17 @@ import { Meta } from "@storybook/blocks";
 
 # What's new
 
-## Maintenance release
+## Migration to app.config
 
-In this release, there are no substantial changes compared to previous versions. However, we’ve introduced some improvements to enhance functionality and flexibility in specific use cases:
+In this release, the library has been updated to Angular 19, adopting the new `app.config` approach and relegating support for `app.module` to a minimal level.
+It is strongly recommended to migrate to `app.config` as soon as possible to take full advantage of the latest features and to ensure compatibility with future updates.
 
-- **Symbol Support for Numeric Columns in `ibKaiTable`**: Numeric columns in `ibKaiTable` now support symbols, allowing for a richer and more versatile representation of numerical data.
-- **Exposed Asset Path for `ibTranslate`**: The asset path for `ibTranslate` is now exposed, providing greater control and customization when managing translation assets.
-
-These updates aim to provide a more seamless user experience while maintaining compatibility with existing functionality.
-
-
+Additionally, the general trend will be to increasingly adopt standalone components.
+In an initial phase, we will continue to use modules as mere collectors;
+however, they will eventually be deprecated and removed.
+We recommend using standalone components as they become available to align with this transition and ensure smoother future migrations.
 # Changelog
 
 | Issue ID | Type | Section | Description |
 | -- | -- | -- | -- |
-|DEVK-358|feat|IbKaiTable|added symbol on number columns|
-|DEVK-408|fix|Forms Utility|Removed experimental notice|
-|DEVK-409|feat|IbTranslate|added injection token for assets path|
+|DEVK-427|feat|all|ng 19 upgrade|

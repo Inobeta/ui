@@ -12,14 +12,16 @@ import { Store } from "@ngrx/store";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
 import { takeUntil, tap } from "rxjs/operators";
 import { IbKaiTableAction } from "../../../kai-table/action";
-import { ITableViewData, IView, selectTableViews } from "../../store/views";
+import { ITableViewData, IView } from "../../store/views";
 import { IbViewService } from "../../view.service";
 import { IbTableUrlService } from "../../../kai-table/table-url.service";
+import { selectTableViews } from "../../store/index";
 
 @Component({
-  selector: "ib-view-group, ib-table-view-group",
-  templateUrl: "table-view-group.component.html",
-  styleUrls: ["table-view-group.component.scss"],
+    selector: "ib-view-group, ib-table-view-group",
+    templateUrl: "table-view-group.component.html",
+    styleUrls: ["table-view-group.component.scss"],
+    standalone: false
 })
 export class IbTableViewGroup implements OnDestroy  {
   @ViewChildren(IbKaiTableAction) actions: QueryList<IbKaiTableAction>;

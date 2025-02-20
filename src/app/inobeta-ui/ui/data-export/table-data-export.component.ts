@@ -6,8 +6,8 @@ import {
 } from "./data-export.service";
 
 @Component({
-  selector: "ib-table-data-export-action",
-  template: `
+    selector: "ib-table-data-export-action",
+    template: `
     <button
       mat-icon-button
       [matTooltip]="'shared.ibTable.export' | translate"
@@ -16,6 +16,7 @@ import {
       <mat-icon>file_download</mat-icon>
     </button>
   `,
+    standalone: false
 })
 export class IbTableDataExportAction {
   @Input() showAllRowsOption = false;

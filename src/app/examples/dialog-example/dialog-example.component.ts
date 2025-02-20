@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { IbModalMessageService } from 'src/app/inobeta-ui/ui/modal/modal-message.service';
 
 @Component({
-  selector: 'ib-dialog-example',
-  template: `
+    selector: 'ib-dialog-example',
+    template: `
   <button (click)="open()">open dialog</button>
   <div>{{ response }}</div>
-  `
+  `,
+    standalone: false
 })
 
 export class DialogExampleComponent implements OnInit {

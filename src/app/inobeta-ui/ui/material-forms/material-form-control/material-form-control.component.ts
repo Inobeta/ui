@@ -12,7 +12,8 @@ import { IbFormControlInterface } from "../../forms/controls/form-control-base";
 import { IbDynamicFormControlComponent } from "../../forms/dynamic-form-control/dynamic-form-control.component";
 
 @Directive({
-  selector: "[formControlHost]",
+    selector: "[formControlHost]",
+    standalone: false
 })
 export class IbFormControlDirective {
   constructor(public viewContainerRef: ViewContainerRef) {}
@@ -20,8 +21,9 @@ export class IbFormControlDirective {
 
 /** @deprecated */
 @Component({
-  selector: "ib-material-form-control",
-  templateUrl: "./material-form-control.component.html",
+    selector: "ib-material-form-control",
+    templateUrl: "./material-form-control.component.html",
+    standalone: false
 })
 export class IbMaterialFormControlComponent
   extends IbDynamicFormControlComponent

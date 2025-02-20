@@ -6,6 +6,7 @@ import {
   IbMatCheckboxControl,
   IbMatDatepickerControl,
   IbMatDropdownControl,
+  IbMaterialFormModule,
   IbMatLabelControl,
   IbMatPaddingControl,
   IbMatRadioControl,
@@ -19,11 +20,15 @@ import {
   forceValueValidator,
   multipleCustomExample,
 } from "../material-form-example/validators";
+import { MatCardModule } from "@angular/material/card";
 
 @Component({
-  selector: "app-material-form-grid-example",
-  templateUrl: "./material-form-grid-example.component.html",
-  styleUrls: ["./material-form-grid-example.component.css"],
+    selector: "app-material-form-grid-example",
+    templateUrl: "./material-form-grid-example.component.html",
+    styleUrls: ["./material-form-grid-example.component.css"],
+    imports: [
+      IbMaterialFormModule, MatCardModule
+    ]
 })
 export class MaterialFormGridExampleComponent {
   customFormFields: IbFormField[] = [

@@ -12,21 +12,20 @@ import { eq, none } from "../../filters";
 import { IbFilterBase } from "../base/filter-base";
 
 @Component({
-  standalone: true,
-  imports: [
-    NgIf,
-    IbFilterButton,
-    IbFilterActionGroup,
-    ReactiveFormsModule,
-    MatButtonModule,
-    MatButtonToggleModule,
-    MatRadioModule,
-    TranslateModule,
-    LowerCasePipe,
-  ],
-  selector: "ib-boolean-filter",
-  templateUrl: "boolean-filter.component.html",
-  providers: [{ provide: IbFilterBase, useExisting: IbBooleanFilter }],
+    imports: [
+        NgIf,
+        IbFilterButton,
+        IbFilterActionGroup,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatButtonToggleModule,
+        MatRadioModule,
+        TranslateModule,
+        LowerCasePipe,
+    ],
+    selector: "ib-boolean-filter",
+    templateUrl: "boolean-filter.component.html",
+    providers: [{ provide: IbFilterBase, useExisting: IbBooleanFilter }]
 })
 export class IbBooleanFilter extends IbFilterBase {
   searchCriteria = new FormControl(null);

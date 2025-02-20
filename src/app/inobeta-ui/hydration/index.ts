@@ -7,7 +7,7 @@ import { getIbHydrationMetaReducer } from "./reducer";
  *
  * @param ibSessionStorageKey The key to identify the storage in which the state is stored.
  * @param ibReduxPersistKeys The keys to other redux stores to include in the persisted state.
- * @returns Effects and metareducers to apply to your root `EffectsModule` and `StoreModule`.
+ * @returns Effects and metareducers to apply to your root Store.
  */
 export const ibSetupHydration = (
   ibSessionStorageKey: string,
