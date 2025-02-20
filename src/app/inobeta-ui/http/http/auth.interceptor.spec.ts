@@ -1,6 +1,6 @@
 import {TestBed} from '@angular/core/testing';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { IbAuthInterceptor } from './auth.interceptor';
+import { IbAuthInterceptor, IbAuthInterceptorLegacy } from './auth.interceptor';
 import { RouterTestingModule } from '@angular/router/testing';
 import { IbToolTestModule } from '../../tools/tools-test.module';
 import { IbToastTestModule } from '../../ui/toast/toast-test.module';
@@ -28,7 +28,7 @@ export class LoginDummyComponent implements OnInit {
 
 describe('IbAuthInterceptor', () => {
 
-  let service: IbAuthInterceptor;
+  let service: IbAuthInterceptorLegacy;
   let routerCall;
   const httpHandlerSpy = jasmine.createSpyObj('HttpHandler', ['handle']);
 
@@ -52,13 +52,13 @@ describe('IbAuthInterceptor', () => {
             provide: "ibHttpToastOnLoginFailure",
             useValue: "shared.ibHttp.authFailure",
         },
-        IbAuthInterceptor,
+        IbAuthInterceptorLegacy,
         provideMockStore({}),
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
     ]
 }).compileComponents();
-    service = TestBed.inject(IbAuthInterceptor);
+    service = TestBed.inject(IbAuthInterceptorLegacy);
     routerCall = spyOn(TestBed.inject(IbLoginService), 'logout').and.callThrough();
   });
 

@@ -1,5 +1,5 @@
 import { registerLocaleData } from "@angular/common";
-import { HttpClient, provideHttpClient } from "@angular/common/http";
+import { HttpClient, provideHttpClient, withInterceptors } from "@angular/common/http";
 import { ApplicationConfig, isDevMode, provideZoneChangeDetection } from "@angular/core";
 import { provideEffects } from "@ngrx/effects";
 import { provideState, provideStore } from "@ngrx/store";
@@ -19,6 +19,9 @@ import localeIt from '@angular/common/locales/it';
 import { PreloadAllModules, provideRouter, withComponentInputBinding, withPreloading } from "@angular/router";
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { ibCounterExampleFeature } from "./examples/redux-example/counter.feature";
+import { IbAuthInterceptor } from "./inobeta-ui/http/http/auth.interceptor";
+import { IbErrorInterceptor } from "./inobeta-ui/http/http/error.interceptor";
+import { IbLoaderInterceptor } from "./inobeta-ui/http/http/loader.interceptor";
 
 
 registerLocaleData(localeIt);
@@ -51,7 +54,11 @@ export const appConfig: ApplicationConfig = {
       withPreloading(PreloadAllModules)
     ),
     provideAnimationsAsync(),
-    provideHttpClient(),
+    provideHttpClient(
+      withInterceptors([
+        IbAuthInterceptor//, IbErrorInterceptor, IbLoaderInterceptor
+      ])
+    ),
     provideIbHttp(),
     provideTranslateService({
       loader: {

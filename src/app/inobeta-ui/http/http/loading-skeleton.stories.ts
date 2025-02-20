@@ -1,5 +1,5 @@
 import { StorybookTranslateModule } from ".storybook/i18n";
-import { HttpClient, HttpClientModule } from "@angular/common/http";
+import { HttpClient, HttpClientModule, provideHttpClient } from "@angular/common/http";
 import {
   Component,
   Input,
@@ -16,6 +16,7 @@ import { provideIbHttp } from "../http.module";
 import { ibLoaderFeature } from "../store";
 import { provideAnimations } from "@angular/platform-browser/animations";
 import { MatButtonModule } from "@angular/material/button";
+import { IbLoadingDirective } from "public_api";
 
 @Component({
   selector: "ib-loading-screen",
@@ -23,6 +24,9 @@ import { MatButtonModule } from "@angular/material/button";
     <button mat-flat-button (click)="reload()">Reload</button>
     <section *ibLoading="props">Hello 👋</section>
   `,
+  imports: [
+    IbLoadingDirective
+  ]
 })
 export class IbLoadingScreen {
   /** @ignore */
@@ -44,15 +48,16 @@ const meta: Meta<IbLoadingScreen> = {
       declarations: [],
       imports: [
         StorybookTranslateModule,
-        MatButtonModule,
+        MatButtonModule
       ],
     }),
     applicationConfig({
       providers: [
+        provideHttpClient(),
+        provideIbHttp(),
         provideStore(),
         provideState(ibLoaderFeature),
         provideAnimations(),
-        provideIbHttp()
       ],
     }),
   ],
