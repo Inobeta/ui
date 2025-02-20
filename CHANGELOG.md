@@ -1,6 +1,6 @@
 # Inobeta/UI Changelog
 
-## [19.0.0] (unreleased)
+## [19.0.0] (2025-02-20)
 
 | Issue ID | Type | Section | Description |
 | -- | -- | -- | -- |
