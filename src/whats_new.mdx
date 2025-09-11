@@ -6,17 +6,15 @@ import { Meta } from "@storybook/blocks";
 
 ## Migration to app.config
 
-In this release, the library has been updated to Angular 19, adopting the new `app.config` approach and relegating support for `app.module` to a minimal level.
-It is strongly recommended to migrate to `app.config` as soon as possible to take full advantage of the latest features and to ensure compatibility with future updates.
+In this release, the library has been updated to **Angular 20**.
 
-Additionally, the general trend will be to increasingly adopt standalone components.
-In an initial phase, we will continue to use modules as mere collectors;
-however, they will eventually be deprecated and removed.
-We recommend using standalone components as they become available to align with this transition and ensure smoother future migrations.
+
+## Node.js requirement
+
+Starting with this release, it is recommended to use **Node.js 22.19** or higher to ensure full compatibility and stability with Angular 20 and upcoming versions of the library.
+
 # Changelog
 
-| Issue ID | Type | Section | Description |
-| -- | -- | -- | -- |
-|DEVK-427|feat|all|added support to angular 19|
-|DEVK-467|fix|IbKaiTable|State url nullish access fix|
-
+| Issue ID | Type | Section   | Description |
+| --       | --   | --        | -- |
+| DEVK-693 | feat | all       | added support for Angular 20 |

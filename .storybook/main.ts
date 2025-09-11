@@ -6,7 +6,8 @@ const config: StorybookConfig = {
     "@storybook/addon-essentials",
     "@storybook/addon-interactions",
     './version-selector',
-    "@storybook/addon-mdx-gfm"
+    "@storybook/addon-mdx-gfm",
+    "@storybook/addon-docs"
   ],
 
   framework: {
