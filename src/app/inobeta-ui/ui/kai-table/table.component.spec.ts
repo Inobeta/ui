@@ -69,12 +69,11 @@ describe("IbTable", () => {
       loader = TestbedHarnessEnvironment.loader(fixture);
     });
 
-    it("should create", async (done) => {
-        const table = await loader.getHarness(MatTableHarness);
-        const rows = await table.getRows();
-        expect(component).toBeTruthy();
-        expect(rows.length).toBe(2);
-        done()
+    it("should create", async () => {
+      const table = await loader.getHarness(MatTableHarness);
+      const rows = await table.getRows();
+      expect(component).toBeTruthy();
+      expect(rows.length).toBe(2);
     });
 
     it("should select a row", () => {
@@ -271,35 +270,35 @@ describe("IbTable", () => {
     xit("should export current page", async () => {
       setTimeout(async () => {
 
-      const exportSpy = spyOn(component.exportAction.exportService, "export");
-      const exportButton = await loader.getHarness(
-        MatButtonHarness.with({
-          ancestor: ".ib-table__toolbar__actions",
-          variant: "icon",
-        })
-      );
-      await exportButton.click();
-      const dialog = await loader.getHarness(MatDialogHarness);
-      fixture.detectChanges();
-      await fixture.whenStable();
-      expect(dialog).toBeTruthy();
-      const [_, __, option] = await dialog.getAllHarnesses(
-        MatRadioButtonHarness
-      );
-      await option.check();
-      const confirm = await dialog.getHarness(
-        MatButtonHarness.with({
-          text: "shared.ibTable.export",
-        })
-      );
-      await confirm.click();
-      fixture.detectChanges();
+        const exportSpy = spyOn(component.exportAction.exportService, "export");
+        const exportButton = await loader.getHarness(
+          MatButtonHarness.with({
+            ancestor: ".ib-table__toolbar__actions",
+            variant: "icon",
+          })
+        );
+        await exportButton.click();
+        const dialog = await loader.getHarness(MatDialogHarness);
+        fixture.detectChanges();
+        await fixture.whenStable();
+        expect(dialog).toBeTruthy();
+        const [_, __, option] = await dialog.getAllHarnesses(
+          MatRadioButtonHarness
+        );
+        await option.check();
+        const confirm = await dialog.getHarness(
+          MatButtonHarness.with({
+            text: "shared.ibTable.export",
+          })
+        );
+        await confirm.click();
+        fixture.detectChanges();
 
-      expect(exportSpy).toHaveBeenCalledWith(
-        component.dataSource.data.slice(0, 5),
-        component.tableName,
-        "ib"
-      );
+        expect(exportSpy).toHaveBeenCalledWith(
+          component.dataSource.data.slice(0, 5),
+          component.tableName,
+          "ib"
+        );
       });
     });
 
@@ -486,7 +485,7 @@ function configureModule<T>(type: Type<T>) {
           }
         }
       }),
-      { provide: MatSnackBar, useValue: { open: () => {} } },
+      { provide: MatSnackBar, useValue: { open: () => { } } },
       IbTableUrlService,
       UrlStateEffects
     ],
@@ -502,7 +501,7 @@ function createComponent<T>(type: Type<T>): ComponentFixture<T> {
 }
 
 @Component({
-    template: `
+  template: `
     <ib-kai-table [data]="data" [displayedColumns]="['name', 'color', 'price']">
       <ib-filter [value]="filterValue">
         <ib-text-filter name="name">Name</ib-text-filter>
@@ -515,7 +514,7 @@ function createComponent<T>(type: Type<T>): ComponentFixture<T> {
       <ib-number-column name="price"></ib-number-column>
     </ib-kai-table>
   `,
-    standalone: false
+  standalone: false
 })
 class IbTableApp {
   filterValue = { color: ["black"] };
@@ -526,7 +525,7 @@ class IbTableApp {
 }
 
 @Component({
-    template: `
+  template: `
     <ib-kai-table [data]="data" [displayedColumns]="['name']">
       <ib-text-column name="name"></ib-text-column>
       <ng-template ibKaiRowGroup let-row="row">
@@ -534,7 +533,7 @@ class IbTableApp {
       </ng-template>
     </ib-kai-table>
   `,
-    standalone: false
+  standalone: false
 })
 class IbTableWithRowGroupApp {
   data = [{ name: "alice" }];
@@ -554,7 +553,7 @@ class IbTestDataSource extends IbTableRemoteDataSource<any> {
 }
 
 @Component({
-    template: `
+  template: `
     <ib-kai-table [dataSource]="dataSource" [displayedColumns]="['name']">
       <ib-filter>
         <ib-text-filter name="name">Name</ib-text-filter>
@@ -562,14 +561,14 @@ class IbTestDataSource extends IbTableRemoteDataSource<any> {
       <ib-text-column name="name"></ib-text-column>
     </ib-kai-table>
   `,
-    standalone: false
+  standalone: false
 })
 class IbTableWithRemoteDataApp {
   dataSource = new IbTestDataSource();
 }
 
 @Component({
-    template: `
+  template: `
     <ib-kai-table
       tableName="employees"
       [data]="data"
@@ -584,7 +583,7 @@ class IbTableWithRemoteDataApp {
       <ib-text-column name="color"></ib-text-column>
     </ib-kai-table>
   `,
-    standalone: false
+  standalone: false
 })
 class IbTableWithViewGroupApp {
   data = [
@@ -596,11 +595,11 @@ class IbTableWithViewGroupApp {
 class IbStubExportProvider implements IbDataExportProvider {
   format = "ib";
   label = "inobeta";
-  export(data: any[], filename: string): void {}
+  export(data: any[], filename: string): void { }
 }
 
 @Component({
-    template: `
+  template: `
     <ib-kai-table
       tableName="employees"
       [data]="data"
@@ -615,15 +614,15 @@ class IbStubExportProvider implements IbDataExportProvider {
       <ib-text-column headerText="color" name="color"></ib-text-column>
     </ib-kai-table>
   `,
-    providers: [
-        IbDataExportService,
-        {
-            provide: OVERRIDE_EXPORT_FORMATS,
-            useClass: IbStubExportProvider,
-            multi: true,
-        },
-    ],
-    standalone: false
+  providers: [
+    IbDataExportService,
+    {
+      provide: OVERRIDE_EXPORT_FORMATS,
+      useClass: IbStubExportProvider,
+      multi: true,
+    },
+  ],
+  standalone: false
 })
 class IbTableWithExport {
   data = [
@@ -638,7 +637,7 @@ class IbTableWithExport {
 }
 
 @Component({
-    template: `
+  template: `
     <ib-kai-table
       tableName="employees"
       [data]="data"
@@ -663,15 +662,15 @@ class IbTableWithExport {
       />
     </ib-kai-table>
   `,
-    providers: [
-        IbDataExportService,
-        {
-            provide: OVERRIDE_EXPORT_FORMATS,
-            useClass: IbStubExportProvider,
-            multi: true,
-        },
-    ],
-    standalone: false
+  providers: [
+    IbDataExportService,
+    {
+      provide: OVERRIDE_EXPORT_FORMATS,
+      useClass: IbStubExportProvider,
+      multi: true,
+    },
+  ],
+  standalone: false
 })
 class IbTableWithExportTransformer {
   data = [
@@ -683,7 +682,7 @@ class IbTableWithExportTransformer {
 }
 
 @Component({
-    template: `
+  template: `
     <ib-kai-table
       [data]="data"
       [displayedColumns]="['name', 'amount', 'createdAt']"
@@ -696,7 +695,7 @@ class IbTableWithExportTransformer {
       </ib-column>
     </ib-kai-table>
   `,
-    standalone: false
+  standalone: false
 })
 class IbTableWithSort {
   data = [
@@ -706,13 +705,13 @@ class IbTableWithSort {
 }
 
 @Component({
-    template: `
+  template: `
     <ib-kai-table [data]="data" [displayedColumns]="['name', 'amount']">
       <ib-text-column name="name"></ib-text-column>
       <ib-number-column name="amount" aggregate></ib-number-column>
     </ib-kai-table>
   `,
-    standalone: false
+  standalone: false
 })
 class IbTableWithAggregate {
   data = [

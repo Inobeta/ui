@@ -1,84 +1,98 @@
 <form (ngSubmit)="handleSubmit()" [formGroup]="form" class="ibForm">
-  <div
-    class="ibFormActions"
-    style="display:flex;flex-direction:row;justify-content: end; gap:10px"
-    *ngIf="[ibMatActionsPosition.BOTH, ibMatActionsPosition.TOP].indexOf(actionsPosition) > -1"
-    >
-    <ib-material-form-control
-      *ngFor="let action of simpleActions"
-      class="ibFormRow"
-      [base]="action"
-      [form]="form"
-      [attr.data-cy]="action.key"
-    ></ib-material-form-control>
-    <ib-material-form-control
-      *ngIf="submitAction"
-      class="ibFormRow"
-      [base]="submitAction"
-      [form]="form"
-      [attr.data-cy]="submitAction.key"
-    ></ib-material-form-control>
-  </div>
-
-  <mat-grid-list class="ib-material-form-grid" *ngIf="cols" [cols]="cols" [rowHeight]="rowHeight">
-    <mat-grid-tile
-        *ngFor="let field of fields"
-        [colspan]="field.cols"
-        [rowspan]="field.rows">
-        <ng-container [ngSwitch]="field.role">
-          <ib-material-form-control
-            *ngSwitchCase="'control'"
-            class="ibFormRow"
-            [base]="field | asFormControl"
-            [form]="form"
-            [ngStyle]="{ flex: '1 1 ' + field.width }"
-            [attr.data-cy]="field?.key"
-          ></ib-material-form-control>
-        </ng-container>
-    </mat-grid-tile>
-  </mat-grid-list>
-
-  <div style="display:flex;flex-direction:row;flex-wrap: wrap" *ngIf="!cols">
-    <ng-container *ngFor="let field of fields">
-      <ng-container [ngSwitch]="field.role">
+  @if ([ibMatActionsPosition.BOTH, ibMatActionsPosition.TOP].indexOf(actionsPosition) > -1) {
+    <div
+      class="ibFormActions"
+      style="display:flex;flex-direction:row;justify-content: end; gap:10px"
+      >
+      @for (action of simpleActions; track action) {
         <ib-material-form-control
-          *ngSwitchCase="'control'"
           class="ibFormRow"
-          [base]="field | asFormControl"
+          [base]="action"
           [form]="form"
-          [ngStyle]="{ flex: '1 1 ' + field.width }"
-          [attr.data-cy]="field?.key"
+          [attr.data-cy]="action.key"
         ></ib-material-form-control>
-        <ib-material-form-array
-          *ngSwitchCase="'array'"
+      }
+      @if (submitAction) {
+        <ib-material-form-control
           class="ibFormRow"
-          [base]="field | asFormArray"
+          [base]="submitAction"
           [form]="form"
-          [ngStyle]="{ flex: '1 1 ' + field.width }"
-          [attr.data-cy]="field?.key"
-        ></ib-material-form-array>
-      </ng-container>
-    </ng-container>
-  </div>
+          [attr.data-cy]="submitAction.key"
+        ></ib-material-form-control>
+      }
+    </div>
+  }
 
-  <div
-    class="ibFormActions"
-    style="display:flex;flex-direction:row;justify-content: end; gap:10px"
-    *ngIf="[ibMatActionsPosition.BOTH, ibMatActionsPosition.BOTTOM].indexOf(actionsPosition) > -1"
-    >
-    <ib-material-form-control
-      *ngFor="let action of simpleActions"
-      class="ibFormRow"
-      [base]="action"
-      [form]="form"
-      [attr.data-cy]="action.key"
-    ></ib-material-form-control>
-    <ib-material-form-control
-      *ngIf="submitAction"
-      class="ibFormRow"
-      [base]="submitAction"
-      [form]="form"
-      [attr.data-cy]="submitAction.key"
-    ></ib-material-form-control>
-  </div>
+  @if (cols) {
+    <mat-grid-list class="ib-material-form-grid" [cols]="cols" [rowHeight]="rowHeight">
+      @for (field of fields; track field) {
+        <mat-grid-tile
+          [colspan]="field.cols"
+          [rowspan]="field.rows">
+          @switch (field.role) {
+            @case ('control') {
+              <ib-material-form-control
+                class="ibFormRow"
+                [base]="field | asFormControl"
+                [form]="form"
+                [ngStyle]="{ flex: '1 1 ' + field.width }"
+                [attr.data-cy]="field?.key"
+              ></ib-material-form-control>
+            }
+          }
+        </mat-grid-tile>
+      }
+    </mat-grid-list>
+  }
+
+  @if (!cols) {
+    <div style="display:flex;flex-direction:row;flex-wrap: wrap">
+      @for (field of fields; track field) {
+        @switch (field.role) {
+          @case ('control') {
+            <ib-material-form-control
+              class="ibFormRow"
+              [base]="field | asFormControl"
+              [form]="form"
+              [ngStyle]="{ flex: '1 1 ' + field.width }"
+              [attr.data-cy]="field?.key"
+            ></ib-material-form-control>
+          }
+          @case ('array') {
+            <ib-material-form-array
+              class="ibFormRow"
+              [base]="field | asFormArray"
+              [form]="form"
+              [ngStyle]="{ flex: '1 1 ' + field.width }"
+              [attr.data-cy]="field?.key"
+            ></ib-material-form-array>
+          }
+        }
+      }
+    </div>
+  }
+
+  @if ([ibMatActionsPosition.BOTH, ibMatActionsPosition.BOTTOM].indexOf(actionsPosition) > -1) {
+    <div
+      class="ibFormActions"
+      style="display:flex;flex-direction:row;justify-content: end; gap:10px"
+      >
+      @for (action of simpleActions; track action) {
+        <ib-material-form-control
+          class="ibFormRow"
+          [base]="action"
+          [form]="form"
+          [attr.data-cy]="action.key"
+        ></ib-material-form-control>
+      }
+      @if (submitAction) {
+        <ib-material-form-control
+          class="ibFormRow"
+          [base]="submitAction"
+          [form]="form"
+          [attr.data-cy]="submitAction.key"
+        ></ib-material-form-control>
+      }
+    </div>
+  }
 </form>

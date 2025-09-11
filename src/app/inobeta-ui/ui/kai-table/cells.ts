@@ -115,19 +115,20 @@ export const IbAverageAggregateProvider = {
         mat-icon-button
         [matMenuTriggerFor]="menu"
         [matTooltip]="'shared.aggregate.apply' | translate"
-      >
+        >
         <mat-icon>functions</mat-icon>
       </button>
       <span class="mat-caption">{{ displayName | translate }}</span>
     </section>
     <mat-menu #menu="matMenu">
-      <button
-        *ngFor="let function of availableFunctions"
-        mat-menu-item
-        (click)="apply(function.id)"
-      >
-        {{ function.label | translate }}
-      </button>
+      @for (function of availableFunctions; track function) {
+        <button
+          mat-menu-item
+          (click)="apply(function.id)"
+          >
+          {{ function.label | translate }}
+        </button>
+      }
     </mat-menu>
     <section class="ib-aggregate__display-value">
       <div>
@@ -136,15 +137,17 @@ export const IbAverageAggregateProvider = {
         }}</span>
         {{ result?.currentPage ? (result.currentPage | number) : "--" }}
       </div>
-
-      <div *ngIf="showTotal">
-        <span class="mat-caption">{{
-          "shared.aggregate.total" | translate
-        }}</span>
-        {{ result?.total ? (result.total | number) : "--" }}
-      </div>
+    
+      @if (showTotal) {
+        <div>
+          <span class="mat-caption">{{
+            "shared.aggregate.total" | translate
+          }}</span>
+          {{ result?.total ? (result.total | number) : "--" }}
+        </div>
+      }
     </section>
-  `,
+    `,
     standalone: false
 })
 export class IbAggregateCell {

@@ -1,4 +1,4 @@
-import { LowerCasePipe, NgIf } from "@angular/common";
+import { LowerCasePipe } from "@angular/common";
 import { Component } from "@angular/core";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
@@ -13,16 +13,15 @@ import { IbFilterBase } from "../base/filter-base";
 
 @Component({
     imports: [
-        NgIf,
-        IbFilterButton,
-        IbFilterActionGroup,
-        ReactiveFormsModule,
-        MatButtonModule,
-        MatButtonToggleModule,
-        MatRadioModule,
-        TranslateModule,
-        LowerCasePipe,
-    ],
+    IbFilterButton,
+    IbFilterActionGroup,
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatButtonToggleModule,
+    MatRadioModule,
+    TranslateModule,
+    LowerCasePipe
+],
     selector: "ib-boolean-filter",
     templateUrl: "boolean-filter.component.html",
     providers: [{ provide: IbFilterBase, useExisting: IbBooleanFilter }]

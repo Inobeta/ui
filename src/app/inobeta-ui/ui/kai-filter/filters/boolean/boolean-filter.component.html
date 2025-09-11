@@ -1,8 +1,10 @@
 <ib-filter-button>
   <span ib-filter-name><ng-content></ng-content></span>
-  <span ib-filter-value *ngIf="isDirty">
-    {{ (displayValue ? "shared.ibFilter.true" : "shared.ibFilter.false") | translate | lowercase }}
-  </span>
+  @if (isDirty) {
+    <span ib-filter-value>
+      {{ (displayValue ? "shared.ibFilter.true" : "shared.ibFilter.false") | translate | lowercase }}
+    </span>
+  }
 
   <section [formGroup]="filter.form" style="padding: .5em 1em 1em 1em">
     <mat-button-toggle-group [formControlName]="name" style="width: 100%;">

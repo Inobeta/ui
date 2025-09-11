@@ -56,7 +56,7 @@
 @mixin color($theme) {
   .mat-mdc-header-cell,
   .mat-sort-header-arrow {
-    --mdc-checkbox-unselected-icon-color: #{mat.get-theme-color($theme, on-primary)};
+    --mat-checkbox-unselected-icon-color: #{mat.get-theme-color($theme, on-primary)};
     color: var(
       --ib-table-header-text-color,
       mat.get-theme-color($theme, on-primary)

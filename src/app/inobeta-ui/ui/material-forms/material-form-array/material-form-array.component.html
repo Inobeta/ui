@@ -1,34 +1,44 @@
 <form class="ibFormArray" [formGroup]="form">
 
-  <section class="ibFormArrayItem" *ngFor="let line of array.controls; let index = index"
-    style="display: flex; flex-wrap: wrap">
-    <ng-container *ngFor="let field of base.fields">
-      <ng-container [ngSwitch]="field.role">
-        <ib-material-form-control *ngSwitchCase="'control'" class="ibFormRow" [base]="field" [form]="getGroupAt(index)"
-          [style.flex]="'1 1 ' + field.width" [style.max-width]="field.width"
-          [attr.data-cy]="field.key"
-          ></ib-material-form-control>
-      </ng-container>
-    </ng-container>
-    <div class="ibFormArrayActions">
-      <button mat-icon-button *ngIf="lines > 0" (click)="removeField(index)" [disabled]="array.disabled">
-        <mat-icon>remove</mat-icon>
-      </button>
-      <button mat-icon-button *ngIf="lines - 1 === index && lines !== max" (click)="addField()"
-        [disabled]="array.disabled">
-        <mat-icon>add</mat-icon>
-      </button>
-    </div>
-  </section>
+  @for (line of array.controls; track line; let index = $index) {
+    <section class="ibFormArrayItem"
+      style="display: flex; flex-wrap: wrap">
+      @for (field of base.fields; track field) {
+        @switch (field.role) {
+          @case ('control') {
+            <ib-material-form-control class="ibFormRow" [base]="field" [form]="getGroupAt(index)"
+              [style.flex]="'1 1 ' + field.width" [style.max-width]="field.width"
+              [attr.data-cy]="field.key"
+            ></ib-material-form-control>
+          }
+        }
+      }
+      <div class="ibFormArrayActions">
+        @if (lines > 0) {
+          <button mat-icon-button (click)="removeField(index)" [disabled]="array.disabled">
+            <mat-icon>remove</mat-icon>
+          </button>
+        }
+        @if (lines - 1 === index && lines !== max) {
+          <button mat-icon-button (click)="addField()"
+            [disabled]="array.disabled">
+            <mat-icon>add</mat-icon>
+          </button>
+        }
+      </div>
+    </section>
+  }
 
-  <section *ngIf="!array.controls.length" class="ibFormArrayItem">
-    <div class="ibFormArrayActions">
-      <button mat-flat-button (click)="addField()"
-        [disabled]="array.disabled">
-        <mat-icon>add</mat-icon>
-        {{ base.options.addFieldLabel | translate }}
-      </button>
-    </div>
-  </section>
+  @if (!array.controls.length) {
+    <section class="ibFormArrayItem">
+      <div class="ibFormArrayActions">
+        <button mat-flat-button (click)="addField()"
+          [disabled]="array.disabled">
+          <mat-icon>add</mat-icon>
+          {{ base.options.addFieldLabel | translate }}
+        </button>
+      </div>
+    </section>
+  }
 
 </form>

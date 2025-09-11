@@ -15,45 +15,51 @@ import {
       appearance="fill"
       style="width: 100%;"
       [formGroup]="data.form"
-    >
+      >
       <mat-label>{{ data.base.label | translate }}</mat-label>
       <mat-select
         [formControlName]="data.base.key"
         [multiple]="data.base.multiple"
         (selectionChange)="handleSelection($event)"
-      >
-        <mat-option
-          *ngIf="data.base.multiple"
-          class="ib-mat-dropdown-select-all"
-          value="__all"
-          >{{
-            (this.all
-              ? "shared.ibDropdown.selectNone"
-              : "shared.ibDropdown.selectAll"
-            ) | translate
-          }}</mat-option
         >
-        <mat-option *ngIf="data.base.emptyRow" [value]="data.base.emptyRow.key">
-          {{ data.base.emptyRow.value | translate }}
-        </mat-option>
-        <mat-option *ngFor="let opt of data.base.options" [value]="opt.key">
-          {{ opt.value | translate }}
-        </mat-option>
-      </mat-select>
-      <mat-icon
-        matSuffix
-        *ngIf="hintMessage"
-        [matTooltip]="hintMessage | translate"
-      >
-        help_outline
-      </mat-icon>
-      <mat-error>
-        <ng-container
-          *ngTemplateOutlet="data.formControlErrors; context: this"
-        ></ng-container>
-      </mat-error>
-    </mat-form-field>
-  `,
+        @if (data.base.multiple) {
+          <mat-option
+            class="ib-mat-dropdown-select-all"
+            value="__all"
+            >{{
+            (this.all
+            ? "shared.ibDropdown.selectNone"
+            : "shared.ibDropdown.selectAll"
+            ) | translate
+            }}</mat-option
+            >
+          }
+          @if (data.base.emptyRow) {
+            <mat-option [value]="data.base.emptyRow.key">
+              {{ data.base.emptyRow.value | translate }}
+            </mat-option>
+          }
+          @for (opt of data.base.options; track opt) {
+            <mat-option [value]="opt.key">
+              {{ opt.value | translate }}
+            </mat-option>
+          }
+        </mat-select>
+        @if (hintMessage) {
+          <mat-icon
+            matSuffix
+            [matTooltip]="hintMessage | translate"
+            >
+            help_outline
+          </mat-icon>
+        }
+        <mat-error>
+          <ng-container
+            *ngTemplateOutlet="data.formControlErrors; context: this"
+          ></ng-container>
+        </mat-error>
+      </mat-form-field>
+    `,
     styles: [
         `
       .ib-mat-dropdown-select-all ::ng-deep mat-pseudo-checkbox {

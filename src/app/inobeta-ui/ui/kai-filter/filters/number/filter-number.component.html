@@ -1,12 +1,14 @@
 <ib-filter-button [attr.data-cy]="'ib-number-filter-' + name">
   <span ib-filter-name><ng-content></ng-content></span>
-  <span ib-filter-value *ngIf="isDirty">
-    {{
+  @if (isDirty) {
+    <span ib-filter-value>
+      {{
       "shared.ibFilter.label.number"
-        | translate : displayLabelParams
-        | lowercase
-    }}
-  </span>
+      | translate : displayLabelParams
+      | lowercase
+      }}
+    </span>
+  }
 
   <section style="padding: 0 1em">
     <section class="ib-number-filter" [formGroup]="slider">
@@ -16,12 +18,12 @@
             matSliderStartThumb
             formControlName="min"
             [value]="slider.value.min"
-          />
+            />
           <input
             matSliderEndThumb
             formControlName="max"
             [value]="slider.value.max"
-          />
+            />
         </mat-slider>
       </section>
 
@@ -35,7 +37,7 @@
             formControlName="min"
             [value]="slider.value.min"
             [attr.data-cy]="'ib-number-filter-' + name + '-min'"
-          />
+            />
         </mat-form-field>
 
         <mat-form-field appearance="outline" style="width: 12ch">
@@ -47,7 +49,7 @@
             formControlName="max"
             [value]="slider.value.max"
             [attr.data-cy]="'ib-number-filter-' + name + '-max'"
-          />
+            />
         </mat-form-field>
       </section>
     </section>

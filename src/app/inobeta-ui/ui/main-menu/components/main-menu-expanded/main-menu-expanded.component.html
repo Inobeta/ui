@@ -2,11 +2,11 @@
 <div id="ib-main-menu-expanded-header"
   style="display:flex;flex-direction:row;justify-content: space-between; align-items: center;align-content: center">
   <div id="ib-main-menu-expanded-header-wrapper"
-  style="display:flex;flex-direction:row;justify-content: space-between; align-items: center;align-content: center">
+    style="display:flex;flex-direction:row;justify-content: space-between; align-items: center;align-content: center">
 
     <!-- header > title --------------------------------------->
     <div id="ib-main-menu-expanded-header-title-wrapper"
-    style="display:flex;flex-direction:row;justify-content: flex-start; align-items: center;align-content: center">
+      style="display:flex;flex-direction:row;justify-content: flex-start; align-items: center;align-content: center">
       <p>{{navDataSet.title | translate }}</p>
     </div>
 
@@ -19,18 +19,17 @@
 
     <!-- header > upRight buttons ------------------------------>
     <div id="ib-main-menu-expanded-header-settingsLogout-wrapper"
-    style="display:flex;flex-direction:row;justify-content: flex-end; align-items: center;align-content: center">
+      style="display:flex;flex-direction:row;justify-content: flex-end; align-items: center;align-content: center">
       <div id="ib-main-menu-expanded-header-settingsLogout-box"
-      style="display:flex;flex-direction:row;justify-content: space-evenly; align-items: center;align-content: center">
-        <ng-container *ngFor="let upRight of navDataSet.upRight">
+        style="display:flex;flex-direction:row;justify-content: space-evenly; align-items: center;align-content: center">
+        @for (upRight of navDataSet.upRight; track upRight) {
           <ib-main-menu-header-footer-buttons
-          class="ib-main-menu-upRight-item"
-          [type]="'upRight'"
-          [element]="upRight"
-          (click)="emitAction($event,upRight)">
-        </ib-main-menu-header-footer-buttons>
-
-        </ng-container>
+            class="ib-main-menu-upRight-item"
+            [type]="'upRight'"
+            [element]="upRight"
+            (click)="emitAction($event,upRight)">
+          </ib-main-menu-header-footer-buttons>
+        }
       </div>
     </div>
 
@@ -40,40 +39,36 @@
 <!--body---------------------------------------------------------------------->
 <div id="ib-main-menu-expanded-body">
   <div id="ib-main-menu-expanded-body-wrapper"
-  style="display:flex;flex-direction:row;flex-wrap:wrap;justify-content: flex-start; align-items: center;align-content: center;gap:16px">
-    <ng-container *ngFor="let firstLevel of navDataSet.navData">
-
+    style="display:flex;flex-direction:row;flex-wrap:wrap;justify-content: flex-start; align-items: center;align-content: center;gap:16px">
+    @for (firstLevel of navDataSet.navData; track firstLevel) {
       <!-- body > box ----------------------------------------->
       <div
-      routerLink="{{ ( firstLevel.link === undefined) ? null : firstLevel.link }}"
-      routerLinkActive
-      #rla="routerLinkActive"
-      style="display: none;"
+        routerLink="{{ ( firstLevel.link === undefined) ? null : firstLevel.link }}"
+        routerLinkActive
+        #rla="routerLinkActive"
+        style="display: none;"
       ></div>
-
       <div class="{{(rla.isActive && firstLevel.link !== undefined)? 'ib-main-menu-expanded-body-box ib-main-menu-box-active-box': 'ib-main-menu-expanded-body-box'}}"
         [ngStyle]="{'width': calcBoxWidth(firstLevel.paths.length)}"
         (click)="$event.stopPropagation()">
-
         <!-- body > box > firstLevel -------------------->
         <div class="ib-main-menu-expanded-body-box-firstLevel">
-            <div class="ib-main-menu-expanded-body-box-firstLevel-box"
+          <div class="ib-main-menu-expanded-body-box-firstLevel-box"
             style="display:flex;flex-direction:row;justify-content: start; align-items: center;align-content: center">
-              <mat-icon class="{{firstLevel.icon.type?'material-icons-' + firstLevel.icon.type: null}}">{{firstLevel.icon.label}}</mat-icon>
-              <p> {{firstLevel.label |translate}} </p>
-            </div>
+            <mat-icon class="{{firstLevel.icon.type?'material-icons-' + firstLevel.icon.type: null}}">{{firstLevel.icon.label}}</mat-icon>
+            <p> {{firstLevel.label |translate}} </p>
+          </div>
         </div>
-
         <!-- body > box > secondLevel ------------------>
         <div class="ib-main-menu-expanded-body-box-secondLevel"
-        style="height: 85%;display:flex;flex-direction:column;flex-wrap: wrap;justify-content: flex-start; align-items: flex-start;align-content: flex-start">
-          <ng-container *ngFor="let secondLevel of firstLevel.paths; let i = index">
+          style="height: 85%;display:flex;flex-direction:column;flex-wrap: wrap;justify-content: flex-start; align-items: flex-start;align-content: flex-start">
+          @for (secondLevel of firstLevel.paths; track secondLevel; let i = $index) {
             <div
               routerLink="{{ ( secondLevel.link === undefined) ? null : secondLevel.link }}"
               routerLinkActive
               #rla="routerLinkActive"
               style="display: none;"
-            >
+              >
             </div>
             <button
               mat-button
@@ -81,30 +76,29 @@
               style="flex:1 1 18"
               [ngStyle]="{'width': calcSecondLevelWidth(firstLevel.paths.length)}"
               (click)="emitAction($event, secondLevel)"
-            >
+              >
               <p>
                 {{secondLevel.label | translate}}
               </p>
             </button>
-          </ng-container>
+          }
         </div>
-
       </div>
-    </ng-container>
+    }
   </div>
 </div>
 
 <!--footer--------------------------------------------------------------------------------------------->
 <div id="ib-main-menu-expanded-footer">
   <div id="ib-main-menu-expanded-footer-wrapper"
-  style="display:flex;flex-direction:row;justify-content: space-between; align-items: center;align-content: center">
+    style="display:flex;flex-direction:row;justify-content: space-between; align-items: center;align-content: center">
 
-      <!-- footer > bottomLeft button ------------------------>
-      <ib-main-menu-header-footer-buttons
-          [type]="'bottomLeft'"
-          [element]="navDataSet.bottomLeft"
-          (click)="emitAction($event,navDataSet.bottomLeft)">
-      </ib-main-menu-header-footer-buttons>
+    <!-- footer > bottomLeft button ------------------------>
+    <ib-main-menu-header-footer-buttons
+      [type]="'bottomLeft'"
+      [element]="navDataSet.bottomLeft"
+      (click)="emitAction($event,navDataSet.bottomLeft)">
+    </ib-main-menu-header-footer-buttons>
 
     <!-- footer > bottomRight copyright ---------------------->
     <div id="ib-main-menu-expanded-footer-copyright-wrapper">

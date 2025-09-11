@@ -4,12 +4,13 @@ import { Component, Input, OnInit } from '@angular/core';
     selector: 'ib-loading-skeleton-container',
     template: `
   <div class="ib-skeleton-container">
-    <ib-loading-skeleton-rect
-      *ngFor="let s of skeletons"
-      [width]="s.width"
-      [height]="s.height"
-      [className]="s.className"
-    ></ib-loading-skeleton-rect>
+    @for (s of skeletons; track s) {
+      <ib-loading-skeleton-rect
+        [width]="s.width"
+        [height]="s.height"
+        [className]="s.className"
+      ></ib-loading-skeleton-rect>
+    }
   </div>
   `,
     styles: [`

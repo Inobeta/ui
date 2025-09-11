@@ -2,59 +2,65 @@
   <ng-content select="ib-table-view-group" />
   <section class="ib-table__toolbar__actions">
     <ng-content select="ib-table-action-group, [ib-table-action-group]" />
-    <ng-template *ngFor="let portal of actionPortals" [cdkPortalOutlet]="portal" />
+    @for (portal of actionPortals; track portal) {
+      <ng-template [cdkPortalOutlet]="portal" />
+    }
   </section>
 </section>
 
 <ng-content select="ib-filter" />
 
 <section class="ib-table__content" [class.ib-table__content--loading]="state === 'loading'">
-  <div class="ib-table__content__progress-bar" *ngIf="state === 'loading'">
-    <mat-progress-bar mode="indeterminate" />
-  </div>
+  @if (state === 'loading') {
+    <div class="ib-table__content__progress-bar">
+      <mat-progress-bar mode="indeterminate" />
+    </div>
+  }
 
   <table class="ib-table" mat-table matSort multiTemplateDataRows [matSortActive]="this.dataSource.sortState.active"
     [matSortDirection]="this.dataSource.sortState.direction" [dataSource]="dataSource">
     <ng-content select="ib-selection-column" />
     <ng-content />
 
-    <ng-container matColumnDef="expandedDetail" *ngIf="rowGroup">
-      <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
-        <div class="ib-table__cell-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-          <ng-container *ngTemplateOutlet="rowGroup.templateRef; context: {'$implicit': element, 'row': element}" />
-        </div>
-      </td>
-    </ng-container>
+    @if (rowGroup) {
+      <ng-container matColumnDef="expandedDetail">
+        <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
+          <div class="ib-table__cell-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+            <ng-container *ngTemplateOutlet="rowGroup.templateRef; context: {'$implicit': element, 'row': element}" />
+          </div>
+        </td>
+      </ng-container>
+    }
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true;"></tr>
 
     <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="ib-table__row"
       [class.ib-table__row--expanded]="expandedElement === row"
-      (click)="rowGroup && (expandedElement = expandedElement === row ? null : row)"></tr>
-    <ng-container *ngIf="rowGroup">
+    (click)="rowGroup && (expandedElement = expandedElement === row ? null : row)"></tr>
+    @if (rowGroup) {
       <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="ib-table__row-group"
-        [class.ib-table__row-group--hidden]="expandedElement !== row"></tr>
-    </ng-container>
+      [class.ib-table__row-group--hidden]="expandedElement !== row"></tr>
+    }
 
     <tr *matNoDataRow>
       <td [attr.colspan]="columns.length">
         <div>
-          <ng-container *ngIf="state === 'idle'">
+          @if (state === 'idle') {
             <mat-icon style="color: #888">inbox</mat-icon>
             {{ "common.noItems" | translate }}
-          </ng-container>
+          }
 
-          <ng-container *ngIf="state === 'http_error'">
+          @if (state === 'http_error') {
             <mat-icon style="color: #888">error</mat-icon>
             {{ "common.httpError" | translate }}
-          </ng-container>
+          }
         </div>
       </td>
     </tr>
 
-    <ng-container *ngIf="dataSource.shouldDisplayAggregationFooter">
+    @if (dataSource.shouldDisplayAggregationFooter) {
       <tr class="ib-table__rollup-row" mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></tr>
-    </ng-container>
+    }
   </table>
 </section>
 <mat-paginator class="ib-table__paginator"

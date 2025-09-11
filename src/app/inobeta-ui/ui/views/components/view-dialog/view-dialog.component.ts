@@ -22,30 +22,37 @@ export interface IbTableViewDialogData {
     selector: "ib-table-view-dialog",
     template: `
     <h2 mat-dialog-title>{{ data?.title | translate }}</h2>
-
+    
     <mat-dialog-content>
-      <p
-        *ngIf="data?.hideInput"
-        translate
-        [translateParams]="data?.message?.args"
-      >
-        {{ data?.message?.label }}
-      </p>
-
-      <mat-form-field style="width: 100%;" *ngIf="!data?.hideInput">
-        <mat-label>{{ "shared.ibTableView.viewName" | translate }}</mat-label>
-        <input [formControl]="viewName" matInput maxlength="40" />
-        <mat-hint align="end">{{ viewName.value.length }}/40</mat-hint>
-      </mat-form-field>
+      @if (data?.hideInput) {
+        <p
+          translate
+          [translateParams]="data?.message?.args"
+          >
+          {{ data?.message?.label }}
+        </p>
+      }
+    
+      @if (!data?.hideInput) {
+        <mat-form-field style="width: 100%;">
+          <mat-label>{{ "shared.ibTableView.viewName" | translate }}</mat-label>
+          <input [formControl]="viewName" matInput maxlength="40" />
+          <mat-hint align="end">{{ viewName.value.length }}/40</mat-hint>
+        </mat-form-field>
+      }
     </mat-dialog-content>
-
+    
     <div mat-dialog-actions style="justify-content: flex-end">
-      <button *ngIf="!data?.hideCancel" mat-button mat-dialog-close>
-        {{ "shared.ibTableView.cancel" | translate }}
-      </button>
-      <button *ngIf="data?.hasNo" mat-button [mat-dialog-close]="{
+      @if (!data?.hideCancel) {
+        <button mat-button mat-dialog-close>
+          {{ "shared.ibTableView.cancel" | translate }}
+        </button>
+      }
+      @if (data?.hasNo) {
+<button mat-button [mat-dialog-close]="{
         confirmed: false
       }">{{ "shared.ibTableView.no" | translate }}</button>
+      }
       <button
         mat-button
         [disabled]="!data?.hideInput ? viewName.value.length === 0 : false"
@@ -54,11 +61,11 @@ export interface IbTableViewDialogData {
           name: viewName.value,
           confirmed: true
         }"
-      >
+        >
         {{ data?.confirm | translate }}
       </button>
     </div>
-  `,
+    `,
     standalone: false
 })
 export class IbTableViewDialog {

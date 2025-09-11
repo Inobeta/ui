@@ -24,7 +24,7 @@ import { IbColumn } from "./column";
       matSort
       [sticky]="sticky"
       [stickyEnd]="stickyEnd"
-    >
+      >
       <th
         class="ib-table__header-cell"
         mat-header-cell
@@ -32,7 +32,7 @@ import { IbColumn } from "./column";
         [ibSortHeaderFor]="matSort"
         mat-sort-header
         [disabled]="!sort"
-      >
+        >
         {{ headerText }}
       </th>
       <td mat-cell *matCellDef="let data" [style.text-align]="'end'">
@@ -40,22 +40,23 @@ import { IbColumn } from "./column";
           {{ um() }}&nbsp;
         }
         {{ dataAccessor(data, name) | number : digitsInfo : locale }}
-
+    
         @if(umPosition() === 'right') {
           {{ um() }}
         }
       </td>
       <td mat-footer-cell *matFooterCellDef style="max-width: fit-content">
-        <ib-aggregate
-          *ngIf="aggregate"
-          [showTotal]="!_table.isRemote"
-          [result]="aggregatedData"
-          [function]="aggregationFunction"
-          (ibFunctionChange)="handleAggregationChange($event)"
-        />
+        @if (aggregate) {
+          <ib-aggregate
+            [showTotal]="!_table.isRemote"
+            [result]="aggregatedData"
+            [function]="aggregationFunction"
+            (ibFunctionChange)="handleAggregationChange($event)"
+            />
+        }
       </td>
     </ng-container>
-  `,
+    `,
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Default,
     providers: [

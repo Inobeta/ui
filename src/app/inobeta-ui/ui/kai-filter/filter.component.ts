@@ -22,24 +22,26 @@ import { IB_FILTER } from "./tokens";
       class="ib-filter"
       [class.ib-filter--hidden]="hideFilters"
       [attr.aria-hidden]="hideFilters"
-    >
+      >
       <ng-content select="ib-search-bar"></ng-content>
       <section #list class="ib-filter__list">
-        <mat-icon *ngIf="list.children.length > 1">filter_list</mat-icon>
+        @if (list.children.length > 1) {
+          <mat-icon>filter_list</mat-icon>
+        }
         <ng-content></ng-content>
       </section>
     </section>
-
+    
     <button
       *ibTableAction
       mat-icon-button
       [matTooltip]="'shared.ibTableView.showFilters' | translate"
       [color]="!hideFilters ? 'primary' : ''"
       (click)="hideFilters = !hideFilters"
-    >
+      >
       <mat-icon>{{ "filter_alt" }}</mat-icon>
     </button>
-  `,
+    `,
   styleUrls: ["./filter.component.scss"],
   encapsulation: ViewEncapsulation.None,
   providers: [{ provide: IB_FILTER, useExisting: IbFilter }],

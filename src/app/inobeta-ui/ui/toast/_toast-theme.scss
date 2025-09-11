@@ -3,16 +3,16 @@
 
 @mixin m3-color($theme) {
   .ib-toast-warning {
-    --mdc-snackbar-container-color: #{mat.get-theme-color($theme, tertiary)};
-    --mdc-snackbar-supporting-text-color: #{mat.get-theme-color(
+    --mat-snackbar-container-color: #{mat.get-theme-color($theme, tertiary)};
+    --mat-snackbar-supporting-text-color: #{mat.get-theme-color(
         $theme,
         on-tertiary
       )};
   }
 
   .ib-toast-error {
-    --mdc-snackbar-container-color: #{mat.get-theme-color($theme, error)};
-    --mdc-snackbar-supporting-text-color: #{mat.get-theme-color(
+    --mat-snackbar-container-color: #{mat.get-theme-color($theme, error)};
+    --mat-snackbar-supporting-text-color: #{mat.get-theme-color(
         $theme,
         on-error
       )};
@@ -21,21 +21,21 @@
 
 @mixin m2-color($theme) {
   .ib-toast-success {
-    --mdc-snackbar-container-color: green;
-    --mdc-snackbar-supporting-text-color: white;
-    --mdc-snackbar-supporting-text-weight: bold;
+    --mat-snackbar-container-color: green;
+    --mat-snackbar-supporting-text-color: white;
+    --mat-snackbar-supporting-text-weight: bold;
   }
 
   .ib-toast-warning {
-    --mdc-snackbar-container-color: orange;
-    --mdc-snackbar-supporting-text-color: white;
-    --mdc-snackbar-supporting-text-weight: bold;
+    --mat-snackbar-container-color: orange;
+    --mat-snackbar-supporting-text-color: white;
+    --mat-snackbar-supporting-text-weight: bold;
   }
 
   .ib-toast-error {
-    --mdc-snackbar-container-color: red;
-    --mdc-snackbar-supporting-text-color: white;
-    --mdc-snackbar-supporting-text-weight: bold;
+    --mat-snackbar-container-color: red;
+    --mat-snackbar-supporting-text-color: white;
+    --mat-snackbar-supporting-text-weight: bold;
   }
 }
 

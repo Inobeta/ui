@@ -6,16 +6,18 @@ import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, 
     selector: '[ib-mat-label]',
     template: `
     <div style="width:100%;height:50px;">
-      <div
-        *ngIf="data.base.label"
-        style="padding-right:10px;"
-      >{{data.base.label | translate}}: </div>
-      <div
-        *ngIf="data.base.value"
-        style="font-weight:bold;"
-      >{{ data.base.value }}</div>
-</div>
-  `,
+      @if (data.base.label) {
+        <div
+          style="padding-right:10px;"
+        >{{data.base.label | translate}}: </div>
+      }
+      @if (data.base.value) {
+        <div
+          style="font-weight:bold;"
+        >{{ data.base.value }}</div>
+      }
+    </div>
+    `,
     standalone: false
 })
 

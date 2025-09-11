@@ -10,58 +10,61 @@ import { IbMainMenuButton } from '../../models/main-menu-button.model'
       routerLinkActive
       #rla="routerLinkActive"
       style="display: none;"
-    >
-    </div>
-
-    <!-- topCenter button ------------->
-    <div
-      *ngIf="type === 'topCenter'"
-      id="ib-main-menu-expanded-header-closeButton-wrapper"
-      style="display:flex;flex-direction:row;justify-content: space-around; align-items: center;align-content: center">
-      <button mat-button>
-        <div
-          style="display:flex;flex-direction:row;justify-content: space-evenly; align-items: center;align-content: center">
-          <mat-icon class="{{element.icon.type?'material-icons-' + element.icon.type + ' ' + element.icon.type : null}}">
-            {{element.icon.label}}
-          </mat-icon>
-          <p>
-            {{ element.label | translate }}
-          </p>
-        </div>
-      </button>
-    </div>
-
-    <!-- upRight button ------------->
-    <button
-      *ngIf="type === 'upRight'"
-      class="{{(rla.isActive && element.link !== undefined)? 'active-header-footer-button upRight-button': 'upRight-button'}}"
-    >
-      <mat-icon class="{{element.icon.type?'material-icons-' + element.icon.type: null}}">
-        {{element.icon.label}}
-      </mat-icon>
-    </button>
-
-    <!-- bottomLeft button --------->
-    <button
-      *ngIf="type === 'bottomLeft'"
-      id="ib-main-menu-expanded-footer-support-button"
-      class="{{(rla.isActive && element.link !== undefined)? 'active-header-footer-button': null}}"
-    >
-      <div
-        id="ib-main-menu-expanded-footer-support-button-wrapper"
-        style="display:flex;flex-direction:row;justify-content: center; align-items: center;align-content: center"
       >
+    </div>
+  
+    <!-- topCenter button ------------->
+    @if (type === 'topCenter') {
+      <div
+        id="ib-main-menu-expanded-header-closeButton-wrapper"
+        style="display:flex;flex-direction:row;justify-content: space-around; align-items: center;align-content: center">
+        <button mat-button>
+          <div
+            style="display:flex;flex-direction:row;justify-content: space-evenly; align-items: center;align-content: center">
+            <mat-icon class="{{element.icon.type?'material-icons-' + element.icon.type + ' ' + element.icon.type : null}}">
+              {{element.icon.label}}
+            </mat-icon>
+            <p>
+              {{ element.label | translate }}
+            </p>
+          </div>
+        </button>
+      </div>
+    }
+  
+    <!-- upRight button ------------->
+    @if (type === 'upRight') {
+      <button
+        class="{{(rla.isActive && element.link !== undefined)? 'active-header-footer-button upRight-button': 'upRight-button'}}"
+        >
         <mat-icon class="{{element.icon.type?'material-icons-' + element.icon.type: null}}">
           {{element.icon.label}}
         </mat-icon>
-        <p>
-          {{element.label | translate}}
-        </p>
-      </div>
-    </button>
-
-   </ng-container>
-    `,
+      </button>
+    }
+  
+    <!-- bottomLeft button --------->
+    @if (type === 'bottomLeft') {
+      <button
+        id="ib-main-menu-expanded-footer-support-button"
+        class="{{(rla.isActive && element.link !== undefined)? 'active-header-footer-button': null}}"
+        >
+        <div
+          id="ib-main-menu-expanded-footer-support-button-wrapper"
+          style="display:flex;flex-direction:row;justify-content: center; align-items: center;align-content: center"
+          >
+          <mat-icon class="{{element.icon.type?'material-icons-' + element.icon.type: null}}">
+            {{element.icon.label}}
+          </mat-icon>
+          <p>
+            {{element.label | translate}}
+          </p>
+        </div>
+      </button>
+    }
+  
+  </ng-container>
+  `,
     styles: [`
 
     #ib-main-menu-expanded-header-closeButton-wrapper {

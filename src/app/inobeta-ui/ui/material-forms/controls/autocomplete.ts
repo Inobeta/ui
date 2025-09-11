@@ -19,20 +19,21 @@ import { Component, Input } from '@angular/core';
       (focus)="onSearchChange($event.target['value'], data.base.options)"
       [matAutocomplete]="auto"
       />
-      <mat-icon
-        style="cursor:pointer;color:#666;"
-        matSuffix
-        (click)="data.self.reset(); data.base.change(data.self)"
-      >{{'clear'}}</mat-icon>
-      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="data.base.change(data.self)">
+    <mat-icon
+      style="cursor:pointer;color:#666;"
+      matSuffix
+      (click)="data.self.reset(); data.base.change(data.self)"
+    >{{'clear'}}</mat-icon>
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="data.base.change(data.self)">
+      @for (item of autocompleteFiltered; track item) {
         <mat-option
-          *ngFor="let item of autocompleteFiltered"
           [value]="item.value"
           (click)="selectedItem = item"
           >
           {{item.value}}
         </mat-option>
-      </mat-autocomplete>
+      }
+    </mat-autocomplete>
     <mat-error>
       <ng-container *ngTemplateOutlet="data.formControlErrors;context: this"></ng-container>
     </mat-error>

@@ -4,7 +4,7 @@ import { IbKaiTableState } from "../../inobeta-ui/ui/kai-table/table.types";
 import { UserService } from "./users";
 import { MatIconModule } from "@angular/material/icon";
 import { IbDataExportModule, IbFilterModule, IbKaiTableModule, IbTableActionModule, IbViewModule } from "public_api";
-import { CommonModule } from "@angular/common";
+
 import { MatIconButton } from "@angular/material/button";
 
 @Component({
@@ -15,32 +15,33 @@ import { MatIconButton } from "@angular/material/button";
       [displayedColumns]="columns"
       [data]="data"
       [state]="state"
-    >
+      >
       <ib-table-action-group>
-        <button
-          mat-icon-button
-          (click)="getSelection()"
-          *ngIf="selectionColumn?.selection.selected.length > 0"
-        >
-          <mat-icon>delete</mat-icon>
-        </button>
+        @if (selectionColumn?.selection.selected.length > 0) {
+          <button
+            mat-icon-button
+            (click)="getSelection()"
+            >
+            <mat-icon>delete</mat-icon>
+          </button>
+        }
         <button mat-icon-button (click)="getUserOrders()">
           <mat-icon>refresh</mat-icon>
         </button>
         <ib-table-data-export-action />
       </ib-table-action-group>
-
+    
       <ib-table-view-group />
       <ib-filter>
         <ib-search-bar />
-
+    
         <ib-text-filter name="name">Name</ib-text-filter>
         <ib-tag-filter name="fruit">Fruit</ib-tag-filter>
         <ib-number-filter name="amount">Amount</ib-number-filter>
         <ib-date-filter name="created_at">Purchased</ib-date-filter>
         <ib-boolean-filter name="subscribed">Subscribed</ib-boolean-filter>
       </ib-filter>
-
+    
       <ib-selection-column (ibRowSelectionChange)="selectionChange($event)" />
       <ib-text-column headerText="Name" name="name" sort />
       <ib-text-column headerText="Fruit" name="fruit" sort />
@@ -61,7 +62,7 @@ import { MatIconButton } from "@angular/material/button";
         </section>
       </ib-column>
     </ib-kai-table>
-  `,
+    `,
     styles: [
         `
       :host {
@@ -74,8 +75,14 @@ import { MatIconButton } from "@angular/material/button";
     ],
     providers: [UserService],
     imports: [
-      MatIconModule, IbKaiTableModule, IbFilterModule, IbViewModule, IbTableActionModule, IbDataExportModule, CommonModule, MatIconButton
-    ]
+    MatIconModule,
+    IbKaiTableModule,
+    IbFilterModule,
+    IbViewModule,
+    IbTableActionModule,
+    IbDataExportModule,
+    MatIconButton
+]
 })
 export class IbKaiTableFullExamplePage {
   @ViewChild(IbSelectionColumn, { static: true })
