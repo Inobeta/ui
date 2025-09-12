@@ -1,4 +1,4 @@
-image: node:20
+image: node:22.19
 
 stages:
   - quality
@@ -35,7 +35,7 @@ install:
     - master
 
 test_unit:
-  image: inobeta/node-chrome:20
+  image: inobeta/node-chrome:22
   stage: quality
   script:
     - set_current_version
@@ -157,7 +157,7 @@ examples:build:
     when: on_success
     expire_in: "30 mins"
   tags:
-  - gitlab-org-docker
+    - gitlab-org-docker
   only:
     - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
     - /^[0-9]+\.[0-9]+\.[0-9]+$/
@@ -179,13 +179,13 @@ examples:image:
     - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
     - /^[0-9]+\.[0-9]+\.[0-9]+$/
   tags:
-  - gitlab-org-docker
+    - gitlab-org-docker
 
 examples:deploy:
   image: docker:latest
   stage: examples:deploy
   services:
-  - docker:dind
+    - docker:dind
   script:
     - prepare_staging
     - service_pullrestart_staging $IMAGE latest $SERVICE
