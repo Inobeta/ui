@@ -1,4 +1,4 @@
-image: node:22.19
+image: node:24.8
 
 stages:
   - quality
@@ -35,7 +35,7 @@ install:
     - master
 
 test_unit:
-  image: inobeta/node-chrome:22
+  image: inobeta/node-chrome:24.8
   stage: quality
   script:
     - set_current_version

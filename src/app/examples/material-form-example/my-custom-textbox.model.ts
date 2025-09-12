@@ -5,10 +5,11 @@ import { MatIcon } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
+import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
-    selector: '[ib-my-custom-textbox]',
-    template: `
+  selector: '[ib-my-custom-textbox]',
+  template: `
   <mat-form-field appearance="fill" style="width: 100%;" [formGroup]="data.form">
     <mat-label>{{data.base.label | translate}} {{data.base.testField}}</mat-label>
     <input
@@ -24,9 +25,9 @@ import { TranslatePipe } from '@ngx-translate/core';
     </mat-error>
   </mat-form-field>
   `,
-    imports: [
-      MatError, MatIcon, MatInputModule, ReactiveFormsModule, TranslatePipe
-    ]
+  imports: [
+    MatError, MatIcon, MatInputModule, ReactiveFormsModule, TranslatePipe, NgTemplateOutlet
+  ]
 })
 
 export class MyCustomTextboxComponent implements IbFormControlInterface {
@@ -34,9 +35,9 @@ export class MyCustomTextboxComponent implements IbFormControlInterface {
 }
 
 
-export class MyCustomTextbox extends IbFormControlBase<string>{
+export class MyCustomTextbox extends IbFormControlBase<string> {
   testField = 'Questa è una prova';
-  constructor(options: MyCustomTextboxParams){
+  constructor(options: MyCustomTextboxParams) {
     super(options)
     this.testField = options.testField;
     this.control = new IbFormControlBaseComponent(MyCustomTextboxComponent, {

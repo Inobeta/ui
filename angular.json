@@ -37,6 +37,11 @@
               "jspdf-autotable",
               "xlsx"
             ],
+            "externalDependencies": [
+              "html2canvas",
+              "dompurify",
+              "canvg"
+            ],
             "extractLicenses": false,
             "sourceMap": true,
             "optimization": false,
@@ -100,7 +105,12 @@
             "assets": [
               "src/favicon.ico",
               "src/assets"
-            ]
+            ],
+            "externalDependencies": [
+              "html2canvas",
+              "dompurify",
+              "canvg"
+            ],
           }
         },
         "storybook": {
