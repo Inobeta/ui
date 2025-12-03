@@ -17,7 +17,7 @@ import { IbMaterialFormModule } from "./material-form.module";
 import { IbMaterialFormComponent } from "./material-form/material-form.component";
 
 const meta: Meta = {
-  title: "Components/Forms (deprecated)",
+  title: "Components/Forms  (**Deprecated**)",
   component: IbMaterialFormComponent,
   decorators: [
     moduleMetadata({

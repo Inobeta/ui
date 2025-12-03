@@ -1,8 +1,8 @@
 import { Meta } from "@storybook/blocks";
 
-<Meta title="Components/Main Menu/Overview" />
+<Meta title="Components/Main Menu (**Deprecated**)/Overview" />
 
-# Main Menu
+# Main Menu (**Deprecated**)
 
 This module generates the main menu (desktop version).
 
@@ -145,7 +145,7 @@ export interface IbMainMenuData extends IbMainMenuButton {
   }
 ```
 
-This data model is designed so you can set a first level menu section with second level menu sections connected to it. The design requires the icon field set for the first levels, where the label refers to the material icon name, and the type to the different styles material icons offers: outlined, two-tone, filled, rounded and sharp. In order to be able to use this variants you must set also your `index.html` file, providing the right link element. For example, to be able to use all the variants, you must add this code:  
+This data model is designed so you can set a first level menu section with second level menu sections connected to it. The design requires the icon field set for the first levels, where the label refers to the material icon name, and the type to the different styles material icons offers: outlined, two-tone, filled, rounded and sharp. In order to be able to use this variants you must set also your `index.html` file, providing the right link element. For example, to be able to use all the variants, you must add this code:
 ```html
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons%7CMaterial+Icons+Outlined%7CMaterial+Icons+Two+Tone%7CMaterial+Icons+Round%7CMaterial+Icons+Sharp" rel="stylesheet">
 ```

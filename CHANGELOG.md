@@ -1,5 +1,16 @@
 # Inobeta/UI Changelog
 
+## [20.0.0] (unreleased)
+
+| Issue ID | Type | Section | Description |
+| -- | -- | -- | -- |
+| DEVK-693 | feat | all       | added support for Angular 20 |
+
+### [20.0.0] - Breaking changes
+
+- Main menu deprecated
+- breadcrumbs deprecated
+
 ## [19.0.0] (2025-02-20)
 
 | Issue ID | Type | Section | Description |

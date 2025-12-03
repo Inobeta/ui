@@ -12,6 +12,7 @@ import { IbMainMenuDialogComponent } from '../main-menu-dialog/main-menu-dialog.
     styleUrls: ['./main-menu-bar.component.css'],
     standalone: false
 })
+/** @deprecated this component will be removed in v21 */
 export class IbMainMenuBarComponent  {
 /**
  * Dichiara l'icona da utilizzare per la menu bar principale, ovvero quella che al click apre il menu in forma estesa.

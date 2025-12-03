@@ -34,4 +34,5 @@ import { IbMainMenuExpandedComponent } from './components/main-menu-expanded/mai
     IbMainMenuHeaderFooterButtonsComponent
   ]
 })
+/** @deprecated this component will be removed in v21 */
 export class IbMainMenuModule { }
