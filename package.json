@@ -87,6 +87,9 @@
     "protractor": "0.0.0"
   },
   "dependencies": {
+    "chart.js": "^4.5.1",
+    "chartjs-adapter-date-fns": "^3.0.0",
+    "ng2-charts": "^9.0.0",
     "tslib": "^2.4.0"
   },
   "exports": {
