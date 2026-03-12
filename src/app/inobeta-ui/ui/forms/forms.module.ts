@@ -22,4 +22,5 @@ import { IbFormPipeModule } from "./forms.pipes";
     IbDynamicFormArrayComponent,
   ],
 })
-export class IbDynamicFormsModule {}
+/** @deprecated this element will be removed in v21 */
+export class IbDynamicFormsModule { }

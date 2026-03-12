@@ -14,7 +14,7 @@ const components = [
     MatButtonModule,
     TranslateModule.forChild({
       extend: true
-  }),
+    }),
     MatButtonModule
   ],
   exports: [
@@ -25,4 +25,5 @@ const components = [
   ],
   providers: []
 })
+/** @deprecated this element will be removed in v21 */
 export class IbUploaderModule { }

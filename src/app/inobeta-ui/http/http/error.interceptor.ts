@@ -6,6 +6,7 @@ import { catchError } from "rxjs/operators";
 import { IbToastNotification } from "../../ui/toast/toast.service";
 
 @Injectable({ providedIn: "root" })
+/** @deprecated this element will be removed in v21 */
 export class IbErrorInterceptor implements HttpInterceptor {
   constructor(
     private ibToast: IbToastNotification,
@@ -17,7 +18,7 @@ export class IbErrorInterceptor implements HttpInterceptor {
     @Inject("ibHttpToastErrorField") public ibHttpToastErrorField: string,
     @Inject("ibHttpToastOnStatusCode") public ibHttpToastOnStatusCode: any,
     @Inject("ibHttpToastErrorCode") public ibHttpToastErrorCode: string
-  ) {}
+  ) { }
 
   intercept(
     request: HttpRequest<any>,
@@ -48,9 +49,8 @@ export class IbErrorInterceptor implements HttpInterceptor {
             err.error &&
             err.error[this.ibHttpToastErrorCode]
           ) {
-            const codeError = `shared.ibHttp.error${
-              err.error[this.ibHttpToastErrorCode]
-            }`;
+            const codeError = `shared.ibHttp.error${err.error[this.ibHttpToastErrorCode]
+              }`;
             const instant = this.translate.instant(codeError);
             if (
               instant !==

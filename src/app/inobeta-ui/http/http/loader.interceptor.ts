@@ -11,6 +11,7 @@ export interface IbHttpRequestDefinition {
 }
 
 @Injectable({ providedIn: "root" })
+/** @deprecated this element will be removed in v21 */
 export class IbLoaderInterceptor implements HttpInterceptor {
   constructor(
     private store: Store,
@@ -18,7 +19,7 @@ export class IbLoaderInterceptor implements HttpInterceptor {
     public ibHttpEnableInterceptors: boolean,
     @Inject("ibHttpUrlExcludedFromLoader")
     public ibHttpUrlExcludedFromLoader: IbHttpRequestDefinition[]
-  ) {}
+  ) { }
 
   intercept(
     request: HttpRequest<any>,

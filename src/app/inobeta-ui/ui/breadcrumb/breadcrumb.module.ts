@@ -15,7 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
     CommonModule,
     RouterModule,
     TranslateModule.forChild({
-        extend: true
+      extend: true
     }),
     MatIconModule
   ],
@@ -24,4 +24,5 @@ import { MatIconModule } from '@angular/material/icon';
     IbMaterialBreadcrumbComponent
   ]
 })
+/** @deprecated this element will be removed in v21 */
 export class IbBreadcrumbModule { }

@@ -15,6 +15,7 @@ import { IbAPITokens } from "../auth/session.model";
   selector: "[ibRoleCheck]",
   standalone: true,
 })
+/** @deprecated this element will be removed in v21 */
 export class IbRoleCheckDirective implements OnInit, OnDestroy {
   @Input("ibRoleCheck") roles: string[];
   destroy: Subject<void> = new Subject();
@@ -23,7 +24,7 @@ export class IbRoleCheckDirective implements OnInit, OnDestroy {
     private tpl: TemplateRef<any>,
     private vcr: ViewContainerRef,
     private login: IbLoginService<IbAPITokens>
-  ) {}
+  ) { }
 
   ngOnDestroy(): void {
     this.destroy.next();

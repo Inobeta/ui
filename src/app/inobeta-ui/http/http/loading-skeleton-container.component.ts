@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
-    selector: 'ib-loading-skeleton-container',
-    template: `
+  selector: 'ib-loading-skeleton-container',
+  template: `
   <div class="ib-skeleton-container">
     @for (s of skeletons; track s) {
       <ib-loading-skeleton-rect
@@ -13,7 +13,7 @@ import { Component, Input, OnInit } from '@angular/core';
     }
   </div>
   `,
-    styles: [`
+  styles: [`
   :host{
     flex: 1;
     width: 100%;
@@ -24,9 +24,9 @@ import { Component, Input, OnInit } from '@angular/core';
   }
 
   `],
-    standalone: false
+  standalone: false
 })
-
+/** @deprecated this element will be removed in v21 */
 export class IbLoadingSkeletonContainerComponent implements OnInit {
   @Input() skeletons: {
     width: string;

@@ -27,6 +27,7 @@ import { IbAPITokens, IbSession } from "./session.model";
  * ```
  */
 @Injectable({ providedIn: "root" })
+/** @deprecated this element will be removed in v21 */
 export class IbAuthGuard {
   store = inject(Store);
   session$$ = this.store.selectSignal(ibSelectActiveSession<IbAPITokens>());
@@ -34,7 +35,7 @@ export class IbAuthGuard {
   constructor(
     private router: Router,
     @Inject("ibHttpGUILoginUrl") public ibHttpGUILoginUrl: string
-  ) {}
+  ) { }
 
   canActivate() {
     const session = this.session$$();
@@ -77,7 +78,7 @@ export class IbLoginGuard {
     private router: Router,
     @Inject("ibHttpGUIDashboardUrl")
     public ibHttpGUIDashboardUrl: string
-  ) {}
+  ) { }
 
   canActivate() {
     const session = this.session$$();
@@ -121,7 +122,7 @@ export class IbRoleGuard {
     private login: IbLoginService<IbAPITokens>,
     @Inject("ibHttpGUIDashboardUrl")
     public ibHttpGUIDashboardUrl: string
-  ) {}
+  ) { }
 
   canActivate(route: ActivatedRouteSnapshot) {
     return this.login.hasRoles(route.data.roles).pipe(

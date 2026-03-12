@@ -9,6 +9,7 @@ import { IbAPITokens, IbAuthTypes, IbSession } from "../auth/session.model";
 import { ibSelectActiveSession } from "../store/";
 
 @Injectable({ providedIn: "root" })
+/** @deprecated this element will be removed in v21 */
 export class IbAuthInterceptor implements HttpInterceptor {
   store = inject(Store);
   session$: Observable<IbSession<IbAPITokens> | null> = this.store.select(
@@ -24,7 +25,7 @@ export class IbAuthInterceptor implements HttpInterceptor {
     @Inject("ibHttpToastOnLoginFailure")
     public ibHttpToastOnLoginFailure: string,
     @Inject("ibHttpAuthType") public ibHttpAuthType: IbAuthTypes
-  ) {}
+  ) { }
 
   intercept(
     request: HttpRequest<any>,

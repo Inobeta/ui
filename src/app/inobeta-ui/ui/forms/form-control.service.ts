@@ -9,10 +9,10 @@ import {
 import { IbFormField } from "./forms.types";
 import { IbFormArray } from "./array/array";
 
-/** @deprecated */
 @Injectable({ providedIn: "root" })
+/** @deprecated this element will be removed in v21 */
 export class IbFormControlService {
-  constructor() {}
+  constructor() { }
 
   toFormGroup(fields: IbFormField[]) {
     const group = new UntypedFormGroup({});
@@ -21,7 +21,7 @@ export class IbFormControlService {
       if (!field.key) {
         continue;
       }
-      
+
       if (field instanceof IbFormControlBase) {
         group.addControl(field.key, this.toControl(field))
       }

@@ -24,66 +24,69 @@ const components = [
   IbLoadingSkeletonContainerComponent,
   IbLoadingSkeletonRectComponent,
 ];
-@NgModule({ exports: [...components, IbRoleCheckDirective],
-    declarations: [...components], imports: [TranslateModule.forChild({
-            extend: true,
-        }),
-        CommonModule,
-        ReactiveFormsModule,
-        IbToastModule,
-        IbStorageModule,
-        IbRoleCheckDirective], providers: [
-        IbLoginService,
-        { provide: "ibHttpAuthType", useValue: IbAuthTypes.JWT },
-        {
-            provide: "ibHttpUrlExcludedFromLoader",
-            useValue: [],
-        },
-        { provide: "ibHttpGUIDashboardUrl", useValue: "/home" },
-        {
-            provide: "ibHttpAPILoginUrl",
-            useValue: "/api/auth/login",
-        },
-        { provide: "ibHttpGUILoginUrl", useValue: "/login" },
-        {
-            provide: "ibHttpAPIRefreshUrl",
-            useValue: "/api/auth/refresh",
-        },
-        {
-            provide: "ibHttpSessionStorageType",
-            useValue: IbStorageTypes.LOCALSTORAGE,
-        },
-        {
-            provide: "ibHttpJWTClaimsField",
-            useValue: "https://hasura.io/jwt/claims",
-        },
-        { provide: "ibHttpJWTRolesField", useValue: "x-hasura-allowed-roles" },
-        { provide: "ibHttpEnableInterceptors", useValue: true },
-        {
-            provide: "ibHttpToastOnLoginFailure",
-            useValue: "shared.ibHttp.authFailure",
-        },
-        {
-            provide: "ibHttpToastOnGenericFailure",
-            useValue: "shared.ibHttp.genericFailure",
-        },
-        {
-            provide: "ibHttpToastOnStatusCode",
-            useValue: {},
-        },
-        {
-            provide: "ibHttpToastErrorCode",
-            useValue: null,
-        },
-        {
-            provide: "ibHttpToastErrorField",
-            useValue: null,
-        },
-        { provide: HTTP_INTERCEPTORS, useClass: IbAuthInterceptor, multi: true },
-        { provide: HTTP_INTERCEPTORS, useClass: IbErrorInterceptor, multi: true },
-        { provide: HTTP_INTERCEPTORS, useClass: IbLoaderInterceptor, multi: true },
-        provideHttpClient(withInterceptorsFromDi()),
-    ] })
+@NgModule({
+  exports: [...components, IbRoleCheckDirective],
+  declarations: [...components], imports: [TranslateModule.forChild({
+    extend: true,
+  }),
+    CommonModule,
+    ReactiveFormsModule,
+    IbToastModule,
+    IbStorageModule,
+    IbRoleCheckDirective], providers: [
+      IbLoginService,
+      { provide: "ibHttpAuthType", useValue: IbAuthTypes.JWT },
+      {
+        provide: "ibHttpUrlExcludedFromLoader",
+        useValue: [],
+      },
+      { provide: "ibHttpGUIDashboardUrl", useValue: "/home" },
+      {
+        provide: "ibHttpAPILoginUrl",
+        useValue: "/api/auth/login",
+      },
+      { provide: "ibHttpGUILoginUrl", useValue: "/login" },
+      {
+        provide: "ibHttpAPIRefreshUrl",
+        useValue: "/api/auth/refresh",
+      },
+      {
+        provide: "ibHttpSessionStorageType",
+        useValue: IbStorageTypes.LOCALSTORAGE,
+      },
+      {
+        provide: "ibHttpJWTClaimsField",
+        useValue: "https://hasura.io/jwt/claims",
+      },
+      { provide: "ibHttpJWTRolesField", useValue: "x-hasura-allowed-roles" },
+      { provide: "ibHttpEnableInterceptors", useValue: true },
+      {
+        provide: "ibHttpToastOnLoginFailure",
+        useValue: "shared.ibHttp.authFailure",
+      },
+      {
+        provide: "ibHttpToastOnGenericFailure",
+        useValue: "shared.ibHttp.genericFailure",
+      },
+      {
+        provide: "ibHttpToastOnStatusCode",
+        useValue: {},
+      },
+      {
+        provide: "ibHttpToastErrorCode",
+        useValue: null,
+      },
+      {
+        provide: "ibHttpToastErrorField",
+        useValue: null,
+      },
+      { provide: HTTP_INTERCEPTORS, useClass: IbAuthInterceptor, multi: true },
+      { provide: HTTP_INTERCEPTORS, useClass: IbErrorInterceptor, multi: true },
+      { provide: HTTP_INTERCEPTORS, useClass: IbLoaderInterceptor, multi: true },
+      provideHttpClient(withInterceptorsFromDi()),
+    ]
+})
+/** @deprecated this element will be removed in v21 */
 export class IbHttpModule {
   static injector: Injector = null;
 

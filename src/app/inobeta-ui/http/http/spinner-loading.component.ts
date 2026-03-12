@@ -1,11 +1,11 @@
-import {Component, ViewEncapsulation, inject} from '@angular/core';
+import { Component, ViewEncapsulation, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ibSelectIsHttpLoading } from '../store/index';
 import { Observable } from 'rxjs';
 
 @Component({
-    selector: 'ib-spinner-loading',
-    styles: [`
+  selector: 'ib-spinner-loading',
+  styles: [`
     .spinner {
       width: 40px;
       height: 40px;
@@ -61,7 +61,7 @@ import { Observable } from 'rxjs';
       background-color: rgba(0, 0, 0, 0.4);
     }
   `],
-    template: `
+  template: `
     @if (showLoading$ | async) {
       <div class="modal-spinner">
         <div class="spinner">
@@ -70,10 +70,10 @@ import { Observable } from 'rxjs';
         </div>
       </div>
     }`,
-    encapsulation: ViewEncapsulation.None,
-    standalone: false
+  encapsulation: ViewEncapsulation.None,
+  standalone: false
 })
-
+/** @deprecated this element will be removed in v21 */
 export class IbSpinnerLoadingComponent {
   store = inject(Store);
   showLoading$: Observable<boolean> = this.store.select(ibSelectIsHttpLoading)

@@ -16,19 +16,22 @@ const components = [
 ];
 
 const services = [
-  { provide: TranslateService, useValue: translateServiceStub},
-  { provide: MatDialogRef, useValue: serviceDialogStub}
+  { provide: TranslateService, useValue: translateServiceStub },
+  { provide: MatDialogRef, useValue: serviceDialogStub }
 ];
 
 
-@NgModule({ exports: [
-        ...components
-    ],
-    declarations: [
-        ...components
-    ], imports: [], providers: [
-        ...services,
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting()
-    ] })
+@NgModule({
+  exports: [
+    ...components
+  ],
+  declarations: [
+    ...components
+  ], imports: [], providers: [
+    ...services,
+    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClientTesting()
+  ]
+})
+/** @deprecated this element will be removed in v21 */
 export class IbToolTestModule { }
