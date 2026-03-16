@@ -17,14 +17,16 @@ import {
   ViewChild,
   ViewEncapsulation,
   booleanAttribute,
+  effect,
   inject,
   input,
+  signal,
 } from "@angular/core";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { MatTable } from "@angular/material/table";
 import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
+import { filter, takeUntil } from "rxjs/operators";
 import { IbTableDataExportAction } from "../data-export/table-data-export.component";
 import { IbFilter } from "../kai-filter";
 import { IbTableViewGroup } from "../views";
@@ -39,7 +41,7 @@ import { IbTableUrlService } from "./table-url.service";
 import { Store } from "@ngrx/store";
 import { urlStateActions } from "./store/url-state/actions";
 import { toSignal } from "@angular/core/rxjs-interop";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 
 const defaultTableDef: IbTableDef = {
   paginator: {
@@ -103,7 +105,7 @@ export class IbTable implements OnDestroy {
   tableUrl = inject(IbTableUrlService);
   private store = inject(Store);
   private activatedRoute = inject(ActivatedRoute);
-  private activeParams = this.activatedRoute.firstChild?.params ? toSignal(this.activatedRoute.firstChild.params) : null;
+  private router = inject(Router);
 
   /**
    * Configuration for the table and its inner components. Currently supports only
@@ -167,16 +169,23 @@ export class IbTable implements OnDestroy {
 
 
   activeRowParams = input<{ dataParamId: string, childRouteParamId: string }>({ dataParamId: null, childRouteParamId: null })
+  activeRouteId = signal<string>(null);
 
-  getActiveRowId() {
-    if (!this.activeParams) return null;
-    const currentParams = this.activeParams();
-    if (this.activeRowParams()?.dataParamId && this.activeRowParams()?.childRouteParamId) {
-      return currentParams[this.activeRowParams()?.childRouteParamId]
-    }
-    return null;
+  constructor() {
+    const currentRoute = toSignal(this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ));
+    effect(() => {
+      const current = currentRoute();
+      const childRouteId = this.activeRowParams()?.childRouteParamId
+      if (childRouteId) {
+        const activeId = this.activatedRoute.firstChild?.snapshot.paramMap.get(childRouteId);
+        this.activeRouteId.set(activeId);
+      } else {
+        this.activeRouteId.set(null);
+      }
+    })
   }
-
   ngOnInit() {
     const paginatorFromUrl = this.tableUrl.getPaginator(this.tableName);
     this.tableDef.paginator = {
