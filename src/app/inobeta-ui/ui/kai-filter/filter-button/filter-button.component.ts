@@ -24,7 +24,6 @@ export class IbFilterButton {
   }
 
   buttonStyle = computed(() => {
-    console.log(this.value());
     if (!this.value()) {
       return "outlined";
     } else {
