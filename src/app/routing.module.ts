@@ -16,6 +16,8 @@ import { AuthExampleComponent } from './examples/http/auth.component';
 import { IbRoleGuard } from './inobeta-ui/http/auth/guard.service';
 import { MaterialFormValueExampleComponent } from './examples/material-form-value-example/material-form.value.component';
 import { Routes } from '@angular/router';
+import { IbKaiTableWithRouting } from './examples/kai-table-example/kai-table-with-routing';
+import { KaiTableDetailComponent } from './examples/kai-table-example/kai-table-detail';
 
 export const appRoutes: Routes = [
   {
@@ -65,8 +67,8 @@ export const appRoutes: Routes = [
           path: 'base',
           component: MyCounterComponent,
           data: { breadcrumb: 'Base' },
-         },
-         {
+        },
+        {
           path: 'lazy',
           data: { breadcrumb: 'Lazy loaded' },
           loadChildren: () => import('./examples/lazy-loaded/lazy-loaded.module').then(m => m.LazyLoadedModule)
@@ -130,6 +132,18 @@ export const appRoutes: Routes = [
             path: 'full',
             data: { breadcrumb: 'Full' },
             component: IbKaiTableFullExamplePage
+          },
+          {
+            path: 'with-routing',
+            data: { breadcrumb: 'With Routing' },
+            component: IbKaiTableWithRouting,
+            children: [
+              {
+                path: 'details/:id',
+                data: { breadcrumb: 'Details' },
+                component: KaiTableDetailComponent
+              }
+            ]
           },
           {
             path: '',

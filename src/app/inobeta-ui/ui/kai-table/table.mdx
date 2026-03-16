@@ -448,8 +448,8 @@ Through the `paginator` property of `IbTableDef` it is possible to change the ap
 export class IbKaiTableExamplePage {
   tableDef: IbTableDef = {
     paginator: {
-      pageSize: 10
-      pageSizeOptions: [5, 10, 25, 100],
+      pageSize: 20
+      pageSizeOptions: [10, 20, 50, 100],
       hidePageSize: false,
       showFirstLastButtons: true,
       hide: false
@@ -597,8 +597,8 @@ Then you may change the text or background color with the variables:
 
 ```css
 :host {
-  /** Minimum number of rows to be shown. Defaults to 10 */
-  --ib-table-minimum-rows: 10;
+  /** Minimum number of rows to be shown. Defaults to 20 */
+  --ib-table-minimum-rows: 20;
 
   /** Header text color. Defaults to the darker constrast available for the primary palette */
   --ib-table-header-text-color: black;
@@ -616,6 +616,11 @@ Then you may change the text or background color with the variables:
 
   /** Background color when hovering rows */
   --ib-table-row-background-color-on-hover: #111;
+
+  /** Background color when a child route is activated */
+  --ib-table-row-background-color-selected: #ABABAB
+
+
 
   /** Outline color for both container and table content */
   --ib-table-outline-color: var(--mat-table-row-item-outline-color);

@@ -70,7 +70,13 @@
   .mat-mdc-row:hover {
     background: var(
       --ib-table-row-background-color-on-hover,
-      rgba(mat.get-theme-color($theme, primary), 0.03)
+      rgba(mat.get-theme-color($theme, primary), 0.1)
+    ) !important;
+  }
+  .ib-table__row--selected {
+    background: var(
+      --ib-table-row-background-color-selected,
+      rgba(mat.get-theme-color($theme, primary), 0.1)
     ) !important;
   }
 

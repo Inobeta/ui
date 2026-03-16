@@ -5,7 +5,7 @@ import { Sort } from '@angular/material/sort';
 import { IbKaiTableParams } from './store/url-state/interfaces';
 
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class IbTableUrlService {
   _emptyFilterSchema: Record<string, IbFilterSyntaxExtended> = {};
 
@@ -22,7 +22,7 @@ export class IbTableUrlService {
 
   getRawParams(tableName: string): IbTableQsParams {
     return JSON.parse(this.activatedRoute.snapshot.queryParams?.[tableName]
-      ?? `{"ibfilter": ${JSON.stringify(this.emptyFilterSchema[tableName] ?? {})}, "ibview": "__ibTableView__all", "ibpage": 0, "ibpagesize": 10, "ibaggregatedcolumns": {}, "ibsort": {}  }`) ?? {};
+      ?? `{"ibfilter": ${JSON.stringify(this.emptyFilterSchema[tableName] ?? {})}, "ibview": "__ibTableView__all", "ibpage": 0, "ibpagesize": 20, "ibaggregatedcolumns": {}, "ibsort": {}  }`) ?? {};
   }
 
 
@@ -42,11 +42,11 @@ export class IbTableUrlService {
     });
   }
 
-  getActiveView(tableName: string,) : string{
+  getActiveView(tableName: string,): string {
     return this.getRawParams(tableName).ibview ?? '__ibTableView__all';
   }
 
-  setPaginator(tableName: string, params: {pageIndex: number, pageSize: number}) {
+  setPaginator(tableName: string, params: { pageIndex: number, pageSize: number }) {
     this.router.navigate([], {
       queryParams: {
         [tableName]: JSON.stringify({
@@ -59,14 +59,14 @@ export class IbTableUrlService {
     });
   }
 
-  getPaginator(tableName: string) : {pageIndex: number, pageSize: number}{
+  getPaginator(tableName: string): { pageIndex: number, pageSize: number } {
     return {
       pageIndex: this.getRawParams(tableName).ibpage ?? 0,
       pageSize: this.getRawParams(tableName).ibpagesize ?? 0,
     }
   }
 
-  setAggregatedColumns(tableName: string,params: Record<string, string>) {
+  setAggregatedColumns(tableName: string, params: Record<string, string>) {
     this.router.navigate([], {
       queryParams: {
         [tableName]: JSON.stringify({
@@ -82,7 +82,7 @@ export class IbTableUrlService {
     return this.getRawParams(tableName).ibaggregatedcolumns ?? {};
   }
 
-  setSort(tableName: string,params: Sort) {
+  setSort(tableName: string, params: Sort) {
     const ibsort = params.direction !== '' ? params : null
     this.router.navigate([], {
       queryParams: {
@@ -95,11 +95,11 @@ export class IbTableUrlService {
     });
   }
 
-  getSort(tableName: string) : Sort{
-    return this.getRawParams(tableName).ibsort ?? {active: '', direction: ''};
+  getSort(tableName: string): Sort {
+    return this.getRawParams(tableName).ibsort ?? { active: '', direction: '' };
   }
 
-  handleViewChange(tableName: string,params: Omit<IbKaiTableParams, 'tableName'> & {view: string}) {
+  handleViewChange(tableName: string, params: Omit<IbKaiTableParams, 'tableName'> & { view: string }) {
     this.router.navigate([], {
       queryParams: {
         [tableName]: JSON.stringify({

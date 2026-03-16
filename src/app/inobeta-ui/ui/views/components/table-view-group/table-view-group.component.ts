@@ -18,25 +18,25 @@ import { IbTableUrlService } from "../../../kai-table/table-url.service";
 import { selectTableViews } from "../../store/index";
 
 @Component({
-    selector: "ib-view-group, ib-table-view-group",
-    templateUrl: "table-view-group.component.html",
-    styleUrls: ["table-view-group.component.scss"],
-    standalone: false
+  selector: "ib-view-group, ib-table-view-group",
+  templateUrl: "table-view-group.component.html",
+  styleUrls: ["table-view-group.component.scss"],
+  standalone: false
 })
-export class IbTableViewGroup implements OnDestroy  {
+export class IbTableViewGroup implements OnDestroy {
   @ViewChildren(IbKaiTableAction) actions: QueryList<IbKaiTableAction>;
 
   private _destroyed = new Subject<void>();
   tableUrl = inject(IbTableUrlService);
 
-  get defaultView(): IView{
+  get defaultView(): IView {
     return {
       id: "__ibTableView__all",
       name: "",
       groupName: "",
       data: {
         filter: this.tableUrl.emptyFilterSchema[this.viewGroupName],
-        pageSize: 10,
+        pageSize: 20,
         aggregatedColumns: {},
         sort: {
           active: "",
@@ -89,7 +89,7 @@ export class IbTableViewGroup implements OnDestroy  {
   dirty = false;
   views$: Observable<IView[]>;
 
-  constructor(private store: Store, public viewService: IbViewService) {}
+  constructor(private store: Store, public viewService: IbViewService) { }
 
 
   ngOnDestroy() {
@@ -105,7 +105,7 @@ export class IbTableViewGroup implements OnDestroy  {
     }
 
     // FIXME: this check is really bad, we should use a deep comparison and schema initializer must be done in a better way
-    if(JSON.stringify(this.activeView.data.filter) == '{}'){
+    if (JSON.stringify(this.activeView.data.filter) == '{}') {
       this.activeView.data.filter = structuredClone(this.tableUrl.emptyFilterSchema[this.viewGroupName])
     }
 

@@ -178,9 +178,9 @@ export const Simple: Story = {
     displayedColumns: ["name", "category"],
     tableDef: {
       paginator: {
-        pageSizeOptions: [5, 10, 25, 100],
+        pageSizeOptions: [10, 20, 50, 100],
         showFirstLastButtons: true,
-        pageSize: 5,
+        pageSize: 20,
         hide: false,
       },
     },
@@ -204,9 +204,9 @@ export const WithSort: Story = {
     displayedColumns: ["id", "name", "sku", "category", "price", "created_at"],
     tableDef: {
       paginator: {
-        pageSizeOptions: [5, 10, 25, 100],
+        pageSizeOptions: [10, 20, 50, 100],
         showFirstLastButtons: true,
-        pageSize: 5,
+        pageSize: 20,
       },
     },
   },
@@ -298,9 +298,9 @@ export const WithCustomColumn: Story = {
     ],
     tableDef: {
       paginator: {
-        pageSizeOptions: [5, 10, 25, 100],
+        pageSizeOptions: [10, 20, 50, 100],
         showFirstLastButtons: true,
-        pageSize: 5,
+        pageSize: 20,
       },
     },
   },

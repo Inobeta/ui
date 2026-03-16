@@ -1,30 +1,40 @@
 [
   {
     "label": "examples.ibMainMenu.kaiTable",
-    "icon": {"label": "table_rows", "type": "two-tone"},
+    "icon": {
+      "label": "table_rows",
+      "type": "two-tone"
+    },
     "link": "/home/kai-table",
     "paths": [
       {
         "label": "examples.ibMainMenu.kaiTableSimple",
-        "link":  "/home/kai-table/simple"
+        "link": "/home/kai-table/simple"
       },
       {
         "label": "examples.ibMainMenu.kaiTableContextAction",
-        "link":  "/home/kai-table/actions"
+        "link": "/home/kai-table/actions"
       },
       {
         "label": "examples.ibMainMenu.kaiTableFull",
-        "link":  "/home/kai-table/full"
+        "link": "/home/kai-table/full"
       },
       {
         "label": "examples.ibMainMenu.kaiTableApi",
-        "link":  "/home/kai-table/api"
+        "link": "/home/kai-table/api"
+      },
+      {
+        "label": "examples.ibMainMenu.kaiTableRouting",
+        "link": "/home/kai-table/with-routing"
       }
     ]
   },
   {
     "label": "examples.ibMainMenu.dynamicFormsMain",
-    "icon": {"label": "view_list", "type": "two-tone"},
+    "icon": {
+      "label": "view_list",
+      "type": "two-tone"
+    },
     "link": "/home/forms",
     "paths": [
       {
@@ -51,7 +61,10 @@
   },
   {
     "label": "examples.ibMainMenu.httpMain",
-    "icon": {"label": "http", "type": "two-tone"},
+    "icon": {
+      "label": "http",
+      "type": "two-tone"
+    },
     "link": "/home/http",
     "paths": [
       {
@@ -70,7 +83,10 @@
   },
   {
     "label": "examples.ibMainMenu.reduxMain",
-    "icon": {"label": "archive", "type": "two-tone"},
+    "icon": {
+      "label": "archive",
+      "type": "two-tone"
+    },
     "link": "/home/redux/base",
     "paths": [
       {
@@ -85,7 +101,10 @@
   },
   {
     "label": "examples.ibMainMenu.dialogMain",
-    "icon": {"label": "announcement", "type": "two-tone"},
+    "icon": {
+      "label": "announcement",
+      "type": "two-tone"
+    },
     "link": "/home/dialog",
     "paths": [
       {
@@ -96,7 +115,10 @@
   },
   {
     "label": "examples.ibMainMenu.toastMain",
-    "icon": {"label": "breakfast_dining", "type": "two-tone"},
+    "icon": {
+      "label": "breakfast_dining",
+      "type": "two-tone"
+    },
     "link": "/home/toast",
     "paths": [
       {

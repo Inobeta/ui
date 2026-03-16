@@ -1,8 +1,10 @@
 <ib-filter-button [attr.data-cy]="'ib-tag-filter-' + name">
   <span ib-filter-name><ng-content></ng-content></span>
-  <span ib-filter-value>
-    {{ displayLabel | translate : displayLabelParams }}
-  </span>
+  @if (isDirty) {
+    <span ib-filter-value>
+      {{ displayLabel | translate : displayLabelParams }}
+    </span>
+  }
 
   <mat-form-field class="ib-tag-filter-search" subscriptSizing="dynamic">
     <input matInput [formControl]="query" [placeholder]="'shared.ibFilter.search' | translate"/>

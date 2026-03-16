@@ -36,6 +36,7 @@ import { IbNumberFilter } from "./filters/number/filter-number.component";
 import { IbSearchBar } from "./filters/search-bar/search-bar.component";
 import { IbTagFilter } from "./filters/tag/filter-tag.component";
 import { IbTextFilter } from "./filters/text/filter-text.component";
+import { IbFilterValueDirective } from "./filter-value.directive";
 
 @NgModule({
   imports: [
@@ -64,6 +65,7 @@ import { IbTextFilter } from "./filters/text/filter-text.component";
     IbFilterButton,
     IbFilterActionGroup,
     IbBooleanFilter,
+    IbFilterValueDirective
   ],
   exports: [
     IbFilter,
@@ -99,4 +101,4 @@ import { IbTextFilter } from "./filters/text/filter-text.component";
     },
   ],
 })
-export class IbFilterModule {}
+export class IbFilterModule { }

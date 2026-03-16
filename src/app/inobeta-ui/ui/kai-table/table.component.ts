@@ -18,11 +18,12 @@ import {
   ViewEncapsulation,
   booleanAttribute,
   inject,
+  input,
 } from "@angular/core";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { MatTable } from "@angular/material/table";
-import { Subject} from "rxjs";
+import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { IbTableDataExportAction } from "../data-export/table-data-export.component";
 import { IbFilter } from "../kai-filter";
@@ -37,32 +38,34 @@ import { IB_TABLE } from "./tokens";
 import { IbTableUrlService } from "./table-url.service";
 import { Store } from "@ngrx/store";
 import { urlStateActions } from "./store/url-state/actions";
+import { toSignal } from "@angular/core/rxjs-interop";
+import { ActivatedRoute } from "@angular/router";
 
 const defaultTableDef: IbTableDef = {
   paginator: {
-    pageSizeOptions: [5, 10, 25, 100],
+    pageSizeOptions: [10, 20, 50, 100],
     showFirstLastButtons: true,
-    pageSize: 10,
+    pageSize: 20,
   },
 };
 
 @Component({
-    selector: "ib-kai-table",
-    templateUrl: "./table.component.html",
-    styleUrls: ["./table.component.scss"],
-    host: {
-        class: "ib-table__container",
-    },
-    animations: [
-        trigger("detailExpand", [
-            state("collapsed", style({ height: "0px", minHeight: "0" })),
-            state("expanded", style({ height: "*" })),
-            transition("expanded <=> collapsed", animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)")),
-        ]),
-    ],
-    providers: [{ provide: IB_TABLE, useExisting: IbTable }],
-    encapsulation: ViewEncapsulation.None,
-    standalone: false
+  selector: "ib-kai-table",
+  templateUrl: "./table.component.html",
+  styleUrls: ["./table.component.scss"],
+  host: {
+    class: "ib-table__container",
+  },
+  animations: [
+    trigger("detailExpand", [
+      state("collapsed", style({ height: "0px", minHeight: "0" })),
+      state("expanded", style({ height: "*" })),
+      transition("expanded <=> collapsed", animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)")),
+    ]),
+  ],
+  providers: [{ provide: IB_TABLE, useExisting: IbTable }],
+  encapsulation: ViewEncapsulation.None,
+  standalone: false
 })
 export class IbTable implements OnDestroy {
   private _destroyed = new Subject<void>();
@@ -99,6 +102,8 @@ export class IbTable implements OnDestroy {
 
   tableUrl = inject(IbTableUrlService);
   private store = inject(Store);
+  private activatedRoute = inject(ActivatedRoute);
+  private activeParams = this.activatedRoute.firstChild?.params ? toSignal(this.activatedRoute.firstChild.params) : null;
 
   /**
    * Configuration for the table and its inner components. Currently supports only
@@ -109,9 +114,9 @@ export class IbTable implements OnDestroy {
    * ```
    * {
    *   paginator : {
-   *     pageSizeOptions: [5, 10, 25, 100],
+   *     pageSizeOptions: [10, 20, 50, 100],
    *     showFirstLastButtons: true,
-   *     pageSize: 10,
+   *     pageSize: 20,
    *     hide: false,
    *   }
    * }
@@ -129,7 +134,7 @@ export class IbTable implements OnDestroy {
   get tableDef() {
     return this._tableDef;
   }
-  private _tableDef: IbTableDef = {...defaultTableDef};
+  private _tableDef: IbTableDef = { ...defaultTableDef };
 
 
   /**
@@ -160,6 +165,17 @@ export class IbTable implements OnDestroy {
 
   isRemote = false;
 
+
+  activeRowParams = input<{ dataParamId: string, childRouteParamId: string }>({ dataParamId: null, childRouteParamId: null })
+
+  getActiveRowId() {
+    if (!this.activeParams) return null;
+    const currentParams = this.activeParams();
+    if (this.activeRowParams()?.dataParamId && this.activeRowParams()?.childRouteParamId) {
+      return currentParams[this.activeRowParams()?.childRouteParamId]
+    }
+    return null;
+  }
 
   ngOnInit() {
     const paginatorFromUrl = this.tableUrl.getPaginator(this.tableName);
@@ -200,8 +216,8 @@ export class IbTable implements OnDestroy {
         ...this.tableDef.initialSort
       };
       const sortFromUrl = this.tableUrl.getSort(this.tableName)
-      if(sortFromUrl.active !== '' && sortFromUrl.active !== undefined){
-        sortState = {...sortFromUrl}
+      if (sortFromUrl.active !== '' && sortFromUrl.active !== undefined) {
+        sortState = { ...sortFromUrl }
       }
       this.dataSource.initializeSortState(sortState);
     }
@@ -227,7 +243,7 @@ export class IbTable implements OnDestroy {
       setTimeout(() => viewInit())
     }
 
-    if(!this.filter){
+    if (!this.filter) {
       setTimeout(() => dsInit())
     }
     this.dataSource.columns = this.columns.toArray();
@@ -245,8 +261,8 @@ export class IbTable implements OnDestroy {
     this._destroyed.complete();
   }
 
-  setPaginatorState(params){
-    this.store.dispatch(urlStateActions.setPaginator({tableName: this.tableName, params}))
+  setPaginatorState(params) {
+    this.store.dispatch(urlStateActions.setPaginator({ tableName: this.tableName, params }))
   }
   private setupViewGroup() {
     for (const action of [

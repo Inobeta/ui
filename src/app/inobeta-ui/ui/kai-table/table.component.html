@@ -36,6 +36,7 @@
 
     <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="ib-table__row"
       [class.ib-table__row--expanded]="expandedElement === row"
+      [class.ib-table__row--selected]="row[activeRowParams()?.dataParamId] === getActiveRowId()"
     (click)="rowGroup && (expandedElement = expandedElement === row ? null : row)"></tr>
     @if (rowGroup) {
       <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="ib-table__row-group"

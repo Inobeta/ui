@@ -10,9 +10,10 @@ import { IbFilterButton } from "../../filter-button/filter-button.component";
 import { IbFilterDef } from "../../filter.types";
 import { eq, none } from "../../filters";
 import { IbFilterBase } from "../base/filter-base";
+import { IbFilterValueDirective } from "../../filter-value.directive";
 
 @Component({
-    imports: [
+  imports: [
     IbFilterButton,
     IbFilterActionGroup,
     ReactiveFormsModule,
@@ -20,11 +21,12 @@ import { IbFilterBase } from "../base/filter-base";
     MatButtonToggleModule,
     MatRadioModule,
     TranslateModule,
-    LowerCasePipe
-],
-    selector: "ib-boolean-filter",
-    templateUrl: "boolean-filter.component.html",
-    providers: [{ provide: IbFilterBase, useExisting: IbBooleanFilter }]
+    LowerCasePipe,
+    IbFilterValueDirective
+  ],
+  selector: "ib-boolean-filter",
+  templateUrl: "boolean-filter.component.html",
+  providers: [{ provide: IbFilterBase, useExisting: IbBooleanFilter }]
 })
 export class IbBooleanFilter extends IbFilterBase {
   searchCriteria = new FormControl(null);
