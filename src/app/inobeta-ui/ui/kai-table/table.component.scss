@@ -167,3 +167,20 @@ td.mat-column-ib-action > :first-child {
   justify-content: flex-end;
   align-content: center;
 }
+
+
+
+.ib-table-mobile {
+  display: none !important;
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+  .ib-table-desktop {
+    display: none !important;
+  }
+
+  .ib-table-mobile {
+    display: block !important;
+  }
+}

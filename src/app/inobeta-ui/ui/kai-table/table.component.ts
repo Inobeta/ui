@@ -17,6 +17,8 @@ import {
   ViewChild,
   ViewEncapsulation,
   booleanAttribute,
+  contentChild,
+  contentChildren,
   effect,
   inject,
   input,
@@ -28,7 +30,7 @@ import { MatTable } from "@angular/material/table";
 import { Subject } from "rxjs";
 import { filter, takeUntil } from "rxjs/operators";
 import { IbTableDataExportAction } from "../data-export/table-data-export.component";
-import { IbFilter } from "../kai-filter";
+import { IbFilter, IbFilterBase } from "../kai-filter";
 import { IbTableViewGroup } from "../views";
 import { IbColumn } from "./columns/column";
 import { IbSelectionColumn } from "./columns/selection-column";
@@ -42,6 +44,8 @@ import { Store } from "@ngrx/store";
 import { urlStateActions } from "./store/url-state/actions";
 import { toSignal } from "@angular/core/rxjs-interop";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
+import { IbActionColumn, IbKaiTableAction } from ".";
+import { BreakpointObserver } from '@angular/cdk/layout';
 
 const defaultTableDef: IbTableDef = {
   paginator: {
@@ -55,9 +59,6 @@ const defaultTableDef: IbTableDef = {
   selector: "ib-kai-table",
   templateUrl: "./table.component.html",
   styleUrls: ["./table.component.scss"],
-  host: {
-    class: "ib-table__container",
-  },
   animations: [
     trigger("detailExpand", [
       state("collapsed", style({ height: "0px", minHeight: "0" })),
@@ -71,6 +72,27 @@ const defaultTableDef: IbTableDef = {
 })
 export class IbTable implements OnDestroy {
   private _destroyed = new Subject<void>();
+
+
+  /**
+   *
+   * MOBILE STUFF
+   */
+  mobileColumns = contentChildren(IbColumn);
+  mobileRowGroup = contentChild(IbKaiRowGroupDirective);
+  mobileFilter = contentChild(IbFilter);
+  mobileFilters = contentChildren(IbFilterBase, { descendants: true });
+  mobileHeaderActions = contentChildren(IbKaiTableAction, { descendants: true });
+  mobileActionColumn = contentChild(IbActionColumn);
+  private breakpointObserver = inject(BreakpointObserver);
+  isMobile = this.breakpointObserver.isMatched('(max-width: 767px)');
+  @HostBinding('class.ib-table__container')
+  get hasTableContainerClass(): boolean {
+    return !this.isMobile;
+  }
+  /** END MOBILE STUFF */
+
+
 
   @ContentChildren(IbColumn) columns: QueryList<IbColumn<any>>;
   @ContentChild(IbSelectionColumn) selectionColumn!: IbSelectionColumn;

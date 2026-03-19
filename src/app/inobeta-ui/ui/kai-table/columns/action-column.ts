@@ -2,8 +2,8 @@ import { Directive } from "@angular/core";
 import { IbColumn } from "./column";
 
 @Directive({
-    selector: "[ib-action-column]",
-    standalone: false
+  selector: "[ib-action-column]",
+  standalone: false
 })
 export class IbActionColumn {
   constructor(public ibColumn: IbColumn<unknown>) {
@@ -12,6 +12,6 @@ export class IbActionColumn {
 
   ngOnInit() {
     this.ibColumn.headerText = "";
-    this.ibColumn._table.displayedColumns.push("ib-action")
+    this.ibColumn._table?.displayedColumns?.push("ib-action")
   }
 }

@@ -32,7 +32,8 @@ import { IbKaiRowGroupDirective } from "./rowgroup";
 import { IbSortHeader } from "./sort-header";
 import { IbTable } from "./table.component";
 import { provideState } from '@ngrx/store';
-import {  provideEffects } from '@ngrx/effects';
+import { provideEffects } from '@ngrx/effects';
+import { IbKaiTableMobileComponent } from "../kai-table-mobile/table-mobile.component";
 
 @NgModule({
   exports: [
@@ -73,6 +74,7 @@ import {  provideEffects } from '@ngrx/effects';
     MatCheckboxModule,
     MatPaginatorModule,
     MatProgressBarModule,
+    IbKaiTableMobileComponent,
     TranslateModule.forChild({
       extend: true,
     }),
@@ -89,4 +91,4 @@ import {  provideEffects } from '@ngrx/effects';
     provideEffects(kaiTableEffects),
   ],
 })
-export class IbKaiTableModule {}
+export class IbKaiTableModule { }

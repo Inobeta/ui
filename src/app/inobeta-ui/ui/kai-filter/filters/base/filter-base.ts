@@ -25,8 +25,8 @@ export interface IFilterBase {
 }
 
 @Directive({
-    selector: "ib-filter-base",
-    standalone: false
+  selector: "ib-filter-base",
+  standalone: false
 })
 export class IbFilterBase implements IFilterBase {
   @ViewChild(IbFilterButton) button: IbFilterButton;
@@ -95,7 +95,7 @@ export class IbFilterBase implements IFilterBase {
     this.closeMenu();
   }
 
-  initializeFromColumn(data: any[]): void {}
+  initializeFromColumn(data: any[]): void { }
 
   clear() {
     this.searchCriteria.markAsPristine();
@@ -106,5 +106,28 @@ export class IbFilterBase implements IFilterBase {
 
   closeMenu() {
     this.button?.closeMenu();
+  }
+
+  mobileLabel(): string {
+    return this.name;
+  }
+
+  mobileSummary(): string {
+    const raw = this.rawValue;
+
+    if (raw == null) {
+      return "";
+    }
+
+    if (typeof raw !== "object") {
+      return String(raw);
+    }
+
+    const values = Object.values(raw).filter(v => v != null && v !== "");
+    return values.length ? values.map(v => String(v)).join(" • ") : "";
+  }
+
+  mobileHasValue(): boolean {
+    return !!this.mobileSummary();
   }
 }

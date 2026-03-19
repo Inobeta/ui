@@ -17,8 +17,8 @@ import { IbColumn } from "./column";
  * the `format` input. Same as `DatePipe` or `formatDate` function.
  */
 @Component({
-    selector: "ib-date-column",
-    template: `
+  selector: "ib-date-column",
+  template: `
     <ng-container
       matColumnDef
       matSort
@@ -42,13 +42,13 @@ import { IbColumn } from "./column";
       </td>
     </ng-container>
   `,
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.Default,
-    providers: [
-        { provide: IbColumn, useExisting: IbDateColumn },
-        { provide: IB_COLUMN, useExisting: IbDateColumn },
-    ],
-    standalone: false
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.Default,
+  providers: [
+    { provide: IbColumn, useExisting: IbDateColumn },
+    { provide: IB_COLUMN, useExisting: IbDateColumn },
+  ],
+  standalone: false
 })
 export class IbDateColumn<T> extends IbColumn<T> {
   @Input() format = "dd/MM/yyyy HH:mm z";
@@ -57,4 +57,9 @@ export class IbDateColumn<T> extends IbColumn<T> {
 
   /** @ignore */
   transform = { pdf: (data) => formatDate(data, this.format, this.locale) };
+
+  mobileDataRenderer(data: T, name: string): string {
+    const value = this.dataAccessor(data, name);
+    return formatDate(value, this.format, this.locale);
+  }
 }

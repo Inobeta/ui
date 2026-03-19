@@ -7,6 +7,7 @@ import {
 } from "@angular/core";
 import { IB_AGGREGATE_TYPE, IB_COLUMN } from "../tokens";
 import { IbColumn } from "./column";
+import { DecimalPipe } from "@angular/common";
 
 /**
  * Column that shows a formatted number for the row cells.
@@ -17,8 +18,8 @@ import { IbColumn } from "./column";
  * `digitsInfo` input. Same as `DecimalPipe` or `formatNumber` function.
  */
 @Component({
-    selector: "ib-number-column",
-    template: `
+  selector: "ib-number-column",
+  template: `
     <ng-container
       matColumnDef
       matSort
@@ -40,7 +41,7 @@ import { IbColumn } from "./column";
           {{ um() }}&nbsp;
         }
         {{ dataAccessor(data, name) | number : digitsInfo : locale }}
-    
+
         @if(umPosition() === 'right') {
           {{ um() }}
         }
@@ -57,21 +58,30 @@ import { IbColumn } from "./column";
       </td>
     </ng-container>
     `,
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.Default,
-    providers: [
-        {
-            provide: IbColumn,
-            useExisting: IbNumberColumn,
-        },
-        { provide: IB_COLUMN, useExisting: IbNumberColumn },
-        { provide: IB_AGGREGATE_TYPE, useValue: "number" },
-    ],
-    standalone: false
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.Default,
+  providers: [
+    {
+      provide: IbColumn,
+      useExisting: IbNumberColumn,
+    },
+    { provide: IB_COLUMN, useExisting: IbNumberColumn },
+    { provide: IB_AGGREGATE_TYPE, useValue: "number" },
+  ],
+  standalone: false
 })
 export class IbNumberColumn<T> extends IbColumn<T> {
   @Input() digitsInfo = "1.0-2";
   @Input() locale = "it";
   um = input<string>("");
   umPosition = input<'right' | 'left'>("right");
+
+  mobileDataRenderer(data: T, name: string): string {
+    const value = this.dataAccessor(data, name);
+    const formattedValue = DecimalPipe.prototype.transform(value, this.digitsInfo, this.locale) ?? "";
+    if (this.um()) {
+      return this.umPosition() === 'left' ? `${this.um()} ${formattedValue}` : `${formattedValue} ${this.um()}`;
+    }
+    return formattedValue;
+  }
 }

@@ -8,8 +8,8 @@ import {
 } from "@angular/core";
 
 @Directive({
-    selector: "[ibTableAction]",
-    standalone: false
+  selector: "[ibTableAction]",
+  standalone: false
 })
 export class IbKaiTableAction {
   @ViewChild(TemplateRef) templateRef;
@@ -22,13 +22,15 @@ export class IbKaiTableAction {
 }
 
 @Directive({
-    selector: "ib-table-action-group, [ib-table-action-group]",
-    standalone: false
+  selector: 'ib-table-action-group, [ib-table-action-group]',
+  standalone: false
 })
-export class IbKaiTableActionGroup {}
+export class IbKaiTableActionGroup {
+  @ViewChild(TemplateRef, { static: true }) templateRef!: TemplateRef<any>;
+}
 
 @NgModule({
   exports: [IbKaiTableAction, IbKaiTableActionGroup],
   declarations: [IbKaiTableAction, IbKaiTableActionGroup],
 })
-export class IbTableActionModule {}
+export class IbTableActionModule { }

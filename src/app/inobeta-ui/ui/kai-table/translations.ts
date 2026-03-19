@@ -34,7 +34,9 @@ export const ibKaiTableTranslations = {
         "all": "Tutti i dati",
         "currentPage": "Pagina corrente",
         "selectedRows": "Righe selezionate"
-      }
+      },
+      "showDetails": "Mostra dettagli",
+      "hideDetails": "Nascondi dettagli"
     }
   }
 }

@@ -3,8 +3,10 @@ import {
   ContentChildren,
   EventEmitter,
   Input,
+  Optional,
   Output,
   QueryList,
+  TemplateRef,
   ViewChild,
   ViewEncapsulation,
 } from "@angular/core";
@@ -31,7 +33,7 @@ import { IB_FILTER } from "./tokens";
         <ng-content></ng-content>
       </section>
     </section>
-    
+
     <button
       *ibTableAction
       mat-icon-button
@@ -86,7 +88,7 @@ export class IbFilter {
   form: FormGroup = new FormGroup({});
 
   initialRawValue: IbFilterSyntaxExtended = {};
-  get selectedCriteria(){
+  get selectedCriteria() {
     return this.form.getRawValue();
   }
   query: Record<string, any> = {};
@@ -94,7 +96,7 @@ export class IbFilter {
   hideFilters = false;
 
   initialized = new ReplaySubject<void>(1);
-
+  constructor(@Optional() public templateRef: TemplateRef<any>) { }
   ngOnInit() {
   }
 
