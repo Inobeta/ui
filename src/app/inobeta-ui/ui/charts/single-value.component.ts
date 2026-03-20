@@ -9,76 +9,145 @@ import { TranslateModule } from '@ngx-translate/core';
   imports: [TranslateModule, MatIconModule],
   template: `
   @if(variant() === 'header'){
-    <div class="single-value-header w-full h-full rounded-xl p-4 flex flex-col gap-3"
-      [style.background-color]="backgroundColor()"
-      [style.color]="fontColor()">
+  <div
+    class="single-value single-value--header"
+    [style.background-color]="backgroundColor()"
+    [style.color]="fontColor()">
 
-      <div class="flex gap-3 items-center mb-2">
-        @if(icon()){
-          <div class="flex items-center justify-center">
-            <mat-icon
-              style="width:48px; height:48px; font-size:48px;"
-              [style.color]="iconColor()">
-              {{ icon() }}
-            </mat-icon>
-          </div>
-        }
-
-        <div class="flex flex-col">
-          <div class="text-xl">{{ title() | translate }}</div>
-
-          @if(additionalInfo()){
-            <div class="flex items-center gap-1 text-md">
-              @if(additionalInfo()?.icon){
-                <mat-icon
-                  style="width:18px; height:18px; font-size:18px;"
-                  [style.color]="additionalInfo()?.iconColor">
-                  {{ additionalInfo()?.icon }}
-                </mat-icon>
-              }
-              <span [style.color]="additionalInfo()?.labelColor">
-                {{ additionalInfo()?.label ?? '' | translate }}
-              </span>
-            </div>
-          }
+    <div class="single-value__header-row">
+      @if(icon()){
+        <div class="single-value__icon-container">
+          <mat-icon
+            class="single-value__icon single-value__icon--header"
+            [style.color]="iconColor()">
+            {{ icon() }}
+          </mat-icon>
         </div>
-      </div>
+      }
 
-      <div class="flex justify-center items-center gap-2">
-        <span class="text-5xl font-bold">{{ value() }}</span>
-        @if(unit()){
-          <span class="text-xl">{{ unit() }}</span>
+      <div class="single-value__header-text">
+        <div class="single-value__title single-value__title--xl">{{ title() | translate }}</div>
+
+        @if(additionalInfo()){
+          <div class="single-value__additional-info single-value__additional-info--md">
+            @if(additionalInfo()?.icon){
+              <mat-icon
+                class="single-value__additional-icon"
+                [style.color]="additionalInfo()?.iconColor">
+                {{ additionalInfo()?.icon }}
+              </mat-icon>
+            }
+            <span [style.color]="additionalInfo()?.labelColor">
+              {{ additionalInfo()?.label ?? '' | translate }}
+            </span>
+          </div>
         }
       </div>
     </div>
-  }
 
-  <!-- STACKED -->
-  @if(variant() === 'stacked'){
-    <div class="single-card-stacked w-full h-full rounded-xl p-4 flex flex-col items-center text-center gap-2"
-      [style.background-color]="backgroundColor()"
-      [style.color]="fontColor()">
+    <div class="single-value__value-row single-value__value-row--center">
+      <span class="single-value__value single-value__value--5xl">{{ value() }}</span>
+      @if(unit()){
+        <span class="single-value__unit single-value__unit--xl">{{ unit() }}</span>
+      }
+    </div>
+  </div>
+}
 
+@if(variant() === 'stacked'){
+  <div
+    class="single-value single-value--stacked"
+    [style.background-color]="backgroundColor()"
+    [style.color]="fontColor()">
+
+    @if(icon()){
+      <mat-icon
+        class="single-value__icon single-value__icon--stacked"
+        [style.color]="iconColor()">
+        {{ icon() }}
+      </mat-icon>
+    }
+
+    <div class="single-value__value-row single-value__value-row--end">
+      <span class="single-value__value single-value__value--3xl">{{ value() }}</span>
+      @if(unit()){
+        <span class="single-value__unit single-value__unit--xl">{{ unit() }}</span>
+      }
+    </div>
+
+    @if(additionalInfo()){
+      <div class="single-value__additional-info single-value__additional-info--md">
+        @if(additionalInfo()?.icon){
+          <mat-icon
+            class="single-value__additional-icon"
+            [style.color]="additionalInfo()?.iconColor">
+            {{ additionalInfo()?.icon }}
+          </mat-icon>
+        }
+
+        <span [style.color]="additionalInfo()?.labelColor">
+          {{ additionalInfo()?.label ?? '' | translate }}
+        </span>
+      </div>
+    }
+  </div>
+}
+
+@if(variant() === 'inline'){
+  <div
+    class="single-value single-value--inline"
+    [style.background-color]="backgroundColor()"
+    [style.color]="fontColor()">
+
+    <div class="single-value__inline-start">
       @if(icon()){
         <mat-icon
-          style="width:62px; height:62px; font-size:62px;"
+          class="single-value__icon single-value__icon--inline"
           [style.color]="iconColor()">
           {{ icon() }}
         </mat-icon>
       }
 
-      <div class="flex items-end gap-2">
-        <span class="text-3xl font-bold">{{ value() }}</span>
-        @if(unit()){
-          <span class="text-xl">{{ unit() }}</span>
-        }
+      @if(title()){
+        <span class="single-value__title single-value__title--md">{{ title() | translate }}</span>
+      }
+    </div>
+
+    <div class="single-value__value-row single-value__value-row--end">
+      <span class="single-value__value single-value__value--3xl">{{ value() }}</span>
+      @if(unit()){
+        <span class="single-value__unit single-value__unit--lg">{{ unit() }}</span>
+      }
+    </div>
+  </div>
+}
+
+@if(variant() === 'side-icon'){
+  <div
+    class="single-value single-value--side-icon"
+    [style.background-color]="backgroundColor()"
+    [style.color]="fontColor()">
+
+    @if(icon()){
+      <div class="single-value__icon-container">
+        <mat-icon
+          class="single-value__icon single-value__icon--stacked"
+          [style.color]="iconColor()">
+          {{ icon() }}
+        </mat-icon>
       </div>
+    }
+
+    <div class="single-value__side-content">
+      @if(title()){
+        <div class="single-value__title single-value__title--xl">{{ title() | translate }}</div>
+      }
 
       @if(additionalInfo()){
-        <div class="flex items-center gap-1 text-md">
+        <div class="single-value__additional-info single-value__additional-info--md">
           @if(additionalInfo()?.icon){
             <mat-icon
-              style="width:18px; height:18px; font-size:18px;"
+              class="single-value__additional-icon"
               [style.color]="additionalInfo()?.iconColor">
               {{ additionalInfo()?.icon }}
             </mat-icon>
@@ -89,84 +158,17 @@ import { TranslateModule } from '@ngx-translate/core';
           </span>
         </div>
       }
-    </div>
-  }
 
-  <!-- INLINE -->
-  @if(variant() === 'inline'){
-    <div class="single-card-inline w-full h-full rounded-xl p-4 flex items-center justify-between gap-3"
-      [style.background-color]="backgroundColor()"
-      [style.color]="fontColor()">
-
-      <div class="flex items-center gap-2">
-        @if(icon()){
-          <mat-icon
-            style="width:32px; height:32px; font-size:32px; display: contents;"
-            [style.color]="iconColor()">
-            {{ icon() }}
-          </mat-icon>
-        }
-
-        @if(title()){
-          <span class="text-md">{{ title() | translate }}</span>
-        }
-      </div>
-
-      <div class="flex items-end gap-2">
-        <span class="text-3xl font-bold">{{ value() }}</span>
+      <div class="single-value__value-row single-value__value-row--end">
+        <span class="single-value__value single-value__value--2xl">{{ value() }}</span>
         @if(unit()){
-          <span class="text-lg">{{ unit() }}</span>
+          <span class="single-value__unit single-value__unit--xl">{{ unit() }}</span>
         }
       </div>
     </div>
-  }
-
-  <!-- SIDE ICON -->
-  @if(variant() === 'side-icon'){
-    <div class="single-card-side-icon w-full h-full rounded-xl p-4 flex items-center gap-4"
-      [style.background-color]="backgroundColor()"
-      [style.color]="fontColor()">
-
-      @if(icon()){
-        <div class="flex items-center justify-center">
-          <mat-icon
-            style="width:62px; height:62px; font-size:62px;"
-            [style.color]="iconColor()">
-            {{ icon() }}
-          </mat-icon>
-        </div>
-      }
-
-      <div class="flex flex-col gap-1">
-        @if(title()){
-          <div class="text-xl">{{ title() | translate }}</div>
-        }
-
-        @if(additionalInfo()){
-          <div class="flex items-center gap-1 text-md">
-            @if(additionalInfo()?.icon){
-              <mat-icon
-                style="width:18px; height:18px; font-size:18px;"
-                [style.color]="additionalInfo()?.iconColor">
-                {{ additionalInfo()?.icon }}
-              </mat-icon>
-            }
-
-            <span [style.color]="additionalInfo()?.labelColor">
-              {{ additionalInfo()?.label ?? '' | translate }}
-            </span>
-          </div>
-        }
-
-        <div class="flex items-end gap-2">
-          <span class="text-2xl font-bold">{{ value() }}</span>
-          @if(unit()){
-            <span class="text-xl">{{ unit() }}</span>
-          }
-        </div>
-      </div>
-    </div>
-  }`
+  </div>
+  }`,
+  styleUrls: ['./single-value.component.scss']
 })
 export class SingleValueComponent {
   title = input<string>('title');
