@@ -39,6 +39,7 @@ export class IbTableUrlService {
         })
       },
       queryParamsHandling: 'merge',
+      replaceUrl: true,
     });
   }
 
@@ -56,6 +57,7 @@ export class IbTableUrlService {
         })
       },
       queryParamsHandling: 'merge',
+      replaceUrl: true,
     });
   }
 
@@ -75,6 +77,7 @@ export class IbTableUrlService {
         })
       },
       queryParamsHandling: 'merge',
+      replaceUrl: true,
     });
   }
 
@@ -92,6 +95,7 @@ export class IbTableUrlService {
         })
       },
       queryParamsHandling: 'merge',
+      replaceUrl: true,
     });
   }
 
@@ -113,6 +117,7 @@ export class IbTableUrlService {
         })
       },
       queryParamsHandling: 'merge',
+      replaceUrl: true,
     });
   }
 
@@ -139,6 +144,7 @@ export class IbTableUrlService {
         })
       },
       queryParamsHandling: 'merge',
+      replaceUrl: true,
     });
   }
 }
