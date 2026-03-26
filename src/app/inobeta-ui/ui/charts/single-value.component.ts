@@ -2,11 +2,12 @@ import { Component, input } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { SingleValueAdditionalInfo } from './types';
 import { TranslateModule } from '@ngx-translate/core';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'single-value',
   standalone: true,
-  imports: [TranslateModule, MatIconModule],
+  imports: [TranslateModule, MatIconModule, DecimalPipe],
   template: `
   @if(variant() === 'header'){
   <div
@@ -46,7 +47,7 @@ import { TranslateModule } from '@ngx-translate/core';
     </div>
 
     <div class="single-value__value-row single-value__value-row--center">
-      <span class="single-value__value single-value__value--5xl">{{ value() }}</span>
+      <span class="single-value__value single-value__value--5xl">{{ value() | number:digitsInfo():locale() }}</span>
       @if(unit()){
         <span class="single-value__unit single-value__unit--xl">{{ unit() }}</span>
       }
@@ -69,7 +70,7 @@ import { TranslateModule } from '@ngx-translate/core';
     }
 
     <div class="single-value__value-row single-value__value-row--end">
-      <span class="single-value__value single-value__value--3xl">{{ value() }}</span>
+      <span class="single-value__value single-value__value--3xl">{{ value() | number:digitsInfo():locale() }}</span>
       @if(unit()){
         <span class="single-value__unit single-value__unit--xl">{{ unit() }}</span>
       }
@@ -114,7 +115,7 @@ import { TranslateModule } from '@ngx-translate/core';
     </div>
 
     <div class="single-value__value-row single-value__value-row--end">
-      <span class="single-value__value single-value__value--3xl">{{ value() }}</span>
+      <span class="single-value__value single-value__value--3xl">{{ value() | number:digitsInfo():locale() }}</span>
       @if(unit()){
         <span class="single-value__unit single-value__unit--lg">{{ unit() }}</span>
       }
@@ -160,7 +161,7 @@ import { TranslateModule } from '@ngx-translate/core';
       }
 
       <div class="single-value__value-row single-value__value-row--end">
-        <span class="single-value__value single-value__value--2xl">{{ value() }}</span>
+        <span class="single-value__value single-value__value--2xl">{{ value() | number:digitsInfo():locale() }}</span>
         @if(unit()){
           <span class="single-value__unit single-value__unit--xl">{{ unit() }}</span>
         }
@@ -177,10 +178,12 @@ export class SingleValueComponent {
   iconColor = input<string>('auto');
   backgroundColor = input<string>('auto');
   unit = input<string>('');
+  digitsInfo = input<string>('1.2-2');
   icon = input.required<string>();
-  value = input.required<string | number>();
+  value = input.required<number>();
   additionalInfo = input<SingleValueAdditionalInfo | null>();
   fontColor = input<string | null>(null);
+  locale = input<string>('it');
 }
 
 enum SingleValueVariant {
