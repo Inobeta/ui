@@ -2,7 +2,17 @@
   <section class="ib-table__toolbar">
     <ng-content select="ib-table-view-group" />
     <section class="ib-table__toolbar__actions">
-      <ng-content select="ib-table-action-group, [ib-table-action-group]" />
+      @for(action of mobileHeaderActions(); track $index) {
+        @if(action.kind() === 'export') {
+          <ib-table-data-export-action
+            (ibDataExport)="doExport($event)"
+            [showSelectedRowsOption]="!!this.selectionColumn"
+            [showAllRowsOption]="!this.isRemote"
+            />
+        } @else {
+          <ng-container *ngTemplateOutlet="action.templateRef"> </ng-container>
+        }
+      }
       @for (portal of actionPortals; track portal) {
         <ng-template [cdkPortalOutlet]="portal" />
       }
@@ -86,6 +96,7 @@
       [filters]="mobileFilters()"
       [headerActions]="mobileHeaderActions()"
       [actionColumn]="mobileActionColumn()"
+      (doExport)="doExport($event)"
       >
     </ib-kai-table-mobile>
 </div>

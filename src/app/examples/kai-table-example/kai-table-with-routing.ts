@@ -21,17 +21,21 @@ import { ActivatedRoute, Router, RouterOutlet } from "@angular/router";
       >
       <ib-table-action-group>
         @if (selectionColumn?.selection.selected.length > 0) {
-          <button
-            mat-icon-button
-            (click)="getSelection()"
-            >
-            <mat-icon>delete</mat-icon>
-          </button>
+          <ng-template ibTableAction>
+            <button
+              mat-icon-button
+              (click)="getSelection()"
+              >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </ng-template>
         }
-        <button mat-icon-button (click)="getUserOrders()">
-          <mat-icon>refresh</mat-icon>
-        </button>
-        <ib-table-data-export-action />
+        <ng-template ibTableAction>
+          <button mat-icon-button (click)="getUserOrders()">
+            <mat-icon>refresh</mat-icon>
+          </button>
+        </ng-template>
+        <ng-template ibTableAction [kind]="'export'"></ng-template>
       </ib-table-action-group>
 
       <ib-table-view-group />

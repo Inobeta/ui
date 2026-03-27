@@ -2,31 +2,49 @@ import { NgTemplateOutlet } from '@angular/common';
 import {
   Component,
   computed,
+  inject,
   input,
+  output,
   signal
 } from '@angular/core';
 
+import { MatButtonModule } from '@angular/material/button';
 import { MatCard } from "@angular/material/card";
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { filter } from 'rxjs';
+import { IbDataExportService, IDataExportSettings } from '../data-export/data-export.service';
 import { IbFilterBase } from '../kai-filter/filters/base/filter-base';
 import { IbKaiTableAction, } from "../kai-table/action";
 
 @Component({
   selector: 'ib-kai-table-mobile-toolbar',
   standalone: true,
-  imports: [NgTemplateOutlet, MatCard],
+  imports: [NgTemplateOutlet, MatCard, MatButtonModule, MatIcon, MatTooltipModule],
   template: `
           <div class="ib-kai-table-mobile__toolbar">
+            <mat-card>
             <div class="ib-kai-table-mobile__toolbar-actions">
               @for (action of headerActions(); track $index) {
-                @if (action.templateRef) {
-                  <ng-container
-                    *ngTemplateOutlet="action.templateRef">
-                  </ng-container>
+                @if(action.kind() === 'export') {
+                  <button
+                    mat-icon-button
+                    [matTooltip]="'shared.ibTable.export' "
+                    (click)="openExportDialog()"
+                  >
+                    <mat-icon>file_download</mat-icon>
+                  </button>
+                  <!--<ib-table-data-export-action
+                    [showSelectedRowsOption]="false"
+                    [showAllRowsOption]="true"
+                    />-->
+                } @else {
+                  <ng-container *ngTemplateOutlet="action.templateRef"> </ng-container>
                 }
               }
             </div>
-
-            @if (filters().length) {
+            </mat-card>
+            <!--@if (filters().length) {
               <mat-card>
                 <button
                   type="button"
@@ -41,7 +59,7 @@ import { IbKaiTableAction, } from "../kai-table/action";
                   }
                 </button>
               </mat-card>
-            }
+            }-->
           </div>
 
           @if (filtersOpen()) {
@@ -217,8 +235,9 @@ import { IbKaiTableAction, } from "../kai-table/action";
 export class IbKaiTableMobileToolbarComponent {
   headerActions = input<readonly IbKaiTableAction[]>([]);
   filters = input<readonly IbFilterBase[]>([]);
-
+  doExport = output<Partial<IDataExportSettings>>()
   filtersOpen = signal(false);
+  exportService: IbDataExportService = inject(IbDataExportService);
 
   activeFiltersCount = computed(() => {
     return this.filters().filter(f => f.mobileHasValue()).length;
@@ -235,5 +254,15 @@ export class IbKaiTableMobileToolbarComponent {
 
   clearAllFilters(): void {
     this.filters().forEach(f => f.clear());
+  }
+
+  openExportDialog() {
+    this.exportService
+      .openExportDialog({
+        showSelectedRowsOption: false,
+        showAllRowsOption: true,
+      })
+      .pipe(filter((settings) => !!settings))
+      .subscribe((settings) => this.doExport.emit(settings));
   }
 }

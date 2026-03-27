@@ -4,10 +4,11 @@ import {
   ViewChild,
   computed,
   input,
+  output,
   signal
 } from '@angular/core';
 
-import { JsonPipe } from '@angular/common';
+import { IDataExportSettings } from '../data-export/data-export.service';
 import { IbFilter } from '../kai-filter';
 import { IbFilterBase } from '../kai-filter/filters/base/filter-base';
 import { IbKaiTableAction, } from "../kai-table/action";
@@ -22,16 +23,17 @@ import { IbKaiTableMobileToolbarComponent } from './table-mobile-toolbar.compone
 @Component({
   selector: 'ib-kai-table-mobile',
   standalone: true,
-  imports: [IbKaiTableMobileToolbarComponent, IbKaiTableMobileItemComponent, IbKaiTableMobileInfiniteScrollComponent, JsonPipe],
+  imports: [IbKaiTableMobileToolbarComponent, IbKaiTableMobileItemComponent, IbKaiTableMobileInfiniteScrollComponent],
   template: `
     <div class="ib-kai-table-mobile">
-      @if (headerActions().length || filters().length) {
-        <!-- TBD <div class="ib-kai-table-mobile__sticky-header">
+      @if (headerActions().length > 0 || filters().length > 0) {
+        <div class="ib-kai-table-mobile__sticky-header">
           <ib-kai-table-mobile-toolbar
             [headerActions]="headerActions()"
             [filters]="filters()"
+            (doExport)="doExport.emit($event)"
           ></ib-kai-table-mobile-toolbar>
-        </div>-->
+        </div>
       }
       @if (cardDataColumns().length || cardActionColumns().length) {
         <div class="ib-kai-table-mobile__content">
@@ -115,6 +117,8 @@ export class IbKaiTableMobileComponent {
   filters = input<readonly IbFilterBase[]>();
   headerActions = input<readonly IbKaiTableAction[]>();
   actionColumn = input<IbActionColumn>();
+
+  doExport = output<Partial<IDataExportSettings>>()
 
   @ViewChild('scrollAnchor') scrollAnchor?: ElementRef<HTMLElement>;
 

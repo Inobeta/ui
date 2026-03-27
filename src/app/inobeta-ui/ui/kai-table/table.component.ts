@@ -5,6 +5,7 @@ import {
   transition,
   trigger,
 } from "@angular/animations";
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { Portal, TemplatePortal } from "@angular/cdk/portal";
 import {
   Component,
@@ -24,28 +25,27 @@ import {
   input,
   signal,
 } from "@angular/core";
+import { toSignal } from "@angular/core/rxjs-interop";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { MatTable } from "@angular/material/table";
+import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
+import { Store } from "@ngrx/store";
 import { Subject } from "rxjs";
 import { filter, takeUntil } from "rxjs/operators";
-import { IbTableDataExportAction } from "../data-export/table-data-export.component";
+import { IbActionColumn, IbKaiTableAction, IbKaiTableActionGroup } from ".";
+import { IbDataExportService } from "../data-export";
 import { IbFilter, IbFilterBase } from "../kai-filter";
 import { IbTableViewGroup } from "../views";
 import { IbColumn } from "./columns/column";
 import { IbSelectionColumn } from "./columns/selection-column";
 import { IbTableRemoteDataSource } from "./remote-data-source";
 import { IbKaiRowGroupDirective } from "./rowgroup";
+import { urlStateActions } from "./store/url-state/actions";
 import { IbTableDataSource } from "./table-data-source";
+import { IbTableUrlService } from "./table-url.service";
 import { IbKaiTableState, IbTableDef } from "./table.types";
 import { IB_TABLE } from "./tokens";
-import { IbTableUrlService } from "./table-url.service";
-import { Store } from "@ngrx/store";
-import { urlStateActions } from "./store/url-state/actions";
-import { toSignal } from "@angular/core/rxjs-interop";
-import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
-import { IbActionColumn, IbKaiTableAction } from ".";
-import { BreakpointObserver } from '@angular/cdk/layout';
 
 const defaultTableDef: IbTableDef = {
   paginator: {
@@ -84,6 +84,7 @@ export class IbTable implements OnDestroy {
   mobileFilters = contentChildren(IbFilterBase, { descendants: true });
   mobileHeaderActions = contentChildren(IbKaiTableAction, { descendants: true });
   mobileActionColumn = contentChild(IbActionColumn);
+  mobileActionGroup = contentChild(IbKaiTableActionGroup);
   private breakpointObserver = inject(BreakpointObserver);
   isMobile = this.breakpointObserver.isMatched('(max-width: 767px)');
   @HostBinding('class.ib-table__container')
@@ -101,7 +102,6 @@ export class IbTable implements OnDestroy {
   @ContentChild(IbFilter) filter!: IbFilter;
   @ContentChild(IbTableViewGroup) view!: IbTableViewGroup;
 
-  @ContentChild(IbTableDataExportAction) exportAction: IbTableDataExportAction;
 
   @ViewChild(MatTable, { static: true }) matTable: MatTable<any>;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -193,6 +193,8 @@ export class IbTable implements OnDestroy {
   activeRowParams = input<{ dataParamId: string, childRouteParamId: string }>({ dataParamId: null, childRouteParamId: null })
   activeRouteId = signal<string>(null);
 
+  exportService: IbDataExportService = inject(IbDataExportService);
+
   constructor() {
     const currentRoute = toSignal(this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
@@ -223,12 +225,6 @@ export class IbTable implements OnDestroy {
       this.dataSource._state
         .pipe(takeUntil(this._destroyed))
         .subscribe((s) => (this.state = s));
-    }
-  }
-
-  ngAfterViewInit() {
-    if (this.exportAction) {
-      this.setupExportAction();
     }
   }
 
@@ -306,17 +302,11 @@ export class IbTable implements OnDestroy {
     }
   }
 
-  private setupExportAction() {
-    this.exportAction.showSelectedRowsOption = !!this.selectionColumn;
-    this.exportAction.showAllRowsOption = !this.isRemote;
-    this.exportAction.ibDataExport
-      .pipe(takeUntil(this._destroyed))
-      .subscribe((settings) => {
-        this.exportAction.exportService._exportFromTable(
-          this.tableName,
-          this.dataSource,
-          settings
-        );
-      });
+  doExport(settings) {
+    this.exportService._exportFromTable(
+      this.tableName,
+      this.dataSource,
+      settings
+    );
   }
 }

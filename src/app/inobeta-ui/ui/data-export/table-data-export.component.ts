@@ -1,13 +1,17 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, EventEmitter, inject, Input, Output } from "@angular/core";
+import { MatButtonModule } from "@angular/material/button";
+import { MatIcon } from "@angular/material/icon";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { TranslatePipe } from "@ngx-translate/core";
 import { filter } from "rxjs/operators";
 import {
-  IDataExportSettings,
   IbDataExportService,
+  IDataExportSettings,
 } from "./data-export.service";
 
 @Component({
-    selector: "ib-table-data-export-action",
-    template: `
+  selector: "ib-table-data-export-action",
+  template: `
     <button
       mat-icon-button
       [matTooltip]="'shared.ibTable.export' | translate"
@@ -16,15 +20,16 @@ import {
       <mat-icon>file_download</mat-icon>
     </button>
   `,
-    standalone: false
+  standalone: true,
+  imports: [
+    MatButtonModule, MatIcon, MatTooltipModule, TranslatePipe
+  ],
 })
 export class IbTableDataExportAction {
   @Input() showAllRowsOption = false;
   @Input() showSelectedRowsOption = false;
   @Output() ibDataExport = new EventEmitter<IDataExportSettings>();
-
-  constructor(public exportService: IbDataExportService) {}
-
+  exportService: IbDataExportService = inject(IbDataExportService);
   openExportDialog() {
     this.exportService
       .openExportDialog({

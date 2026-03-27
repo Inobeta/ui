@@ -34,6 +34,7 @@ import { IbTable } from "./table.component";
 import { provideState } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 import { IbKaiTableMobileComponent } from "../kai-table-mobile/table-mobile.component";
+import { IbTableDataExportAction } from "../data-export/table-data-export.component";
 
 @NgModule({
   exports: [
@@ -75,6 +76,7 @@ import { IbKaiTableMobileComponent } from "../kai-table-mobile/table-mobile.comp
     MatPaginatorModule,
     MatProgressBarModule,
     IbKaiTableMobileComponent,
+    IbTableDataExportAction,
     TranslateModule.forChild({
       extend: true,
     }),
