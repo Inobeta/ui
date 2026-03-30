@@ -21,12 +21,16 @@ import { MatSortHarness } from "@angular/material/sort/testing";
 import { MatTableHarness } from "@angular/material/table/testing";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
+import { RouterTestingModule } from "@angular/router/testing";
+import { EffectsModule } from "@ngrx/effects";
+import { provideStore } from "@ngrx/store";
+import { provideMockStore } from "@ngrx/store/testing";
 import { TranslateModule } from "@ngx-translate/core";
-import { Observable, map, of, throwError, timer } from "rxjs";
+import { Observable, map, throwError, timer } from "rxjs";
 import {
   IbDataExportModule,
   IbDataExportService,
-  OVERRIDE_EXPORT_FORMATS,
+  OVERRIDE_EXPORT_FORMATS
 } from "../data-export";
 import { IbDataExportProvider } from "../data-export/provider";
 import { IbFilterModule } from "../kai-filter";
@@ -37,15 +41,11 @@ import {
   IbFetchDataResponse,
   IbTableRemoteDataSource,
 } from "./remote-data-source";
+import { UrlStateEffects } from "./store/url-state/effects";
 import { IbTableDataSource } from "./table-data-source";
+import { IbTableUrlService } from "./table-url.service";
 import { IbTable } from "./table.component";
 import { IbKaiTableModule } from "./table.module";
-import { IbTableUrlService } from "./table-url.service";
-import { EffectsModule } from "@ngrx/effects";
-import { RouterTestingModule } from "@angular/router/testing";
-import { UrlStateEffects } from "./store/url-state/effects";
-import { provideMockStore } from "@ngrx/store/testing";
-import { provideStore } from "@ngrx/store";
 
 describe("IbTable", () => {
   describe("with IbTableDataSource", () => {
@@ -239,7 +239,7 @@ describe("IbTable", () => {
     });
 
     it("should export entire dataset", async () => {
-      const exportSpy = spyOn(component.exportAction.exportService, "export");
+      const exportSpy = spyOn(component.exportService, "export");
       const exportButton = await loader.getHarness(
         MatButtonHarness.with({
           ancestor: ".ib-table__toolbar__actions",
@@ -270,7 +270,7 @@ describe("IbTable", () => {
     xit("should export current page", async () => {
       setTimeout(async () => {
 
-        const exportSpy = spyOn(component.exportAction.exportService, "export");
+        const exportSpy = spyOn(component.exportService, "export");
         const exportButton = await loader.getHarness(
           MatButtonHarness.with({
             ancestor: ".ib-table__toolbar__actions",
@@ -304,7 +304,7 @@ describe("IbTable", () => {
 
     it("should export selected rows", fakeAsync(async () => {
 
-      const exportSpy = spyOn(component.exportAction.exportService, "export");
+      const exportSpy = spyOn(component.exportService, "export");
 
       component.selectionColumn.selection.select(
         ...component.dataSource.data.slice(0, 2)
@@ -343,7 +343,7 @@ describe("IbTable", () => {
     });
 
     it("should use transform function", async () => {
-      const exportSpy = spyOn(component.exportAction.exportService, "export");
+      const exportSpy = spyOn(component.exportService, "export");
       const exportButton = await loader.getHarness(
         MatButtonHarness.with({
           ancestor: ".ib-table__toolbar__actions",
@@ -607,7 +607,7 @@ class IbStubExportProvider implements IbDataExportProvider {
       [displayedColumns]="['name', 'color']"
     >
       <ib-table-action-group>
-        <ib-table-data-export-action></ib-table-data-export-action>
+        <ng-template ibTableAction [kind]="'export'"></ng-template>
       </ib-table-action-group>
       <ib-selection-column></ib-selection-column>
       <ib-text-column headerText="name" name="name"></ib-text-column>
@@ -644,7 +644,7 @@ class IbTableWithExport {
       [displayedColumns]="['name', 'created_at', 'updated_at']"
     >
       <ib-table-action-group>
-        <ib-table-data-export-action></ib-table-data-export-action>
+        <ng-template ibTableAction [kind]="'export'"></ng-template>
       </ib-table-action-group>
       <ib-selection-column></ib-selection-column>
       <ib-text-column headerText="name" name="name" />
