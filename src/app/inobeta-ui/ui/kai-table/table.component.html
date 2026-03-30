@@ -88,7 +88,7 @@
     <ib-kai-table-mobile
       [tableName]="tableName"
       [displayedColumns]="displayedColumns"
-      [data]="dataSource.data"
+      [dataSource]="dataSource"
       [state]="state"
       [columns]="mobileColumns()"
       [rowGroup]="mobileRowGroup()"
@@ -97,6 +97,7 @@
       [headerActions]="mobileHeaderActions()"
       [actionColumn]="mobileActionColumn()"
       (doExport)="doExport($event)"
+      (sortUpdated)="updateSortFromMobile($event)"
       >
     </ib-kai-table-mobile>
 </div>

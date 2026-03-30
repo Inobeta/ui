@@ -309,4 +309,10 @@ export class IbTable implements OnDestroy {
       settings
     );
   }
+
+  updateSortFromMobile(newSort: MatSort) {
+    this.dataSource.sort.active = newSort.active;
+    this.dataSource.sort.direction = newSort.direction;
+    this.dataSource.sort.sortChange.emit(newSort);
+  }
 }

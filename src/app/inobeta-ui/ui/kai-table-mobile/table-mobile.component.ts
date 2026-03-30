@@ -1,13 +1,17 @@
 import {
   Component,
   ElementRef,
+  OnDestroy,
   ViewChild,
   computed,
+  effect,
   input,
   output,
   signal
 } from '@angular/core';
 
+import { MatSort } from '@angular/material/sort';
+import { Subscription } from 'rxjs';
 import { IDataExportSettings } from '../data-export/data-export.service';
 import { IbFilter } from '../kai-filter';
 import { IbFilterBase } from '../kai-filter/filters/base/filter-base';
@@ -31,7 +35,10 @@ import { IbKaiTableMobileToolbarComponent } from './table-mobile-toolbar.compone
           <ib-kai-table-mobile-toolbar
             [headerActions]="headerActions()"
             [filters]="filters()"
+            [sortableColumns]="sortableColumns()"
+            [currentSort]="currentSort()"
             (doExport)="doExport.emit($event)"
+            (sortUpdated)="sortUpdate($event)"
           ></ib-kai-table-mobile-toolbar>
         </div>
       }
@@ -102,10 +109,9 @@ import { IbKaiTableMobileToolbarComponent } from './table-mobile-toolbar.compone
     }
   `]
 })
-export class IbKaiTableMobileComponent {
+export class IbKaiTableMobileComponent implements OnDestroy {
   state = input<IbKaiTableState>('idle');
-  data = input<any[]>([]);
-  dataSource = input<IbTableDataSource<any>>(new IbTableDataSource([]));
+  dataSource = input<IbTableDataSource<any>>();
   tableName = input<string>(btoa(window.location.pathname + window.location.hash));
   tableDef = input<Partial<IbTableDef>>({});
   displayedColumns = input<string[]>([]);
@@ -119,12 +125,42 @@ export class IbKaiTableMobileComponent {
   actionColumn = input<IbActionColumn>();
 
   doExport = output<Partial<IDataExportSettings>>()
+  sortUpdated = output<MatSort>()
 
   @ViewChild('scrollAnchor') scrollAnchor?: ElementRef<HTMLElement>;
 
   private observer?: IntersectionObserver;
   visibleCount = signal(this.pageSize());
   filtersOpen = signal(false);
+
+  data = signal<any[]>([]);
+  datasourceConnection: Subscription | null = null;
+  currentSort = signal<{ active: string, direction: 'asc' | 'desc' } | null>(null);
+
+  constructor() {
+    effect(() => {
+      const datasource = this.dataSource();
+      if (datasource) {
+        if (this.datasourceConnection) this.datasourceConnection.unsubscribe()
+        this.datasourceConnection = datasource.connect().asObservable().subscribe(data => {
+          this.data.set(data);
+          this.currentSort.set(datasource.sort ? { active: datasource.sort.active, direction: datasource.sort.direction as 'asc' | 'desc' } : null);
+        }
+        )
+      }
+    })
+  }
+
+  ngOnDestroy() {
+    if (this.datasourceConnection) {
+      this.datasourceConnection.unsubscribe();
+    }
+  }
+
+  sortableColumns = computed(() => {
+    const cols = this.columns() ?? [];
+    return cols.filter(c => c.sort);
+  });
 
   visibleColumns = computed(() => {
     const cols = this.columns() ?? [];
@@ -167,5 +203,21 @@ export class IbKaiTableMobileComponent {
 
   private getRowKey(row: any, index: number): unknown {
     return row?.id ?? row?.uuid ?? row?.key ?? index;
+  }
+
+  sortUpdate(columnName: string) {
+    const currentSort = this.dataSource().sort;
+    if (currentSort.active === columnName) {
+      const newDirection = currentSort.direction === 'asc' ? 'desc' : 'asc';
+      const newSort: MatSort = new MatSort();
+      newSort.active = columnName;
+      newSort.direction = newDirection;
+      this.sortUpdated.emit(newSort);
+      return;
+    }
+    const newSort: MatSort = new MatSort();
+    newSort.active = columnName;
+    newSort.direction = 'asc';
+    this.sortUpdated.emit(newSort);
   }
 }

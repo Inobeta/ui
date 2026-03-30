@@ -16,6 +16,7 @@ import { filter } from 'rxjs';
 import { IbDataExportService, IDataExportSettings } from '../data-export/data-export.service';
 import { IbFilterBase } from '../kai-filter/filters/base/filter-base';
 import { IbKaiTableAction, } from "../kai-table/action";
+import { IbColumn } from '../kai-table';
 
 @Component({
   selector: 'ib-kai-table-mobile-toolbar',
@@ -25,6 +26,13 @@ import { IbKaiTableAction, } from "../kai-table/action";
           <div class="ib-kai-table-mobile__toolbar">
             <mat-card>
             <div class="ib-kai-table-mobile__toolbar-actions">
+
+              <button
+                mat-icon-button
+                (click)="sortOpen.set(!sortOpen())"
+              >
+                <mat-icon>sort</mat-icon>
+              </button>
               @for (action of headerActions(); track $index) {
                 @if(action.kind() === 'export') {
                   <button
@@ -34,10 +42,6 @@ import { IbKaiTableAction, } from "../kai-table/action";
                   >
                     <mat-icon>file_download</mat-icon>
                   </button>
-                  <!--<ib-table-data-export-action
-                    [showSelectedRowsOption]="false"
-                    [showAllRowsOption]="true"
-                    />-->
                 } @else {
                   <ng-container *ngTemplateOutlet="action.templateRef"> </ng-container>
                 }
@@ -62,8 +66,29 @@ import { IbKaiTableAction, } from "../kai-table/action";
             }-->
           </div>
 
-          @if (filtersOpen()) {
+          @if (sortOpen()) {
             <mat-card>
+              <div style="display: flex; flex-direction: column;">
+                @for (col of sortableColumns(); track $index) {
+                    <button
+                      mat-button
+                      style="justify-content: flex-start;"
+                      (click)="sortUpdated.emit(col.name)"
+                    >
+                      {{ col.headerText }}
+                      @if (currentSort()?.active === col.name) {
+                        <mat-icon>
+                          {{ currentSort()?.direction === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
+                        </mat-icon>
+                      }
+                    </button>
+                }
+              </div>
+            </mat-card>
+           }
+
+          @if (filtersOpen()) {
+            <!--<mat-card>
               <div class="ib-kai-table-mobile__filters-panel-header">
                 <div class="ib-kai-table-mobile__filters-title">Filtri</div>
 
@@ -113,7 +138,7 @@ import { IbKaiTableAction, } from "../kai-table/action";
                   </div>
                 }
               </div>
-              </mat-card>
+              </mat-card>-->
           }
 
 
@@ -235,9 +260,16 @@ import { IbKaiTableAction, } from "../kai-table/action";
 export class IbKaiTableMobileToolbarComponent {
   headerActions = input<readonly IbKaiTableAction[]>([]);
   filters = input<readonly IbFilterBase[]>([]);
+  sortableColumns = input<readonly IbColumn<any>[]>([]);
+  currentSort = input<{ active: string, direction: 'asc' | 'desc' } | null>(null);
   doExport = output<Partial<IDataExportSettings>>()
+  sortUpdated = output<string>()
   filtersOpen = signal(false);
+  sortOpen = signal(false);
+
   exportService: IbDataExportService = inject(IbDataExportService);
+
+
 
   activeFiltersCount = computed(() => {
     return this.filters().filter(f => f.mobileHasValue()).length;
