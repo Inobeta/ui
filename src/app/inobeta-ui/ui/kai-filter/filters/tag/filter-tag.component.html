@@ -1,50 +1,54 @@
-<ib-filter-button [attr.data-cy]="'ib-tag-filter-' + name">
-  <span ib-filter-name><ng-content></ng-content></span>
-  @if (isDirty) {
-    <span ib-filter-value>
-      {{ displayLabel | translate : displayLabelParams }}
-    </span>
-  }
+<ng-template #renderer>
+  <ib-filter-button [attr.data-cy]="'ib-tag-filter-' + name">
+    <span ib-filter-name><ng-content></ng-content></span>
+    @if (isDirty) {
+      <span ib-filter-value>
+        {{ displayLabel | translate : displayLabelParams }}
+      </span>
+    }
 
-  <mat-form-field class="ib-tag-filter-search" subscriptSizing="dynamic">
-    <input matInput [formControl]="query" [placeholder]="'shared.ibFilter.search' | translate"/>
-  </mat-form-field>
-  <section [formGroup]="filter?.form">
-    <section class="ib-tag-filter">
-      <mat-selection-list
-        [multiple]="multiple"
-        [formControlName]="name"
-        disableRipple="true"
-        [attr.data-cy]="'ib-tag-filter-' + name + '-options'"
-      >
-        @if (hasNullishValues) {
-          <mat-list-option
-            togglePosition="before"
-            [value]="'__empty'"
-          >
-            {{ 'shared.ibFilter.includeEmpty' | translate }}
-          </mat-list-option>
-        }
-        @for (option of options | filterBy: query.value; track option) {
-          <mat-list-option
-            togglePosition="before"
-            [value]="option"
-          >
-            {{ option }}
-          </mat-list-option>
-        } @empty {
-          <mat-list-item disabled>{{ 'shared.ibFilter.noItems' | translate }}</mat-list-item>
-        }
-      </mat-selection-list>
+    <mat-form-field class="ib-tag-filter-search" subscriptSizing="dynamic">
+      <input matInput [formControl]="query" [placeholder]="'shared.ibFilter.search' | translate"/>
+    </mat-form-field>
+    <section [formGroup]="filter?.form">
+      <section class="ib-tag-filter">
+        <mat-selection-list
+          [multiple]="multiple"
+          [formControlName]="name"
+          disableRipple="true"
+          [attr.data-cy]="'ib-tag-filter-' + name + '-options'"
+        >
+          @if (hasNullishValues) {
+            <mat-list-option
+              togglePosition="before"
+              [value]="'__empty'"
+            >
+              {{ 'shared.ibFilter.includeEmpty' | translate }}
+            </mat-list-option>
+          }
+          @for (option of options | filterBy: query.value; track option) {
+            <mat-list-option
+              togglePosition="before"
+              [value]="option"
+            >
+              {{ option }}
+            </mat-list-option>
+          } @empty {
+            <mat-list-item disabled>{{ 'shared.ibFilter.noItems' | translate }}</mat-list-item>
+          }
+        </mat-selection-list>
+      </section>
     </section>
-  </section>
 
-  <ib-filter-action-group>
-    <button mat-button (click)="clear()" [disabled]="!isDirty" [attr.data-cy]="'ib-filter-clear'">
-      {{ "shared.ibFilter.clear" | translate }}
-    </button>
-    <button mat-button color="primary" (click)="applyFilter()" [attr.data-cy]="'ib-filter-update'">
-      {{ "shared.ibFilter.update" | translate }}
-    </button>
-  </ib-filter-action-group>
-</ib-filter-button>
+    <ib-filter-action-group>
+      <button mat-button (click)="clear()" [disabled]="!isDirty" [attr.data-cy]="'ib-filter-clear'">
+        {{ "shared.ibFilter.clear" | translate }}
+      </button>
+      <button mat-button color="primary" (click)="applyFilter()" [attr.data-cy]="'ib-filter-update'">
+        {{ "shared.ibFilter.update" | translate }}
+      </button>
+    </ib-filter-action-group>
+  </ib-filter-button>
+</ng-template>
+
+<ng-container *ngTemplateOutlet="renderer"></ng-container>

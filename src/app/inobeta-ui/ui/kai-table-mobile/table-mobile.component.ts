@@ -24,10 +24,11 @@ import { IbKaiTableState, IbTableDef } from "../kai-table/table.types";
 import { IbKaiTableMobileInfiniteScrollComponent } from './table-mobile-infinitescroll.component';
 import { IbKaiTableMobileItemComponent } from './table-mobile-item.component';
 import { IbKaiTableMobileToolbarComponent } from './table-mobile-toolbar.component';
+import { MatProgressBar } from '@angular/material/progress-bar';
 @Component({
   selector: 'ib-kai-table-mobile',
   standalone: true,
-  imports: [IbKaiTableMobileToolbarComponent, IbKaiTableMobileItemComponent, IbKaiTableMobileInfiniteScrollComponent],
+  imports: [IbKaiTableMobileToolbarComponent, IbKaiTableMobileItemComponent, IbKaiTableMobileInfiniteScrollComponent, MatProgressBar],
   template: `
     <div class="ib-kai-table-mobile">
       @if (headerActions().length > 0 || filters().length > 0) {
@@ -40,6 +41,11 @@ import { IbKaiTableMobileToolbarComponent } from './table-mobile-toolbar.compone
             (doExport)="doExport.emit($event)"
             (sortUpdated)="sortUpdate($event)"
           ></ib-kai-table-mobile-toolbar>
+        </div>
+      }
+      @if (state() === 'loading') {
+        <div class="ib-table__content__progress-bar">
+          <mat-progress-bar mode="indeterminate" />
         </div>
       }
       @if (cardDataColumns().length || cardActionColumns().length) {
@@ -129,7 +135,6 @@ export class IbKaiTableMobileComponent implements OnDestroy {
 
   @ViewChild('scrollAnchor') scrollAnchor?: ElementRef<HTMLElement>;
 
-  private observer?: IntersectionObserver;
   visibleCount = signal(this.pageSize());
   filtersOpen = signal(false);
 

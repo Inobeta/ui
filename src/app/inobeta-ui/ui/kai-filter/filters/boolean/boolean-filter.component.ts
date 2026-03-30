@@ -1,4 +1,4 @@
-import { LowerCasePipe } from "@angular/common";
+import { LowerCasePipe, NgTemplateOutlet } from "@angular/common";
 import { Component } from "@angular/core";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
@@ -22,7 +22,8 @@ import { IbFilterValueDirective } from "../../filter-value.directive";
     MatRadioModule,
     TranslateModule,
     LowerCasePipe,
-    IbFilterValueDirective
+    IbFilterValueDirective,
+    NgTemplateOutlet
   ],
   selector: "ib-boolean-filter",
   templateUrl: "boolean-filter.component.html",

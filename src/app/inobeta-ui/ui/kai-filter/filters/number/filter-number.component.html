@@ -1,66 +1,70 @@
-<ib-filter-button [attr.data-cy]="'ib-number-filter-' + name">
-  <span ib-filter-name><ng-content></ng-content></span>
-  @if (isDirty) {
-    <span ib-filter-value>
-      {{
-      "shared.ibFilter.label.number"
-      | translate : displayLabelParams
-      | lowercase
-      }}
-    </span>
-  }
+<ng-template #renderer>
+  <ib-filter-button [attr.data-cy]="'ib-number-filter-' + name">
+    <span ib-filter-name><ng-content></ng-content></span>
+    @if (isDirty) {
+      <span ib-filter-value>
+        {{
+        "shared.ibFilter.label.number"
+        | translate : displayLabelParams
+        | lowercase
+        }}
+      </span>
+    }
 
-  <section style="padding: 0 1em">
-    <section class="ib-number-filter" [formGroup]="slider">
-      <section style="display: flex">
-        <mat-slider style="flex: 1" [max]="max" [min]="min" [step]="step">
-          <input
-            matSliderStartThumb
-            formControlName="min"
-            [value]="slider.value.min"
-            />
-          <input
-            matSliderEndThumb
-            formControlName="max"
-            [value]="slider.value.max"
-            />
-        </mat-slider>
-      </section>
+    <section style="padding: 0 1em">
+      <section class="ib-number-filter" [formGroup]="slider">
+        <section style="display: flex">
+          <mat-slider style="flex: 1" [max]="max" [min]="min" [step]="step">
+            <input
+              matSliderStartThumb
+              formControlName="min"
+              [value]="slider.value.min"
+              />
+            <input
+              matSliderEndThumb
+              formControlName="max"
+              [value]="slider.value.max"
+              />
+          </mat-slider>
+        </section>
 
-      <section class="ib-number-filter__input-range">
-        <mat-form-field appearance="outline" style="width: 12ch">
-          <mat-label>{{ "shared.ibFilter.min" | translate }}</mat-label>
-          <input
-            matInput
-            type="number"
-            placeholder="min"
-            formControlName="min"
-            [value]="slider.value.min"
-            [attr.data-cy]="'ib-number-filter-' + name + '-min'"
-            />
-        </mat-form-field>
+        <section class="ib-number-filter__input-range">
+          <mat-form-field appearance="outline" style="width: 12ch">
+            <mat-label>{{ "shared.ibFilter.min" | translate }}</mat-label>
+            <input
+              matInput
+              type="number"
+              placeholder="min"
+              formControlName="min"
+              [value]="slider.value.min"
+              [attr.data-cy]="'ib-number-filter-' + name + '-min'"
+              />
+          </mat-form-field>
 
-        <mat-form-field appearance="outline" style="width: 12ch">
-          <mat-label>{{ "shared.ibFilter.max" | translate }}</mat-label>
-          <input
-            matInput
-            type="number"
-            placeholder="max"
-            formControlName="max"
-            [value]="slider.value.max"
-            [attr.data-cy]="'ib-number-filter-' + name + '-max'"
-            />
-        </mat-form-field>
+          <mat-form-field appearance="outline" style="width: 12ch">
+            <mat-label>{{ "shared.ibFilter.max" | translate }}</mat-label>
+            <input
+              matInput
+              type="number"
+              placeholder="max"
+              formControlName="max"
+              [value]="slider.value.max"
+              [attr.data-cy]="'ib-number-filter-' + name + '-max'"
+              />
+          </mat-form-field>
+        </section>
       </section>
     </section>
-  </section>
 
-  <ib-filter-action-group>
-    <button mat-button (click)="clear()" [disabled]="!isDirty" [attr.data-cy]="'ib-filter-clear'">
-      {{ "shared.ibFilter.clear" | translate }}
-    </button>
-    <button mat-button color="primary" (click)="applyFilter()" [attr.data-cy]="'ib-filter-update'">
-      {{ "shared.ibFilter.update" | translate }}
-    </button>
-  </ib-filter-action-group>
-</ib-filter-button>
+    <ib-filter-action-group>
+      <button mat-button (click)="clear()" [disabled]="!isDirty" [attr.data-cy]="'ib-filter-clear'">
+        {{ "shared.ibFilter.clear" | translate }}
+      </button>
+      <button mat-button color="primary" (click)="applyFilter()" [attr.data-cy]="'ib-filter-update'">
+        {{ "shared.ibFilter.update" | translate }}
+      </button>
+    </ib-filter-action-group>
+  </ib-filter-button>
+</ng-template>
+
+<ng-container *ngTemplateOutlet="renderer"></ng-container>

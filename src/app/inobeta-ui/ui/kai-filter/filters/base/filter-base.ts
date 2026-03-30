@@ -1,4 +1,4 @@
-import { Directive, Input, ViewChild, inject } from "@angular/core";
+import { Directive, Input, TemplateRef, ViewChild, inject } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
@@ -34,6 +34,13 @@ export class IbFilterBase implements IFilterBase {
   @Input() name: string;
 
   searchCriteria: FormGroup | FormControl;
+
+  @ViewChild("renderer", { static: false })
+  mobileRendererTemplate?: TemplateRef<unknown>;
+
+  getMobileTemplate(): TemplateRef<unknown> | undefined {
+    return this.mobileRendererTemplate;
+  }
 
   get rawValue() {
     return this.filter?.selectedCriteria[this.name];
@@ -109,7 +116,7 @@ export class IbFilterBase implements IFilterBase {
   }
 
   mobileLabel(): string {
-    return this.name;
+    return '';
   }
 
   mobileSummary(): string {

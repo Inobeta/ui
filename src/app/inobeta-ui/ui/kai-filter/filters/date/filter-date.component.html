@@ -1,82 +1,86 @@
-<ib-filter-button [attr.data-cy]="'ib-date-filter-' + name">
-  <span ib-filter-name><ng-content></ng-content></span>
-  @if (isDirty) {
-    <span ib-filter-value>
-      {{ displayCondition | translate | lowercase }} {{ displayValue }} {{ displayPeriod | translate }}
-    </span>
-  }
+<ng-template #renderer>
+  <ib-filter-button [attr.data-cy]="'ib-date-filter-' + name">
+    <span ib-filter-name><ng-content></ng-content></span>
+    @if (isDirty) {
+      <span ib-filter-value>
+        {{ displayCondition | translate | lowercase }} {{ displayValue }} {{ displayPeriod | translate }}
+      </span>
+    }
 
-  <section [formGroup]="filter?.form" style="padding: 0.5em 1em 0 1em">
-    <section [formGroupName]="name" class="ib-filter-date">
-      <mat-radio-group formControlName="categorySelected">
-        <mat-radio-button value="within" [attr.data-cy]="'ib-date-filter-' + name + '-within'">{{
-        'shared.ibFilter.date.withinTheLast' | translate }}</mat-radio-button>
-        <section [class.ib-filter-date__form--hidden]="!isSelected('within')" formGroupName="within"
-          class="ib-filter-date__form">
-          <mat-form-field style="width: 100%" appearance="outline">
-            <input type="number" matInput formControlName="value"
-              [attr.data-cy]="'ib-date-filter-' + name + '-within-value'" />
-          </mat-form-field>
+    <section [formGroup]="filter?.form" style="padding: 0.5em 1em 0 1em">
+      <section [formGroupName]="name" class="ib-filter-date">
+        <mat-radio-group formControlName="categorySelected">
+          <mat-radio-button value="within" [attr.data-cy]="'ib-date-filter-' + name + '-within'">{{
+          'shared.ibFilter.date.withinTheLast' | translate }}</mat-radio-button>
+          <section [class.ib-filter-date__form--hidden]="!isSelected('within')" formGroupName="within"
+            class="ib-filter-date__form">
+            <mat-form-field style="width: 100%" appearance="outline">
+              <input type="number" matInput formControlName="value"
+                [attr.data-cy]="'ib-date-filter-' + name + '-within-value'" />
+            </mat-form-field>
 
-          <mat-form-field style="width: 100%">
-            <mat-select formControlName="period" [attr.data-cy]="'ib-date-filter-' + name + '-within-period'">
-              @for (option of withinPeriodOptions; track option) {
-                <mat-option [value]="option.value">
-                  {{ option.displayValue | translate }}
-                </mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
-        </section>
+            <mat-form-field style="width: 100%">
+              <mat-select formControlName="period" [attr.data-cy]="'ib-date-filter-' + name + '-within-period'">
+                @for (option of withinPeriodOptions; track option) {
+                  <mat-option [value]="option.value">
+                    {{ option.displayValue | translate }}
+                  </mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </section>
 
-        <mat-radio-button value="moreThan" [attr.data-cy]="'ib-date-filter-' + name + '-moreThan'">{{
-        'shared.ibFilter.date.moreThan' | translate }}</mat-radio-button>
-        <section [class.ib-filter-date__form--hidden]="!isSelected('moreThan')" formGroupName="moreThan"
-          class="ib-filter-date__form">
-          <mat-form-field style="width: 100%" appearance="outline">
-            <input type="number" matInput formControlName="value"
-              [attr.data-cy]="'ib-date-filter-' + name + '-moreThan-value'" />
-          </mat-form-field>
+          <mat-radio-button value="moreThan" [attr.data-cy]="'ib-date-filter-' + name + '-moreThan'">{{
+          'shared.ibFilter.date.moreThan' | translate }}</mat-radio-button>
+          <section [class.ib-filter-date__form--hidden]="!isSelected('moreThan')" formGroupName="moreThan"
+            class="ib-filter-date__form">
+            <mat-form-field style="width: 100%" appearance="outline">
+              <input type="number" matInput formControlName="value"
+                [attr.data-cy]="'ib-date-filter-' + name + '-moreThan-value'" />
+            </mat-form-field>
 
-          <mat-form-field style="width: 100%">
-            <mat-select formControlName="period" [attr.data-cy]="'ib-date-filter-' + name + '-moreThan-period'">
-              @for (option of moreThanPeriodOptions; track option) {
-                <mat-option [value]="option.value">
-                  {{ option.displayValue | translate }}
-                </mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
-        </section>
+            <mat-form-field style="width: 100%">
+              <mat-select formControlName="period" [attr.data-cy]="'ib-date-filter-' + name + '-moreThan-period'">
+                @for (option of moreThanPeriodOptions; track option) {
+                  <mat-option [value]="option.value">
+                    {{ option.displayValue | translate }}
+                  </mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </section>
 
-        <mat-radio-button value="range" [attr.data-cy]="'ib-date-filter-' + name + '-range'">{{
-        'shared.ibFilter.date.between' | translate }}</mat-radio-button>
-        <section [class.ib-filter-date__form--hidden]="!isSelected('range')" formGroupName="range"
-          class="ib-filter-date__range">
-          <mat-form-field style="width: 100%">
-            <mat-label>{{ 'shared.ibFilter.date.dateRangeLabel' | translate }}</mat-label>
-            <mat-date-range-input [rangePicker]="picker">
-              <input matStartDate formControlName="start" placeholder="dd/mm/yyyy"
-                [attr.data-cy]="'ib-date-filter-' + name + '-range-start'">
-              <input matEndDate formControlName="end" placeholder="dd/mm/yyyy"
-                [attr.data-cy]="'ib-date-filter-' + name + '-range-end'">
-            </mat-date-range-input>
-            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-date-range-picker #picker></mat-date-range-picker>
-            <mat-error>{{ 'shared.ibFilter.date.dateRangeInvalid' | translate }}</mat-error>
-          </mat-form-field>
-        </section>
+          <mat-radio-button value="range" [attr.data-cy]="'ib-date-filter-' + name + '-range'">{{
+          'shared.ibFilter.date.between' | translate }}</mat-radio-button>
+          <section [class.ib-filter-date__form--hidden]="!isSelected('range')" formGroupName="range"
+            class="ib-filter-date__range">
+            <mat-form-field style="width: 100%">
+              <mat-label>{{ 'shared.ibFilter.date.dateRangeLabel' | translate }}</mat-label>
+              <mat-date-range-input [rangePicker]="picker">
+                <input matStartDate formControlName="start" placeholder="dd/mm/yyyy"
+                  [attr.data-cy]="'ib-date-filter-' + name + '-range-start'">
+                <input matEndDate formControlName="end" placeholder="dd/mm/yyyy"
+                  [attr.data-cy]="'ib-date-filter-' + name + '-range-end'">
+              </mat-date-range-input>
+              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-date-range-picker #picker></mat-date-range-picker>
+              <mat-error>{{ 'shared.ibFilter.date.dateRangeInvalid' | translate }}</mat-error>
+            </mat-form-field>
+          </section>
 
-      </mat-radio-group>
+        </mat-radio-group>
+      </section>
     </section>
-  </section>
 
-  <ib-filter-action-group>
-    <button mat-button (click)="clear()" [disabled]="!isDirty" [attr.data-cy]="'ib-filter-clear'">
-      {{ "shared.ibFilter.clear" | translate }}
-    </button>
-    <button mat-button color="primary" (click)="applyFilter()" [attr.data-cy]="'ib-filter-update'">
-      {{ "shared.ibFilter.update" | translate }}
-    </button>
-  </ib-filter-action-group>
-</ib-filter-button>
+    <ib-filter-action-group>
+      <button mat-button (click)="clear()" [disabled]="!isDirty" [attr.data-cy]="'ib-filter-clear'">
+        {{ "shared.ibFilter.clear" | translate }}
+      </button>
+      <button mat-button color="primary" (click)="applyFilter()" [attr.data-cy]="'ib-filter-update'">
+        {{ "shared.ibFilter.update" | translate }}
+      </button>
+    </ib-filter-action-group>
+  </ib-filter-button>
+</ng-template>
+
+<ng-container *ngTemplateOutlet="renderer"></ng-container>

@@ -13,12 +13,12 @@ import { and, gte, lte, none } from "../../filters";
 import { IbFilterBase } from "../base/filter-base";
 
 @Component({
-    selector: "ib-date-filter",
-    templateUrl: "filter-date.component.html",
-    styleUrls: ["./filter-date.component.scss"],
-    providers: [{ provide: IbFilterBase, useExisting: IbDateFilter }],
-    encapsulation: ViewEncapsulation.None,
-    standalone: false
+  selector: "ib-date-filter",
+  templateUrl: "filter-date.component.html",
+  styleUrls: ["./filter-date.component.scss"],
+  providers: [{ provide: IbFilterBase, useExisting: IbDateFilter }],
+  encapsulation: ViewEncapsulation.None,
+  standalone: false
 })
 export class IbDateFilter extends IbFilterBase {
   searchCriteria = new FormGroup({
@@ -354,4 +354,9 @@ export class IbDateFilter extends IbFilterBase {
 
     return;
   }
+
+  mobileSummary(): string {
+    return this.displayValue;
+  }
+
 }

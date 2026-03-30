@@ -1,9 +1,11 @@
-import { NgTemplateOutlet } from '@angular/common';
+import { NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
 import {
   Component,
   computed,
+  effect,
   inject,
   input,
+  OnDestroy,
   output,
   signal
 } from '@angular/core';
@@ -12,27 +14,44 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCard } from "@angular/material/card";
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { filter } from 'rxjs';
+import { filter, Subscription } from 'rxjs';
 import { IbDataExportService, IDataExportSettings } from '../data-export/data-export.service';
 import { IbFilterBase } from '../kai-filter/filters/base/filter-base';
 import { IbKaiTableAction, } from "../kai-table/action";
-import { IbColumn } from '../kai-table';
+import { IbColumn } from '../kai-table/columns/column';
+import { MatBadgeModule } from '@angular/material/badge';
+import { TranslatePipe } from '@ngx-translate/core';
+import { CdkNoDataRow } from "@angular/cdk/table";
 
 @Component({
   selector: 'ib-kai-table-mobile-toolbar',
   standalone: true,
-  imports: [NgTemplateOutlet, MatCard, MatButtonModule, MatIcon, MatTooltipModule],
+  imports: [NgTemplateOutlet, MatCard, MatButtonModule, MatIcon, MatTooltipModule, MatBadgeModule, TranslatePipe, NgComponentOutlet],
   template: `
+    <div class="ib-kai-table-mobile__toolbar-container">
           <div class="ib-kai-table-mobile__toolbar">
             <mat-card>
             <div class="ib-kai-table-mobile__toolbar-actions">
 
-              <button
-                mat-icon-button
-                (click)="sortOpen.set(!sortOpen())"
-              >
-                <mat-icon>sort</mat-icon>
-              </button>
+              @if(sortableColumns().length > 0) {
+                <button
+                  mat-icon-button
+                  (click)="sortOpen.set(!sortOpen())"
+                >
+                  <mat-icon>sort</mat-icon>
+                </button>
+              }
+
+            @if (filters().length) {
+                <button
+                  mat-icon-button
+                  (click)="filtersOpen.set(!filtersOpen())"
+                  [matBadge]="activeFiltersCount()"
+                  [matBadgeHidden]="activeFiltersCount() === 0"
+                >
+                  <mat-icon>filter_alt</mat-icon>
+                </button>
+            }
               @for (action of headerActions(); track $index) {
                 @if(action.kind() === 'export') {
                   <button
@@ -48,22 +67,6 @@ import { IbColumn } from '../kai-table';
               }
             </div>
             </mat-card>
-            <!--@if (filters().length) {
-              <mat-card>
-                <button
-                  type="button"
-                  class="ib-kai-table-mobile__filter-button"
-                  (click)="toggleFilters()"
-                >
-                  Filtri
-                  @if (activeFiltersCount() > 0) {
-                    <span class="ib-kai-table-mobile__filter-badge">
-                      {{ activeFiltersCount() }}
-                    </span>
-                  }
-                </button>
-              </mat-card>
-            }-->
           </div>
 
           @if (sortOpen()) {
@@ -75,7 +78,7 @@ import { IbColumn } from '../kai-table';
                       style="justify-content: flex-start;"
                       (click)="sortUpdated.emit(col.name)"
                     >
-                      {{ col.headerText }}
+                      {{ col.headerText  }}
                       @if (currentSort()?.active === col.name) {
                         <mat-icon>
                           {{ currentSort()?.direction === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
@@ -88,9 +91,8 @@ import { IbColumn } from '../kai-table';
            }
 
           @if (filtersOpen()) {
-            <!--<mat-card>
+            <mat-card>
               <div class="ib-kai-table-mobile__filters-panel-header">
-                <div class="ib-kai-table-mobile__filters-title">Filtri</div>
 
                 <div class="ib-kai-table-mobile__filters-panel-actions">
                   <button
@@ -98,52 +100,43 @@ import { IbColumn } from '../kai-table';
                     class="ib-kai-table-mobile__filters-action"
                     (click)="clearAllFilters()"
                   >
-                    Reset
+                    <mat-icon>restore</mat-icon>
                   </button>
 
                   <button
                     type="button"
                     class="ib-kai-table-mobile__filters-action"
-                    (click)="closeFilters()"
+                    (click)="filtersOpen.set(false)"
                   >
-                    Chiudi
+                    <mat-icon>keyboard_arrow_up</mat-icon>
                   </button>
                 </div>
               </div>
 
               <div class="ib-kai-table-mobile__filters-content">
                 @for (f of filters(); track f.name) {
-                  <div class="ib-kai-table-mobile__filter-item">
-                    <div class="ib-kai-table-mobile__filter-item-main">
-                      <div class="ib-kai-table-mobile__filter-item-label">
-                        {{ f.mobileLabel() }}
-                      </div>
-
-                      <div class="ib-kai-table-mobile__filter-item-value">
-                        {{ f.mobileSummary() || 'Nessun filtro attivo' }}
-                      </div>
+                  @if(f.mobileLabel()){
+                    <div class="ib-kai-table-mobile__filter-item-label">
+                      {{ f.mobileLabel() }}
                     </div>
-
-                    <div class="ib-kai-table-mobile__filter-item-actions">
-                      @if (f.mobileHasValue()) {
-                        <button
-                          type="button"
-                          class="ib-kai-table-mobile__filter-item-button"
-                          (click)="f.clear()"
-                        >
-                          Reset
-                        </button>
-                      }
-                    </div>
-                  </div>
+                  }
+                  <ng-container
+                    *ngTemplateOutlet="f.getMobileTemplate()">
+                  </ng-container>
                 }
               </div>
-              </mat-card>-->
+              </mat-card>
           }
-
+        </div>
 
   `,
   styles: [`
+    .ib-kai-table-mobile__toolbar-container{
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
     .ib-kai-table-mobile__toolbar {
       display: flex;
       align-items: center;
@@ -204,7 +197,7 @@ import { IbColumn } from '../kai-table';
     .ib-kai-table-mobile__filters-panel-header {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: end;
       gap: 12px;
       padding: 12px;
       border-bottom: 1px solid var(--ib-mobile-separator);
@@ -223,7 +216,8 @@ import { IbColumn } from '../kai-table';
 
     .ib-kai-table-mobile__filters-content {
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
+      flex-wrap: wrap;
       gap: 10px;
       padding: 12px;
     }
@@ -257,7 +251,7 @@ import { IbColumn } from '../kai-table';
     }
   `]
 })
-export class IbKaiTableMobileToolbarComponent {
+export class IbKaiTableMobileToolbarComponent implements OnDestroy {
   headerActions = input<readonly IbKaiTableAction[]>([]);
   filters = input<readonly IbFilterBase[]>([]);
   sortableColumns = input<readonly IbColumn<any>[]>([]);
@@ -269,20 +263,36 @@ export class IbKaiTableMobileToolbarComponent {
 
   exportService: IbDataExportService = inject(IbDataExportService);
 
+  filterSubscriptions = new Map<string, Subscription>();
+  filterStates = signal<Record<string, boolean>>({});
 
+  constructor() {
+    effect(() => {
+      for (const subscription of this.filterSubscriptions.values()) {
+        subscription.unsubscribe();
+      }
+      for (const f of this.filters()) {
+        const subscription = f.filter.ibFilterUpdated.subscribe((v) => {
+          this.filterStates.update(states => ({
+            ...states,
+            [f.name]: f.mobileHasValue()
+          }));
+        });
+        this.filterSubscriptions.set(f.name, subscription);
+      }
+    })
+  }
+
+  ngOnDestroy(): void {
+    for (const subscription of this.filterSubscriptions.values()) {
+      subscription.unsubscribe();
+    }
+  }
 
   activeFiltersCount = computed(() => {
-    return this.filters().filter(f => f.mobileHasValue()).length;
+    return Object.values(this.filterStates()).filter(f => f).length;
   });
 
-
-  toggleFilters(): void {
-    this.filtersOpen.update(v => !v);
-  }
-
-  closeFilters(): void {
-    this.filtersOpen.set(false);
-  }
 
   clearAllFilters(): void {
     this.filters().forEach(f => f.clear());
