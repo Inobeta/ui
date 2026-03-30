@@ -3,7 +3,7 @@ import { HttpClient, provideHttpClient } from "@angular/common/http";
 import { ApplicationConfig, importProvidersFrom, isDevMode, provideZoneChangeDetection } from "@angular/core";
 import { provideEffects } from "@ngrx/effects";
 import { provideState, provideStore } from "@ngrx/store";
-import { provideStoreDevtools} from "@ngrx/store-devtools";
+import { provideStoreDevtools } from "@ngrx/store-devtools";
 import { provideTranslateService, TranslateLoader } from "@ngx-translate/core";
 
 import { IbHttpModule } from "./inobeta-ui/http/http.module";
@@ -19,6 +19,7 @@ import localeIt from '@angular/common/locales/it';
 import { PreloadAllModules, provideRouter, withComponentInputBinding, withPreloading } from "@angular/router";
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { ibCounterExampleFeature } from "./examples/redux-example/counter.feature";
+import { IbCSVExportProvider, IbXLXSExportProvider, IbPDFExportProvider } from "./inobeta-ui/ui/data-export";
 
 
 registerLocaleData(localeIt);
@@ -52,13 +53,13 @@ export const appConfig: ApplicationConfig = {
     ),
     provideAnimationsAsync(),
     provideHttpClient(),
-    importProvidersFrom([ IbHttpModule ]),
+    importProvidersFrom([IbHttpModule]),
     provideTranslateService({
-        loader: {
-          provide: TranslateLoader,
-          useExisting: IbTranslateModuleLoader,
-          deps: [HttpClient],
-        },
+      loader: {
+        provide: TranslateLoader,
+        useExisting: IbTranslateModuleLoader,
+        deps: [HttpClient],
+      },
     }),
     provideStore(undefined, { metaReducers: reduxStorageSave.metareducers }),
     provideState(ibSessionFeature),
@@ -70,7 +71,10 @@ export const appConfig: ApplicationConfig = {
       maxAge: 25,
       logOnly: !isDevMode(),
       connectInZone: true,
-    })
+    }),
+    IbXLXSExportProvider,
+    IbPDFExportProvider,
+    IbCSVExportProvider,
   ],
 };
 
