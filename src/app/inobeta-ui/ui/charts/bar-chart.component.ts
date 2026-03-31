@@ -5,6 +5,7 @@ import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { ChartConfiguration } from "chart.js";
 import "chartjs-adapter-date-fns";
 import { BaseChartDirective } from "ng2-charts";
+import { DecimalPipe } from "@angular/common";
 import { ChartSeriesConfig, ChartSeriesData, ChartSeriesMeasure } from "./types";
 
 @Component({
@@ -17,7 +18,7 @@ import { ChartSeriesConfig, ChartSeriesData, ChartSeriesMeasure } from "./types"
     BaseChartDirective,
   ],
   template: `
-    <div class="flex w-full h-full">
+    <div class="bar-chart-container">
       <canvas
         baseChart
         [data]="chartData()"
@@ -26,9 +27,29 @@ import { ChartSeriesConfig, ChartSeriesData, ChartSeriesMeasure } from "./types"
       ></canvas>
     </div>
   `,
+  styles: [`
+    :host {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .bar-chart-container {
+      display: flex;
+      width: 100%;
+      height: 100%;
+    }
+
+    canvas {
+      width: 100% !important;
+      height: 100% !important;
+    }
+  `]
 })
 export class BarChartComponent {
   translate = inject(TranslateService);
+  decimal = inject(DecimalPipe);
+
   title = input<string>("Title");
   data = input<ChartSeriesData[]>([]);
   valueType = input<"discrete" | "timeseries">("discrete");
@@ -40,10 +61,12 @@ export class BarChartComponent {
     this.measures().forEach((c) => map.set(c.name, c));
     return map;
   });
+
   private labels = computed(() => {
     if (this.valueType() !== "discrete") return [];
     return [...new Set(this.data().map((d) => d.x))];
   });
+
   chartData: Signal<ChartConfiguration["data"]> = computed(() => {
     const raw = this.data();
     const configMap = this.configMap();
@@ -91,7 +114,6 @@ export class BarChartComponent {
       }),
     };
   });
-
 
   chartOptions: Signal<ChartConfiguration["options"]> = computed(() => {
     const measures = this.measures();
@@ -152,15 +174,17 @@ export class BarChartComponent {
             label: (context) => {
               const datasetLabel = context.dataset.label as string;
               const cfg = measures.find((c) => c.name === datasetLabel);
-              const value = context.parsed.y ?? context.raw;
+              const value: number = context.parsed.y ?? (context.raw as number);
 
               const symbol =
                 cfg?.yAxis === "y2"
                   ? config?.y2Symbol
                   : config?.y1Symbol;
 
-              return `${datasetLabel}: ${value}${symbol ? " " + symbol : ""
-                }`;
+              // 👇 formatting con DecimalPipe
+              const formatted = this.decimal.transform(value, '1.0-2', 'it-IT');
+
+              return `${datasetLabel}: ${formatted}${symbol ? " " + symbol : ""}`;
             },
           },
         },

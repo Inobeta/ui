@@ -2,14 +2,15 @@ import { Component, computed, input } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { RingGaugeAdditionalInfo } from './types';
 import { TranslateModule } from '@ngx-translate/core';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'ring-gauge',
   standalone: true,
-  imports: [MatIconModule, TranslateModule],
+  imports: [MatIconModule, TranslateModule, DecimalPipe],
   template: `
-    <div class="relative size-full" [style.maxWidth]="maxSize()" [style.maxHeight]="maxSize()">
-      <svg viewBox="0 0 120 120" class="shadow-none" style="transform: rotate(-90deg);">
+    <div class="ring-gauge-container" [style.maxWidth]="maxSize()" [style.maxHeight]="maxSize()">
+      <svg viewBox="0 0 120 120" class="ring-gauge-svg">
         <!-- background -->
         <circle
           class="ring-bg"
@@ -30,35 +31,118 @@ import { TranslateModule } from '@ngx-translate/core';
         </circle>
       </svg>
 
-      <div class="flex flex-col items-center justify-center absolute inset-0 pointer-events-none gap-2">
-        @if(icon()){
-          <mat-icon class="icon" [style.color]="iconColor()"
-          style="width:48px; height:48px; font-size:48px;">
-          {{ icon() }}
-        </mat-icon>}
+      <div class="ring-gauge-content">
+        @if (icon()) {
+          <mat-icon
+            class="ring-gauge-icon"
+            [style.color]="iconColor()">
+            {{ icon() }}
+          </mat-icon>
+        }
 
-        <div class="value text-3xl font-medium" [style.color]="effectiveColor()">
-          {{ value() }}
-          <span class="unit text-xl font-normal" [hidden]="!unit()">{{ unit() }}</span>
+        <div class="ring-gauge-value" [style.color]="effectiveColor()">
+          {{ value() | number:'1.0-2':'it-IT' }}
+          <span class="ring-gauge-unit" [hidden]="!unit()">{{ unit() }}</span>
         </div>
-          <div class="flex items-center gap-1 text-md">
-          @if(additionalInfo()){
-              <mat-icon
-              style="width:18px; height:18px; font-size:18px;"
+
+        <div class="ring-gauge-additional-info">
+          @if (additionalInfo()) {
+            <mat-icon
+              class="ring-gauge-additional-icon"
               [style.color]="additionalInfo()?.iconColor">
               {{ additionalInfo()?.icon }}
-              </mat-icon>
+            </mat-icon>
           }
-          <span [style.color]="additionalInfo()?.labelColor">
-              {{ additionalInfo()?.label ?? ''| translate }}
+
+          <span
+            class="ring-gauge-additional-label"
+            [style.color]="additionalInfo()?.labelColor">
+            {{ (additionalInfo()?.label ?? '') | translate }}
           </span>
-          </div>
+        </div>
       </div>
     </div>
   `,
   styles: [`
-    .ring-bg { fill: none; stroke: #e5e7eb; stroke-width: 2; }
-    .ring-progress { fill: none; stroke-width: 6; stroke-linecap: round; transition: stroke-dashoffset 0.35s ease, stroke 0.2s ease; }
+    :host {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .ring-gauge-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    .ring-gauge-svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      box-shadow: none;
+      transform: rotate(-90deg);
+    }
+
+    .ring-bg {
+      fill: none;
+      stroke: #e5e7eb;
+      stroke-width: 2;
+    }
+
+    .ring-progress {
+      fill: none;
+      stroke-width: 6;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.35s ease, stroke 0.2s ease;
+    }
+
+    .ring-gauge-content {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .ring-gauge-icon {
+      width: 48px;
+      height: 48px;
+      font-size: 48px;
+    }
+
+    .ring-gauge-value {
+      font-size: 1.875rem;   /* equivalente a text-3xl */
+      line-height: 2.25rem;
+      font-weight: 500;      /* equivalente a font-medium */
+    }
+
+    .ring-gauge-unit {
+      font-size: 1.25rem;    /* equivalente a text-xl */
+      line-height: 1.75rem;
+      font-weight: 400;      /* equivalente a font-normal */
+    }
+
+    .ring-gauge-additional-info {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;          /* equivalente a gap-1 */
+      font-size: 1rem;       /* circa text-md */
+      line-height: 1.5rem;
+    }
+
+    .ring-gauge-additional-icon {
+      width: 18px;
+      height: 18px;
+      font-size: 18px;
+    }
+
+    .ring-gauge-additional-label {
+      display: inline-block;
+    }
   `]
 })
 export class RingGaugeComponent {
@@ -71,6 +155,7 @@ export class RingGaugeComponent {
   dynamicColor = input<string>('');
   additionalInfo = input<RingGaugeAdditionalInfo | null>(null);
   maxSize = input<string>('300px');
+
   radius = 57;
   circumference = 2 * Math.PI * this.radius;
 

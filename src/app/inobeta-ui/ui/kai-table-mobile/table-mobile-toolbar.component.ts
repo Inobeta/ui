@@ -1,4 +1,4 @@
-import { NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import {
   Component,
   computed,
@@ -10,6 +10,7 @@ import {
   signal
 } from '@angular/core';
 
+import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCard } from "@angular/material/card";
 import { MatIcon } from '@angular/material/icon';
@@ -19,14 +20,11 @@ import { IbDataExportService, IDataExportSettings } from '../data-export/data-ex
 import { IbFilterBase } from '../kai-filter/filters/base/filter-base';
 import { IbKaiTableAction, } from "../kai-table/action";
 import { IbColumn } from '../kai-table/columns/column';
-import { MatBadgeModule } from '@angular/material/badge';
-import { TranslatePipe } from '@ngx-translate/core';
-import { CdkNoDataRow } from "@angular/cdk/table";
 
 @Component({
   selector: 'ib-kai-table-mobile-toolbar',
   standalone: true,
-  imports: [NgTemplateOutlet, MatCard, MatButtonModule, MatIcon, MatTooltipModule, MatBadgeModule, TranslatePipe, NgComponentOutlet],
+  imports: [NgTemplateOutlet, MatCard, MatButtonModule, MatIcon, MatTooltipModule, MatBadgeModule],
   template: `
     <div class="ib-kai-table-mobile__toolbar-container">
           <div class="ib-kai-table-mobile__toolbar">

@@ -5,6 +5,7 @@ import { PieChartData } from "./types";
 import { TranslateModule } from "@ngx-translate/core";
 import { ChartConfiguration, ChartOptions } from "chart.js";
 import { BaseChartDirective } from "ng2-charts";
+import { CurrencyPipe, DecimalPipe } from "@angular/common";
 
 @Component({
   selector: "pie-chart",
@@ -31,6 +32,7 @@ export class PieChartComponent {
   data = input<PieChartData[]>([]);
   unit = input<string>();
   options: InputSignal<ChartOptions<"pie"> | null> = input<ChartOptions<"pie"> | null>(null);
+  decimalPipe = new DecimalPipe('it-IT');
 
   chartData: Signal<ChartConfiguration<"pie">["data"]> = computed(() => {
     const src = this.data() ?? [];
@@ -58,7 +60,7 @@ export class PieChartComponent {
                 label: (ctx: any) => {
                   const value = ctx.raw;
                   const u = this.unit();
-                  return `${value} ${u ?? ""}`;
+                  return this.decimalPipe.transform(value, '1.0-2') + ' ' + u;
                 },
               }
               : undefined,

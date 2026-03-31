@@ -1,11 +1,12 @@
+import { DecimalPipe } from "@angular/common";
 import { Component, computed, inject, input, Signal } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
-import { ChartSeriesConfig, ChartSeriesData, ChartSeriesMeasure } from "./types";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { ChartConfiguration } from "chart.js";
 import "chartjs-adapter-date-fns";
 import { BaseChartDirective } from "ng2-charts";
+import { ChartSeriesConfig, ChartSeriesData, ChartSeriesMeasure } from "./types";
 
 @Component({
   selector: "line-chart",
@@ -16,8 +17,9 @@ import { BaseChartDirective } from "ng2-charts";
     MatIconModule,
     BaseChartDirective,
   ],
+  providers: [DecimalPipe],
   template: `
-    <div class="flex w-full h-full">
+    <div class="line-chart-container">
       <canvas
         baseChart
         [data]="chartData()"
@@ -26,9 +28,29 @@ import { BaseChartDirective } from "ng2-charts";
       ></canvas>
     </div>
   `,
+  styles: [`
+    :host {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .line-chart-container {
+      display: flex;
+      width: 100%;
+      height: 100%;
+    }
+
+    canvas {
+      width: 100% !important;
+      height: 100% !important;
+    }
+  `],
 })
 export class LineChartComponent {
   translate = inject(TranslateService);
+  decimal = inject(DecimalPipe);
+
   title = input<string>("Title");
   data = input<ChartSeriesData[]>([]);
   valueType = input<"discrete" | "timeseries">("discrete");
@@ -40,10 +62,12 @@ export class LineChartComponent {
     this.measures().forEach((c) => map.set(c.name, c));
     return map;
   });
+
   private labels = computed(() => {
     if (this.valueType() !== "discrete") return [];
     return [...new Set(this.data().map((d) => d.x))];
   });
+
   chartData: Signal<ChartConfiguration["data"]> = computed(() => {
     const raw = this.data();
     const configMap = this.configMap();
@@ -93,7 +117,6 @@ export class LineChartComponent {
       }),
     };
   });
-
 
   chartOptions: Signal<ChartConfiguration["options"]> = computed(() => {
     const measures = this.measures();
@@ -149,12 +172,12 @@ export class LineChartComponent {
       plugins: {
         legend: {
           display: true,
-          position: 'right',
+          position: "right",
           labels: {
             boxWidth: 60,
             usePointStyle: true,
             maxWidth: 80,
-            font: { size: 12 }
+            font: { size: 12 },
           },
         },
         tooltip: {
@@ -162,15 +185,16 @@ export class LineChartComponent {
             label: (context) => {
               const datasetLabel = context.dataset.label as string;
               const cfg = measures.find((c) => c.name === datasetLabel);
-              const value = context.parsed.y ?? context.raw;
+              const value = context.parsed.y ?? (context.raw as number);
 
               const symbol =
                 cfg?.yAxis === "y2"
                   ? config?.y2Symbol
                   : config?.y1Symbol;
 
-              return `${datasetLabel}: ${value}${symbol ? " " + symbol : ""
-                }`;
+              const formattedValue = this.decimal.transform(value, "1.0-2", 'it-IT') ?? `${value}`;
+
+              return `${datasetLabel}: ${formattedValue}${symbol ? " " + symbol : ""}`;
             },
           },
         },
