@@ -1,11 +1,12 @@
+import { DecimalPipe } from "@angular/common";
 import { Component, computed, input, InputSignal, Signal } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
-import { PieChartData } from "./types";
 import { TranslateModule } from "@ngx-translate/core";
 import { ChartConfiguration, ChartOptions } from "chart.js";
 import { BaseChartDirective } from "ng2-charts";
-import { CurrencyPipe, DecimalPipe } from "@angular/common";
+import { PieChartData } from "./types";
+import 'chart.js/auto';
 
 @Component({
   selector: "pie-chart",
@@ -26,6 +27,18 @@ import { CurrencyPipe, DecimalPipe } from "@angular/common";
       ></canvas>
     </div>
   `,
+  styles: [`
+    :host {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    canvas {
+      width: 100% !important;
+      height: 100% !important;
+    }
+  `],
 })
 export class PieChartComponent {
   title = input<string>("Title");
@@ -52,6 +65,7 @@ export class PieChartComponent {
     () =>
       this.options() ?? {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
           legend: { display: true, position: "bottom" },
           tooltip: {

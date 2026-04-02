@@ -7,6 +7,7 @@ import "chartjs-adapter-date-fns";
 import { BaseChartDirective } from "ng2-charts";
 import { DecimalPipe } from "@angular/common";
 import { ChartSeriesConfig, ChartSeriesData, ChartSeriesMeasure } from "./types";
+import 'chart.js/auto';
 
 @Component({
   selector: "bar-chart",
@@ -48,7 +49,7 @@ import { ChartSeriesConfig, ChartSeriesData, ChartSeriesMeasure } from "./types"
 })
 export class BarChartComponent {
   translate = inject(TranslateService);
-  decimal = inject(DecimalPipe);
+  decimalPipe = new DecimalPipe('it-IT');
 
   title = input<string>("Title");
   data = input<ChartSeriesData[]>([]);
@@ -123,7 +124,7 @@ export class BarChartComponent {
 
     return {
       responsive: true,
-
+      maintainAspectRatio: false,
       scales: {
         x: {
           type: this.valueType() === "discrete" ? "category" : "timeseries",
@@ -182,7 +183,7 @@ export class BarChartComponent {
                   : config?.y1Symbol;
 
               // 👇 formatting con DecimalPipe
-              const formatted = this.decimal.transform(value, '1.0-2', 'it-IT');
+              const formatted = this.decimalPipe.transform(value, '1.0-2');
 
               return `${datasetLabel}: ${formatted}${symbol ? " " + symbol : ""}`;
             },

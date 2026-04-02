@@ -7,6 +7,7 @@ import { ChartConfiguration } from "chart.js";
 import "chartjs-adapter-date-fns";
 import { BaseChartDirective } from "ng2-charts";
 import { ChartSeriesConfig, ChartSeriesData, ChartSeriesMeasure } from "./types";
+import 'chart.js/auto';
 
 @Component({
   selector: "line-chart",
@@ -49,7 +50,7 @@ import { ChartSeriesConfig, ChartSeriesData, ChartSeriesMeasure } from "./types"
 })
 export class LineChartComponent {
   translate = inject(TranslateService);
-  decimal = inject(DecimalPipe);
+  decimalPipe = new DecimalPipe('it-IT');
 
   title = input<string>("Title");
   data = input<ChartSeriesData[]>([]);
@@ -126,7 +127,7 @@ export class LineChartComponent {
 
     return {
       responsive: true,
-
+      maintainAspectRatio: false,
       scales: {
         x: {
           type: this.valueType() === "discrete" ? "category" : "timeseries",
@@ -192,7 +193,7 @@ export class LineChartComponent {
                   ? config?.y2Symbol
                   : config?.y1Symbol;
 
-              const formattedValue = this.decimal.transform(value, "1.0-2", 'it-IT') ?? `${value}`;
+              const formattedValue = this.decimalPipe.transform(value, "1.0-2") ?? `${value}`;
 
               return `${datasetLabel}: ${formattedValue}${symbol ? " " + symbol : ""}`;
             },
