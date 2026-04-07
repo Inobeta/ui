@@ -1,7 +1,7 @@
-import { Component, input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { SingleValueAdditionalInfo } from './types';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DecimalPipe } from '@angular/common';
 
 @Component({
@@ -47,7 +47,7 @@ import { DecimalPipe } from '@angular/common';
     </div>
 
     <div class="single-value__value-row single-value__value-row--center">
-      <span class="single-value__value single-value__value--5xl">{{ value() | number:digitsInfo():locale() }}</span>
+      <span class="single-value__value single-value__value--5xl">{{ value() | number:digitsInfo():(this.translate.currentLang ?? 'it') }}</span>
       @if(unit()){
         <span class="single-value__unit single-value__unit--xl">{{ unit() }}</span>
       }
@@ -70,7 +70,7 @@ import { DecimalPipe } from '@angular/common';
     }
 
     <div class="single-value__value-row single-value__value-row--end">
-      <span class="single-value__value single-value__value--3xl">{{ value() | number:digitsInfo():locale() }}</span>
+      <span class="single-value__value single-value__value--3xl">{{ value() | number:digitsInfo():(translate.currentLang ?? 'it') }}</span>
       @if(unit()){
         <span class="single-value__unit single-value__unit--xl">{{ unit() }}</span>
       }
@@ -115,7 +115,7 @@ import { DecimalPipe } from '@angular/common';
     </div>
 
     <div class="single-value__value-row single-value__value-row--end">
-      <span class="single-value__value single-value__value--3xl">{{ value() | number:digitsInfo():locale() }}</span>
+      <span class="single-value__value single-value__value--3xl">{{ value() | number:digitsInfo():(translate.currentLang ?? 'it') }}</span>
       @if(unit()){
         <span class="single-value__unit single-value__unit--lg">{{ unit() }}</span>
       }
@@ -161,7 +161,7 @@ import { DecimalPipe } from '@angular/common';
       }
 
       <div class="single-value__value-row single-value__value-row--end">
-        <span class="single-value__value single-value__value--2xl">{{ value() | number:digitsInfo():locale() }}</span>
+        <span class="single-value__value single-value__value--2xl">{{ value() | number:digitsInfo():(translate.currentLang ?? 'it') }}</span>
         @if(unit()){
           <span class="single-value__unit single-value__unit--xl">{{ unit() }}</span>
         }
@@ -183,7 +183,8 @@ export class SingleValueComponent {
   value = input.required<number>();
   additionalInfo = input<SingleValueAdditionalInfo | null>();
   fontColor = input<string | null>(null);
-  locale = input<string>('it');
+
+  translate = inject(TranslateService);
 }
 
 enum SingleValueVariant {

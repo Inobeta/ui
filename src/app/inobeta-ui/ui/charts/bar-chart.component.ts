@@ -20,12 +20,19 @@ import 'chart.js/auto';
   ],
   template: `
     <div class="bar-chart-container">
+      @if(data().length === 0) {
+        <div class="chart-empty">
+          <mat-icon class="chart-empty-icon">bar_chart</mat-icon>
+          <span class="chart-empty-label">{{ "common.noItems" | translate }}</span>
+        </div>
+      } @else {
       <canvas
         baseChart
         [data]="chartData()"
         [options]="chartOptions()"
         [type]="'bar'"
       ></canvas>
+      }
     </div>
   `,
   styles: [`
@@ -45,11 +52,34 @@ import 'chart.js/auto';
       width: 100% !important;
       height: 100% !important;
     }
+    .chart-empty {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      min-height: 150px;
+      border: 1px solid lightgray;
+      border-radius: 10px;
+    }
+
+    .chart-empty-icon {
+      font-size: 2.25rem;
+      width: 2.25rem;
+      height: 2.25rem;
+    }
+
+    .chart-empty-label {
+      font-size: 0.875rem;
+      color: #6b7280;
+    }
   `]
 })
 export class BarChartComponent {
   translate = inject(TranslateService);
-  decimalPipe = new DecimalPipe('it-IT');
+  decimalPipe = new DecimalPipe(this.translate.currentLang ?? 'it');
 
   title = input<string>("Title");
   data = input<ChartSeriesData[]>([]);

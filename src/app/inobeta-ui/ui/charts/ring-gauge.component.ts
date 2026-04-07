@@ -1,7 +1,7 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { RingGaugeAdditionalInfo } from './types';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DecimalPipe } from '@angular/common';
 
 @Component({
@@ -9,7 +9,14 @@ import { DecimalPipe } from '@angular/common';
   standalone: true,
   imports: [MatIconModule, TranslateModule, DecimalPipe],
   template: `
-    <div class="ring-gauge-container" [style.maxWidth]="maxSize()" [style.maxHeight]="maxSize()">
+    <div class="ring-gauge-container" [style.maxHeight]="maxSize()">
+      @if(progress() < 0 || value() < 0) {
+        <div class="chart-empty">
+          <mat-icon class="chart-empty-icon">donut_large</mat-icon>
+          <span class="chart-empty-label">{{ "common.noItems" | translate }}</span>
+        </div>
+      }
+      @else {
       <svg viewBox="0 0 120 120" class="ring-gauge-svg">
         <!-- background -->
         <circle
@@ -41,7 +48,7 @@ import { DecimalPipe } from '@angular/common';
         }
 
         <div class="ring-gauge-value" [style.color]="effectiveColor()">
-          {{ value() | number:'1.0-2':'it-IT' }}
+          {{ value() | number:'1.0-2':translate.currentLang ?? 'it' }}
           <span class="ring-gauge-unit" [hidden]="!unit()">{{ unit() }}</span>
         </div>
 
@@ -61,6 +68,7 @@ import { DecimalPipe } from '@angular/common';
           </span>
         </div>
       </div>
+      }
     </div>
   `,
   styles: [`
@@ -143,6 +151,29 @@ import { DecimalPipe } from '@angular/common';
     .ring-gauge-additional-label {
       display: inline-block;
     }
+    .chart-empty {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      min-height: 150px;
+      border: 1px solid lightgray;
+      border-radius: 10px;
+    }
+
+    .chart-empty-icon {
+      font-size: 2.25rem;
+      width: 2.25rem;
+      height: 2.25rem;
+    }
+
+    .chart-empty-label {
+      font-size: 0.875rem;
+      color: #6b7280;
+    }
   `]
 })
 export class RingGaugeComponent {
@@ -150,12 +181,13 @@ export class RingGaugeComponent {
   iconColor = input<string | undefined>(undefined);
   unit = input<string>('');
 
-  value = input<number>(0);
-  progress = input<number>(0);
+  value = input<number>(-1);
+  progress = input<number>(-1);
   dynamicColor = input<string>('');
   additionalInfo = input<RingGaugeAdditionalInfo | null>(null);
   maxSize = input<string>('300px');
 
+  translate = inject(TranslateService);
   radius = 57;
   circumference = 2 * Math.PI * this.radius;
 
