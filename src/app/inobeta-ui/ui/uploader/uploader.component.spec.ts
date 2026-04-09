@@ -10,11 +10,11 @@ import { IbToolTestModule, serviceDialogStub } from '../../tools';
 
 
 @Component({
-    selector: 'host-test',
-    template: `
+  selector: 'host-test',
+  template: `
   <ib-uploader></ib-uploader>
   `,
-    standalone: false
+  standalone: false
 })
 
 export class TestHostComponent {
@@ -30,19 +30,20 @@ describe('IbUploaderComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ IbUploaderComponent, TestHostComponent ],
+      declarations: [TestHostComponent],
       imports: [
         IbToolTestModule,
         CommonModule,
         MatDialogModule,
+        IbUploaderComponent,
         NoopAnimationsModule
       ],
       providers: [
-        { provide: MatDialogRef, useValue: serviceDialogStub},
-        { provide: MAT_DIALOG_DATA, useValue: {}}
+        { provide: MatDialogRef, useValue: serviceDialogStub },
+        { provide: MAT_DIALOG_DATA, useValue: {} }
       ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
