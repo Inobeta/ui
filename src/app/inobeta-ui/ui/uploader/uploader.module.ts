@@ -2,10 +2,10 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { TranslateModule } from '@ngx-translate/core';
-import { IbUploaderComponent } from './uploader.component';
+import { IbUploaderComponentLegacy } from './uploader.component';
 
 const components = [
-  IbUploaderComponent
+  IbUploaderComponentLegacy
 ];
 
 @NgModule({
