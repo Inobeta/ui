@@ -8,7 +8,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   imports: [MatButtonModule, TranslatePipe],
   template: `
     <input (change)="onChooseChange()" #uploader style="display:none;" type="file" />
-    <button mat-button (click)="onChooseClick()">{{ textKey() | translate }}</button>
+    <button mat-button type="button" (click)="onChooseClick()">{{ textKey() | translate }}</button>
   `,
 })
 export class IbUploaderComponent {
