@@ -19,8 +19,6 @@ Load skills dynamically based on what the example touches:
 - Always load `inobeta-ui-conventions` — naming, imports, i18n, public API awareness.
 - Load `inobeta-angular-patterns` when the example involves component structure,
   signals, lifecycle, reactive forms, or NgModule setup.
-- Load `inobeta-karma-testing` only if the task explicitly requires adding or
-  updating a spec file for an example component.
 
 ## Domain
 

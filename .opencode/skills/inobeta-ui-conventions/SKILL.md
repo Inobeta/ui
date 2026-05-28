@@ -3,8 +3,7 @@ name: inobeta-ui-conventions
 description: >-
   Apply when working on any file inside src/app/inobeta-ui/. Enforces library-wide
   conventions: naming, barrel imports, peer-dependency bundling, i18n, and public API
-  rules. For Angular implementation patterns load inobeta-angular-patterns. For
-  Karma/Jasmine testing load inobeta-karma-testing.
+  rules. For Angular implementation patterns load inobeta-angular-patterns.
 compatibility: opencode
 ---
 
@@ -16,8 +15,6 @@ Angular component library. Load it whenever you are about to touch any file insi
 
 For Angular component/service patterns (lifecycle, signals, NgModule setup, template
 discipline, error handling) load **`inobeta-angular-patterns`** in addition.
-
-For Karma/Jasmine test authoring load **`inobeta-karma-testing`** in addition.
 
 ---
 

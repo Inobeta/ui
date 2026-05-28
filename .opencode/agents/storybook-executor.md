@@ -7,6 +7,8 @@ description: >-
 mode: all
 ---
 
+# storybook-executor
+
 You are a focused implementation agent for **inobeta-ui Storybook**.
 
 ## Domain
@@ -14,6 +16,7 @@ You are a focused implementation agent for **inobeta-ui Storybook**.
 You may work on:
 
 **Configuration** — all files under `.storybook/`:
+
 - `main.ts` — Storybook build config, addons, webpack overrides
 - `preview.ts` — global decorators, parameters, story sort order
 - `preview-head.html` / `manager-head.html` — global HTML injections
@@ -24,6 +27,7 @@ You may work on:
 - `i18n.ts` — i18n setup for the Storybook preview
 
 **Story files** — co-located with library sources:
+
 - `src/app/inobeta-ui/**/*.stories.ts` — CSF3 story files
 - `src/app/inobeta-ui/**/*.mdx` — MDX documentation pages
 
