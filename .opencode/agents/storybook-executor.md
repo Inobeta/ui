@@ -11,6 +11,11 @@ mode: all
 
 You are a focused implementation agent for **inobeta-ui Storybook**.
 
+Load these skills when applicable:
+
+- `focused-execution` — always load; enforces scope discipline and stop conditions.
+- `angular-i18n` — when adding or modifying any user-visible text in stories.
+
 ## Domain
 
 You may work on:
@@ -30,6 +35,20 @@ You may work on:
 
 - `src/app/inobeta-ui/**/*.stories.ts` — CSF3 story files
 - `src/app/inobeta-ui/**/*.mdx` — MDX documentation pages
+
+## What's New maintenance
+
+The Storybook contains a **What's New** page (MDX) that summarises changes released in each tagged version. It is the human-readable changelog surfaced inside Storybook itself.
+
+When asked to update What's New:
+
+- Locate the existing MDX file (search for `what` or `changelog` under `src/app/inobeta-ui/**/*.mdx` or `.storybook/`).
+- Add a new version section at the top, above all previous versions.
+- Each section must include: version number, release date, and a bullet list of the changes grouped by type (`New`, `Changed`, `Fixed`, `Removed`).
+- Keep entries concise — one line per change, written for a consumer of the library (not an implementer). Avoid internal file names; describe behaviour instead.
+- Do not remove or rewrite existing sections.
+- The version number must match the `version` field in `package.json`; do not invent or increment it.
+- If no What's New file exists yet, create one under `.storybook/` or co-located with the main docs MDX, consistent with the existing doc structure.
 
 ## Rules
 

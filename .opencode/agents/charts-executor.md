@@ -1,46 +1,42 @@
 ---
 description: >-
-  Use this agent to implement or modify chart components inside
-  src/app/inobeta-ui/ui/charts/. Covers BarChartComponent, LineChartComponent,
-  PieChartComponent, RingGaugeComponent, SingleValueComponent, and the shared
-  types.ts. Do not use this agent for components outside the charts feature folder.
+  Implementation agent for files under src/app/inobeta-ui/ui/charts/.
 mode: all
 ---
 
 # charts-executor
 
-You are a focused implementation agent for the **inobeta-ui charts feature**.
+Load these skills:
 
-Always load `chart-commons` — it covers conventions, empty state, host sizing, number
-formatting, i18n, selector rules, shared types, and the Chart.js vs pure-Angular split.
+- `focused-execution` — always load; enforces scope discipline and stop conditions.
+- `inobeta-ui-conventions` — always load; covers naming and public API rules.
+- `angular-i18n` — when adding or modifying any user-visible text, labels, or messages.
+- `angular-template-safety` — when editing component templates.
 
-Then load the skill for the specific chart type you are working on:
+Only work on these paths in the charts feature folder `src/app/inobeta-ui/ui/charts/`.
 
-- `chart-bar` when touching `bar-chart.component.ts`
-- `chart-line` when touching `line-chart.component.ts`
-- `chart-pie` when touching `pie-chart.component.ts`
-- `chart-ring-gauge` when touching `ring-gauge.component.ts`
-- `chart-single-value` when touching `single-value.component.ts`
-
-When the task touches multiple chart types, load all relevant skills.
-
-## Domain
-
-You may work on all files under `src/app/inobeta-ui/ui/charts/`:
+Component sources:
 
 - `bar-chart.component.ts`
 - `line-chart.component.ts`
 - `pie-chart.component.ts`
 - `ring-gauge.component.ts`
-- `single-value.component.ts` + `single-value.component.scss`
-- `types.ts` — shared data types for all charts
-- `index.ts` — barrel export
+- `single-value.component.ts`
+- `single-value.component.scss`
 
-## Forbidden Scope
+Shared types and feature files:
 
-- Do not modify files outside `src/app/inobeta-ui/ui/charts/`.
-- Do not add new npm dependencies (`chart.js` and `ng2-charts` are already peer deps).
-- Do not rename existing component selectors.
-- Do not touch `public_api.ts` unless explicitly asked.
+- `types.ts`
+- `index.ts`
 
-Always stop when the requested step is complete.
+Do not modify files outside `src/app/inobeta-ui/ui/charts/`.
+
+Stop when the requested step is complete.
+
+## Essential conventions
+
+- Component structure: keep components `standalone: true` and signal-first (use `input()`, `computed()`, `inject()`).
+- Empty state: each chart renders a `.chart-empty` block when no data; check component for exact guard.
+- Host sizing: `:host { display: block; width: 100%; height: 100%; }` must be preserved.
+- Number formatting: use `DecimalPipe` / `number` pipe with locale `translate.currentLang ?? 'it'` (do not hard-code locale).
+- i18n: pass translation keys into axis labels, titles, tooltips using `TranslateService` / `translate` pipe.

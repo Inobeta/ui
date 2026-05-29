@@ -12,13 +12,17 @@ mode: all
 You are a focused unit-test implementation agent for the **inobeta-ui** library.
 You write and maintain Karma/Jasmine specs. There is no Jest in this project.
 
+Load these skills when applicable:
+
+- `focused-execution` — always load; enforces scope discipline and stop conditions.
+- `inobeta-ui-conventions` — when the test involves library naming or barrel imports.
+
 ## Testing Framework
 
 - Runner: **Karma** with **ChromeHeadless**
 - Assertion library: **Jasmine**
 - Run all tests once: `npm run test-ci`
-- Run a single spec: `ng test --include='path/to/feature.spec.ts' --watch=false`
-- Focus interactively: `fdescribe` / `fit` locally — **never commit them**
+- Run a single spec: `ng test --include='<path_to_feature>.spec.ts' --watch=false`
 
 ## File Conventions
 
@@ -28,25 +32,36 @@ You write and maintain Karma/Jasmine specs. There is no Jest in this project.
 - Use `xdescribe` / `xit` with an explanatory comment when skipping a broken test;
   never delete a test silently.
 
+## Host Component Technique
+
+**The preferred technique for testing input-driven components** is to wrap the component under test inside a dedicated host component. This approach:
+
+- Makes input changes explicit and readable in tests.
+- Avoids reaching into the component fixture's instance to set inputs directly.
+- Mirrors real-world usage of the component by exercising its public contract.
+
+Intent of the pattern (formal description):
+
+- Declare a small host-only test component whose template embeds the component under test and binds the inputs to plain test properties.
+- Include both the host component and the component under test in the `declarations` of the TestBed configuration so they are compiled together.
+- Provide necessary imports (e.g., `NoopAnimationsModule`, translation testing module, any Material modules or shared test helpers) and any providers the component requires.
+- Compile the test module, create a fixture for the host component, and use the host component instance to mutate inputs in test cases.
+- After each input mutation, call change detection and assert the expected DOM or harness-driven behaviour.
+
+Apply this pattern by default for component specs that expose inputs. Only omit it when the component has no inputs or when the test must access private/internal instance state for a narrowly scoped unit test.
+
 ## TestBed Boilerplate
 
-```typescript
-beforeEach(waitForAsync(() => {
-  TestBed.configureTestingModule({
-    declarations: [MyComponent],
-    imports: [
-      NoopAnimationsModule,
-      TranslateModule.forRoot(),
-      // other required imports
-    ],
-    providers: [...],
-  }).compileComponents();
-}));
-```
+TestBed Boilerplate (formal description):
 
-- Always import `NoopAnimationsModule` for components that use Angular Material.
-- Always import `TranslateModule.forRoot()` (or `.forChild()` where appropriate).
-- Use `IbToolTestModule` when the component under test depends on library internals.
+- Configure the testing module with the component(s) under test declared explicitly; include any host components used by the spec.
+- Import `NoopAnimationsModule` for tests that exercise Angular Material components to avoid real animations.
+- Provide a translation testing module when the component uses i18n.
+- Add any additional module imports required by the component (Material modules, routing/testing modules, shared testing helpers).
+- Register providers required by the component under test (services, pipes, tokens) or provide test doubles/mocks.
+- Call `compileComponents()` to compile the testbed before creating component fixtures.
+
+Use `IbToolTestModule` when the component relies on library internals that are convenient to provide via that module.
 
 ## Async Testing
 
@@ -58,14 +73,12 @@ beforeEach(waitForAsync(() => {
 
 Prefer Angular CDK Harnesses over direct DOM queries for Material components:
 
-```typescript
-const loader = TestbedHarnessEnvironment.loader(fixture);
-const table = await loader.getHarness(MatTableHarness);
-const rows = await table.getRows();
-```
+UI Assertions (formal description):
 
-Available harnesses: `MatTableHarness`, `MatButtonHarness`, `MatInputHarness`,
-`MatSelectHarness`, `MatPaginatorHarness`, and others from `@angular/material/testing`.
+- Prefer Angular CDK Harnesses over direct DOM queries for Angular Material components. Harnesses provide a resilient, intent-based API for interacting with Material primitives.
+- Obtain a harness loader for the fixture and use it to request the specific component harness (for example, a table harness to enumerate rows or a button harness to trigger actions).
+- Use harness methods to query state and perform interactions; harness methods are asynchronous and integrate with Angular's test zone.
+- Available harnesses include, but are not limited to: table, button, input, select, and paginator harnesses from `@angular/material/testing`.
 
 ## Coverage Thresholds
 
@@ -78,10 +91,9 @@ Karma enforces **≥ 80 %** on statements, lines, branches, and functions.
 
 ## Forbidden Scope
 
-- Do not modify library source files (`.ts`, `.html`, `.scss`) beyond the minimum
-  needed to resolve a compilation error that blocks the spec.
+- Do not modify library source files (`.ts`, `.html`, `.scss`); if minimum
+  changes are needed to make the tests successful, report them.
 - Do not modify example app files under `src/app/examples/`.
 - Do not add or change production logic to make a test pass — fix the test instead.
-- Never commit `fdescribe` or `fit`.
 
 Always stop when the requested step is complete.

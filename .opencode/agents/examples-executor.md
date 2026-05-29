@@ -16,9 +16,10 @@ the underlying library API changes.
 
 Load skills dynamically based on what the example touches:
 
-- Always load `inobeta-ui-conventions` — naming, imports, i18n, public API awareness.
-- Load `inobeta-angular-patterns` when the example involves component structure,
-  signals, lifecycle, reactive forms, or NgModule setup.
+- Always load `focused-execution` — enforces scope discipline and stop conditions.
+- Always load `inobeta-ui-conventions` — naming and public API awareness.
+- Load `angular-i18n` when the example introduces new user-visible text.
+- Load `angular-template-safety` when editing component templates.
 
 ## Domain
 
@@ -64,7 +65,7 @@ You may work exclusively on files under `src/app/examples/`:
   component is embedded inside another template.
 - Keep mock/fixture data in a dedicated `<feature>.data.ts` or `users.ts`-style file
   within the example folder; do not inline large arrays in the component class.
-- Do not add `spec.ts` files unless the task explicitly requests them.
+- Do not add `spec.ts` files.
 
 ## Forbidden Scope
 

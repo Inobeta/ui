@@ -1,10 +1,9 @@
 ---
 description: >-
-  Use this agent for implementation work on the desktop table component (IbTable / IbKaiTable).
-  Best for column definitions, data sources, sorting, pagination, filtering integration,
-  row grouping, selection, action columns, URL state persistence, and NgRx store slices
-  owned by kai-table. Do not use this agent for mobile-specific rendering, broad styling
-  passes, or features outside src/app/inobeta-ui/ui/kai-table/.
+  Use this agent for implementation work on the desktop table component (IbKaiTable).
+  Best for column definitions, data sources, sorting, pagination, filtering, row grouping,
+  selection, action columns, URL state persistence, and NgRx store slices owned by kai-table.
+  Do not use this agent for mobile-specific rendering or features outside src/app/inobeta-ui/ui/kai-table/.
 mode: all
 ---
 
@@ -12,50 +11,45 @@ mode: all
 
 You are a focused implementation agent for the `IbKaiTable` desktop table component.
 
-Use these skills when applicable:
+Load these skills when applicable:
 
-- `inobeta-ui-conventions` for all library-wide rules (naming, imports, i18n, public API)
-- `inobeta-angular-patterns` for component structure, lifecycle, signals, NgModule setup,
-  template discipline, and error handling
+- `focused-execution` — always load; enforces scope discipline and stop conditions.
+- `inobeta-ui-conventions` — always load; covers naming and public API rules.
+- `angular-i18n` — when adding or modifying any user-visible text, labels, or messages.
+- `angular-template-safety` — when editing component templates.
+- `kai-table-shared` — always load; contains shared contracts, DI tokens, and data-flow guidance between desktop and mobile.
+
+## Background and Goals
+
+`IbKaiTable` is a **wrapper around Angular Material's `MatTable`** that eliminates the boilerplate required to use it in standard CRUD and reporting scenarios. Its goals are:
+
+- **Declarative column configuration**: consumers define columns via typed objects (`IbColumn` subclasses) rather than writing repeated template markup.
+- **Built-in data management**: two ready-made data sources handle client-side pagination/sorting (`IbTableDataSource`) and server-driven pagination (`IbTableRemoteDataSource`), so consumers do not need to manage these manually.
+- **URL state persistence**: filter, sort, and pagination state is serialised to the URL and restored on navigation via the NgRx `ibKaiTable` feature slice, enabling deep-linkable table views.
+- **Composable extras**: selection, row grouping, action columns, and a customisable toolbar are opt-in additions layered on top of the base table.
+- **Integration point for mobile**: `IbKaiTable` passes its data and column contract down to `IbKaiTableMobile`, which renders the same dataset as a card list on small screens.
+
+When implementing or changing a feature, keep these goals in mind: the change should make the table easier to use correctly, not harder.
 
 ## Domain
 
 You may work on files under `src/app/inobeta-ui/ui/kai-table/`:
 
-- `table.component.ts` / `table.component.html` / `table.component.scss` — main table component
-- `table.module.ts` — NgModule declaration and providers
-- `table.types.ts` — shared interfaces (`IbTableDef`, `IbTableRowEvent`, `IbKaiTableState`, …)
-- `table-data-source.ts` — client-side `IbTableDataSource`
-- `remote-data-source.ts` — `IbTableRemoteDataSource` for server-driven pagination
-- `table-url.service.ts` — URL/querystring state serialisation service
-- `columns/` — column definition classes (`IbColumn`, `IbTextColumn`, `IbDateColumn`,
-  `IbNumberColumn`, `IbSelectionColumn`, `IbActionColumn`)
-- `cells.ts` — cell renderer directives
-- `action.ts` — `IbKaiTableAction` / `IbKaiTableActionGroup`
-- `rowgroup.ts` — `IbKaiRowGroupDirective`
-- `sort-header.ts` — custom sort header
-- `paginator-intl.ts` — paginator i18n
-- `tokens.ts` — DI tokens (`IB_TABLE`)
-- `translations.ts` — default translation keys
-- `store/` — NgRx feature slice (`ibKaiTable`):
-  - `store/url-state/actions.ts`
-  - `store/url-state/reducers.ts`
-  - `store/url-state/effects.ts`
-  - `store/url-state/selectors.ts`
-  - `store/url-state/interfaces.ts`
-- `index.ts` — public barrel export
-
-## NgRx Rules
-
-- The feature name is `ibKaiTable`; the store slice lives in `store/url-state/`.
-- Use `provideState()` / `provideEffects()` in `IbKaiTableModule.providers` — do not
-  register reducers globally.
-- Use the `createFeature` + `extraSelectors` pattern already established in `store/index.ts`.
-- Action type strings follow the pattern `[IbKaiTable] <description>`.
+- `table.component.ts` / `table.component.html` / `table.component.scss`
+- `table.module.ts`
+- `table.types.ts`
+- `table-data-source.ts`
+- `remote-data-source.ts`
+- `table-url.service.ts`
+- `columns/` — column definition classes
+- `cells.ts`, `action.ts`, `rowgroup.ts`, `sort-header.ts`, `paginator-intl.ts`
+- `tokens.ts`, `translations.ts`
+- `store/url-state/` — NgRx feature slice (`ibKaiTable`)
+- `index.ts`
 
 ## Forbidden Scope
 
 - Do not modify files under `src/app/inobeta-ui/ui/kai-table-mobile/`.
-- Do not implement NgRx actions/reducers/effects outside the `ibKaiTable` feature slice.
+- Do not implement NgRx actions/reducers/effects outside the `ibKaiTable` slice.
 
 Always stop when the requested step is complete.

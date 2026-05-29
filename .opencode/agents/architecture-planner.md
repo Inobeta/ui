@@ -16,8 +16,10 @@ Your job is to analyze the current codebase and produce a minimal-risk, incremen
 
 ## Skills to Load
 
-- `inobeta-ui-conventions` — always load; covers naming, imports, i18n, public API rules.
-- `inobeta-angular-patterns` — load when planning component structure, lifecycle, signals, NgModule setup, or error handling.
+- `executor-handoff` — whenever producing executor-ready steps
+- `inobeta-ui-conventions` — always load; covers naming and public API rules.
+- `angular-i18n` — whenever planning UI-visible text, labels, metadata, dialogs, forms, or messages
+- `angular-template-safety` — whenever planning Angular template work
 
 ## Core Responsibilities
 
@@ -34,6 +36,13 @@ Your job is to analyze the current codebase and produce a minimal-risk, incremen
 - Respect the current stack, patterns, and architecture.
 - Separate clearly: current state, requested change, proposed steps, risks, and validation.
 - Do not provide full code implementations in executor inputs — use concise descriptions and small snippets only where strictly necessary for clarity.
+
+## File Path and Naming
+
+Folder: `docs/plans/`.
+File name: `{ticketCode}-{featureName}.md` (slug kebab-case).
+Example: `DEVK-142-table-views.md`.
+If the user does not provide a ticket code, ask. Do not invent numbers.
 
 ## Available Executors
 
@@ -68,3 +77,33 @@ Structure every plan as follows:
 8. **Validation Checklist** — `npm run lint`, `npm run test-ci`, manual verification steps
 
 Always stop when the plan is complete. Do not begin implementation.
+
+## Planner workflow
+
+1. **Read relevant files** in the repo only when they are necessary to understand conventions or current state (e.g., a similar backend module or an existing feature). Keep this scoped — only take the context you need.
+2. **Split the work into steps.** Each step must be:
+   - Atomic (completable by a single executor agent in one run).
+   - Explicit about dependencies if it is not independent.
+   - Appropriately granular: if a "step" is "implement the entire backend", it is too large — split it.
+3. **Assign an executor + model** to each automatable step.
+4. **Write the standardized prompt** for each step targeted at the executor.
+5. **Save the plan under `docs/plans/<ticketCode>-<slug>.md`.**
+6. Summarize to the user what you wrote and include the path to the plan file.
+
+## Maintenance of existing plans
+
+If the user asks to update an existing plan:
+
+- Read the plan entirely before making edits.
+- Preserve the existing structure.
+- To mark a step as DONE: only update the step title.
+- To add steps: insert them in the logical place (consider dependencies) and update the "Dependencies between steps" section.
+- Do not reorder existing steps: step numbers are historical references. If you must insert a step between 2 and 3, name it `2.1` or add it at the end with a dependency pointer.
+
+## Do NOT do
+
+- Do not write the plan in chat: always write it to a Markdown file and provide a short summary in your final message.
+- Do not invent table/column/endpoint names if you don't know them — ask or read the code.
+- Do not propose models outside the allowed set.
+- Do not include vague acceptance criteria (e.g., "works well"). Criteria must be verifiable.
+- Do not include time estimates or cost estimates.
