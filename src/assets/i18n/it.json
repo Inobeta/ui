@@ -31,7 +31,7 @@
       "kaiTableFull": "Full Example",
       "kaiTableApi": "Data from API",
       "kaiTableRouting": "With Routing",
-      "kaiTableDatasource": "DataSource esplicito",
+      "kaiTableDatasource": "Explicit DataSource",
       "kaiTableSticky": "Sticky Columns",
       "kaiTablePaginatorHide": "Paginator Hide",
       "kaiTableCustomSortFilter": "Custom Sort & Filter",
@@ -55,8 +55,7 @@
       "dialogDialog": "Dialog",
       "toastMain": "Toast",
       "toastToast": "Toast"
-    }
-    ,
+    },
     "kaiTable": {
       "hidePaginator": "Nascondi paginatore",
       "showPaginator": "Mostra paginatore"

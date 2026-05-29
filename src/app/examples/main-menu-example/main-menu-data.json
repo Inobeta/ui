@@ -44,10 +44,6 @@
         "link": "/home/kai-table/custom-aggregate"
       },
       {
-        "label": "examples.ibMainMenu.kaiTableStripedRows",
-        "link": "/home/kai-table/striped-rows"
-      },
-      {
         "label": "examples.ibMainMenu.kaiTableColumnOptions",
         "link": "/home/kai-table/column-options"
       }
