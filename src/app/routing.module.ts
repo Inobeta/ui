@@ -2,9 +2,15 @@
 import { Routes } from '@angular/router';
 import { DialogExampleComponent } from './examples/dialog-example/dialog-example.component';
 import { IbKaiTableActionColumnExamplePage } from './examples/kai-table-example/kai-table-actions-example';
+import { IbKaiTableColumnOptionsExamplePage } from './examples/kai-table-example/kai-table-column-options-example';
+import { IbKaiTableCustomAggregateExamplePage } from './examples/kai-table-example/kai-table-custom-aggregate-example';
+import { IbKaiTableCustomSortFilterExamplePage } from './examples/kai-table-example/kai-table-custom-sort-filter-example';
+import { IbKaiTableDatasourceExamplePage } from './examples/kai-table-example/kai-table-datasource-example';
 import { KaiTableDetailComponent } from './examples/kai-table-example/kai-table-detail';
 import { IbKaiTableExamplePage } from './examples/kai-table-example/kai-table-example';
 import { IbKaiTableFullExamplePage } from './examples/kai-table-example/kai-table-full-example';
+import { IbKaiTableStickyExamplePage } from './examples/kai-table-example/kai-table-sticky-example';
+import { IbKaiTableStripedRowsExamplePage } from './examples/kai-table-example/kai-table-striped-rows-example';
 import { IbKaiTableWithRouting } from './examples/kai-table-example/kai-table-with-routing';
 import { IbKaiTableApiExamplePage } from './examples/kai-table-example/server-side/kai-table-api-example';
 import { NavComponent } from './examples/nav/nav.component';
@@ -60,6 +66,36 @@ export const appRoutes: Routes = [
                 component: KaiTableDetailComponent
               }
             ]
+          },
+          {
+            path: 'datasource',
+            data: { breadcrumb: 'DataSource' },
+            component: IbKaiTableDatasourceExamplePage
+          },
+          {
+            path: 'sticky',
+            data: { breadcrumb: 'Sticky Columns' },
+            component: IbKaiTableStickyExamplePage
+          },
+          {
+            path: 'custom-sort-filter',
+            data: { breadcrumb: 'Custom Sort & Filter' },
+            component: IbKaiTableCustomSortFilterExamplePage
+          },
+          {
+            path: 'custom-aggregate',
+            data: { breadcrumb: 'Custom Aggregate' },
+            component: IbKaiTableCustomAggregateExamplePage
+          },
+          {
+            path: 'striped-rows',
+            data: { breadcrumb: 'Striped Rows' },
+            component: IbKaiTableStripedRowsExamplePage
+          },
+          {
+            path: 'column-options',
+            data: { breadcrumb: 'Column Options' },
+            component: IbKaiTableColumnOptionsExamplePage
           },
           {
             path: '',

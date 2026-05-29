@@ -26,6 +26,30 @@
       {
         "label": "examples.ibMainMenu.kaiTableRouting",
         "link": "/home/kai-table/with-routing"
+      },
+      {
+        "label": "examples.ibMainMenu.kaiTableDatasource",
+        "link": "/home/kai-table/datasource"
+      },
+      {
+        "label": "examples.ibMainMenu.kaiTableSticky",
+        "link": "/home/kai-table/sticky"
+      },
+      {
+        "label": "examples.ibMainMenu.kaiTableCustomSortFilter",
+        "link": "/home/kai-table/custom-sort-filter"
+      },
+      {
+        "label": "examples.ibMainMenu.kaiTableCustomAggregate",
+        "link": "/home/kai-table/custom-aggregate"
+      },
+      {
+        "label": "examples.ibMainMenu.kaiTableStripedRows",
+        "link": "/home/kai-table/striped-rows"
+      },
+      {
+        "label": "examples.ibMainMenu.kaiTableColumnOptions",
+        "link": "/home/kai-table/column-options"
       }
     ]
   },
