@@ -1,7 +1,5 @@
 <div style="display:flex; gap:8px; margin-bottom:12px; align-items:center;">
-  @if(!paginatorHidden) {
   <button mat-stroked-button (click)="toggle()">{{ paginatorToggleKey | translate }}</button>
-  }
 </div>
 <ib-kai-table [data]="data" [displayedColumns]="['name', 'fruit', 'number', 'created_at']" [tableDef]="tableDef">
   <ib-text-column name="name"></ib-text-column>
