@@ -12,6 +12,7 @@ import { IbKaiTableFullExamplePage } from './examples/kai-table-example/kai-tabl
 import { IbKaiTableStickyExamplePage } from './examples/kai-table-example/kai-table-sticky-example';
 import { IbKaiTableWithRouting } from './examples/kai-table-example/kai-table-with-routing';
 import { IbKaiTableApiExamplePage } from './examples/kai-table-example/server-side/kai-table-api-example';
+import { IbKaiTableMobileEmptyExamplePage } from './examples/kai-table-example/kai-table-mobile-empty-example';
 import { NavComponent } from './examples/nav/nav.component';
 import { IbToastExampleComponent } from './examples/toast-example/toast-example.component';
 
@@ -90,6 +91,11 @@ export const appRoutes: Routes = [
             path: 'column-options',
             data: { breadcrumb: 'Column Options' },
             component: IbKaiTableColumnOptionsExamplePage
+          },
+          {
+            path: 'mobile-empty',
+            data: { breadcrumb: 'Empty Tables' },
+            component: IbKaiTableMobileEmptyExamplePage
           },
           {
             path: '',

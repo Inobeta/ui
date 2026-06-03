@@ -47,6 +47,11 @@
         "label": "examples.ibMainMenu.kaiTableColumnOptions",
         "link": "/home/kai-table/column-options"
       }
+      ,
+      {
+        "label": "examples.ibMainMenu.kaiTableMobileEmpty",
+        "link": "/home/kai-table/mobile-empty"
+      }
     ]
   },
   {

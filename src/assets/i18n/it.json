@@ -1,4 +1,7 @@
 {
+  "common": {
+    "noItems": "Nessun elemento"
+  },
   "shared": {
     "login": {
       "email": "E-mail",
@@ -39,6 +42,7 @@
       "kaiTableNgrxSelectors": "NgRx Selectors",
       "kaiTableStripedRows": "Striped Rows",
       "kaiTableColumnOptions": "Column Options",
+      "kaiTableMobileEmpty": "Empty Tables",
       "dynamicFormsMain": "Dynamic forms",
       "dynamicFormsDynamicForms": "Dynamic forms (API)",
       "basicForm": "Material Form",
@@ -58,7 +62,8 @@
     },
     "kaiTable": {
       "hidePaginator": "Nascondi paginatore",
-      "showPaginator": "Mostra paginatore"
+      "showPaginator": "Mostra paginatore",
+      "emptyState": "Nessun elemento"
     }
   }
 }

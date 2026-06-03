@@ -25,10 +25,12 @@ import { IbKaiTableMobileInfiniteScrollComponent } from './table-mobile-infinite
 import { IbKaiTableMobileItemComponent } from './table-mobile-item.component';
 import { IbKaiTableMobileToolbarComponent } from './table-mobile-toolbar.component';
 import { MatProgressBar } from '@angular/material/progress-bar';
+import { MatIconModule } from '@angular/material/icon';
+import { TranslatePipe } from '@ngx-translate/core';
 @Component({
   selector: 'ib-kai-table-mobile',
   standalone: true,
-  imports: [IbKaiTableMobileToolbarComponent, IbKaiTableMobileItemComponent, IbKaiTableMobileInfiniteScrollComponent, MatProgressBar],
+  imports: [IbKaiTableMobileToolbarComponent, IbKaiTableMobileItemComponent, IbKaiTableMobileInfiniteScrollComponent, MatProgressBar, MatIconModule, TranslatePipe],
   template: `
     <div class="ib-kai-table-mobile">
       @if (headerActions().length > 0 || filters().length > 0) {
@@ -66,6 +68,12 @@ import { MatProgressBar } from '@angular/material/progress-bar';
               (visibleCountChanged)="visibleCount.set($event)"
             ></ib-kai-table-mobile-infinitescroll>
           }
+        </div>
+      }
+      @if (cardDataColumns().length === 0 && cardActionColumns().length === 0 && state() !== 'loading') {
+        <div class="table-empty">
+          <mat-icon class="table-empty-icon">inbox</mat-icon>
+          <span class="table-empty-label">{{ "common.noItems" | translate }}</span>
         </div>
       }
     </div>
@@ -112,6 +120,30 @@ import { MatProgressBar } from '@angular/material/progress-bar';
       width: 100%;
       min-width: 0;
       box-sizing: border-box;
+    }
+
+   .table-empty {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      min-height: 150px;
+      border: 1px solid lightgray;
+      border-radius: 10px;
+    }
+
+    .table-empty-icon {
+      font-size: 2.25rem;
+      width: 2.25rem;
+      height: 2.25rem;
+    }
+
+    .table-empty-label {
+      font-size: 0.875rem;
+      color: #6b7280;
     }
   `]
 })
