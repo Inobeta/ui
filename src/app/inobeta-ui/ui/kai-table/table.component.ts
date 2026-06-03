@@ -153,6 +153,10 @@ export class IbTable implements OnDestroy {
     this._tableDef = {
       ...defaultTableDef,
       ...value,
+      paginator: {
+        ...defaultTableDef.paginator,
+        ...value?.paginator,
+      },
     };
   }
   get tableDef() {
@@ -211,10 +215,13 @@ export class IbTable implements OnDestroy {
     })
   }
   ngOnInit() {
-    const paginatorFromUrl = this.tableUrl.getPaginator(this.tableName);
-    this.tableDef.paginator = {
-      ...this.tableDef.paginator,
-      ...paginatorFromUrl,
+    const hasUrlState = !!this.activatedRoute.snapshot.queryParams?.[this.tableName];
+    if (hasUrlState) {
+      const paginatorFromUrl = this.tableUrl.getPaginator(this.tableName);
+      this.tableDef.paginator = {
+        ...this.tableDef.paginator,
+        ...paginatorFromUrl,
+      }
     }
     this.dataSource.tableName = this.tableName;
     this.dataSource.paginator = this.paginator;
