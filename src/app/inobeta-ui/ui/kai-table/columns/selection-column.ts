@@ -68,9 +68,6 @@ export class IbSelectionColumn implements OnInit {
 
   ngOnInit() {
     if (this.table) {
-      if (this.table.isRemote) {
-        console.warn("Selection column is currently not supported with IbTableRemoteDataSource")
-      }
       this.columnDef.cell = this.cell;
       this.columnDef.headerCell = this.headerCell;
       this.columnDef.footerCell = this.footerCell;

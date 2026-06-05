@@ -1,6 +1,6 @@
 import { Component, ViewChild } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
-import { IbDataExportModule, IbFilterModule, IbKaiTableModule, IbTableActionModule, IbViewModule } from "public_api";
+import { IbDataExportModule, IbFilterModule, IbKaiTableModule, IbTableActionModule } from "public_api";
 import { IbSelectionColumn } from "../../inobeta-ui/ui/kai-table/columns/selection-column";
 import { IbKaiTableState } from "../../inobeta-ui/ui/kai-table/table.types";
 import { UserService } from "./users";
@@ -38,7 +38,6 @@ import { MatIconButton } from "@angular/material/button";
         </ng-template>
       </ib-table-action-group>
 
-      <ib-table-view-group />
       <ib-filter>
         <ib-search-bar />
 
@@ -85,7 +84,6 @@ import { MatIconButton } from "@angular/material/button";
     MatIconModule,
     IbKaiTableModule,
     IbFilterModule,
-    IbViewModule,
     IbTableActionModule,
     IbDataExportModule,
     MatIconButton

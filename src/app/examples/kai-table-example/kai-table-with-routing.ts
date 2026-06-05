@@ -1,6 +1,6 @@
 import { Component, inject, ViewChild } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
-import { IbDataExportModule, IbFilterModule, IbKaiTableModule, IbTableActionModule, IbViewModule } from "public_api";
+import { IbDataExportModule, IbFilterModule, IbKaiTableModule, IbTableActionModule } from "public_api";
 import { IbSelectionColumn } from "../../inobeta-ui/ui/kai-table/columns/selection-column";
 import { IbKaiTableState } from "../../inobeta-ui/ui/kai-table/table.types";
 import { IbUserExample, UserService } from "./users";
@@ -38,7 +38,6 @@ import { ActivatedRoute, Router, RouterOutlet } from "@angular/router";
         <ng-template ibTableAction [kind]="'export'"></ng-template>
       </ib-table-action-group>
 
-      <ib-table-view-group />
       <ib-filter>
         <ib-search-bar />
 
@@ -87,7 +86,6 @@ import { ActivatedRoute, Router, RouterOutlet } from "@angular/router";
     MatIconModule,
     IbKaiTableModule,
     IbFilterModule,
-    IbViewModule,
     IbTableActionModule,
     IbDataExportModule,
     MatIconButton,

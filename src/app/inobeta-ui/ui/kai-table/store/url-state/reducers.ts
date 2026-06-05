@@ -41,19 +41,6 @@ export const urlStateReducer = createReducer(INITIAL,
       ...state
     }
   }),
-  on(urlStateActions.handleViewChange, (stateIn, action) => {
-    let state = structuredClone(stateIn);
-    const table = getTable(action.tableName, state.tables);
-    table.view = action.params.view;
-    table.page = action.params.page;
-    table.pageSize = action.params.pageSize;
-    table.filters = action.params.filters;
-    table.aggregatedColumns = action.params.aggregatedColumns;
-    table.sort = action.params.sort;
-    return {
-      ...state
-    }
-  }),
 );
 
 

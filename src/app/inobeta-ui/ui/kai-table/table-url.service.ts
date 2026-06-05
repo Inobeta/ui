@@ -22,7 +22,7 @@ export class IbTableUrlService {
 
   getRawParams(tableName: string): IbTableQsParams {
     return JSON.parse(this.activatedRoute.snapshot.queryParams?.[tableName]
-      ?? `{"ibfilter": ${JSON.stringify(this.emptyFilterSchema[tableName] ?? {})}, "ibview": "__ibTableView__all", "ibpage": 0, "ibpagesize": 20, "ibaggregatedcolumns": {}, "ibsort": {}  }`) ?? {};
+      ?? `{"ibfilter": ${JSON.stringify(this.emptyFilterSchema[tableName] ?? {})}, "ibpage": 0, "ibpagesize": 20, "ibaggregatedcolumns": {}, "ibsort": {}  }`) ?? {};
   }
 
 
@@ -41,10 +41,6 @@ export class IbTableUrlService {
       queryParamsHandling: 'merge',
       replaceUrl: true,
     });
-  }
-
-  getActiveView(tableName: string,): string {
-    return this.getRawParams(tableName).ibview ?? '__ibTableView__all';
   }
 
   setPaginator(tableName: string, params: { pageIndex: number, pageSize: number }) {
@@ -103,36 +99,6 @@ export class IbTableUrlService {
     return this.getRawParams(tableName).ibsort ?? { active: '', direction: '' };
   }
 
-  handleViewChange(tableName: string, params: Omit<IbKaiTableParams, 'tableName'> & { view: string }) {
-    this.router.navigate([], {
-      queryParams: {
-        [tableName]: JSON.stringify({
-          ...this.getRawParams(tableName),
-          ibview: params.view,
-          ibpage: params.page,
-          ibpagesize: params.pageSize,
-          ibfilter: params.filters,
-          ibaggregatedcolumns: params.aggregatedColumns,
-          ibsort: params.sort,
-        })
-      },
-      queryParamsHandling: 'merge',
-      replaceUrl: true,
-    });
-  }
-
-
-  getViewState(tableName: string) {
-    return {
-      view: this.getActiveView(tableName),
-      pageSize: this.getPaginator(tableName).pageSize,
-      page: this.getPaginator(tableName).pageIndex,
-      filters: this.getFilters(tableName),
-      aggregatedColumns: this.getAggregatedColumns(tableName),
-      sort: this.getSort(tableName)
-    }
-  }
-
   setFilterAndSort(tableName: string, ibfilter: IbFilterSyntaxExtended, sort: Sort) {
     const ibsort = sort.direction !== '' ? sort : null
     this.router.navigate([], {
@@ -156,5 +122,4 @@ export type IbTableQsParams = {
   ibfilter: IbFilterSyntaxExtended;
   ibaggregatedcolumns: Record<string, string>;
   ibsort: Sort;
-  ibview: string;
 }

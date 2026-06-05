@@ -36,7 +36,6 @@ import { filter, takeUntil } from "rxjs/operators";
 import { IbActionColumn, IbKaiTableAction, IbKaiTableActionGroup } from ".";
 import { IbDataExportService } from "../data-export";
 import { IbFilter, IbFilterBase } from "../kai-filter";
-import { IbTableViewGroup } from "../views";
 import { IbColumn } from "./columns/column";
 import { IbSelectionColumn } from "./columns/selection-column";
 import { IbTableRemoteDataSource } from "./remote-data-source";
@@ -100,7 +99,6 @@ export class IbTable implements OnDestroy {
   @ContentChild(IbKaiRowGroupDirective) rowGroup!: IbKaiRowGroupDirective;
 
   @ContentChild(IbFilter) filter!: IbFilter;
-  @ContentChild(IbTableViewGroup) view!: IbTableViewGroup;
 
 
   @ViewChild(MatTable, { static: true }) matTable: MatTable<any>;
@@ -237,11 +235,7 @@ export class IbTable implements OnDestroy {
 
   ngAfterContentInit() {
 
-    const viewInit = () => {
-      this.view.viewGroupName = this.tableName;
-      this.dataSource.view = this.view;
-      this.setupViewGroup();
-    }
+
 
     const dsInit = () => {
       this.dataSource.sort = this.sort;
@@ -266,16 +260,9 @@ export class IbTable implements OnDestroy {
 
       const filtersFromUrl = this.tableUrl.getFilters(this.tableName)
       this.filter.value = filtersFromUrl
-      if (this.view) {
-        //NG0100
-        setTimeout(() => viewInit())
-      }
     })
 
-    // If there is no filter, we need to set the viewGroupName to the table name
-    if (this.view && !this.filter) {
-      setTimeout(() => viewInit())
-    }
+    // Views support removed for desktop table
 
     if (!this.filter) {
       setTimeout(() => dsInit())
@@ -298,16 +285,7 @@ export class IbTable implements OnDestroy {
   setPaginatorState(params) {
     this.store.dispatch(urlStateActions.setPaginator({ tableName: this.tableName, params }))
   }
-  private setupViewGroup() {
-    for (const action of [
-      this.filter.hideFilterAction,
-      ...this.view.actions.toArray(),
-    ]) {
-      this.actionPortals.push(
-        new TemplatePortal(action.templateRef, action.viewContainerRef)
-      );
-    }
-  }
+  // view group setup removed: views are no longer part of the desktop table
 
   doExport(settings) {
     this.exportService._exportFromTable(

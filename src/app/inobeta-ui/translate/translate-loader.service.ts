@@ -6,7 +6,6 @@ import { map } from "rxjs/operators";
 import { ibHttpTranslations } from "../http/translations";
 import { ibMaterialFormTranslations } from "../ui/material-forms/translations";
 import { ibKaiFilterTranslations } from "../ui/kai-filter/translations";
-import { ibViewTranslations } from "../ui/views/translations";
 import { ibKaiTableTranslations } from "../ui/kai-table/translations";
 import { ibModalTranslations } from "../ui/modal/translations";
 import { ibFormTranslations } from "../ui/forms-utilities/translations";
@@ -14,8 +13,8 @@ import { ibFormTranslations } from "../ui/forms-utilities/translations";
 
 export const IB_TRANSLATE_ASSETS_PATH = new InjectionToken<string>('ibTranslateAssetsPath');
 
-@Injectable({providedIn: 'root'})
-export class IbTranslateModuleLoader implements TranslateLoader{
+@Injectable({ providedIn: 'root' })
+export class IbTranslateModuleLoader implements TranslateLoader {
   private ibTranslateAssetsPath = inject(IB_TRANSLATE_ASSETS_PATH, { optional: true }) ?? './assets/i18n/';
   private http = inject(HttpClient);
 
@@ -28,7 +27,6 @@ export class IbTranslateModuleLoader implements TranslateLoader{
           ...ibHttpTranslations[lang],
           ...ibMaterialFormTranslations[lang],
           ...ibKaiFilterTranslations[lang],
-          ...ibViewTranslations[lang],
           ...ibKaiTableTranslations[lang],
           ...ibModalTranslations[lang],
           ...ibFormTranslations[lang],

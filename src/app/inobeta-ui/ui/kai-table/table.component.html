@@ -1,20 +1,17 @@
 <div class="ib-table-desktop">
   <section class="ib-table__toolbar">
-    <ng-content select="ib-table-view-group" />
+
     <section class="ib-table__toolbar__actions">
       @for(action of mobileHeaderActions(); track $index) {
-        @if(action.kind() === 'export') {
-          <ib-table-data-export-action
-            (ibDataExport)="doExport($event)"
-            [showSelectedRowsOption]="!!this.selectionColumn"
-            [showAllRowsOption]="!this.isRemote"
-            />
-        } @else {
-          <ng-container *ngTemplateOutlet="action.templateRef"> </ng-container>
-        }
+      @if(action.kind() === 'export') {
+      <ib-table-data-export-action (ibDataExport)="doExport($event)" [showSelectedRowsOption]="!!this.selectionColumn"
+        [showAllRowsOption]="!this.isRemote" />
+      } @else {
+      <ng-container *ngTemplateOutlet="action.templateRef"> </ng-container>
+      }
       }
       @for (portal of actionPortals; track portal) {
-        <ng-template [cdkPortalOutlet]="portal" />
+      <ng-template [cdkPortalOutlet]="portal" />
       }
     </section>
   </section>
@@ -23,9 +20,9 @@
 
   <section class="ib-table__content" [class.ib-table__content--loading]="state === 'loading'">
     @if (state === 'loading') {
-      <div class="ib-table__content__progress-bar">
-        <mat-progress-bar mode="indeterminate" />
-      </div>
+    <div class="ib-table__content__progress-bar">
+      <mat-progress-bar mode="indeterminate" />
+    </div>
     }
 
     <table class="ib-table" mat-table matSort multiTemplateDataRows [matSortActive]="this.dataSource.sortState.active"
@@ -34,13 +31,13 @@
       <ng-content />
 
       @if (rowGroup) {
-        <ng-container matColumnDef="expandedDetail">
-          <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
-            <div class="ib-table__cell-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-              <ng-container *ngTemplateOutlet="rowGroup.templateRef; context: {'$implicit': element, 'row': element}" />
-            </div>
-          </td>
-        </ng-container>
+      <ng-container matColumnDef="expandedDetail">
+        <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
+          <div class="ib-table__cell-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+            <ng-container *ngTemplateOutlet="rowGroup.templateRef; context: {'$implicit': element, 'row': element}" />
+          </div>
+        </td>
+      </ng-container>
       }
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true;"></tr>
@@ -48,9 +45,9 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="ib-table__row"
         [class.ib-table__row--expanded]="expandedElement === row"
         [class.ib-table__row--selected]="activeRouteId() && row[activeRowParams()?.dataParamId]?.toString() === activeRouteId()"
-      (click)="rowGroup && (expandedElement = expandedElement === row ? null : row)"></tr>
+        (click)="rowGroup && (expandedElement = expandedElement === row ? null : row)"></tr>
       @if (rowGroup) {
-        <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="ib-table__row-group"
+      <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="ib-table__row-group"
         [class.ib-table__row-group--hidden]="expandedElement !== row"></tr>
       }
 
@@ -58,46 +55,33 @@
         <td [attr.colspan]="columns.length">
           <div>
             @if (state === 'idle') {
-              <mat-icon style="color: #888">inbox</mat-icon>
-              {{ "common.noItems" | translate }}
+            <mat-icon style="color: #888">inbox</mat-icon>
+            {{ "common.noItems" | translate }}
             }
 
             @if (state === 'http_error') {
-              <mat-icon style="color: #888">error</mat-icon>
-              {{ "common.httpError" | translate }}
+            <mat-icon style="color: #888">error</mat-icon>
+            {{ "common.httpError" | translate }}
             }
           </div>
         </td>
       </tr>
 
       @if (dataSource.shouldDisplayAggregationFooter) {
-        <tr class="ib-table__rollup-row" mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></tr>
+      <tr class="ib-table__rollup-row" mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></tr>
       }
     </table>
   </section>
-  <mat-paginator class="ib-table__paginator"
-    [disabled]="state !== 'idle'"
-    [style.display]="tableDef.paginator.hide ? 'none' : 'block'"
-    [pageSize]="tableDef.paginator.pageSize"
+  <mat-paginator class="ib-table__paginator" [disabled]="state !== 'idle'"
+    [style.display]="tableDef.paginator.hide ? 'none' : 'block'" [pageSize]="tableDef.paginator.pageSize"
     [showFirstLastButtons]="tableDef.paginator.showFirstLastButtons"
     [pageSizeOptions]="tableDef.paginator.pageSizeOptions"
-    (page)="setPaginatorState({ pageIndex: $event.pageIndex, pageSize: $event.pageSize })"
-    />
+    (page)="setPaginatorState({ pageIndex: $event.pageIndex, pageSize: $event.pageSize })" />
 </div>
 <div class="ib-table-mobile">
-    <ib-kai-table-mobile
-      [tableName]="tableName"
-      [displayedColumns]="displayedColumns"
-      [dataSource]="dataSource"
-      [state]="state"
-      [columns]="mobileColumns()"
-      [rowGroup]="mobileRowGroup()"
-      [filter]="mobileFilter()"
-      [filters]="mobileFilters()"
-      [headerActions]="mobileHeaderActions()"
-      [actionColumn]="mobileActionColumn()"
-      (doExport)="doExport($event)"
-      (sortUpdated)="updateSortFromMobile($event)"
-      >
-    </ib-kai-table-mobile>
+  <ib-kai-table-mobile [tableName]="tableName" [displayedColumns]="displayedColumns" [dataSource]="dataSource"
+    [state]="state" [columns]="mobileColumns()" [rowGroup]="mobileRowGroup()" [filter]="mobileFilter()"
+    [filters]="mobileFilters()" [headerActions]="mobileHeaderActions()" [actionColumn]="mobileActionColumn()"
+    (doExport)="doExport($event)" (sortUpdated)="updateSortFromMobile($event)">
+  </ib-kai-table-mobile>
 </div>

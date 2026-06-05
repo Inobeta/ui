@@ -6,7 +6,6 @@ export type IUrlStateState = {
 }
 
 export type IbKaiTableParams = {
-  view: string;
   pageSize: number;
   page: number;
   filters: IbFilterSyntaxExtended;

@@ -34,7 +34,6 @@ import {
 } from "../data-export";
 import { IbDataExportProvider } from "../data-export/provider";
 import { IbFilterModule } from "../kai-filter";
-import { IbViewModule } from "../views";
 import { IbTableActionModule } from "./action";
 import { IbAggregateCell } from "./cells";
 import {
@@ -128,97 +127,7 @@ describe("IbTable", () => {
     });
   });
 
-  describe("with IbView", () => {
-    let fixture: ComponentFixture<IbTableWithViewGroupApp>;
-    let component: IbTable;
-    let loader: HarnessLoader;
-
-    beforeEach(() => {
-      fixture = createComponent(IbTableWithViewGroupApp);
-      component = fixture.debugElement.query(
-        By.directive(IbTable)
-      ).componentInstance;
-      loader = TestbedHarnessEnvironment.documentRootLoader(fixture);
-    });
-
-    it("should create", () => {
-      expect(component).toBeTruthy();
-    });
-
-    it("should create a view", async () => {
-      const addViewButton = await loader.getHarness(
-        MatButtonHarness.with({
-          ancestor: "ib-view-list",
-          variant: "icon",
-        })
-      );
-      await addViewButton.click();
-
-      fixture.detectChanges();
-      await fixture.whenStable();
-
-      const dialog = await loader.getHarness(MatDialogHarness);
-      expect(dialog).toBeTruthy();
-      const input = await loader.getHarness(MatInputHarness);
-      await input.setValue("green view");
-
-      const confirm = await loader.getHarness(
-        MatButtonHarness.with({
-          text: "shared.ibTableView.add",
-        })
-      );
-      expect(confirm).toBeTruthy();
-      await confirm.click();
-
-      fixture.detectChanges();
-      await fixture.whenStable();
-
-      const views = await loader.getAllHarnesses(
-        MatButtonHarness.with({
-          ancestor: "ib-view-list",
-        })
-      );
-      expect(views.length).toBe(2);
-    });
-
-
-    //DEVK-346 this should be fixed
-    xit("should save view", fakeAsync(async () => {
-      component.filter.form.patchValue({ color: ["green"] });
-      component.filter.update();
-      expect(component.view.dirty).toBeTruthy();
-
-      tick(1);
-      const save = await loader.getHarness(
-        MatButtonHarness.with({
-          ancestor: ".ib-table__toolbar__actions",
-          variant: "icon",
-          text: /save/,
-        })
-      );
-      await save.click();
-
-      const dialog = await loader.getHarness(MatDialogHarness);
-      expect(dialog).toBeTruthy();
-      await fixture.whenStable();
-      const input = await dialog.getHarness(MatInputHarness);
-      await input.setValue("green view");
-
-      const confirm = await dialog.getHarness(
-        MatButtonHarness.with({
-          text: "shared.ibTableView.add",
-        })
-      );
-      await confirm.click();
-
-      const views = await loader.getAllHarnesses(
-        MatButtonHarness.with({
-          ancestor: "ib-view-list",
-        })
-      );
-      expect(views.length - 1).toBe(2);
-    }));
-  });
+  // Tests related to IbView removed
 
   describe("with export", () => {
     let fixture: ComponentFixture<IbTableWithExport>;
@@ -466,7 +375,6 @@ function configureModule<T>(type: Type<T>) {
       IbKaiTableModule,
       IbTableActionModule,
       IbFilterModule,
-      IbViewModule,
       MatSortModule,
       IbDataExportModule,
       NoopAnimationsModule,

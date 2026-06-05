@@ -1,12 +1,12 @@
 import { Component } from "@angular/core";
 import { GithubDataSource } from "./github-data-source";
-import { IbDataExportModule, IbFilterModule, IbKaiTableModule, IbTableActionModule, IbViewModule } from "public_api";
+import { IbDataExportModule, IbFilterModule, IbKaiTableModule, IbTableActionModule } from "public_api";
 import { MatIconModule } from "@angular/material/icon";
 import { MatIconButton } from "@angular/material/button";
 
 @Component({
-    selector: "ib-kai-table-api-example",
-    template: `
+  selector: "ib-kai-table-api-example",
+  template: `
     <ib-kai-table
       [displayedColumns]="['created', 'state', 'number', 'title']"
       [dataSource]="dataSource"
@@ -25,7 +25,6 @@ import { MatIconButton } from "@angular/material/button";
         <ib-table-data-export-action />
       </ib-table-action-group>
 
-      <ib-table-view-group />
       <ib-filter>
         <ib-search-bar async />
         <ib-date-filter name="created">Created</ib-date-filter>
@@ -50,18 +49,18 @@ import { MatIconButton } from "@angular/material/button";
       <ib-text-column name="title" />
     </ib-kai-table>
   `,
-    styles: [
-        `
+  styles: [
+    `
       :host {
         display: flex;
         flex-direction: column;
         padding: 30px;
       }
     `,
-    ],
-    imports: [
-      IbKaiTableModule, IbFilterModule, IbViewModule, IbDataExportModule, MatIconModule, IbTableActionModule, MatIconButton
-    ]
+  ],
+  imports: [
+    IbKaiTableModule, IbFilterModule, IbDataExportModule, MatIconModule, IbTableActionModule, MatIconButton
+  ]
 })
 export class IbKaiTableApiExamplePage {
   dataSource = new GithubDataSource();

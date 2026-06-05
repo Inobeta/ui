@@ -11,12 +11,10 @@ import {
   merge,
   of as observableOf,
 } from "rxjs";
-import { filter, map } from "rxjs/operators";
+import { map } from "rxjs/operators";
 import { IbFilter } from "../kai-filter/filter.component";
 import { IbFilterDef, IbFilterSyntax } from "../kai-filter/filter.types";
 import { applyFilter } from "../kai-filter/filters";
-import { IbTableViewGroup } from "../views/components/table-view-group/table-view-group.component";
-import { IView } from "../views/store/views/table-view";
 import { IbAggregateResult } from "./cells";
 import { IbColumn, IbSelectionColumn } from "./columns";
 import { IB_AGGREGATE } from "./tokens";
@@ -50,7 +48,6 @@ export class IbTableDataSource<
    */
   _renderChangesSubscription: Subscription | null = null;
 
-  _viewChangesSubscription: Subscription | null = null;
 
   tableName: string;
   /**
@@ -178,16 +175,7 @@ export class IbTableDataSource<
   private _columns: Record<string, IbColumn<unknown>> = {};
   private _sortedColumns: IbColumn<unknown>[] = [];
 
-  set view(view: IbTableViewGroup | null) {
-    this._view = view;
-    this._updateViewChangeSubscription();
-  }
 
-  get view() {
-    return this._view;
-  }
-
-  private _view: IbTableViewGroup | null;
 
   /**
    * Aggregated data by column name.
@@ -204,7 +192,7 @@ export class IbTableDataSource<
   /**
    * Used to trigger the aggregation of a column by the user.
    *
-   * IbTableViewGroup listens to this stream to detect state changes
+   * A view component may listen to this stream to detect state changes.
    */
   aggregate = new Subject<{ columnName: string; function: string }>();
   /**
@@ -398,63 +386,7 @@ export class IbTableDataSource<
     });
   }
 
-  private _updateViewChangeSubscription() {
-    this.view.defaultView.data = {
-      filter: this.filter.initialRawValue,
-      pageSize: this.paginator.pageSize,
-      aggregatedColumns: this.aggregatedColumns,
-      sort: {
-        ...this.sortState
-      }
-    };
-
-    this.view.viewDataAccessor = () => {
-      return {
-        filter: this.filter.selectedCriteria,
-        pageSize: this.paginator.pageSize,
-        aggregatedColumns: this.aggregatedColumns,
-        sort: {
-          ...this.sortState
-        },
-      }
-    };
-
-    const changes$ = merge(
-      this.filter.ibQueryUpdated,
-      this.paginator.page,
-      this.aggregate,
-      this.sort.sortChange
-    );
-    this.view.handleStateChanges(changes$);
-
-    this._viewChangesSubscription?.unsubscribe();
-    this._viewChangesSubscription = this.view._activeView
-     // Skip initial view, initialization come from querystring
-      .pipe(filter((view) => !!view && !view.initial))
-      .subscribe(this.handleViewChange);
-  }
-
-  private handleViewChange = (view: IView) => {
-    this.paginator.firstPage();
-    this.paginator.pageSize = view.data.pageSize;
-    this.aggregatedColumns = { ...view.data.aggregatedColumns };
-    this.filter.value = view.data.filter;
-    this.sortState = view.data.sort;
-    this.store.dispatch(urlStateActions.handleViewChange({
-      tableName: this.tableName,
-      params: {
-        view: view.id,
-        pageSize: view.data.pageSize,
-        page: 0,
-        filters: view.data.filter,
-        aggregatedColumns: view.data.aggregatedColumns,
-        sort: {
-          active: view.data.sort.active,
-          direction: view.data.sort.direction,
-        },
-      }
-    }));
-  };
+  
 
   /**
    * Returns a filtered data array where each row satisfies the filter.
@@ -575,7 +507,7 @@ export class IbTableDataSource<
    * Used by the MatTable. Called when it disconnects from the data source.
    */
   disconnect() {
-    this._viewChangesSubscription?.unsubscribe();
+    
     this._renderChangesSubscription?.unsubscribe();
     this._renderChangesSubscription = null;
   }
