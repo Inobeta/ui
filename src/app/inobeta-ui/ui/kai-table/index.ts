@@ -1,6 +1,8 @@
+export { IbRemoteFetchStrategy, IbSortState, IbPageState } from "./remote-strategy";
 export * from "./action";
 export * from "./cells";
 export * from "./columns";
+export * from "./remote-strategy";
 export * from "./remote-data-source";
 export * from "./rowgroup";
 export * from "./sort-header";
