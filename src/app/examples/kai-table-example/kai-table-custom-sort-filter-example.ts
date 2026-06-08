@@ -1,19 +1,17 @@
-import { Component, OnInit } from "@angular/core";
-import { MatSort } from "@angular/material/sort";
+import { Component } from "@angular/core";
 import { IbFilterModule, IbKaiTableModule } from "public_api";
-import { IbTableDataSource } from "../../inobeta-ui/ui/kai-table/table-data-source";
 import { IbUserExample, createNewUser } from "./users";
 
 @Component({
   selector: "ib-kai-table-custom-sort-filter-example",
   template: `
-    <ib-kai-table [dataSource]="dataSource" [displayedColumns]="displayedColumns">
+    <ib-kai-table [data]="data" [displayedColumns]="displayedColumns">
       <ib-filter>
         <ib-search-bar />
         <ib-boolean-filter name="isSummerFruit">Frutta estiva</ib-boolean-filter>
       </ib-filter>
 
-      <ib-text-column headerText="Name (sortable by pattern '%w.')" name="name" sort></ib-text-column>
+      <ib-text-column headerText="Name (sortable by pattern '%w.')" name="name" sort [sortingDataAccessor]="customNameSortingAccessor"></ib-text-column>
       <ib-text-column headerText="Fruit" name="fruit" sort></ib-text-column>
       <ib-number-column headerText="Amount" name="amount" sort></ib-number-column>
       <ib-text-column name="isSummerFruit" [filterDataAccessor]="seasonFilterAccessor"></ib-text-column>
@@ -23,10 +21,8 @@ import { IbUserExample, createNewUser } from "./users";
   imports: [IbKaiTableModule, IbFilterModule],
   styles: [`:host { display: flex; flex-direction: column; padding: 30px; }`],
 })
-export class IbKaiTableCustomSortFilterExamplePage implements OnInit {
-  private readonly data = Array.from({ length: 50 }, (_, k) => createNewUser(k + 1));
-
-  dataSource = new IbTableDataSource<IbUserExample>(this.data);
+export class IbKaiTableCustomSortFilterExamplePage {
+  data: IbUserExample[] = Array.from({ length: 50 }, (_, k) => createNewUser(k + 1));
   displayedColumns = ["name", "fruit", "amount"];
 
   seasonFilterAccessor = (data: IbUserExample): any => {
@@ -46,32 +42,11 @@ export class IbKaiTableCustomSortFilterExamplePage implements OnInit {
     return false;
   };
 
-  ngOnInit() {
-    const defaultSort = this.dataSource.sortData.bind(this.dataSource);
-    this.dataSource.sortData = (data: IbUserExample[], sort: MatSort): IbUserExample[] => {
-      if (!sort?.active || !sort?.direction) {
-        return data;
-      }
-
-      if (sort.active !== "name") {
-        return defaultSort(data, sort);
-      }
-
-      const isAsc = sort.direction === "asc";
-      const getInitial = (fullName: string) => {
-        if (!fullName) return "";
-        const parts = fullName.trim().split(/\s+/);
-        // assume last part is the initial like "A." -> take first char
-        const last = parts.length > 1 ? parts[parts.length - 1] : parts[0];
-        return (last.charAt(0) || "").toLowerCase();
-      };
-
-      return data.slice().sort((a, b) => {
-        const aInit = getInitial(a.name ?? "");
-        const bInit = getInitial(b.name ?? "");
-        const result = aInit.localeCompare(bInit);
-        return isAsc ? result : -result;
-      });
-    };
-  }
+  // custom sorting accessor for the 'name' column. Returns a comparable key used by the table
+  customNameSortingAccessor = (data: IbUserExample, name: string) => {
+    const fullName = data?.name ?? "";
+    const parts = fullName.trim().split(/\s+/);
+    const last = parts.length > 1 ? parts[parts.length - 1] : parts[0];
+    return (last.charAt(0) || "").toLowerCase();
+  };
 }

@@ -1,7 +1,6 @@
 import { Component } from "@angular/core";
 import { IbKaiTableModule } from "public_api";
 import { IB_COLUMN_OPTIONS } from "../../inobeta-ui/ui/kai-table/tokens";
-import { IbTableDataSource } from "../../inobeta-ui/ui/kai-table/table-data-source";
 import { createNewUser } from "./users";
 
 @Component({
@@ -19,7 +18,7 @@ import { createNewUser } from "./users";
     },
   ],
   template: `
-    <ib-kai-table [dataSource]="dataSource" [displayedColumns]="displayedColumns">
+    <ib-kai-table [data]="data" [displayedColumns]="displayedColumns">
       <ib-text-column name="name"></ib-text-column>
       <ib-text-column name="fruit"></ib-text-column>
       <ib-number-column name="amount"></ib-number-column>
@@ -37,8 +36,6 @@ import { createNewUser } from "./users";
   ],
 })
 export class IbKaiTableColumnOptionsExamplePage {
-  dataSource = new IbTableDataSource(
-    Array.from({ length: 50 }, (_, k) => createNewUser(k + 1))
-  );
+  data = Array.from({ length: 50 }, (_, k) => createNewUser(k + 1));
   displayedColumns = ["name", "fruit", "amount", "created_at"];
 }

@@ -1,5 +1,5 @@
-import { Component } from "@angular/core";
-import { GithubDataSource } from "./github-data-source";
+import { Component, inject, ViewChild } from "@angular/core";
+import { GithubFetchService } from "./github-data-source";
 import { IbDataExportModule, IbFilterModule, IbKaiTableModule, IbTableActionModule } from "public_api";
 import { MatIconModule } from "@angular/material/icon";
 import { MatIconButton } from "@angular/material/button";
@@ -7,9 +7,9 @@ import { MatIconButton } from "@angular/material/button";
 @Component({
   selector: "ib-kai-table-api-example",
   template: `
-    <ib-kai-table
+    <ib-kai-table #table
       [displayedColumns]="['created', 'state', 'number', 'title']"
-      [dataSource]="dataSource"
+      [remoteSource]="githubFetchService"
     >
       <ib-table-action-group>
         <button
@@ -63,31 +63,32 @@ import { MatIconButton } from "@angular/material/button";
   ]
 })
 export class IbKaiTableApiExamplePage {
-  dataSource = new GithubDataSource();
+  githubFetchService = inject(GithubFetchService);
+  @ViewChild('table') table: any;
 
   createdAtAccessor = (data: any, name: string) => data.created_at;
 
   setState(state: string) {
-    if (state === "loading") {
-      return (this.dataSource.state = "loading");
-    }
-
-    this.dataSource.state = "idle";
+    // table state is managed by the table component; if examples needs to simulate
+    // a state change it should call methods that affect the remote service or
+    // trigger a refresh on the table. No-op here.
   }
 
   refresh() {
-    this.dataSource.refresh();
+    this.table?.refresh();
   }
 
   simulateError() {
-    this.dataSource.href = "oops";
-    this.dataSource.refresh();
-    setTimeout(
-      () => {
-        this.dataSource.href = "https://api.github.com/search/issues";
-        this.dataSource.refresh();
-      },
-      1000
-    );
+    // mutate the service href to an invalid value to simulate an error, then
+    // restore it after a short delay and trigger a table refresh by dispatching
+    // the table-level refresh button (user can click it). The table's refresh
+    // button calls IbTable.refresh(); programmatic refresh would require a
+    // ViewChild reference to the component which we avoid here.
+    this.githubFetchService.href = "oops";
+    this.table?.refresh();
+    setTimeout(() => {
+      this.githubFetchService.href = "https://api.github.com/search/issues";
+      this.table?.refresh();
+    }, 1000);
   }
 }

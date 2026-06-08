@@ -1,17 +1,15 @@
 import { HttpClient } from "@angular/common/http";
-import { inject } from "@angular/core";
-import { MatPaginator } from "@angular/material/paginator";
-import { MatSort } from "@angular/material/sort";
+import { inject, Injectable } from "@angular/core";
 import { Observable, map } from "rxjs";
 import {
   IbDateQuery,
   IbTagQuery,
   IbTextQuery,
-} from "../../../inobeta-ui/ui/kai-filter/filter.types";
-import {
   IbFetchDataResponse,
-  IbTableRemoteDataSource,
-} from "../../../inobeta-ui/ui/kai-table/remote-data-source";
+  IbRemoteFetchStrategy,
+  IbSortState,
+  IbPageState,
+} from "public_api";
 
 type GithubApi = {
   items: GithubIssue[];
@@ -33,20 +31,20 @@ type GithubApiQueryFilter = {
   state: IbTagQuery<GithubPRState>;
 };
 
-export class GithubDataSource extends IbTableRemoteDataSource<
-  GithubIssue,
-  GithubApiQueryFilter
-> {
+@Injectable({ providedIn: "root" })
+export class GithubFetchService
+  implements IbRemoteFetchStrategy<GithubIssue, GithubApiQueryFilter>
+{
   private http = inject(HttpClient);
   href = "https://api.github.com/search/issues";
 
-  getQuery(filter: GithubApiQueryFilter) {
+  private getQuery(filter: GithubApiQueryFilter) {
     let q = "";
     if (filter?.title) {
       q = `${filter?.title.text} in:title`;
     }
 
-    if (filter?.state?.items.length) {
+    if (filter?.state?.items?.length) {
       q = `${q} is:${filter?.state.items[0]}`;
     }
 
@@ -58,27 +56,27 @@ export class GithubDataSource extends IbTableRemoteDataSource<
   }
 
   fetchData(
-    sort: MatSort,
-    page: MatPaginator,
-    filter: GithubApiQueryFilter
+    sort: IbSortState,
+    page: IbPageState,
+    filter?: GithubApiQueryFilter
   ): Observable<IbFetchDataResponse<GithubIssue>> {
-    console.log('filter', filter)
-    const query = this.getQuery(filter);
+    const query = this.getQuery(filter ?? ({} as any));
+    // GitHub API expects page numbers starting at 1
+    const pageIndex = (page?.pageIndex ?? 0) + 1;
+    const pageSize = page?.pageSize ?? 20;
+
     return this.http
       .get<GithubApi>(this.href, {
         params: {
           q: `repo:angular/components ${query}`,
-          sort: sort?.active,
-          order: sort?.direction,
-          page: page.pageIndex + 1,
-          per_page: page.pageSize,
+          sort: sort?.active ?? "",
+          order: sort?.direction ?? "",
+          page: String(pageIndex),
+          per_page: String(pageSize),
         },
       })
       .pipe(
-        map((result) => ({
-          data: result.items,
-          totalCount: result.total_count,
-        }))
+        map((result) => ({ items: result.items, totalCount: result.total_count }))
       );
   }
 }

@@ -1,7 +1,6 @@
 import { Component } from "@angular/core";
 import { IbKaiTableModule } from "public_api";
 import { IB_AGGREGATE } from "../../inobeta-ui/ui/kai-table/tokens";
-import { IbTableDataSource } from "../../inobeta-ui/ui/kai-table/table-data-source";
 import { IbUserExample, createNewUser } from "./users";
 
 @Component({
@@ -24,7 +23,7 @@ import { IbUserExample, createNewUser } from "./users";
     },
   ],
   template: `
-    <ib-kai-table [dataSource]="dataSource" [displayedColumns]="displayedColumns">
+    <ib-kai-table [data]="data" [displayedColumns]="displayedColumns">
       <ib-text-column headerText="Name" name="name"></ib-text-column>
       <ib-text-column headerText="Fruit" name="fruit"></ib-text-column>
       <ib-number-column headerText="Amount" name="amount" aggregate></ib-number-column>
@@ -32,9 +31,7 @@ import { IbUserExample, createNewUser } from "./users";
   `,
 })
 export class IbKaiTableCustomAggregateExamplePage {
-  dataSource = new IbTableDataSource<IbUserExample>(
-    Array.from({ length: 50 }, (_, k) => createNewUser(k + 1))
-  );
+  data = Array.from({ length: 50 }, (_, k) => createNewUser(k + 1));
 
   displayedColumns = ["name", "fruit", "amount"];
 }
