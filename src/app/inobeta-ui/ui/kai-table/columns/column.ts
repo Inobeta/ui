@@ -124,11 +124,11 @@ export class IbColumn<T> implements OnDestroy, OnInit {
   @Input({ transform: booleanAttribute }) aggregate = false;
 
   get aggregationFunction() {
-    return this._table.dataSource.aggregatedColumns?.[this.name];
+    return this._table.aggregatedColumns?.[this.name];
   }
 
   get aggregatedData() {
-    return this._table.dataSource.aggregatedData[this.name];
+    return this._table.aggregatedData[this.name];
   }
 
   @ContentChild(IbCellDef, { static: true }) ibCellDef: IbCellDef;
@@ -217,10 +217,7 @@ export class IbColumn<T> implements OnDestroy, OnInit {
   }
 
   handleAggregationChange(fun: string) {
-    this._table.dataSource.aggregate.next({
-      columnName: this.name,
-      function: fun,
-    });
+    this._table.aggregate.next({ columnName: this.name, function: fun });
   }
 
   /** Synchronizes the column definition name with the text column name. */

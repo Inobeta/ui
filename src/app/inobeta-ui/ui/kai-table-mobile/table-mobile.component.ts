@@ -1,17 +1,17 @@
 import {
   Component,
   ElementRef,
-  OnDestroy,
   ViewChild,
   computed,
-  effect,
   input,
   output,
   signal
 } from '@angular/core';
 
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressBar } from '@angular/material/progress-bar';
 import { MatSort } from '@angular/material/sort';
-import { Subscription } from 'rxjs';
+import { TranslatePipe } from '@ngx-translate/core';
 import { IDataExportSettings } from '../data-export/data-export.service';
 import { IbFilter } from '../kai-filter';
 import { IbFilterBase } from '../kai-filter/filters/base/filter-base';
@@ -19,31 +19,32 @@ import { IbKaiTableAction, } from "../kai-table/action";
 import { IbActionColumn } from "../kai-table/columns/action-column";
 import { IbColumn } from "../kai-table/columns/column";
 import { IbKaiRowGroupDirective } from "../kai-table/rowgroup";
-import { IbTableDataSource } from '../kai-table/table-data-source';
 import { IbKaiTableState, IbTableDef } from "../kai-table/table.types";
 import { IbKaiTableMobileInfiniteScrollComponent } from './table-mobile-infinitescroll.component';
 import { IbKaiTableMobileItemComponent } from './table-mobile-item.component';
 import { IbKaiTableMobileToolbarComponent } from './table-mobile-toolbar.component';
-import { MatProgressBar } from '@angular/material/progress-bar';
-import { MatIconModule } from '@angular/material/icon';
-import { TranslatePipe } from '@ngx-translate/core';
+
 @Component({
   selector: 'ib-kai-table-mobile',
   standalone: true,
   imports: [IbKaiTableMobileToolbarComponent, IbKaiTableMobileItemComponent, IbKaiTableMobileInfiniteScrollComponent, MatProgressBar, MatIconModule, TranslatePipe],
   template: `
     <div class="ib-kai-table-mobile">
-      @if (headerActions().length > 0 || filters().length > 0) {
-        <div class="ib-kai-table-mobile__sticky-header">
-          <ib-kai-table-mobile-toolbar
-            [headerActions]="headerActions()"
-            [filters]="filters()"
-            [sortableColumns]="sortableColumns()"
-            [currentSort]="currentSort()"
-            (doExport)="doExport.emit($event)"
-            (sortUpdated)="sortUpdate($event)"
-          ></ib-kai-table-mobile-toolbar>
-        </div>
+      @if(headerActions(); as headerActions) {
+        @if(filters(); as filters) {
+          @if (headerActions.length > 0 || filters.length > 0) {
+            <div class="ib-kai-table-mobile__sticky-header">
+              <ib-kai-table-mobile-toolbar
+                [headerActions]="headerActions"
+                [filters]="filters"
+                [sortableColumns]="sortableColumns()"
+                [currentSort]="currentSort()"
+                (doExport)="doExport.emit($event)"
+                (sortUpdated)="sortUpdate($event)"
+              ></ib-kai-table-mobile-toolbar>
+            </div>
+          }
+        }
       }
       @if (state() === 'loading') {
         <div class="ib-table__content__progress-bar">
@@ -57,14 +58,14 @@ import { TranslatePipe } from '@ngx-translate/core';
               [row]="row"
               [cardDataColumns]="cardDataColumns()"
               [cardActionColumns]="cardActionColumns()"
-              [rowGroup]="rowGroup()"
+              [rowGroup]="rowGroup() ?? null"
               ></ib-kai-table-mobile-item>
           }
 
           @if (hasMoreRows()) {
             <ib-kai-table-mobile-infinitescroll
               [hasMoreRows]="hasMoreRows()"
-              [data]="data()"
+              [data]="data() ?? []"
               (visibleCountChanged)="visibleCount.set($event)"
             ></ib-kai-table-mobile-infinitescroll>
           }
@@ -147,9 +148,9 @@ import { TranslatePipe } from '@ngx-translate/core';
     }
   `]
 })
-export class IbKaiTableMobileComponent implements OnDestroy {
+export class IbKaiTableMobileComponent {
   state = input<IbKaiTableState>('idle');
-  dataSource = input<IbTableDataSource<any>>();
+  data = input<any[]>();
   tableName = input<string>(btoa(window.location.pathname + window.location.hash));
   tableDef = input<Partial<IbTableDef>>({});
   displayedColumns = input<string[]>([]);
@@ -170,29 +171,11 @@ export class IbKaiTableMobileComponent implements OnDestroy {
   visibleCount = signal(this.pageSize());
   filtersOpen = signal(false);
 
-  data = signal<any[]>([]);
-  datasourceConnection: Subscription | null = null;
-  currentSort = signal<{ active: string, direction: 'asc' | 'desc' } | null>(null);
+  // rows are provided by the parent via inputs
+  // current sort state is provided by the parent (from the desktop table)
+  currentSort = input<{ active: string, direction: 'asc' | 'desc' } | null>(null);
 
-  constructor() {
-    effect(() => {
-      const datasource = this.dataSource();
-      if (datasource) {
-        if (this.datasourceConnection) this.datasourceConnection.unsubscribe()
-        this.datasourceConnection = datasource.connect().asObservable().subscribe(data => {
-          this.data.set(data);
-          this.currentSort.set(datasource.sort ? { active: datasource.sort.active, direction: datasource.sort.direction as 'asc' | 'desc' } : null);
-        }
-        )
-      }
-    })
-  }
-
-  ngOnDestroy() {
-    if (this.datasourceConnection) {
-      this.datasourceConnection.unsubscribe();
-    }
-  }
+  // No constructor side-effects: data and sort are supplied by the parent via inputs
 
   sortableColumns = computed(() => {
     const cols = this.columns() ?? [];
@@ -243,8 +226,8 @@ export class IbKaiTableMobileComponent implements OnDestroy {
   }
 
   sortUpdate(columnName: string) {
-    const currentSort = this.dataSource().sort;
-    if (currentSort.active === columnName) {
+    const currentSort = this.currentSort();
+    if (currentSort && currentSort.active === columnName) {
       const newDirection = currentSort.direction === 'asc' ? 'desc' : 'asc';
       const newSort: MatSort = new MatSort();
       newSort.active = columnName;

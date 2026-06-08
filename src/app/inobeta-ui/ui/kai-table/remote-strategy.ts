@@ -1,11 +1,15 @@
 import { Observable } from 'rxjs';
-import type { IbFetchDataResponse } from './remote-data-source';
 
 export type IbSortState = { active: string; direction: 'asc' | 'desc' | '' };
 
 export type IbPageState = { pageIndex: number; pageSize: number };
 
-export { IbFetchDataResponse } from './remote-data-source';
+export type IbFetchDataResponse<T> = {
+  /** Subset of rows returned by the server. */
+  items: T[];
+  /** Total row count of the query without pagination. */
+  totalCount: number;
+};
 
 export interface IbRemoteFetchStrategy<T, V = Record<string, any>> {
   fetchData(

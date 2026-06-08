@@ -25,8 +25,8 @@
     </div>
     }
 
-    <table class="ib-table" mat-table matSort multiTemplateDataRows [matSortActive]="this.dataSource.sortState.active"
-      [matSortDirection]="this.dataSource.sortState.direction" [dataSource]="dataSource">
+    <table class="ib-table" mat-table matSort multiTemplateDataRows [matSortActive]="getMatSortActive()"
+      [matSortDirection]="getMatSortDirection()" [dataSource]="renderedRows()">
       <ng-content select="ib-selection-column" />
       <ng-content />
 
@@ -44,7 +44,7 @@
 
       <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="ib-table__row"
         [class.ib-table__row--expanded]="expandedElement === row"
-        [class.ib-table__row--selected]="activeRouteId() && row[activeRowParams()?.dataParamId]?.toString() === activeRouteId()"
+        [class.ib-table__row--selected]="activeRouteId() && row[activeRowParams()?.dataParamId ?? -1]?.toString() === activeRouteId()"
         (click)="rowGroup && (expandedElement = expandedElement === row ? null : row)"></tr>
       @if (rowGroup) {
       <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="ib-table__row-group"
@@ -73,15 +73,15 @@
     </table>
   </section>
   <mat-paginator class="ib-table__paginator" [disabled]="state !== 'idle'"
-    [style.display]="tableDef.paginator.hide ? 'none' : 'block'" [pageSize]="tableDef.paginator.pageSize"
-    [showFirstLastButtons]="tableDef.paginator.showFirstLastButtons"
-    [pageSizeOptions]="tableDef.paginator.pageSizeOptions"
+    [style.display]="tableDef.paginator?.hide ? 'none' : 'block'" [pageSize]="tableDef.paginator?.pageSize"
+    [showFirstLastButtons]="tableDef.paginator?.showFirstLastButtons"
+    [pageSizeOptions]="tableDef.paginator?.pageSizeOptions ?? []"
     (page)="setPaginatorState({ pageIndex: $event.pageIndex, pageSize: $event.pageSize })" />
 </div>
 <div class="ib-table-mobile">
-  <ib-kai-table-mobile [tableName]="tableName" [displayedColumns]="displayedColumns" [dataSource]="dataSource"
-    [state]="state" [columns]="mobileColumns()" [rowGroup]="mobileRowGroup()" [filter]="mobileFilter()"
-    [filters]="mobileFilters()" [headerActions]="mobileHeaderActions()" [actionColumn]="mobileActionColumn()"
-    (doExport)="doExport($event)" (sortUpdated)="updateSortFromMobile($event)">
+  <ib-kai-table-mobile [tableName]="tableName" [displayedColumns]="displayedColumns" [data]="renderedRows()"
+    [currentSort]="sortState()" [state]="state" [columns]="mobileColumns()" [rowGroup]="mobileRowGroup()"
+    [filter]="mobileFilter()" [filters]="mobileFilters()" [headerActions]="mobileHeaderActions()"
+    [actionColumn]="mobileActionColumn()" (doExport)="doExport($event)" (sortUpdated)="updateSortFromMobile($event)">
   </ib-kai-table-mobile>
 </div>

@@ -3,7 +3,22 @@ import { InjectionToken } from '@angular/core';
 /**
  * Used to provide a table to some of the sub-components without causing a circular dependency.
  */
-export const IB_TABLE = new InjectionToken<any>("IbTable");
+export interface IbTablePublic {
+  matTable?: any;
+  sort?: any;
+  aggregatedData?: Record<string, any>;
+  aggregatedColumns?: Record<string, string>;
+  aggregate?: { next: (v: any) => void; pipe?: any };
+  displayedColumns?: string[];
+  dataSource?: any;
+  tableName?: string;
+  selectionColumn?: any;
+  state?: string;
+  paginator?: any;
+  isRemote?: boolean;
+}
+
+export const IB_TABLE = new InjectionToken<IbTablePublic>("IbTable");
 
 /** Used to provide a column to the aggregate cell of a given column. */
 export const IB_COLUMN = new InjectionToken<any>("IbColumn");

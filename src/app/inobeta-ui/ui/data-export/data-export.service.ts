@@ -1,7 +1,6 @@
 import { Inject, Injectable, InjectionToken } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { IbColumn } from "../kai-table/columns/column";
-import { IbTableDataSource } from "../kai-table/table-data-source";
 import { IbDataExportProvider } from "./provider";
 import {
   IbTableDataExportDialog,
@@ -11,6 +10,21 @@ import {
 export interface IDataExportSettings {
   format: "xlsx" | "pdf" | "csv";
   dataset: "all" | "selected" | "current";
+}
+
+/**
+ * Context object with minimal table state required for exporting.
+ * This decouples the export service from the concrete data-source implementation.
+ */
+export interface IbTableExportContext {
+  filteredData: unknown[];
+  sortedColumns: IbColumn<unknown>[];
+  /** Pure function that orders data according to current sort state */
+  _orderData: (data: unknown[]) => unknown[];
+  /** Pure function that paginates ordered data according to current paginator state */
+  _pageData: (data: unknown[]) => unknown[];
+  /** Optional list of explicitly selected rows */
+  selected?: unknown[];
 }
 
 export const OVERRIDE_EXPORT_FORMATS = new InjectionToken<IbDataExportProvider>(
@@ -50,27 +64,25 @@ export class IbDataExportService {
    */
   _exportFromTable(
     tableName: string,
-    dataSource: IbTableDataSource<unknown>,
+    context: IbTableExportContext,
     settings: IDataExportSettings
   ) {
-    let data: unknown[];
+    let data: unknown[] = [];
     if (settings.dataset === "all") {
-      data = dataSource._orderData(dataSource.filteredData);
+      data = context._orderData(context.filteredData || []);
     }
 
     if (settings.dataset === "selected") {
-      data = dataSource._orderData(
-        dataSource.selectionColumn?.selection.selected
-      );
+      data = context._orderData(context.selected || []);
     }
 
     if (settings.dataset === "current") {
-      data = dataSource._pageData(
-        dataSource._orderData(dataSource.filteredData)
+      data = context._pageData(
+        context._orderData(context.filteredData || [])
       );
     }
 
-    const columns = dataSource.sortedColumns.filter(
+    const columns = (context.sortedColumns || []).filter(
       (c) => !c.name.startsWith("ib-")
     );
 

@@ -36,12 +36,9 @@ import { IbDataExportProvider } from "../data-export/provider";
 import { IbFilterModule } from "../kai-filter";
 import { IbTableActionModule } from "./action";
 import { IbAggregateCell } from "./cells";
-import {
-  IbFetchDataResponse,
-  IbTableRemoteDataSource,
-} from "./remote-data-source";
+import { IbFetchDataResponse, IbRemoteFetchStrategy } from "./remote-strategy";
 import { UrlStateEffects } from "./store/url-state/effects";
-import { IbTableDataSource } from "./table-data-source";
+// IbTableDataSource removed; tests use the table's dataSource shape instead
 import { IbTableUrlService } from "./table-url.service";
 import { IbTable } from "./table.component";
 import { IbKaiTableModule } from "./table.module";
@@ -305,7 +302,7 @@ describe("IbTable", () => {
     });
 
     it("should apply", async () => {
-      const dataSource = component.dataSource as IbTableDataSource<any>;
+    const dataSource = component.dataSource as any;
       const sort = await loader.getHarness(MatSortHarness);
       const [_, number] = await sort.getSortHeaders();
       let active = await sort.getActiveHeader();
@@ -448,16 +445,17 @@ class IbTableWithRowGroupApp {
 }
 
 @Injectable()
-class IbTestDataSource extends IbTableRemoteDataSource<any> {
+class IbTestDataSource implements IbRemoteFetchStrategy<any, any> {
   fetchData(
     sort: MatSort,
     page: MatPaginator,
   ): Observable<IbFetchDataResponse<any>> {
     return timer(1).pipe(map(() => ({
-      data: [{ name: "alice" }],
+      items: [{ name: "alice" }],
       totalCount: 1,
     })));
   }
+  refresh() {}
 }
 
 @Component({

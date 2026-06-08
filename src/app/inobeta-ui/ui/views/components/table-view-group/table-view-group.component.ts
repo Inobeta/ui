@@ -65,11 +65,11 @@ export class IbTableViewGroup implements OnDestroy {
 
   @Input() set viewGroupName(name) {
     this._viewGroupName = name;
-    const activeView = this.tableUrl.getActiveView(name);
+    const activeView = (this.tableUrl as any).getActiveView ? (this.tableUrl as any).getActiveView(name) : null;
     this.views$ = this.store.select(selectTableViews(this._viewGroupName)).pipe(
-      tap((views) => {
+      tap((views: any) => {
         if (activeView) {
-          let view = views.find((v) => v.id === activeView);
+          let view = (views || []).find((v: any) => v.id === activeView);
           if (!view) {
             view = this.defaultView;
           }
