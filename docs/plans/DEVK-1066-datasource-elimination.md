@@ -87,6 +87,7 @@ Step 1 ────────────────────────�
 Step 2 ──────────────────────────────────────────────────── independent
 Steps 3 → 4 → 5 → 6 → 7 → 8 ─── compile-chain (B)
 Steps 9, 10 ───────────────────── depend on Step 8
+Steps 11 → 12 ─────────────────── depend on Step 8  (table.component.ts typing & logic)
 ```
 
 ---
@@ -958,6 +959,372 @@ write "NEED CLARIFICATION" and take no action
 
 ---
 
+### Step 11 — Eliminate all `any` in `table.component.ts`; define proper types [DEPENDS ON STEP 8]
+
+**Target executor:** `kai-table-executor`
+
+**Allowed files:**
+- `src/app/inobeta-ui/ui/kai-table/table.component.ts`
+
+**Read-only reference:**
+- `src/app/inobeta-ui/ui/kai-table/remote-strategy.ts`
+- `src/app/inobeta-ui/ui/kai-table/store/url-state/interfaces.ts`
+- `src/app/inobeta-ui/ui/kai-table/columns/column.ts`
+- `src/app/inobeta-ui/ui/kai-filter/filter.types.ts`
+
+**Objective:** Replace every `any` in `table.component.ts` with the correct type.
+Define a file-local `IbTableDataSourceShim` interface for the `dataSource` shim.
+Properly type all signals, method parameters, and class fields.
+Move the inline `import('./remote-strategy')` to the top-level import block.
+
+This step is **types-only**: no logic changes. It is expected to surface 3–5 TypeScript
+compile errors that confirm the logic bugs fixed in Step 12. List those errors in the
+step output but do NOT fix them.
+
+**Key requirements:**
+
+1. Add top-level imports (before `@Component`):
+   - `import { IbFetchDataResponse, IbRemoteFetchStrategy, IbSortState } from './remote-strategy'`
+   - `import { IbFilterSyntaxExtended, IbFilterDef } from '../kai-filter/filter.types'` (or from `'../kai-filter'` if re-exported)
+   - `import { IbKaiTableNamedParams } from './store/url-state/interfaces'`
+
+2. Define a file-local (non-exported) interface before `@Component`:
+   ```typescript
+   /** @internal Legacy shim retained during the datasource-elimination transition. */
+   interface IbTableDataSourceShim {
+     data: unknown[];
+     filteredData: unknown[];
+     sortedColumns: IbColumn<unknown>[];
+     filterPredicate: (r: unknown, f: IbFilterSyntaxExtended | null) => boolean;
+     _orderData: (d: unknown[]) => unknown[];
+     _pageData: (d: unknown[]) => unknown[];
+     tableName?: string;
+     paginator?: MatPaginator;
+     sort?: MatSort;
+     aggregatedColumns?: Record<string, string>;
+     selectionColumn?: IbSelectionColumn;
+     filter?: IbFilter;
+     columns?: IbColumn<unknown>[];
+   }
+   ```
+   **Do NOT add `applySortOnColumn` to this interface** — its absence intentionally surfaces a TypeScript error on the call sites (lines ~533 and ~538) that confirms the bug fixed in Step 12.
+
+3. Update class-level field types:
+   - `@ContentChildren(IbColumn) columns!: QueryList<IbColumn<unknown>>`
+   - `@ViewChild(MatTable) matTable!: MatTable<unknown>`
+   - `expandedElement: unknown`
+   - `actionPortals: Portal<unknown>[] = []`
+   - `@Input() dataSource: IbTableDataSourceShim = { ... }` (initializer body unchanged)
+   - `private _data = signal<unknown[]>([])`
+   - `private _columnsRegistry = signal<IbColumn<unknown>[]>([])`
+   - `private _columnsMap: Record<string, IbColumn<unknown>> = {}`
+   - `private _sortedColumns: IbColumn<unknown>[] = []`
+   - `remoteSource = input<IbRemoteFetchStrategy<unknown, unknown>>()`
+
+4. URL-state signal and derived signals — replace `signal<any>(null)`, `any` fields:
+   - `private _urlState = signal<IbKaiTableNamedParams | undefined>(undefined)`
+   - Remove the `private urlStateSignal: any` field entirely; replace all `this.urlStateSignal()` call sites with `this._urlState()` directly.
+   - `sortState: Signal<IbSortState>` — typed computed:
+     `computed<IbSortState>(() => this._urlState()?.sort ?? { active: '', direction: '' })`
+     (`IbKaiTableNamedParams.sort` is `Sort` from `@angular/material/sort`, structurally identical to `IbSortState`)
+   - `filtersState: Signal<IbFilterSyntaxExtended | undefined>` —
+     `computed<IbFilterSyntaxExtended | undefined>(() => this._urlState()?.filters)`
+   - `pageState: Signal<number>` —
+     `computed<number>(() => this._urlState()?.page ?? 0)`
+     (Store's `IbKaiTableNamedParams.page` is a plain `number` representing the page index, not `{ pageIndex: number }`)
+   - `pageSizeState: Signal<number>` —
+     `computed<number>(() => this._urlState()?.pageSize ?? this.tableDef.paginator?.pageSize ?? 20)`
+
+5. `renderedRows` and `_filteredLength`:
+   - `renderedRows: Signal<unknown[]>` — remove `!` non-null assertion; keep existing computed body, just add type parameter: `computed<unknown[]>(() => { ... })`
+   - `private _filteredLength: Signal<number>` — replace `ReturnType<typeof computed>` with `Signal<number>`
+
+6. Method signature updates (body unchanged):
+   - `private filterPredicate(data: unknown, filter: IbFilterSyntaxExtended | null): boolean`
+     — in body: `condition` coming from `Object.entries(filters)` is `IbFilterDef`; cast `applyFilter(condition as IbFilterDef, filterValue)` if needed
+   - `private applySearchBarFilter(data: unknown, filter: IbFilterDef | string | undefined): boolean`
+     — `applyFilter(filter as IbFilterDef, dataStr)` cast unchanged
+   - `public _orderData(data: unknown[]): unknown[]`
+   - `public _pageData(data: unknown[]): unknown[]`
+
+7. Remote effect subscribe callback: `.subscribe((result: IbFetchDataResponse<unknown>) => { ... })`. Replace `result: any` with `result: IbFetchDataResponse<unknown>`. Also type the `of({...})` early-return in `switchMap` as `Observable<IbFetchDataResponse<unknown>>`.
+
+8. Aggregation loop: `this.aggregationFunctions.find(f => f.id === fun)` — remove `f: any` explicit annotation on the predicate parameter; it is inferred.
+
+**Expected TypeScript errors after this step (do NOT fix; document and stop):**
+- `this.dataSource.applySortOnColumn(this.displayedColumns)` × 2 — method not on `IbTableDataSourceShim`
+- `page?.pageIndex` or `this.pageState?.()?.pageIndex` × 2 — property `pageIndex` does not exist on `number`
+- `this.dataSource.columns[sort.active]` — element access on array by string may be flagged depending on `noImplicitAny` settings
+
+**Constraints:**
+- Edit only `table.component.ts`.
+- Do not change any logic, method bodies, or reactive pipelines.
+- Do not fix the compile errors listed above — Step 12 will do that.
+- Do not touch `public_api.ts` or any barrel.
+
+**Validation:**
+- `npm run lint` exits 0.
+- `grep ": any" src/app/inobeta-ui/ui/kai-table/table.component.ts` returns 0 matches
+  (except potentially inside string literals or comments).
+
+**Stop condition:** If removing the `urlStateSignal` wrapper causes more than 3 additional type errors beyond the expected ones, restore `urlStateSignal` as `Signal<IbKaiTableNamedParams | undefined>` (typed, not `any`) and stop.
+
+---
+
+~~~
+## TASK:
+Replace every `any` in `table.component.ts` with the correct TypeScript type.
+This is a type-only refactor — no logic changes.
+
+## CONTEXT:
+Repo: inobeta-ui. File: `src/app/inobeta-ui/ui/kai-table/table.component.ts`.
+After Steps 3–8 the file compiles but uses `any` for the legacy `dataSource` shim,
+all signal fields, method parameters, and the remote fetch input.
+`IbKaiTableNamedParams.page` is `number` (page index). `IbKaiTableNamedParams.sort` is
+`Sort` from `@angular/material/sort` — structurally identical to `IbSortState`.
+`IbTableDataSourceShim` is a new local interface; it must NOT include `applySortOnColumn`
+so the missing-method type errors appear as confirmation of bugs fixed in Step 12.
+
+## OBJECTIVE:
+After this step `table.component.ts` has zero `any` fields, all signals carry explicit
+type parameters, and the `dataSource` property is typed as the new local
+`IbTableDataSourceShim` interface.
+3–5 TypeScript compile errors will appear; they must be documented and left unfixed.
+
+## REQUIREMENTS:
+1. Add imports: `IbFetchDataResponse`, `IbRemoteFetchStrategy`, `IbSortState` from
+   `./remote-strategy`; `IbFilterSyntaxExtended` from `../kai-filter`; `IbFilterDef` from
+   `../kai-filter/filter.types`; `IbKaiTableNamedParams` from `./store/url-state/interfaces`.
+2. Define file-local `interface IbTableDataSourceShim` before `@Component` (see step
+   requirements above for all fields). Do NOT include `applySortOnColumn`.
+3. Change `@Input() dataSource: any` → `@Input() dataSource: IbTableDataSourceShim`.
+   Initializer body is unchanged.
+4. Change `private _urlState = signal<any>(null)` →
+   `private _urlState = signal<IbKaiTableNamedParams | undefined>(undefined)`.
+5. Remove `private urlStateSignal: any`; replace all `urlStateSignal()` call-sites with
+   `this._urlState()`.
+6. Retype four derived signals with explicit generics:
+   `sortState: Signal<IbSortState>`, `filtersState: Signal<IbFilterSyntaxExtended | undefined>`,
+   `pageState: Signal<number>`, `pageSizeState: Signal<number>`.
+   Use the formulas documented in the step requirements.
+7. `renderedRows: Signal<unknown[]>` (remove `!`), `_filteredLength: Signal<number>`.
+8. Update field types: `_data`, `_columnsRegistry`, `_columnsMap`, `_sortedColumns`,
+   `matTable`, `columns`, `expandedElement`, `actionPortals`, `remoteSource` as specified.
+9. Update method signatures: `filterPredicate`, `applySearchBarFilter`, `_orderData`,
+   `_pageData` — parameters typed; bodies unchanged (add casts where TypeScript requires).
+10. Type remote subscribe: `.subscribe((result: IbFetchDataResponse<unknown>) => { ... })`.
+11. Remove `(f: any)` annotation in aggregation `find` predicate.
+
+## CONSTRAINTS:
+- Edit ONLY `table.component.ts`.
+- Do NOT change method bodies or reactive logic.
+- Do NOT fix the compile errors for `applySortOnColumn` and `pageIndex` accesses.
+- Do NOT add `applySortOnColumn` to `IbTableDataSourceShim`.
+
+## OUTPUT:
+Updated `table.component.ts` + a bulleted list of the TypeScript compile errors found.
+
+## ACCEPTANCE CRITERIA:
+- `grep ": any" src/app/inobeta-ui/ui/kai-table/table.component.ts` returns 0.
+- `npm run lint` exits 0.
+- Output lists at least 2 TypeScript compile errors (the `applySortOnColumn` ones).
+
+## IF UNSURE:
+write "NEED CLARIFICATION" and take no action
+~~~
+
+---
+
+### Step 12 — Fix sort, filter, and pagination logic bugs [DEPENDS ON STEP 11]
+
+**Target executor:** `kai-table-executor`
+
+**Allowed files:**
+- `src/app/inobeta-ui/ui/kai-table/table.component.ts`
+
+**Read-only reference:**
+- `src/app/inobeta-ui/ui/kai-table/store/url-state/interfaces.ts`
+- `src/app/inobeta-ui/ui/kai-table/store/url-state/actions.ts`
+- `src/app/inobeta-ui/ui/kai-table/remote-strategy.ts`
+
+**Objective:** Fix the 6 logic bugs that cause sorting, filtering, and pagination to be
+silently broken. Resolve all TypeScript compile errors introduced by Step 11.
+After this step `ng build` and `npm run test-ci` must both pass.
+
+**Bug inventory and required fixes:**
+
+**Bug 1 — Sorting never works.**
+`renderedRows` uses `this.dataSource.columns[sort.active]` to look up the column for
+sorting. `dataSource.columns` is `IbColumn<unknown>[]` (an array); indexing it by a string
+key (`sort.active`) always returns `undefined`. The sort is silently skipped every time.
+Fix: replace with `this._columnsMap[sort.active]`.
+
+**Bug 2 — Filtering never works.**
+`this._columnsMap` is declared (`private _columnsMap: Record<string, IbColumn<unknown>>`)
+but is never populated. `filterPredicate` calls `this._columnsMap[columnName]` and always
+gets `undefined`, throwing `Error('column not found')` for any named-column filter.
+Fix: populate `_columnsMap` (and `_sortedColumns`) in `ngAfterContentInit`. Keep it
+current on `columns.changes`:
+```typescript
+const syncColumnsMap = (cols: IbColumn<unknown>[]) => {
+  this._columnsMap = Object.fromEntries(cols.map(c => [c.name, c]));
+  this._sortedColumns = (this.displayedColumns ?? [])
+    .map(n => this._columnsMap[n])
+    .filter((c): c is IbColumn<unknown> => !!c);
+};
+syncColumnsMap(this.columns.toArray());
+this.columns.changes
+  .pipe(takeUntil(this._destroyed))
+  .subscribe(cols => syncColumnsMap(cols.toArray()));
+```
+Place this after the `this.dataSource.columns = this.columns.toArray()` line and remove
+the existing duplicate `columns.changes` subscription that only updates `this.dataSource.columns`.
+
+**Bug 3 — Pagination always shows page 0.**
+`pageState` is `Signal<number>` (the page index from `IbKaiTableNamedParams.page`), but
+the code still accesses `.pageIndex` on the returned number, which is always `undefined`.
+Fix in two places:
+- In `renderedRows` computed (the `start` calculation): replace
+  `(page?.pageIndex ?? 0) * (pageSize ?? this.tableDef.paginator?.pageSize)` with
+  `this.pageState() * this.pageSizeState()`.
+  Remove the intermediate `page` / `pageSize` const if they become unused; or re-name
+  them to `pageIndex` / `pageSize` for clarity.
+- In the paginator sync `effect()`: replace
+  `this.paginator.pageIndex = Number(this.pageState?.()?.pageIndex ?? 0)` with
+  `this.paginator.pageIndex = this.pageState()`.
+  Similarly remove `?.` optional chaining on `pageSizeState` — it is a proper `Signal<number>`:
+  `this.paginator.pageSize = this.pageSizeState()`.
+
+**Bug 4 — Runtime error on every `ngAfterContentInit`.**
+`this.dataSource.applySortOnColumn(this.displayedColumns)` is called twice (lines ~533
+and ~538) but `applySortOnColumn` does not exist on `IbTableDataSourceShim`.
+Fix: remove both calls. `_columnsMap` and `_sortedColumns` are now kept current by the
+`syncColumnsMap` helper introduced in Bug 2 fix.
+
+**Bug 5 — `updateSortFromMobile` bypasses the Redux pipeline.**
+`updateSortFromMobile` writes directly to `this.dataSource.sort.active/direction` and
+emits `sortChange`. This mutates the legacy shim but does not dispatch to the store, so
+the `renderedRows` computed never sees the new sort state.
+Fix: replace the method body entirely with a store dispatch:
+```typescript
+updateSortFromMobile(newSort: MatSort) {
+  this.store.dispatch(
+    urlStateActions.setSort({
+      tableName: this.tableName,
+      params: { active: newSort.active, direction: newSort.direction },
+    })
+  );
+}
+```
+
+**Bug 6 — `doExport` sends empty `sortedColumns`.**
+`this.dataSource.sortedColumns` is initialized as `[]` and never updated. `doExport` uses
+it to determine the export column order, so all exports get an empty column list.
+Fix in `doExport`: replace `sortedColumns: this.dataSource.sortedColumns` with
+`sortedColumns: this._sortedColumns`.
+
+**Additional cleanups (required to resolve all TypeScript errors):**
+
+- In `renderedRows`: replace `data.filter((r) => this.dataSource.filterPredicate(r as any, filters))`
+  with `data.filter(r => this.filterPredicate(r, filters ?? null))`.
+- In `_filteredLength` computed: same replacement — use `this.filterPredicate(r, filters ?? null)`.
+- In the remote effect: build `IbPageState` using the now-typed signals:
+  `const page: IbPageState = { pageIndex: this.pageState(), pageSize: this.pageSizeState() }`.
+  Remove the `?.pageIndex ?? 0` pattern; remove optional chaining on `pageSizeState`.
+
+**Constraints:**
+- Edit only `table.component.ts`.
+- Do not change public `@Input()` API.
+- Do not change aggregation logic.
+- Do not introduce new `any` types.
+- Do not modify the `dsInit` helper beyond removing `applySortOnColumn` calls.
+
+**Validation:**
+- `ng build --configuration=development` exits 0.
+- `npm run lint` exits 0.
+- `npm run test-ci` exits 0.
+- `grep "applySortOnColumn" src/app/inobeta-ui/ui/kai-table/table.component.ts` returns 0.
+- `grep "this\.dataSource\.columns\[" src/app/inobeta-ui/ui/kai-table/table.component.ts` returns 0.
+- `grep "pageIndex" src/app/inobeta-ui/ui/kai-table/table.component.ts` should show 0 accesses of `.pageIndex` on a numeric signal result.
+
+**Stop condition:** If fixing any bug requires changes outside `table.component.ts`,
+stop and report which file needs to change before proceeding.
+
+---
+
+~~~
+## TASK:
+Fix six logic bugs in `table.component.ts` that cause sort, filter, and pagination to be
+silently broken. All TypeScript errors from Step 11 must be resolved.
+
+## CONTEXT:
+Repo: inobeta-ui. File: `src/app/inobeta-ui/ui/kai-table/table.component.ts`.
+After Step 11 the file has correct types but several TypeScript compile errors and 6 logic
+bugs documented below. This step must fix all of them.
+
+Key type facts (from Step 11):
+- `pageState: Signal<number>` — page index (maps to `IbKaiTableNamedParams.page: number`)
+- `pageSizeState: Signal<number>` — page size
+- `_columnsMap: Record<string, IbColumn<unknown>>` — populated in THIS step
+- `_sortedColumns: IbColumn<unknown>[]` — populated in THIS step
+- `dataSource.columns` is `IbColumn<unknown>[]` (array), NOT a map
+
+## OBJECTIVE:
+After this step:
+- `renderedRows` correctly sorts and filters using `_columnsMap`.
+- Pagination reads `pageState()` as a plain number.
+- `_columnsMap` and `_sortedColumns` are populated in `ngAfterContentInit`.
+- `updateSortFromMobile` dispatches to the NgRx store.
+- `doExport` uses `_sortedColumns`.
+- `ng build` and `npm run test-ci` both pass.
+
+## REQUIREMENTS:
+1. **Bug 1 (sorting):** In `renderedRows`, replace `this.dataSource.columns[sort.active]`
+   with `this._columnsMap[sort.active]`.
+2. **Bug 2 (filtering / _columnsMap never populated):** In `ngAfterContentInit`, add
+   `syncColumnsMap` helper (see step plan for full snippet). Call it after
+   `this.dataSource.columns = this.columns.toArray()`. Merge it with the existing
+   `columns.changes` subscription (replace the old subscription that only updated
+   `this.dataSource.columns`).
+3. **Bug 3 (pagination):** In `renderedRows`, change `start` calculation to
+   `const start = this.pageState() * this.pageSizeState()` and slice accordingly.
+   In the paginator sync `effect()`, change `pageIndex` and `pageSize` assignments to
+   use `this.pageState()` and `this.pageSizeState()` directly (no `?.pageIndex`).
+4. **Bug 4 (applySortOnColumn):** Remove both calls to
+   `this.dataSource.applySortOnColumn(this.displayedColumns)`.
+5. **Bug 5 (updateSortFromMobile):** Replace method body with
+   `this.store.dispatch(urlStateActions.setSort({ tableName: this.tableName, params: { active: newSort.active, direction: newSort.direction } }))`.
+6. **Bug 6 (doExport):** Change `sortedColumns: this.dataSource.sortedColumns` to
+   `sortedColumns: this._sortedColumns` in the `doExport` context object.
+7. **TypeScript cleanup:** Replace `this.dataSource.filterPredicate(r as any, filters)` with
+   `this.filterPredicate(r, filters ?? null)` in both `renderedRows` and `_filteredLength`.
+8. **Remote effect:** Build `const page: IbPageState = { pageIndex: this.pageState(), pageSize: this.pageSizeState() }`.
+   Remove `?.pageIndex ?? 0` and optional chaining on `pageSizeState`.
+
+## CONSTRAINTS:
+- Edit ONLY `table.component.ts`.
+- Do NOT change any public `@Input()` declarations.
+- Do NOT change aggregation logic or the `dsInit` helper (beyond removing `applySortOnColumn`).
+- Do NOT introduce new `any` types.
+
+## OUTPUT:
+Updated `table.component.ts`.
+
+## ACCEPTANCE CRITERIA:
+- `ng build --configuration=development` exits 0.
+- `npm run lint` exits 0.
+- `npm run test-ci` exits 0.
+- `grep "applySortOnColumn" src/app/inobeta-ui/ui/kai-table/table.component.ts` returns 0.
+- `grep "this\.dataSource\.columns\[" src/app/inobeta-ui/ui/kai-table/table.component.ts` returns 0.
+- `grep "\.pageIndex" src/app/inobeta-ui/ui/kai-table/table.component.ts` returns 0
+  (no numeric signal result has `.pageIndex` accessed).
+
+## IF UNSURE:
+write "NEED CLARIFICATION" and take no action
+~~~
+
+---
+
 ## 6. Impacted Areas
 
 | File / Symbol | Change |
@@ -997,12 +1364,14 @@ write "NEED CLARIFICATION" and take no action
 ## 8. Validation Checklist
 
 - [ ] `npm run lint` — passes after each step
-- [ ] `ng build --configuration=development` — passes after each Chain-B step
-- [ ] `npm run test-ci` — must pass after Step 8 (with compilation fixes) and fully after Step 10
+- [ ] `ng build --configuration=development` — passes after each Chain-B step and after Step 12
+- [ ] `npm run test-ci` — must pass after Step 8 (with compilation fixes), fully after Step 10, and again after Step 12
 - [ ] `npm run packagr` — passes after Step 8
 - [ ] `npm run build` (demo app) — passes after Step 9
 - [ ] `grep -r "IbTableDataSource\|IbTableRemoteDataSource" src/` returns 0 after Step 8
 - [ ] `grep -r "kaiTableReducers\|IKaiTableStore" src/` returns 0 after Step 1
+- [ ] `grep ": any" src/app/inobeta-ui/ui/kai-table/table.component.ts` returns 0 after Step 11
+- [ ] `grep "applySortOnColumn\|this\.dataSource\.columns\[" src/app/inobeta-ui/ui/kai-table/table.component.ts` returns 0 after Step 12
 - [ ] Manual smoke: demo app renders table with data, sort, filter, paginator working
 - [ ] Manual smoke: GitHub issues remote example renders with loading state and refresh
 - [ ] Manual smoke: mobile view renders cards from the same data as desktop

@@ -23,7 +23,6 @@ import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterTestingModule } from "@angular/router/testing";
 import { EffectsModule } from "@ngrx/effects";
-import { provideStore } from "@ngrx/store";
 import { provideMockStore } from "@ngrx/store/testing";
 import { TranslateModule } from "@ngx-translate/core";
 import { Observable, map, throwError, timer } from "rxjs";
@@ -97,7 +96,8 @@ describe("IbTable", () => {
       ).componentInstance;
       tick(1000) //DEVK-346 we add a debounceTime time of 500ms in order to avoid multiple requests
       expect(component).toBeTruthy();
-      expect(component.dataSource.state).toBe("idle");
+      // remote fetch pipeline sets table state
+      expect(component.state).toBe("idle");
     }));
 
     it("should show error on exception", fakeAsync(() => {
@@ -105,9 +105,13 @@ describe("IbTable", () => {
       const component = fixture.debugElement.query(
         By.directive(IbTable)
       ).componentInstance;
-      fixture.componentInstance.dataSource.fetchData = () =>
-        throwError(() => new Error());
-      component.dataSource.refresh();
+      const fetchService = TestBed.inject(MockFetchService);
+      spyOn(fetchService, "fetchData").and.returnValue(
+        throwError(() => new Error())
+      );
+
+      // trigger a refresh which should call the fetch service and set http_error on catch
+      component.refresh();
       tick(500);
       fixture.detectChanges();
       expect(component.state).toBe("http_error");
@@ -304,26 +308,28 @@ describe("IbTable", () => {
     it("should apply", async () => {
     const dataSource = component.dataSource as any;
       const sort = await loader.getHarness(MatSortHarness);
-      const [_, number] = await sort.getSortHeaders();
+      const [_, numberHeader] = await sort.getSortHeaders();
       let active = await sort.getActiveHeader();
       expect(active).toBeNull();
 
-      await number.click();
+      await numberHeader.click();
 
       active = await sort.getActiveHeader();
-      let direction = await number.getSortDirection();
-      expect(await active.getLabel()).toEqual(await number.getLabel());
+      let direction = await numberHeader.getSortDirection();
+      expect(await active.getLabel()).toEqual(await numberHeader.getLabel());
 
       expect(direction).toBe("asc");
 
-      await number.click();
-      direction = await number.getSortDirection();
+      await numberHeader.click();
+      direction = await numberHeader.getSortDirection();
       expect(direction).toBe("desc");
 
-      const amountData = dataSource
-        ._orderData(dataSource.filteredData)
-        .map((i) => i.amount);
-      expect(amountData).toEqual([20, 10]);
+      const table = await loader.getHarness(MatTableHarness);
+      const rows = await table.getRows();
+      const amounts = await Promise.all(
+        rows.map((r) => r.getCellTextByIndex({ columnName: 'amount' }).then((texts) => Number(texts[0])))
+      );
+      expect(amounts).toEqual([20, 10]);
     });
   });
 
@@ -382,17 +388,15 @@ function configureModule<T>(type: Type<T>) {
       RouterTestingModule.withRoutes([])
     ],
     providers: [
-      provideStore(),
       provideMockStore({
         initialState: {
-          ibViews: {
-            views: []
-          }
+          ibKaiTable: { tables: [] },
         }
       }),
       { provide: MatSnackBar, useValue: { open: () => { } } },
       IbTableUrlService,
-      UrlStateEffects
+      UrlStateEffects,
+      MockFetchService,
     ],
   }).compileComponents();
 }
@@ -445,22 +449,21 @@ class IbTableWithRowGroupApp {
 }
 
 @Injectable()
-class IbTestDataSource implements IbRemoteFetchStrategy<any, any> {
+class MockFetchService implements IbRemoteFetchStrategy<any> {
   fetchData(
-    sort: MatSort,
-    page: MatPaginator,
+    sort: any,
+    page: any,
+    filter?: any
   ): Observable<IbFetchDataResponse<any>> {
-    return timer(1).pipe(map(() => ({
-      items: [{ name: "alice" }],
-      totalCount: 1,
-    })));
+    return timer(1).pipe(
+      map(() => ({ items: [{ name: "alice" }], totalCount: 1 }))
+    );
   }
-  refresh() {}
 }
 
 @Component({
   template: `
-    <ib-kai-table [dataSource]="dataSource" [displayedColumns]="['name']">
+    <ib-kai-table [remoteSource]="fetchService" [displayedColumns]="['name']">
       <ib-filter>
         <ib-text-filter name="name">Name</ib-text-filter>
       </ib-filter>
@@ -470,33 +473,10 @@ class IbTestDataSource implements IbRemoteFetchStrategy<any, any> {
   standalone: false
 })
 class IbTableWithRemoteDataApp {
-  dataSource = new IbTestDataSource();
+  constructor(public fetchService: MockFetchService) {}
 }
 
-@Component({
-  template: `
-    <ib-kai-table
-      tableName="employees"
-      [data]="data"
-      [displayedColumns]="['name', 'color']"
-    >
-      <ib-table-view-group></ib-table-view-group>
-      <ib-filter>
-        <ib-tag-filter name="color">Color</ib-tag-filter>
-      </ib-filter>
-
-      <ib-text-column name="name"></ib-text-column>
-      <ib-text-column name="color"></ib-text-column>
-    </ib-kai-table>
-  `,
-  standalone: false
-})
-class IbTableWithViewGroupApp {
-  data = [
-    { name: "alice", color: "peach" },
-    { name: "bob", color: "green" },
-  ];
-}
+// IbTableWithViewGroupApp removed: views are no longer part of desktop table tests
 
 class IbStubExportProvider implements IbDataExportProvider {
   format = "ib";

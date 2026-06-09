@@ -67,7 +67,7 @@
         </td>
       </tr>
 
-      @if (dataSource.shouldDisplayAggregationFooter) {
+      @if (hasAggregatedColumns) {
       <tr class="ib-table__rollup-row" mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></tr>
       }
     </table>
@@ -80,7 +80,7 @@
 </div>
 <div class="ib-table-mobile">
   <ib-kai-table-mobile [tableName]="tableName" [displayedColumns]="displayedColumns" [data]="renderedRows()"
-    [currentSort]="sortState()" [state]="state" [columns]="mobileColumns()" [rowGroup]="mobileRowGroup()"
+    [currentSort]="getMobileSortDirection()" [state]="state" [columns]="mobileColumns()" [rowGroup]="mobileRowGroup()"
     [filter]="mobileFilter()" [filters]="mobileFilters()" [headerActions]="mobileHeaderActions()"
     [actionColumn]="mobileActionColumn()" (doExport)="doExport($event)" (sortUpdated)="updateSortFromMobile($event)">
   </ib-kai-table-mobile>
