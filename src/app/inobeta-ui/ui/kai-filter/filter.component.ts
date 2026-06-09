@@ -52,10 +52,10 @@ import { IB_FILTER } from "./tokens";
 export class IbFilter {
   /** @ignore */
   @ContentChildren(IbFilterBase)
-  filters: QueryList<IbFilterBase>;
+  filters?: QueryList<IbFilterBase>;
 
   /** @ignore */
-  @ViewChild(IbKaiTableAction) hideFilterAction: IbKaiTableAction;
+  @ViewChild(IbKaiTableAction) hideFilterAction?: IbKaiTableAction;
 
   /**
    * Manually sets a filter
@@ -118,7 +118,7 @@ export class IbFilter {
   }
 
   toQuery() {
-    let output = {};
+    let output: Record<string, any> = {};
     const filters = this.filters?.toArray() ?? [];
 
     for (const filter of filters) {
@@ -130,7 +130,7 @@ export class IbFilter {
 
   /** @ignore */
   private buildFilter(): IbFilterSyntax {
-    let output = {};
+    let output: Record<string, any> = {};
     const filters = this.filters?.toArray() ?? [];
 
     for (const filter of filters) {

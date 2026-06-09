@@ -2,9 +2,9 @@
   <ib-filter-button [attr.data-cy]="'ib-text-filter-' + name">
     <span ib-filter-name><ng-content></ng-content></span>
     @if (isDirty) {
-      <span ib-filter-value>
-        {{ displayCondition | translate | lowercase }} "{{ displayValue }}"
-      </span>
+    <span ib-filter-value>
+      {{ displayCondition ?? '' | translate | lowercase }} "{{ displayValue }}"
+    </span>
     }
 
     <section [formGroup]="filter?.form" style="padding: 0.5em 1em 0 1em">
@@ -13,19 +13,19 @@
           <mat-label>{{ "shared.ibFilter.condition" | translate }}</mat-label>
           <mat-select formControlName="operator" [attr.data-cy]="'ib-text-filter-' + name + '-condition'">
             @for (operator of operators; track operator) {
-              <mat-option [value]="operator.value">
-                {{ operator.displayValue | translate }}
-              </mat-option>
+            <mat-option [value]="operator.value">
+              {{ operator.displayValue | translate }}
+            </mat-option>
             }
           </mat-select>
           <mat-error>{{ "shared.ibFilter.condition" | translate }}
-          {{ "shared.ibKaiFilter.required" | translate }}</mat-error>
+            {{ "shared.ibKaiFilter.required" | translate }}</mat-error>
         </mat-form-field>
         <mat-form-field style="width: 100%">
           <mat-label>{{ "shared.ibFilter.value" | translate }}</mat-label>
           <input matInput formControlName="value" [attr.data-cy]="'ib-text-filter-' + name + '-value'" />
           <mat-error>{{ "shared.ibFilter.value" | translate }}
-          {{ "shared.ibKaiFilter.required" | translate }}</mat-error>
+            {{ "shared.ibKaiFilter.required" | translate }}</mat-error>
         </mat-form-field>
       </section>
     </section>

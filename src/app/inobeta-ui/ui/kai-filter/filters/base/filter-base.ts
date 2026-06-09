@@ -29,11 +29,11 @@ export interface IFilterBase {
   standalone: false
 })
 export class IbFilterBase implements IFilterBase {
-  @ViewChild(IbFilterButton) button: IbFilterButton;
+  @ViewChild(IbFilterButton) button?: IbFilterButton;
 
-  @Input() name: string;
+  @Input() name: string = '';
 
-  searchCriteria: FormGroup | FormControl;
+  searchCriteria: FormGroup | FormControl = new FormControl();
 
   @ViewChild("renderer", { static: false })
   mobileRendererTemplate?: TemplateRef<unknown>;
@@ -67,7 +67,7 @@ export class IbFilterBase implements IFilterBase {
   }
 
   ngAfterViewInit() {
-    this.button?.trigger.menuClosed
+    this.button?.trigger?.menuClosed
       .pipe(takeUntil(this._destroyed))
       .subscribe(() => {
         this.revertFilter();

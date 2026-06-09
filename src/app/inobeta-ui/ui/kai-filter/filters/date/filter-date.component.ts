@@ -166,12 +166,12 @@ export class IbDateFilter extends IbFilterBase {
     });
   }
 
-  isSelected(category) {
+  isSelected(category: any) {
     return this.searchCriteria.value.categorySelected === category;
   }
 
   getSelected() {
-    return this.searchCriteria?.get(this.searchCriteria.value.categorySelected);
+    return this.searchCriteria?.get(this.searchCriteria?.value?.categorySelected ?? '');
   }
 
   applyFilter(): void {
@@ -181,7 +181,7 @@ export class IbDateFilter extends IbFilterBase {
       return;
     }
 
-    const categorySelected = this.searchCriteria?.value.categorySelected;
+    const categorySelected = this.searchCriteria?.value.categorySelected ?? '';
     const patch = {
       [categorySelected]: this.getSelected()?.value,
       categorySelected,
@@ -189,7 +189,7 @@ export class IbDateFilter extends IbFilterBase {
 
     this.clearFilter(patch);
     this.filter.update();
-    this.button.closeMenu();
+    this.button?.closeMenu();
   }
 
   clearFilter(patchValue = {}) {
@@ -209,10 +209,10 @@ export class IbDateFilter extends IbFilterBase {
     this.filter.update();
   }
 
-  private getOffsetTime(value: number, category) {
+  private getOffsetTime(value: number, category: any) {
     const now = new Date();
     const then = new Date();
-    const multiplier = this.multipliers[category.period];
+    const multiplier = this.multipliers[category.period as keyof typeof this.multipliers];
 
     then.setTime(now.getTime() - value * multiplier);
     return [then, now];
@@ -231,21 +231,21 @@ export class IbDateFilter extends IbFilterBase {
   }
 
   private buildWithinCategory() {
-    const value = this.searchCriteria.value.within.value;
+    const value = this.searchCriteria?.value?.within?.value;
     if (!value) {
       return none();
     }
 
     const [then, now] = this.getOffsetTime(
       value,
-      this.searchCriteria.value.within
+      this.searchCriteria?.value?.within
     );
 
     return and([gte(then), lte(now)]);
   }
 
   private buildMoreThanCategory() {
-    const value = this.searchCriteria.value.moreThan.value;
+    const value = this.searchCriteria?.value?.moreThan?.value;
     if (!value) {
       return none();
     }
@@ -259,8 +259,8 @@ export class IbDateFilter extends IbFilterBase {
   }
 
   private buildRangeCategory() {
-    const start = this.searchCriteria.value.range.start;
-    const end = this.searchCriteria.value.range.end;
+    const start = this.searchCriteria?.value?.range?.start;
+    const end = this.searchCriteria?.value?.range?.end;
     if (!start || !end) {
       return none();
     }
@@ -289,7 +289,7 @@ export class IbDateFilter extends IbFilterBase {
   };
 
   private toQueryWithinCategory() {
-    const value = this.searchCriteria.value.within.value;
+    const value = this.searchCriteria?.value?.within?.value;
     if (!value) {
       return null;
     }
@@ -306,7 +306,7 @@ export class IbDateFilter extends IbFilterBase {
   }
 
   private toQueryMoreThanCategory() {
-    const value = this.searchCriteria.value.moreThan.value;
+    const value = this.searchCriteria?.value?.moreThan?.value;
     if (!value) {
       return null;
     }
@@ -323,8 +323,8 @@ export class IbDateFilter extends IbFilterBase {
   }
 
   private toQueryRangeCategory() {
-    const start = this.searchCriteria.value.range.start;
-    const end = this.searchCriteria.value.range.end;
+    const start = this.searchCriteria?.value?.range?.start;
+    const end = this.searchCriteria?.value?.range?.end;
     if (!start || !end) {
       return null;
     }
@@ -335,9 +335,9 @@ export class IbDateFilter extends IbFilterBase {
     };
   }
 
-  toQuery(): IbDateQuery {
+  toQuery(): IbDateQuery | null {
     if (this.getSelected()?.invalid) {
-      return;
+      return null;
     }
 
     if (this.isSelected(IbDateFilterCategory.WITHIN)) {
@@ -352,7 +352,7 @@ export class IbDateFilter extends IbFilterBase {
       return this.toQueryRangeCategory();
     }
 
-    return;
+    return null;
   }
 
   mobileSummary(): string {

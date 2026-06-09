@@ -11,12 +11,10 @@ import {
 } from "@angular/core/testing";
 import { MatButtonHarness } from "@angular/material/button/testing";
 import { MatDialogHarness } from "@angular/material/dialog/testing";
-import { MatInputHarness } from "@angular/material/input/testing";
 import { MatMenuHarness } from "@angular/material/menu/testing";
-import { MatPaginator } from "@angular/material/paginator";
 import { MatRadioButtonHarness } from "@angular/material/radio/testing";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { MatSort, MatSortModule } from "@angular/material/sort";
+import { MatSortModule } from "@angular/material/sort";
 import { MatSortHarness } from "@angular/material/sort/testing";
 import { MatTableHarness } from "@angular/material/table/testing";
 import { By } from "@angular/platform-browser";
@@ -306,7 +304,6 @@ describe("IbTable", () => {
     });
 
     it("should apply", async () => {
-    const dataSource = component.dataSource as any;
       const sort = await loader.getHarness(MatSortHarness);
       const [_, numberHeader] = await sort.getSortHeaders();
       let active = await sort.getActiveHeader();
@@ -316,7 +313,7 @@ describe("IbTable", () => {
 
       active = await sort.getActiveHeader();
       let direction = await numberHeader.getSortDirection();
-      expect(await active.getLabel()).toEqual(await numberHeader.getLabel());
+      expect(await active?.getLabel()).toEqual(await numberHeader.getLabel());
 
       expect(direction).toBe("asc");
 
@@ -473,7 +470,7 @@ class MockFetchService implements IbRemoteFetchStrategy<any> {
   standalone: false
 })
 class IbTableWithRemoteDataApp {
-  constructor(public fetchService: MockFetchService) {}
+  constructor(public fetchService: MockFetchService) { }
 }
 
 // IbTableWithViewGroupApp removed: views are no longer part of desktop table tests

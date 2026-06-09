@@ -47,10 +47,12 @@ export class IbNumberFilter extends IbFilterBase {
         this.clearRange();
         return;
       }
-      this.slider.setValue({
-        min: values.value?.[0]?.value,
-        max: values.value?.[1]?.value,
-      });
+      if (Array.isArray(values.value)) {
+        this.slider.setValue({
+          min: (values.value[0]?.value as number) ?? this.min,
+          max: (values.value[1]?.value as number) ?? this.max,
+        });
+      }
     });
     this.clearRange();
     super.ngOnInit();
@@ -75,7 +77,7 @@ export class IbNumberFilter extends IbFilterBase {
     }
     this.searchCriteria.setValue(this.build());
     this.filter.update();
-    this.button.closeMenu();
+    this.button?.closeMenu();
   }
 
   clear() {
@@ -104,8 +106,8 @@ export class IbNumberFilter extends IbFilterBase {
 
   toQuery(): IbNumberQuery {
     return {
-      min: this.slider.value.min,
-      max: this.slider.value.max,
+      min: this.slider.value.min ?? 0,
+      max: this.slider.value.max ?? 0,
     };
   }
 

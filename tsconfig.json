@@ -19,6 +19,9 @@
       "dom"
     ],
     "resolveJsonModule": true,
-    "useDefineForClassFields": false
+    "useDefineForClassFields": false,
+    "types": [
+      "jasmine"
+    ]
   }
 }

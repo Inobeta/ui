@@ -12,11 +12,11 @@ import { IbFilterBase } from "../base/filter-base";
 })
 export class IbTextFilter extends IbFilterBase {
   searchCriteria = new FormGroup({
-    operator: new FormControl<IbFilterOperator>(IbFilterOperator.CONTAINS, {
+    operator: new FormControl<IbFilterOperator | null>(IbFilterOperator.CONTAINS, {
       validators: [Validators.required],
       nonNullable: true,
     }),
-    value: new FormControl(null, { nonNullable: true }),
+    value: new FormControl<string | null>(null, { nonNullable: true }),
   });
 
   operators = [
@@ -61,18 +61,18 @@ export class IbTextFilter extends IbFilterBase {
     }
 
     return {
-      operator: this.searchCriteria.value.operator,
+      operator: this.searchCriteria.value.operator ?? IbFilterOperator.NONE,
       value: this.searchCriteria.value.value,
     };
   }
 
-  toQuery(): IbTextQuery {
+  toQuery(): IbTextQuery | null {
     const text = this.searchCriteria.value.value;
     if (!text) {
-      return;
+      return null;
     }
 
-    let regex: string, like: string;
+    let regex: string = '', like: string = '';
     const condition = this.searchCriteria.value.operator;
     if (condition == IbFilterOperator.CONTAINS) {
       regex = `.*${text}.*`;
@@ -94,7 +94,7 @@ export class IbTextFilter extends IbFilterBase {
       like = text;
     }
 
-    return { regex, like, condition, text };
+    return { regex, like, condition: condition ?? IbFilterOperator.NONE, text };
   }
 
   override mobileSummary(): string {

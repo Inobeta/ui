@@ -20,7 +20,7 @@ import { ActivatedRoute, Router, RouterOutlet } from "@angular/router";
       [activeRowParams]="{ dataParamId: 'id', childRouteParamId: 'id'}"
       >
       <ib-table-action-group>
-        @if (selectionColumn?.selection.selected.length > 0) {
+        @if (selectionColumn?.selection?.selected && selectionColumn?.selection.selected.length > 0) {
           <ng-template ibTableAction>
             <button
               mat-icon-button
@@ -94,7 +94,7 @@ import { ActivatedRoute, Router, RouterOutlet } from "@angular/router";
 })
 export class IbKaiTableWithRouting {
   @ViewChild(IbSelectionColumn, { static: true })
-  selectionColumn: IbSelectionColumn;
+  selectionColumn?: IbSelectionColumn;
 
   data: IbUserExample[] = [];
   columns = ["name", "fruit", "amount", "created_at", "subscribed"];

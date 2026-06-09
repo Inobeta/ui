@@ -17,7 +17,7 @@ import { FilterOverlayService } from "./filter-overlay.service";
   templateUrl: "filter-button.component.html"
 })
 export class IbFilterButton {
-  @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
+  @ViewChild(MatMenuTrigger) trigger?: MatMenuTrigger;
   value = contentChild(IbFilterValueDirective);
 
   overlay = inject(FilterOverlayService);

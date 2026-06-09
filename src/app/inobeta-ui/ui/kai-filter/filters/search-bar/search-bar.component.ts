@@ -68,9 +68,9 @@ export class IbSearchBar extends IbFilterBase {
   build = () =>
     this.searchCriteria.value ? contains(this.searchCriteria.value) : none();
 
-  toQuery(): IbTextQuery {
+  toQuery(): IbTextQuery | null {
     if (!this.searchCriteria.value) {
-      return;
+      return null;
     }
 
     return {

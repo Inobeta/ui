@@ -6,12 +6,12 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatIconButton } from "@angular/material/button";
 
 @Component({
-    selector: "ib-kai-table-context-action-example",
-    template: `
+  selector: "ib-kai-table-context-action-example",
+  template: `
     <ib-kai-table
       style="text-direction: rtl"
       [displayedColumns]="['name', 'fruit', 'number']"
-      [data]="data"
+      [data]="data ?? []"
       class="mat-elevation-z8"
     >
       <ib-text-column name="name"></ib-text-column>
@@ -32,21 +32,21 @@ import { MatIconButton } from "@angular/material/button";
       </ib-column>
     </ib-kai-table>
   `,
-    styles: [
-        `
+  styles: [
+    `
       :host {
         display: flex;
         flex-direction: column;
         padding: 30px;
       }
     `,
-    ],
-    imports: [
-      IbKaiTableModule, MatMenuModule, MatIconModule, MatIconButton
-    ]
+  ],
+  imports: [
+    IbKaiTableModule, MatMenuModule, MatIconModule, MatIconButton
+  ]
 })
 export class IbKaiTableActionColumnExamplePage implements OnInit {
-  data: IbUserExample[];
+  data?: IbUserExample[];
 
   ngOnInit() {
     this.data = Array.from({ length: 1000 }, (_, k) => createNewUser(k + 1));

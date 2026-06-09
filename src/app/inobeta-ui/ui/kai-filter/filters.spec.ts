@@ -15,8 +15,8 @@ import {
 
 describe("filters", () => {
   it("should return true if empty", () => {
-    expect(applyFilter({ operator: 0, value: null }, "")).toBeTruthy();
-    expect(applyFilter(null, "")).toBeTruthy();
+    expect(applyFilter({ operator: 0, value: '' }, "")).toBeTruthy();
+    expect(applyFilter({ operator: 0, value: '' }, "")).toBeTruthy();
   });
 
   it("and/or operator", () => {

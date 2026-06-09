@@ -5,15 +5,15 @@ import { eq, none, or } from "../../filters";
 import { IbFilterBase } from "../base/filter-base";
 
 @Component({
-    selector: "ib-tag-filter",
-    templateUrl: "./filter-tag.component.html",
-    styleUrls: ["./filter-tag.component.scss"],
-    providers: [{ provide: IbFilterBase, useExisting: IbTagFilter }],
-    encapsulation: ViewEncapsulation.None,
-    standalone: false
+  selector: "ib-tag-filter",
+  templateUrl: "./filter-tag.component.html",
+  styleUrls: ["./filter-tag.component.scss"],
+  providers: [{ provide: IbFilterBase, useExisting: IbTagFilter }],
+  encapsulation: ViewEncapsulation.None,
+  standalone: false
 })
 export class IbTagFilter extends IbFilterBase {
-  searchCriteria = new FormControl([], { nonNullable: true });
+  searchCriteria = new FormControl<string[]>([], { nonNullable: true });
 
   @Input() multiple = true;
   @Input()
@@ -77,7 +77,7 @@ export class IbTagFilter extends IbFilterBase {
 
   applyFilter() {
     this.filter.update();
-    this.button.closeMenu();
+    this.button?.closeMenu();
     this.query.setValue("");
   }
 
