@@ -3,7 +3,7 @@ import { IbKaiTableNamedParams } from "./interfaces";
 
 
 const selectUrlState = (tableName: string) => (tables: IbKaiTableNamedParams[]): IbKaiTableNamedParams => {
-  return tables?.find((table) => table.tableName === tableName)
+  return tables?.find((table) => table.tableName === tableName) ?? { tableName: '' }
 }
 
 const selectLastQueryStringRaw = (state?: IbKaiTableNamedParams) => ({
@@ -18,7 +18,7 @@ const selectLastQueryStringRaw = (state?: IbKaiTableNamedParams) => ({
 const selectLastQueryString = (state: any): string => JSON.stringify(state)
 
 
-export const ibKaiTableExtraSelectors = ({ selectTables }) => {
+export const ibKaiTableExtraSelectors = ({ selectTables }: { selectTables: any }) => {
   const ibTableSelectUrlState = (tableName: string) => createSelector(selectTables, selectUrlState(tableName))
 
   const ibTableSelectLastQueryStringRaw = (tableName: string) => createSelector(

@@ -8,11 +8,11 @@ import { Subject } from "rxjs";
 export class IbTablePaginatorIntl implements MatPaginatorIntl {
   changes = new Subject<void>();
 
-  itemsPerPageLabel;
-  nextPageLabel;
-  previousPageLabel;
-  firstPageLabel;
-  lastPageLabel;
+  itemsPerPageLabel: string = '';
+  nextPageLabel: string = '';
+  previousPageLabel: string = '';
+  firstPageLabel: string = '';
+  lastPageLabel: string = '';
 
   constructor(private translate: TranslateService) {
     this.setLabels();

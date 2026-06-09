@@ -6,6 +6,7 @@ import {
   Input,
   OnDestroy,
   OnInit,
+  TemplateRef,
   ViewChild,
   booleanAttribute,
   inject,
@@ -35,6 +36,7 @@ import { IB_COLUMN_OPTIONS, IB_TABLE, IbColumnOptions } from "../tokens";
 @Component({
   selector: "ib-column",
   template: `
+  @if(ibCellDef) {
     <ng-container
       matColumnDef
       matSort
@@ -62,6 +64,7 @@ import { IB_COLUMN_OPTIONS, IB_TABLE, IbColumnOptions } from "../tokens";
       </td>
       <td mat-footer-cell *matFooterCellDef></td>
     </ng-container>
+  }
   `,
   // Change detection is intentionally not set to OnPush. This component's template will be provided
   // to the table to be inserted into its view. This is problematic when change detection runs since
@@ -85,13 +88,13 @@ export class IbColumn<T> implements OnDestroy, OnInit {
     // available. In that case, we defer the synchronization until "ngOnInit" fires.
     this._syncColumnDefName();
   }
-  _name: string;
+  _name: string = '';
 
   /**
    * Text label that should be used for the column header. If this property is not
    * set, the header text will default to the column name with its first letter capitalized.
    */
-  @Input() headerText: string;
+  @Input() headerText: string = '';
 
   /**
    * Accessor function to retrieve the data rendered for each cell. If this
@@ -99,15 +102,21 @@ export class IbColumn<T> implements OnDestroy, OnInit {
    * the column's name. For example, if the column is named `id`, then the rendered value will be
    * value defined by the data's `id` property.
    */
-  @Input() dataAccessor: (data: T, name: string) => number | string;
+  @Input() dataAccessor: (data: T, name: string) => number | string = (data: T, name: string) => (data as any)?.[name];
   /**
    * Data accessor function that is used to retrieve data properties for sorting
    */
-  @Input() sortingDataAccessor: (data: T, name: string) => number | string;
+  @Input() sortingDataAccessor: (data: T, name: string) => number | string = (data: T, name: string) => {
+    const value = (data as any)?.[name];
+    return value == null ? '' : String(value).toLowerCase();
+  };
   /**
    * Data accessor function that is used to retrieve data properties for filtering
    */
-  @Input() filterDataAccessor: (data: T, name: string) => number | string;
+  @Input() filterDataAccessor: (data: T, name: string) => number | string = (data: T, name: string) => {
+    const value = (data as any)?.[name];
+    return value == null ? '' : String(value).toLowerCase();
+  };
 
   /**
    * Enables sorting for the column.
@@ -124,17 +133,17 @@ export class IbColumn<T> implements OnDestroy, OnInit {
   @Input({ transform: booleanAttribute }) aggregate = false;
 
   get aggregationFunction() {
-    return this._table.aggregatedColumns?.[this.name];
+    return this._table?.aggregatedColumns?.[this.name];
   }
 
   get aggregatedData() {
-    return this._table.aggregatedData[this.name];
+    return this._table?.aggregatedData?.[this.name];
   }
 
-  @ContentChild(IbCellDef, { static: true }) ibCellDef: IbCellDef;
+  @ContentChild(IbCellDef, { static: true }) ibCellDef?: IbCellDef;
 
   /** @ignore */
-  @ViewChild(MatColumnDef, { static: true }) columnDef: MatColumnDef;
+  @ViewChild(MatColumnDef, { static: true }) columnDef?: MatColumnDef;
 
   /**
    * The column cell, headerCell, and footerCell are provided to the column during `ngOnInit` with a static query.
@@ -143,17 +152,17 @@ export class IbColumn<T> implements OnDestroy, OnInit {
    * component.
    * @ignore
    */
-  @ViewChild(MatCellDef, { static: true }) cell: MatCellDef;
-  @ViewChild(MatHeaderCellDef, { static: true }) headerCell: MatHeaderCellDef;
-  @ViewChild(MatFooterCellDef, { static: true }) footerCell: MatFooterCellDef;
+  @ViewChild(MatCellDef, { static: true }) cell?: MatCellDef;
+  @ViewChild(MatHeaderCellDef, { static: true }) headerCell?: MatHeaderCellDef;
+  @ViewChild(MatFooterCellDef, { static: true }) footerCell?: MatFooterCellDef;
 
-  @ViewChild(IbAggregateCell) aggregateCell: IbAggregateCell;
+  @ViewChild(IbAggregateCell) aggregateCell?: IbAggregateCell;
 
   @Input({ alias: 'ib-action-column', transform: booleanAttribute }) isActionColumn = false;
 
   /** @ignore */
   get matSort() {
-    return this._table.sort;
+    return this._table?.sort;
   }
 
   _table = inject(IB_TABLE, { optional: true });
@@ -185,10 +194,19 @@ export class IbColumn<T> implements OnDestroy, OnInit {
       // Provide the cell and headerCell directly to the table with the static `ViewChild` query,
       // since the columnDef will not pick up its content by the time the table finishes checking
       // its content and initializing the rows.
-      this.columnDef.cell = this.cell;
-      this.columnDef.headerCell = this.headerCell;
-      this.columnDef.footerCell = this.footerCell;
-      this._table.matTable.addColumnDef(this.columnDef);
+      const columndDef = this.columnDef;
+      if (columndDef) {
+        if (columndDef && this.cell) {
+          columndDef.cell = this.cell;
+        }
+        if (columndDef && this.headerCell) {
+          columndDef.headerCell = this.headerCell;
+        }
+        if (columndDef && this.footerCell) {
+          columndDef.footerCell = this.footerCell;
+        }
+        this._table.matTable.addColumnDef(columndDef);
+      }
     }
   }
 
@@ -217,7 +235,7 @@ export class IbColumn<T> implements OnDestroy, OnInit {
   }
 
   handleAggregationChange(fun: string) {
-    this._table.aggregate.next({ columnName: this.name, function: fun });
+    this._table?.aggregate?.next({ columnName: this.name, function: fun });
   }
 
   /** Synchronizes the column definition name with the text column name. */

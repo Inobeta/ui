@@ -11,6 +11,9 @@ export const urlStateReducer = createReducer(INITIAL,
   on(urlStateActions.setFilters, (stateIn, action) => {
     let state = structuredClone(stateIn);
     const table = getTable(action.tableName, state.tables);
+    if (!table) {
+      return state;
+    }
     table.filters = action.params;
     return {
       ...state
@@ -19,6 +22,9 @@ export const urlStateReducer = createReducer(INITIAL,
   on(urlStateActions.setPaginator, (stateIn, action) => {
     let state = structuredClone(stateIn);
     const table = getTable(action.tableName, state.tables);
+    if (!table) {
+      return state;
+    }
     table.page = action.params.pageIndex;
     table.pageSize = action.params.pageSize;
     return {
@@ -28,7 +34,10 @@ export const urlStateReducer = createReducer(INITIAL,
   on(urlStateActions.setAggregatedColumns, (stateIn, action) => {
     let state = structuredClone(stateIn);
     const table = getTable(action.tableName, state.tables);
-    table.aggregatedColumns = {...action.params}
+    if (!table) {
+      return state;
+    }
+    table.aggregatedColumns = { ...action.params }
     return {
       ...state
     }
@@ -36,7 +45,10 @@ export const urlStateReducer = createReducer(INITIAL,
   on(urlStateActions.setSort, (stateIn, action) => {
     let state = structuredClone(stateIn);
     const table = getTable(action.tableName, state.tables);
-    table.sort = {...action.params};
+    if (!table) {
+      return state;
+    }
+    table.sort = { ...action.params };
     return {
       ...state
     }
@@ -48,7 +60,7 @@ export const urlStateReducer = createReducer(INITIAL,
 
 function getTable(tableName: string, state: IbKaiTableNamedParams[]) {
   let table = state.find((table) => table.tableName === tableName);
-  if(!table) {
+  if (!table) {
     state.push({ tableName });
     table = state.find((table) => table.tableName === tableName);
   }

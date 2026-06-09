@@ -18,8 +18,8 @@ import { IbTableRowSelectionChange } from "../table.types";
 import { IB_TABLE } from "../tokens";
 
 @Component({
-    selector: "ib-selection-column",
-    template: `
+  selector: "ib-selection-column",
+  template: `
     <ng-container matColumnDef="ib-selection">
       <th
         style="width: 40px"
@@ -47,32 +47,40 @@ import { IB_TABLE } from "../tokens";
       <td mat-footer-cell *matFooterCellDef></td>
     </ng-container>
   `,
-    standalone: false
+  standalone: false
 })
 export class IbSelectionColumn implements OnInit {
   /** @ignore */
-  @ViewChild(MatCellDef, { static: true }) cell: MatCellDef;
+  @ViewChild(MatCellDef, { static: true }) cell?: MatCellDef;
   /** @ignore */
-  @ViewChild(MatHeaderCellDef, { static: true }) headerCell: MatHeaderCellDef;
+  @ViewChild(MatHeaderCellDef, { static: true }) headerCell?: MatHeaderCellDef;
   /** @ignore */
-  @ViewChild(MatFooterCellDef, { static: true }) footerCell: MatFooterCellDef;
+  @ViewChild(MatFooterCellDef, { static: true }) footerCell?: MatFooterCellDef;
   /** @ignore */
-  @ViewChild(MatColumnDef, { static: true }) columnDef: MatColumnDef;
+  @ViewChild(MatColumnDef, { static: true }) columnDef?: MatColumnDef;
   selection = new SelectionModel<any>(true, []);
 
   @Output() ibRowSelectionChange = new EventEmitter<
     IbTableRowSelectionChange[]
   >();
 
-  constructor(@Inject(IB_TABLE) @Optional() private table: any) {}
+  constructor(@Inject(IB_TABLE) @Optional() private table: any) { }
 
   ngOnInit() {
     if (this.table) {
-      this.columnDef.cell = this.cell;
-      this.columnDef.headerCell = this.headerCell;
-      this.columnDef.footerCell = this.footerCell;
-      this.table.matTable.addColumnDef(this.columnDef);
-      this.table.displayedColumns.unshift("ib-selection");
+      if (this.columnDef) {
+        if (this.cell) {
+          this.columnDef.cell = this.cell;
+        }
+        if (this.headerCell) {
+          this.columnDef.headerCell = this.headerCell;
+        }
+        if (this.footerCell) {
+          this.columnDef.footerCell = this.footerCell;
+        }
+        this.table.matTable.addColumnDef(this.columnDef);
+        this.table.displayedColumns.unshift("ib-selection");
+      }
     }
   }
 
@@ -89,7 +97,7 @@ export class IbSelectionColumn implements OnInit {
 
     const selectionAfterToggle = this.isAllSelected();
     this.ibRowSelectionChange.emit(
-      this.table.dataSource.filteredData.map((row) => ({
+      this.table.dataSource.filteredData.map((row: any) => ({
         tableName: this.table.tableName,
         row,
         selection: selectionAfterToggle,
@@ -97,7 +105,7 @@ export class IbSelectionColumn implements OnInit {
     );
   }
 
-  toggleRowSelection(ev, row) {
+  toggleRowSelection(ev: any, row: any) {
     if (ev) {
       this.selection.toggle(row);
 

@@ -15,7 +15,7 @@ import {
 })
 export class IbKaiTableAction {
   kind = input<string>("default");
-  @ViewChild(TemplateRef) templateRef;
+  @ViewChild(TemplateRef) templateRef: any;
   constructor(
     @Optional() public _templateRef: TemplateRef<any>,
     public viewContainerRef: ViewContainerRef

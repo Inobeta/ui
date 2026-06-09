@@ -49,9 +49,9 @@ import { DecimalPipe } from "@angular/common";
       <td mat-footer-cell *matFooterCellDef style="max-width: fit-content">
         @if (aggregate) {
           <ib-aggregate
-            [showTotal]="!_table.isRemote"
+            [showTotal]="!_table?.isRemote"
             [result]="aggregatedData"
-            [function]="aggregationFunction"
+            [function]="aggregationFunction ?? ''"
             (ibFunctionChange)="handleAggregationChange($event)"
             />
         }
