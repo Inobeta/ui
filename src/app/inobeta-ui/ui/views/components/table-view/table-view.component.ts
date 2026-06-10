@@ -1,17 +1,23 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { IView } from "../../store/views/table-view";
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { TranslateModule } from "@ngx-translate/core";
+import { IbViewSnapshot } from "../../view.types";
 
 @Component({
-    selector: "ib-table-view",
-    templateUrl: "./table-view.component.html",
-    standalone: false
+  selector: "ib-table-view",
+  templateUrl: "./table-view.component.html",
+  standalone: true,
+  imports: [MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule, TranslateModule]
 })
 export class IbTableView {
-  @Input() view: Readonly<IView>;
+  @Input() view: Readonly<IbViewSnapshot>;
   @Input() selected: boolean = false;
   @Input() dirty: boolean = false;
-  @Output() ibRemoveView = new EventEmitter<IView>();
-  @Output() ibRenameView = new EventEmitter<IView>();
-  @Output() ibDuplicateView = new EventEmitter<IView>();
-  @Output() ibChangeView = new EventEmitter<IView>();
+  @Output() ibRemoveView = new EventEmitter<IbViewSnapshot>();
+  @Output() ibRenameView = new EventEmitter<IbViewSnapshot>();
+  @Output() ibDuplicateView = new EventEmitter<IbViewSnapshot>();
+  @Output() ibChangeView = new EventEmitter<IbViewSnapshot>();
 }

@@ -9,14 +9,14 @@ import { MockStore, provideMockStore } from "@ngrx/store/testing";
 import { TranslateModule } from "@ngx-translate/core";
 import { of } from "rxjs";
 import { IbToastModule } from "../../../toast";
-import { IViewState } from "../../store/reducer";
+// store reducer types removed; use any for tests
 import { IbViewModule } from "../../view.module";
 import { IbTableViewGroup } from "./table-view-group.component";
 import { IbTableUrlService } from "../../../kai-table";
 import { RouterTestingModule } from "@angular/router/testing";
 import { provideStore } from "@ngrx/store";
 
-const initialState: IViewState = {
+const initialState: any = {
   views: [],
 };
 
@@ -201,7 +201,7 @@ export const createViewComponent = createComponent;
     viewGroupName="issues"
     [viewDataAccessor]="viewDataAccessor"
   ></ib-view-group>`,
-    standalone: false
+    standalone: true
 })
 class IbViewApp {
   filter = { };

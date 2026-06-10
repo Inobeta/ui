@@ -1,6 +1,10 @@
 import { Component, Inject } from "@angular/core";
-import { FormControl } from "@angular/forms";
-import { MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { FormControl, ReactiveFormsModule } from "@angular/forms";
+import { MAT_DIALOG_DATA, MatDialogModule } from "@angular/material/dialog";
+import { MatButtonModule } from "@angular/material/button";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { TranslateModule } from "@ngx-translate/core";
 
 export interface IbTableViewDialogData {
   title: string;
@@ -66,7 +70,8 @@ export interface IbTableViewDialogData {
       </button>
     </div>
     `,
-    standalone: false
+    standalone: true,
+    imports: [ReactiveFormsModule, MatDialogModule, MatButtonModule, MatFormFieldModule, MatInputModule, TranslateModule]
 })
 export class IbTableViewDialog {
   viewName = new FormControl("");
