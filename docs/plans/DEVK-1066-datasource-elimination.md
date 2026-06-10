@@ -88,6 +88,7 @@ Step 2 ────────────────────────�
 Steps 3 → 4 → 5 → 6 → 7 → 8 ─── compile-chain (B)
 Steps 9, 10 ───────────────────── depend on Step 8
 Steps 11 → 12 ─────────────────── depend on Step 8  (table.component.ts typing & logic)
+Steps 13 → 14 → 15 ────────────── depend on Step 12 (table.component.ts slimming)
 ```
 
 ---
@@ -1325,6 +1326,393 @@ write "NEED CLARIFICATION" and take no action
 
 ---
 
+### Step 13 — Extract pipeline pure functions to `table-pipeline.utils.ts` [DEPENDS ON STEP 12]
+
+**Target executor:** `kai-table-executor`
+
+**Allowed files:**
+- `src/app/inobeta-ui/ui/kai-table/table-pipeline.utils.ts` (new — internal only)
+- `src/app/inobeta-ui/ui/kai-table/table.component.ts`
+
+**Read-only reference:**
+- `src/app/inobeta-ui/ui/kai-filter/filters.ts`
+- `src/app/inobeta-ui/ui/kai-filter/filter.types.ts`
+
+**Objective:** Remove `filterPredicate`, `applySearchBarFilter`, `_orderData`, `_pageData`
+method bodies from `IbTable` and replace with calls to standalone pure functions.
+Eliminate the 20-line sort comparator duplicated inside `renderedRows` computed.
+Target: ≥ 55-line reduction in `table.component.ts`.
+
+**Key requirements:**
+1. Create `table-pipeline.utils.ts` exporting three pure functions:
+   - `filterRows(data: unknown[], filters: IbFilterSyntaxExtended | null | undefined, columnsMap: Record<string, IbColumn<unknown>>): unknown[]`
+     — returns `data` unchanged if `!filters`; else `data.filter(r => filterRow(r, filters, columnsMap))`.
+     `filterRow` is a file-local helper encapsulating the `filterPredicate` + `applySearchBarFilter` logic
+     (calls `column.filterDataAccessor`, calls `applyFilter`, throws on unknown column — same semantics).
+   - `sortRows(data: unknown[], sort: IbSortState, columnsMap: Record<string, IbColumn<unknown>>): unknown[]`
+     — returns `data` if `!sort.active || !sort.direction` or column not found; else `data.slice().sort(comparator)`
+     using the comparator currently in `_orderData`.
+   - `pageRows(data: unknown[], pageIndex: number, pageSize: number): unknown[]`
+     — `data.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize)`.
+2. In `table.component.ts`:
+   - Delete `filterPredicate()` and `applySearchBarFilter()` methods.
+   - Replace `_orderData(data)` body with one line: delegate to `sortRows(data, { active: this.sort?.active ?? '', direction: this.sort?.direction ?? '' }, this._columnsMap)`.
+   - Replace `_pageData(data)` body with one line: delegate to `pageRows(data, this.paginator?.pageIndex ?? 0, this.paginator?.pageSize ?? (this.tableDef.paginator?.pageSize ?? 20))`.
+   - In `renderedRows` computed: replace the `data.filter(r => this.filterPredicate(...))` call and the inline 20-line sort block with:
+     `filterRows` → `sortRows` → `pageRows` calls (3 lines).
+     Guard for `this.filter` stays: `const filtered = this.filter ? filterRows(data, filters ?? null, this._columnsMap) : data`.
+   - In `_filteredLength` computed: replace `data.filter(r => this.filterPredicate(...)).length` with `filterRows(data, filters ?? null, this._columnsMap).length`.
+3. Do NOT add to `index.ts` or `public_api.ts`.
+
+**Constraints:**
+- Pure functions must not reference `this` — all state passed as parameters.
+- Keep `_orderData()` and `_pageData()` methods on `IbTable` — used by `doExport` context.
+- Do not touch aggregation, remote fetch, `ngAfterContentInit`, or `dataSource` shim.
+- Do not change the public `@Input()` API.
+
+**Validation:**
+- `grep "filterPredicate\|applySearchBarFilter" src/app/inobeta-ui/ui/kai-table/table.component.ts` returns 0.
+- `npm run lint` exits 0.
+- `npm run test-ci` exits 0.
+- `wc -l src/app/inobeta-ui/ui/kai-table/table.component.ts` output ≤ 610.
+
+**Stop condition:** If `filterRows` or `sortRows` need to call injected Angular services (beyond `IbColumn` method calls), stop and report — the extraction strategy would need revision.
+
+---
+
+~~~
+## TASK:
+Extract `filterPredicate`, `applySearchBarFilter`, `_orderData` bodies, and the inline sort
+inside `renderedRows` from `IbTable` into pure functions in a new `table-pipeline.utils.ts`.
+
+## CONTEXT:
+Repo: inobeta-ui. File: `src/app/inobeta-ui/ui/kai-table/table.component.ts`.
+After Step 12, `IbTable` is 663 lines. Methods `filterPredicate()` (~15 lines),
+`applySearchBarFilter()` (~11 lines), `_orderData()` (~28 lines), `_pageData()` (~4 lines)
+live on the class but are near-pure: they access only `this._columnsMap`, `this.sort`,
+`this.paginator`. `renderedRows` computed duplicates the 20-line sort comparator from
+`_orderData()` inline. Both can be replaced by delegating to standalone pure functions.
+
+`applyFilter()` is imported from `'../kai-filter/filters'`.
+`IbColumn.sortingDataAccessor` and `IbColumn.filterDataAccessor` are methods on the column.
+`IbFilterSyntaxExtended` is imported from `'../kai-filter'`. `IbSortState` from `'./remote-strategy'`.
+
+## OBJECTIVE:
+Create `table-pipeline.utils.ts` (internal, not barrel-exported) with three pure functions:
+`filterRows`, `sortRows`, `pageRows`. Update `table.component.ts` to use them.
+Net result: `filterPredicate` and `applySearchBarFilter` removed from the class;
+`renderedRows` inline sort eliminated; `_orderData`/`_pageData` reduced to one-liners.
+
+## REQUIREMENTS:
+1. Create `src/app/inobeta-ui/ui/kai-table/table-pipeline.utils.ts`:
+   a. `filterRows(data, filters, columnsMap)`: returns `data` if `!filters`; else filters
+      each row with a file-local `filterRow(r, filters, columnsMap)` helper. That helper
+      implements the exact logic of current `filterPredicate` + `applySearchBarFilter`
+      (destructure `ibSearchBar`, iterate other keys, call `column.filterDataAccessor`,
+      call `applyFilter`, throw on unknown column).
+   b. `sortRows(data, sort, columnsMap)`: returns `data` if `!sort.active || !sort.direction`
+      or column not found; else `data.slice().sort(comparator)` using the exact comparator
+      from current `_orderData` (value-type coercion, null handling, direction multiplier).
+   c. `pageRows(data, pageIndex, pageSize)`: `data.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize)`.
+2. In `table.component.ts`:
+   a. Import `{ filterRows, sortRows, pageRows }` from `'./table-pipeline.utils'`.
+   b. Delete `filterPredicate()` and `applySearchBarFilter()` methods.
+   c. Replace `_orderData(data)` body with single-line `sortRows` delegation.
+   d. Replace `_pageData(data)` body with single-line `pageRows` delegation.
+   e. In `renderedRows` computed: replace the inline filter/sort/page blocks with three calls.
+      Keep the `!this.filter` guard: `const filtered = this.filter ? filterRows(data, filters ?? null, this._columnsMap) : data`.
+   f. In `_filteredLength` computed: use `filterRows(data, filters ?? null, this._columnsMap).length`.
+      Keep the `!this.filter || !filters` short-circuit for the no-filter case.
+
+## CONSTRAINTS:
+- `table-pipeline.utils.ts`: no Angular `inject()` or injection tokens.
+- Do NOT add to `index.ts` or `public_api.ts`.
+- Keep `_orderData()` and `_pageData()` on `IbTable` (just with one-line bodies).
+- Do NOT touch aggregation, remote fetch, mobile, or `ngAfterContentInit` code.
+
+## OUTPUT:
+- New `table-pipeline.utils.ts`.
+- Updated `table.component.ts`.
+
+## ACCEPTANCE CRITERIA:
+- `grep "filterPredicate\|applySearchBarFilter" src/app/inobeta-ui/ui/kai-table/table.component.ts` returns 0.
+- `npm run lint` exits 0.
+- `npm run test-ci` exits 0.
+- `wc -l src/app/inobeta-ui/ui/kai-table/table.component.ts` output ≤ 610.
+
+## IF UNSURE:
+write "NEED CLARIFICATION" and take no action
+~~~
+
+---
+
+### Step 14 — Extract aggregation computation to `computeAggregations` [DEPENDS ON STEP 13]
+
+**Target executor:** `kai-table-executor`
+
+**Allowed files:**
+- `src/app/inobeta-ui/ui/kai-table/table-pipeline.utils.ts` (add to it)
+- `src/app/inobeta-ui/ui/kai-table/table.component.ts`
+
+**Read-only reference:**
+- `src/app/inobeta-ui/ui/kai-table/cells.ts` (`IbAggregateResult`)
+
+**Objective:** Extract the 30-line inline aggregation computation from the `aggregate.subscribe()`
+callback into a testable pure function. Replace the silent `catch (e) {}` with a logged error.
+Target: ≥ 20-line reduction in `table.component.ts`.
+
+**Key requirements:**
+1. Add to `table-pipeline.utils.ts`:
+   ```typescript
+   export function computeAggregations(
+     data: unknown[],
+     pageIndex: number,
+     pageSize: number,
+     aggregatedColumns: Record<string, string>,
+     aggregationFunctions: Array<{ id: string; aggregateData(vals: unknown[]): unknown }>,
+     existing: Record<string, IbAggregateResult>
+   ): Record<string, IbAggregateResult>
+   ```
+   Logic: compute `start = pageIndex * pageSize`; for each `[columnName, fun]` in
+   `aggregatedColumns`, find matching `aggregationFunctions` entry by `id`; compute
+   `total` over all `data` and `currentPage` over the page slice. Return a new record
+   merging `existing` with updated entries.
+2. In `table.component.ts`, replace the `try { /* ~25 lines */ } catch (e) {}` block in the
+   aggregate subscribe callback with:
+   ```typescript
+   try {
+     this.aggregatedData = computeAggregations(
+       this._data(), this.pageState(), this.pageSizeState(),
+       this.aggregatedColumns, this.aggregationFunctions, this.aggregatedData
+     );
+   } catch (e) {
+     console.error('[IbTable] aggregation error', e);
+   }
+   ```
+   The two lines above the try block (`this.aggregatedColumns[...] = ...` and `store.dispatch`) are unchanged.
+
+**Constraints:**
+- `computeAggregations` must not reference `this`. All state passed as parameters.
+- Do not change `filterRows`, `sortRows`, `pageRows` from Step 13.
+- Edit only `table-pipeline.utils.ts` and `table.component.ts`.
+
+**Validation:**
+- `grep "computeAggregations" src/app/inobeta-ui/ui/kai-table/table.component.ts` returns ≥ 1.
+- `grep "} catch (e) { }" src/app/inobeta-ui/ui/kai-table/table.component.ts` returns 0.
+- `npm run lint` exits 0.
+- `npm run test-ci` exits 0.
+- `wc -l src/app/inobeta-ui/ui/kai-table/table.component.ts` output ≤ 590.
+
+**Stop condition:** If `aggregationFunctions` type from `IB_AGGREGATE` token causes inference
+issues, type the parameter as `any[]` and add a `// TODO: type IB_AGGREGATE` comment.
+
+---
+
+~~~
+## TASK:
+Add `computeAggregations` pure function to `table-pipeline.utils.ts`. Replace the inline
+aggregation try/catch block in `IbTable`'s `aggregate.subscribe()` callback.
+
+## CONTEXT:
+Repo: inobeta-ui.
+Files to edit: `src/app/inobeta-ui/ui/kai-table/table.component.ts` (constructor, the
+`aggregate.pipe(...).subscribe(...)` block) and `table-pipeline.utils.ts` (created in Step 13).
+
+Current callback structure (post Step 12):
+  ```
+  this.aggregatedColumns[target.columnName] = target.function;
+  this.store.dispatch(urlStateActions.setAggregatedColumns(...));
+  try {
+    // ~25 lines: iterate aggregatedColumns, find fn, compute total + currentPage
+  } catch (e) {}
+  ```
+`IbAggregateResult` is imported from `'./cells'`.
+`this.aggregationFunctions` is `inject(IB_AGGREGATE)` — array of `{ id: string; aggregateData(vals): unknown }`.
+
+## OBJECTIVE:
+`computeAggregations(data, pageIndex, pageSize, aggregatedColumns, aggregationFunctions, existing)`
+is a pure function returning `Record<string, IbAggregateResult>`.
+The subscribe callback shrinks to ~6 lines. Silent error swallowing replaced with `console.error`.
+
+## REQUIREMENTS:
+1. In `table-pipeline.utils.ts`:
+   - Import `IbAggregateResult` from `'./cells'`.
+   - Export `computeAggregations` with the signature above.
+   - Implementation: compute `start = pageIndex * pageSize`; iterate `Object.entries(aggregatedColumns)`;
+     for each `[columnName, fun]`: find `f = aggregationFunctions.find(x => x.id === fun)`;
+     if found, build `result[columnName] = { ...existing[columnName], total: f.aggregateData(data.map(i => (i as any)[columnName])), currentPage: f.aggregateData(data.slice(start, start + pageSize).map(i => (i as any)[columnName])) }`.
+   - Return `{ ...existing, ...result }`.
+2. In `table.component.ts`:
+   - Import `computeAggregations` from `'./table-pipeline.utils'`.
+   - Replace the try/catch block with the 4-line version (logged catch). Keep the two preceding dispatch lines unchanged.
+
+## CONSTRAINTS:
+- `computeAggregations` must not use `this`.
+- Do not modify `filterRows`, `sortRows`, `pageRows`.
+- Edit only `table-pipeline.utils.ts` and `table.component.ts`.
+
+## OUTPUT:
+Updated `table-pipeline.utils.ts` and `table.component.ts`.
+
+## ACCEPTANCE CRITERIA:
+- `grep "computeAggregations" src/app/inobeta-ui/ui/kai-table/table.component.ts` returns ≥ 1.
+- `grep "} catch (e) { }" src/app/inobeta-ui/ui/kai-table/table.component.ts` returns 0.
+- `npm run lint` exits 0.
+- `npm run test-ci` exits 0.
+
+## IF UNSURE:
+write "NEED CLARIFICATION" and take no action
+~~~
+
+---
+
+### Step 15 — Slim constructor: class-field declarations + move to `ngOnInit` [DEPENDS ON STEP 14]
+
+**Target executor:** `kai-table-executor`
+
+**Allowed files:**
+- `src/app/inobeta-ui/ui/kai-table/table.component.ts`
+
+**Objective:** Reduce constructor from ~185 lines to ~40 lines. Convert signal/computed
+derivations to class-field declarations. Move non-injection-context setup to `ngOnInit`.
+Extract remote fetch RxJS pipeline to a named private method. Remove dead `dsInit` helper.
+Target: `table.component.ts` ≤ 500 lines total.
+
+**Key requirements:**
+
+1. **Convert to class-field declarations** (move out of constructor body):
+   - `sortState = computed<IbSortState>(...)`, `filtersState`, `pageState`, `pageSizeState`.
+   - `renderedRows = computed<unknown[]>(...)`.
+   - `private _filteredLength = computed<number>(...)`.
+   - Place all of these immediately after `private _urlState = signal<IbKaiTableNamedParams | undefined>(undefined)`.
+   - These reference only signals (`_urlState`, `_data`, `_remoteRows`, etc.) and lazily-resolved
+     `@ContentChild` fields (`this.filter`) — safe as class-field computeds.
+
+2. **Move to `ngOnInit`** (does not require injection context):
+   - Store subscription: `this.store.select(ibTableSelectUrlState(this.tableName)).pipe(takeUntil(this._destroyed)).subscribe(v => this._urlState.set(v))`.
+   - URL sort init block (read `tableUrl.getSort` → `store.dispatch(setSort)` or dispatch `tableDef.initialSort`).
+   - URL paginator init block (`hasUrlState` → update `this.tableDef.paginator`).
+   - `this.dataSource.tableName = ...` and `this.dataSource.paginator = ...` assignments.
+   - `this.aggregatedColumns = this.tableUrl.getAggregatedColumns(...) || {}` initialization.
+   - `this.aggregate.pipe(takeUntil(this._destroyed)).subscribe(...)` block.
+
+3. **Keep in constructor** (require injection context):
+   - Route tracking `effect()`.
+   - Remote fetch `effect()` wrapper — but extract its pipeline body to:
+     `private _createRemoteFetchPipeline(sort: IbSortState, page: IbPageState, filters: IbFilterSyntaxExtended | undefined): Subscription`.
+     Effect becomes: `const sub = this._createRemoteFetchPipeline(sort, page, filters); return () => sub.unsubscribe();`.
+   - Paginator sync `effect()` (stays small as-is).
+
+4. **Remove `dsInit` from `ngAfterContentInit`**:
+   - `dsInit` set `dataSource.sort` (no longer needed — `_orderData` delegates to `sortRows` which takes sort as parameter) and `dataSource.aggregatedColumns` (not needed — read `this.aggregatedColumns` directly).
+   - Remove the `dsInit` function definition.
+   - Remove both `setTimeout(() => dsInit())` call sites (one inside `filter.initialized.subscribe()`, one in the `if (!this.filter)` branch).
+
+5. **Simplify `syncColumnsMap` in `ngAfterContentInit`**:
+   - Change to `const syncColumnsMap = (cols: IbColumn<unknown>[]) => { ... }` (parameter instead of closure capture).
+   - Remove `this.dataSource.columns = cols` from its body (only `_columnsMap` and `_sortedColumns` needed; `doExport` uses `_sortedColumns` directly).
+   - Remove `this.dataSource.columns = this.columns.toArray()` call before `syncColumnsMap`.
+   - Update `columns.changes.subscribe` to call `syncColumnsMap(cols.toArray())`.
+
+6. **Simplify `hasAggregatedColumns` getter**:
+   - Replace `return !!this.dataSource?.aggregatedColumns && Object.keys(this.dataSource.aggregatedColumns).length > 0` with `return Object.keys(this.aggregatedColumns).length > 0`.
+
+**Constraints:**
+- `effect()` calls must stay in constructor.
+- `inject()` calls already on class fields — do not move them.
+- Do not change the public `@Input()` API.
+- Copy `_createRemoteFetchPipeline` body verbatim from the current effect — no logic changes.
+- If class-field `computed()` order causes TS error, reorder fields and report.
+
+**Validation:**
+- `grep "dsInit" src/app/inobeta-ui/ui/kai-table/table.component.ts` returns 0.
+- `ng build --configuration=development` exits 0.
+- `npm run lint` exits 0.
+- `npm run test-ci` exits 0.
+- `wc -l src/app/inobeta-ui/ui/kai-table/table.component.ts` output ≤ 500.
+
+**Stop condition:** If converting a `computed()` assignment to a class-field declaration
+introduces a TS error that cannot be resolved by reordering, keep that field in the constructor
+and report which one.
+
+---
+
+~~~
+## TASK:
+Slim `table.component.ts` constructor from ~185 to ~40 lines: convert computed signals to
+class-field declarations, move non-injection setup to `ngOnInit`, extract remote fetch pipeline
+to a private method, remove dead `dsInit` helper and simplify `ngAfterContentInit`.
+
+## CONTEXT:
+Repo: inobeta-ui. File: `src/app/inobeta-ui/ui/kai-table/table.component.ts`.
+After Steps 13–14 the file is ~585 lines. Constructor does too much: signal derivations,
+store subscriptions, URL initialization, aggregation setup, all wrapped around 3 `effect()` calls.
+
+Key Angular rules:
+- `effect()` requires injection context → must stay in constructor.
+- `computed()` does NOT require injection context → can be class-field declarations.
+- Plain `Observable.subscribe()` does NOT require injection context → can be in `ngOnInit`.
+- `@ViewChild(MatPaginator, { static: true })` is available in `ngOnInit`.
+- `takeUntil(this._destroyed)` keeps subscriptions safe if moved to `ngOnInit`.
+
+Current constructor block summary:
+- Route tracking `effect()` (keep)
+- Store subscription → `_urlState.set(v)` (move to ngOnInit)
+- `this.sortState = computed(...)` × 4 (→ class fields)
+- `this.renderedRows = computed(...)` (→ class field)
+- `this._filteredLength = computed(...)` (→ class field)
+- URL sort + paginator init (move to ngOnInit)
+- `dataSource.tableName/paginator` (move to ngOnInit)
+- Aggregation init + aggregate.subscribe (move to ngOnInit)
+- Remote fetch `effect()` (keep, extract pipeline body to private method)
+- Paginator sync `effect()` (keep)
+
+`dsInit` in `ngAfterContentInit` only assigned `dataSource.sort` and `dataSource.aggregatedColumns`
+— both unused now. Both `setTimeout(() => dsInit())` callers become no-ops.
+
+## OBJECTIVE:
+Constructor shrinks to ≤ 45 lines (3 `effect()` calls + minimal setup).
+Signal derivations become class fields. Init code moves to `ngOnInit`.
+`dsInit` is removed. `syncColumnsMap` takes cols as parameter. `hasAggregatedColumns` reads
+`this.aggregatedColumns` directly. Total file ≤ 500 lines.
+
+## REQUIREMENTS:
+1. Move `this.sortState = computed(...)`, `filtersState`, `pageState`, `pageSizeState`,
+   `this.renderedRows = computed(...)`, `this._filteredLength = computed(...)` from constructor
+   body to class-field declarations, placed after `private _urlState = signal(...)`.
+2. Add `ngOnInit()`: store subscription, URL sort init, URL paginator init,
+   `dataSource.tableName/paginator` assignments, aggregation init, `aggregate.subscribe`.
+3. In constructor: keep only 3 `effect()` calls. For remote fetch effect, replace the
+   pipeline body with `const sub = this._createRemoteFetchPipeline(sort, page, filters); return () => sub.unsubscribe();`.
+4. Add `private _createRemoteFetchPipeline(sort: IbSortState, page: IbPageState, filters: IbFilterSyntaxExtended | undefined): Subscription` — copy the current effect pipeline verbatim.
+5. Remove `dsInit` definition. Remove both `setTimeout(() => dsInit())` call sites.
+6. Simplify `syncColumnsMap` to accept `cols: IbColumn<unknown>[]` directly; remove
+   `this.dataSource.columns = ...` from its body and call sites.
+7. Simplify `hasAggregatedColumns`: `return Object.keys(this.aggregatedColumns).length > 0;`.
+
+## CONSTRAINTS:
+- `effect()` stays in constructor. No `runInInjectionContext` wrappers needed.
+- `inject()` stays on class fields (already there).
+- Do NOT change any `@Input()` declarations or their setters/getters.
+- `_createRemoteFetchPipeline` body is a verbatim copy — no logic changes.
+- If class-field computed order causes TS errors, reorder fields to resolve.
+
+## OUTPUT:
+Updated `table.component.ts`.
+
+## ACCEPTANCE CRITERIA:
+- `grep "dsInit" src/app/inobeta-ui/ui/kai-table/table.component.ts` returns 0.
+- `wc -l src/app/inobeta-ui/ui/kai-table/table.component.ts` output ≤ 500.
+- `ng build --configuration=development` exits 0.
+- `npm run lint` exits 0.
+- `npm run test-ci` exits 0.
+
+## IF UNSURE:
+write "NEED CLARIFICATION" and take no action
+~~~
+
+---
+
 ## 6. Impacted Areas
 
 | File / Symbol | Change |
@@ -1332,6 +1720,7 @@ write "NEED CLARIFICATION" and take no action
 | `table-data-source.ts` | **Deleted** |
 | `remote-data-source.ts` | **Deleted** (IbFetchDataResponse re-exported from `remote-strategy.ts`) |
 | `remote-strategy.ts` | **New** — `IbRemoteFetchStrategy<T,V>`, `IbSortState`, `IbPageState` |
+| `table-pipeline.utils.ts` | **New (internal)** — `filterRows`, `sortRows`, `pageRows`, `computeAggregations`; not exported from barrel |
 | `store/index.ts` | Remove `IKaiTableStore`, `kaiTableReducers` |
 | `table.component.ts` | Major refactor: signals, redux-first dispatch, `remoteSource` input, aggregation ownership, export decoupling |
 | `table.component.html` | `[dataSource]="renderedRows()"`, updated mobile bindings |
@@ -1372,6 +1761,9 @@ write "NEED CLARIFICATION" and take no action
 - [ ] `grep -r "kaiTableReducers\|IKaiTableStore" src/` returns 0 after Step 1
 - [ ] `grep ": any" src/app/inobeta-ui/ui/kai-table/table.component.ts` returns 0 after Step 11
 - [ ] `grep "applySortOnColumn\|this\.dataSource\.columns\[" src/app/inobeta-ui/ui/kai-table/table.component.ts` returns 0 after Step 12
+- [ ] `grep "filterPredicate\|applySearchBarFilter" src/app/inobeta-ui/ui/kai-table/table.component.ts` returns 0 after Step 13
+- [ ] `grep "dsInit" src/app/inobeta-ui/ui/kai-table/table.component.ts` returns 0 after Step 15
+- [ ] `wc -l src/app/inobeta-ui/ui/kai-table/table.component.ts` ≤ 500 after Step 15
 - [ ] Manual smoke: demo app renders table with data, sort, filter, paginator working
 - [ ] Manual smoke: GitHub issues remote example renders with loading state and refresh
 - [ ] Manual smoke: mobile view renders cards from the same data as desktop
