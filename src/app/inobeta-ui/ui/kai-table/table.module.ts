@@ -31,6 +31,7 @@ import { IbTablePaginatorIntl } from "./paginator-intl";
 import { IbKaiRowGroupDirective } from "./rowgroup";
 import { IbSortHeader } from "./sort-header";
 import { IbTable } from "./table.component";
+import { IbTableViewGroup } from "../views";
 import { provideState } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 import { IbKaiTableMobileComponent } from "../kai-table-mobile/table-mobile.component";
@@ -64,6 +65,7 @@ import { IbTableDataExportAction } from "../data-export/table-data-export.compon
   imports: [
     CommonModule,
     PortalModule,
+    IbTableViewGroup,
     IbColumn,
     IbSortHeader,
     MatTableModule,

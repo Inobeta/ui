@@ -1,9 +1,10 @@
 @use "@angular/material" as mat;
+
 :host {
   display: flex;
   gap: 8px;
   align-items: center;
-  flex: 1;
+  flex: 0 1 auto;
   flex-wrap: wrap;
 }
 

@@ -10,6 +10,20 @@
     },
     "ibMainMenu": {
       "returnToDash": "Ritorna alla Dashboard"
+    },
+    "ibTableView": {
+      "defaultView": "Vista predefinita",
+      "viewName": "Nome vista",
+      "addTitle": "Aggiungi vista",
+      "renameTitle": "Rinomina vista",
+      "duplicateTitle": "Duplica vista",
+      "deleteTitle": "Elimina vista",
+      "deleteMessage": "Sei sicuro di voler eliminare questa vista?",
+      "cancel": "Annulla",
+      "add": "Salva",
+      "rename": "Rinomina",
+      "duplicate": "Duplica",
+      "remove": "Elimina"
     }
   },
   "examples": {

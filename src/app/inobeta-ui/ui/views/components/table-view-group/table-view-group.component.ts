@@ -2,203 +2,217 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnInit,
   OnDestroy,
   Output,
-  QueryList,
-  ViewChildren,
   inject,
+  signal,
 } from "@angular/core";
-import { Store } from "@ngrx/store";
-import { BehaviorSubject, Observable, Subject } from "rxjs";
-import { takeUntil, tap } from "rxjs/operators";
-import { IbKaiTableAction } from "../../../kai-table/action";
+import { Observable, Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 import { IbViewList } from "../view-list/view-list.component";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { TranslateModule } from "@ngx-translate/core";
-import { IbTableActionModule } from "../../../kai-table/action";
-import { IbViewSnapshot } from "../../view.types";
-import { IbTableUrlService } from "../../../kai-table/table-url.service";
+import { DEFAULT_VIEW_ID, IbViewSnapshot } from "../../view.types";
+import { IbViewService } from "../../view.service";
 
 @Component({
   selector: "ib-view-group, ib-table-view-group",
   templateUrl: "table-view-group.component.html",
   styleUrls: ["table-view-group.component.scss"],
   standalone: true,
-  imports: [IbViewList, MatIconModule, MatButtonModule, MatTooltipModule, TranslateModule, IbTableActionModule]
+  imports: [IbViewList, MatButtonModule, MatIconModule, MatTooltipModule, TranslateModule],
 })
-export class IbTableViewGroup implements OnDestroy {
-  @ViewChildren(IbKaiTableAction) actions: QueryList<IbKaiTableAction>;
-
-  private _destroyed = new Subject<void>();
-  tableUrl = inject(IbTableUrlService);
-
-  get defaultView(): IbViewSnapshot {
-    return {
-      id: "__ibTableView__all",
-      name: "",
-      groupName: "",
-      componentType: "table",
-      data: {
-        filter: this.tableUrl.emptyFilterSchema?.[this.viewGroupName],
-        pageSize: 20,
-        aggregatedColumns: {},
-        sort: {
-          active: "",
-          direction: "",
-        }
-      },
-    };
-  }
-
-  _activeView = new BehaviorSubject<IbViewSnapshot>({
-    ...this.defaultView,
-    initial: true
-  });
-  get activeView() {
-    return {
-      ...this._activeView.value,
-      initial: false
-    };
-  }
-
-
-  @Input() viewDataAccessor: () => any = () => structuredClone(this.defaultView.data);
+export class IbTableViewGroup implements OnInit, OnDestroy {
+  @Input() groupName: string = "";
+  @Input() componentType: string = "";
+  @Input() stateAccessor: () => unknown = () => ({});
+  @Input() initialViewId: string | null = null;
+  @Input() stateChanges$: Observable<unknown> | null = null;
 
   @Output() ibViewChanged = new EventEmitter<IbViewSnapshot>();
-  @Output() ibResetView = new EventEmitter();
 
-  @Input() set viewGroupName(name) {
-    this._viewGroupName = name;
-    // store selectors removed in refactor; provide empty observable for views
-    this.views$ = this.store.select(() => [] as IbViewSnapshot[]).pipe(
-      tap(() => {
-        // noop
-      })
-    );
+  views = signal<IbViewSnapshot[]>([]);
+  activeView = signal<IbViewSnapshot>(this._buildDefaultView());
+  dirty = signal<boolean>(false);
+
+  private _destroyed = new Subject<void>();
+  viewService = inject(IbViewService);
+
+  get defaultView(): IbViewSnapshot {
+    return this._buildDefaultView();
   }
-  get viewGroupName() {
-    return this._viewGroupName;
+
+  ngOnInit(): void {
+    this._reloadViews();
+
+    if (this.initialViewId !== null) {
+      const foundView = this.views().find((view) => view.id === this.initialViewId);
+      if (foundView) {
+        this.activeView.set(foundView);
+        this.dirty.set(false);
+        this.ibViewChanged.emit({ ...foundView, initial: true });
+      } else {
+        this.activeView.set(this._buildDefaultView());
+        this.dirty.set(false);
+      }
+    }
+
+    if (this.stateChanges$) {
+      this.stateChanges$
+        .pipe(takeUntil(this._destroyed))
+        .subscribe(() => this.dirty.set(this._checkDirty()));
+    }
   }
-  private _viewGroupName: string;
 
-  dirty = false;
-  views$: Observable<IbViewSnapshot[]>;
-
-  constructor(private store: Store, public viewService: any) { }
-
-
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this._destroyed.next();
     this._destroyed.complete();
   }
 
+  private _buildDefaultView(): IbViewSnapshot {
+    return {
+      id: DEFAULT_VIEW_ID,
+      name: "",
+      groupName: this.groupName,
+      componentType: this.componentType,
+      data: {},
+    };
+  }
 
-  checkViewDataChanges(): boolean {
-    const current = this.viewDataAccessor();
+  private _checkDirty(): boolean {
+    const current = this.stateAccessor();
     if (current === undefined) {
       return false;
     }
 
-    // FIXME: this check is really bad, we should use a deep comparison and schema initializer must be done in a better way
-    try {
-      if (JSON.stringify((this.activeView.data as any).filter) == '{}') {
-        (this.activeView.data as any).filter = structuredClone(this.tableUrl.emptyFilterSchema?.[this.viewGroupName] ?? {});
-      }
-    } catch (e) {
-      // silence - defensive for refactor paths where data shape may differ
+    return this._serialize(current) !== this._serialize(this.activeView().data);
+  }
+
+  private _serialize(state: unknown): string {
+    if (state === null || typeof state !== "object") {
+      return JSON.stringify(state);
     }
 
-
-    return JSON.stringify(current) != JSON.stringify(this.activeView.data);
+    const objectValue = state as Record<string, unknown>;
+    return JSON.stringify(objectValue, Object.keys(objectValue).sort());
   }
 
-  handleStateChanges(changes$: Observable<unknown>) {
-    changes$
-      .pipe(takeUntil(this._destroyed))
-      .subscribe(() => (this.dirty = this.checkViewDataChanges()));
+  private _reloadViews(): void {
+    this.views.set(this.viewService.getViews(this.groupName, this.componentType));
   }
 
-  handleAddView(data = this.defaultView.data) {
+  private _withoutInitial(view: IbViewSnapshot): IbViewSnapshot {
+    const { initial: _initial, ...snapshot } = view;
+    return snapshot;
+  }
+
+  private _setActiveView(view: IbViewSnapshot): void {
+    this.activeView.set({ ...view, initial: false });
+    this.dirty.set(false);
+    this.ibViewChanged.emit({ ...view, initial: false });
+  }
+
+  handleAddView(): void {
     this.viewService.openAddViewDialog().subscribe(({ name }) => {
       const view = this.viewService.addView({
         name,
-        groupName: this.viewGroupName,
-        data,
+        groupName: this.groupName,
+        componentType: this.componentType,
+        data: this.stateAccessor(),
       });
-      this._activeView.next(view);
+      this._reloadViews();
+      this._setActiveView(view);
     });
   }
 
-  handleRemoveView(view: IbViewSnapshot) {
+  handleRemoveView(view: IbViewSnapshot): void {
+    const snapshot = this._withoutInitial(view);
     this.viewService.openDeleteViewDialog(view).subscribe(() => {
-      this.viewService.deleteView(view);
-      this._activeView.next(this.defaultView);
+      this.viewService.deleteView(snapshot);
+      this._reloadViews();
+      this._setActiveView(this._buildDefaultView());
     });
   }
 
-  handleRenameView(view: IbViewSnapshot) {
+  handleRenameView(view: IbViewSnapshot): void {
+    const snapshot = this._withoutInitial(view);
     this.viewService.openRenameViewDialog(view).subscribe(({ name }) => {
-      this._activeView.next(this.viewService.renameView(view, name));
+      const renamedView = this.viewService.renameView(snapshot, name);
+      this._reloadViews();
+      this._setActiveView(renamedView);
     });
   }
 
-  handleDuplicateView(view: IbViewSnapshot) {
+  handleDuplicateView(view: IbViewSnapshot): void {
     this.viewService.openDuplicateViewDialog(view).subscribe(({ name }) => {
       const nextView = this.viewService.duplicateView({
         name,
         groupName: view.groupName,
-        data: this.viewDataAccessor(),
+        componentType: view.componentType,
+        data: this.stateAccessor(),
       });
-      this._activeView.next(nextView);
+      this._reloadViews();
+      this._setActiveView(nextView);
     });
   }
 
-  handleSaveView() {
-    if (this.activeView.id === this.defaultView.id) {
-      this.handleAddView(this.viewDataAccessor());
+  handleSaveView(): void {
+    const currentActiveView = this.activeView();
+
+    if (currentActiveView.id === DEFAULT_VIEW_ID) {
+      this.handleAddView();
       return;
     }
 
     const view = this.viewService.saveView(
-      this.activeView,
-      this.viewDataAccessor()
+      this._withoutInitial(currentActiveView),
+      this.stateAccessor(),
     );
-    this._activeView.next(view);
+    this._reloadViews();
+    this._setActiveView(view);
   }
 
-  handleChangeView(view: IbViewSnapshot) {
-    if (!this.dirty) {
-      this._activeView.next(view);
+  handleChangeView(view: IbViewSnapshot): void {
+    if (!this.dirty()) {
+      this._setActiveView(view);
       return;
     }
 
-    if (this.activeView.id === this.defaultView.id) {
+    const currentActiveView = this.activeView();
+    if (currentActiveView.id === DEFAULT_VIEW_ID) {
       this.viewService.openSaveAsDialog().subscribe((newView) => {
         if (newView.confirmed) {
           this.viewService.addView({
             name: newView.name,
-            groupName: this.viewGroupName,
-            data: this.viewDataAccessor(),
+            groupName: this.groupName,
+            componentType: this.componentType,
+            data: this.stateAccessor(),
           });
+          this._reloadViews();
         }
-        this._activeView.next(view);
+        this._setActiveView(view);
       });
       return;
     }
 
     this.viewService
-      .openSaveChangesDialog(this.activeView)
+      .openSaveChangesDialog(currentActiveView)
       .subscribe((result) => {
         if (result.confirmed) {
-          this.viewService.saveView(this.activeView, this.viewDataAccessor());
+          this.viewService.saveView(
+            this._withoutInitial(currentActiveView),
+            this.stateAccessor(),
+          );
+          this._reloadViews();
         }
-        this._activeView.next(view);
+        this._setActiveView(view);
       });
   }
 
-  handleDiscardChanges() {
-    this._activeView.next(this.activeView);
+  handleDiscardChanges(): void {
+    this._setActiveView(this.activeView());
   }
 }

@@ -1,212 +1,263 @@
-import { HarnessLoader } from "@angular/cdk/testing";
-import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
-import { CommonModule } from "@angular/common";
-import { Component, Type, inject } from "@angular/core";
+import { Component, Type } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { MockStore, provideMockStore } from "@ngrx/store/testing";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { TranslateModule } from "@ngx-translate/core";
 import { of } from "rxjs";
-import { IbToastModule } from "../../../toast";
-// store reducer types removed; use any for tests
-import { IbViewModule } from "../../view.module";
-import { IbTableViewGroup } from "./table-view-group.component";
-import { IbTableUrlService } from "../../../kai-table";
 import { RouterTestingModule } from "@angular/router/testing";
-import { provideStore } from "@ngrx/store";
 
-const initialState: any = {
-  views: [],
-};
+import { IbTableViewGroup } from "./table-view-group.component";
+import { IbViewSnapshot, DEFAULT_VIEW_ID } from "../../view.types";
+import { IbViewService } from "../../view.service";
+import { EventEmitter } from "@angular/core";
 
-describe("IbTableViewGroup", () => {
-  let fixture: ComponentFixture<IbViewApp>;
+describe('IbTableViewGroup', () => {
+  let fixture: ComponentFixture<TestHostComponent>;
+  let host: TestHostComponent;
   let component: IbTableViewGroup;
-  let loader: HarnessLoader;
-  let store: MockStore;
+  let viewService: jasmine.SpyObj<IbViewService>;
 
-  beforeEach(() => {
-    fixture = createComponent(IbViewApp);
-    component = fixture.debugElement.query(
-      By.directive(IbTableViewGroup)
-    ).componentInstance;
-    loader = TestbedHarnessEnvironment.loader(fixture);
-    store = TestBed.inject(MockStore);
+  const makeView = (id: string, name: string): IbViewSnapshot => ({
+    id,
+    name,
+    groupName: 'issues',
+    componentType: 'table',
+    data: {},
   });
 
-  it("should create", () => {
+  beforeEach(async () => {
+    viewService = jasmine.createSpyObj('IbViewService', [
+      'getViews',
+      'openAddViewDialog',
+      'addView',
+      'openDeleteViewDialog',
+      'deleteView',
+      'openRenameViewDialog',
+      'renameView',
+      'openDuplicateViewDialog',
+      'duplicateView',
+      'saveView',
+      'openSaveAsDialog',
+      'openSaveChangesDialog',
+    ]);
+
+    // Default: return two saved views
+    viewService.getViews.and.returnValue([
+      makeView('v1', 'Alpha'),
+      makeView('v2', 'Beta'),
+    ]);
+
+    await TestBed.configureTestingModule({
+      declarations: [TestHostComponent],
+      imports: [
+        IbTableViewGroup,
+        NoopAnimationsModule,
+        TranslateModule.forRoot(),
+        RouterTestingModule.withRoutes([]),
+      ],
+      providers: [
+        { provide: IbViewService, useValue: viewService },
+      ],
+    }).compileComponents();
+  });
+
+  function createHost(initialViewId?: string, stateAccessor?: () => unknown) {
+    fixture = TestBed.createComponent(TestHostComponent);
+    host = fixture.componentInstance;
+    host.groupName = 'issues';
+    host.componentType = 'table';
+    host.stateAccessor = stateAccessor ?? (() => ({ }));
+    host.initialViewId = initialViewId ?? null;
+    fixture.detectChanges();
+
+    component = fixture.debugElement
+      .query(By.directive(IbTableViewGroup))
+      .componentInstance as IbTableViewGroup;
+  }
+
+  it('creates successfully', () => {
+    createHost();
     expect(component).toBeTruthy();
   });
 
-  it("should add a view", () => {
-    spyOn(component.viewService, "openAddViewDialog").and.returnValue(
-      of({ name: "related" })
-    );
-    component.handleAddView();
-    expect(component.activeView.name).toBe("related");
+  it('initialViewId matches a view -> sets active and emits initial', () => {
+    // create host but intercept EventEmitter.emit globally for this spec
+    const originalEmit = (EventEmitter.prototype as any).emit;
+    const emitSpy = spyOn(EventEmitter.prototype as any, 'emit').and.callThrough();
+
+    createHost('v1');
+
+    expect(component.activeView().id).toBe('v1');
+    expect(emitSpy).toHaveBeenCalledWith(jasmine.objectContaining({ id: 'v1', initial: true }));
+
+    // restore original
+    (EventEmitter.prototype as any).emit = originalEmit;
   });
 
-  it("should remove a view", () => {
-    spyOn(component.viewService, "openAddViewDialog").and.returnValue(
-      of({ name: "related" })
-    );
-    spyOn(component.viewService, "openDeleteViewDialog").and.returnValue(
-      of(true)
-    );
+  it('initialViewId does not match -> uses default and does not emit', () => {
+    createHost('no-match');
+    spyOn(component.ibViewChanged, 'emit');
 
-    component.handleAddView();
-    fixture.detectChanges();
-    component.handleRemoveView(component.activeView);
-    fixture.detectChanges();
-    expect(component.activeView.id).toBe("__ibTableView__all");
+    expect(component.activeView().id).toBe(DEFAULT_VIEW_ID);
+    expect(component.ibViewChanged.emit).not.toHaveBeenCalled();
   });
 
-  it("should rename a view", () => {
-    spyOn(component.viewService, "openAddViewDialog").and.returnValue(
-      of({ name: "related" })
-    );
-    spyOn(component.viewService, "openRenameViewDialog").and.returnValue(
-      of({ name: "dandori" })
-    );
+  it('handleAddView calls addView, sets active and emits', () => {
+    createHost(undefined, () => ({ foo: 'bar' }));
+    const newView = makeView('newid', 'New');
+    newView.data = { foo: 'bar' };
+
+    viewService.openAddViewDialog.and.returnValue(of({ name: 'New' }));
+    viewService.addView.and.returnValue(newView);
+    spyOn(component.ibViewChanged, 'emit');
 
     component.handleAddView();
-    component.handleRenameView(component.activeView);
-    expect(component.activeView.name).toBe("dandori");
+
+    expect(viewService.addView).toHaveBeenCalledWith(jasmine.objectContaining({ name: 'New', groupName: 'issues', componentType: 'table', data: { foo: 'bar' } }));
+    expect(component.activeView().id).toBe('newid');
+    expect(component.ibViewChanged.emit).toHaveBeenCalledWith(jasmine.objectContaining({ id: 'newid', initial: false }));
   });
 
-  it("should duplicate a view", () => {
-    spyOn(component.viewService, "openAddViewDialog").and.returnValue(
-      of({ name: "dandori" })
-    );
-    spyOn(component.viewService, "openDuplicateViewDialog").and.returnValue(
-      of({ name: "Copy of dandori" })
-    );
+  it('handleRemoveView calls deleteView and resets to default', () => {
+    createHost();
+    const view = makeView('to-delete', 'X');
+    // Simulate delete dialog confirmed (service exposes Observable<void>)
+    viewService.openDeleteViewDialog.and.returnValue(of(undefined));
+    viewService.deleteView.and.callFake(() => {});
 
-    component.handleAddView();
-    component.handleDuplicateView(component.activeView);
-    expect(component.activeView.name).toBe("Copy of dandori");
+    component.handleRemoveView(view);
+
+    expect(viewService.deleteView).toHaveBeenCalledWith(jasmine.objectContaining({ id: 'to-delete' }));
+    expect(component.activeView().id).toBe(DEFAULT_VIEW_ID);
   });
 
-  it("should save a view", () => {
-    spyOn(component.viewService, "openAddViewDialog").and.returnValue(
-      of({ name: "dandori" })
-    );
+  it('handleRenameView calls renameView and updates active name', () => {
+    createHost();
+    const view = makeView('r1', 'Old');
+    const renamed = { ...view, name: 'Renamed' };
+    viewService.openRenameViewDialog.and.returnValue(of({ name: 'Renamed' }));
+    viewService.renameView.and.returnValue(renamed);
 
-    component.handleAddView();
-    fixture.componentInstance.filter = { issueType: "dandori" };
+    component.handleRenameView(view);
+
+    expect(viewService.renameView).toHaveBeenCalledWith(jasmine.objectContaining({ id: 'r1' }), 'Renamed');
+    expect(component.activeView().name).toBe('Renamed');
+  });
+
+  it('handleDuplicateView duplicates and sets active to copy', () => {
+    createHost(undefined, () => ({ a: 1 }));
+    const view = makeView('vdup', 'Orig');
+    const copy = { ...view, id: 'vdup-copy', name: 'Copy' };
+    viewService.openDuplicateViewDialog.and.returnValue(of({ name: 'Copy' }));
+    viewService.duplicateView.and.returnValue(copy);
+
+    component.handleDuplicateView(view);
+
+    expect(viewService.duplicateView).toHaveBeenCalledWith(jasmine.objectContaining({ name: 'Copy', groupName: 'issues', componentType: 'table', data: { a: 1 } }));
+    expect(component.activeView().id).toBe('vdup-copy');
+  });
+
+  it('handleSaveView on default delegates to add flow', () => {
+    createHost(undefined, () => ({ x: 1 }));
+    spyOn(component, 'handleAddView');
+
+    // Ensure active is default
+    component.activeView.set(component.defaultView);
     component.handleSaveView();
-  /*  expect(component.activeView.data).toEqual({
-      filter: { issueType: "dandori" },
-    });*/
+
+    expect(component.handleAddView).toHaveBeenCalled();
   });
 
-  it("should save a new view when default is selected", () => {
-    spyOn(component.viewService, "openAddViewDialog").and.returnValue(
-      of({ name: "dandori", confirmed: true })
-    );
+  it('handleSaveView on named view calls saveView', () => {
+    createHost(undefined, () => ({ x: 2 }));
+    const named = makeView('save1', 'Saved');
+    viewService.saveView.and.returnValue(named);
 
-    fixture.componentInstance.filter = { issueType: "dandori" };
+    component.activeView.set(named);
     component.handleSaveView();
-  /*  expect(component.activeView.data).toEqual({
-      filter: { issueType: "dandori" },
-    });*/
+
+    expect(viewService.saveView).toHaveBeenCalledWith(jasmine.objectContaining({ id: 'save1' }), { x: 2 });
+    expect(component.activeView().id).toBe('save1');
   });
 
+  it('handleChangeView when not dirty updates active immediately', () => {
+    createHost();
+    const view = makeView('vchange', 'V');
+    component.dirty.set(false);
 
+    component.handleChangeView(view);
 
-
-  it("should change a view", () => {
-    spyOn(component.viewService, "openAddViewDialog").and.returnValue(
-      of({ name: "dandori" })
-    );
-    component.handleAddView();
-    component.handleChangeView(component.defaultView);
-    expect(component.activeView.id).toBe("__ibTableView__all");
+    expect(component.activeView().id).toBe('vchange');
   });
 
-  it("should save as view, default -> any", () => {
-    spyOn(component.viewService, "openAddViewDialog").and.returnValue(
-      of({ name: "time" })
-    );
-    spyOn(component.viewService, "openSaveAsDialog").and.returnValue(
-      of({ name: "dandori", confirmed: true })
-    );
+  it('handleChangeView when dirty and default active opens saveAs dialog and adds', () => {
+    createHost(undefined, () => ({ k: 'v' }));
+    const target = makeView('target', 'T');
 
-    component.handleAddView();
-    const timeView = component.activeView;
-    component.handleChangeView(component.defaultView);
-    expect(component.activeView.id).toBe("__ibTableView__all");
+    // set active to default and dirty
+    component.activeView.set(component.defaultView);
+    component.dirty.set(true);
 
-    fixture.componentInstance.filter = { issueType: "dandori" };
-    component.dirty = true;
-    component.handleChangeView(timeView);
+    viewService.openSaveAsDialog.and.returnValue(of({ name: 'SavedAs', confirmed: true }));
+    viewService.addView.and.returnValue(makeView('sa1', 'SavedAs'));
 
-    expect(component.activeView.name).toBe("time");
+    component.handleChangeView(target);
+
+    expect(viewService.openSaveAsDialog).toHaveBeenCalled();
+    expect(viewService.addView).toHaveBeenCalled();
+    expect(component.activeView().id).toBe('target');
   });
 
-  it("should save changes, any view -> any", () => {
-    spyOn(component.viewService, "openAddViewDialog").and.returnValue(
-      of({ name: "time" })
-    );
-    spyOn(component.viewService, "openSaveChangesDialog").and.returnValue(
-      of({ name: "dandori", confirmed: true })
-    );
+  it('handleChangeView when dirty and named active opens saveChanges dialog and saves', () => {
+    createHost(undefined, () => ({ z: 9 }));
+    const current = makeView('cur', 'Cur');
+    const target = makeView('tgt', 'Tgt');
 
-    component.handleAddView();
-    fixture.componentInstance.filter = { issueType: "dandori" };
-    component.dirty = true;
-    component.handleChangeView(component.defaultView);
-    expect(component.activeView.id).toBe("__ibTableView__all");
+    component.activeView.set(current);
+    component.dirty.set(true);
+
+    viewService.openSaveChangesDialog.and.returnValue(of({ confirmed: true }));
+    viewService.saveView.and.returnValue(current);
+
+    component.handleChangeView(target);
+
+    expect(viewService.openSaveChangesDialog).toHaveBeenCalledWith(current);
+    expect(viewService.saveView).toHaveBeenCalled();
+    expect(component.activeView().id).toBe('tgt');
+  });
+
+  it('_checkDirty is order-insensitive for objects', () => {
+    // Provide a stateAccessor returning {a:1,b:2}
+    createHost(undefined, () => ({ a: 1, b: 2 }));
+    // set active view data with fields in different order
+    component.activeView.set({ id: 'x', name: '', groupName: 'issues', componentType: 'table', data: { b: 2, a: 1 } });
+
+    const dirty = (component as any)._checkDirty();
+    expect(dirty).toBeFalse();
+  });
+
+  it('handleDiscardChanges resets dirty to false', () => {
+    createHost();
+    component.dirty.set(true);
+    component.handleDiscardChanges();
+    expect(component.dirty()).toBeFalse();
   });
 });
 
-function configureModule<T>(type: Type<T>) {
-  TestBed.configureTestingModule({
-    declarations: [type],
-    imports: [
-      CommonModule,
-      BrowserAnimationsModule,
-      IbToastModule,
-      IbViewModule,
-      TranslateModule.forRoot({
-        extend: true,
-      }),
-      RouterTestingModule.withRoutes([])
-    ],
-    providers: [
-      provideStore(),
-      provideMockStore({
-        initialState: {
-          ibViews: initialState
-        }
-      }),
-      IbTableUrlService
-    ],
-  }).compileComponents();
-}
-
-function createComponent<T>(type: Type<T>): ComponentFixture<T> {
-  configureModule(type);
-
-  const fixture = TestBed.createComponent(type);
-  fixture.detectChanges();
-  return fixture;
-}
-
-export const createViewComponent = createComponent;
-
 @Component({
-    template: `<ib-view-group
-    viewGroupName="issues"
-    [viewDataAccessor]="viewDataAccessor"
-  ></ib-view-group>`,
-    standalone: true
+  template: `
+    <ib-table-view-group
+      [groupName]="groupName"
+      [componentType]="componentType"
+      [stateAccessor]="stateAccessor"
+      [initialViewId]="initialViewId"
+    ></ib-table-view-group>
+  `,
+  standalone: false,
 })
-class IbViewApp {
-  filter = { };
-
-  viewDataAccessor = () => ({
-    filter: this.filter,
-  });
+class TestHostComponent {
+  groupName = 'issues';
+  componentType = 'table';
+  stateAccessor: () => unknown = () => ({});
+  initialViewId: string | null = null;
 }

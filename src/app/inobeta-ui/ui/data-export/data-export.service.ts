@@ -53,6 +53,9 @@ export class IbDataExportService {
     dataSource: IbTableDataSource<unknown>,
     settings: IDataExportSettings
   ) {
+    console.log("Exporting with settings", settings);
+    console.log("Data source", dataSource);
+    console.log("Table name", tableName);
     let data: unknown[];
     if (settings.dataset === "all") {
       data = dataSource._orderData(dataSource.filteredData);

@@ -3,7 +3,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { TranslatePipe } from "@ngx-translate/core";
-import { filter } from "rxjs/operators";
+import { filter, tap } from "rxjs/operators";
 import {
   IbDataExportService,
   IDataExportSettings,
@@ -36,7 +36,7 @@ export class IbTableDataExportAction {
         showSelectedRowsOption: this.showSelectedRowsOption,
         showAllRowsOption: this.showAllRowsOption,
       })
-      .pipe(filter((settings) => !!settings))
+      .pipe(filter((settings) => !!settings), tap((settings) => console.log(this.showAllRowsOption, this.showSelectedRowsOption)))
       .subscribe((settings) => this.ibDataExport.emit(settings));
   }
 }

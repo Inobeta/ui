@@ -3,6 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { IbFilterSyntaxExtended } from '../kai-filter/filter.types';
 import { Sort } from '@angular/material/sort';
 import { IbKaiTableParams } from './store/url-state/interfaces';
+import { DEFAULT_VIEW_ID } from '../views/view.types';
 
 
 @Injectable({ providedIn: 'root' })
@@ -113,6 +114,40 @@ export class IbTableUrlService {
       replaceUrl: true,
     });
   }
+
+  getActiveView(tableName: string): string | null {
+    return this.getRawParams(tableName).ibview ?? null;
+  }
+
+  setActiveView(tableName: string, viewId: string): void {
+    const raw = this.getRawParams(tableName);
+    const payload = viewId === DEFAULT_VIEW_ID
+      ? { ...raw }
+      : { ...raw, ibview: viewId };
+
+    this.router.navigate([], {
+      queryParams: {
+        [tableName]: JSON.stringify(payload)
+      },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
+  }
+
+  setViewState(tableName: string, viewId: string, params: Partial<IbTableQsParams>): void {
+    const raw = this.getRawParams(tableName);
+    const payload = viewId === DEFAULT_VIEW_ID
+      ? { ...raw, ...params }
+      : { ...raw, ...params, ibview: viewId };
+
+    this.router.navigate([], {
+      queryParams: {
+        [tableName]: JSON.stringify(payload)
+      },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
+  }
 }
 
 
@@ -122,4 +157,5 @@ export type IbTableQsParams = {
   ibfilter: IbFilterSyntaxExtended;
   ibaggregatedcolumns: Record<string, string>;
   ibsort: Sort;
+  ibview?: string;
 }

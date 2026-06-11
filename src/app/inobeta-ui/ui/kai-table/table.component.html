@@ -1,6 +1,7 @@
 <div class="ib-table-desktop">
   <section class="ib-table__toolbar">
-
+    <ng-content select="ib-view-group, ib-table-view-group"></ng-content>
+    <span style="flex: 1 1 auto;"></span>
     <section class="ib-table__toolbar__actions">
       @for(action of mobileHeaderActions(); track $index) {
       @if(action.kind() === 'export') {

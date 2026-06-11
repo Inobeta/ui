@@ -1,7 +1,7 @@
 import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { CommonModule } from "@angular/common";
-import { Component, Injectable, Type } from "@angular/core";
+import { Component, Injectable, Type, Input, Output, EventEmitter } from "@angular/core";
 import {
   ComponentFixture,
   TestBed,
@@ -24,9 +24,9 @@ import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterTestingModule } from "@angular/router/testing";
 import { EffectsModule } from "@ngrx/effects";
 import { provideStore } from "@ngrx/store";
-import { provideMockStore } from "@ngrx/store/testing";
+import { provideMockStore, MockStore } from "@ngrx/store/testing";
 import { TranslateModule } from "@ngx-translate/core";
-import { Observable, map, throwError, timer } from "rxjs";
+import { Observable, Subject, map, throwError, timer } from "rxjs";
 import {
   IbDataExportModule,
   IbDataExportService,
@@ -369,7 +369,7 @@ describe("IbTable", () => {
 
 function configureModule<T>(type: Type<T>) {
   TestBed.configureTestingModule({
-    declarations: [type],
+  declarations: [type, IbViewGroupStub],
     imports: [
       CommonModule,
       IbKaiTableModule,
@@ -388,8 +388,8 @@ function configureModule<T>(type: Type<T>) {
       provideStore(),
       provideMockStore({
         initialState: {
-          ibViews: {
-            views: []
+          ibKaiTable: {
+            tables: []
           }
         }
       }),
@@ -627,3 +627,102 @@ class IbTableWithAggregate {
     { name: "bob", amount: 20 },
   ];
 }
+
+@Component({
+  selector: "ib-view-group, ib-table-view-group",
+  template: "",
+  standalone: false,
+})
+class IbViewGroupStub {
+  @Input() groupName: string = "";
+  @Input() componentType: string = "";
+  @Input() stateAccessor: () => unknown = () => ({});
+  @Input() initialViewId: string | null = null;
+  @Input() stateChanges$: Observable<unknown> | null = null;
+  @Output() ibViewChanged = new EventEmitter<any>();
+}
+
+
+describe("with IbTableViewGroup", () => {
+  it("applyViewToTable({ initial: true, data: {...} }) applies data and does NOT call setViewState", fakeAsync(() => {
+    configureModule(IbTableWithViewGroupApp);
+    const tableUrl = TestBed.inject(IbTableUrlService);
+    const setSpy = spyOn(tableUrl, "setViewState");
+
+    const fixture = TestBed.createComponent(IbTableWithViewGroupApp);
+    fixture.detectChanges();
+    const component = fixture.debugElement.query(By.directive(IbTable)).componentInstance;
+
+    // apply initial view (should not call setViewState)
+    component.applyViewToTable({ initial: true, id: "v-initial", data: { pageSize: 5 } } as any);
+    expect(component.dataSource.paginator.pageSize).toBe(5);
+    expect(setSpy).not.toHaveBeenCalled();
+  }));
+
+  it("applyViewToTable({ initial: false, data: {...} }) applies data AND calls setViewState", fakeAsync(() => {
+    configureModule(IbTableWithViewGroupApp);
+    const tableUrl = TestBed.inject(IbTableUrlService);
+    const setSpy = spyOn(tableUrl, "setViewState");
+
+    const fixture = TestBed.createComponent(IbTableWithViewGroupApp);
+    fixture.detectChanges();
+    const component = fixture.debugElement.query(By.directive(IbTable)).componentInstance;
+
+    component.applyViewToTable({ initial: false, id: "v-2", data: { pageSize: 3 } } as any);
+    expect(component.dataSource.paginator.pageSize).toBe(3);
+    expect(setSpy).toHaveBeenCalledWith(component.tableName, "v-2", jasmine.any(Object));
+  }));
+
+  it("getCurrentTableState() returns filter, pageSize, aggregatedColumns, sort", () => {
+    configureModule(IbTableWithViewGroupApp);
+    const fixture = TestBed.createComponent(IbTableWithViewGroupApp);
+    fixture.detectChanges();
+    const component = fixture.debugElement.query(By.directive(IbTable)).componentInstance;
+
+    // set some internal values
+    component.dataSource.aggregatedColumns = { foo: true } as any;
+    component.dataSource.sort = component.sort;
+    component.sort.active = "name";
+    component.sort.direction = "asc";
+    component.paginator.pageSize = 11;
+
+    const state: any = component.getCurrentTableState();
+    expect(state.pageSize).toBe(11);
+    expect(state.aggregatedColumns).toEqual({ foo: true });
+    expect(state.sort).toBeDefined();
+    expect(state.sort.active).toBe("name");
+    expect(state.sort.direction).toBe("asc");
+    expect(state.filter).toBeDefined();
+  });
+
+  it("viewIdFromUrl() is non-null when URL has ibview param set", () => {
+    configureModule(IbTableWithViewGroupApp);
+    const tableUrl = TestBed.inject(IbTableUrlService);
+    spyOn(tableUrl, "getActiveView").and.returnValue("from-url");
+
+    const fixture = TestBed.createComponent(IbTableWithViewGroupApp);
+    fixture.detectChanges();
+    const component = fixture.debugElement.query(By.directive(IbTable)).componentInstance;
+
+    expect(component.viewIdFromUrl()).toBe("from-url");
+  });
+
+  it("URL empty + Redux cached state -> paginator.pageSize receives cached value", () => {
+    configureModule(IbTableWithViewGroupApp);
+    const mockStore = TestBed.inject(MockStore);
+    // Use setState (factory selector ibTableSelectLastQueryStringRaw creates a new instance
+    // each call so overrideSelector won't match — set actual state instead)
+    mockStore.setState({
+      ibKaiTable: {
+        tables: [{ tableName: "employees", pageSize: 7 }]
+      }
+    });
+
+    const fixture = TestBed.createComponent(IbTableWithViewGroupApp);
+    fixture.detectChanges();
+    const component = fixture.debugElement.query(By.directive(IbTable)).componentInstance;
+
+    // tableDef should be initialized from cached store value
+    expect(component.tableDef.paginator.pageSize).toBe(7);
+  });
+});

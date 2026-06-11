@@ -2,22 +2,12 @@
   --ib-table-minimum-rows-private: var(--ib-table-minimum-rows, 10);
   --ib-table-has-footer-row: 0;
   --ib-table-filter-max-height: 112px;
-  --ib-table-content-max-height-private: var(
-    --ib-table-content-max-height,
-    calc(
-      var(--mat-table-header-container-height) +
-        var(--mat-table-row-item-container-height) *
-        (var(--ib-table-minimum-rows-private) + var(--ib-table-has-footer-row))
-    )
-  );
-  --ib-table-outline-color-private: var(
-    --ib-table-outline-color,
-    var(--mat-table-row-item-outline-color)
-  );
-  --ib-table-column-outline-width-private: var(
-    --ib-table-column-outline-width,
-    0
-  );
+  --ib-table-content-max-height-private: var(--ib-table-content-max-height,
+      calc(var(--mat-table-header-container-height) + var(--mat-table-row-item-container-height) * (var(--ib-table-minimum-rows-private) + var(--ib-table-has-footer-row))));
+  --ib-table-outline-color-private: var(--ib-table-outline-color,
+      var(--mat-table-row-item-outline-color));
+  --ib-table-column-outline-width-private: var(--ib-table-column-outline-width,
+      0);
   --ib-table-border-width: 1px;
 
   &:has(.ib-table__rollup-row) {
@@ -30,8 +20,8 @@
 
   .ib-table__toolbar {
     display: flex;
+    flex-direction: row;
     align-items: center;
-    justify-content: flex-end;
 
     &:has(ib-table-view-group),
     &:has(> section:not(:empty)) {
@@ -41,6 +31,7 @@
 
     &__actions {
       padding-right: 8px;
+
       ib-table-action-group {
         display: inline-block;
       }
@@ -54,14 +45,11 @@
     }
   }
 
-  ib-filter:not(:has(.ib-filter--hidden)) ~ .ib-table__content {
-    max-height: calc(
-      var(--ib-table-content-max-height-private) -
-        var(--ib-table-filter-max-height)
-    );
+  ib-filter:not(:has(.ib-filter--hidden))~.ib-table__content {
+    max-height: calc(var(--ib-table-content-max-height-private) - var(--ib-table-filter-max-height));
   }
 
-  ib-filter:has(.ib-filter--hidden) ~ .ib-table__content {
+  ib-filter:has(.ib-filter--hidden)~.ib-table__content {
     max-height: calc(var(--ib-table-content-max-height-private));
   }
 
@@ -117,6 +105,7 @@
 
     .ib-table__row-group {
       height: 0;
+
       &--hidden {
         .mat-mdc-cell {
           border-bottom-width: 0;
@@ -124,7 +113,7 @@
       }
     }
 
-    .mat-mdc-no-data-row > td > div {
+    .mat-mdc-no-data-row>td>div {
       display: flex;
       flex-direction: column;
       gap: 4px;
@@ -155,13 +144,14 @@
   .ib-table__rollup-row {
     box-shadow: 0 -1px var(--ib-table-outline-color-private);
   }
+
   .ib-table__paginator {
     border-top: 1px solid var(--ib-table-outline-color-private);
   }
 }
 
-td.cdk-column-ib-action > :first-child,
-td.mat-column-ib-action > :first-child {
+td.cdk-column-ib-action> :first-child,
+td.mat-column-ib-action> :first-child {
   display: flex;
   gap: 4px;
   justify-content: flex-end;

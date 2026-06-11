@@ -1,8 +1,14 @@
 import { Component, ViewChild } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
-import { IbDataExportModule, IbFilterModule, IbKaiTableModule, IbTableActionModule } from "public_api";
-import { IbSelectionColumn } from "../../inobeta-ui/ui/kai-table/columns/selection-column";
-import { IbKaiTableState } from "../../inobeta-ui/ui/kai-table/table.types";
+import {
+  IbDataExportModule,
+  IbFilterModule,
+  IbKaiTableModule,
+  IbKaiTableState,
+  IbSelectionColumn,
+  IbTableActionModule,
+  IbTableViewGroup,
+} from "public_api";
 import { UserService } from "./users";
 
 import { MatIconButton } from "@angular/material/button";
@@ -33,9 +39,7 @@ import { MatIconButton } from "@angular/material/button";
             <mat-icon>refresh</mat-icon>
           </button>
         </ng-template>
-        <ng-template ibTableAction>
-          <ib-table-data-export-action />
-        </ng-template>
+        <ng-template ibTableAction [kind]="'export'"></ng-template>
       </ib-table-action-group>
 
       <ib-filter>
@@ -47,6 +51,8 @@ import { MatIconButton } from "@angular/material/button";
         <ib-date-filter name="created_at">Purchased</ib-date-filter>
         <ib-boolean-filter name="subscribed">Subscribed</ib-boolean-filter>
       </ib-filter>
+
+      <ib-view-group [groupName]="'fullExample'" />
 
       <ib-selection-column (ibRowSelectionChange)="selectionChange($event)" />
       <ib-text-column headerText="Name" name="name" sort />
@@ -86,6 +92,7 @@ import { MatIconButton } from "@angular/material/button";
     IbFilterModule,
     IbTableActionModule,
     IbDataExportModule,
+    IbTableViewGroup,
     MatIconButton
   ]
 })

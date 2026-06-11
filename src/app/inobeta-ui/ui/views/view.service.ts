@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@angular/core";
+import { inject, Inject, Injectable } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { Observable } from "rxjs";
 import { filter, map } from "rxjs/operators";
@@ -10,12 +10,14 @@ import { IbViewSnapshot } from "./view.types";
 
 @Injectable({ providedIn: "root" })
 export class IbViewService {
+
+  private storageService = inject(IbStorageService);
+  private dialog = inject(MatDialog);
+  private toast = inject(IbToastNotification);
+
   constructor(
-    private storageService: IbStorageService,
-    private dialog: MatDialog,
-    private toast: IbToastNotification,
     @Inject(IB_VIEWS_STORAGE_KEY) private storageKey: string,
-  ) {}
+  ) { }
 
   getViews(groupName: string, componentType: string): IbViewSnapshot[] {
     return this._readAll(groupName).filter((view) => view.componentType === componentType);
