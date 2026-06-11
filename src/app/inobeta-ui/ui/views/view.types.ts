@@ -1,8 +1,5 @@
 /**
- * Snapshot representation of a saved view/state for UI views (tables/cards/etc.).
- *
- * Note: the `initial` flag is an internal runtime-only marker and MUST NOT be
- * persisted to localStorage; stored representations should omit this field.
+ * Snapshot representation of a saved view/state for UI views (tables/charts/etc...).
  */
 export interface IbViewSnapshot {
   /** Unique view identifier */
@@ -15,9 +12,7 @@ export interface IbViewSnapshot {
   componentType: string;
   /** Arbitrary view-specific data (filters, column order, etc.) */
   data: unknown;
-  /** Internal runtime-only flag. Do NOT persist to storage. */
-  initial?: boolean;
 }
 
-/** Default view id used for the "all" / fallback view */
+/** Default view id used when no view is selected, as a fallback not to be saved */
 export const DEFAULT_VIEW_ID = '__ibTableView__all';

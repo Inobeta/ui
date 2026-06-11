@@ -1,4 +1,4 @@
-import { inject, Inject, Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { Observable } from "rxjs";
 import { filter, map } from "rxjs/operators";
@@ -14,80 +14,70 @@ export class IbViewService {
   private storageService = inject(IbStorageService);
   private dialog = inject(MatDialog);
   private toast = inject(IbToastNotification);
-
-  constructor(
-    @Inject(IB_VIEWS_STORAGE_KEY) private storageKey: string,
-  ) { }
+  private storageKey = inject(IB_VIEWS_STORAGE_KEY);
 
   getViews(groupName: string, componentType: string): IbViewSnapshot[] {
-    return this._readAll(groupName).filter((view) => view.componentType === componentType);
+    return this._readAll(groupName)
+      .filter((view) => view.componentType === componentType);
   }
 
-  addView(
-    p: Pick<IbViewSnapshot, "name" | "groupName" | "componentType" | "data">,
-  ): IbViewSnapshot {
+  addView(view: Omit<IbViewSnapshot, 'id'>): IbViewSnapshot {
     const next: IbViewSnapshot = {
+      ...view,
       id: this._generateId(),
-      name: p.name,
-      groupName: p.groupName,
-      componentType: p.componentType,
-      data: p.data,
     };
-
-    const views = [...this._readAll(p.groupName), next];
-    this._writeAll(p.groupName, views);
+    const views = [...this._readAll(view.groupName), next];
+    this._writeAll(view.groupName, views);
     this.toast.open("shared.ibTableView.addSuccess");
     return next;
   }
 
-  saveView(snapshot: IbViewSnapshot, data: unknown): IbViewSnapshot {
+  saveView(view: IbViewSnapshot, data: unknown): IbViewSnapshot {
     const updated: IbViewSnapshot = {
-      ...snapshot,
+      ...view,
       data,
     };
 
-    const views = this._readAll(snapshot.groupName).map((view) => {
-      if (view.id !== snapshot.id) {
-        return view;
+    const views = this._readAll(view.groupName).map((v) => {
+      if (v.id !== view.id) {
+        return v;
       }
       return updated;
     });
 
-    this._writeAll(snapshot.groupName, views);
+    this._writeAll(view.groupName, views);
     this.toast.open("shared.ibTableView.saveSuccess");
     return updated;
   }
 
-  renameView(snapshot: IbViewSnapshot, newName: string): IbViewSnapshot {
+  renameView(view: IbViewSnapshot, newName: string): IbViewSnapshot {
     const updated: IbViewSnapshot = {
-      ...snapshot,
+      ...view,
       name: newName,
     };
 
-    const views = this._readAll(snapshot.groupName).map((view) => {
-      if (view.id !== snapshot.id) {
-        return view;
+    const views = this._readAll(view.groupName).map((v) => {
+      if (v.id !== view.id) {
+        return v;
       }
       return updated;
     });
 
-    this._writeAll(snapshot.groupName, views);
+    this._writeAll(view.groupName, views);
     this.toast.open("shared.ibTableView.renameSuccess");
     return updated;
   }
 
-  duplicateView(
-    p: Pick<IbViewSnapshot, "name" | "groupName" | "componentType" | "data">,
-  ): IbViewSnapshot {
-    return this.addView(p);
+  duplicateView(view: Omit<IbViewSnapshot, 'id'>): IbViewSnapshot {
+    return this.addView(view);
   }
 
-  deleteView(snapshot: IbViewSnapshot): void {
+  deleteView(view: IbViewSnapshot): void {
     const nextViews = this
-      ._readAll(snapshot.groupName)
-      .filter((view) => view.id !== snapshot.id);
+      ._readAll(view.groupName)
+      .filter((v) => v.id !== view.id);
 
-    this._writeAll(snapshot.groupName, nextViews);
+    this._writeAll(view.groupName, nextViews);
     this.toast.open("shared.ibTableView.deleteSuccess");
   }
 
@@ -187,21 +177,14 @@ export class IbViewService {
 
   private _readAll(groupName: string): IbViewSnapshot[] {
     const stored = this.storageService.get(this._groupStorageKey(groupName));
-
     if (!stored || !Array.isArray(stored)) {
       return [];
     }
-
     return stored as IbViewSnapshot[];
   }
 
   private _writeAll(groupName: string, views: IbViewSnapshot[]): void {
-    const sanitizedViews = views.map((view) => {
-      const { initial: _, ...persisted } = view;
-      return persisted;
-    });
-
-    this.storageService.set(this._groupStorageKey(groupName), sanitizedViews);
+    this.storageService.set(this._groupStorageKey(groupName), views);
   }
 
   private _groupStorageKey(groupName: string): string {

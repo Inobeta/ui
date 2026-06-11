@@ -108,6 +108,7 @@ export class IbFilter {
   update() {
     this._value = this.buildFilter();
     this.query = this.toQuery();
+    console.debug('[IbFilter] update ->', { value: this._value, query: this.query });
     this.ibFilterUpdated.emit(this._value);
     this.ibQueryUpdated.emit(this.query);
   }

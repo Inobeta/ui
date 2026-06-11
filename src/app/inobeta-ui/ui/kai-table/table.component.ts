@@ -6,7 +6,7 @@ import {
   trigger,
 } from "@angular/animations";
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { Portal, TemplatePortal } from "@angular/cdk/portal";
+import { Portal } from "@angular/cdk/portal";
 import {
   Component,
   ContentChild,
@@ -41,8 +41,8 @@ import { IbTableViewGroup, IbViewSnapshot } from "../views";
 import { IbColumn } from "./columns/column";
 import { IbSelectionColumn } from "./columns/selection-column";
 import { IbTableRemoteDataSource } from "./remote-data-source";
-import { ibTableSelectLastQueryStringRaw } from "./store";
 import { IbKaiRowGroupDirective } from "./rowgroup";
+import { ibTableSelectLastQueryStringRaw } from "./store";
 import { urlStateActions } from "./store/url-state/actions";
 import { IbTableDataSource } from "./table-data-source";
 import { IbTableQsParams, IbTableUrlService } from "./table-url.service";
@@ -103,16 +103,16 @@ export class IbTable implements OnDestroy {
 
 
 
-  @ContentChildren(IbColumn) columns: QueryList<IbColumn<any>>;
+  @ContentChildren(IbColumn) columns!: QueryList<IbColumn<any>>;
   @ContentChild(IbSelectionColumn) selectionColumn!: IbSelectionColumn;
   @ContentChild(IbKaiRowGroupDirective) rowGroup!: IbKaiRowGroupDirective;
 
   @ContentChild(IbFilter) filter!: IbFilter;
 
 
-  @ViewChild(MatTable, { static: true }) matTable: MatTable<any>;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatTable, { static: true }) matTable!: MatTable<any>;
+  @ViewChild(MatSort, { static: true }) sort!: MatSort;
+  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
 
   expandedElement: any;
   actionPortals: Portal<any>[] = [];
@@ -202,8 +202,8 @@ export class IbTable implements OnDestroy {
   isRemote = false;
 
 
-  activeRowParams = input<{ dataParamId: string, childRouteParamId: string }>({ dataParamId: null, childRouteParamId: null })
-  activeRouteId = signal<string>(null);
+  activeRowParams = input<{ dataParamId: string, childRouteParamId: string }>({ dataParamId: null!, childRouteParamId: null! })
+  activeRouteId = signal<string>(null!);
 
   exportService: IbDataExportService = inject(IbDataExportService);
 
@@ -216,9 +216,9 @@ export class IbTable implements OnDestroy {
       const childRouteId = this.activeRowParams()?.childRouteParamId
       if (childRouteId) {
         const activeId = this.activatedRoute.firstChild?.snapshot.paramMap.get(childRouteId);
-        this.activeRouteId.set(activeId);
+        this.activeRouteId.set(activeId!);
       } else {
-        this.activeRouteId.set(null);
+        this.activeRouteId.set(null!);
       }
     })
   }
@@ -239,7 +239,7 @@ export class IbTable implements OnDestroy {
 
       if (hasCachedFilters || hasCachedPagination) {
         if (cachedQueryStringRaw?.ibpagesize != null) {
-          this.tableDef.paginator.pageSize = cachedQueryStringRaw.ibpagesize;
+          this.tableDef.paginator!.pageSize = cachedQueryStringRaw.ibpagesize;
         }
 
         if (cachedQueryStringRaw?.ibfilter != null) {
@@ -295,6 +295,12 @@ export class IbTable implements OnDestroy {
       }
     })
 
+    if (this.filter) {
+      this.filter.ibFilterUpdated.pipe(takeUntil(this._destroyed)).subscribe((v) => {
+        console.debug('[IbTable] direct subscription filter.ibFilterUpdated ->', v);
+      });
+    }
+
     if (!this.filter) {
       setTimeout(() => {
         dsInit();
@@ -316,9 +322,7 @@ export class IbTable implements OnDestroy {
         return;
       }
 
-      viewGroup.initialViewId = this.viewIdFromUrl();
-      viewGroup.stateChanges$ = this.tableStateChange$;
-      viewGroup.stateAccessor = this.getCurrentTableState.bind(this);
+      viewGroup.initialViewId.set(this.viewIdFromUrl());
 
       if (!this._viewGroupWired) {
         this._viewGroupWired = true;
@@ -334,12 +338,20 @@ export class IbTable implements OnDestroy {
     this._destroyed.complete();
   }
 
-  setPaginatorState(params) {
+  setPaginatorState(params: any) {
     this.store.dispatch(urlStateActions.setPaginator({ tableName: this.tableName, params }))
   }
 
   private _initializeTableStateChange(): void {
+    console.debug('[IbTable] _initializeTableStateChange called', this.tableName, {
+      hasFilter: !!this.filter,
+      paginator: !!this.paginator,
+      sort: !!this.sort,
+    });
     // No aggregation change observable is currently exposed by IbTableDataSource.
+    // Forward merged state change emissions into the subject stored in
+    // `tableStateChange$` so any earlier consumer (eg. viewGroup.stateChanges$)
+    // that holds the original Subject will receive updates.
     const stateChanges: Observable<unknown>[] = [
       this.paginator.page,
       this.sort.sortChange,
@@ -349,7 +361,12 @@ export class IbTable implements OnDestroy {
       stateChanges.unshift(this.filter.ibFilterUpdated);
     }
 
-    this.tableStateChange$ = merge(...stateChanges);
+    const merged = merge(...stateChanges);
+    const subject = this.tableStateChange$ as Subject<unknown>;
+    merged.pipe(takeUntil(this._destroyed)).subscribe((s) => {
+      console.debug('[IbTable] table state change ->', s);
+      subject.next(s);
+    });
   }
 
   getCurrentTableState(): unknown {
@@ -388,16 +405,14 @@ export class IbTable implements OnDestroy {
       });
     }
 
-    if (view.initial !== true) {
-      this.tableUrl.setViewState(
-        this.tableName,
-        view.id,
-        this.getCurrentTableState() as IbTableQsParams,
-      );
-    }
+    this.tableUrl.setViewState(
+      this.tableName,
+      view.id,
+      this.getCurrentTableState() as IbTableQsParams,
+    );
   }
 
-  doExport(settings) {
+  doExport(settings: any) {
     this.exportService._exportFromTable(
       this.tableName,
       this.dataSource,
@@ -406,8 +421,8 @@ export class IbTable implements OnDestroy {
   }
 
   updateSortFromMobile(newSort: MatSort) {
-    this.dataSource.sort.active = newSort.active;
-    this.dataSource.sort.direction = newSort.direction;
-    this.dataSource.sort.sortChange.emit(newSort);
+    this.dataSource.sort!.active = newSort.active;
+    this.dataSource.sort!.direction = newSort.direction;
+    this.dataSource.sort!.sortChange.emit(newSort);
   }
 }

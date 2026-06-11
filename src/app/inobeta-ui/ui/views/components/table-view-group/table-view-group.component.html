@@ -1,4 +1,4 @@
-<ib-view-list [views]="views()" [defaultView]="defaultView" [activeView]="activeView()" [dirty]="dirty()"
+<ib-view-list [views]="views()" [defaultView]="buildDefaultView()" [activeView]="activeView()" [dirty]="dirty()"
   (ibAddView)="handleAddView()" (ibChangeView)="handleChangeView($event)" (ibRemoveView)="handleRemoveView($event)"
   (ibRenameView)="handleRenameView($event)" (ibDuplicateView)="handleDuplicateView($event)"></ib-view-list>
 

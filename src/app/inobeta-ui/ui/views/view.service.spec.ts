@@ -3,8 +3,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
 
 import { IbViewService } from './view.service';
-import { IbViewSnapshot } from './view.types';
 import { IB_VIEWS_STORAGE_KEY } from './view.tokens';
+import { IbViewSnapshot } from './view.types';
 
 import { MatDialog } from '@angular/material/dialog';
 import { IbStorageService } from '../../storage';

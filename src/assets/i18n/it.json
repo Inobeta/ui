@@ -18,12 +18,20 @@
       "renameTitle": "Rinomina vista",
       "duplicateTitle": "Duplica vista",
       "deleteTitle": "Elimina vista",
+      "saveChangesTitle": "Salva modifiche",
+      "saveAsTitle": "Salva come",
       "deleteMessage": "Sei sicuro di voler eliminare questa vista?",
       "cancel": "Annulla",
       "add": "Salva",
       "rename": "Rinomina",
       "duplicate": "Duplica",
-      "remove": "Elimina"
+      "remove": "Elimina",
+      "addSuccess": "Vista aggiunta con successo",
+      "saveSuccess": "Vista salvata con successo",
+      "renameSuccess": "Vista rinominata con successo",
+      "deleteSuccess": "Vista eliminata con successo",
+      "undo": "Annulla",
+      "save": "Salva"
     }
   },
   "examples": {

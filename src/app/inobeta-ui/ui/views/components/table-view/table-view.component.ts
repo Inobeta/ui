@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, input, output } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from "@angular/material/menu";
@@ -13,11 +13,11 @@ import { IbViewSnapshot } from "../../view.types";
   imports: [MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule, TranslateModule]
 })
 export class IbTableView {
-  @Input() view: Readonly<IbViewSnapshot>;
-  @Input() selected: boolean = false;
-  @Input() dirty: boolean = false;
-  @Output() ibRemoveView = new EventEmitter<IbViewSnapshot>();
-  @Output() ibRenameView = new EventEmitter<IbViewSnapshot>();
-  @Output() ibDuplicateView = new EventEmitter<IbViewSnapshot>();
-  @Output() ibChangeView = new EventEmitter<IbViewSnapshot>();
+  readonly view = input.required<IbViewSnapshot>();
+  selected = input<boolean>(false);
+  dirty = input<boolean>(false);
+  ibRemoveView = output<IbViewSnapshot>();
+  ibRenameView = output<IbViewSnapshot>();
+  ibDuplicateView = output<IbViewSnapshot>();
+  ibChangeView = output<IbViewSnapshot>();
 }
