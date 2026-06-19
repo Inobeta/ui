@@ -131,7 +131,7 @@ import { TranslatePipe } from '@ngx-translate/core';
       width: 100%;
       height: 100%;
       min-height: 150px;
-      border: 1px solid lightgray;
+      border: 1px solid var(--ib-mobile-border);
       border-radius: 10px;
     }
 
@@ -143,7 +143,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 
     .table-empty-label {
       font-size: 0.875rem;
-      color: #6b7280;
+      color: var(--ib-mobile-text);
     }
   `]
 })
