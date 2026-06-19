@@ -26,76 +26,26 @@
       {
         "label": "examples.ibMainMenu.kaiTableRouting",
         "link": "/home/kai-table/with-routing"
-      }
-    ]
-  },
-  {
-    "label": "examples.ibMainMenu.dynamicFormsMain",
-    "icon": {
-      "label": "view_list",
-      "type": "two-tone"
-    },
-    "link": "/home/forms",
-    "paths": [
-      {
-        "label": "examples.ibMainMenu.dynamicFormsDynamicForms",
-        "link": "/home/forms/api"
       },
       {
-        "label": "examples.ibMainMenu.basicForm",
-        "link": "/home/forms/basic"
+        "label": "examples.ibMainMenu.kaiTableDatasource",
+        "link": "/home/kai-table/datasource"
       },
       {
-        "label": "examples.ibMainMenu.formArray",
-        "link": "/home/forms/array"
+        "label": "examples.ibMainMenu.kaiTableSticky",
+        "link": "/home/kai-table/sticky"
       },
       {
-        "label": "examples.ibMainMenu.formValue",
-        "link": "/home/forms/value"
+        "label": "examples.ibMainMenu.kaiTableCustomSortFilter",
+        "link": "/home/kai-table/custom-sort-filter"
       },
       {
-        "label": "examples.ibMainMenu.formGrid",
-        "link": "/home/forms/grid"
-      }
-    ]
-  },
-  {
-    "label": "examples.ibMainMenu.httpMain",
-    "icon": {
-      "label": "http",
-      "type": "two-tone"
-    },
-    "link": "/home/http",
-    "paths": [
-      {
-        "label": "examples.ibMainMenu.httpBase",
-        "link": "/home/http/base"
+        "label": "examples.ibMainMenu.kaiTableCustomAggregate",
+        "link": "/home/kai-table/custom-aggregate"
       },
       {
-        "label": "examples.ibMainMenu.httpAuth",
-        "link": "/home/http/auth"
-      },
-      {
-        "label": "examples.ibMainMenu.httpProtected",
-        "link": "/home/http/protected-admin"
-      }
-    ]
-  },
-  {
-    "label": "examples.ibMainMenu.reduxMain",
-    "icon": {
-      "label": "archive",
-      "type": "two-tone"
-    },
-    "link": "/home/redux/base",
-    "paths": [
-      {
-        "label": "examples.ibMainMenu.reduxRedux",
-        "link": "/home/redux/base"
-      },
-      {
-        "label": "Lazy loaded hydration",
-        "link": "/home/redux/lazy"
+        "label": "examples.ibMainMenu.kaiTableColumnOptions",
+        "link": "/home/kai-table/column-options"
       }
     ]
   },

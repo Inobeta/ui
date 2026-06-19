@@ -18,7 +18,6 @@ import { appRoutes } from "./routing.module";
 import localeIt from '@angular/common/locales/it';
 import { PreloadAllModules, provideRouter, withComponentInputBinding, withPreloading } from "@angular/router";
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { ibCounterExampleFeature } from "./examples/redux-example/counter.feature";
 import { IbCSVExportProvider, IbXLXSExportProvider, IbPDFExportProvider } from "./inobeta-ui/ui/data-export";
 
 
@@ -64,7 +63,6 @@ export const appConfig: ApplicationConfig = {
     provideStore(undefined, { metaReducers: reduxStorageSave.metareducers }),
     provideState(ibSessionFeature),
     provideState(ibLoaderFeature),
-    provideState(ibCounterExampleFeature),
     provideEffects(ibHttpEffects),
     provideEffects(reduxStorageSave.effects),
     provideStoreDevtools({

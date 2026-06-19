@@ -31,6 +31,14 @@
       "kaiTableFull": "Full Example",
       "kaiTableApi": "Data from API",
       "kaiTableRouting": "With Routing",
+      "kaiTableDatasource": "Explicit DataSource",
+      "kaiTableSticky": "Sticky Columns",
+      "kaiTablePaginatorHide": "Paginator Hide",
+      "kaiTableCustomSortFilter": "Custom Sort & Filter",
+      "kaiTableCustomAggregate": "Custom Aggregate",
+      "kaiTableNgrxSelectors": "NgRx Selectors",
+      "kaiTableStripedRows": "Striped Rows",
+      "kaiTableColumnOptions": "Column Options",
       "dynamicFormsMain": "Dynamic forms",
       "dynamicFormsDynamicForms": "Dynamic forms (API)",
       "basicForm": "Material Form",
@@ -47,6 +55,10 @@
       "dialogDialog": "Dialog",
       "toastMain": "Toast",
       "toastToast": "Toast"
+    },
+    "kaiTable": {
+      "hidePaginator": "Nascondi paginatore",
+      "showPaginator": "Mostra paginatore"
     }
   }
 }

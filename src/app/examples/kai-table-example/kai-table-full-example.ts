@@ -15,6 +15,7 @@ import { MatIconButton } from "@angular/material/button";
       [displayedColumns]="columns"
       [data]="data"
       [state]="state"
+      [stripedRows]="true"
       >
       <ib-table-action-group>
         @if (selectionColumn?.selection.selected.length > 0) {
