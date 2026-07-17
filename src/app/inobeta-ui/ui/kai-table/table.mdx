@@ -6,7 +6,7 @@ import * as TableStories from "./table.stories";
 
 # Table
 
-The `ib-kai-table` provides high customization capabilities and out-of-the-box compatibility with other components such as `ib-filter` for filtering, `ib-table-view-group` to manage user-defined views, and much more.
+The `ib-kai-table` provides high customization capabilities and compatibility with other optional components such as `ib-filter` for filtering, `ib-table-view-group` (requires the separate `IbViewModule`) to manage user-defined views, and much more.
 
 ## Getting started
 
@@ -460,7 +460,9 @@ export class IbKaiTableExamplePage {
 
 ## Views
 
-To add views to a table, first import `IbViewModule` alongside `IbKaiTableModule`, `IbTableActionModule`, and `IbFilterModule`.
+View management is an optional feature provided by the decoupled `IbViewModule`. The table works without it — views are only needed when you want to let users save and restore table state (filters, sort, pagination).
+
+To add views to a table, import `IbViewModule` alongside `IbKaiTableModule`, `IbTableActionModule`, and `IbFilterModule`.
 
 ```typescript
 @Component({

@@ -11,12 +11,11 @@ import {
   merge,
   of as observableOf,
 } from "rxjs";
-import { filter, map } from "rxjs/operators";
+import { map } from "rxjs/operators";
 import { IbFilter } from "../kai-filter/filter.component";
 import { IbFilterDef, IbFilterSyntax } from "../kai-filter/filter.types";
 import { applyFilter } from "../kai-filter/filters";
-import { IbTableViewGroup } from "../views/components/table-view-group/table-view-group.component";
-import { IView } from "../views/store/views/table-view";
+import { IbTableViewsData, IbTableViewsHost } from "./table-views-host";
 import { IbAggregateResult } from "./cells";
 import { IbColumn, IbSelectionColumn } from "./columns";
 import { IB_AGGREGATE } from "./tokens";
@@ -178,16 +177,16 @@ export class IbTableDataSource<
   private _columns: Record<string, IbColumn<unknown>> = {};
   private _sortedColumns: IbColumn<unknown>[] = [];
 
-  set view(view: IbTableViewGroup | null) {
+  set view(view: IbTableViewsHost | null) {
     this._view = view;
     this._updateViewChangeSubscription();
   }
 
-  get view() {
+  get view(): IbTableViewsHost | null {
     return this._view;
   }
 
-  private _view: IbTableViewGroup | null;
+  private _view: IbTableViewsHost | null;
 
   /**
    * Aggregated data by column name.
@@ -204,7 +203,7 @@ export class IbTableDataSource<
   /**
    * Used to trigger the aggregation of a column by the user.
    *
-   * IbTableViewGroup listens to this stream to detect state changes
+   * IbTableViewsHost listens to this stream to detect state changes
    */
   aggregate = new Subject<{ columnName: string; function: string }>();
   /**
@@ -399,25 +398,9 @@ export class IbTableDataSource<
   }
 
   private _updateViewChangeSubscription() {
-    this.view.defaultView.data = {
-      filter: this.filter.initialRawValue,
-      pageSize: this.paginator.pageSize,
-      aggregatedColumns: this.aggregatedColumns,
-      sort: {
-        ...this.sortState
-      }
-    };
-
-    this.view.viewDataAccessor = () => {
-      return {
-        filter: this.filter.selectedCriteria,
-        pageSize: this.paginator.pageSize,
-        aggregatedColumns: this.aggregatedColumns,
-        sort: {
-          ...this.sortState
-        },
-      }
-    };
+    if (!this._view) {
+      return;
+    }
 
     const changes$ = merge(
       this.filter.ibQueryUpdated,
@@ -425,32 +408,30 @@ export class IbTableDataSource<
       this.aggregate,
       this.sort.sortChange
     );
-    this.view.handleStateChanges(changes$);
+    this._view.handleStateChanges(changes$);
 
     this._viewChangesSubscription?.unsubscribe();
-    this._viewChangesSubscription = this.view._activeView
-     // Skip initial view, initialization come from querystring
-      .pipe(filter((view) => !!view && !view.initial))
+    this._viewChangesSubscription = this._view.activeViewChanged
       .subscribe(this.handleViewChange);
   }
 
-  private handleViewChange = (view: IView) => {
+  private handleViewChange = (data: IbTableViewsData & { viewId: string }) => {
     this.paginator.firstPage();
-    this.paginator.pageSize = view.data.pageSize;
-    this.aggregatedColumns = { ...view.data.aggregatedColumns };
-    this.filter.value = view.data.filter;
-    this.sortState = view.data.sort;
+    this.paginator.pageSize = data.pageSize;
+    this.aggregatedColumns = { ...data.aggregatedColumns };
+    this.filter.value = data.filter;
+    this.sortState = data.sort;
     this.store.dispatch(urlStateActions.handleViewChange({
       tableName: this.tableName,
       params: {
-        view: view.id,
-        pageSize: view.data.pageSize,
+        view: data.viewId,
+        pageSize: data.pageSize,
         page: 0,
-        filters: view.data.filter,
-        aggregatedColumns: view.data.aggregatedColumns,
+        filters: data.filter,
+        aggregatedColumns: data.aggregatedColumns,
         sort: {
-          active: view.data.sort.active,
-          direction: view.data.sort.direction,
+          active: data.sort.active,
+          direction: data.sort.direction,
         },
       }
     }));

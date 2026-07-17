@@ -1,18 +1,20 @@
+import { Portal, TemplatePortal } from "@angular/cdk/portal";
 import {
   Component,
-  EventEmitter,
-  Input,
   OnDestroy,
-  Output,
   QueryList,
   ViewChildren,
   inject,
 } from "@angular/core";
 import { Store } from "@ngrx/store";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
-import { takeUntil, tap } from "rxjs/operators";
+import { filter, map, takeUntil, tap } from "rxjs/operators";
 import { IbKaiTableAction } from "../../../kai-table/action";
-import { ITableViewData, IView } from "../../store/views";
+import {
+  IbTableViewsData,
+  IbTableViewsHost,
+} from "../../../kai-table/table-views-host";
+import { IView } from "../../store/views";
 import { IbViewService } from "../../view.service";
 import { IbTableUrlService } from "../../../kai-table/table-url.service";
 import { selectTableViews } from "../../store/index";
@@ -23,7 +25,7 @@ import { selectTableViews } from "../../store/index";
   styleUrls: ["table-view-group.component.scss"],
   standalone: false
 })
-export class IbTableViewGroup implements OnDestroy {
+export class IbTableViewGroup extends IbTableViewsHost implements OnDestroy {
   @ViewChildren(IbKaiTableAction) actions: QueryList<IbKaiTableAction>;
 
   private _destroyed = new Subject<void>();
@@ -58,12 +60,14 @@ export class IbTableViewGroup implements OnDestroy {
   }
 
 
-  @Input() viewDataAccessor: () => ITableViewData = () => structuredClone(this.defaultView.data);
+  private _viewDataAccessor: () => IbTableViewsData = () =>
+    structuredClone(this.defaultView.data);
 
-  @Output() ibViewChanged = new EventEmitter<IView>();
-  @Output() ibResetView = new EventEmitter();
+  override setViewDataAccessor(fn: () => IbTableViewsData): void {
+    this._viewDataAccessor = fn;
+  }
 
-  @Input() set viewGroupName(name) {
+  override setViewGroupName(name: string) {
     this._viewGroupName = name;
     const activeView = this.tableUrl.getActiveView(name);
     this.views$ = this.store.select(selectTableViews(this._viewGroupName)).pipe(
@@ -86,10 +90,38 @@ export class IbTableViewGroup implements OnDestroy {
   }
   private _viewGroupName: string;
 
-  dirty = false;
+  private _dirty = false;
+
+  override get dirty(): boolean {
+    return this._dirty;
+  }
+
   views$: Observable<IView[]>;
 
-  constructor(private store: Store, public viewService: IbViewService) { }
+  override get activeViewChanged(): Observable<
+    IbTableViewsData & { viewId: string }
+  > {
+    return this._activeView.pipe(
+      filter((v) => !!v && !v.initial),
+      map((v) => ({
+        ...v.data,
+        viewId: v.id,
+      }))
+    );
+  }
+
+  override get toolbarPortals(): Portal<any>[] {
+    return (
+      this.actions?.toArray().map(
+        (action) =>
+          new TemplatePortal(action.templateRef, action.viewContainerRef)
+      ) ?? []
+    );
+  }
+
+  constructor(private store: Store, public viewService: IbViewService) {
+    super();
+  }
 
 
   ngOnDestroy() {
@@ -99,7 +131,7 @@ export class IbTableViewGroup implements OnDestroy {
 
 
   checkViewDataChanges(): boolean {
-    const current = this.viewDataAccessor();
+    const current = this._viewDataAccessor();
     if (current === undefined) {
       return false;
     }
@@ -113,10 +145,10 @@ export class IbTableViewGroup implements OnDestroy {
     return JSON.stringify(current) != JSON.stringify(this.activeView.data);
   }
 
-  handleStateChanges(changes$: Observable<unknown>) {
+  override handleStateChanges(changes$: Observable<unknown>) {
     changes$
       .pipe(takeUntil(this._destroyed))
-      .subscribe(() => (this.dirty = this.checkViewDataChanges()));
+      .subscribe(() => (this._dirty = this.checkViewDataChanges()));
   }
 
   handleAddView(data = this.defaultView.data) {
@@ -148,7 +180,7 @@ export class IbTableViewGroup implements OnDestroy {
       const nextView = this.viewService.duplicateView({
         name,
         groupName: view.groupName,
-        data: this.viewDataAccessor(),
+        data: this._viewDataAccessor(),
       });
       this._activeView.next(nextView);
     });
@@ -156,13 +188,13 @@ export class IbTableViewGroup implements OnDestroy {
 
   handleSaveView() {
     if (this.activeView.id === this.defaultView.id) {
-      this.handleAddView(this.viewDataAccessor());
+      this.handleAddView(this._viewDataAccessor());
       return;
     }
 
     const view = this.viewService.saveView(
       this.activeView,
-      this.viewDataAccessor()
+      this._viewDataAccessor()
     );
     this._activeView.next(view);
   }
@@ -179,7 +211,7 @@ export class IbTableViewGroup implements OnDestroy {
           this.viewService.addView({
             name: newView.name,
             groupName: this.viewGroupName,
-            data: this.viewDataAccessor(),
+            data: this._viewDataAccessor(),
           });
         }
         this._activeView.next(view);
@@ -191,7 +223,7 @@ export class IbTableViewGroup implements OnDestroy {
       .openSaveChangesDialog(this.activeView)
       .subscribe((result) => {
         if (result.confirmed) {
-          this.viewService.saveView(this.activeView, this.viewDataAccessor());
+          this.viewService.saveView(this.activeView, this._viewDataAccessor());
         }
         this._activeView.next(view);
       });

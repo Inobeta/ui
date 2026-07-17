@@ -36,7 +36,7 @@ import { filter, takeUntil } from "rxjs/operators";
 import { IbActionColumn, IbKaiTableAction, IbKaiTableActionGroup } from ".";
 import { IbDataExportService } from "../data-export";
 import { IbFilter, IbFilterBase } from "../kai-filter";
-import { IbTableViewGroup } from "../views";
+import { IbTableViewsHost } from "./table-views-host";
 import { IbColumn } from "./columns/column";
 import { IbSelectionColumn } from "./columns/selection-column";
 import { IbTableRemoteDataSource } from "./remote-data-source";
@@ -100,7 +100,7 @@ export class IbTable implements OnDestroy {
   @ContentChild(IbKaiRowGroupDirective) rowGroup!: IbKaiRowGroupDirective;
 
   @ContentChild(IbFilter) filter!: IbFilter;
-  @ContentChild(IbTableViewGroup) view!: IbTableViewGroup;
+  @ContentChild(IbTableViewsHost) viewHost!: IbTableViewsHost;
 
 
   @ViewChild(MatTable, { static: true }) matTable: MatTable<any>;
@@ -187,6 +187,8 @@ export class IbTable implements OnDestroy {
   }
   private _displayedColumns: string[] = [];
 
+  @HostBinding('class.ib-table--has-views') get hasViews() { return !!this.viewHost; }
+
   @HostBinding("class.ib-table-striped-rows")
   @Input({ transform: booleanAttribute })
   stripedRows = false;
@@ -238,8 +240,14 @@ export class IbTable implements OnDestroy {
   ngAfterContentInit() {
 
     const viewInit = () => {
-      this.view.viewGroupName = this.tableName;
-      this.dataSource.view = this.view;
+      this.viewHost.setViewDataAccessor(() => ({
+        filter: this.filter.selectedCriteria,
+        pageSize: this.paginator.pageSize,
+        aggregatedColumns: this.dataSource.aggregatedColumns,
+        sort: { ...this.dataSource.sortState },
+      }));
+      this.viewHost.setViewGroupName(this.tableName);
+      this.dataSource.view = this.viewHost;
       this.setupViewGroup();
     }
 
@@ -266,14 +274,14 @@ export class IbTable implements OnDestroy {
 
       const filtersFromUrl = this.tableUrl.getFilters(this.tableName)
       this.filter.value = filtersFromUrl
-      if (this.view) {
+      if (this.viewHost) {
         //NG0100
         setTimeout(() => viewInit())
       }
     })
 
     // If there is no filter, we need to set the viewGroupName to the table name
-    if (this.view && !this.filter) {
+    if (this.viewHost && !this.filter) {
       setTimeout(() => viewInit())
     }
 
@@ -299,14 +307,10 @@ export class IbTable implements OnDestroy {
     this.store.dispatch(urlStateActions.setPaginator({ tableName: this.tableName, params }))
   }
   private setupViewGroup() {
-    for (const action of [
-      this.filter.hideFilterAction,
-      ...this.view.actions.toArray(),
-    ]) {
-      this.actionPortals.push(
-        new TemplatePortal(action.templateRef, action.viewContainerRef)
-      );
-    }
+    this.actionPortals.push(
+      new TemplatePortal(this.filter.hideFilterAction.templateRef, this.filter.hideFilterAction.viewContainerRef)
+    );
+    this.actionPortals.push(...this.viewHost.toolbarPortals);
   }
 
   doExport(settings) {

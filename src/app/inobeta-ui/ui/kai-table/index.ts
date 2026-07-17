@@ -14,4 +14,5 @@ export * from "./store/url-state/selectors";
 export * from "./table-url.service";
 export * from "./table.component";
 export * from "./table.module";
+export * from "./table-views-host";
 export * from "./table.types";
