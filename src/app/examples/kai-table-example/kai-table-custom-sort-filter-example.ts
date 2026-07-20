@@ -1,13 +1,12 @@
 import { Component, OnInit } from "@angular/core";
 import { MatSort } from "@angular/material/sort";
-import { IbFilterModule, IbKaiTableModule } from "public_api";
-import { IbTableDataSource } from "../../inobeta-ui/ui/kai-table/table-data-source";
+import { IbFilterModule, IbKaiTableModule, IbTableDataSource } from "public_api";
 import { IbUserExample, createNewUser } from "./users";
 
 @Component({
   selector: "ib-kai-table-custom-sort-filter-example",
   template: `
-    <ib-kai-table [dataSource]="dataSource" [displayedColumns]="displayedColumns">
+    <ib-kai-table tableName="customSortFilter" [dataSource]="dataSource" [displayedColumns]="displayedColumns">
       <ib-filter>
         <ib-search-bar />
         <ib-boolean-filter name="isSummerFruit">Frutta estiva</ib-boolean-filter>

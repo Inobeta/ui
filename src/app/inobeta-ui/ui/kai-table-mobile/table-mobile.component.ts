@@ -1,8 +1,6 @@
 import {
   Component,
-  ElementRef,
   OnDestroy,
-  ViewChild,
   computed,
   effect,
   input,
@@ -10,7 +8,8 @@ import {
   signal
 } from '@angular/core';
 
-import { MatSort } from '@angular/material/sort';
+import { CollectionViewer, DataSource } from '@angular/cdk/collections';
+import { Sort } from '@angular/material/sort';
 import { Subscription } from 'rxjs';
 import { IDataExportSettings } from '../data-export/data-export.service';
 import { IbFilter } from '../kai-filter';
@@ -19,7 +18,6 @@ import { IbKaiTableAction, } from "../kai-table/action";
 import { IbActionColumn } from "../kai-table/columns/action-column";
 import { IbColumn } from "../kai-table/columns/column";
 import { IbKaiRowGroupDirective } from "../kai-table/rowgroup";
-import { IbTableDataSource } from '../kai-table/table-data-source';
 import { IbKaiTableState, IbTableDef } from "../kai-table/table.types";
 import { IbKaiTableMobileInfiniteScrollComponent } from './table-mobile-infinitescroll.component';
 import { IbKaiTableMobileItemComponent } from './table-mobile-item.component';
@@ -27,6 +25,11 @@ import { IbKaiTableMobileToolbarComponent } from './table-mobile-toolbar.compone
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslatePipe } from '@ngx-translate/core';
+
+type IbKaiTableMobileDataSource<T> = DataSource<T> & {
+  readonly sortState?: Sort;
+  readonly input?: { sort: Sort | null };
+};
 @Component({
   selector: 'ib-kai-table-mobile',
   standalone: true,
@@ -149,7 +152,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 })
 export class IbKaiTableMobileComponent implements OnDestroy {
   state = input<IbKaiTableState>('idle');
-  dataSource = input<IbTableDataSource<any>>();
+  dataSource = input<IbKaiTableMobileDataSource<unknown>>();
   tableName = input<string>(btoa(window.location.pathname + window.location.hash));
   tableDef = input<Partial<IbTableDef>>({});
   displayedColumns = input<string[]>([]);
@@ -163,29 +166,41 @@ export class IbKaiTableMobileComponent implements OnDestroy {
   actionColumn = input<IbActionColumn>();
 
   doExport = output<Partial<IDataExportSettings>>()
-  sortUpdated = output<MatSort>()
-
-  @ViewChild('scrollAnchor') scrollAnchor?: ElementRef<HTMLElement>;
+  sortUpdated = output<Sort>()
 
   visibleCount = signal(this.pageSize());
   filtersOpen = signal(false);
 
-  data = signal<any[]>([]);
+  data = signal<unknown[]>([]);
   datasourceConnection: Subscription | null = null;
-  currentSort = signal<{ active: string, direction: 'asc' | 'desc' } | null>(null);
+  currentSort = signal<Sort | null>(null);
 
   constructor() {
-    effect(() => {
+    effect((onCleanup) => {
       const datasource = this.dataSource();
-      if (datasource) {
-        if (this.datasourceConnection) this.datasourceConnection.unsubscribe()
-        this.datasourceConnection = datasource.connect().asObservable().subscribe(data => {
-          this.data.set(data);
-          this.currentSort.set(datasource.sort ? { active: datasource.sort.active, direction: datasource.sort.direction as 'asc' | 'desc' } : null);
-        }
-        )
+      this.datasourceConnection?.unsubscribe();
+      this.datasourceConnection = null;
+
+      if (!datasource) {
+        this.data.set([]);
+        this.currentSort.set(null);
+        return;
       }
-    })
+
+      const sortState = datasource.sortState ?? datasource.input?.sort ?? null;
+      this.currentSort.set(sortState?.active ? { ...sortState } : null);
+      this.datasourceConnection = datasource
+        .connect({} as CollectionViewer)
+        .subscribe((rows) => {
+          this.data.set([...rows]);
+          const current = datasource.sortState ?? datasource.input?.sort ?? null;
+          this.currentSort.set(current?.active ? { ...current } : null);
+        });
+      onCleanup(() => {
+        this.datasourceConnection?.unsubscribe();
+        this.datasourceConnection = null;
+      });
+    });
   }
 
   ngOnDestroy() {
@@ -196,13 +211,13 @@ export class IbKaiTableMobileComponent implements OnDestroy {
 
   sortableColumns = computed(() => {
     const cols = this.columns() ?? [];
-    return cols.filter(c => c.sort);
+    return cols.filter(c => c.sortInput());
   });
 
   visibleColumns = computed(() => {
     const cols = this.columns() ?? [];
     const displayed = [...(this.displayedColumns() ?? [])]
-    if (!!this.actionColumn && !displayed.includes('ib-action')) {
+      if (this.actionColumn() && !displayed.includes('ib-action')) {
       displayed.push('ib-action');
     }
 
@@ -210,18 +225,18 @@ export class IbKaiTableMobileComponent implements OnDestroy {
       return cols;
     }
 
-    const byName = new Map(cols.map(col => [col.name, col]));
+    const byName = new Map(cols.map(col => [col.name(), col]));
     return displayed
       .map(name => byName.get(name))
       .filter((col): col is IbColumn<any> => !!col);
   });
 
   cardDataColumns = computed(() => {
-    return this.visibleColumns().filter(col => !col.isActionColumn);
+    return this.visibleColumns().filter(col => !col.isActionColumnInput());
   });
 
   cardActionColumns = computed(() => {
-    return this.visibleColumns().filter(col => col.isActionColumn);
+    return this.visibleColumns().filter(col => col.isActionColumnInput());
   });
 
   visibleRows = computed(() => {
@@ -242,19 +257,11 @@ export class IbKaiTableMobileComponent implements OnDestroy {
     return row?.id ?? row?.uuid ?? row?.key ?? index;
   }
 
-  sortUpdate(columnName: string) {
-    const currentSort = this.dataSource().sort;
-    if (currentSort.active === columnName) {
-      const newDirection = currentSort.direction === 'asc' ? 'desc' : 'asc';
-      const newSort: MatSort = new MatSort();
-      newSort.active = columnName;
-      newSort.direction = newDirection;
-      this.sortUpdated.emit(newSort);
-      return;
-    }
-    const newSort: MatSort = new MatSort();
-    newSort.active = columnName;
-    newSort.direction = 'asc';
-    this.sortUpdated.emit(newSort);
+  sortUpdate(columnName: string): void {
+    const currentSort = this.currentSort();
+    const direction = currentSort?.active === columnName && currentSort.direction === 'asc'
+      ? 'desc'
+      : 'asc';
+    this.sortUpdated.emit({ active: columnName, direction });
   }
 }

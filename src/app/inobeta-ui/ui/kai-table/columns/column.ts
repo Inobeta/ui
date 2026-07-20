@@ -2,11 +2,13 @@ import { NgTemplateOutlet } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   Component,
-  ContentChild,
-  Input,
+  contentChild,
+  computed,
+  input,
+  model,
   OnDestroy,
   OnInit,
-  ViewChild,
+  viewChild,
   booleanAttribute,
   inject,
 } from "@angular/core";
@@ -38,23 +40,23 @@ import { IB_COLUMN_OPTIONS, IB_TABLE, IbColumnOptions } from "../tokens";
     <ng-container
       matColumnDef
       matSort
-      [sticky]="sticky"
-      [stickyEnd]="stickyEnd"
+       [sticky]="stickyInput()"
+       [stickyEnd]="stickyEndInput()"
     >
       <th
         class="ib-table__header-cell"
         mat-header-cell
         *matHeaderCellDef
-        [ibSortHeaderFor]="matSort"
+         [ibSortHeaderFor]="matSort()"
         mat-sort-header
-        [disabled]="!sort"
+         [disabled]="!sortInput()"
       >
-        {{ headerText }}
+         {{ headerText() }}
       </th>
       <td mat-cell *matCellDef="let data">
         <ng-container
           *ngTemplateOutlet="
-            ibCellDef.templateRef;
+             ibCellDef()?.templateRef;
             context: { $implicit: data }
           "
         >
@@ -74,24 +76,13 @@ import { IB_COLUMN_OPTIONS, IB_TABLE, IbColumnOptions } from "../tokens";
 })
 export class IbColumn<T> implements OnDestroy, OnInit {
   /** Column name that should be used to reference this column. */
-  @Input()
-  get name(): string {
-    return this._name;
-  }
-  set name(name: string) {
-    this._name = name;
-
-    // With Ivy, inputs can be initialized before static query results are
-    // available. In that case, we defer the synchronization until "ngOnInit" fires.
-    this._syncColumnDefName();
-  }
-  _name: string;
+  readonly name = model<string>("", { alias: "name" });
 
   /**
    * Text label that should be used for the column header. If this property is not
    * set, the header text will default to the column name with its first letter capitalized.
    */
-  @Input() headerText: string;
+  readonly headerText = model<string | undefined>(undefined, { alias: "headerText" });
 
   /**
    * Accessor function to retrieve the data rendered for each cell. If this
@@ -99,42 +90,42 @@ export class IbColumn<T> implements OnDestroy, OnInit {
    * the column's name. For example, if the column is named `id`, then the rendered value will be
    * value defined by the data's `id` property.
    */
-  @Input() dataAccessor: (data: T, name: string) => number | string;
+  readonly dataAccessor = model<((data: T, name: string) => number | string) | undefined>(undefined, { alias: "dataAccessor" });
   /**
    * Data accessor function that is used to retrieve data properties for sorting
    */
-  @Input() sortingDataAccessor: (data: T, name: string) => number | string;
+  readonly sortingDataAccessor = model<((data: T, name: string) => number | string) | undefined>(undefined, { alias: "sortingDataAccessor" });
   /**
    * Data accessor function that is used to retrieve data properties for filtering
    */
-  @Input() filterDataAccessor: (data: T, name: string) => number | string;
+  readonly filterDataAccessor = model<((data: T, name: string) => number | string) | undefined>(undefined, { alias: "filterDataAccessor" });
 
   /**
    * Enables sorting for the column.
    */
-  @Input({ transform: booleanAttribute }) sort = false;
+  readonly sortInput = input(false, { transform: booleanAttribute, alias: "sort" });
 
   /** Whether sticky positioning should be applied. */
-  @Input({ transform: booleanAttribute }) sticky = false;
+  readonly stickyInput = input(false, { transform: booleanAttribute, alias: "sticky" });
 
   /** Whether this column should be sticky positioned on the end of the row. */
-  @Input({ transform: booleanAttribute }) stickyEnd = false;
+  readonly stickyEndInput = input(false, { transform: booleanAttribute, alias: "stickyEnd" });
 
   /** Whether this column should display in the roll-up footer. */
-  @Input({ transform: booleanAttribute }) aggregate = false;
+  readonly aggregateInput = input(false, { transform: booleanAttribute, alias: "aggregate" });
 
   get aggregationFunction() {
-    return this._table.dataSource.aggregatedColumns?.[this.name];
+    return this._table.dataSource.aggregatedColumns?.[this.name()];
   }
 
   get aggregatedData() {
-    return this._table.dataSource.aggregatedData[this.name];
+    return this._table.dataSource.aggregatedData[this.name()];
   }
 
-  @ContentChild(IbCellDef, { static: true }) ibCellDef: IbCellDef;
+  readonly ibCellDef = contentChild(IbCellDef);
 
   /** @ignore */
-  @ViewChild(MatColumnDef, { static: true }) columnDef: MatColumnDef;
+  readonly columnDef = viewChild.required(MatColumnDef);
 
   /**
    * The column cell, headerCell, and footerCell are provided to the column during `ngOnInit` with a static query.
@@ -143,18 +134,16 @@ export class IbColumn<T> implements OnDestroy, OnInit {
    * component.
    * @ignore
    */
-  @ViewChild(MatCellDef, { static: true }) cell: MatCellDef;
-  @ViewChild(MatHeaderCellDef, { static: true }) headerCell: MatHeaderCellDef;
-  @ViewChild(MatFooterCellDef, { static: true }) footerCell: MatFooterCellDef;
+  readonly cell = viewChild.required(MatCellDef);
+  readonly headerCell = viewChild.required(MatHeaderCellDef);
+  readonly footerCell = viewChild.required(MatFooterCellDef);
 
-  @ViewChild(IbAggregateCell) aggregateCell: IbAggregateCell;
+  readonly aggregateCell = viewChild(IbAggregateCell);
 
-  @Input({ alias: 'ib-action-column', transform: booleanAttribute }) isActionColumn = false;
+  readonly isActionColumnInput = input(false, { alias: 'ib-action-column', transform: booleanAttribute });
 
   /** @ignore */
-  get matSort() {
-    return this._table.sort;
-  }
+  readonly matSort = computed(() => this._table.sort);
 
   _table = inject(IB_TABLE, { optional: true });
   _options: IbColumnOptions<T> =
@@ -163,38 +152,38 @@ export class IbColumn<T> implements OnDestroy, OnInit {
   ngOnInit() {
     this._syncColumnDefName();
 
-    if (this.headerText === undefined) {
-      this.headerText = this._createDefaultHeaderText();
+    if (this.headerText() === undefined) {
+      this.headerText.set(this._createDefaultHeaderText());
     }
 
-    if (!this.dataAccessor) {
-      this.dataAccessor =
+    if (!this.dataAccessor()) {
+      this.dataAccessor.set(
         this._options.defaultDataAccessor ||
-        ((data: T, name: string) => (data as any)[name]);
+        ((data: T, name: string) => (data as any)[name]));
     }
 
-    if (!this.sortingDataAccessor) {
-      this.sortingDataAccessor = this.dataAccessor;
+    if (!this.sortingDataAccessor()) {
+      this.sortingDataAccessor.set(this.dataAccessor());
     }
 
-    if (!this.filterDataAccessor) {
-      this.filterDataAccessor = this.dataAccessor;
+    if (!this.filterDataAccessor()) {
+      this.filterDataAccessor.set(this.dataAccessor());
     }
 
     if (this._table) {
       // Provide the cell and headerCell directly to the table with the static `ViewChild` query,
       // since the columnDef will not pick up its content by the time the table finishes checking
       // its content and initializing the rows.
-      this.columnDef.cell = this.cell;
-      this.columnDef.headerCell = this.headerCell;
-      this.columnDef.footerCell = this.footerCell;
-      this._table.matTable.addColumnDef(this.columnDef);
+       this.columnDef().cell = this.cell();
+       this.columnDef().headerCell = this.headerCell();
+       this.columnDef().footerCell = this.footerCell();
+       this._table.matTable.addColumnDef(this.columnDef());
     }
   }
 
   ngOnDestroy() {
     if (this._table) {
-      this._table.matTable.removeColumnDef(this.columnDef);
+       this._table.matTable.removeColumnDef(this.columnDef());
     }
   }
 
@@ -203,7 +192,7 @@ export class IbColumn<T> implements OnDestroy, OnInit {
    * has been provided. Otherwise simply capitalize the column name.
    */
   _createDefaultHeaderText() {
-    const name = this.name;
+    const name = this.name();
 
     if (!name) {
       throw Error(`Table column must have a name.`);
@@ -218,21 +207,21 @@ export class IbColumn<T> implements OnDestroy, OnInit {
 
   handleAggregationChange(fun: string) {
     this._table.dataSource.aggregate.next({
-      columnName: this.name,
+      columnName: this.name(),
       function: fun,
     });
   }
 
   /** Synchronizes the column definition name with the text column name. */
   private _syncColumnDefName() {
-    if (this.columnDef) {
-      this.columnDef.name = this.name;
+    if (this.columnDef()) {
+      this.columnDef().name = this.name();
     }
   }
 
   mobileDataRenderer(data: T, name: string): unknown {
-    const value = this.dataAccessor
-      ? this.dataAccessor(data, name)
+    const value = this.dataAccessor()
+      ? this.dataAccessor()(data, name)
       : (data as any)?.[name];
 
     return value == null ? '' : String(value);

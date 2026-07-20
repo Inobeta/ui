@@ -7,7 +7,7 @@ import {
   inject,
 } from "@angular/core";
 import { Store } from "@ngrx/store";
-import { BehaviorSubject, Observable, Subject } from "rxjs";
+import { BehaviorSubject, Observable, Subject, of } from "rxjs";
 import { filter, map, takeUntil, tap } from "rxjs/operators";
 import { IbKaiTableAction } from "../../../kai-table/action";
 import {
@@ -17,7 +17,7 @@ import {
 import { IView } from "../../store/views";
 import { IbViewService } from "../../view.service";
 import { IbTableUrlService } from "../../../kai-table/table-url.service";
-import { selectTableViews } from "../../store/index";
+import { selectTableViews, selectViews } from "../../store/index";
 
 @Component({
   selector: "ib-view-group, ib-table-view-group",
@@ -38,6 +38,7 @@ export class IbTableViewGroup extends IbTableViewsHost implements OnDestroy {
       groupName: "",
       data: {
         filter: this.tableUrl.emptyFilterSchema[this.viewGroupName],
+        filters: null,
         pageSize: 20,
         aggregatedColumns: {},
         sort: {
@@ -99,13 +100,17 @@ export class IbTableViewGroup extends IbTableViewsHost implements OnDestroy {
   views$: Observable<IView[]>;
 
   override get activeViewChanged(): Observable<
-    IbTableViewsData & { viewId: string }
+    IbTableViewsData & { viewId: string | null }
   > {
     return this._activeView.pipe(
       filter((v) => !!v && !v.initial),
       map((v) => ({
-        ...v.data,
-        viewId: v.id,
+        filter: v.data.filter,
+        filters: v.data.filters ?? null,
+        pageSize: v.data.pageSize,
+        aggregatedColumns: v.data.aggregatedColumns,
+        sort: v.data.sort,
+        viewId: v.id === "__ibTableView__all" ? null : v.id,
       }))
     );
   }
@@ -114,8 +119,27 @@ export class IbTableViewGroup extends IbTableViewsHost implements OnDestroy {
     return (
       this.actions?.toArray().map(
         (action) =>
-          new TemplatePortal(action.templateRef, action.viewContainerRef)
+          new TemplatePortal(action.templateRef(), action.viewContainerRef)
       ) ?? []
+    );
+  }
+
+  /**
+   * Resolves a view snapshot by its ID.
+   *
+   * `null` and `'__ibTableView__all'` resolve to `null` (no specific view).
+   * Unknown IDs or an empty view store also resolve to `null` without throwing.
+   */
+  override resolveView(
+    viewId: string | null
+  ): Observable<IbTableViewsData | null> {
+    // The legacy sentinel and explicit null both mean "no view selected"
+    if (!viewId || viewId === "__ibTableView__all") {
+      return of(null);
+    }
+    return this.store.select(selectViews).pipe(
+      map((views) => views.find((v) => v.id === viewId)),
+      map((view) => (view ? this._normalizeViewData(view.data) : null))
     );
   }
 
@@ -141,14 +165,42 @@ export class IbTableViewGroup extends IbTableViewsHost implements OnDestroy {
       this.activeView.data.filter = structuredClone(this.tableUrl.emptyFilterSchema[this.viewGroupName])
     }
 
-
-    return JSON.stringify(current) != JSON.stringify(this.activeView.data);
+    // Compare only the canonical state fields to avoid noise from the
+    // optional `filters` boundary field (which may be absent in the
+    // current snapshot produced by the table component's accessor).
+    return (
+      JSON.stringify(current.filter) !==
+        JSON.stringify(this.activeView.data.filter) ||
+      current.pageSize !== this.activeView.data.pageSize ||
+      JSON.stringify(current.aggregatedColumns) !==
+        JSON.stringify(this.activeView.data.aggregatedColumns) ||
+      JSON.stringify(current.sort) !==
+        JSON.stringify(this.activeView.data.sort)
+    );
   }
 
   override handleStateChanges(changes$: Observable<unknown>) {
     changes$
       .pipe(takeUntil(this._destroyed))
       .subscribe(() => (this._dirty = this.checkViewDataChanges()));
+  }
+
+  /**
+   * Normalizes the internal `ITableViewData` (which uses the legacy
+   * `filter` field typed as `IbFilterSyntaxExtended`) into the canonical
+   * {@link IbTableViewsData} boundary used by the kai-table host contract.
+   *
+   * The legacy `filter` value is copied into both `filter` (for backward
+   * compatibility) and `filters` (the canonical raw filter snapshot).
+   */
+  private _normalizeViewData(data: IView["data"]): IbTableViewsData {
+    return {
+      filter: data.filter,
+      filters: data.filters ?? null,
+      pageSize: data.pageSize,
+      aggregatedColumns: data.aggregatedColumns,
+      sort: data.sort,
+    };
   }
 
   handleAddView(data = this.defaultView.data) {

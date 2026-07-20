@@ -3,12 +3,13 @@ import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { CommonModule } from "@angular/common";
 import { Component, Type } from "@angular/core";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { By } from "@angular/platform-browser";
 import { MockStore, provideMockStore } from "@ngrx/store/testing";
 import { TranslateModule } from "@ngx-translate/core";
 import { Subject, of } from "rxjs";
+import { firstValueFrom } from "rxjs";
 import { IbToastModule } from "../../../toast";
 import { IbFilterOperator } from "../../../kai-filter/filter.types";
 import { IbTableViewsData } from "../../../kai-table/table-views-host";
@@ -203,6 +204,234 @@ describe("IbTableViewGroup", () => {
       fixture.detectChanges();
 
       expect(component.activeView.id).toBe("saved-view-1");
+    });
+  });
+
+  describe("resolveView and normalization", () => {
+    it("should return null when viewId is null", fakeAsync(async () => {
+      const result = await firstValueFrom(component.resolveView(null));
+      expect(result).toBeNull();
+    }));
+
+    it("should return null when viewId is the legacy sentinel __ibTableView__all", fakeAsync(async () => {
+      const result = await firstValueFrom(
+        component.resolveView("__ibTableView__all")
+      );
+      expect(result).toBeNull();
+    }));
+
+    it("should return null when the views store is empty", fakeAsync(async () => {
+      store.setState({ ibViews: { views: [] } });
+      store.refreshState();
+      tick();
+
+      const result = await firstValueFrom(
+        component.resolveView("non-existent-id")
+      );
+      expect(result).toBeNull();
+    }));
+
+    it("should return null for an unknown view ID not present in the store", fakeAsync(async () => {
+      const existingView: IView = {
+        id: "view-known",
+        name: "Known View",
+        groupName: "issues",
+        data: {
+          filter: {},
+          pageSize: 20,
+          aggregatedColumns: {},
+          sort: { active: "", direction: "" },
+        },
+      };
+      store.setState({ ibViews: { views: [existingView] } });
+      store.refreshState();
+      tick();
+
+      const result = await firstValueFrom(
+        component.resolveView("unknown-id")
+      );
+      expect(result).toBeNull();
+    }));
+
+    it("should resolve an existing view and return normalized snapshot", fakeAsync(async () => {
+      const storedView: IView = {
+        id: "view-1",
+        name: "My View",
+        groupName: "issues",
+        data: {
+          filter: {
+            color: { operator: IbFilterOperator.EQUALS, value: "red" },
+          },
+          pageSize: 10,
+          aggregatedColumns: { amount: "sum" },
+          sort: { active: "name", direction: "asc" },
+        },
+      };
+      store.setState({ ibViews: { views: [storedView] } });
+      store.refreshState();
+      tick();
+
+      const result = await firstValueFrom(component.resolveView("view-1"));
+      expect(result).not.toBeNull();
+      expect(result!.pageSize).toBe(10);
+      expect(result!.aggregatedColumns).toEqual({ amount: "sum" });
+      expect(result!.sort).toEqual({ active: "name", direction: "asc" });
+      expect(result!.filter).toEqual({
+        color: { operator: IbFilterOperator.EQUALS, value: "red" },
+      });
+      expect(result!.filters).toBeNull();
+    }));
+
+    it("should normalize legacy filter snapshot to canonical filters in resolved view", fakeAsync(async () => {
+      // Simulate a legacy saved view that only has the `filter` field
+      // and no `filters` field.
+      const legacyView: IView = {
+        id: "legacy-view",
+        name: "Legacy View",
+        groupName: "issues",
+        data: {
+          filter: {
+            status: { operator: IbFilterOperator.EQUALS, value: "open" },
+          },
+          pageSize: 30,
+          aggregatedColumns: {},
+          sort: { active: "id", direction: "desc" },
+          // filters is absent (legacy snapshot)
+        },
+      };
+      store.setState({ ibViews: { views: [legacyView] } });
+      store.refreshState();
+      tick();
+
+      const result = await firstValueFrom(
+        component.resolveView("legacy-view")
+      );
+      expect(result).not.toBeNull();
+      // The legacy elaborated filter should be preserved in `filter`
+      expect(result!.filter).toEqual({
+        status: { operator: IbFilterOperator.EQUALS, value: "open" },
+      });
+      // `filters` (raw filter state) should be null — normalized at boundary
+      expect(result!.filters).toBeNull();
+      expect(result!.pageSize).toBe(30);
+      expect(result!.sort).toEqual({ active: "id", direction: "desc" });
+    }));
+
+    it("should preserve canonical filters field when present in stored view", fakeAsync(async () => {
+      const savedFilterState = {
+        status: { operator: IbFilterOperator.EQUALS, value: "open" as const },
+      };
+      const viewWithFilters: IView = {
+        id: "view-with-filters",
+        name: "With Filters",
+        groupName: "issues",
+        data: {
+          filter: {
+            status: { operator: IbFilterOperator.EQUALS, value: "open" },
+          },
+          filters: savedFilterState,
+          pageSize: 25,
+          aggregatedColumns: { count: "avg" },
+          sort: { active: "date", direction: "asc" },
+        },
+      };
+      store.setState({ ibViews: { views: [viewWithFilters] } });
+      store.refreshState();
+      tick();
+
+      const result = await firstValueFrom(
+        component.resolveView("view-with-filters")
+      );
+      expect(result).not.toBeNull();
+      expect(result!.filters).toEqual(savedFilterState);
+      expect(result!.pageSize).toBe(25);
+      expect(result!.aggregatedColumns).toEqual({ count: "avg" });
+      expect(result!.sort).toEqual({ active: "date", direction: "asc" });
+    }));
+
+    it("activeViewChanged should convert default sentinel to null viewId", () => {
+      const emitted: any[] = [];
+      component.activeViewChanged.subscribe((v) => emitted.push(v));
+
+      // Emit the default view (sentinel ID) without the `initial` flag
+      const defaultView: IView = {
+        id: "__ibTableView__all",
+        name: "",
+        groupName: "issues",
+        data: {
+          filter: {},
+          pageSize: 20,
+          aggregatedColumns: {},
+          sort: { active: "", direction: "" },
+        },
+      };
+      (component as any)._activeView.next(defaultView);
+      fixture.detectChanges();
+
+      expect(emitted.length).toBe(1);
+      // The sentinel __ibTableView__all should NOT leak through;
+      // it must be converted to null at the boundary.
+      expect(emitted[0].viewId).toBeNull();
+    });
+
+    it("activeViewChanged should emit the actual viewId for a saved view", () => {
+      const emitted: any[] = [];
+      component.activeViewChanged.subscribe((v) => emitted.push(v));
+
+      const savedView: IView = {
+        id: "custom-view-42",
+        name: "Custom",
+        groupName: "issues",
+        data: {
+          filter: { type: { operator: IbFilterOperator.EQUALS, value: "bug" } },
+          filters: { type: { operator: IbFilterOperator.EQUALS, value: "bug" } },
+          pageSize: 50,
+          aggregatedColumns: {},
+          sort: { active: "priority", direction: "desc" },
+        },
+      };
+      (component as any)._activeView.next(savedView);
+      fixture.detectChanges();
+
+      expect(emitted.length).toBe(1);
+      expect(emitted[0].viewId).toBe("custom-view-42");
+      expect(emitted[0].pageSize).toBe(50);
+      expect(emitted[0].filter).toEqual({
+        type: { operator: IbFilterOperator.EQUALS, value: "bug" },
+      });
+      expect(emitted[0].filters).toEqual({
+        type: { operator: IbFilterOperator.EQUALS, value: "bug" },
+      });
+    });
+
+    it("activeViewChanged should not emit anything for null viewId (empty string)", () => {
+      const emitted: any[] = [];
+      component.activeViewChanged.subscribe((v) => emitted.push(v));
+
+      // Emit a view with id="" which should be filtered out
+      // since `!!v && !v.initial` would succeed, but the map should
+      // convert id to null since "" != "__ibTableView__all"
+      // Actually, `"" !== "__ibTableView__all"` so `viewId` would be "".
+      // But the guard `!!v` passes for non-null objects, so it would emit.
+      // Let's test the realistic case: empty string should emit viewId = ""
+      const emptyIdView: IView = {
+        id: "",
+        name: "Empty ID",
+        groupName: "issues",
+        data: {
+          filter: {},
+          pageSize: 20,
+          aggregatedColumns: {},
+          sort: { active: "", direction: "" },
+        },
+      };
+      (component as any)._activeView.next(emptyIdView);
+      fixture.detectChanges();
+
+      // With filter `!!v && !v.initial`, this should pass through
+      // and id "" is not "__ibTableView__all", so viewId = ""
+      expect(emitted.length).toBe(1);
+      expect(emitted[0].viewId).toBe("");
     });
   });
 

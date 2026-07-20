@@ -8,6 +8,7 @@ import { MatIconButton } from "@angular/material/button";
     selector: "ib-kai-table-api-example",
     template: `
     <ib-kai-table
+      tableName="remoteExample"
       [displayedColumns]="['created', 'state', 'number', 'title']"
       [dataSource]="dataSource"
     >
@@ -67,14 +68,6 @@ export class IbKaiTableApiExamplePage {
   dataSource = new GithubDataSource();
 
   createdAtAccessor = (data: any, name: string) => data.created_at;
-
-  setState(state: string) {
-    if (state === "loading") {
-      return (this.dataSource.state = "loading");
-    }
-
-    this.dataSource.state = "idle";
-  }
 
   refresh() {
     this.dataSource.refresh();

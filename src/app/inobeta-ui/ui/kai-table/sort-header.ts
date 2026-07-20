@@ -1,4 +1,4 @@
-import { Directive, Input } from "@angular/core";
+import { Directive, effect, input } from "@angular/core";
 import { MatSort, MatSortHeader } from "@angular/material/sort";
 
 /**
@@ -17,9 +17,9 @@ import { MatSort, MatSortHeader } from "@angular/material/sort";
   standalone: true,
 })
 export class IbSortHeader {
-  @Input("ibSortHeaderFor") set matSort(matSort: MatSort) {
-    this.matSortHeader._sort = matSort;
-  }
+  readonly matSort = input.required<MatSort>({ alias: "ibSortHeaderFor" });
 
-  constructor(public matSortHeader: MatSortHeader) {}
+  constructor(public matSortHeader: MatSortHeader) {
+    effect(() => this.matSortHeader._sort = this.matSort());
+  }
 }

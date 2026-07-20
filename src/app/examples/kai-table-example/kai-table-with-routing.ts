@@ -1,8 +1,7 @@
 import { Component, inject, ViewChild } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { IbDataExportModule, IbFilterModule, IbKaiTableModule, IbTableActionModule, IbViewModule } from "public_api";
-import { IbSelectionColumn } from "../../inobeta-ui/ui/kai-table/columns/selection-column";
-import { IbKaiTableState } from "../../inobeta-ui/ui/kai-table/table.types";
+import { IbSelectionColumn } from "public_api";
 import { IbUserExample, UserService } from "./users";
 
 import { MatIconButton } from "@angular/material/button";
@@ -13,10 +12,9 @@ import { ActivatedRoute, Router, RouterOutlet } from "@angular/router";
   template: `
   <div style="display: flex; flex-direction: row; gap: 2em;">
     <ib-kai-table
-      tableName="fullExample"
+      tableName="routingExample"
       [displayedColumns]="columns"
       [data]="data"
-      [state]="state"
       [activeRowParams]="{ dataParamId: 'id', childRouteParamId: 'id'}"
       >
       <ib-table-action-group>
@@ -100,7 +98,6 @@ export class IbKaiTableWithRouting {
 
   data: IbUserExample[] = [];
   columns = ["name", "fruit", "amount", "created_at", "subscribed"];
-  state: IbKaiTableState = "idle";
   router = inject(Router);
   activatedRoute = inject(ActivatedRoute);
   constructor(private userService: UserService) { }
@@ -110,10 +107,8 @@ export class IbKaiTableWithRouting {
   }
 
   getUserOrders() {
-    this.state = "loading";
     this.userService.getUserOrders().subscribe((orders) => {
       this.data = orders;
-      this.state = "idle";
     });
   }
 

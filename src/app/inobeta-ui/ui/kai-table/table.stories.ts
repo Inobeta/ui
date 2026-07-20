@@ -175,6 +175,7 @@ type Story = StoryObj<IbTable>;
  */
 export const Simple: Story = {
   args: {
+    tableName: "products-simple",
     displayedColumns: ["name", "category"],
     tableDef: {
       paginator: {
@@ -191,7 +192,7 @@ export const Simple: Story = {
       ...args,
     },
     template: `
-      <ib-kai-table tableName="products" [data]="data" [displayedColumns]="displayedColumns" [tableDef]="tableDef">
+      <ib-kai-table [tableName]="tableName" [data]="data" [displayedColumns]="displayedColumns" [tableDef]="tableDef">
         <ib-text-column headerText="Product name" name="name" />
         <ib-text-column name="category" />
       </ib-kai-table>
@@ -201,6 +202,7 @@ export const Simple: Story = {
 
 export const WithSort: Story = {
   args: {
+    tableName: "products-sort",
     displayedColumns: ["id", "name", "sku", "category", "price", "created_at"],
     tableDef: {
       paginator: {
@@ -216,7 +218,7 @@ export const WithSort: Story = {
       ...args,
     },
     template: `
-      <ib-kai-table tableName="products" [data]="data" [displayedColumns]="displayedColumns" [tableDef]="tableDef">
+      <ib-kai-table [tableName]="tableName" [data]="data" [displayedColumns]="displayedColumns" [tableDef]="tableDef">
         <ib-text-column headerText="ID" name="id" sort />
         <ib-text-column headerText="Product name" name="name" sort />
         <ib-text-column headerText="SKU" name="sku" />
@@ -231,6 +233,7 @@ export const WithSort: Story = {
 export const WithFilters: Story = {
   render: () => ({
     props: {
+      tableName: "products-filters",
       data: tableData,
       displayedColumns: [
         "id",
@@ -242,7 +245,7 @@ export const WithFilters: Story = {
       ],
     },
     template: `
-      <ib-kai-table tableName="products" [displayedColumns]="displayedColumns" [data]="data">
+      <ib-kai-table [tableName]="tableName" [displayedColumns]="displayedColumns" [data]="data">
         <ib-filter>
           <ib-text-filter name="name">Product name</ib-text-filter>
           <ib-text-filter name="sku">SKU</ib-text-filter>
@@ -264,13 +267,14 @@ export const WithFilters: Story = {
 
 export const WithExport: Story = {
   args: {
+    tableName: "products-export",
     data: tableData,
     displayedColumns: ["id", "name", "sku", "category", "price", "created_at"],
   },
   render: (args) => ({
     props: args,
     template: `
-      <ib-kai-table tableName="products" [displayedColumns]="displayedColumns" [data]="data">
+      <ib-kai-table [tableName]="tableName" [displayedColumns]="displayedColumns" [data]="data">
         <ib-table-action-group>
           <ib-table-data-export-action />
         </ib-table-action-group>
@@ -288,6 +292,7 @@ export const WithExport: Story = {
 
 export const WithCustomColumn: Story = {
   args: {
+    tableName: "products-custom-column",
     displayedColumns: [
       "id",
       "name",
@@ -310,7 +315,7 @@ export const WithCustomColumn: Story = {
       ...args,
     },
     template: `
-      <ib-kai-table tableName="products" [data]="data" [displayedColumns]="displayedColumns" [tableDef]="tableDef">
+      <ib-kai-table [tableName]="tableName" [data]="data" [displayedColumns]="displayedColumns" [tableDef]="tableDef">
         <ib-text-column headerText="ID" name="id" sort />
         <ib-text-column headerText="Product name" name="name" sort />
         <ib-text-column headerText="SKU" name="sku" />
@@ -328,6 +333,7 @@ export const WithCustomColumn: Story = {
  */
 export const WithRowGroup: Story = {
   args: {
+    tableName: "products-row-group",
     displayedColumns: ["id", "name", "sku", "category", "price", "created_at"],
     tableDef: {
       paginator: {
@@ -341,7 +347,7 @@ export const WithRowGroup: Story = {
       ...args,
     },
     template: `
-      <ib-kai-table tableName="products" [data]="data" [displayedColumns]="displayedColumns" [tableDef]="tableDef">
+      <ib-kai-table [tableName]="tableName" [data]="data" [displayedColumns]="displayedColumns" [tableDef]="tableDef">
         <ng-container *ibKaiRowGroup="let data">
           Description for {{ data.name }}: {{ data.description }}
         </ng-container>

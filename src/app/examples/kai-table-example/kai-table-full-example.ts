@@ -1,8 +1,7 @@
 import { Component, ViewChild } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { IbDataExportModule, IbFilterModule, IbKaiTableModule, IbTableActionModule, IbViewModule } from "public_api";
-import { IbSelectionColumn } from "../../inobeta-ui/ui/kai-table/columns/selection-column";
-import { IbKaiTableState } from "../../inobeta-ui/ui/kai-table/table.types";
+import { IbSelectionColumn } from "public_api";
 import { UserService } from "./users";
 
 import { MatIconButton } from "@angular/material/button";
@@ -14,7 +13,6 @@ import { MatIconButton } from "@angular/material/button";
       tableName="fullExample"
       [displayedColumns]="columns"
       [data]="data"
-      [state]="state"
       [stripedRows]="true"
       >
       <ib-table-action-group>
@@ -97,7 +95,6 @@ export class IbKaiTableFullExamplePage {
 
   data: any[] = [];
   columns = ["name", "fruit", "amount", "created_at", "subscribed"];
-  state: IbKaiTableState = "idle";
 
   constructor(private userService: UserService) { }
 
@@ -106,10 +103,8 @@ export class IbKaiTableFullExamplePage {
   }
 
   getUserOrders() {
-    this.state = "loading";
     this.userService.getUserOrders().subscribe((orders) => {
       this.data = orders;
-      this.state = "idle";
     });
   }
 

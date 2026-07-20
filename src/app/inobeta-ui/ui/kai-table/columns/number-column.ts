@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   input,
-  Input,
   ViewEncapsulation,
 } from "@angular/core";
 import { IB_AGGREGATE_TYPE, IB_COLUMN } from "../tokens";
@@ -23,31 +22,31 @@ import { DecimalPipe } from "@angular/common";
     <ng-container
       matColumnDef
       matSort
-      [sticky]="sticky"
-      [stickyEnd]="stickyEnd"
+      [sticky]="stickyInput()"
+      [stickyEnd]="stickyEndInput()"
       >
       <th
         class="ib-table__header-cell"
         mat-header-cell
         *matHeaderCellDef
-        [ibSortHeaderFor]="matSort"
+        [ibSortHeaderFor]="matSort()"
         mat-sort-header
-        [disabled]="!sort"
+        [disabled]="!sortInput()"
         >
-        {{ headerText }}
+        {{ headerText() }}
       </th>
       <td mat-cell *matCellDef="let data" [style.text-align]="'end'">
         @if(umPosition() === 'left') {
           {{ um() }}&nbsp;
         }
-        {{ dataAccessor(data, name) | number : digitsInfo : locale }}
+         {{ dataAccessor()(data, name()) | number : digitsInfo() : locale() }}
 
         @if(umPosition() === 'right') {
           {{ um() }}
         }
       </td>
       <td mat-footer-cell *matFooterCellDef style="max-width: fit-content">
-        @if (aggregate) {
+        @if (aggregateInput()) {
           <ib-aggregate
             [showTotal]="!_table.isRemote"
             [result]="aggregatedData"
@@ -71,14 +70,14 @@ import { DecimalPipe } from "@angular/common";
   standalone: false
 })
 export class IbNumberColumn<T> extends IbColumn<T> {
-  @Input() digitsInfo = "1.0-2";
-  @Input() locale = "it";
+  readonly digitsInfo = input("1.0-2");
+  readonly locale = input("it");
   um = input<string>("");
   umPosition = input<'right' | 'left'>("right");
 
   mobileDataRenderer(data: T, name: string): string {
-    const value = this.dataAccessor(data, name);
-    const formattedValue = DecimalPipe.prototype.transform(value, this.digitsInfo, this.locale) ?? "";
+    const value = this.dataAccessor()(data, name);
+    const formattedValue = DecimalPipe.prototype.transform(value, this.digitsInfo(), this.locale()) ?? "";
     if (this.um()) {
       return this.umPosition() === 'left' ? `${this.um()} ${formattedValue}` : `${formattedValue} ${this.um()}`;
     }

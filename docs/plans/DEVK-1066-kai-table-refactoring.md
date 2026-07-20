@@ -1592,7 +1592,7 @@ Una guida concisa ma completa, verificabile contro i simboli finali.
 7. Documentare schema URL v2 e lettura legacy sentinel.
 8. Documentare [data]/[dataSource] mutuamente esclusivi.
 9. Documentare limiti remoti fuori scope.
-10. Correggere affermazioni obsolete della deprecation guide, incluse compatibilità MatTableDataSource e output rowClicked inesistente.
+10. Rimuovere il contenuto della deprecation guide e riscriverne il contenuto con quanto emerso in questo lavoro.
 
 ## CONSTRAINTS:
 - Non modificare production code.

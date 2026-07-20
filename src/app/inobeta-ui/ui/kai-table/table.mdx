@@ -27,6 +27,54 @@ export class SimpleKaiTableExample {
 }
 ```
 
+### Table identity and data sources
+
+`tableName` is required and must be unique for each table on a page. It scopes the
+NgRx state, URL state, views, selection events, and exported files.
+
+For client-side data, `[data]` is shorthand for an `IbTableLocalDataSource` managed
+by the table. You can also construct the source yourself when you need its typed
+API (`setInput`, `filteredData`, `aggregatedData`, or custom sorting/filtering).
+
+```typescript
+import { IbTableLocalDataSource } from "public_api";
+
+dataSource = new IbTableLocalDataSource(this.data);
+```
+
+`[data]` and `[dataSource]` are mutually exclusive. Use `[data]` for local rows or
+`[dataSource]` for an `IbTableLocalDataSource` / `IbTableRemoteDataSource`, never both.
+
+### Initial state precedence
+
+At initialization, each state field is resolved independently using this precedence
+(highest priority first):
+
+| Priority | Source |
+| --- | --- |
+| 1 | Explicit URL field |
+| 2 | URL view snapshot |
+| 3 | `tableDef` `initial*` field |
+| 4 | Technical default (`sort: null`, `filters: null`, `selectedView: null`, page `0`, page size `20`) |
+
+An **absent** field does not override a lower layer. An explicit `null` clears the
+field: for example, `initialFilters: null` means no filters, and a URL payload with
+`filters: null` clears filters even when a view or `tableDef` defines them.
+
+`selectedView` is `null` when no view host is present, when no view is selected, or
+when the implicit all-data view is active. Views are optional; the table does not
+require `IbViewModule` or an `IbTableViewsHost`.
+
+```typescript
+tableDef: IbTableDef = {
+  initialSort: { active: "name", direction: "asc" },
+  initialFilters: null,
+  initialView: null,
+  initialPageIndex: 0,
+  initialPageSize: 20,
+};
+```
+
 Next, write your table's column templates.
 
 Each column definition must be given a name. By default, the name of the columns will also used as the header text and data property accessor.
@@ -277,7 +325,7 @@ By default, sorting is disabled in any column. To enable sorting, use `sort` in 
 
 #### Set initial sort
 
-Through the `initialSort` property of `IbTableDef` a sort direction can be activated during the first render of the table. The property `active` corresponds to the `name` of a column, and `direction` can only be either `asc` or `desc`.
+Through the `initialSort` property of `IbTableDef` a sort direction can be activated during the first render of the table. The property `active` corresponds to the `name` of a column, and `direction` can only be either `asc` or `desc`. The other `initial*` fields are `initialFilters`, `initialView`, `initialPageIndex`, `initialPageSize`, and `initialAggregatedColumns`; absent and `null` values follow the precedence rules above.
 
 ```html
 <ib-kai-table ... [tableDef]="tableDef">
@@ -675,17 +723,20 @@ Include the rule within your component hosting `ib-kai-table`
 
 > 🚧 Aggregation, selection, and exporting are not fully supported
 
-Enable server-side interactions with an `IbTableRemoteDataSource` provided to the `dataSource` input.
+Enable server-side interactions with an `IbTableRemoteDataSource` provided to the `dataSource` input. Remote multi-page selection, full export, and global aggregation are not supported; use a local data source when those capabilities are required.
 
 1. Define your data source
 
 Your data source must extend `IbTableRemoteDataSource` in order to be compatible with the table. This is an abstract class, and it needs the `fetchData` method
-to be implemented.
+to be implemented. The request is a value object containing `sort`, `pageIndex`, `pageSize`, and `filter`.
 
-The method `fetchData` will be called with two parameters whenever some data from the server is needed:
+The method `fetchData` is called whenever data is needed. Requests are cancellable: new sort, page, or filter state cancels the previous request through `switchMap`. Filter requests are debounced by `filterDebounceMs` (500 ms by default).
 
-- `sort` is of type `MatSort`¹, the current sorted column is available in `sort.active` and the order in `sort.direction`².
-- `page` is of type `MatPaginator`³, the requested page index can be accessed with `page.pageIndex`, and the current page size with `page.pageSize`.
+The request fields replace the old Material control parameters:
+
+- `sort` is a `Sort | null` value.
+- `pageIndex` and `pageSize` identify the requested page.
+- `filter` contains the current filter state, or `null` when no filter is applied.
 
 ```typescript
 // product-data-source.ts
@@ -693,16 +744,15 @@ export class ProductDataSource extends IbTableRemoteDataSource<Product> {
   private http = inject(HttpClient);
 
   fetchData(
-    sort: MatSort,
-    page: MatPaginator
+    request: IbRemoteDataSourceRequest<ProductQuery>
   ): Observable<IbFetchDataResponse<Product>> {
     return this.http
       .get<ProductReponse>("/products", {
         params: {
-          sort: sort.active,
-          order: sort.direction,
-          page: page.pageIndex,
-          per_page: page.pageSize,
+          sort: request.sort?.active,
+          order: request.sort?.direction,
+          page: request.pageIndex,
+          per_page: request.pageSize,
         },
       })
       .pipe(
@@ -756,10 +806,6 @@ export class RemoteDataSourceExample {
 </ib-kai-table>
 ```
 
-¹ [More about MatSort](https://material.angular.io/components/sort/api#MatSort)
-² Both are null as per initial state. Can also be empty strings when undefined, please refer to the documentation.
-³ [More about MatPaginator](https://material.angular.io/components/paginator/api#MatPaginator)
-
 #### Filtering
 
 Considering the following table as an example:
@@ -804,7 +850,7 @@ type ProductQuery = {
 2. Update your data source
 
 The `IbTableRemoteDataSource` class accepts a second generic type to specify the type for the filter model.
-Also, a third `filter` parameter is provided to the method `fetchData`
+The filter is available as `request.filter` in the method `fetchData`
 
 > The parameters of `filter` may be undefined if left untouched by the user.
 
@@ -813,18 +859,16 @@ class ProductDataSource extends IbTableRemoteDataSource<Product, ProductQuery> {
   private http = inject(HttpClient);
 
   fetchData(
-    sort: MatSort,
-    page: MatPaginator,
-    filter: ProductQuery
+    request: IbRemoteDataSourceRequest<ProductQuery>
   ): Observable<IbFetchDataResponse<Product>> {
     return this.http
       .get("/products", {
         params: {
-          sort: sort.active,
-          order: sort.direction,
-          page: page.pageIndex,
-          per_page: page.pageSize,
-          // use your filters here
+          sort: request.sort?.active,
+          order: request.sort?.direction,
+          page: request.pageIndex,
+          per_page: request.pageSize,
+          // use request.filter here
         },
       })
       .pipe(
@@ -1050,6 +1094,10 @@ The following feature are always serialized in url bar:
 - paginator settings (only page size)
 - active view
 
+The URL stores the full canonical state for each table, including explicit `null`
+values. Sort and filter changes reset the page to zero. Browser back/forward
+replays the URL snapshot, restoring sort, filters, view, pagination, and aggregation.
+
 In order to recover previous state, you have to use history.back() call that will preserve url querystring and the table will be reinizialized.
 
 Is it possibile to recover the last table state also by using `ibTableSelectLastQueryString` selector as follow:
@@ -1068,6 +1116,17 @@ this.router.navigate([your path], {
   queryParamsHandling: 'merge'
 })
 
+```
+
+Use signals directly when reading table state:
+
+```typescript
+urlState = this.store.selectSignal(ibTableSelectUrlState("YOUR_TABLE_NAME"));
+lastQueryString = this.store.selectSignal(
+  ibTableSelectLastQueryString("YOUR_TABLE_NAME"),
+);
+
+console.log(urlState());
 ```
 
 Multiple tables on the same page are supported as long as different table names are used.

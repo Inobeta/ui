@@ -14,6 +14,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCard } from "@angular/material/card";
 import { MatIcon } from '@angular/material/icon';
+import { Sort } from '@angular/material/sort';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { filter, Subscription } from 'rxjs';
 import { IbDataExportService, IDataExportSettings } from '../data-export/data-export.service';
@@ -60,7 +61,7 @@ import { IbColumn } from '../kai-table/columns/column';
                     <mat-icon>file_download</mat-icon>
                   </button>
                 } @else {
-                  <ng-container *ngTemplateOutlet="action.templateRef"> </ng-container>
+                    <ng-container *ngTemplateOutlet="action.templateRef()"> </ng-container>
                 }
               }
             </div>
@@ -74,10 +75,10 @@ import { IbColumn } from '../kai-table/columns/column';
                     <button
                       mat-button
                       style="justify-content: flex-start;"
-                      (click)="sortUpdated.emit(col.name)"
+                      (click)="sortUpdated.emit(col.name())"
                     >
-                      {{ col.headerText  }}
-                      @if (currentSort()?.active === col.name) {
+                       {{ col.headerText()  }}
+                       @if (currentSort()?.active === col.name()) {
                         <mat-icon>
                           {{ currentSort()?.direction === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
                         </mat-icon>
@@ -253,7 +254,7 @@ export class IbKaiTableMobileToolbarComponent implements OnDestroy {
   headerActions = input<readonly IbKaiTableAction[]>([]);
   filters = input<readonly IbFilterBase[]>([]);
   sortableColumns = input<readonly IbColumn<any>[]>([]);
-  currentSort = input<{ active: string, direction: 'asc' | 'desc' } | null>(null);
+  currentSort = input<Sort | null>(null);
   doExport = output<Partial<IDataExportSettings>>()
   sortUpdated = output<string>()
   filtersOpen = signal(false);

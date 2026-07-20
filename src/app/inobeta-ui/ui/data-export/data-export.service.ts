@@ -54,24 +54,36 @@ export class IbDataExportService {
     settings: IDataExportSettings
   ) {
     let data: unknown[];
+
     if (settings.dataset === "all") {
-      data = dataSource._orderData(dataSource.filteredData);
+      data = [...dataSource.filteredData];
+      const sort = dataSource.sort;
+      if (sort) {
+        data = dataSource.sortData(data, sort);
+      }
     }
 
     if (settings.dataset === "selected") {
-      data = dataSource._orderData(
-        dataSource.selectionColumn?.selection.selected
-      );
+      data = dataSource.selectionColumn?.selection.selected ?? [];
+      const sort = dataSource.sort;
+      if (sort) {
+        data = dataSource.sortData(data, sort);
+      }
     }
 
     if (settings.dataset === "current") {
-      data = dataSource._pageData(
-        dataSource._orderData(dataSource.filteredData)
-      );
+      let ordered = [...dataSource.filteredData];
+      const sort = dataSource.sort;
+      if (sort) {
+        ordered = dataSource.sortData(ordered, sort);
+      }
+      const pageIndex = dataSource.paginator?.pageIndex ?? 0;
+      const pageSize = dataSource.paginator?.pageSize ?? ordered.length;
+      data = ordered.slice(pageIndex * pageSize, pageIndex * pageSize + pageSize);
     }
 
     const columns = dataSource.sortedColumns.filter(
-      (c) => !c.name.startsWith("ib-")
+      (c) => !c.name().startsWith("ib-")
     );
 
     const dataAccessor = this.getDataAccessorForFormat(settings.format);
@@ -80,7 +92,7 @@ export class IbDataExportService {
       columns.reduce(
         (acc, column) => ({
           ...acc,
-          [column.headerText]: dataAccessor(row, column),
+          [column.headerText()]: dataAccessor(row, column),
         }),
         {}
       )
@@ -103,7 +115,9 @@ export class IbDataExportService {
   /** @ignore */
   private getDataAccessorForFormat =
     (format: string) => (row: unknown, column: IbColumn<unknown>) => {
-      const data = column.dataAccessor(row, column.name);
+      const accessor = column.dataAccessor();
+      const colName = column.name();
+      const data = accessor ? accessor(row, colName) : (row as Record<string, unknown>)[colName];
       const fn =
         column?.["transform"]?.[format] ?? column?.["transform"]?.["ibAny"];
       if (!fn) {

@@ -1,12 +1,11 @@
 import { SelectionModel } from "@angular/cdk/collections";
 import {
   Component,
-  EventEmitter,
   Inject,
   OnInit,
   Optional,
-  Output,
-  ViewChild,
+  output,
+  viewChild,
 } from "@angular/core";
 import {
   MatCellDef,
@@ -51,18 +50,16 @@ import { IB_TABLE } from "../tokens";
 })
 export class IbSelectionColumn implements OnInit {
   /** @ignore */
-  @ViewChild(MatCellDef, { static: true }) cell: MatCellDef;
+  readonly cell = viewChild.required(MatCellDef);
   /** @ignore */
-  @ViewChild(MatHeaderCellDef, { static: true }) headerCell: MatHeaderCellDef;
+  readonly headerCell = viewChild.required(MatHeaderCellDef);
   /** @ignore */
-  @ViewChild(MatFooterCellDef, { static: true }) footerCell: MatFooterCellDef;
+  readonly footerCell = viewChild.required(MatFooterCellDef);
   /** @ignore */
-  @ViewChild(MatColumnDef, { static: true }) columnDef: MatColumnDef;
+  readonly columnDef = viewChild.required(MatColumnDef);
   selection = new SelectionModel<any>(true, []);
 
-  @Output() ibRowSelectionChange = new EventEmitter<
-    IbTableRowSelectionChange[]
-  >();
+  readonly ibRowSelectionChange = output<IbTableRowSelectionChange[]>();
 
   constructor(@Inject(IB_TABLE) @Optional() private table: any) {}
 
@@ -71,10 +68,10 @@ export class IbSelectionColumn implements OnInit {
       if (this.table.isRemote) {
         console.warn("Selection column is currently not supported with IbTableRemoteDataSource")
       }
-      this.columnDef.cell = this.cell;
-      this.columnDef.headerCell = this.headerCell;
-      this.columnDef.footerCell = this.footerCell;
-      this.table.matTable.addColumnDef(this.columnDef);
+      this.columnDef().cell = this.cell();
+      this.columnDef().headerCell = this.headerCell();
+      this.columnDef().footerCell = this.footerCell();
+      this.table.matTable.addColumnDef(this.columnDef());
       this.table.displayedColumns.unshift("ib-selection");
     }
   }
