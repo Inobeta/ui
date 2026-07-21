@@ -30,7 +30,7 @@ import { MatPaginator } from "@angular/material/paginator";
 import { MatSort, Sort } from "@angular/material/sort";
 import { MatTable } from "@angular/material/table";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
-import { Subscription } from "rxjs";
+import { firstValueFrom, Subscription } from "rxjs";
 import { filter } from "rxjs/operators";
 import { IbActionColumn, IbKaiTableAction, IbKaiTableActionGroup } from ".";
 import { IbDataExportService, IDataExportSettings } from "../data-export";
@@ -44,7 +44,13 @@ import { IbTableDataSource } from "./table-data-source";
 import { IbKaiTableSnapshot, IbKaiTableState, IbTableDef } from "./table.types";
 import { IB_TABLE } from "./tokens";
 import { IbKaiTableStateFacade } from "./table-state.facade";
-import { IbDataSourceCapability } from "./data-source.types";
+import { IbDataSourceCapability, IbTableRendererDataSource } from "./data-source.types";
+import { IbTableLocalDataSource } from "./local-data-source";
+
+type IbTableSource =
+  | IbTableDataSource<unknown>
+  | IbTableLocalDataSource<unknown>
+  | IbTableRemoteDataSource<unknown>;
 
 const defaultTableDef: IbTableDef = {
   paginator: {
@@ -75,9 +81,9 @@ const defaultTableDef: IbTableDef = {
 export class IbTable implements OnDestroy {
   readonly initialized = signal(false);
   private readonly remoteState = signal<IbKaiTableState | null>(null);
-  private readonly internalDataSource = new IbTableDataSource<unknown>([]);
+  private readonly internalDataSource = new IbTableLocalDataSource<unknown>([]);
   private applyingSnapshot = false;
-  private snapshotAppliedSource: IbTableDataSource<unknown> | IbTableRemoteDataSource<unknown> | null = null;
+  private snapshotAppliedSource: IbTableSource | null = null;
   private snapshotAppliedState: IbKaiTableSnapshot | null = null;
   /**
    *
@@ -122,7 +128,7 @@ export class IbTable implements OnDestroy {
   readonly __state = input<IbKaiTableState>('idle');
   data = input<unknown[] | undefined>(undefined);
   /** @internal — use {@link dataSource} getter or {@link activeDataSource} signal. */
-  readonly __dataSource = input<IbTableDataSource<unknown> | IbTableRemoteDataSource<unknown> | undefined>(undefined, { alias: 'dataSource' });
+  readonly __dataSource = input<IbTableSource | undefined>(undefined, { alias: 'dataSource' });
   readonly __tableName = input.required<string>({ alias: 'tableName' });
   tableDef = input<Partial<IbTableDef>>({});
   /** @internal — use {@link displayedColumns} getter or {@link effectiveDisplayedColumns} signal. */
@@ -131,7 +137,9 @@ export class IbTable implements OnDestroy {
   activeRowParams = input<{ dataParamId: string, childRouteParamId: string }>({ dataParamId: null, childRouteParamId: null });
 
   /** @deprecated Backward-compatible accessor for child components. Will be removed in Step 15 migration. */
-  get dataSource(): IbTableDataSource<unknown> | IbTableRemoteDataSource<unknown> | undefined { return this.activeDataSource(); }
+  get dataSource(): IbTableDataSource<unknown> | IbTableRemoteDataSource<unknown> | undefined {
+    return this.activeDataSource() as IbTableDataSource<unknown> | IbTableRemoteDataSource<unknown>;
+  }
   /** @deprecated Backward-compatible accessor for child components. Will be removed in Step 15 migration. */
   get tableName(): string { return this.__tableName(); }
   /** @deprecated Backward-compatible accessor for child components. Will be removed in Step 15 migration. */
@@ -148,7 +156,7 @@ export class IbTable implements OnDestroy {
       ...this.tableDef().paginator,
     },
   }));
-  readonly activeDataSource = computed<IbTableDataSource<unknown> | IbTableRemoteDataSource<unknown>>(() => {
+  readonly activeDataSource = computed<IbTableSource>(() => {
     const data = this.data();
     const dataSource = this.__dataSource();
     if (data !== undefined && dataSource !== undefined) {
@@ -159,11 +167,13 @@ export class IbTable implements OnDestroy {
   });
   readonly effectiveDisplayedColumns = computed(() => {
     const columns = [...this.__displayedColumns()];
-    if (this.selectionColumn() && !columns.includes('ib-selection')) columns.unshift('ib-selection');
+    if (this.selectionColumn() && this.canSelectRows() && !columns.includes('ib-selection')) columns.unshift('ib-selection');
     if (this.columns().some((column) => column.name() === 'ib-action') && !columns.includes('ib-action')) columns.push('ib-action');
     return columns;
   });
   readonly canExportAllRows = computed(() => this.hasCapability(IbDataSourceCapability.FullExport));
+  readonly canExportCurrentPage = computed(() => this.hasCapability(IbDataSourceCapability.CurrentPageExport));
+  readonly canSelectRows = computed(() => this.hasCapability(IbDataSourceCapability.RowSelection));
   readonly shouldDisplayAggregationFooter = computed(() => {
     const source = this.activeDataSource();
     return this.hasCapability(IbDataSourceCapability.GlobalAggregation)
@@ -214,6 +224,9 @@ export class IbTable implements OnDestroy {
       const snapshot = this.stateFacade.snapshot();
       const source = this.activeDataSource();
       if (source === this.snapshotAppliedSource && snapshot === this.snapshotAppliedState) return;
+      if (this.snapshotAppliedSource && this.snapshotAppliedSource !== source) {
+        this.detachSource(this.snapshotAppliedSource);
+      }
       this.applyingSnapshot = true;
       try {
         untracked(() => this.applySnapshot(source, snapshot));
@@ -227,7 +240,7 @@ export class IbTable implements OnDestroy {
       if (!this.initialized()) return;
       const source = this.activeDataSource();
       const paginator = this.__paginator();
-      if (!paginator || !this.isRemoteDataSource(source)) return;
+      if (!paginator || !('totalCount$' in source)) return;
       const subscription = source.totalCount$.subscribe((totalCount) => {
         paginator.length = totalCount;
       });
@@ -236,9 +249,8 @@ export class IbTable implements OnDestroy {
     effect(() => {
       if (!this.initialized()) return;
       const source = this.activeDataSource();
-      if (!this.isRemoteDataSource(source)) {
-        source.columns = [...this.columns()];
-        source.applySortOnColumn(this.effectiveDisplayedColumns());
+      if (this.isLocalDataSource(source)) {
+        source.setColumns([...this.columns()]);
       }
     });
     effect((onCleanup) => {
@@ -249,13 +261,19 @@ export class IbTable implements OnDestroy {
       if (sort) subscriptions.push(sort.sortChange.subscribe((value) => {
         if (!this.applyingSnapshot) this.stateFacade.setSort(value);
       }));
-      if (tableFilter) subscriptions.push(tableFilter.ibFilterUpdated.subscribe(() => this.stateFacade.setFilters(tableFilter.value)));
+      if (tableFilter) subscriptions.push(
+        tableFilter.ibFilterUpdated.subscribe(() => this.stateFacade.setFilters(tableFilter.selectedCriteria)),
+      );
       onCleanup(() => subscriptions.forEach((subscription) => subscription.unsubscribe()));
     });
   }
 
   async ngAfterContentInit(): Promise<void> {
     await this.stateFacade.initialize(this.__tableName(), this.effectiveTableDef(), this.viewHost());
+    if (this.destroyRef.destroyed) return;
+    const tableFilter = this.filter();
+    if (tableFilter) await firstValueFrom(tableFilter.initialized);
+    if (this.destroyRef.destroyed) return;
     const viewHost = this.viewHost();
     if (viewHost) {
       viewHost.setViewGroupName(this.__tableName());
@@ -265,7 +283,7 @@ export class IbTable implements OnDestroy {
           .pipe(takeUntilDestroyed(this.destroyRef)),
       );
       const source = this.activeDataSource();
-      if (!this.isRemoteDataSource(source)) source.view = viewHost;
+      if (source instanceof IbTableDataSource) source.view = viewHost;
       this.viewSubscription = viewHost.activeViewChanged.subscribe((view) => {
         this.stateFacade.applyView(view.viewId, {
           sort: view.sort?.active ? view.sort : null,
@@ -280,6 +298,7 @@ export class IbTable implements OnDestroy {
   }
 
   ngOnDestroy() {
+    this.detachSource(this.snapshotAppliedSource);
     this.viewSubscription?.unsubscribe();
     this.stateFacade.destroy();
   }
@@ -300,10 +319,14 @@ export class IbTable implements OnDestroy {
   doExport(settings: Partial<IDataExportSettings>): void {
     if (!this.isExportSettings(settings)) return;
     const source = this.activeDataSource();
-    if (this.isRemoteDataSource(source)) return;
+    if (
+      !this.hasCapability(IbDataSourceCapability.CurrentPageExport)
+      || (settings.dataset === 'all' && !this.hasCapability(IbDataSourceCapability.FullExport))
+      || (settings.dataset === 'selected' && !this.hasCapability(IbDataSourceCapability.RowSelection))
+    ) return;
     this.exportService._exportFromTable(
       this.__tableName(),
-      source,
+      source as IbTableDataSource<unknown>,
       settings
     );
   }
@@ -319,19 +342,33 @@ export class IbTable implements OnDestroy {
     sort.sortChange.emit(newSort);
   }
 
-  tableDataSource(): IbTableDataSource<unknown> | IbTableRemoteDataSource<unknown> {
+  setAggregation(columnName: string, aggregation: string): void {
+    if (!this.hasCapability(IbDataSourceCapability.GlobalAggregation)) return;
+    const aggregatedColumns = {
+      ...this.stateFacade.aggregatedColumns(),
+      [columnName]: aggregation,
+    };
+    this.stateFacade.setAggregatedColumns(aggregatedColumns);
+  }
+
+  tableDataSource(): IbTableRendererDataSource<unknown> {
     return this.activeDataSource();
   }
 
-  dataSourceForMobile(): IbTableDataSource<unknown> {
-    return this.activeDataSource() as unknown as IbTableDataSource<unknown>;
+  dataSourceForMobile(): IbTableRendererDataSource<unknown> {
+    return this.activeDataSource();
+  }
+
+  tableSortState(): Sort {
+    const source = this.rendererDataSource();
+    return source.sortState ?? source.input?.sort ?? { active: '', direction: '' };
   }
 
   /** @deprecated Backward-compatible accessor for child components. Will be removed in Step 15 migration. */
   get isRemote(): boolean { return this.isRemoteDataSource(this.activeDataSource()); }
 
   private applySnapshot(
-    source: IbTableDataSource<unknown> | IbTableRemoteDataSource<unknown>,
+    source: IbTableSource,
     snapshot: IbKaiTableSnapshot,
   ): void {
     const paginator = this.__paginator();
@@ -341,9 +378,24 @@ export class IbTable implements OnDestroy {
       paginator.pageIndex = snapshot.pageIndex;
       paginator.pageSize = snapshot.pageSize;
     }
-    if (tableFilter && snapshot.filters) tableFilter.value = snapshot.filters as never;
+    if (tableFilter) tableFilter.hydrateRawValue(snapshot.filters as never);
     if (this.isRemoteDataSource(source)) {
-      source.setInput({ sort: snapshot.sort, pageIndex: snapshot.pageIndex, pageSize: snapshot.pageSize, filter: snapshot.filters });
+      source.setInput({
+        sort: snapshot.sort,
+        pageIndex: snapshot.pageIndex,
+        pageSize: snapshot.pageSize,
+        filter: (tableFilter?.query ?? null) as never,
+      });
+      return;
+    }
+    if (this.isLocalDataSource(source)) {
+      source.setInput({
+        sort: snapshot.sort,
+        rawFilter: snapshot.filters,
+        pageIndex: snapshot.pageIndex,
+        pageSize: snapshot.pageSize,
+        aggregatedColumns: snapshot.aggregatedColumns,
+      });
       return;
     }
     source.tableName = this.__tableName();
@@ -352,13 +404,7 @@ export class IbTable implements OnDestroy {
     source.aggregatedColumns = snapshot.aggregatedColumns;
     source.sort = sort ?? null;
     source.paginator = paginator ?? null;
-    const snapshotSort = snapshot.sort ?? { active: '', direction: '' };
-    if (
-      source.sortState.active !== snapshotSort.active
-      || source.sortState.direction !== snapshotSort.direction
-    ) {
-      source.initializeSortState(snapshotSort);
-    }
+    source.initializeSortState(snapshot.sort ?? { active: '', direction: '' });
   }
 
   private getViewData() {
@@ -372,14 +418,32 @@ export class IbTable implements OnDestroy {
     };
   }
 
-  private isRemoteDataSource(source: IbTableDataSource<unknown> | IbTableRemoteDataSource<unknown>): source is IbTableRemoteDataSource<unknown> {
+  private isRemoteDataSource(source: IbTableSource): source is IbTableRemoteDataSource<unknown> {
     return 'request$' in source;
+  }
+
+  private isLocalDataSource(source: IbTableSource): source is IbTableLocalDataSource<unknown> {
+    return source instanceof IbTableLocalDataSource;
+  }
+
+  private rendererDataSource(): IbTableRendererDataSource<unknown> {
+    return this.activeDataSource();
+  }
+
+  private detachSource(source: IbTableSource | null): void {
+    if (source instanceof IbTableDataSource) {
+      source.sort = null;
+      source.paginator = null;
+      source.filter = null;
+      source.selectionColumn = null;
+    }
   }
 
   private hasCapability(capability: IbDataSourceCapability): boolean {
     const source = this.activeDataSource();
-    if ('capabilities' in source) return source.capabilities.has(capability);
-    return !this.isRemoteDataSource(source);
+    return 'capabilities' in source
+      ? source.capabilities.has(capability)
+      : !this.isRemoteDataSource(source);
   }
 
   private isExportSettings(settings: Partial<IDataExportSettings>): settings is IDataExportSettings {

@@ -195,31 +195,8 @@ export class IbKaiTableStateFacade {
     // --- Layer 1: decode raw URL params synchronously ---
     const urlParams = this.urlService.decodeUrlParams(tableName);
 
-    // --- Layers 2 & 3: resolve view snapshots asynchronously ---
-    let initialViewSnapshot: IbKaiTableViewSnapshot | null = null;
-    let urlViewSnapshot: IbKaiTableViewSnapshot | null = null;
-
-    if (this._viewsHost) {
-      // Resolve `tableDef.initialView` (if the key is explicitly present)
-      if (tableDef && 'initialView' in tableDef) {
-        initialViewSnapshot = await this.resolveViewSnapshot(
-          tableDef.initialView!,
-        );
-      }
-
-      // Resolve `urlParams.view` (if the key is explicitly present)
-      if (urlParams && 'view' in urlParams) {
-        urlViewSnapshot = await this.resolveViewSnapshot(urlParams.view!);
-      }
-    }
-
-    // --- Merge all layers via the pure resolver ---
-    const snapshot = resolveInitialTableState({
-      tableDef,
-      urlParams,
-      initialViewSnapshot,
-      urlViewSnapshot,
-    });
+    // --- Resolve all view layers and merge them through the canonical resolver ---
+    const snapshot = await this.resolveUrlState(urlParams);
 
     // --- Single dispatch ---
     this.store.dispatch(
@@ -383,7 +360,10 @@ export class IbKaiTableStateFacade {
    *   (browser back/forward or external navigation).
    */
   private handleUrlChange(raw: string | undefined): void {
-    if (raw === undefined) return; // param absent — nothing to hydrate
+    if (raw === undefined) {
+      this.hydrateResolvedUrl(null);
+      return;
+    }
 
     const urlParams = decodeUrlPayload(raw);
 
@@ -401,13 +381,52 @@ export class IbKaiTableStateFacade {
     }
 
     // External change → hydrate from URL
-    const hydrated = resolveInitialTableState({ urlParams });
-    this.store.dispatch(
-      tableStateActions.hydrateFromUrl({
+    this.hydrateResolvedUrl(urlParams);
+  }
+
+  private hydrateResolvedUrl(
+    urlParams: import('./table.types').IbKaiTableUrlParams | null,
+  ): void {
+    if (!this._viewsHost) {
+      this.store.dispatch(tableStateActions.hydrateFromUrl({
         tableName: this._tableName!,
-        snapshot: hydrated,
-      }),
-    );
+        snapshot: resolveInitialTableState({ tableDef: this._tableDef, urlParams }),
+      }));
+      return;
+    }
+    void this.resolveUrlState(urlParams).then((snapshot) => {
+      this.store.dispatch(tableStateActions.hydrateFromUrl({
+        tableName: this._tableName!,
+        snapshot,
+      }));
+    });
+  }
+
+  private async resolveUrlState(
+    urlParams: import('./table.types').IbKaiTableUrlParams | null,
+  ): Promise<IbKaiTableSnapshot> {
+    let initialViewSnapshot: IbKaiTableViewSnapshot | null = null;
+    let urlViewSnapshot: IbKaiTableViewSnapshot | null = null;
+    let resolvedUrlParams = urlParams;
+    const tableDef = this._tableDef;
+
+    const hasUrlView = !!urlParams && Object.prototype.hasOwnProperty.call(urlParams, 'view');
+    if (this._viewsHost && !hasUrlView && tableDef && Object.prototype.hasOwnProperty.call(tableDef, 'initialView')) {
+      initialViewSnapshot = await this.resolveViewSnapshot(tableDef.initialView!);
+    }
+    if (this._viewsHost && hasUrlView && urlParams!.view !== null) {
+      urlViewSnapshot = await this.resolveViewSnapshot(urlParams.view!);
+      if (!urlViewSnapshot) {
+        resolvedUrlParams = { ...urlParams!, view: null };
+      }
+    }
+
+    return resolveInitialTableState({
+      tableDef,
+      urlParams: resolvedUrlParams,
+      initialViewSnapshot,
+      urlViewSnapshot,
+    });
   }
 
   /**

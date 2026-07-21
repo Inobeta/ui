@@ -1,3 +1,4 @@
+import { DataSource } from "@angular/cdk/collections";
 import { Sort } from "@angular/material/sort";
 import { IbTableFilterState } from "./table.types";
 
@@ -50,8 +51,20 @@ export const IB_LOCAL_DS_DEFAULT_INPUT: IbLocalDataSourceInput = {
  * a different set of capabilities.
  */
 export enum IbDataSourceCapability {
+  /** The data source supports selecting rows. */
+  RowSelection = 'rowSelection',
+  /** The data source can export the currently rendered page. */
+  CurrentPageExport = 'currentPageExport',
   /** The data source can export all rows (not only the current page). */
   FullExport = 'fullExport',
   /** The data source supports global aggregation on the entire filtered set. */
   GlobalAggregation = 'globalAggregation',
 }
+
+/**
+ * Minimum rendering contract shared by local and remote table data sources.
+ */
+export type IbTableRendererDataSource<T> = DataSource<T> & {
+  readonly sortState?: Sort;
+  readonly input?: Pick<IbLocalDataSourceInput, "sort">;
+};

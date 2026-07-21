@@ -626,15 +626,17 @@ describe('IbKaiTableStateFacade', () => {
       expect(lastCall.snapshot.selectedView).toBeNull();
     });
 
-    it('should ignore param absence (undefined) without dispatching', async () => {
-      await facade.initialize(TABLE_NAME, {});
+    it('should hydrate the resolved baseline when the param is removed', async () => {
+      await facade.initialize(TABLE_NAME, { initialPageSize: 50 });
       const dispatchCount = mockStoreDispatch.calls.count();
 
       // Omit the table's query param entirely
       queryParamsSubject.next({});
 
-      // No new dispatch
-      expect(mockStoreDispatch.calls.count()).toBe(dispatchCount);
+      expect(mockStoreDispatch.calls.count()).toBe(dispatchCount + 1);
+      const lastCall = mockStoreDispatch.calls.mostRecent().args[0];
+      expect(lastCall.type).toBe(tableStateActions.hydrateFromUrl.type);
+      expect(lastCall.snapshot.pageSize).toBe(50);
     });
   });
 

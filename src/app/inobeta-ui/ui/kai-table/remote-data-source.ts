@@ -1,6 +1,6 @@
 import { DataSource } from "@angular/cdk/collections";
 import { Sort } from "@angular/material/sort";
-import { BehaviorSubject, Observable, Subject, merge, of, timer } from "rxjs";
+import { BehaviorSubject, Observable, Subject, Subscription, merge, of, timer } from "rxjs";
 import { catchError, distinctUntilChanged, map, switchMap } from "rxjs/operators";
 import { IbDataSourceCapability } from "./data-source.types";
 import { IbKaiTableState, IbTableFilterState } from "./table.types";
@@ -31,6 +31,8 @@ export abstract class IbTableRemoteDataSource<T, V = IbTableFilterState>
   private readonly _trigger = new Subject<IbRemoteTrigger<V>>();
   private readonly _refresh = new Subject<void>();
   private initialRequestIssued = false;
+  private consumers = 0;
+  private pipelineSubscription: Subscription | null = null;
   private _request: IbRemoteDataSourceRequest<V> = {
     sort: null,
     pageIndex: 0,
@@ -41,7 +43,6 @@ export abstract class IbTableRemoteDataSource<T, V = IbTableFilterState>
 
   constructor(readonly filterDebounceMs = 500) {
     super();
-    this.connectPipeline();
   }
 
   readonly capabilities: ReadonlySet<IbDataSourceCapability> = new Set();
@@ -72,7 +73,7 @@ export abstract class IbTableRemoteDataSource<T, V = IbTableFilterState>
   }
 
   private connectPipeline(): void {
-    merge(
+    this.pipelineSubscription = merge(
       this._trigger,
       this._refresh.pipe(map(() => ({ request: this.request, debounceFilter: false }))),
     )
@@ -108,21 +109,33 @@ export abstract class IbTableRemoteDataSource<T, V = IbTableFilterState>
     this._request = nextRequest;
     this._lastFilter = nextRequest.filter;
     this.request$.next(this.request);
-    this.triggerRequest({ request: this.request, debounceFilter: filterChanged });
+    if (this.consumers > 0) {
+      this.triggerRequest({ request: this.request, debounceFilter: filterChanged });
+    }
   }
 
   refresh(): void {
-    this._refresh.next();
+    if (this.consumers > 0) this._refresh.next();
   }
 
   connect(): BehaviorSubject<T[]> {
+    this.consumers++;
+    if (!this.pipelineSubscription) this.connectPipeline();
     if (!this.initialRequestIssued) {
       this.triggerRequest({ request: this.request, debounceFilter: false });
     }
     return this.renderData;
   }
 
-  disconnect(): void {}
+  disconnect(): void {
+    this.consumers = Math.max(0, this.consumers - 1);
+    if (this.consumers === 0) {
+      this.pipelineSubscription?.unsubscribe();
+      this.pipelineSubscription = null;
+      this.initialRequestIssued = false;
+      this._state.next('idle');
+    }
+  }
 
   private triggerRequest(trigger: IbRemoteTrigger<V>): void {
     this.initialRequestIssued = true;

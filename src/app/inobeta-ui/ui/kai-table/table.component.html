@@ -3,10 +3,10 @@
     <ng-content select="ib-table-view-group" />
     <section class="ib-table__toolbar__actions">
       @for(action of headerActions(); track $index) {
-        @if(action.kind() === 'export') {
+        @if(action.kind() === 'export' && canExportCurrentPage()) {
           <ib-table-data-export-action
             (ibDataExport)="doExport($event)"
-            [showSelectedRowsOption]="!!selectionColumn()"
+            [showSelectedRowsOption]="canSelectRows()"
             [showAllRowsOption]="canExportAllRows()"
             />
         } @else {
@@ -28,8 +28,8 @@
       </div>
     }
 
-    <table class="ib-table" mat-table matSort multiTemplateDataRows [matSortActive]="tableDataSource().sortState.active"
-      [matSortDirection]="tableDataSource().sortState.direction" [dataSource]="isDataSourceReady() ? tableDataSource() : null">
+    <table class="ib-table" mat-table matSort multiTemplateDataRows [matSortActive]="tableSortState().active"
+      [matSortDirection]="tableSortState().direction" [dataSource]="isDataSourceReady() ? tableDataSource() : null">
       <ng-content select="ib-selection-column" />
       <ng-content />
 

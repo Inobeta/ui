@@ -106,10 +106,29 @@ export class IbFilter {
   }
 
   update() {
-    this._value = this.buildFilter();
-    this.query = this.toQuery();
+    this._computeValues();
     this.ibFilterUpdated.emit(this._value);
     this.ibQueryUpdated.emit(this.query);
+  }
+
+  /**
+   * Silently hydrates raw form values from a canonical source (e.g., URL, NgRx)
+   * without emitting {@link ibFilterUpdated} or {@link ibQueryUpdated}.
+   *
+   * @param value Serialized raw filter criteria, or `null` to clear all filters.
+   */
+  hydrateRawValue(value: IbFilterSyntaxExtended | null): void {
+    if (value === null) {
+      this.form.reset();
+    } else {
+      this.form.patchValue(value);
+    }
+    this._computeValues();
+  }
+
+  private _computeValues(): void {
+    this._value = this.buildFilter();
+    this.query = this.toQuery();
   }
 
   reset() {

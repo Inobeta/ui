@@ -206,10 +206,7 @@ export class IbColumn<T> implements OnDestroy, OnInit {
   }
 
   handleAggregationChange(fun: string) {
-    this._table.dataSource.aggregate.next({
-      columnName: this.name(),
-      function: fun,
-    });
+    this._table.setAggregation(this.name(), fun);
   }
 
   /** Synchronizes the column definition name with the text column name. */

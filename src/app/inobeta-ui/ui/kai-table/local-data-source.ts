@@ -1,6 +1,6 @@
 import { DataSource } from "@angular/cdk/collections";
-import { Sort } from "@angular/material/sort";
-import { BehaviorSubject, Observable } from "rxjs";
+import { MatSort, Sort } from "@angular/material/sort";
+import { BehaviorSubject, Observable, Subject } from "rxjs";
 import { applyFilter } from "../kai-filter/filters";
 import { IbFilterDef } from "../kai-filter/filter.types";
 import { IbAggregate, IbAggregateResult } from "./cells";
@@ -37,12 +37,32 @@ export class IbTableLocalDataSource<T> extends DataSource<T> {
 
   readonly totalCount$: Observable<number> = this._totalCount.asObservable();
   readonly capabilities: ReadonlySet<IbDataSourceCapability> = new Set([
+    IbDataSourceCapability.RowSelection,
+    IbDataSourceCapability.CurrentPageExport,
     IbDataSourceCapability.FullExport,
     IbDataSourceCapability.GlobalAggregation,
   ]);
+  /** Compatibility event consumed by existing aggregate column definitions. */
+  readonly aggregate = new Subject<{ columnName: string; function: string }>();
+
+  get sortState(): Sort {
+    return this._input.sort ?? { active: "", direction: "" };
+  }
+
+  get aggregatedColumns(): Record<string, string> {
+    return { ...this._input.aggregatedColumns };
+  }
+
+  set aggregatedColumns(value: Record<string, string>) {
+    this.setInput({ aggregatedColumns: value });
+  }
+
+  get sortedColumns(): IbColumn<unknown>[] {
+    return Object.values(this._columns);
+  }
 
   /** Typed local sorting extension point. */
-  sortData: (data: T[], sort: Sort, columns: Record<string, IbColumn<unknown>>) => T[] =
+  sortData: (data: T[], sort: Sort, columns?: Record<string, IbColumn<unknown>>) => T[] =
     (data, sort, columns) => this.defaultSortData(data, sort, columns);
 
   /** Typed local filtering extension point. */
@@ -56,6 +76,11 @@ export class IbTableLocalDataSource<T> extends DataSource<T> {
     super();
     this._aggregationFunctions = aggregationFunctions;
     this.data = initialData;
+    this.aggregate.subscribe(({ columnName, function: functionId }) => {
+      this.setInput({
+        aggregatedColumns: { ...this._input.aggregatedColumns, [columnName]: functionId },
+      });
+    });
   }
 
   get data(): T[] {
@@ -130,11 +155,11 @@ export class IbTableLocalDataSource<T> extends DataSource<T> {
     const start = Math.max(pageIndex, 0) * size;
     this.currentPageData = size > 0 ? this.orderedData.slice(start, start + size) : [];
     this._totalCount.next(this.filteredData.length);
-    this.aggregate(aggregatedColumns);
+    this.computeAggregates(aggregatedColumns);
     this._renderData.next([...this.currentPageData]);
   }
 
-  private aggregate(aggregatedColumns: Record<string, string>): void {
+  private computeAggregates(aggregatedColumns: Record<string, string>): void {
     this.aggregatedData = {};
     for (const [columnName, functionId] of Object.entries(aggregatedColumns)) {
       const aggregate = this._aggregationFunctions.find((item) => item.id === functionId);
@@ -151,7 +176,7 @@ export class IbTableLocalDataSource<T> extends DataSource<T> {
   private defaultSortData(
     data: T[],
     sort: Sort,
-    columns: Record<string, IbColumn<unknown>>,
+    columns: Record<string, IbColumn<unknown>> = this._columns,
   ): T[] {
     const column = columns[sort.active];
     if (!column) return data;

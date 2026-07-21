@@ -81,7 +81,7 @@ describe("IbTable", () => {
       const table = await loader.getHarness(MatTableHarness);
       const rows = await table.getRows();
       expect(component).toBeTruthy();
-      expect(rows.length).toBe(1);
+      expect(rows.length).toBe(2);
     });
 
     it("should select a row", () => {
@@ -94,10 +94,10 @@ describe("IbTable", () => {
     it("should toggle all rows", async () => {
       const table = await loader.getHarness(MatTableHarness);
       const renderedRows = await table.getRows();
-      expect(renderedRows.length).toBe(1);
+      expect(renderedRows.length).toBe(2);
 
       component.selectionColumn().toggleAllRows();
-      expect(component.selectionColumn().selection.selected).toEqual([host.data[1]]);
+      expect(component.selectionColumn().selection.selected).toEqual(host.data);
 
       component.selectionColumn().toggleAllRows();
       fixture.detectChanges();
@@ -204,8 +204,7 @@ describe("IbTable", () => {
       expect(data.sort).toBeDefined();
       expect(data.aggregatedColumns).toBeDefined();
 
-      const localSource = component.activeDataSource() as IbTableDataSource<any>;
-      expect(localSource.view).toBe(host);
+      expect(component.activeDataSource()).toEqual(jasmine.any(IbTableLocalDataSource));
 
       expect(component.actionPortals.length).toBe(1);
 
@@ -225,8 +224,7 @@ describe("IbTable", () => {
       f.detectChanges();
 
       const host = c.viewHost() as IbTableViewsHostStub;
-      const localSource = c.activeDataSource() as IbTableDataSource<any>;
-      expect(localSource.view).toBe(host);
+      expect(c.activeDataSource()).toEqual(jasmine.any(IbTableLocalDataSource));
 
       const store = TestBed.inject(Store);
       const dispatchSpy = spyOn(store, "dispatch").and.callThrough();
@@ -525,7 +523,7 @@ describe("IbTable", () => {
     });
 
     it("should apply", async () => {
-      const dataSource = component.activeDataSource() as IbTableDataSource<any>;
+      const dataSource = component.activeDataSource() as IbTableLocalDataSource<any>;
       const sort = await loader.getHarness(MatSortHarness);
       const [_, number] = await sort.getSortHeaders();
       let active = await sort.getActiveHeader();
@@ -543,9 +541,7 @@ describe("IbTable", () => {
       direction = await number.getSortDirection();
       expect(direction).toBe("desc");
 
-      const amountData = dataSource
-        ._orderData(dataSource.filteredData)
-        .map((i) => i.amount);
+      const amountData = dataSource.getOrderedData().map((i) => i.amount);
       expect(amountData).toEqual([20, 10]);
     });
   });
@@ -555,12 +551,13 @@ describe("IbTable", () => {
     let component: IbTable;
     let loader: HarnessLoader;
 
-    beforeEach(() => {
+    beforeEach(async () => {
       fixture = createComponent(IbTableWithAggregate);
       component = fixture.debugElement.query(
         By.directive(IbTable)
       ).componentInstance as IbTable;
       fixture.detectChanges();
+      await fixture.whenStable();
       loader = TestbedHarnessEnvironment.loader(fixture);
     });
 
@@ -569,7 +566,7 @@ describe("IbTable", () => {
     });
 
     it("should update aggregate state through the number column", () => {
-      const dataSource = component.activeDataSource() as IbTableDataSource<unknown>;
+      const dataSource = component.activeDataSource() as IbTableLocalDataSource<unknown>;
       const numberColumn = component.columns().find(
         (column) => column.name() === "amount",
       ) as {
@@ -628,8 +625,9 @@ describe("IbTable", () => {
       expect(facade.tableName).toBe("test-basic");
     });
 
-    it("should create an internal data source when using [data] shorthand", async () => {
-      const ds = component.activeDataSource() as IbTableDataSource<any>;
+    it("should create an internal local data source when using [data] shorthand", async () => {
+      const ds = component.activeDataSource() as IbTableLocalDataSource<any>;
+      expect(ds instanceof IbTableLocalDataSource).toBeTrue();
       expect(ds).toBeDefined();
       expect(ds.data.length).toBeGreaterThan(0);
     });
@@ -672,6 +670,20 @@ describe("IbTable", () => {
       const newSource = c.activeDataSource() as IbTableDataSource<any>;
       expect(newSource.data).toEqual([{ name: "replaced" }]);
       expect(newSource).not.toBe(initialSource);
+    });
+  });
+
+  describe("with IbTableLocalDataSource", () => {
+    it("should render an explicitly bound local data source", async () => {
+      const fixture = createComponent(IbTableWithLocalDataSourceApp);
+      await fixture.whenStable();
+      fixture.detectChanges();
+
+      const component = fixture.debugElement.query(By.directive(IbTable)).componentInstance as IbTable;
+      const table = await TestbedHarnessEnvironment.loader(fixture).getHarness(MatTableHarness);
+
+      expect(component.activeDataSource()).toBe(fixture.componentInstance.dataSource);
+      expect(await table.getRows()).toHaveSize(1);
     });
   });
 
@@ -1074,4 +1086,16 @@ class IbTableWithBothDataAndDataSource {
 })
 class IbTableWithDataSourceReplacement {
   currentSource = new IbTableDataSource([{ name: "first" }]);
+}
+
+@Component({
+  template: `
+    <ib-kai-table tableName="test-local" [dataSource]="dataSource" [displayedColumns]="['name']">
+      <ib-text-column name="name"></ib-text-column>
+    </ib-kai-table>
+  `,
+  standalone: false,
+})
+class IbTableWithLocalDataSourceApp {
+  dataSource = new IbTableLocalDataSource([{ name: "alice" }]);
 }

@@ -119,7 +119,7 @@ function applyIfPresent<K extends string>(
   key: K,
   setter: (value: any) => void,
 ): void {
-  if (key in source) {
+  if (Object.prototype.hasOwnProperty.call(source, key)) {
     setter(source[key]);
   }
 }
@@ -137,16 +137,16 @@ function applyViewLayer(
 ): void {
   if (!snapshot) return;
 
-  if ('sort' in snapshot) {
+  if (Object.prototype.hasOwnProperty.call(snapshot, 'sort')) {
     target.sort = snapshot.sort!;
   }
-  if ('filters' in snapshot) {
+  if (Object.prototype.hasOwnProperty.call(snapshot, 'filters')) {
     target.filters = snapshot.filters!;
   }
-  if ('pageSize' in snapshot) {
+  if (Object.prototype.hasOwnProperty.call(snapshot, 'pageSize')) {
     target.pageSize = snapshot.pageSize! ?? TECHNICAL_DEFAULTS.pageSize;
   }
-  if ('aggregatedColumns' in snapshot) {
+  if (Object.prototype.hasOwnProperty.call(snapshot, 'aggregatedColumns')) {
     target.aggregatedColumns = snapshot.aggregatedColumns! ?? {};
   }
 }

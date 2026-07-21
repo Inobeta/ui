@@ -114,7 +114,12 @@ describe("IbTableLocalDataSource", () => {
     const source = createSource();
 
     expect(source.capabilities).toEqual(
-      new Set([IbDataSourceCapability.FullExport, IbDataSourceCapability.GlobalAggregation]),
+      new Set([
+        IbDataSourceCapability.RowSelection,
+        IbDataSourceCapability.CurrentPageExport,
+        IbDataSourceCapability.FullExport,
+        IbDataSourceCapability.GlobalAggregation,
+      ]),
     );
   });
 });

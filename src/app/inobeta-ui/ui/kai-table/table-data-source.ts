@@ -32,6 +32,7 @@ export class IbTableDataSource<T, P extends MatPaginator = MatPaginator> extends
   protected readonly store = { dispatch: (_action: unknown): void => undefined };
   readonly _renderData = new BehaviorSubject<T[]>([]);
   _renderChangesSubscription: Subscription | null = null;
+  private _renderConsumers = 0;
   sortState: Sort = { active: "", direction: "" };
   aggregatedColumns: Record<string, string> = {};
   aggregatedData: Record<string, IbAggregateResult> = {};
@@ -159,13 +160,19 @@ export class IbTableDataSource<T, P extends MatPaginator = MatPaginator> extends
   }
 
   connect(): BehaviorSubject<T[]> {
-    this._renderChangesSubscription = this.local.connect().subscribe((rows) => this._renderData.next(rows));
+    this._renderConsumers++;
+    if (!this._renderChangesSubscription) {
+      this._renderChangesSubscription = this.local.connect().subscribe((rows) => this._renderData.next(rows));
+    }
     return this._renderData;
   }
 
   disconnect(): void {
-    this._renderChangesSubscription?.unsubscribe();
-    this._renderChangesSubscription = null;
+    this._renderConsumers = Math.max(0, this._renderConsumers - 1);
+    if (this._renderConsumers === 0) {
+      this._renderChangesSubscription?.unsubscribe();
+      this._renderChangesSubscription = null;
+    }
   }
 
   private updateSort(): void {

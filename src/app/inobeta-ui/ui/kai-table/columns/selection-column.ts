@@ -65,14 +65,17 @@ export class IbSelectionColumn implements OnInit {
 
   ngOnInit() {
     if (this.table) {
+      if (typeof this.table.canSelectRows === 'function' && !this.table.canSelectRows()) return;
       if (this.table.isRemote) {
-        console.warn("Selection column is currently not supported with IbTableRemoteDataSource")
+        console.warn("Selection column is currently not supported with IbTableRemoteDataSource");
       }
       this.columnDef().cell = this.cell();
       this.columnDef().headerCell = this.headerCell();
       this.columnDef().footerCell = this.footerCell();
       this.table.matTable.addColumnDef(this.columnDef());
-      this.table.displayedColumns.unshift("ib-selection");
+      if (Array.isArray(this.table.displayedColumns) && !this.table.displayedColumns.includes("ib-selection")) {
+        this.table.displayedColumns.unshift("ib-selection");
+      }
     }
   }
 
