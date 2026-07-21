@@ -14,9 +14,8 @@ import { Subscription } from 'rxjs';
 import { IDataExportSettings } from '../data-export/data-export.service';
 import { IbFilter } from '../kai-filter';
 import { IbFilterBase } from '../kai-filter/filters/base/filter-base';
-import { IbKaiTableAction, } from "../kai-table/action";
-import { IbActionColumn } from "../kai-table/columns/action-column";
-import { IbColumn } from "../kai-table/columns/column";
+import { IbKaiTableAction } from "../kai-table/action";
+import { IbActionColumn, IbColumn } from "../kai-table/columns";
 import { IbKaiRowGroupDirective } from "../kai-table/rowgroup";
 import { IbKaiTableState, IbTableDef } from "../kai-table/table.types";
 import { IbKaiTableMobileInfiniteScrollComponent } from './table-mobile-infinitescroll.component';
@@ -43,6 +42,8 @@ type IbKaiTableMobileDataSource<T> = DataSource<T> & {
             [filters]="filters()"
             [sortableColumns]="sortableColumns()"
             [currentSort]="currentSort()"
+            [canExportAllRows]="canExportAllRows()"
+            [canExportCurrentPage]="canExportCurrentPage()"
             (doExport)="doExport.emit($event)"
             (sortUpdated)="sortUpdate($event)"
           ></ib-kai-table-mobile-toolbar>
@@ -164,6 +165,9 @@ export class IbKaiTableMobileComponent implements OnDestroy {
   filters = input<readonly IbFilterBase[]>();
   headerActions = input<readonly IbKaiTableAction[]>();
   actionColumn = input<IbActionColumn>();
+
+  canExportAllRows = input(true);
+  canExportCurrentPage = input(true);
 
   doExport = output<Partial<IDataExportSettings>>()
   sortUpdated = output<Sort>()

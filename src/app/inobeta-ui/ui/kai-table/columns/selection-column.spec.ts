@@ -14,19 +14,22 @@ import { IB_TABLE } from "../tokens";
 import { IbTableRowSelectionChange } from "../table.types";
 
 function createMockTable(overrides: Partial<any> = {}) {
+  const dsObj = {
+    filteredData: [
+      { id: 1, name: "alice" },
+      { id: 2, name: "bob" },
+      { id: 3, name: "charlie" },
+    ],
+  };
   return {
-    matTable: { addColumnDef: () => {}, removeColumnDef: () => {} },
-    displayedColumns: [] as string[],
-    dataSource: {
-      filteredData: [
-        { id: 1, name: "alice" },
-        { id: 2, name: "bob" },
-        { id: 3, name: "charlie" },
-      ],
-    },
-    isRemote: false,
-    state: "idle",
-    tableName: "test-table",
+    matTable: jasmine.createSpy('matTable').and.returnValue({ addColumnDef: () => {}, removeColumnDef: () => {} }),
+    displayedColumns: jasmine.createSpy('displayedColumns').and.returnValue([] as string[]),
+    activeDataSource: jasmine.createSpy('activeDataSource').and.returnValue(dsObj),
+    dataSource: dsObj,
+    isRemote: jasmine.createSpy('isRemote').and.returnValue(false),
+    state: jasmine.createSpy('state').and.returnValue("idle"),
+    tableName: jasmine.createSpy('tableName').and.returnValue("test-table"),
+    canSelectRows: jasmine.createSpy('canSelectRows').and.returnValue(true),
     ...overrides,
   };
 }
@@ -68,7 +71,7 @@ describe("IbSelectionColumn", () => {
     it("should toggle a single row selection and emit output", () => {
       const emitted: IbTableRowSelectionChange[] = [];
       component.ibRowSelectionChange.subscribe((e) => emitted.push(...e));
-      const row = mockTable.dataSource.filteredData[0];
+      const row = mockTable.activeDataSource().filteredData[0];
       component.toggleRowSelection({ checked: true }, row);
       expect(component.selection.isSelected(row)).toBeTrue();
       expect(emitted.length).toBe(1);
@@ -78,7 +81,7 @@ describe("IbSelectionColumn", () => {
     });
 
     it("should toggle a single row deselection and emit output", () => {
-      const row = mockTable.dataSource.filteredData[0];
+      const row = mockTable.activeDataSource().filteredData[0];
       component.selection.select(row);
       const emitted: IbTableRowSelectionChange[] = [];
       component.ibRowSelectionChange.subscribe((e) => emitted.push(...e));
@@ -103,15 +106,15 @@ describe("IbSelectionColumn", () => {
 
     it("should register isAllSelected correctly", () => {
       expect(component.isAllSelected()).toBeFalse();
-      mockTable.dataSource.filteredData.forEach((row: any) => component.selection.select(row));
+      mockTable.activeDataSource().filteredData.forEach((row: any) => component.selection.select(row));
       expect(component.isAllSelected()).toBeTrue();
-      component.selection.deselect(mockTable.dataSource.filteredData[0]);
+      component.selection.deselect(mockTable.activeDataSource().filteredData[0]);
       expect(component.isAllSelected()).toBeFalse();
     });
 
     it("should be disabled when table state is not 'idle'", () => {
       expect(component.isDisabled()).toBeFalse();
-      mockTable.state = "loading";
+      mockTable.state.and.returnValue("loading");
       expect(component.isDisabled()).toBeTrue();
     });
 
@@ -127,8 +130,8 @@ describe("IbSelectionColumn", () => {
     });
 
     it("should push 'ib-selection' to the beginning of displayedColumns", () => {
-      expect(mockTable.displayedColumns).toContain("ib-selection");
-      expect(mockTable.displayedColumns[0]).toBe("ib-selection");
+      expect(mockTable.displayedColumns()).toContain("ib-selection");
+      expect(mockTable.displayedColumns()[0]).toBe("ib-selection");
     });
 
     it("should not crash when IB_TABLE is not provided", () => {
@@ -140,7 +143,8 @@ describe("IbSelectionColumn", () => {
 
   describe("warning on remote", () => {
     it("should log a warning when table is remote", waitForAsync(() => {
-      const mockTable = createMockTable({ isRemote: true });
+      const mockTable = createMockTable();
+      mockTable.isRemote.and.returnValue(true);
       spyOn(console, "warn");
       TestBed.configureTestingModule({
         declarations: [SelectionHostComponent, IbSelectionColumn],

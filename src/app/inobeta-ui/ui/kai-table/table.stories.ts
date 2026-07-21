@@ -78,29 +78,29 @@ registerLocaleData(localeIt);
   template: `<ng-container
     matColumnDef
     matSort
-    [sticky]="sticky"
-    [stickyEnd]="stickyEnd"
+     [sticky]="stickyInput()"
+     [stickyEnd]="stickyEndInput()"
   >
     <!-- ibSortHeaderFor: Replaces the temporary \`matSort\` instance with the one declared in the table component -->
     <th
       class="ib-table__header-cell"
       mat-header-cell
       *matHeaderCellDef
-      [ibSortHeaderFor]="matSort"
+       [ibSortHeaderFor]="matSort()"
       mat-sort-header
-      [disabled]="!sort"
+       [disabled]="!sortInput()"
     >
-      {{ headerText }}
+       {{ headerText() }}
     </th>
     <td
       mat-cell
       *matCellDef="let data"
-      [matTooltip]="dataAccessor(data, name) + ' ms'"
+       [matTooltip]="dataAccessor()(data, name()) + ' ms'"
     >
-      {{ dataAccessor(data, name) | date: "MMM d, YYYY 'at' hh:mm" }}
+       {{ dataAccessor()(data, name()) | date: "MMM d, YYYY 'at' hh:mm" }}
     </td>
     <td mat-footer-cell *matFooterCellDef style="max-width: fit-content">
-      <ib-aggregate *ngIf="aggregate"></ib-aggregate>
+       <ib-aggregate *ngIf="aggregateInput()"></ib-aggregate>
     </td>
   </ng-container>`,
   // View encapsulation must be removed so that the styles can be applied accordingly.
@@ -127,7 +127,12 @@ registerLocaleData(localeIt);
   ],
 })
 export class IbTimestampColumn<T> extends IbColumn<T> {
-  dataAccessor = (data: T, name: string): any => data[name].seconds * 1000;
+  constructor() {
+    super();
+    this.dataAccessor.set((data: T, name: string) =>
+      (data as Record<string, { seconds: number }>)[name].seconds * 1000
+    );
+  }
 }
 
 const meta: Meta = {

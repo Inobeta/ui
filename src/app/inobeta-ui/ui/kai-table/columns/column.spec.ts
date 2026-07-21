@@ -59,6 +59,18 @@ class ColumnHostComponent {
 // Host with a mock IB_TABLE for registration lifecycle tests
 // ===========================================================================
 
+const columnTableMockMatTable = {
+  addColumnDef: () => {},
+  removeColumnDef: () => {},
+};
+
+const columnTableMock = {
+  matTable: () => columnTableMockMatTable,
+  activeDataSource: () => ({}),
+  displayedColumns: () => [],
+  sort: () => null,
+};
+
 @Component({
   template: `
     <ib-column [name]="'regCol'" [headerText]="'Reg'"></ib-column>
@@ -67,15 +79,7 @@ class ColumnHostComponent {
   providers: [
     {
       provide: IB_TABLE,
-      useValue: {
-        matTable: {
-          addColumnDef: () => {},
-          removeColumnDef: () => {},
-        },
-        dataSource: {},
-        displayedColumns: [],
-        sort: null,
-      },
+      useValue: columnTableMock,
     },
   ],
 })
@@ -287,7 +291,7 @@ describe("IbColumn", () => {
     });
 
     it("should remove columnDef from the table on destroy", () => {
-      const removeSpy = spyOn(component._table.matTable, "removeColumnDef");
+      const removeSpy = spyOn(component._table.matTable(), "removeColumnDef");
       component.ngOnDestroy();
       expect(removeSpy).toHaveBeenCalledWith(component.columnDef());
     });

@@ -87,7 +87,7 @@
 <div class="ib-table-mobile">
     @if (isDataSourceReady()) {
       <ib-kai-table-mobile
-        [tableName]="__tableName()"
+        [tableName]="tableName()"
         [displayedColumns]="effectiveDisplayedColumns()"
         [dataSource]="dataSourceForMobile()"
         [state]="effectiveState()"

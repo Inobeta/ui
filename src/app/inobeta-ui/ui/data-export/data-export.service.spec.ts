@@ -1,4 +1,3 @@
-import { SelectionModel } from "@angular/cdk/collections";
 import { CommonModule } from "@angular/common";
 import { Component, Type } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
@@ -7,10 +6,11 @@ import { MatSort, Sort } from "@angular/material/sort";
 import { Subject } from "rxjs";
 import { TranslateModule } from "@ngx-translate/core";
 import { IbColumn } from "../kai-table/columns/column";
-import { IbTableDataSource } from "../kai-table/table-data-source";
+import { IbDataSourceCapability } from "../kai-table/data-source.types";
 import { IbDataExportModule } from "./data-export.module";
 import {
   IbDataExportService,
+  IbExportableSource,
   OVERRIDE_EXPORT_FORMATS,
 } from "./data-export.service";
 import { IbDataExportProvider } from "./provider";
@@ -79,6 +79,13 @@ describe("IbDataExport", () => {
   describe("_exportFromTable", () => {
     let service: IbDataExportService;
     let exportSpy: jasmine.Spy;
+
+    /** Full capabilities — for local data source tests. */
+    const FULL_CAPS = new Set([
+      IbDataSourceCapability.FullExport,
+      IbDataSourceCapability.RowSelection,
+      IbDataSourceCapability.CurrentPageExport,
+    ]);
 
     /** Helper: create a mock sort state with a comparison function. */
     function createSortState(
@@ -161,7 +168,7 @@ describe("IbDataExport", () => {
 
       const sort = createSortState("name", "asc");
       const columns = [createColumn("name", "Name")];
-      const dataSource = {
+      const dataSource: IbExportableSource = {
         filteredData: data,
         sort,
         sortData: (
@@ -172,13 +179,10 @@ describe("IbDataExport", () => {
             a.name > b.name ? 1 : -1
           );
         },
-        selectionColumn: null,
         paginator: null,
         sortedColumns: columns,
-        aggregatedColumns: {},
-        aggregatedData: {},
-        aggregate: new Subject(),
-      } as unknown as IbTableDataSource<unknown>;
+        capabilities: FULL_CAPS,
+      };
 
       service._exportFromTable("test", dataSource, {
         format: "xlsx",
@@ -205,17 +209,14 @@ describe("IbDataExport", () => {
         { name: "bob" },
       ];
       const columns = [createColumn("name", "Name")];
-      const dataSource = {
+      const dataSource: IbExportableSource = {
         filteredData: data,
         sort: null,
         sortData: jasmine.createSpy("sortData"),
-        selectionColumn: null,
         paginator: null,
         sortedColumns: columns,
-        aggregatedColumns: {},
-        aggregatedData: {},
-        aggregate: new Subject(),
-      } as unknown as IbTableDataSource<unknown>;
+        capabilities: FULL_CAPS,
+      };
 
       service._exportFromTable("test", dataSource, {
         format: "csv",
@@ -243,17 +244,14 @@ describe("IbDataExport", () => {
       ];
       const paginator = createPaginatorState(1, 2); // page 1, size 2 → rows at index 2,3
       const columns = [createColumn("name", "Name")];
-      const dataSource = {
+      const dataSource: IbExportableSource = {
         filteredData: data,
         sort: null,
-        selectionColumn: null,
         paginator,
         sortedColumns: columns,
-        aggregatedColumns: {},
-        aggregatedData: {},
-        aggregate: new Subject(),
         sortData: jasmine.createSpy("sortData"),
-      } as unknown as IbTableDataSource<unknown>;
+        capabilities: FULL_CAPS,
+      };
 
       service._exportFromTable("test", dataSource, {
         format: "xlsx",
@@ -280,20 +278,17 @@ describe("IbDataExport", () => {
       const sort = createSortState("name", "asc");
       const paginator = createPaginatorState(0, 2); // first 2 after sort
       const columns = [createColumn("name", "Name")];
-      const dataSource = {
+      const dataSource: IbExportableSource = {
         filteredData: data,
         sort,
         sortData: (rows: unknown[], s: MatSort) =>
           [...rows].sort((a: any, b: any) =>
             a.name > b.name ? 1 : -1
           ),
-        selectionColumn: null,
         paginator,
         sortedColumns: columns,
-        aggregatedColumns: {},
-        aggregatedData: {},
-        aggregate: new Subject(),
-      } as unknown as IbTableDataSource<unknown>;
+        capabilities: FULL_CAPS,
+      };
 
       service._exportFromTable("test", dataSource, {
         format: "xlsx",
@@ -319,30 +314,23 @@ describe("IbDataExport", () => {
       ];
       const selected = [allData[2], allData[0]]; // zara, alice
       const sort = createSortState("name", "asc");
-      const selectionModel = new SelectionModel<unknown>(
-        true,
-        selected
-      );
       const columns = [createColumn("name", "Name")];
-      const dataSource = {
+      const dataSource: IbExportableSource = {
         filteredData: allData,
         sort,
         sortData: (rows: unknown[], s: MatSort) =>
           [...rows].sort((a: any, b: any) =>
             a.name > b.name ? 1 : -1
           ),
-        selectionColumn: { selection: selectionModel },
         paginator: null,
         sortedColumns: columns,
-        aggregatedColumns: {},
-        aggregatedData: {},
-        aggregate: new Subject(),
-      } as unknown as IbTableDataSource<unknown>;
+        capabilities: FULL_CAPS,
+      };
 
       service._exportFromTable("test", dataSource, {
         format: "csv",
         dataset: "selected",
-      });
+      }, selected);
 
       expect(exportSpy).toHaveBeenCalledTimes(1);
       const exportedData = exportSpy.calls.mostRecent().args[0] as Record<
@@ -355,30 +343,25 @@ describe("IbDataExport", () => {
       expect(exportedData[1]["Name"]).toBe("zara");
     });
 
-    it("exports empty array when selection column is null", () => {
+    it("rejects selected dataset when selectedRows is empty", () => {
       const data = [{ name: "alice" }];
       const sort = createSortState("name", "asc");
       const columns = [createColumn("name", "Name")];
-      const dataSource = {
+      const dataSource: IbExportableSource = {
         filteredData: data,
         sort,
         sortData: (rows: unknown[], s: MatSort) => [...rows],
-        selectionColumn: null,
         paginator: null,
         sortedColumns: columns,
-        aggregatedColumns: {},
-        aggregatedData: {},
-        aggregate: new Subject(),
-      } as unknown as IbTableDataSource<unknown>;
+        capabilities: FULL_CAPS,
+      };
 
-      service._exportFromTable("test", dataSource, {
-        format: "xlsx",
-        dataset: "selected",
-      });
-
-      expect(exportSpy).toHaveBeenCalledTimes(1);
-      const exportedData = exportSpy.calls.mostRecent().args[0] as unknown[];
-      expect(exportedData.length).toBe(0);
+      expect(() => {
+        service._exportFromTable("test", dataSource, {
+          format: "xlsx",
+          dataset: "selected",
+        });
+      }).toThrowError(/dataset "selected" requires non-empty selectedRows/);
     });
 
     it("removes ib- columns from export output", () => {
@@ -388,17 +371,14 @@ describe("IbDataExport", () => {
         createColumn("ib-action", ""),
         createColumn("ib-selection", ""),
       ];
-      const dataSource = {
+      const dataSource: IbExportableSource = {
         filteredData: data,
         sort: null,
-        selectionColumn: null,
         paginator: null,
         sortedColumns: columns,
-        aggregatedColumns: {},
-        aggregatedData: {},
-        aggregate: new Subject(),
         sortData: jasmine.createSpy("sortData"),
-      } as unknown as IbTableDataSource<unknown>;
+        capabilities: FULL_CAPS,
+      };
 
       service._exportFromTable("test", dataSource, {
         format: "pdf",
@@ -430,17 +410,14 @@ describe("IbDataExport", () => {
           pdf: pdfTransform,
         }),
       ];
-      const dataSource = {
+      const dataSource: IbExportableSource = {
         filteredData: data,
         sort: null,
-        selectionColumn: null,
         paginator: null,
         sortedColumns: columns,
-        aggregatedColumns: {},
-        aggregatedData: {},
-        aggregate: new Subject(),
         sortData: jasmine.createSpy("sortData"),
-      } as unknown as IbTableDataSource<unknown>;
+        capabilities: FULL_CAPS,
+      };
 
       service._exportFromTable("test", dataSource, {
         format: "xlsx",
@@ -465,17 +442,14 @@ describe("IbDataExport", () => {
           ibAny: anyTransform,
         }),
       ];
-      const dataSource = {
+      const dataSource: IbExportableSource = {
         filteredData: data,
         sort: null,
-        selectionColumn: null,
         paginator: null,
         sortedColumns: columns,
-        aggregatedColumns: {},
-        aggregatedData: {},
-        aggregate: new Subject(),
         sortData: jasmine.createSpy("sortData"),
-      } as unknown as IbTableDataSource<unknown>;
+        capabilities: FULL_CAPS,
+      };
 
       // Request csv format; column only has ibAny → should fall back
       service._exportFromTable("test", dataSource, {
@@ -494,17 +468,14 @@ describe("IbDataExport", () => {
     it("falls through to original value when no transform is defined", () => {
       const data = [{ value: 99 }];
       const columns = [createColumn("value", "Value")];
-      const dataSource = {
+      const dataSource: IbExportableSource = {
         filteredData: data,
         sort: null,
-        selectionColumn: null,
         paginator: null,
         sortedColumns: columns,
-        aggregatedColumns: {},
-        aggregatedData: {},
-        aggregate: new Subject(),
         sortData: jasmine.createSpy("sortData"),
-      } as unknown as IbTableDataSource<unknown>;
+        capabilities: FULL_CAPS,
+      };
 
       service._exportFromTable("test", dataSource, {
         format: "xlsx",
@@ -518,32 +489,62 @@ describe("IbDataExport", () => {
       expect(exportedData[0]["Value"]).toBe(99);
     });
 
-    it("handles remote-like data source with no selection and empty filtered data", () => {
-      // Simulate a remote data source that has no selection column
-      // and empty filtered data — the method must not throw.
+    it("rejects full export when source lacks FullExport capability", () => {
+      // Simulate a remote data source that only supports current-page export.
       const columns = [createColumn("id", "ID")];
-      const dataSource = {
+      const dataSource: IbExportableSource = {
         filteredData: [],
         sort: null,
-        selectionColumn: null,
         paginator: null,
         sortedColumns: columns,
-        aggregatedColumns: {},
-        aggregatedData: {},
-        aggregate: new Subject(),
         sortData: jasmine.createSpy("sortData"),
-      } as unknown as IbTableDataSource<unknown>;
+        capabilities: new Set([IbDataSourceCapability.CurrentPageExport]),
+      };
 
       expect(() => {
         service._exportFromTable("test", dataSource, {
           format: "xlsx",
           dataset: "all",
         });
-      }).not.toThrow();
+      }).toThrowError(/dataset "all" requires the "fullExport" capability/);
+    });
 
-      expect(exportSpy).toHaveBeenCalledTimes(1);
-      const exportedData = exportSpy.calls.mostRecent().args[0] as unknown[];
-      expect(exportedData).toEqual([]);
+    it("rejects selected export when source lacks RowSelection capability", () => {
+      const columns = [createColumn("id", "ID")];
+      const dataSource: IbExportableSource = {
+        filteredData: [],
+        sort: null,
+        paginator: null,
+        sortedColumns: columns,
+        sortData: jasmine.createSpy("sortData"),
+        capabilities: new Set(),
+      };
+
+      expect(() => {
+        service._exportFromTable("test", dataSource, {
+          format: "xlsx",
+          dataset: "selected",
+        }, [{ id: 1 }]);
+      }).toThrowError(/dataset "selected" requires the "rowSelection" capability/);
+    });
+
+    it("rejects current-page export when source lacks CurrentPageExport capability", () => {
+      const columns = [createColumn("id", "ID")];
+      const dataSource: IbExportableSource = {
+        filteredData: [],
+        sort: null,
+        paginator: null,
+        sortedColumns: columns,
+        sortData: jasmine.createSpy("sortData"),
+        capabilities: new Set(),
+      };
+
+      expect(() => {
+        service._exportFromTable("test", dataSource, {
+          format: "xlsx",
+          dataset: "current",
+        });
+      }).toThrowError(/dataset "current" requires the "currentPageExport" capability/);
     });
   });
 });

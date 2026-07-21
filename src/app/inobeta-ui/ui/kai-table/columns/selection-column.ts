@@ -66,34 +66,34 @@ export class IbSelectionColumn implements OnInit {
   ngOnInit() {
     if (this.table) {
       if (typeof this.table.canSelectRows === 'function' && !this.table.canSelectRows()) return;
-      if (this.table.isRemote) {
+      if (this.table.isRemote()) {
         console.warn("Selection column is currently not supported with IbTableRemoteDataSource");
       }
       this.columnDef().cell = this.cell();
       this.columnDef().headerCell = this.headerCell();
       this.columnDef().footerCell = this.footerCell();
-      this.table.matTable.addColumnDef(this.columnDef());
-      if (Array.isArray(this.table.displayedColumns) && !this.table.displayedColumns.includes("ib-selection")) {
-        this.table.displayedColumns.unshift("ib-selection");
+      this.table.matTable().addColumnDef(this.columnDef());
+      if (Array.isArray(this.table.displayedColumns()) && !this.table.displayedColumns().includes("ib-selection")) {
+        this.table.displayedColumns().unshift("ib-selection");
       }
     }
   }
 
   isAllSelected() {
     const numSelected = this.selection.selected.length;
-    const numRows = this.table.dataSource.filteredData.length;
+    const numRows = this.table.activeDataSource().filteredData.length;
     return numSelected == numRows;
   }
 
   toggleAllRows() {
     this.isAllSelected()
       ? this.selection.clear()
-      : this.selection.select(...this.table.dataSource.filteredData);
+      : this.selection.select(...this.table.activeDataSource().filteredData);
 
     const selectionAfterToggle = this.isAllSelected();
     this.ibRowSelectionChange.emit(
-      this.table.dataSource.filteredData.map((row) => ({
-        tableName: this.table.tableName,
+      this.table.activeDataSource().filteredData.map((row) => ({
+        tableName: this.table.tableName(),
         row,
         selection: selectionAfterToggle,
       }))
@@ -106,7 +106,7 @@ export class IbSelectionColumn implements OnInit {
 
       this.ibRowSelectionChange.emit([
         {
-          tableName: this.table.tableName,
+          tableName: this.table.tableName(),
           row,
           selection: ev.checked,
         },
@@ -115,6 +115,6 @@ export class IbSelectionColumn implements OnInit {
   }
 
   isDisabled() {
-    return this.table.state !== "idle";
+    return this.table.state() !== "idle";
   }
 }

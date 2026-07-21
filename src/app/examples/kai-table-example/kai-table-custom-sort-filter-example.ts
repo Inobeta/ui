@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
-import { MatSort } from "@angular/material/sort";
-import { IbFilterModule, IbKaiTableModule, IbTableDataSource } from "public_api";
+import { Sort } from "@angular/material/sort";
+import { IbFilterModule, IbKaiTableModule, IbTableLocalDataSource } from "public_api";
 import { IbUserExample, createNewUser } from "./users";
 
 @Component({
@@ -25,7 +25,7 @@ import { IbUserExample, createNewUser } from "./users";
 export class IbKaiTableCustomSortFilterExamplePage implements OnInit {
   private readonly data = Array.from({ length: 50 }, (_, k) => createNewUser(k + 1));
 
-  dataSource = new IbTableDataSource<IbUserExample>(this.data);
+  dataSource = new IbTableLocalDataSource<IbUserExample>(this.data);
   displayedColumns = ["name", "fruit", "amount"];
 
   seasonFilterAccessor = (data: IbUserExample): any => {
@@ -47,7 +47,7 @@ export class IbKaiTableCustomSortFilterExamplePage implements OnInit {
 
   ngOnInit() {
     const defaultSort = this.dataSource.sortData.bind(this.dataSource);
-    this.dataSource.sortData = (data: IbUserExample[], sort: MatSort): IbUserExample[] => {
+    this.dataSource.sortData = (data: IbUserExample[], sort: Sort): IbUserExample[] => {
       if (!sort?.active || !sort?.direction) {
         return data;
       }

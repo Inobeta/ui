@@ -108,45 +108,23 @@ export class IbTable implements OnDestroy {
 
 
 
-  /** @internal Signal-based view query — access via {@link matTable} getter. */
-  readonly __matTable = viewChild(MatTable);
-  /** @internal Signal-based view query — access via {@link sort} getter. */
-  readonly __sort = viewChild(MatSort);
-  /** @internal Signal-based view query — access via {@link paginator} getter. */
-  readonly __paginator = viewChild(MatPaginator);
-
-  /** @deprecated Backward-compatible accessor for child components. Will be removed in Step 15 migration. */
-  get matTable(): MatTable<any> { return this.__matTable()!; }
-  /** @deprecated Backward-compatible accessor for child components. Will be removed in Step 15 migration. */
-  get sort(): MatSort { return this.__sort()!; }
-  /** @deprecated Backward-compatible accessor for child components. Will be removed in Step 15 migration. */
-  get paginator(): MatPaginator { return this.__paginator()!; }
+  readonly matTable = viewChild(MatTable);
+  readonly sort = viewChild(MatSort);
+  readonly paginator = viewChild(MatPaginator);
 
   expandedElement: any;
   actionPortals: Portal<any>[] = [];
 
-  readonly __state = input<IbKaiTableState>('idle');
+  readonly state = input<IbKaiTableState>('idle');
   data = input<unknown[] | undefined>(undefined);
-  /** @internal — use {@link dataSource} getter or {@link activeDataSource} signal. */
-  readonly __dataSource = input<IbTableSource | undefined>(undefined, { alias: 'dataSource' });
-  readonly __tableName = input.required<string>({ alias: 'tableName' });
+  readonly dataSource = input<IbTableSource | undefined>(undefined);
+  readonly tableName = input.required<string>();
   tableDef = input<Partial<IbTableDef>>({});
-  /** @internal — use {@link displayedColumns} getter or {@link effectiveDisplayedColumns} signal. */
-  readonly __displayedColumns = input<string[]>([], { alias: 'displayedColumns' });
+  readonly displayedColumns = input<string[]>([],);
   stripedRows = input(false, { transform: booleanAttribute });
   activeRowParams = input<{ dataParamId: string, childRouteParamId: string }>({ dataParamId: null, childRouteParamId: null });
 
-  /** @deprecated Backward-compatible accessor for child components. Will be removed in Step 15 migration. */
-  get dataSource(): IbTableDataSource<unknown> | IbTableRemoteDataSource<unknown> | undefined {
-    return this.activeDataSource() as IbTableDataSource<unknown> | IbTableRemoteDataSource<unknown>;
-  }
-  /** @deprecated Backward-compatible accessor for child components. Will be removed in Step 15 migration. */
-  get tableName(): string { return this.__tableName(); }
-  /** @deprecated Backward-compatible accessor for child components. Will be removed in Step 15 migration. */
-  get displayedColumns(): string[] { return this.effectiveDisplayedColumns(); }
-
-  /** @deprecated Backward-compatible accessor for child components. Will be removed in Step 15 migration. */
-  get state(): IbKaiTableState { return this.__state(); }
+  readonly isRemote = computed(() => this.isRemoteDataSource(this.activeDataSource()));
 
   readonly effectiveTableDef = computed<IbTableDef>(() => ({
     ...defaultTableDef,
@@ -158,15 +136,15 @@ export class IbTable implements OnDestroy {
   }));
   readonly activeDataSource = computed<IbTableSource>(() => {
     const data = this.data();
-    const dataSource = this.__dataSource();
-    if (data !== undefined && dataSource !== undefined) {
+    const boundDataSource = this.dataSource();
+    if (data !== undefined && boundDataSource !== undefined) {
       throw new Error('[IbTable] [data] and [dataSource] cannot be used together.');
     }
     if (data !== undefined) this.internalDataSource.data = data;
-    return dataSource ?? this.internalDataSource;
+    return boundDataSource ?? this.internalDataSource;
   });
   readonly effectiveDisplayedColumns = computed(() => {
-    const columns = [...this.__displayedColumns()];
+    const columns = [...this.displayedColumns()];
     if (this.selectionColumn() && this.canSelectRows() && !columns.includes('ib-selection')) columns.unshift('ib-selection');
     if (this.columns().some((column) => column.name() === 'ib-action') && !columns.includes('ib-action')) columns.push('ib-action');
     return columns;
@@ -180,7 +158,7 @@ export class IbTable implements OnDestroy {
       && !this.isRemoteDataSource(source)
       && Object.keys(source.aggregatedData).length > 0;
   });
-  readonly effectiveState = computed(() => this.remoteState() ?? this.__state());
+  readonly effectiveState = computed(() => this.remoteState() ?? this.state());
   readonly isDataSourceReady = computed(() =>
     this.initialized() || !this.isRemoteDataSource(this.activeDataSource()),
   );
@@ -239,7 +217,7 @@ export class IbTable implements OnDestroy {
     effect((onCleanup) => {
       if (!this.initialized()) return;
       const source = this.activeDataSource();
-      const paginator = this.__paginator();
+      const paginator = this.paginator();
       if (!paginator || !('totalCount$' in source)) return;
       const subscription = source.totalCount$.subscribe((totalCount) => {
         paginator.length = totalCount;
@@ -255,7 +233,7 @@ export class IbTable implements OnDestroy {
     });
     effect((onCleanup) => {
       if (!this.initialized()) return;
-      const sort = this.__sort();
+      const sort = this.sort();
       const tableFilter = this.filter();
       const subscriptions: Subscription[] = [];
       if (sort) subscriptions.push(sort.sortChange.subscribe((value) => {
@@ -269,14 +247,14 @@ export class IbTable implements OnDestroy {
   }
 
   async ngAfterContentInit(): Promise<void> {
-    await this.stateFacade.initialize(this.__tableName(), this.effectiveTableDef(), this.viewHost());
+    await this.stateFacade.initialize(this.tableName(), this.effectiveTableDef(), this.viewHost());
     if (this.destroyRef.destroyed) return;
     const tableFilter = this.filter();
     if (tableFilter) await firstValueFrom(tableFilter.initialized);
     if (this.destroyRef.destroyed) return;
     const viewHost = this.viewHost();
     if (viewHost) {
-      viewHost.setViewGroupName(this.__tableName());
+      viewHost.setViewGroupName(this.tableName());
       viewHost.setViewDataAccessor(() => this.getViewData());
       viewHost.handleStateChanges(
         toObservable(this.stateFacade.snapshot, { injector: this.injector })
@@ -325,7 +303,7 @@ export class IbTable implements OnDestroy {
       || (settings.dataset === 'selected' && !this.hasCapability(IbDataSourceCapability.RowSelection))
     ) return;
     this.exportService._exportFromTable(
-      this.__tableName(),
+      this.tableName(),
       source as IbTableDataSource<unknown>,
       settings
     );
@@ -335,7 +313,7 @@ export class IbTable implements OnDestroy {
     this.stateFacade.setSort(newSort);
     const source = this.activeDataSource();
     if (this.isRemoteDataSource(source)) return;
-    const sort = this.__sort();
+    const sort = this.sort();
     if (!sort) return;
     sort.active = newSort.active;
     sort.direction = newSort.direction;
@@ -364,15 +342,12 @@ export class IbTable implements OnDestroy {
     return source.sortState ?? source.input?.sort ?? { active: '', direction: '' };
   }
 
-  /** @deprecated Backward-compatible accessor for child components. Will be removed in Step 15 migration. */
-  get isRemote(): boolean { return this.isRemoteDataSource(this.activeDataSource()); }
-
   private applySnapshot(
     source: IbTableSource,
     snapshot: IbKaiTableSnapshot,
   ): void {
-    const paginator = this.__paginator();
-    const sort = this.__sort();
+    const paginator = this.paginator();
+    const sort = this.sort();
     const tableFilter = this.filter();
     if (paginator) {
       paginator.pageIndex = snapshot.pageIndex;
@@ -398,7 +373,7 @@ export class IbTable implements OnDestroy {
       });
       return;
     }
-    source.tableName = this.__tableName();
+    source.tableName = this.tableName();
     source.selectionColumn = this.selectionColumn() ?? null;
     source.filter = tableFilter ?? null;
     source.aggregatedColumns = snapshot.aggregatedColumns;

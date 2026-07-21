@@ -27,10 +27,10 @@ describe("IbActionColumn", () => {
 
   beforeEach(waitForAsync(() => {
     mockTable = {
-      matTable: { addColumnDef: () => {}, removeColumnDef: () => {} },
-      dataSource: {},
-      displayedColumns: [] as string[],
-      sort: null,
+      matTable: () => ({ addColumnDef: () => {}, removeColumnDef: () => {} }),
+      activeDataSource: () => ({}),
+      displayedColumns: () => [] as string[],
+      sort: () => null,
     };
 
     TestBed.configureTestingModule({
@@ -57,7 +57,7 @@ describe("IbActionColumn", () => {
   });
 
   it("should not mutate the table displayedColumns", () => {
-    expect(mockTable.displayedColumns).toEqual([]);
+    expect(mockTable.displayedColumns()).toEqual([]);
   });
 
   it("should reference the ibColumn", () => {

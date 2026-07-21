@@ -1,7 +1,9 @@
 import { Inject, Injectable, InjectionToken } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
+import { MatPaginator } from "@angular/material/paginator";
+import { MatSort } from "@angular/material/sort";
 import { IbColumn } from "../kai-table/columns/column";
-import { IbTableDataSource } from "../kai-table/table-data-source";
+import { IbDataSourceCapability } from "../kai-table/data-source.types";
 import { IbDataExportProvider } from "./provider";
 import {
   IbTableDataExportDialog,
@@ -16,6 +18,29 @@ export interface IDataExportSettings {
 export const OVERRIDE_EXPORT_FORMATS = new InjectionToken<IbDataExportProvider>(
   "overrideExportFormats"
 );
+
+/**
+ * Minimal contract required by {@link IbDataExportService._exportFromTable}.
+ *
+ * Data sources (local, remote, or compatibility wrappers) that support
+ * table-driven export must satisfy this shape.  Capabilities are used to
+ * validate the requested dataset before extraction begins.
+ */
+export interface IbExportableSource {
+  /** Current filtered and sorted rows visible in the table. */
+  filteredData: unknown[];
+  /** Active sort control, or `null`. */
+  sort: MatSort | null;
+  /** Sort implementation — may be overridden by consumers. */
+  sortData: (data: unknown[], sort: MatSort) => unknown[];
+  /** Active paginator control, or `null`. */
+  paginator: MatPaginator | null;
+  /** Columns rendered in the table, in display order. */
+  sortedColumns: IbColumn<unknown>[];
+  /** Data-source capabilities declared by the owning source.
+   * When omitted, capability validation is skipped (backward compat). */
+  capabilities?: ReadonlySet<IbDataSourceCapability>;
+}
 
 @Injectable({ providedIn: "root" })
 export class IbDataExportService {
@@ -50,9 +75,12 @@ export class IbDataExportService {
    */
   _exportFromTable(
     tableName: string,
-    dataSource: IbTableDataSource<unknown>,
-    settings: IDataExportSettings
+    dataSource: IbExportableSource,
+    settings: IDataExportSettings,
+    selectedRows?: unknown[],
   ) {
+    this._assertExportCapability(dataSource, settings.dataset, selectedRows);
+
     let data: unknown[];
 
     if (settings.dataset === "all") {
@@ -64,7 +92,7 @@ export class IbDataExportService {
     }
 
     if (settings.dataset === "selected") {
-      data = dataSource.selectionColumn?.selection.selected ?? [];
+      data = selectedRows ?? [];
       const sort = dataSource.sort;
       if (sort) {
         data = dataSource.sortData(data, sort);
@@ -110,6 +138,48 @@ export class IbDataExportService {
   export(data: any[], filename: string, format: string) {
     const provider = this.providers.find((p) => p.format === format);
     return provider.export(data, filename);
+  }
+
+  /**
+   * Validates that the requested dataset is supported by the source's
+   * declared capabilities.  Throws when the operation is unsupported.
+   */
+  private _assertExportCapability(
+    source: IbExportableSource,
+    dataset: IDataExportSettings["dataset"],
+    selectedRows?: unknown[],
+  ): void {
+    const caps = source.capabilities;
+    if (!caps) return; // backward compat — no capability contract declared
+
+    if (dataset === "current" && !caps.has(IbDataSourceCapability.CurrentPageExport)) {
+      throw new Error(
+        `IbDataExportService: dataset "current" requires the ` +
+        `"${IbDataSourceCapability.CurrentPageExport}" capability.`
+      );
+    }
+
+    if (dataset === "selected") {
+      if (!caps.has(IbDataSourceCapability.RowSelection)) {
+        throw new Error(
+          `IbDataExportService: dataset "selected" requires the ` +
+          `"${IbDataSourceCapability.RowSelection}" capability.`
+        );
+      }
+      if (!selectedRows || selectedRows.length === 0) {
+        throw new Error(
+          `IbDataExportService: dataset "selected" requires non-empty ` +
+          `selectedRows from the caller.`
+        );
+      }
+    }
+
+    if (dataset === "all" && !caps.has(IbDataSourceCapability.FullExport)) {
+      throw new Error(
+        `IbDataExportService: dataset "all" requires the ` +
+        `"${IbDataSourceCapability.FullExport}" capability.`
+      );
+    }
   }
 
   /** @ignore */

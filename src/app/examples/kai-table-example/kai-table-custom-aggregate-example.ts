@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { IB_AGGREGATE, IbKaiTableModule, IbTableDataSource } from "public_api";
+import { IB_AGGREGATE, IbKaiTableModule, IbTableLocalDataSource } from "public_api";
 import { IbUserExample, createNewUser } from "./users";
 
 @Component({
@@ -30,7 +30,7 @@ import { IbUserExample, createNewUser } from "./users";
   `,
 })
 export class IbKaiTableCustomAggregateExamplePage {
-  dataSource = new IbTableDataSource<IbUserExample>(
+  dataSource = new IbTableLocalDataSource<IbUserExample>(
     Array.from({ length: 50 }, (_, k) => createNewUser(k + 1))
   );
 

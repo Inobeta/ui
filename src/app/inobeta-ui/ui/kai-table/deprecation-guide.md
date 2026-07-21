@@ -27,10 +27,9 @@ The table component does not expose a generic row-click output. Do not migrate
 code to `ibRowClicked`; it is not part of the implemented API. Row selection
 is exposed by `IbSelectionColumn.ibRowSelectionChange`.
 
-For TypeScript access to Material child queries, the canonical properties are
-the signal queries `__matTable()`, `__sort()`, and `__paginator()`. The
-`matTable`, `sort`, and `paginator` getters exist only for compatibility with
-internal child integrations and are deprecated.
+For TypeScript access to Material child queries, use the signal queries
+`matTable()`, `sort()`, and `paginator()`. There are no longer any
+compatibility getters — the signal queries are the canonical properties.
 
 ## `tableName` is required
 
@@ -95,15 +94,18 @@ State is resolved independently for each field using this order, from highest
 to lowest priority:
 
 1. Explicit URL field
-2. URL view snapshot
-3. `tableDef.initial*` field
-4. Technical default (`sort`, `filters`, and `selectedView` are `null`;
+2. URL view snapshot (resolved from views provider using the URL `view` param)
+3. Initial view snapshot (resolved from views provider using `tableDef.initialView`)
+4. `tableDef.initial*` field
+5. Technical default (`sort`, `filters`, and `selectedView` are `null`;
    `pageIndex` is `0`; `pageSize` is `20`)
 
-`initialView` is a view ID used to resolve an initial view snapshot. A field
-absent from a layer does not override a lower layer. `null` is an explicit
+`initialView` is a view ID used to resolve an initial view snapshot (layer 3).
+A field absent from a layer does not override a lower layer. `null` is an explicit
 override: for example, `initialFilters: null` clears filters, while
-`initialView: null` selects the implicit all-data view.
+`initialView: null` selects the implicit all-data view. A URL payload with
+`view: null` suppresses both view snapshot layers (2 and 3), allowing
+lower `initial*` fields to emerge.
 
 ## URL state
 
@@ -117,6 +119,44 @@ The writer always emits v2 and never writes the legacy
 `__ibTableView__all` sentinel. The reader still accepts the legacy v1 fields
 (`ibfilter`, `ibview`, `ibpage`, `ibpagesize`, `ibaggregatedcolumns`, and
 `ibsort`) and maps `__ibTableView__all` to `view: null`.
+
+### Canonical selectors
+
+Read table state through the canonical selectors. Each returns a signal when
+used with `store.selectSignal`:
+
+```ts
+import {
+  selectIbKaiTableSnapshot,
+  selectTableSort,
+  selectTableFilters,
+  selectTablePageIndex,
+  selectTablePageSize,
+  selectTableSelectedView,
+  selectTableAggregatedColumns,
+} from "public_api";
+
+// Full snapshot
+const snap = this.store.selectSignal(
+  selectIbKaiTableSnapshot("myTable"),
+);
+
+// Individual field signals
+const sort = this.store.selectSignal(selectTableSort("myTable"));
+const pageSize = this.store.selectSignal(selectTablePageSize("myTable"));
+```
+
+### Legacy selectors (deprecated)
+
+The following selectors are retained for backward compatibility only:
+
+| Legacy selector | Canonical replacement |
+| --- | --- |
+| `ibTableSelectUrlState` | `selectIbKaiTableRecord` |
+| `ibTableSelectLastQueryStringRaw` | `selectIbKaiTableSnapshot` |
+| `ibTableSelectLastQueryString` | `selectIbKaiTableSnapshot` |
+
+Use the canonical selectors for all new code.
 
 ## Removed or changed legacy options
 

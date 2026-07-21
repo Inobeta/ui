@@ -4,8 +4,10 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
 import { Observable, Subject } from 'rxjs';
-import { IbColumn } from '../kai-table/columns/column';
+import { IbColumn } from '../kai-table/columns';
 import { IbKaiRowGroupDirective } from '../kai-table/rowgroup';
+import { IbKaiTableAction } from '../kai-table/action';
+import { OVERRIDE_EXPORT_FORMATS } from '../data-export/data-export.service';
 import { IbKaiTableMobileComponent } from './table-mobile.component';
 import { IbKaiTableMobileItemComponent } from './table-mobile-item.component';
 
@@ -30,12 +32,17 @@ class MobileDataSource extends DataSource<unknown> {
 
 const nameColumn = {
   name: () => 'name',
-  headerText: 'Name',
+  headerText: () => 'Name',
   sortInput: () => false,
   isActionColumnInput: () => false,
   mobileDataRenderer: (row: { name: string }) => row.name,
   ibCellDef: () => undefined,
 } as unknown as IbColumn<unknown>;
+
+const exportAction = {
+  kind: () => 'export',
+  templateRef: () => null,
+} as unknown as IbKaiTableAction;
 
 describe('IbKaiTableMobileComponent', () => {
   let fixture: ComponentFixture<IbKaiTableMobileComponent>;
@@ -48,6 +55,7 @@ describe('IbKaiTableMobileComponent', () => {
         NoopAnimationsModule,
         TranslateModule.forRoot(),
       ],
+      providers: [{ provide: OVERRIDE_EXPORT_FORMATS, useValue: [], multi: true }],
     }).compileComponents();
   }));
 
@@ -109,6 +117,49 @@ describe('IbKaiTableMobileComponent', () => {
 
     expect(component.cardActionColumns()).toEqual([]);
     expect(component.visibleColumns().map((column) => column.name())).toEqual(['name']);
+  });
+
+  describe('export capability gating', () => {
+    beforeEach(() => {
+      fixture.componentRef.setInput('headerActions', [exportAction]);
+    });
+
+    it('renders the export button when canExportCurrentPage is true', () => {
+      fixture.componentRef.setInput('canExportCurrentPage', true);
+      fixture.componentRef.setInput('canExportAllRows', true);
+      fixture.detectChanges();
+
+      const icons = fixture.nativeElement.querySelectorAll('.ib-kai-table-mobile__toolbar-actions mat-icon');
+      const exportIcon = Array.from(icons).find(
+        (el: Element) => el.textContent?.trim() === 'file_download'
+      );
+      expect(exportIcon).toBeTruthy();
+    });
+
+    it('hides the export button when canExportCurrentPage is false', () => {
+      fixture.componentRef.setInput('canExportCurrentPage', false);
+      fixture.componentRef.setInput('canExportAllRows', false);
+      fixture.detectChanges();
+
+      const icons = fixture.nativeElement.querySelectorAll('.ib-kai-table-mobile__toolbar-actions mat-icon');
+      const exportIcon = Array.from(icons).find(
+        (el: Element) => el.textContent?.trim() === 'file_download'
+      );
+      expect(exportIcon).toBeUndefined();
+    });
+
+    it('invokes column headerText signal for labels', () => {
+      const source = new MobileDataSource();
+      fixture.componentRef.setInput('dataSource', source);
+      fixture.detectChanges();
+
+      source.rows.next([{ id: 1, name: 'Alice' }]);
+      fixture.detectChanges();
+
+      const label = fixture.nativeElement.querySelector('.ib-kai-table-mobile__label');
+      expect(label).toBeTruthy();
+      expect(label.textContent.trim()).toBe('Name');
+    });
   });
 });
 

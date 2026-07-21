@@ -115,11 +115,11 @@ export class IbColumn<T> implements OnDestroy, OnInit {
   readonly aggregateInput = input(false, { transform: booleanAttribute, alias: "aggregate" });
 
   get aggregationFunction() {
-    return this._table.dataSource.aggregatedColumns?.[this.name()];
+    return this._table.activeDataSource().aggregatedColumns?.[this.name()];
   }
 
   get aggregatedData() {
-    return this._table.dataSource.aggregatedData[this.name()];
+    return this._table.activeDataSource().aggregatedData[this.name()];
   }
 
   readonly ibCellDef = contentChild(IbCellDef);
@@ -143,7 +143,7 @@ export class IbColumn<T> implements OnDestroy, OnInit {
   readonly isActionColumnInput = input(false, { alias: 'ib-action-column', transform: booleanAttribute });
 
   /** @ignore */
-  readonly matSort = computed(() => this._table.sort);
+  readonly matSort = computed(() => this._table.sort());
 
   _table = inject(IB_TABLE, { optional: true });
   _options: IbColumnOptions<T> =
@@ -177,13 +177,13 @@ export class IbColumn<T> implements OnDestroy, OnInit {
        this.columnDef().cell = this.cell();
        this.columnDef().headerCell = this.headerCell();
        this.columnDef().footerCell = this.footerCell();
-       this._table.matTable.addColumnDef(this.columnDef());
+       this._table.matTable().addColumnDef(this.columnDef());
     }
   }
 
   ngOnDestroy() {
     if (this._table) {
-       this._table.matTable.removeColumnDef(this.columnDef());
+       this._table.matTable().removeColumnDef(this.columnDef());
     }
   }
 

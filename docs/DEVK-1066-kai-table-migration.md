@@ -19,9 +19,9 @@ table.tableName();
 table.displayedColumns();
 ```
 
-The canonical signal queries are `__matTable()`, `__sort()`, and
-`__paginator()`. The old `matTable`, `sort`, and `paginator` getters are only
-compatibility accessors and are deprecated.
+The canonical signal queries are `matTable()`, `sort()`, and
+`paginator()`. There are no longer compatibility getters — the signal
+queries are the canonical properties.
 
 There is no implemented table-level `rowClicked` or `ibRowClicked` output.
 Do not add a migration for it. Selection uses
@@ -32,18 +32,22 @@ Do not add a migration for it. Selection uses
 `tableName` is required and must be unique on the page. It scopes table state,
 URL state, views, selection, and exports.
 
-Initial state is resolved per field in this order:
+Initial state is resolved per field in this order, from highest to lowest
+priority:
 
 1. Explicit URL field
-2. URL view snapshot
-3. `tableDef.initial*`
-4. Technical default: `sort`, `filters`, and `selectedView` are `null`,
+2. URL view snapshot (resolved from views provider using the URL `view` param)
+3. Initial view snapshot (resolved from views provider using `tableDef.initialView`)
+4. `tableDef.initial*`
+5. Technical default: `sort`, `filters`, and `selectedView` are `null`,
    `pageIndex` is `0`, and `pageSize` is `20`
 
 Supported `tableDef` fields are `initialSort`, `initialFilters`, `initialView`,
 `initialPageIndex`, `initialPageSize`, and `initialAggregatedColumns`.
-`initialView` identifies the initial view snapshot. An absent field leaves lower
-priority state untouched; `null` explicitly clears it. For page fields, null
+`initialView` identifies the initial view ID, which is resolved to a snapshot at
+layer 3. An absent field leaves lower priority state untouched; `null` explicitly
+clears it. A URL payload with `view: null` suppresses both view snapshot layers
+(2 and 3), allowing lower `initial*` fields to emerge. For page fields, null
 resolves to the technical defaults.
 
 ## Data sources

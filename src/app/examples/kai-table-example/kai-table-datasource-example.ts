@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { IbKaiTableModule } from "public_api";
-import { IbTableDataSource } from "public_api";
+import { IbTableLocalDataSource } from "public_api";
 import { IbUserExample, createNewUser } from "./users";
 
 @Component({
@@ -25,7 +25,7 @@ import { IbUserExample, createNewUser } from "./users";
 })
 export class IbKaiTableDatasourceExamplePage {
   // Initial data as required: 50 users
-  dataSource = new IbTableDataSource<IbUserExample>(
+  dataSource = new IbTableLocalDataSource<IbUserExample>(
     Array.from({ length: 50 }, (_, k) => createNewUser(k + 1))
   );
   displayedColumns = ["name", "fruit", "amount"];

@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { IB_COLUMN_OPTIONS, IbKaiTableModule, IbTableDataSource } from "public_api";
+import { IB_COLUMN_OPTIONS, IbKaiTableModule, IbTableLocalDataSource } from "public_api";
 import { createNewUser } from "./users";
 
 @Component({
@@ -35,7 +35,7 @@ import { createNewUser } from "./users";
   ],
 })
 export class IbKaiTableColumnOptionsExamplePage {
-  dataSource = new IbTableDataSource(
+  dataSource = new IbTableLocalDataSource(
     Array.from({ length: 50 }, (_, k) => createNewUser(k + 1))
   );
   displayedColumns = ["name", "fruit", "amount", "created_at"];
