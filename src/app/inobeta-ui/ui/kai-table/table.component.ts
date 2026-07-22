@@ -42,10 +42,11 @@ import { IbTableRemoteDataSource } from "./remote-data-source";
 import { IbKaiRowGroupDirective } from "./rowgroup";
 import { IbTableDataSource } from "./table-data-source";
 import { IbKaiTableSnapshot, IbKaiTableState, IbTableDef } from "./table.types";
-import { IB_TABLE } from "./tokens";
+import { IB_AGGREGATE, IB_TABLE } from "./tokens";
 import { IbKaiTableStateFacade } from "./table-state.facade";
 import { IbDataSourceCapability, IbTableRendererDataSource } from "./data-source.types";
 import { IbTableLocalDataSource } from "./local-data-source";
+import { IbAggregate } from "./cells";
 
 type IbTableSource =
   | IbTableDataSource<unknown>
@@ -140,7 +141,6 @@ export class IbTable implements OnDestroy {
     if (data !== undefined && boundDataSource !== undefined) {
       throw new Error('[IbTable] [data] and [dataSource] cannot be used together.');
     }
-    if (data !== undefined) this.internalDataSource.data = data;
     return boundDataSource ?? this.internalDataSource;
   });
   readonly effectiveDisplayedColumns = computed(() => {
@@ -153,10 +153,10 @@ export class IbTable implements OnDestroy {
   readonly canExportCurrentPage = computed(() => this.hasCapability(IbDataSourceCapability.CurrentPageExport));
   readonly canSelectRows = computed(() => this.hasCapability(IbDataSourceCapability.RowSelection));
   readonly shouldDisplayAggregationFooter = computed(() => {
-    const source = this.activeDataSource();
     return this.hasCapability(IbDataSourceCapability.GlobalAggregation)
-      && !this.isRemoteDataSource(source)
-      && Object.keys(source.aggregatedData).length > 0;
+      && this.effectiveDisplayedColumns().some((name) =>
+        this.columns().some((column) => column.name() === name && column.aggregateInput()),
+      );
   });
   readonly effectiveState = computed(() => this.remoteState() ?? this.state());
   readonly isDataSourceReady = computed(() =>
@@ -168,6 +168,7 @@ export class IbTable implements OnDestroy {
   private stateFacade = inject(IbKaiTableStateFacade);
   private injector = inject(Injector);
   private destroyRef = inject(DestroyRef);
+  private aggregationFunctions = inject(IB_AGGREGATE, { optional: true }) as IbAggregate[] | null;
 
   @HostBinding('class.ib-table--has-views') get hasViews() { return !!this.viewHost(); }
   @HostBinding("class.ib-table-striped-rows") get hasStripedRows() { return this.stripedRows(); }
@@ -189,6 +190,16 @@ export class IbTable implements OnDestroy {
       } else {
         this.activeRouteId.set(null);
       }
+    });
+    effect(() => {
+      const data = this.data();
+      if (data !== undefined) this.internalDataSource.data = data;
+    });
+    effect(() => {
+      if (!this.initialized()) return;
+      const data = this.data();
+      if (data === undefined) return;
+      this.filters().forEach((tableFilter) => tableFilter.initializeFromColumn(data));
     });
     effect((onCleanup) => {
       const source = this.activeDataSource();
@@ -229,6 +240,7 @@ export class IbTable implements OnDestroy {
       const source = this.activeDataSource();
       if (this.isLocalDataSource(source)) {
         source.setColumns([...this.columns()]);
+        source.setAggregationFunctions(this.aggregationFunctions ?? []);
       }
     });
     effect((onCleanup) => {
@@ -366,7 +378,7 @@ export class IbTable implements OnDestroy {
     if (this.isLocalDataSource(source)) {
       source.setInput({
         sort: snapshot.sort,
-        rawFilter: snapshot.filters,
+        rawFilter: tableFilter?.value ?? null,
         pageIndex: snapshot.pageIndex,
         pageSize: snapshot.pageSize,
         aggregatedColumns: snapshot.aggregatedColumns,

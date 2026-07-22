@@ -10,11 +10,13 @@ interface Row {
   id: number;
 }
 
-class ControlledRemoteDataSource extends IbTableRemoteDataSource<Row, { term: string }> {
-  readonly requests: IbRemoteDataSourceRequest<{ term: string }>[] = [];
+type Filter = Record<string, string>;
+
+class ControlledRemoteDataSource extends IbTableRemoteDataSource<Row, Filter> {
+  readonly requests: IbRemoteDataSourceRequest<Filter>[] = [];
   readonly responses: Subject<IbFetchDataResponse<Row>>[] = [];
 
-  fetchData(request: IbRemoteDataSourceRequest<{ term: string }>): Observable<IbFetchDataResponse<Row>> {
+  fetchData(request: IbRemoteDataSourceRequest<Filter>): Observable<IbFetchDataResponse<Row>> {
     this.requests.push(request);
     const response = new Subject<IbFetchDataResponse<Row>>();
     this.responses.push(response);
@@ -88,6 +90,62 @@ describe("IbTableRemoteDataSource", () => {
     expect(source.requests[3]).toEqual(source.request);
     subscription.unsubscribe();
   });
+
+  it("suppresses separately-created equivalent non-null requests and still refreshes", fakeAsync(() => {
+    const source = createSource();
+    const subscription = source.connect().subscribe();
+    source.responses[0].next({ data: [{ id: 1 }], totalCount: 1 });
+
+    source.setInput({
+      sort: { active: "id", direction: "asc" },
+      pageIndex: 2,
+      pageSize: 10,
+      filter: { term: "abc", status: "active" },
+    });
+    tick(500);
+    expect(source.requests.length).toBe(2);
+
+    source.setInput({
+      sort: { active: "id", direction: "asc" },
+      pageIndex: 2,
+      pageSize: 10,
+      filter: { status: "active", term: "abc" },
+    });
+
+    expect(source.requests.length).toBe(2);
+
+    source.refresh();
+
+    expect(source.requests.length).toBe(3);
+    expect(source.requests[2]).toEqual(source.request);
+    subscription.unsubscribe();
+  }));
+
+  it("dedupes requests whose filters carry undefined-valued keys and still fetches real changes", fakeAsync(() => {
+    const source = createSource();
+    const subscription = source.connect().subscribe();
+    source.responses[0].next({ data: [{ id: 1 }], totalCount: 1 });
+
+    // Mirrors real IbFilter.query output: keys are present with undefined values
+    source.setInput({ filter: { ibSearchBar: undefined, name: undefined } });
+    tick(500);
+    expect(source.requests.length).toBe(2);
+    expect(source.requests[1].filter).toEqual({ ibSearchBar: undefined, name: undefined });
+    source.responses[1].next({ data: [{ id: 1 }], totalCount: 1 });
+
+    // a separately-created, structurally-equal filter must be deduped
+    source.setInput({ filter: { ibSearchBar: undefined, name: undefined } });
+    tick(500);
+    expect(source.requests.length).toBe(2);
+
+    // a real change still fetches, after the filter debounce
+    source.setInput({ filter: { ibSearchBar: undefined, name: "abc" } });
+    expect(source.requests.length).toBe(2);
+    tick(500);
+    expect(source.requests.length).toBe(3);
+    expect(source.requests[2].filter).toEqual({ ibSearchBar: undefined, name: "abc" });
+    subscription.unsubscribe();
+  }));
 
   it("does not allow an obsolete response to replace the latest response", () => {
     const source = createSource();

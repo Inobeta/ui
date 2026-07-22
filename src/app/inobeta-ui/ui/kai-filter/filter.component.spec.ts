@@ -6,6 +6,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { TranslateModule } from "@ngx-translate/core";
 import { IbFilter } from "./filter.component";
 import { IbFilterModule } from "./filters.module";
+import { IbFilterOperator } from "./filter.types";
 import { contains } from "./filters";
 
 describe("IbFilter", () => {
@@ -52,6 +53,33 @@ describe("IbFilter", () => {
     expect(component.selectedCriteria["sku"]).toEqual(textFilter);
     expect(filterUpdatedSpy).not.toHaveBeenCalled();
     expect(queryUpdatedSpy).not.toHaveBeenCalled();
+  });
+
+  it("should not emit form valueChanges while recomputing value and query during hydration", () => {
+    const fixture = createComponent(IbFilterApp);
+    const component = fixture.debugElement.query(
+      By.directive(IbFilter)
+    ).componentInstance;
+    const valueChangesSpy = jasmine.createSpy("valueChanges");
+    const filterUpdatedSpy = jasmine.createSpy("ibFilterUpdated");
+    const queryUpdatedSpy = jasmine.createSpy("ibQueryUpdated");
+    const valueChangesSubscription = component.form.valueChanges.subscribe(valueChangesSpy);
+    component.ibFilterUpdated.subscribe(filterUpdatedSpy);
+    component.ibQueryUpdated.subscribe(queryUpdatedSpy);
+
+    component.hydrateRawValue({ sku: contains("hydratedValue") });
+
+    expect(valueChangesSpy).not.toHaveBeenCalled();
+    expect(filterUpdatedSpy).not.toHaveBeenCalled();
+    expect(queryUpdatedSpy).not.toHaveBeenCalled();
+    expect(component.value["sku"]).toEqual(contains("hydratedValue"));
+    expect(component.query["sku"]).toEqual({
+      regex: ".*hydratedValue.*",
+      like: "%hydratedValue%",
+      condition: IbFilterOperator.CONTAINS,
+      text: "hydratedValue",
+    });
+    valueChangesSubscription.unsubscribe();
   });
 
   it("should clear raw values silently with null", () => {

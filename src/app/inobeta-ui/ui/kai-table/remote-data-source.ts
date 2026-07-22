@@ -1,7 +1,7 @@
 import { DataSource } from "@angular/cdk/collections";
 import { Sort } from "@angular/material/sort";
 import { BehaviorSubject, Observable, Subject, Subscription, merge, of, timer } from "rxjs";
-import { catchError, distinctUntilChanged, map, switchMap } from "rxjs/operators";
+import { catchError, map, switchMap } from "rxjs/operators";
 import { IbDataSourceCapability } from "./data-source.types";
 import { IbKaiTableState, IbTableFilterState } from "./table.types";
 
@@ -22,6 +22,52 @@ type IbRemoteTrigger<V> = Readonly<{
   debounceFilter: boolean;
 }>;
 
+function areStructurallyEqual(left: unknown, right: unknown): boolean {
+  const traversedObjects = new WeakSet<object>();
+
+  const compare = (leftValue: unknown, rightValue: unknown): boolean => {
+    if (leftValue === rightValue) {
+      return leftValue === null || leftValue === undefined || typeof leftValue === "string" || typeof leftValue === "boolean" ||
+        typeof leftValue === "bigint" || typeof leftValue === "symbol" ||
+        (typeof leftValue === "number" && Number.isFinite(leftValue));
+    }
+
+    if (typeof leftValue !== typeof rightValue || leftValue === null || rightValue === null) return false;
+    if (typeof leftValue !== "object") return false;
+
+    const leftObject = leftValue as object;
+    const rightObject = rightValue as object;
+    if (traversedObjects.has(leftObject)) return false;
+    traversedObjects.add(leftObject);
+
+    try {
+      const leftIsArray = Array.isArray(leftObject);
+      if (leftIsArray !== Array.isArray(rightObject)) return false;
+      if (!leftIsArray && (Object.getPrototypeOf(leftObject) !== Object.prototype || Object.getPrototypeOf(rightObject) !== Object.prototype)) {
+        return false;
+      }
+      if (Object.getOwnPropertySymbols(leftObject).length > 0 || Object.getOwnPropertySymbols(rightObject).length > 0) return false;
+
+      const leftKeys = Object.keys(leftObject);
+      const rightKeys = Object.keys(rightObject);
+      if (leftKeys.length !== rightKeys.length) return false;
+
+      return leftKeys.every((key) =>
+        Object.prototype.hasOwnProperty.call(rightObject, key) && compare(
+          (leftObject as Record<string, unknown>)[key],
+          (rightObject as Record<string, unknown>)[key],
+        ),
+      );
+    } catch {
+      return false;
+    } finally {
+      traversedObjects.delete(leftObject);
+    }
+  };
+
+  return compare(left, right);
+}
+
 /** Server-side table data source with cancellable, value-object requests. */
 export abstract class IbTableRemoteDataSource<T, V = IbTableFilterState>
   extends DataSource<T> {
@@ -39,7 +85,6 @@ export abstract class IbTableRemoteDataSource<T, V = IbTableFilterState>
     pageSize: 20,
     filter: null,
   };
-  private _lastFilter: V | null = null;
 
   constructor(readonly filterDebounceMs = 500) {
     super();
@@ -105,9 +150,10 @@ export abstract class IbTableRemoteDataSource<T, V = IbTableFilterState>
       ...this._request,
       ...value,
     };
-    const filterChanged = JSON.stringify(nextRequest.filter) !== JSON.stringify(this._lastFilter);
+    if (areStructurallyEqual(nextRequest, this._request)) return;
+
+    const filterChanged = !areStructurallyEqual(nextRequest.filter, this._request.filter);
     this._request = nextRequest;
-    this._lastFilter = nextRequest.filter;
     this.request$.next(this.request);
     if (this.consumers > 0) {
       this.triggerRequest({ request: this.request, debounceFilter: filterChanged });
