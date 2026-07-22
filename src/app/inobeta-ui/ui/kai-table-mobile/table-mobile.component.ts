@@ -1,16 +1,15 @@
 import {
   Component,
-  OnDestroy,
   computed,
-  effect,
   input,
   output,
   signal
 } from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 
 import { CollectionViewer, DataSource } from '@angular/cdk/collections';
 import { Sort } from '@angular/material/sort';
-import { Subscription } from 'rxjs';
+import { asapScheduler, concat, defer, finalize, map, observeOn, of, switchMap } from 'rxjs';
 import { IDataExportSettings } from '../data-export/data-export.service';
 import { IbFilter } from '../kai-filter';
 import { IbFilterBase } from '../kai-filter/filters/base/filter-base';
@@ -151,7 +150,7 @@ type IbKaiTableMobileDataSource<T> = DataSource<T> & {
     }
   `]
 })
-export class IbKaiTableMobileComponent implements OnDestroy {
+export class IbKaiTableMobileComponent {
   state = input<IbKaiTableState>('idle');
   dataSource = input<IbKaiTableMobileDataSource<unknown>>();
   tableName = input<string>(btoa(window.location.pathname + window.location.hash));
@@ -175,43 +174,33 @@ export class IbKaiTableMobileComponent implements OnDestroy {
   visibleCount = signal(this.pageSize());
   filtersOpen = signal(false);
 
-  data = signal<unknown[]>([]);
-  datasourceConnection: Subscription | null = null;
-  currentSort = signal<Sort | null>(null);
+  private readonly connectedData = toSignal(
+    toObservable(this.dataSource).pipe(
+      switchMap((dataSource) => {
+        const rows = dataSource
+          ? defer(() => {
+            const collectionViewer = {} as CollectionViewer;
+            return dataSource.connect(collectionViewer).pipe(
+              finalize(() => dataSource.disconnect(collectionViewer))
+            );
+          })
+          : of<unknown[]>([]);
 
-  constructor() {
-    effect((onCleanup) => {
-      const datasource = this.dataSource();
-      this.datasourceConnection?.unsubscribe();
-      this.datasourceConnection = null;
+        return concat(of<unknown[]>([]), rows).pipe(
+          observeOn(asapScheduler),
+          map((rows) => [...rows])
+        );
+      })
+    ),
+    { initialValue: [] as unknown[] }
+  );
 
-      if (!datasource) {
-        this.data.set([]);
-        this.currentSort.set(null);
-        return;
-      }
-
-      const sortState = datasource.sortState ?? datasource.input?.sort ?? null;
-      this.currentSort.set(sortState?.active ? { ...sortState } : null);
-      this.datasourceConnection = datasource
-        .connect({} as CollectionViewer)
-        .subscribe((rows) => {
-          this.data.set([...rows]);
-          const current = datasource.sortState ?? datasource.input?.sort ?? null;
-          this.currentSort.set(current?.active ? { ...current } : null);
-        });
-      onCleanup(() => {
-        this.datasourceConnection?.unsubscribe();
-        this.datasourceConnection = null;
-      });
-    });
-  }
-
-  ngOnDestroy() {
-    if (this.datasourceConnection) {
-      this.datasourceConnection.unsubscribe();
-    }
-  }
+  readonly data = computed(() => this.connectedData());
+  readonly currentSort = computed(() => {
+    this.connectedData();
+    const sortState = this.dataSource()?.sortState ?? this.dataSource()?.input?.sort ?? null;
+    return sortState?.active ? { ...sortState } : null;
+  });
 
   sortableColumns = computed(() => {
     const cols = this.columns() ?? [];

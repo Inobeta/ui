@@ -32,11 +32,11 @@ import {
   OVERRIDE_EXPORT_FORMATS
 } from "../data-export";
 import { IbDataExportProvider } from "../data-export/provider";
-import { IbFilterModule } from "../kai-filter";
+import { IbFilterModule, IbSearchBar, IbTagFilter } from "../kai-filter";
 import { IbTableActionModule } from "./action";
 import { IbTableViewsHost } from "./table-views-host";
 import { IbTableViewsHostStub } from "./table-views-host.stub.spec";
-import { IbAggregateCell } from "./cells";
+import { IbAggregate, IbAggregateCell } from "./cells";
 import {
   IbFetchDataResponse,
   IbRemoteDataSourceRequest,
@@ -49,6 +49,7 @@ import { IbTable } from "./table.component";
 import { IbKaiTableModule } from "./table.module";
 import { IbTableLocalDataSource } from "./local-data-source";
 import { IbKaiTableStateFacade } from "./table-state.facade";
+import { IB_AGGREGATE } from "./tokens";
 
 // Locale registration required by DecimalPipe / DatePipe in columns
 registerLocaleData(localeIt);
@@ -517,9 +518,30 @@ describe("IbTable", () => {
       fixture.detectChanges();
 
       expect(dataSource.aggregatedColumns).toEqual({ amount: "sum" });
-      // No aggregation implementation is registered on this legacy data
-      // source, so the footer remains absent until aggregate data exists.
-      expect(fixture.debugElement.query(By.directive(IbAggregateCell))).toBeNull();
+      expect(fixture.debugElement.query(By.directive(IbAggregateCell))).toBeTruthy();
+    });
+
+  });
+
+  describe("with a custom aggregate provider", () => {
+    it("should forward the injected aggregate to the local data source", async () => {
+      const fixture = createComponent(IbTableWithCustomAggregate);
+      const component = fixture.debugElement.query(By.directive(IbTable)).componentInstance as IbTable;
+      const dataSource = component.activeDataSource() as IbTableLocalDataSource<unknown>;
+
+      await fixture.whenStable();
+      fixture.detectChanges();
+
+      const aggregates = component["aggregationFunctions"] as IbAggregate[];
+      expect(aggregates.some((aggregate) => aggregate.id === "test-product")).toBeTrue();
+
+      component.setPaginatorState({ pageIndex: 0, pageSize: 2 });
+      component.setAggregation("amount", "test-product");
+      await fixture.whenStable();
+      fixture.detectChanges();
+
+      expect(dataSource.aggregatedColumns).toEqual({ amount: "test-product" });
+      expect(dataSource.aggregatedData.amount).toEqual({ total: 24, currentPage: 6 });
     });
   });
 
@@ -593,6 +615,86 @@ describe("IbTable", () => {
       expect(snapshot.pageIndex).toBe(0);
       expect(snapshot.pageSize).toBe(20);
     });
+  });
+
+  describe("tag filter option initialization", () => {
+    it("should initialize implicit tag filter options when data arrives after table initialization", async () => {
+      const fixture = createComponent(IbTableWithAsyncTagFilterData);
+      const tagFilter = fixture.debugElement.query(
+        By.directive(IbTagFilter),
+      ).componentInstance as IbTagFilter;
+
+      await fixture.whenStable();
+      expect(tagFilter.options).toEqual([]);
+
+      fixture.componentInstance.data = [
+        { fruit: "banana" },
+        { fruit: "apple" },
+        { fruit: "banana" },
+      ];
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      expect(tagFilter.options).toEqual(["apple", "banana"]);
+    });
+
+    it("should not override explicit tag filter options for local [data]", async () => {
+      const fixture = createComponent(IbTableWithExplicitTagFilterOptions);
+      const tagFilter = fixture.debugElement.query(
+        By.directive(IbTagFilter),
+      ).componentInstance as IbTagFilter;
+
+      await fixture.whenStable();
+
+      expect(tagFilter.options).toEqual(["preset"]);
+    });
+
+    it("should not initialize tag filter options for an explicit local data source", async () => {
+      configureModule(IbTableWithLocalDataSourceTagFilter);
+      const initializeSpy = spyOn(IbTagFilter.prototype, "initializeFromColumn");
+      const fixture = TestBed.createComponent(IbTableWithLocalDataSourceTagFilter);
+
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      expect(initializeSpy).not.toHaveBeenCalled();
+    });
+
+    it("should not initialize tag filter options for a remote data source", async () => {
+      configureModule(IbTableWithRemoteDataApp);
+      const initializeSpy = spyOn(IbTagFilter.prototype, "initializeFromColumn");
+      const fixture = TestBed.createComponent(IbTableWithRemoteDataApp);
+
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      expect(initializeSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("with normalized local filters", () => {
+    it("should retain matching rows when search is applied with inactive tag and date filters", fakeAsync(() => {
+      const fixture = createComponent(IbTableWithFullFilterApp);
+      const component = fixture.debugElement.query(By.directive(IbTable)).componentInstance as IbTable;
+      const searchBar = fixture.debugElement.query(By.directive(IbSearchBar)).componentInstance as IbSearchBar;
+
+      // Settle asynchronous table initialization (facade store init and the
+      // effect wiring the filter to the facade) before interacting.
+      tick();
+      fixture.detectChanges();
+
+      // Drive the real update path: searchCriteria valueChanges -> debounced
+      // applyFilter() -> IbFilter.update() -> ibFilterUpdated -> facade.setFilters
+      // -> NgRx snapshot -> applySnapshot -> local data source recompute.
+      // debounceTime(0) schedules on the RxJS asyncScheduler (a macrotask that
+      // whenStable cannot observe), so flush it deterministically with tick().
+      searchBar.searchCriteria.setValue("alice");
+      tick();
+      fixture.detectChanges();
+
+      const source = component.activeDataSource() as IbTableLocalDataSource<unknown>;
+      expect(source.getFilteredData()).toEqual([fixture.componentInstance.data[0]]);
+    }));
   });
 
   describe("data source replacement", () => {
@@ -728,6 +830,31 @@ describe("IbTable", () => {
     }));
   });
 
+  describe("with remote data source and async search bar", () => {
+    it("should fetch once with the hydrated query and not refetch after silent hydration", fakeAsync(() => {
+      const fetchSpy = spyOn(IbTestDataSource.prototype, "fetchData").and.callThrough();
+      const fixture = createComponent(IbTableWithRemoteSearchApp);
+
+      tick(1000);
+      fixture.detectChanges();
+      tick(2000);
+      fixture.detectChanges();
+
+      // the initial request reached the backend exactly once, carrying the
+      // hydrated IbFilter.query output (undefined-valued keys included)
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
+      const request = fetchSpy.calls.argsFor(0)[0];
+      expect(request).toEqual({
+        sort: null,
+        pageIndex: 0,
+        pageSize: 20,
+        filter: { ibSearchBar: undefined },
+      });
+      expect(Object.prototype.hasOwnProperty.call(request.filter, "ibSearchBar")).toBeTrue();
+      expect(request.filter.ibSearchBar).toBeUndefined();
+    }));
+  });
+
   describe("paginator restoration", () => {
     it("should restore paginator state from snapshot after initialization", async () => {
       const fixture = createComponent(IbTableWithTableDef);
@@ -808,6 +935,95 @@ class IbTableApp {
 
 @Component({
   template: `
+    <ib-kai-table
+      tableName="test-async-tag-filter"
+      [data]="data"
+      [displayedColumns]="['fruit']"
+    >
+      <ib-filter>
+        <ib-tag-filter name="fruit">Fruit</ib-tag-filter>
+      </ib-filter>
+      <ib-text-column name="fruit"></ib-text-column>
+    </ib-kai-table>
+  `,
+  standalone: false,
+})
+class IbTableWithAsyncTagFilterData {
+  data: { fruit: string }[] = [];
+}
+
+@Component({
+  template: `
+    <ib-kai-table
+      tableName="test-explicit-tag-filter-options"
+      [data]="data"
+      [displayedColumns]="['fruit']"
+    >
+      <ib-filter>
+        <ib-tag-filter name="fruit" [options]="options">Fruit</ib-tag-filter>
+      </ib-filter>
+      <ib-text-column name="fruit"></ib-text-column>
+    </ib-kai-table>
+  `,
+  standalone: false,
+})
+class IbTableWithExplicitTagFilterOptions {
+  options = ["preset"];
+  data = [{ fruit: "banana" }, { fruit: "apple" }];
+}
+
+@Component({
+  template: `
+    <ib-kai-table
+      tableName="test-local-tag-filter"
+      [dataSource]="dataSource"
+      [displayedColumns]="['fruit']"
+    >
+      <ib-filter>
+        <ib-tag-filter name="fruit">Fruit</ib-tag-filter>
+      </ib-filter>
+      <ib-text-column name="fruit"></ib-text-column>
+    </ib-kai-table>
+  `,
+  standalone: false,
+})
+class IbTableWithLocalDataSourceTagFilter {
+  dataSource = new IbTableLocalDataSource([{ fruit: "banana" }]);
+}
+
+@Component({
+  template: `
+    <ib-kai-table
+      tableName="test-full-filter"
+      [data]="data"
+      [displayedColumns]="['name', 'color', 'amount', 'createdAt', 'active']"
+    >
+      <ib-filter>
+        <ib-search-bar></ib-search-bar>
+        <ib-text-filter name="name">Name</ib-text-filter>
+        <ib-tag-filter name="color">Color</ib-tag-filter>
+        <ib-number-filter name="amount">Amount</ib-number-filter>
+        <ib-date-filter name="createdAt">Created</ib-date-filter>
+        <ib-boolean-filter name="active">Active</ib-boolean-filter>
+      </ib-filter>
+      <ib-text-column name="name"></ib-text-column>
+      <ib-text-column name="color"></ib-text-column>
+      <ib-number-column name="amount"></ib-number-column>
+      <ib-date-column name="createdAt"></ib-date-column>
+      <ib-text-column name="active"></ib-text-column>
+    </ib-kai-table>
+  `,
+  standalone: false,
+})
+class IbTableWithFullFilterApp {
+  data = [
+    { name: "alice", color: "white", amount: 10, createdAt: new Date("2024-01-01"), active: true },
+    { name: "bob", color: "black", amount: 20, createdAt: new Date("2024-02-01"), active: false },
+  ];
+}
+
+@Component({
+  template: `
     <ib-kai-table tableName="test-rowgroup" [data]="data" [displayedColumns]="['name']">
       <ib-text-column name="name"></ib-text-column>
       <ng-template ibKaiRowGroup let-row="row">
@@ -845,6 +1061,21 @@ class IbTestDataSource extends IbTableRemoteDataSource<any, any> {
   standalone: false
 })
 class IbTableWithRemoteDataApp {
+  dataSource = new IbTestDataSource();
+}
+
+@Component({
+  template: `
+    <ib-kai-table tableName="test-remote-search" [dataSource]="dataSource" [displayedColumns]="['name']">
+      <ib-filter>
+        <ib-search-bar async></ib-search-bar>
+      </ib-filter>
+      <ib-text-column name="name"></ib-text-column>
+    </ib-kai-table>
+  `,
+  standalone: false
+})
+class IbTableWithRemoteSearchApp {
   dataSource = new IbTestDataSource();
 }
 
@@ -1008,6 +1239,36 @@ class IbTableWithAggregate {
     { name: "alice", amount: 10 },
     { name: "bob", amount: 20 },
   ];
+}
+
+class IbTestProductAggregate extends IbAggregate {
+  id = "test-product";
+  name = "test.product.name";
+  label = "test.product.label";
+  type = "number";
+
+  aggregateData(data: unknown[]): number {
+    return data.reduce<number>((product, value) => product * Number(value), 1);
+  }
+}
+
+@Component({
+  template: `
+    <ib-kai-table
+      tableName="test-custom-aggregate"
+      [data]="data"
+      [displayedColumns]="['amount']"
+    >
+      <ib-number-column name="amount" aggregate></ib-number-column>
+    </ib-kai-table>
+  `,
+  providers: [
+    { provide: IB_AGGREGATE, useClass: IbTestProductAggregate, multi: true },
+  ],
+  standalone: false,
+})
+class IbTableWithCustomAggregate {
+  data = [{ amount: 2 }, { amount: 3 }, { amount: 4 }];
 }
 
 @Component({

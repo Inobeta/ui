@@ -119,9 +119,9 @@ export class IbFilter {
    */
   hydrateRawValue(value: IbFilterSyntaxExtended | null): void {
     if (value === null) {
-      this.form.reset();
+      this.form.reset(undefined, { emitEvent: false });
     } else {
-      this.form.patchValue(value);
+      this.form.patchValue(value, { emitEvent: false });
     }
     this._computeValues();
   }

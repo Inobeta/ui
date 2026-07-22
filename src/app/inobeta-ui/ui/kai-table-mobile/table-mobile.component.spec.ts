@@ -1,9 +1,9 @@
 import { DataSource } from '@angular/cdk/collections';
-import { Component, ViewChild } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { Component, computed, ViewChild } from '@angular/core';
+import { ComponentFixture, fakeAsync, flushMicrotasks, TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { IbColumn } from '../kai-table/columns';
 import { IbKaiRowGroupDirective } from '../kai-table/rowgroup';
 import { IbKaiTableAction } from '../kai-table/action';
@@ -15,6 +15,7 @@ class MobileDataSource extends DataSource<unknown> {
   readonly rows = new Subject<unknown[]>();
   connectCalls = 0;
   unsubscribeCalls = 0;
+  disconnectCalls = 0;
 
   connect(): Observable<unknown[]> {
     this.connectCalls++;
@@ -25,6 +26,18 @@ class MobileDataSource extends DataSource<unknown> {
         subscription.unsubscribe();
       };
     });
+  }
+
+  disconnect(): void {
+    this.disconnectCalls++;
+  }
+}
+
+class SynchronousMobileDataSource extends DataSource<unknown> {
+  readonly rows = new BehaviorSubject<unknown[]>([{ id: 1, name: 'Alice' }]);
+
+  connect(): Observable<unknown[]> {
+    return this.rows;
   }
 
   disconnect(): void {}
@@ -68,40 +81,93 @@ describe('IbKaiTableMobileComponent', () => {
     fixture.componentRef.setInput('headerActions', []);
   });
 
-  it('renders rows emitted by dataSource.connect()', () => {
+  it('renders rows emitted by dataSource.connect()', fakeAsync(() => {
     const source = new MobileDataSource();
     fixture.componentRef.setInput('dataSource', source);
     fixture.detectChanges();
+    flushMicrotasks();
 
     source.rows.next([{ id: 1, name: 'Alice' }]);
+    flushMicrotasks();
     fixture.detectChanges();
 
     expect(component.data()).toEqual([{ id: 1, name: 'Alice' }]);
     expect(fixture.nativeElement.querySelectorAll('ib-kai-table-mobile-item').length).toBe(1);
-  });
+  }));
 
-  it('replaces the data source and unsubscribes the previous connection', () => {
+  it('renders a synchronous BehaviorSubject initial value without NG0600', fakeAsync(() => {
+    fixture.componentRef.setInput('dataSource', new SynchronousMobileDataSource());
+
+    expect(() => fixture.detectChanges()).not.toThrow();
+    flushMicrotasks();
+    fixture.detectChanges();
+
+    expect(component.data()).toEqual([{ id: 1, name: 'Alice' }]);
+    expect(fixture.nativeElement.querySelectorAll('ib-kai-table-mobile-item').length).toBe(1);
+  }));
+
+  it('clears rows before rendering emissions from a replacement data source', fakeAsync(() => {
     const first = new MobileDataSource();
     const second = new MobileDataSource();
     fixture.componentRef.setInput('dataSource', first);
     fixture.detectChanges();
+    flushMicrotasks();
+
+    first.rows.next([{ id: 1, name: 'Alice' }]);
+    flushMicrotasks();
+    fixture.detectChanges();
+
+    expect(component.data()).toEqual([{ id: 1, name: 'Alice' }]);
 
     fixture.componentRef.setInput('dataSource', second);
     fixture.detectChanges();
+    flushMicrotasks();
 
     expect(first.unsubscribeCalls).toBe(1);
+    expect(first.disconnectCalls).toBe(1);
     expect(second.connectCalls).toBe(1);
-  });
+    expect(component.data()).toEqual([]);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll('ib-kai-table-mobile-item').length).toBe(0);
 
-  it('unsubscribes the data source when destroyed', () => {
+    second.rows.next([{ id: 2, name: 'Bob' }]);
+    flushMicrotasks();
+    fixture.detectChanges();
+
+    expect(component.data()).toEqual([{ id: 2, name: 'Bob' }]);
+    expect(fixture.nativeElement.querySelectorAll('ib-kai-table-mobile-item').length).toBe(1);
+  }));
+
+  it('cleans up the data source when destroyed', fakeAsync(() => {
     const source = new MobileDataSource();
     fixture.componentRef.setInput('dataSource', source);
     fixture.detectChanges();
+    flushMicrotasks();
 
     fixture.destroy();
 
     expect(source.unsubscribeCalls).toBe(1);
-  });
+    expect(source.disconnectCalls).toBe(1);
+  }));
+
+  it('defers data source emissions triggered from a computed', fakeAsync(() => {
+    const source = new MobileDataSource();
+    fixture.componentRef.setInput('dataSource', source);
+    fixture.detectChanges();
+    flushMicrotasks();
+
+    const triggerEmission = computed(() => {
+      source.rows.next([{ id: 2, name: 'Bob' }]);
+      return component.data();
+    });
+
+    expect(() => triggerEmission()).not.toThrow();
+    flushMicrotasks();
+    fixture.detectChanges();
+
+    expect(component.data()).toEqual([{ id: 2, name: 'Bob' }]);
+    expect(fixture.nativeElement.querySelectorAll('ib-kai-table-mobile-item').length).toBe(1);
+  }));
 
   it('emits a Sort value object when sorting a column', () => {
     const emitted: unknown[] = [];
@@ -148,18 +214,20 @@ describe('IbKaiTableMobileComponent', () => {
       expect(exportIcon).toBeUndefined();
     });
 
-    it('invokes column headerText signal for labels', () => {
+    it('invokes column headerText signal for labels', fakeAsync(() => {
       const source = new MobileDataSource();
       fixture.componentRef.setInput('dataSource', source);
       fixture.detectChanges();
+      flushMicrotasks();
 
       source.rows.next([{ id: 1, name: 'Alice' }]);
+      flushMicrotasks();
       fixture.detectChanges();
 
       const label = fixture.nativeElement.querySelector('.ib-kai-table-mobile__label');
       expect(label).toBeTruthy();
       expect(label.textContent.trim()).toBe('Name');
-    });
+    }));
   });
 });
 

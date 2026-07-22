@@ -1,5 +1,6 @@
 import { signal } from "@angular/core";
 import { Sort } from "@angular/material/sort";
+import { contains, none } from "../kai-filter";
 import { IbAggregate } from "./cells";
 import { IbColumn } from "./columns";
 import { IbDataSourceCapability } from "./data-source.types";
@@ -19,6 +20,17 @@ class SumAggregate extends IbAggregate {
 
   aggregateData(data: number[]): number {
     return data.reduce((total, value) => total + value, 0);
+  }
+}
+
+class CountAggregate extends IbAggregate {
+  id = "count";
+  name = "count";
+  label = "count";
+  type = "number";
+
+  aggregateData(data: number[]): number {
+    return data.length;
   }
 }
 
@@ -84,6 +96,41 @@ describe("IbTableLocalDataSource", () => {
 
     expect(source.getFilteredData()).toEqual([rows[1], rows[2]]);
     expect(source.getOrderedData()).toEqual([rows[2], rows[1]]);
+  });
+
+  it("matches ibSearchBar across registered columns and combines it with column filters", () => {
+    const source = createSource();
+
+    source.setInput({ rawFilter: { ibSearchBar: "ALI", amount: "1" } });
+    expect(source.getFilteredData()).toEqual([rows[0]]);
+
+    source.setInput({ rawFilter: { ibSearchBar: "20" } });
+    expect(source.getFilteredData()).toEqual([rows[1]]);
+
+    source.setInput({ rawFilter: { ibSearchBar: "missing" } });
+    expect(source.getFilteredData()).toEqual([]);
+  });
+
+  it("applies normalized search criteria while inactive criteria are nonrestrictive", () => {
+    const source = createSource();
+
+    source.setInput({
+      rawFilter: {
+        ibSearchBar: contains("ALI"),
+        amount: none(),
+      },
+    });
+
+    expect(source.getFilteredData()).toEqual([rows[0]]);
+  });
+
+  it("recomputes aggregates after custom aggregation functions are registered", () => {
+    const source = createSource();
+
+    source.setInput({ aggregatedColumns: { amount: "count" } });
+    source.setAggregationFunctions([new CountAggregate()]);
+
+    expect(source.aggregatedData.amount).toEqual({ total: 3, currentPage: 3 });
   });
 
   it("ignores an unknown sort column without throwing", () => {

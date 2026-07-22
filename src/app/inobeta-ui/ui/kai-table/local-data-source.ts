@@ -11,6 +11,8 @@ import {
   IbLocalDataSourceInput,
 } from "./data-source.types";
 
+const IB_SEARCH_BAR_FILTER_KEY = "ibSearchBar";
+
 /**
  * Client-side table data source.
  *
@@ -198,6 +200,19 @@ export class IbTableLocalDataSource<T> extends DataSource<T> {
   ): boolean {
     return Object.entries(filter).every(([name, criterion]) => {
       if (criterion == null || criterion === "") return true;
+      if (name === IB_SEARCH_BAR_FILTER_KEY) {
+        if (this.isFilterDef(criterion)) {
+          return Object.values(columns).some((column) =>
+            applyFilter(criterion, column.filterDataAccessor()(row, column.name())),
+          );
+        }
+        const searchTerm = String(criterion).toLowerCase();
+        return Object.values(columns).some((column) =>
+          String(column.filterDataAccessor()(row, column.name()) ?? "")
+            .toLowerCase()
+            .includes(searchTerm),
+        );
+      }
       const column = columns[name];
       const value = this.columnValue(row, name);
       if (column && this.isFilterDef(criterion)) {
