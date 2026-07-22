@@ -9,43 +9,48 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { Portal, TemplatePortal } from "@angular/cdk/portal";
 import {
   Component,
-  ContentChild,
-  ContentChildren,
+  DestroyRef,
   HostBinding,
-  Input,
+  Injector,
   OnDestroy,
-  QueryList,
-  ViewChild,
   ViewEncapsulation,
   booleanAttribute,
   contentChild,
   contentChildren,
+  computed,
   effect,
   inject,
   input,
   signal,
+  untracked,
+  viewChild,
 } from "@angular/core";
-import { toSignal } from "@angular/core/rxjs-interop";
+import { takeUntilDestroyed, toObservable, toSignal } from "@angular/core/rxjs-interop";
 import { MatPaginator } from "@angular/material/paginator";
-import { MatSort } from "@angular/material/sort";
+import { MatSort, Sort } from "@angular/material/sort";
 import { MatTable } from "@angular/material/table";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
-import { Store } from "@ngrx/store";
-import { Subject } from "rxjs";
-import { filter, takeUntil } from "rxjs/operators";
+import { firstValueFrom, Subscription } from "rxjs";
+import { filter } from "rxjs/operators";
 import { IbActionColumn, IbKaiTableAction, IbKaiTableActionGroup } from ".";
-import { IbDataExportService } from "../data-export";
+import { IbDataExportService, IDataExportSettings } from "../data-export";
 import { IbFilter, IbFilterBase } from "../kai-filter";
-import { IbTableViewGroup } from "../views";
+import { IbTableViewsHost } from "./table-views-host";
 import { IbColumn } from "./columns/column";
 import { IbSelectionColumn } from "./columns/selection-column";
 import { IbTableRemoteDataSource } from "./remote-data-source";
 import { IbKaiRowGroupDirective } from "./rowgroup";
-import { urlStateActions } from "./store/url-state/actions";
 import { IbTableDataSource } from "./table-data-source";
-import { IbTableUrlService } from "./table-url.service";
-import { IbKaiTableState, IbTableDef } from "./table.types";
+import { IbKaiTableSnapshot, IbKaiTableState, IbTableDef } from "./table.types";
 import { IB_TABLE } from "./tokens";
+import { IbKaiTableStateFacade } from "./table-state.facade";
+import { IbDataSourceCapability, IbTableRendererDataSource } from "./data-source.types";
+import { IbTableLocalDataSource } from "./local-data-source";
+
+type IbTableSource =
+  | IbTableDataSource<unknown>
+  | IbTableLocalDataSource<unknown>
+  | IbTableRemoteDataSource<unknown>;
 
 const defaultTableDef: IbTableDef = {
   paginator: {
@@ -66,25 +71,33 @@ const defaultTableDef: IbTableDef = {
       transition("expanded <=> collapsed", animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)")),
     ]),
   ],
-  providers: [{ provide: IB_TABLE, useExisting: IbTable }],
+  providers: [
+    { provide: IB_TABLE, useExisting: IbTable },
+    IbKaiTableStateFacade,
+  ],
   encapsulation: ViewEncapsulation.None,
   standalone: false
 })
 export class IbTable implements OnDestroy {
-  private _destroyed = new Subject<void>();
-
-
+  readonly initialized = signal(false);
+  private readonly remoteState = signal<IbKaiTableState | null>(null);
+  private readonly internalDataSource = new IbTableLocalDataSource<unknown>([]);
+  private applyingSnapshot = false;
+  private snapshotAppliedSource: IbTableSource | null = null;
+  private snapshotAppliedState: IbKaiTableSnapshot | null = null;
   /**
    *
    * MOBILE STUFF
    */
-  mobileColumns = contentChildren(IbColumn);
-  mobileRowGroup = contentChild(IbKaiRowGroupDirective);
-  mobileFilter = contentChild(IbFilter);
-  mobileFilters = contentChildren(IbFilterBase, { descendants: true });
-  mobileHeaderActions = contentChildren(IbKaiTableAction, { descendants: true });
-  mobileActionColumn = contentChild(IbActionColumn);
-  mobileActionGroup = contentChild(IbKaiTableActionGroup);
+  columns = contentChildren(IbColumn);
+  selectionColumn = contentChild(IbSelectionColumn);
+  rowGroup = contentChild(IbKaiRowGroupDirective);
+  filter = contentChild(IbFilter);
+  viewHost = contentChild(IbTableViewsHost);
+  filters = contentChildren(IbFilterBase, { descendants: true });
+  headerActions = contentChildren(IbKaiTableAction, { descendants: true });
+  actionColumn = contentChild(IbActionColumn);
+  actionGroup = contentChild(IbKaiTableActionGroup);
   private breakpointObserver = inject(BreakpointObserver);
   isMobile = this.breakpointObserver.isMatched('(max-width: 767px)');
   @HostBinding('class.ib-table__container')
@@ -95,109 +108,73 @@ export class IbTable implements OnDestroy {
 
 
 
-  @ContentChildren(IbColumn) columns: QueryList<IbColumn<any>>;
-  @ContentChild(IbSelectionColumn) selectionColumn!: IbSelectionColumn;
-  @ContentChild(IbKaiRowGroupDirective) rowGroup!: IbKaiRowGroupDirective;
-
-  @ContentChild(IbFilter) filter!: IbFilter;
-  @ContentChild(IbTableViewGroup) view!: IbTableViewGroup;
-
-
-  @ViewChild(MatTable, { static: true }) matTable: MatTable<any>;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  readonly matTable = viewChild(MatTable);
+  readonly sort = viewChild(MatSort);
+  readonly paginator = viewChild(MatPaginator);
 
   expandedElement: any;
   actionPortals: Portal<any>[] = [];
 
-  @Input() state: IbKaiTableState = "idle";
+  readonly state = input<IbKaiTableState>('idle');
+  data = input<unknown[] | undefined>(undefined);
+  readonly dataSource = input<IbTableSource | undefined>(undefined);
+  readonly tableName = input.required<string>();
+  tableDef = input<Partial<IbTableDef>>({});
+  readonly displayedColumns = input<string[]>([],);
+  stripedRows = input(false, { transform: booleanAttribute });
+  activeRowParams = input<{ dataParamId: string, childRouteParamId: string }>({ dataParamId: null, childRouteParamId: null });
 
-  @Input()
-  set data(data: any[]) {
-    this.dataSource.data = data;
-  }
+  readonly isRemote = computed(() => this.isRemoteDataSource(this.activeDataSource()));
 
-  @Input()
-  dataSource: IbTableDataSource<unknown> = new IbTableDataSource([]);
-
-  @Input() tableName: string = btoa(
-    window.location.pathname + window.location.hash
+  readonly effectiveTableDef = computed<IbTableDef>(() => ({
+    ...defaultTableDef,
+    ...this.tableDef(),
+    paginator: {
+      ...defaultTableDef.paginator,
+      ...this.tableDef().paginator,
+    },
+  }));
+  readonly activeDataSource = computed<IbTableSource>(() => {
+    const data = this.data();
+    const boundDataSource = this.dataSource();
+    if (data !== undefined && boundDataSource !== undefined) {
+      throw new Error('[IbTable] [data] and [dataSource] cannot be used together.');
+    }
+    if (data !== undefined) this.internalDataSource.data = data;
+    return boundDataSource ?? this.internalDataSource;
+  });
+  readonly effectiveDisplayedColumns = computed(() => {
+    const columns = [...this.displayedColumns()];
+    if (this.selectionColumn() && this.canSelectRows() && !columns.includes('ib-selection')) columns.unshift('ib-selection');
+    if (this.columns().some((column) => column.name() === 'ib-action') && !columns.includes('ib-action')) columns.push('ib-action');
+    return columns;
+  });
+  readonly canExportAllRows = computed(() => this.hasCapability(IbDataSourceCapability.FullExport));
+  readonly canExportCurrentPage = computed(() => this.hasCapability(IbDataSourceCapability.CurrentPageExport));
+  readonly canSelectRows = computed(() => this.hasCapability(IbDataSourceCapability.RowSelection));
+  readonly shouldDisplayAggregationFooter = computed(() => {
+    const source = this.activeDataSource();
+    return this.hasCapability(IbDataSourceCapability.GlobalAggregation)
+      && !this.isRemoteDataSource(source)
+      && Object.keys(source.aggregatedData).length > 0;
+  });
+  readonly effectiveState = computed(() => this.remoteState() ?? this.state());
+  readonly isDataSourceReady = computed(() =>
+    this.initialized() || !this.isRemoteDataSource(this.activeDataSource()),
   );
 
-  tableUrl = inject(IbTableUrlService);
-  private store = inject(Store);
   private activatedRoute = inject(ActivatedRoute);
   private router = inject(Router);
+  private stateFacade = inject(IbKaiTableStateFacade);
+  private injector = inject(Injector);
+  private destroyRef = inject(DestroyRef);
 
-  /**
-   * Configuration for the table and its inner components. Currently supports only
-   * `paginator` and `sort` parameters.
-   *
-   * If left empty, the following default is used
-   *
-   * ```
-   * {
-   *   paginator : {
-   *     pageSizeOptions: [10, 20, 50, 100],
-   *     showFirstLastButtons: true,
-   *     pageSize: 20,
-   *     hide: false,
-   *   }
-   * }
-   *
-   * NB: querystring override these values
-   * ```
-   */
-  @Input()
-  set tableDef(value: Partial<IbTableDef>) {
-    this._tableDef = {
-      ...defaultTableDef,
-      ...value,
-      paginator: {
-        ...defaultTableDef.paginator,
-        ...value?.paginator,
-      },
-    };
-  }
-  get tableDef() {
-    return this._tableDef;
-  }
-  private _tableDef: IbTableDef = { ...defaultTableDef };
-
-
-  /**
-   * Columns to be displayed.
-   *
-   * The order of the columns present in this array is rendered
-   * as is in a language written from left-to-right. It is reversed
-   * in a language written from right-to-left.
-   */
-  @Input()
-  set displayedColumns(columns: string[]) {
-    this._displayedColumns = columns.map((c) => c);
-    if (this.selectionColumn) {
-      this._displayedColumns.unshift("ib-selection");
-    }
-    if (this.columns?.find((c) => c.name === "ib-action")) {
-      this._displayedColumns.push("ib-action");
-    }
-  }
-  get displayedColumns() {
-    return this._displayedColumns;
-  }
-  private _displayedColumns: string[] = [];
-
-  @HostBinding("class.ib-table-striped-rows")
-  @Input({ transform: booleanAttribute })
-  stripedRows = false;
-
-  isRemote = false;
-
-
-  activeRowParams = input<{ dataParamId: string, childRouteParamId: string }>({ dataParamId: null, childRouteParamId: null })
+  @HostBinding('class.ib-table--has-views') get hasViews() { return !!this.viewHost(); }
+  @HostBinding("class.ib-table-striped-rows") get hasStripedRows() { return this.stripedRows(); }
   activeRouteId = signal<string>(null);
 
   exportService: IbDataExportService = inject(IbDataExportService);
+  private viewSubscription: Subscription | null = null;
 
   constructor() {
     const currentRoute = toSignal(this.router.events.pipe(
@@ -212,114 +189,239 @@ export class IbTable implements OnDestroy {
       } else {
         this.activeRouteId.set(null);
       }
-    })
-  }
-  ngOnInit() {
-    const hasUrlState = !!this.activatedRoute.snapshot.queryParams?.[this.tableName];
-    if (hasUrlState) {
-      const paginatorFromUrl = this.tableUrl.getPaginator(this.tableName);
-      this.tableDef.paginator = {
-        ...this.tableDef.paginator,
-        ...paginatorFromUrl,
+    });
+    effect((onCleanup) => {
+      const source = this.activeDataSource();
+      this.remoteState.set(null);
+      if (!this.isRemoteDataSource(source)) return;
+      const subscription = source._state.subscribe((currentState) => this.remoteState.set(currentState));
+      onCleanup(() => subscription.unsubscribe());
+    });
+    effect(() => {
+      if (!this.initialized()) return;
+      const snapshot = this.stateFacade.snapshot();
+      const source = this.activeDataSource();
+      if (source === this.snapshotAppliedSource && snapshot === this.snapshotAppliedState) return;
+      if (this.snapshotAppliedSource && this.snapshotAppliedSource !== source) {
+        this.detachSource(this.snapshotAppliedSource);
       }
-    }
-    this.dataSource.tableName = this.tableName;
-    this.dataSource.paginator = this.paginator;
-
-
-    if (this.dataSource instanceof IbTableRemoteDataSource) {
-      this.isRemote = true;
-      this.dataSource._state
-        .pipe(takeUntil(this._destroyed))
-        .subscribe((s) => (this.state = s));
-    }
+      this.applyingSnapshot = true;
+      try {
+        untracked(() => this.applySnapshot(source, snapshot));
+      } finally {
+        this.applyingSnapshot = false;
+      }
+      this.snapshotAppliedSource = source;
+      this.snapshotAppliedState = snapshot;
+    });
+    effect((onCleanup) => {
+      if (!this.initialized()) return;
+      const source = this.activeDataSource();
+      const paginator = this.paginator();
+      if (!paginator || !('totalCount$' in source)) return;
+      const subscription = source.totalCount$.subscribe((totalCount) => {
+        paginator.length = totalCount;
+      });
+      onCleanup(() => subscription.unsubscribe());
+    });
+    effect(() => {
+      if (!this.initialized()) return;
+      const source = this.activeDataSource();
+      if (this.isLocalDataSource(source)) {
+        source.setColumns([...this.columns()]);
+      }
+    });
+    effect((onCleanup) => {
+      if (!this.initialized()) return;
+      const sort = this.sort();
+      const tableFilter = this.filter();
+      const subscriptions: Subscription[] = [];
+      if (sort) subscriptions.push(sort.sortChange.subscribe((value) => {
+        if (!this.applyingSnapshot) this.stateFacade.setSort(value);
+      }));
+      if (tableFilter) subscriptions.push(
+        tableFilter.ibFilterUpdated.subscribe(() => this.stateFacade.setFilters(tableFilter.selectedCriteria)),
+      );
+      onCleanup(() => subscriptions.forEach((subscription) => subscription.unsubscribe()));
+    });
   }
 
-  ngAfterContentInit() {
-
-    const viewInit = () => {
-      this.view.viewGroupName = this.tableName;
-      this.dataSource.view = this.view;
+  async ngAfterContentInit(): Promise<void> {
+    await this.stateFacade.initialize(this.tableName(), this.effectiveTableDef(), this.viewHost());
+    if (this.destroyRef.destroyed) return;
+    const tableFilter = this.filter();
+    if (tableFilter) await firstValueFrom(tableFilter.initialized);
+    if (this.destroyRef.destroyed) return;
+    const viewHost = this.viewHost();
+    if (viewHost) {
+      viewHost.setViewGroupName(this.tableName());
+      viewHost.setViewDataAccessor(() => this.getViewData());
+      viewHost.handleStateChanges(
+        toObservable(this.stateFacade.snapshot, { injector: this.injector })
+          .pipe(takeUntilDestroyed(this.destroyRef)),
+      );
+      const source = this.activeDataSource();
+      if (source instanceof IbTableDataSource) source.view = viewHost;
+      this.viewSubscription = viewHost.activeViewChanged.subscribe((view) => {
+        this.stateFacade.applyView(view.viewId, {
+          sort: view.sort?.active ? view.sort : null,
+          filters: view.filters ?? view.filter ?? null,
+          pageSize: view.pageSize,
+          aggregatedColumns: view.aggregatedColumns,
+        });
+      });
       this.setupViewGroup();
     }
-
-    const dsInit = () => {
-      this.dataSource.sort = this.sort;
-      this.dataSource.aggregatedColumns = this.tableUrl.getAggregatedColumns(this.tableName);
-      let sortState = {
-        ...this.tableDef.initialSort
-      };
-      const sortFromUrl = this.tableUrl.getSort(this.tableName)
-      if (sortFromUrl.active !== '' && sortFromUrl.active !== undefined) {
-        sortState = { ...sortFromUrl }
-      }
-      this.dataSource.initializeSortState(sortState);
-    }
-
-
-    this.dataSource.selectionColumn = this.selectionColumn;
-    this.dataSource.filter = this.filter;
-    this.filter?.initialized.subscribe(() => {
-      this.tableUrl.emptyFilterSchema[this.tableName] = structuredClone(this.filter.initialRawValue);
-      //NG0100
-      setTimeout(() => dsInit())
-
-      const filtersFromUrl = this.tableUrl.getFilters(this.tableName)
-      this.filter.value = filtersFromUrl
-      if (this.view) {
-        //NG0100
-        setTimeout(() => viewInit())
-      }
-    })
-
-    // If there is no filter, we need to set the viewGroupName to the table name
-    if (this.view && !this.filter) {
-      setTimeout(() => viewInit())
-    }
-
-    if (!this.filter) {
-      setTimeout(() => dsInit())
-    }
-    this.dataSource.columns = this.columns.toArray();
-    this.dataSource.applySortOnColumn(this.displayedColumns);
-    this.columns.changes
-      .pipe(takeUntil(this._destroyed))
-      .subscribe((columns) => {
-        this.dataSource.columns = columns.toArray();
-        this.dataSource.applySortOnColumn(this.displayedColumns);
-      });
+    this.initialized.set(true);
   }
 
   ngOnDestroy() {
-    this._destroyed.next();
-    this._destroyed.complete();
+    this.detachSource(this.snapshotAppliedSource);
+    this.viewSubscription?.unsubscribe();
+    this.stateFacade.destroy();
   }
 
-  setPaginatorState(params) {
-    this.store.dispatch(urlStateActions.setPaginator({ tableName: this.tableName, params }))
+  setPaginatorState(params: { pageIndex: number; pageSize: number }): void {
+    this.stateFacade.setPaginator(params.pageIndex, params.pageSize);
   }
   private setupViewGroup() {
-    for (const action of [
-      this.filter.hideFilterAction,
-      ...this.view.actions.toArray(),
-    ]) {
-      this.actionPortals.push(
-        new TemplatePortal(action.templateRef, action.viewContainerRef)
-      );
-    }
+    const tableFilter = this.filter();
+    const viewHost = this.viewHost();
+    if (!tableFilter?.hideFilterAction || !viewHost) return;
+    this.actionPortals.push(
+      new TemplatePortal(tableFilter.hideFilterAction.templateRef(), tableFilter.hideFilterAction.viewContainerRef)
+    );
+    this.actionPortals.push(...viewHost.toolbarPortals);
   }
 
-  doExport(settings) {
+  doExport(settings: Partial<IDataExportSettings>): void {
+    if (!this.isExportSettings(settings)) return;
+    const source = this.activeDataSource();
+    if (
+      !this.hasCapability(IbDataSourceCapability.CurrentPageExport)
+      || (settings.dataset === 'all' && !this.hasCapability(IbDataSourceCapability.FullExport))
+      || (settings.dataset === 'selected' && !this.hasCapability(IbDataSourceCapability.RowSelection))
+    ) return;
     this.exportService._exportFromTable(
-      this.tableName,
-      this.dataSource,
+      this.tableName(),
+      source as IbTableDataSource<unknown>,
       settings
     );
   }
 
-  updateSortFromMobile(newSort: MatSort) {
-    this.dataSource.sort.active = newSort.active;
-    this.dataSource.sort.direction = newSort.direction;
-    this.dataSource.sort.sortChange.emit(newSort);
+  updateSortFromMobile(newSort: Sort): void {
+    this.stateFacade.setSort(newSort);
+    const source = this.activeDataSource();
+    if (this.isRemoteDataSource(source)) return;
+    const sort = this.sort();
+    if (!sort) return;
+    sort.active = newSort.active;
+    sort.direction = newSort.direction;
+    sort.sortChange.emit(newSort);
+  }
+
+  setAggregation(columnName: string, aggregation: string): void {
+    if (!this.hasCapability(IbDataSourceCapability.GlobalAggregation)) return;
+    const aggregatedColumns = {
+      ...this.stateFacade.aggregatedColumns(),
+      [columnName]: aggregation,
+    };
+    this.stateFacade.setAggregatedColumns(aggregatedColumns);
+  }
+
+  tableDataSource(): IbTableRendererDataSource<unknown> {
+    return this.activeDataSource();
+  }
+
+  dataSourceForMobile(): IbTableRendererDataSource<unknown> {
+    return this.activeDataSource();
+  }
+
+  tableSortState(): Sort {
+    const source = this.rendererDataSource();
+    return source.sortState ?? source.input?.sort ?? { active: '', direction: '' };
+  }
+
+  private applySnapshot(
+    source: IbTableSource,
+    snapshot: IbKaiTableSnapshot,
+  ): void {
+    const paginator = this.paginator();
+    const sort = this.sort();
+    const tableFilter = this.filter();
+    if (paginator) {
+      paginator.pageIndex = snapshot.pageIndex;
+      paginator.pageSize = snapshot.pageSize;
+    }
+    if (tableFilter) tableFilter.hydrateRawValue(snapshot.filters as never);
+    if (this.isRemoteDataSource(source)) {
+      source.setInput({
+        sort: snapshot.sort,
+        pageIndex: snapshot.pageIndex,
+        pageSize: snapshot.pageSize,
+        filter: (tableFilter?.query ?? null) as never,
+      });
+      return;
+    }
+    if (this.isLocalDataSource(source)) {
+      source.setInput({
+        sort: snapshot.sort,
+        rawFilter: snapshot.filters,
+        pageIndex: snapshot.pageIndex,
+        pageSize: snapshot.pageSize,
+        aggregatedColumns: snapshot.aggregatedColumns,
+      });
+      return;
+    }
+    source.tableName = this.tableName();
+    source.selectionColumn = this.selectionColumn() ?? null;
+    source.filter = tableFilter ?? null;
+    source.aggregatedColumns = snapshot.aggregatedColumns;
+    source.sort = sort ?? null;
+    source.paginator = paginator ?? null;
+    source.initializeSortState(snapshot.sort ?? { active: '', direction: '' });
+  }
+
+  private getViewData() {
+    const snapshot = this.stateFacade.snapshot();
+    return {
+      filter: (this.filter()?.value ?? {}) as never,
+      filters: snapshot.filters,
+      pageSize: snapshot.pageSize,
+      aggregatedColumns: snapshot.aggregatedColumns,
+      sort: snapshot.sort ?? { active: '', direction: '' },
+    };
+  }
+
+  private isRemoteDataSource(source: IbTableSource): source is IbTableRemoteDataSource<unknown> {
+    return 'request$' in source;
+  }
+
+  private isLocalDataSource(source: IbTableSource): source is IbTableLocalDataSource<unknown> {
+    return source instanceof IbTableLocalDataSource;
+  }
+
+  private rendererDataSource(): IbTableRendererDataSource<unknown> {
+    return this.activeDataSource();
+  }
+
+  private detachSource(source: IbTableSource | null): void {
+    if (source instanceof IbTableDataSource) {
+      source.sort = null;
+      source.paginator = null;
+      source.filter = null;
+      source.selectionColumn = null;
+    }
+  }
+
+  private hasCapability(capability: IbDataSourceCapability): boolean {
+    const source = this.activeDataSource();
+    return 'capabilities' in source
+      ? source.capabilities.has(capability)
+      : !this.isRemoteDataSource(source);
+  }
+
+  private isExportSettings(settings: Partial<IDataExportSettings>): settings is IDataExportSettings {
+    return settings.format !== undefined && settings.dataset !== undefined;
   }
 }

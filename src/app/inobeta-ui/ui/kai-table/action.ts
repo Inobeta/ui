@@ -4,8 +4,10 @@ import {
   input,
   NgModule,
   Optional,
+  signal,
+  Signal,
   TemplateRef,
-  ViewChild,
+  viewChild,
   ViewContainerRef
 } from "@angular/core";
 
@@ -15,12 +17,17 @@ import {
 })
 export class IbKaiTableAction {
   kind = input<string>("default");
-  @ViewChild(TemplateRef) templateRef;
+  /**
+   * The action template. Since this directive is applied to `<ng-template>`,
+   * the TemplateRef is constructor-injected; a `viewChild` query cannot
+   * resolve it because attribute directives have no view of their own.
+   */
+  readonly templateRef: Signal<TemplateRef<any> | null>;
   constructor(
     @Optional() public _templateRef: TemplateRef<any>,
     public viewContainerRef: ViewContainerRef
   ) {
-    this.templateRef = this.templateRef ?? this._templateRef;
+    this.templateRef = signal(_templateRef ?? null).asReadonly();
   }
 }
 
@@ -29,7 +36,7 @@ export class IbKaiTableAction {
   standalone: false
 })
 export class IbKaiTableActionGroup {
-  @ViewChild(TemplateRef, { static: true }) templateRef!: TemplateRef<any>;
+  readonly templateRef = viewChild.required(TemplateRef);
   readonly actions = contentChildren(IbKaiTableAction);
 }
 

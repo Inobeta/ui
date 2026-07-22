@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { IbTableDef } from "../../inobeta-ui/ui/kai-table/table.types";
+import { IbTableDef } from "public_api";
 import { createNewUser } from "./users";
 import { JsonPipe } from "@angular/common";
 import { IbKaiTableModule } from "public_api";

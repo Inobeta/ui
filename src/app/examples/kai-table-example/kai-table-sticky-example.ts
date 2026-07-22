@@ -8,6 +8,7 @@ import { IbUserExample, createNewUser } from "./users";
   imports: [IbKaiTableModule],
   template: `
     <ib-kai-table
+      tableName="stickyExample"
       [data]="data"
       [displayedColumns]="displayedColumns"
       [style.max-width]="'600px'"

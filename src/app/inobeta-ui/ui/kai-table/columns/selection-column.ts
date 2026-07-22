@@ -1,12 +1,11 @@
 import { SelectionModel } from "@angular/cdk/collections";
 import {
   Component,
-  EventEmitter,
   Inject,
   OnInit,
   Optional,
-  Output,
-  ViewChild,
+  output,
+  viewChild,
 } from "@angular/core";
 import {
   MatCellDef,
@@ -51,49 +50,50 @@ import { IB_TABLE } from "../tokens";
 })
 export class IbSelectionColumn implements OnInit {
   /** @ignore */
-  @ViewChild(MatCellDef, { static: true }) cell: MatCellDef;
+  readonly cell = viewChild.required(MatCellDef);
   /** @ignore */
-  @ViewChild(MatHeaderCellDef, { static: true }) headerCell: MatHeaderCellDef;
+  readonly headerCell = viewChild.required(MatHeaderCellDef);
   /** @ignore */
-  @ViewChild(MatFooterCellDef, { static: true }) footerCell: MatFooterCellDef;
+  readonly footerCell = viewChild.required(MatFooterCellDef);
   /** @ignore */
-  @ViewChild(MatColumnDef, { static: true }) columnDef: MatColumnDef;
+  readonly columnDef = viewChild.required(MatColumnDef);
   selection = new SelectionModel<any>(true, []);
 
-  @Output() ibRowSelectionChange = new EventEmitter<
-    IbTableRowSelectionChange[]
-  >();
+  readonly ibRowSelectionChange = output<IbTableRowSelectionChange[]>();
 
   constructor(@Inject(IB_TABLE) @Optional() private table: any) {}
 
   ngOnInit() {
     if (this.table) {
-      if (this.table.isRemote) {
-        console.warn("Selection column is currently not supported with IbTableRemoteDataSource")
+      if (typeof this.table.canSelectRows === 'function' && !this.table.canSelectRows()) return;
+      if (this.table.isRemote()) {
+        console.warn("Selection column is currently not supported with IbTableRemoteDataSource");
       }
-      this.columnDef.cell = this.cell;
-      this.columnDef.headerCell = this.headerCell;
-      this.columnDef.footerCell = this.footerCell;
-      this.table.matTable.addColumnDef(this.columnDef);
-      this.table.displayedColumns.unshift("ib-selection");
+      this.columnDef().cell = this.cell();
+      this.columnDef().headerCell = this.headerCell();
+      this.columnDef().footerCell = this.footerCell();
+      this.table.matTable().addColumnDef(this.columnDef());
+      if (Array.isArray(this.table.displayedColumns()) && !this.table.displayedColumns().includes("ib-selection")) {
+        this.table.displayedColumns().unshift("ib-selection");
+      }
     }
   }
 
   isAllSelected() {
     const numSelected = this.selection.selected.length;
-    const numRows = this.table.dataSource.filteredData.length;
+    const numRows = this.table.activeDataSource().filteredData.length;
     return numSelected == numRows;
   }
 
   toggleAllRows() {
     this.isAllSelected()
       ? this.selection.clear()
-      : this.selection.select(...this.table.dataSource.filteredData);
+      : this.selection.select(...this.table.activeDataSource().filteredData);
 
     const selectionAfterToggle = this.isAllSelected();
     this.ibRowSelectionChange.emit(
-      this.table.dataSource.filteredData.map((row) => ({
-        tableName: this.table.tableName,
+      this.table.activeDataSource().filteredData.map((row) => ({
+        tableName: this.table.tableName(),
         row,
         selection: selectionAfterToggle,
       }))
@@ -106,7 +106,7 @@ export class IbSelectionColumn implements OnInit {
 
       this.ibRowSelectionChange.emit([
         {
-          tableName: this.table.tableName,
+          tableName: this.table.tableName(),
           row,
           selection: ev.checked,
         },
@@ -115,6 +115,6 @@ export class IbSelectionColumn implements OnInit {
   }
 
   isDisabled() {
-    return this.table.state !== "idle";
+    return this.table.state() !== "idle";
   }
 }

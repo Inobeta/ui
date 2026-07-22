@@ -1,11 +1,10 @@
 import {
   Component,
   Directive,
-  EventEmitter,
+  output,
   Inject,
-  Input,
+  input,
   Optional,
-  Output,
   TemplateRef,
 } from "@angular/core";
 import { IB_AGGREGATE, IB_AGGREGATE_TYPE, IB_COLUMN } from "./tokens";
@@ -53,10 +52,9 @@ export abstract class IbAggregate {
     dataSource: any,
     column: string
   ): IbAggregateResult {
-    const dataset = dataSource
-      ._orderData(dataSource.filteredData)
-      .map((i) => i[column]);
-    const pagedData = dataSource._pageData(dataset);
+    const orderedData = dataSource.getOrderedData();
+    const dataset = orderedData.map((i) => i[column]);
+    const pagedData = dataSource.getCurrentPageData().map((i) => i[column]);
     return {
       currentPage: this.aggregateData(pagedData),
       total: this.aggregateData(dataset),
@@ -135,15 +133,15 @@ export const IbAverageAggregateProvider = {
         <span class="mat-caption">{{
           "shared.aggregate.currentPage" | translate
         }}</span>
-        {{ result?.currentPage ? (result.currentPage | number) : "--" }}
+           {{ result()?.currentPage ? (result()?.currentPage | number) : "--" }}
       </div>
     
-      @if (showTotal) {
+      @if (showTotal()) {
         <div>
           <span class="mat-caption">{{
             "shared.aggregate.total" | translate
           }}</span>
-          {{ result?.total ? (result.total | number) : "--" }}
+           {{ result()?.total ? (result()?.total | number) : "--" }}
         </div>
       }
     </section>
@@ -151,19 +149,19 @@ export const IbAverageAggregateProvider = {
     standalone: false
 })
 export class IbAggregateCell {
-  @Input() set function(fun: string) {
-    this.updateDisplayName(fun);
-  }
-  @Input() result: IbAggregateResult = {
+  readonly function = input<string>("", { alias: "function" });
+  readonly result = input<IbAggregateResult>({
     currentPage: undefined,
     total: undefined,
-  };
+  });
 
-  @Input() showTotal = true;
-  @Output() ibFunctionChange = new EventEmitter<string>();
+  readonly showTotal = input(true);
+  readonly ibFunctionChange = output<string>();
 
   availableFunctions: IbAggregate[] = [];
   displayName = "";
+
+  ngOnInit() { this.updateDisplayName(this.function()); }
 
   constructor(
     @Inject(IB_COLUMN) private column: any,
@@ -181,7 +179,6 @@ export class IbAggregateCell {
     const strategy = this.availableFunctions.find((f) => f.id === fun);
     if (!strategy) {
       this.displayName = "";
-      this.result = { currentPage: undefined, total: undefined };
       return;
     }
 

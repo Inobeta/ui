@@ -9,6 +9,7 @@ import { MatIconButton } from "@angular/material/button";
     selector: "ib-kai-table-context-action-example",
     template: `
     <ib-kai-table
+      tableName="actionsExample"
       style="text-direction: rtl"
       [displayedColumns]="['name', 'fruit', 'number']"
       [data]="data"

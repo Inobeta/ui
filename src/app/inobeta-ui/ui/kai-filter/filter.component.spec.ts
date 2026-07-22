@@ -37,6 +37,58 @@ describe("IbFilter", () => {
     const updateSpy = spyOn(component, "update");
     expect(updateSpy).not.toHaveBeenCalled();
   });
+
+  it("should hydrate raw values silently without emitting events", () => {
+    const fixture = createComponent(IbFilterApp);
+    const component = fixture.debugElement.query(
+      By.directive(IbFilter)
+    ).componentInstance;
+    const filterUpdatedSpy = jasmine.createSpy("ibFilterUpdated");
+    const queryUpdatedSpy = jasmine.createSpy("ibQueryUpdated");
+    component.ibFilterUpdated.subscribe(filterUpdatedSpy);
+    component.ibQueryUpdated.subscribe(queryUpdatedSpy);
+    const textFilter = contains("hydratedValue");
+    component.hydrateRawValue({ sku: textFilter });
+    expect(component.selectedCriteria["sku"]).toEqual(textFilter);
+    expect(filterUpdatedSpy).not.toHaveBeenCalled();
+    expect(queryUpdatedSpy).not.toHaveBeenCalled();
+  });
+
+  it("should clear raw values silently with null", () => {
+    const fixture = createComponent(IbFilterApp);
+    const component = fixture.debugElement.query(
+      By.directive(IbFilter)
+    ).componentInstance;
+    const textFilter = contains("testValue");
+    component.form.patchValue({ sku: textFilter });
+    component.update();
+    expect(component.selectedCriteria["sku"]).toEqual(textFilter);
+    const filterUpdatedSpy = jasmine.createSpy("ibFilterUpdated");
+    const queryUpdatedSpy = jasmine.createSpy("ibQueryUpdated");
+    component.ibFilterUpdated.subscribe(filterUpdatedSpy);
+    component.ibQueryUpdated.subscribe(queryUpdatedSpy);
+    component.hydrateRawValue(null);
+    const rawValue = component.selectedCriteria["sku"];
+    expect(rawValue).toBeDefined();
+    expect(rawValue?.value).toEqual(null);
+    expect(filterUpdatedSpy).not.toHaveBeenCalled();
+    expect(queryUpdatedSpy).not.toHaveBeenCalled();
+  });
+
+  it("should still emit events on interactive update after hydration", () => {
+    const fixture = createComponent(IbFilterApp);
+    const component = fixture.debugElement.query(
+      By.directive(IbFilter)
+    ).componentInstance;
+    component.hydrateRawValue({ sku: contains("silent") });
+    const filterUpdatedSpy = jasmine.createSpy("ibFilterUpdated");
+    const queryUpdatedSpy = jasmine.createSpy("ibQueryUpdated");
+    component.ibFilterUpdated.subscribe(filterUpdatedSpy);
+    component.ibQueryUpdated.subscribe(queryUpdatedSpy);
+    component.update();
+    expect(filterUpdatedSpy).toHaveBeenCalledTimes(1);
+    expect(queryUpdatedSpy).toHaveBeenCalledTimes(1);
+  });
 });
 
 function configureModule<T>(type: Type<T>) {

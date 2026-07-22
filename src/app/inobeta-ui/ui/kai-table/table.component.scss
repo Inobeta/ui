@@ -28,16 +28,16 @@
   border: var(--ib-table-border-width) solid var(--ib-table-outline-color-private);
   overflow: hidden;
 
+  &.ib-table--has-views .ib-table__toolbar,
+  .ib-table__toolbar:has(> section:not(:empty)) {
+    height: 56px;
+    border-bottom: 1px solid var(--ib-table-outline-color-private);
+  }
+
   .ib-table__toolbar {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-
-    &:has(ib-table-view-group),
-    &:has(> section:not(:empty)) {
-      height: 56px;
-      border-bottom: 1px solid var(--ib-table-outline-color-private);
-    }
 
     &__actions {
       padding-right: 8px;

@@ -1,7 +1,7 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { Component, input, Input, signal } from '@angular/core';
 import { MatCard } from '@angular/material/card';
-import { IbColumn } from "../kai-table/columns/column";
+import { IbColumn } from "../kai-table/columns";
 import { IbKaiRowGroupDirective } from "../kai-table/rowgroup";
 import { TranslatePipe } from '@ngx-translate/core';
 @Component({
@@ -9,26 +9,26 @@ import { TranslatePipe } from '@ngx-translate/core';
   template: `
 <mat-card>
   <div class="ib-kai-table-mobile__grid">
-    @for (col of cardDataColumns(); track col.name; let last = $last; let even = $even) {
+    @for (col of cardDataColumns(); track col.name(); let last = $last; let even = $even) {
       <section
         class="ib-kai-table-mobile__item"
         [class.ib-kai-table-mobile__item--right]="even && !(last && isOdd(cardDataColumns().length))"
         [class.ib-kai-table-mobile__item--full]="last && isOdd(cardDataColumns().length)"
       >
         <div class="ib-kai-table-mobile__label">
-          {{ col.headerText || col.name }}
+          {{ col.headerText() || col.name() }}
         </div>
 
         <div class="ib-kai-table-mobile__value">
-          @if (col.ibCellDef) {
+          @if (col.ibCellDef(); as cellDef) {
             <ng-container
               *ngTemplateOutlet="
-                col.ibCellDef.templateRef;
+                 cellDef.templateRef;
                 context: { $implicit: row }
               "
             />
           } @else {
-            {{ col.mobileDataRenderer(row, col.name) }}
+            {{ col.mobileDataRenderer(row, col.name()) }}
           }
         </div>
       </section>
@@ -37,11 +37,11 @@ import { TranslatePipe } from '@ngx-translate/core';
 
   @if (cardActionColumns().length) {
     <div class="ib-kai-table-mobile__card-actions">
-      @for (col of cardActionColumns(); track col.name ?? $index) {
-        @if (col.ibCellDef?.templateRef) {
+      @for (col of cardActionColumns(); track col.name() ?? $index) {
+        @if (col.ibCellDef(); as cellDef) {
           <ng-container
             *ngTemplateOutlet="
-              col.ibCellDef.templateRef;
+               cellDef.templateRef;
               context: { $implicit: row }
             "
           />
@@ -50,7 +50,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     </div>
   }
 
-  @if (rowGroup()) {
+  @if (rowGroup(); as group) {
     <button
       type="button"
       class="ib-kai-table-mobile__details-toggle"
@@ -71,7 +71,7 @@ import { TranslatePipe } from '@ngx-translate/core';
       <div class="ib-kai-table-mobile__details">
         <ng-container
           *ngTemplateOutlet="
-            rowGroup()!.templateRef;
+            group.templateRef;
             context: { $implicit: row }
           "
         />

@@ -14,17 +14,19 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCard } from "@angular/material/card";
 import { MatIcon } from '@angular/material/icon';
+import { Sort } from '@angular/material/sort';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslatePipe } from '@ngx-translate/core';
 import { filter, Subscription } from 'rxjs';
 import { IbDataExportService, IDataExportSettings } from '../data-export/data-export.service';
 import { IbFilterBase } from '../kai-filter/filters/base/filter-base';
-import { IbKaiTableAction, } from "../kai-table/action";
-import { IbColumn } from '../kai-table/columns/column';
+import { IbKaiTableAction } from "../kai-table/action";
+import { IbColumn } from '../kai-table/columns';
 
 @Component({
   selector: 'ib-kai-table-mobile-toolbar',
   standalone: true,
-  imports: [NgTemplateOutlet, MatCard, MatButtonModule, MatIcon, MatTooltipModule, MatBadgeModule],
+  imports: [NgTemplateOutlet, MatCard, MatButtonModule, MatIcon, MatTooltipModule, MatBadgeModule, TranslatePipe],
   template: `
     <div class="ib-kai-table-mobile__toolbar-container">
           <div class="ib-kai-table-mobile__toolbar">
@@ -51,16 +53,16 @@ import { IbColumn } from '../kai-table/columns/column';
                 </button>
             }
               @for (action of headerActions(); track $index) {
-                @if(action.kind() === 'export') {
+                @if(action.kind() === 'export' && canExportCurrentPage()) {
                   <button
                     mat-icon-button
-                    [matTooltip]="'shared.ibTable.export' "
+                    [matTooltip]="'shared.ibTable.export' | translate"
                     (click)="openExportDialog()"
                   >
                     <mat-icon>file_download</mat-icon>
                   </button>
                 } @else {
-                  <ng-container *ngTemplateOutlet="action.templateRef"> </ng-container>
+                    <ng-container *ngTemplateOutlet="action.templateRef()"> </ng-container>
                 }
               }
             </div>
@@ -74,10 +76,10 @@ import { IbColumn } from '../kai-table/columns/column';
                     <button
                       mat-button
                       style="justify-content: flex-start;"
-                      (click)="sortUpdated.emit(col.name)"
+                      (click)="sortUpdated.emit(col.name())"
                     >
-                      {{ col.headerText  }}
-                      @if (currentSort()?.active === col.name) {
+                       {{ col.headerText()  }}
+                       @if (currentSort()?.active === col.name()) {
                         <mat-icon>
                           {{ currentSort()?.direction === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
                         </mat-icon>
@@ -253,7 +255,9 @@ export class IbKaiTableMobileToolbarComponent implements OnDestroy {
   headerActions = input<readonly IbKaiTableAction[]>([]);
   filters = input<readonly IbFilterBase[]>([]);
   sortableColumns = input<readonly IbColumn<any>[]>([]);
-  currentSort = input<{ active: string, direction: 'asc' | 'desc' } | null>(null);
+  currentSort = input<Sort | null>(null);
+  canExportAllRows = input(true);
+  canExportCurrentPage = input(true);
   doExport = output<Partial<IDataExportSettings>>()
   sortUpdated = output<string>()
   filtersOpen = signal(false);
@@ -300,7 +304,7 @@ export class IbKaiTableMobileToolbarComponent implements OnDestroy {
     this.exportService
       .openExportDialog({
         showSelectedRowsOption: false,
-        showAllRowsOption: true,
+        showAllRowsOption: this.canExportAllRows(),
       })
       .pipe(filter((settings) => !!settings))
       .subscribe((settings) => this.doExport.emit(settings));
