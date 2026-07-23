@@ -256,30 +256,67 @@ export class IbTable implements OnDestroy {
       );
       onCleanup(() => subscriptions.forEach((subscription) => subscription.unsubscribe()));
     });
+
+    // Keep the views host highlighted tab in sync with the canonical
+    // selectedView on initialization, back/forward, and external changes.
+    // syncActiveView is a no-op base implementation that the views host
+    // overrides to update its visual selection without emitting
+    // activeViewChanged — the one-way nature of this call prevents a
+    // feedback loop.
+    effect(() => {
+      if (!this.initialized()) return;
+      const host = this.viewHost();
+      if (!host) return;
+      host.syncActiveView(this.stateFacade.selectedView());
+    });
   }
 
   async ngAfterContentInit(): Promise<void> {
-    await this.stateFacade.initialize(this.tableName(), this.effectiveTableDef(), this.viewHost());
+    // Assign the view group name before initialization so the facade can
+    // resolve views against the correct group during resolveView().
+    const viewHost = this.viewHost();
+    if (viewHost) {
+      viewHost.setViewGroupName(this.tableName());
+    }
+
+    await this.stateFacade.initialize(this.tableName(), this.effectiveTableDef(), viewHost);
     if (this.destroyRef.destroyed) return;
     const tableFilter = this.filter();
     if (tableFilter) await firstValueFrom(tableFilter.initialized);
     if (this.destroyRef.destroyed) return;
-    const viewHost = this.viewHost();
+
     if (viewHost) {
-      viewHost.setViewGroupName(this.tableName());
+      // Supply the Default baseline derived from tableDef so the views
+      // host can detect dirty state on the implicit "all data" tab.
+      viewHost.setDefaultViewBaseline(this.stateFacade.getDefaultViewBaseline());
+
       viewHost.setViewDataAccessor(() => this.getViewData());
       viewHost.handleStateChanges(
         toObservable(this.stateFacade.snapshot, { injector: this.injector })
           .pipe(takeUntilDestroyed(this.destroyRef)),
       );
-      const source = this.activeDataSource();
-      if (source instanceof IbTableDataSource) source.view = viewHost;
+
+      // Synchronize the views UI to the canonical selectedView.  This is
+      // a one-way sync: the host updates its highlighted tab but does NOT
+      // emit activeViewChanged, preventing a feedback loop.
+      viewHost.syncActiveView(this.stateFacade.selectedView());
+
       this.viewSubscription = viewHost.activeViewChanged.subscribe((view) => {
+        // The implicit Default view has no persisted snapshot to resolve.
+        // Always apply the table-definition baseline so switching from a
+        // named view clears its filters and sort (as well as restoring the
+        // other view-owned state), rather than relying on the host's
+        // selectedView=null sentinel data.
+        const snapshot = view.viewId === null
+          ? this.stateFacade.getDefaultViewBaseline()
+          : view;
         this.stateFacade.applyView(view.viewId, {
-          sort: view.sort?.active ? view.sort : null,
-          filters: view.filters ?? view.filter ?? null,
-          pageSize: view.pageSize,
-          aggregatedColumns: view.aggregatedColumns,
+          sort: snapshot.sort?.active ? snapshot.sort : null,
+          filters: snapshot.filters !== undefined
+            ? snapshot.filters
+            : snapshot.filter ?? null,
+          pageSize: snapshot.pageSize,
+          aggregatedColumns: snapshot.aggregatedColumns,
         });
       });
       this.setupViewGroup();
@@ -297,12 +334,15 @@ export class IbTable implements OnDestroy {
     this.stateFacade.setPaginator(params.pageIndex, params.pageSize);
   }
   private setupViewGroup() {
-    const tableFilter = this.filter();
     const viewHost = this.viewHost();
-    if (!tableFilter?.hideFilterAction || !viewHost) return;
-    this.actionPortals.push(
-      new TemplatePortal(tableFilter.hideFilterAction.templateRef(), tableFilter.hideFilterAction.viewContainerRef)
-    );
+    if (!viewHost) return;
+
+    const tableFilter = this.filter();
+    if (tableFilter?.hideFilterAction) {
+      this.actionPortals.push(
+        new TemplatePortal(tableFilter.hideFilterAction.templateRef(), tableFilter.hideFilterAction.viewContainerRef)
+      );
+    }
     this.actionPortals.push(...viewHost.toolbarPortals);
   }
 

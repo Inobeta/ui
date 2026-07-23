@@ -120,6 +120,13 @@ export class IbFilter {
   hydrateRawValue(value: IbFilterSyntaxExtended | null): void {
     if (value === null) {
       this.form.reset(undefined, { emitEvent: false });
+      // A reset form still builds each registered filter's inactive value
+      // (for example, a number range or a date period). Those values must
+      // not be retained as canonical criteria when the snapshot explicitly
+      // requests no filters.
+      this._value = {};
+      this.query = this.toQuery();
+      return;
     } else {
       this.form.patchValue(value, { emitEvent: false });
     }
