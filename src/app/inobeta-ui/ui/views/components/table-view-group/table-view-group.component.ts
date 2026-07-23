@@ -1,6 +1,7 @@
 import { Portal, TemplatePortal } from "@angular/cdk/portal";
 import {
   Component,
+  forwardRef,
   OnDestroy,
   QueryList,
   ViewChildren,
@@ -31,6 +32,9 @@ const EMPTY_SORT: Sort = { active: '', direction: '' as SortDirection };
   selector: "ib-view-group, ib-table-view-group",
   templateUrl: "table-view-group.component.html",
   styleUrls: ["table-view-group.component.scss"],
+  providers: [
+    { provide: IbTableViewsHost, useExisting: forwardRef(() => IbTableViewGroup) },
+  ],
   standalone: false
 })
 export class IbTableViewGroup extends IbTableViewsHost implements OnDestroy {
