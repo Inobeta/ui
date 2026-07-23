@@ -20,6 +20,7 @@ import {
 import { IbTableUrlService } from './table-url.service';
 import { resolveInitialTableState } from './table-state-resolver';
 import { decodeUrlPayload, encodeUrlPayload } from './table-url-codec';
+import { IbFilterSyntaxExtended } from '../kai-filter/filter.types';
 import { IbTableViewsHost, IbTableViewsData } from './table-views-host';
 import {
   IbKaiTableSnapshot,
@@ -209,6 +210,64 @@ export class IbKaiTableStateFacade {
 
     // --- Observe URL for back/forward ---
     this.startUrlObservation();
+  }
+
+  // -----------------------------------------------------------------------
+  // Default view baseline
+  // -----------------------------------------------------------------------
+
+  /**
+   * Derives a Default view baseline from the table definition and technical
+   * defaults, without consulting the URL, `initialView`, or `initialPageIndex`.
+   *
+   * This snapshot represents the baseline "all data" state of the table
+   * **before** any view is applied.  The views host uses it to detect
+   * dirty state on the implicit Default tab and as a fallback when no
+   * named view is selected.
+   *
+   * `selectedView` is always `null` in the returned data.
+   *
+   * ## Field precedence (lowest to highest)
+   *
+   * 1. Technical defaults — `sort: null`, `filters: null`, `pageSize: 20`,
+   *    `aggregatedColumns: {}`.
+   * 2. `tableDef.initial*` — `initialSort`, `initialFilters`,
+   *    `initialPageSize`, `initialAggregatedColumns` (only when the key
+   *    is **present** in `tableDef`; `null` means "clear to default").
+   *
+   * `initialView` and `initialPageIndex` are intentionally excluded to
+   * provide a stable, view-less baseline.
+   */
+  getDefaultViewBaseline(): IbTableViewsData {
+    const def = this._tableDef;
+
+    const sort: Sort | null =
+      def && Object.prototype.hasOwnProperty.call(def, 'initialSort')
+        ? def.initialSort!
+        : null;
+
+    const filters: IbTableFilterState | null =
+      def && Object.prototype.hasOwnProperty.call(def, 'initialFilters')
+        ? def.initialFilters!
+        : null;
+
+    const pageSize: number =
+      def && Object.prototype.hasOwnProperty.call(def, 'initialPageSize')
+        ? def.initialPageSize! ?? TECHNICAL_DEFAULTS.pageSize
+        : TECHNICAL_DEFAULTS.pageSize;
+
+    const aggregatedColumns: Record<string, string> =
+      def && Object.prototype.hasOwnProperty.call(def, 'initialAggregatedColumns')
+        ? def.initialAggregatedColumns! ?? {}
+        : { ...TECHNICAL_DEFAULTS.aggregatedColumns };
+
+    return {
+      filter: {} as IbFilterSyntaxExtended,
+      filters: filters ?? null,
+      pageSize,
+      aggregatedColumns,
+      sort: sort ?? { active: '', direction: '' },
+    };
   }
 
   // -----------------------------------------------------------------------

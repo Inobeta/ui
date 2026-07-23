@@ -1,3 +1,4 @@
+import { ComponentPortal } from "@angular/cdk/portal";
 import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { CommonModule, registerLocaleData } from "@angular/common";
@@ -175,8 +176,37 @@ describe("IbTable", () => {
     let component: IbTable;
     let loader: HarnessLoader;
 
-    beforeEach(() => {
-      hostFixture = createComponent(IbTableWithViewGroupApp);
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [
+          IbTableWithViewGroupApp,
+          IbTableWithViewGroupNoFilterApp,
+          IbTestViewsHostComponent,
+        ],
+        imports: [
+          CommonModule,
+          IbKaiTableModule,
+          IbTableActionModule,
+          IbFilterModule,
+          MatSortModule,
+          IbDataExportModule,
+          NoopAnimationsModule,
+          TranslateModule.forRoot({
+            extend: true,
+          }),
+          RouterTestingModule.withRoutes([])
+        ],
+        providers: [
+          provideStore(),
+          { provide: MatSnackBar, useValue: { open: () => { } } },
+          IbTableUrlService,
+        ],
+      }).compileComponents();
+    }));
+
+    beforeEach(async () => {
+      hostFixture = TestBed.createComponent(IbTableWithViewGroupApp);
+      hostFixture.detectChanges();
       component = hostFixture.debugElement.query(
         By.directive(IbTable)
       ).componentInstance as IbTable;
@@ -259,36 +289,177 @@ describe("IbTable", () => {
       expect(component.actionPortals.length).toBe(1 + portalCount);
     });
 
-    // These tests exercise IbTableViewGroup internals (view-list, dialogs, etc.)
-    // and should be moved to table-view-group.component.spec.ts.
-    describe("view management (requires IbViewModule)", () => {
-      it("should create a view", async () => {
-        await hostFixture.whenStable();
-        const viewHost = component.viewHost() as IbTableViewsHostStub;
-        expect(viewHost.viewGroupName).toBe("test-views");
-        expect(viewHost.viewDataAccessor()).toEqual(
-          jasmine.objectContaining({ pageSize: 20 }),
-        );
-      });
+    // ===========================================================================
+    // Bridge ordering — DEVK-1065 Step 7
+    // ===========================================================================
 
-      it("should expose view state changes to the table", async () => {
-        await hostFixture.whenStable();
-        const host = component.viewHost() as IbTableViewsHostStub;
+    it("should call setViewGroupName before facade.initialize (resolveView is group-aware)", async () => {
+      await hostFixture.whenStable();
+      hostFixture.detectChanges();
 
-        host.emitActiveViewChanged({
-          filter: {},
-          pageSize: 50,
-          aggregatedColumns: { amount: "sum" },
-          sort: { active: "name", direction: "asc" },
-          viewId: "saved-view",
-        });
-        hostFixture.detectChanges();
-        await hostFixture.whenStable();
-
-        expect(component["stateFacade"].snapshot().selectedView).toBe("saved-view");
-        expect(component["stateFacade"].snapshot().pageSize).toBe(50);
-      });
+      const host = component.viewHost() as IbTableViewsHostStub;
+      // setViewGroupName fires synchronously before the first `await` in
+      // ngAfterContentInit, so the group name is already assigned when
+      // facade.initialize calls resolveView().
+      expect(host.viewGroupName).toBe("test-views");
+      expect(host.viewGroupNameSet).toBeTrue();
     });
+
+    // ===========================================================================
+    // Default baseline — DEVK-1065 Step 7
+    // ===========================================================================
+
+    it("should supply the Default view baseline to the views host after init", async () => {
+      await hostFixture.whenStable();
+      hostFixture.detectChanges();
+
+      const host = component.viewHost() as IbTableViewsHostStub;
+      expect(host.defaultViewBaseline).not.toBeNull();
+      expect(host.defaultViewBaseline!.pageSize).toBeGreaterThan(0);
+      expect(host.defaultViewBaseline!.sort).toBeDefined();
+      // filters can be null (technical default) — it is the host's
+      // responsibility to handle that.
+      expect(host.defaultViewBaseline!.aggregatedColumns).toBeDefined();
+    });
+
+    it("should derive Default baseline from tableDef (not hard-coded)", async () => {
+      await hostFixture.whenStable();
+      hostFixture.detectChanges();
+
+      const host = component.viewHost() as IbTableViewsHostStub;
+      // IbTableWithViewGroupApp does not provide a tableDef, so the
+      // baseline uses technical defaults: pageSize 20, no sort, no filters.
+      const baseline = host.defaultViewBaseline!;
+      expect(baseline.pageSize).toBe(20);
+      expect(baseline.filters).toBeNull();
+      expect(baseline.sort).toEqual({ active: '', direction: '' });
+      expect(baseline.aggregatedColumns).toEqual({});
+    });
+
+    // ===========================================================================
+    // Canonical sync without feedback — DEVK-1065 Step 7
+    // ===========================================================================
+
+    it("should sync the host to canonical selectedView without emitting activeViewChanged", async () => {
+      await hostFixture.whenStable();
+      hostFixture.detectChanges();
+
+      const host = component.viewHost() as IbTableViewsHostStub;
+      // syncActiveView is called during ngAfterContentInit before the
+      // activeViewChanged subscription is wired, and it must NOT emit.
+      expect(host.syncActiveViewCallCount).toBeGreaterThanOrEqual(1);
+      expect(host.syncedActiveViewId).toBeNull(); // Default = null
+
+      // The selectedView in the canonical store should match.
+      const facade = component["stateFacade"] as IbKaiTableStateFacade;
+      expect(facade.selectedView()).toBeNull();
+    });
+
+    it("should NOT trigger a second applyView dispatch during sync", async () => {
+      const store = TestBed.inject(Store);
+      await hostFixture.whenStable();
+      hostFixture.detectChanges();
+
+      const dispatchSpy = spyOn(store, "dispatch").and.callThrough();
+      const host = component.viewHost() as IbTableViewsHostStub;
+
+      // Simulate a back/forward sync (same as the table's effect does)
+      host.syncActiveView(null);
+      await hostFixture.whenStable();
+
+      // syncActiveView is a one-way notification — it must not result in
+      // an additional dispatch (no feedback loop).
+      expect(dispatchSpy).not.toHaveBeenCalled();
+    });
+
+    // ===========================================================================
+    // Toolbar portals without filter — DEVK-1065 Step 7
+    // ===========================================================================
+
+    it("should forward toolbar portals from views host even when no ib-filter exists", async () => {
+      const noFilterFixture = TestBed.createComponent(IbTableWithViewGroupNoFilterApp);
+      noFilterFixture.detectChanges();
+
+      // Before async init completes, push a portal into the stub so
+      // setupViewGroup() picks it up.
+      const c: IbTable = noFilterFixture.debugElement.query(
+        By.directive(IbTable),
+      ).componentInstance as IbTable;
+      const host = c.viewHost() as IbTableViewsHostStub;
+      host.addToolbarPortal(new ComponentPortal(DummyPortalComponent));
+
+      await noFilterFixture.whenStable();
+      noFilterFixture.detectChanges();
+
+      // Without a filter, actionPortals should contain only the host portal.
+      expect(c.actionPortals.length).toBe(1);
+      expect(c.actionPortals[0]).toBeInstanceOf(ComponentPortal);
+    });
+
+    it("should initialize views host correctly when table has no filter", async () => {
+      const noFilterFixture = TestBed.createComponent(IbTableWithViewGroupNoFilterApp);
+      noFilterFixture.detectChanges();
+      await noFilterFixture.whenStable();
+      noFilterFixture.detectChanges();
+
+      const c: IbTable = noFilterFixture.debugElement.query(
+        By.directive(IbTable),
+      ).componentInstance as IbTable;
+      const host = c.viewHost() as IbTableViewsHostStub;
+
+      expect(host.defaultViewBaseline).not.toBeNull();
+      expect(host.syncActiveViewCallCount).toBeGreaterThanOrEqual(1);
+      expect(host.viewDataAccessor).toBeDefined();
+
+      const data = host.viewDataAccessor();
+      expect(data).toBeDefined();
+      expect(data.pageSize).toBeGreaterThan(0);
+    });
+  });
+
+  // ===========================================================================
+  // Table without views host — DEVK-1065 Step 7
+  // ===========================================================================
+
+  it("should work normally without a views host (no IbViewModule import needed)", async () => {
+    // Reset TestBed for a clean configuration without views host components.
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      declarations: [IbTableApp],
+      imports: [
+        CommonModule,
+        IbKaiTableModule,
+        IbTableActionModule,
+        IbFilterModule,
+        MatSortModule,
+        IbDataExportModule,
+        NoopAnimationsModule,
+        TranslateModule.forRoot({
+          extend: true,
+        }),
+        RouterTestingModule.withRoutes([]),
+      ],
+      providers: [
+        provideStore(),
+        { provide: MatSnackBar, useValue: { open: () => {} } },
+        IbTableUrlService,
+      ],
+    }).compileComponents();
+
+    const fixture = TestBed.createComponent(IbTableApp);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const c: IbTable = fixture.debugElement.query(
+      By.directive(IbTable),
+    ).componentInstance as IbTable;
+
+    expect(c.viewHost()).toBeFalsy();
+    expect(c.initialized()).toBeTrue();
+    expect(c.activeDataSource()).toBeDefined();
+
+    const facade = c["stateFacade"] as IbKaiTableStateFacade;
+    expect(facade.initialized()).toBeTrue();
   });
 
   describe("with export", () => {
@@ -1110,6 +1281,27 @@ class IbTableWithViewGroupApp {
     { name: "alice", color: "peach" },
     { name: "bob", color: "green" },
   ];
+}
+
+/** Minimal component used as a ComponentPortal payload in toolbar-portal tests. */
+@Component({ template: '', standalone: false })
+class DummyPortalComponent {}
+
+@Component({
+  template: `
+    <ib-kai-table
+      tableName="test-views-no-filter"
+      [data]="data"
+      [displayedColumns]="['name']"
+    >
+      <ib-test-views-host></ib-test-views-host>
+      <ib-text-column name="name"></ib-text-column>
+    </ib-kai-table>
+  `,
+  standalone: false
+})
+class IbTableWithViewGroupNoFilterApp {
+  data = [{ name: "alice" }];
 }
 
 class IbStubExportProvider implements IbDataExportProvider {

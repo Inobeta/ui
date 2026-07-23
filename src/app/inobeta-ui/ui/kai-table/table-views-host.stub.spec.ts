@@ -12,11 +12,26 @@ export class IbTableViewsHostStub extends IbTableViewsHost {
   toolbarPortals: Portal<any>[] = [];
   dirty = false;
 
+  // ── Recording fields for DEVK-1065 Step 7 bridge tests ──────────
+
+  /** Records the last Default baseline data supplied via setDefaultViewBaseline. */
+  defaultViewBaseline: IbTableViewsData | null = null;
+
+  /** Records the last viewId synchronised via syncActiveView. */
+  syncedActiveViewId: string | null = '__UNINITIALIZED__';
+
+  /** Count of syncActiveView calls (used to detect feedback loops). */
+  syncActiveViewCallCount = 0;
+
+  /** Captures the view group name recorded by setViewGroupName (used for order testing). */
+  viewGroupNameSet = false;
+
   /** Internal map of view snapshots used by the stub's resolveView. */
   private _views = new Map<string, IbTableViewsData>();
 
   setViewGroupName(name: string): void {
     this.viewGroupName = name;
+    this.viewGroupNameSet = true;
   }
 
   setViewDataAccessor(fn: () => IbTableViewsData): void {
@@ -50,5 +65,23 @@ export class IbTableViewsHostStub extends IbTableViewsHost {
   /** Helper to simulate a view change from tests. */
   emitActiveViewChanged(data: IbTableViewsData & { viewId: string | null }): void {
     this._activeViewChanged.next(data);
+  }
+
+  // ── Additive hook overrides (DEVK-1065 Step 1) ─────────────────
+
+  /** @override Records the Default baseline for later assertion. */
+  override setDefaultViewBaseline(data: IbTableViewsData): void {
+    this.defaultViewBaseline = data;
+  }
+
+  /** @override Records the synced view ID and increments the call counter. */
+  override syncActiveView(viewId: string | null): void {
+    this.syncedActiveViewId = viewId;
+    this.syncActiveViewCallCount++;
+  }
+
+  /** Helper to pre-populate toolbar portals for filtering‑free table tests. */
+  addToolbarPortal(portal: Portal<any>): void {
+    this.toolbarPortals.push(portal);
   }
 }

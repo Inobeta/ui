@@ -73,6 +73,35 @@ export abstract class IbTableViewsHost {
     viewId: string | null
   ): Observable<IbTableViewsData | null>;
 
+  /**
+   * Provides the views host with the Default baseline snapshot derived
+   * from the table definition and technical defaults.
+   *
+   * The Default view is not persisted; this data is used by the host for
+   * dirty-state comparison and as a fallback when no named view is active.
+   *
+   * Concrete no-op: existing subclasses that do not override this method
+   * remain source- and binary-compatible.
+   */
+  setDefaultViewBaseline(_data: IbTableViewsData): void {
+    // no-op — the host may override this to store the Default baseline
+  }
+
+  /**
+   * Synchronizes the host's highlighted tab to the canonical
+   * `selectedView` from the table store, without emitting
+   * {@link activeViewChanged}.
+   *
+   * Called on initialization, after browser back/forward, and whenever
+   * the canonical selected-view ID changes through external sources.
+   *
+   * Concrete no-op: existing subclasses that do not override this method
+   * remain source- and binary-compatible.
+   */
+  syncActiveView(_viewId: string | null): void {
+    // no-op — the host may override this to update its visual selection
+  }
+
   /** Toolbar action portals contributed by the views provider. */
   abstract readonly toolbarPortals: Portal<any>[];
 

@@ -122,6 +122,9 @@ export class IbKaiTableWithRouting {
 
   handleView(row: IbUserExample) {
     console.log("handleView", row);
-    this.router.navigate([`details/${row.id}`], { relativeTo: this.activatedRoute });
+    this.router.navigate([`details/${row.id}`], {
+      relativeTo: this.activatedRoute,
+      queryParamsHandling: "preserve",
+    });
   }
 }

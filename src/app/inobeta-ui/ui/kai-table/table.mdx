@@ -516,34 +516,144 @@ export class IbKaiTableExamplePage {
 
 ## Views
 
-View management is an optional feature provided by the decoupled `IbViewModule`. The table works without it — views are only needed when you want to let users save and restore table state (filters, sort, pagination).
+View management is an optional feature provided by the decoupled `IbViewModule`. The table works
+without it — views are only needed when you want to let users save and restore table state. Each view
+captures a snapshot of the current filters, sort order, page size, and column aggregations.
 
-To add views to a table, import `IbViewModule` alongside `IbKaiTableModule`, `IbTableActionModule`, and `IbFilterModule`.
+### Setup
+
+Import `IbViewModule` alongside `IbKaiTableModule` and `IbTableActionModule`. Filters are **not**
+required: a view can be created and restored on any table, with or without an `ib-filter` component.
+The only requirement is a unique `tableName` on `ib-kai-table`, which acts as the storage group key.
 
 ```typescript
 @Component({
-  imports: [IbKaiTableModule, IbTableActionModule, IbViewModule, IbFilterModule],
+  imports: [IbKaiTableModule, IbTableActionModule, IbViewModule],
   // ...
 })
 export class TableWithViewsComponent {}
 ```
 
-> ⚠️ An `ib-filter` component is required to use `ib-table-view-group`.
-> Also, the `tableName` property must be set in the `ib-kai-table` component as it is used as a reference for the views.
-
-Then add the `ib-table-view-group` component within `ib-kai-table`.
+Add `<ib-table-view-group />` inside `ib-kai-table`:
 
 ```html
 <ib-kai-table tableName="products" [data]="data" [displayedColumns]="displayedColumns">
   <ib-table-view-group />
 
-  <ib-filter>
-    <!-- ... -->
-  </ib-filter>
-
-  <!-- ... --->
+  <!-- optional filters, columns, etc. -->
 </ib-kai-table>
 ```
+
+### What is saved and what is excluded
+
+A view stores exactly four fields:
+
+| Field | Description |
+| --- | --- |
+| `filters` | Raw filter form values (`IbTableFilterState`), or `null` when no filter is applied. |
+| `sort` | Active sort column and direction (`Sort`), or `null` when unsorted. |
+| `pageSize` | Number of rows per page (e.g. `20`). |
+| `aggregatedColumns` | Active column aggregation functions (column name → aggregate key). |
+
+The following are **not** stored in a view:
+
+- `pageIndex` (current page number)
+- Row selection state
+- Active row / child route state
+- Table data (rows)
+- The elaborated `filter` object (only the canonical raw `filters` are persisted)
+
+Applying a view always resets `pageIndex` to `0` (the first page).
+
+### Default view
+
+Every table automatically shows a **Default** tab as the first view. The Default view represents the
+table baseline derived from `tableDef` initial values and technical defaults — it is never persisted
+to storage.
+
+Default view constraints:
+
+- Cannot be saved, renamed, deleted, or reordered.
+- Cannot be dragged (drag-and-drop applies only to named views).
+- Saving the Default opens a **create new view** dialog instead of overwriting it.
+
+### Named views
+
+Named views are user-defined snapshots stored in the browser's `localStorage`. Each table group
+(identified by `tableName`) owns an independent, ordered list of views.
+
+#### Create a new view
+
+Click the **`+`** button next to the Default tab to create a view from the **current** table state.
+The new view is appended to the list and automatically selected.
+
+#### Save an existing view
+
+When a named view is active and the table state has changed (dirty), click **Save** to update the
+view's snapshot in place. Saving does not change the current page or re-apply the view.
+
+#### Rename
+
+Use the context menu (`⋮`) on a named view tab and select **Rename**. Names are trimmed and must be
+unique case-insensitively within the same table. Renaming does not re-apply the view or change the
+table URL.
+
+#### Duplicate
+
+Use the context menu on a named view tab and select **Duplicate**. The new view captures the
+**current** table state (not the saved snapshot), gets a fresh ID, and is automatically selected.
+
+#### Delete
+
+Use the context menu on a named view tab and select **Delete**.
+
+- Deleting the **active** view immediately applies the Default view and updates the URL to
+  `selectedView: null`.
+- Deleting an **inactive** view does not alter the current table state.
+
+#### Drag-and-drop reorder
+
+Named view tabs support horizontal drag-and-drop. The persisted order matches the visual order and
+survives page reloads. Default and the `+` button are not draggable.
+
+### Dirty state and unsaved changes
+
+When the table state differs from the saved view snapshot (or from the Default baseline when Default
+is active), the view is marked as **dirty**. Switching to another view while dirty opens a
+**Save / Discard / Cancel** dialog:
+
+| Action | Result |
+| --- | --- |
+| **Save** | Saves changes into the current named view, or creates a new view if Default is active. Then applies the selected view. |
+| **Discard** | Discards unsaved changes and applies the selected view. |
+| **Cancel** | Cancels the view switch and stays on the current view and page. |
+
+If Default is active and the user chooses **Save**, a second dialog prompts for the new view name.
+Cancelling either dialog keeps the current state and view.
+
+### Persistence and URL behavior
+
+Views are persisted in `localStorage` under a dedicated key per table, using the format
+`<prefix>:<tableName>`. The default prefix is `inobeta-ui-views` and can be customised via the
+`IB_VIEWS_STORAGE_KEY` injection token:
+
+```typescript
+providers: [
+  { provide: IB_VIEWS_STORAGE_KEY, useValue: 'my-app-views' },
+]
+```
+
+The selected view ID is stored in the table URL query parameter (`sv` field). On page load or browser
+back/forward, the table resolves the view from `localStorage` by ID, within the correct `tableName`
+group. If the URL contains an unknown or deleted view ID, the table falls back to Default.
+
+### Limitations
+
+- Old view data stored under the legacy `__redux-store-inobeta-ui__` hydration key is **not**
+  migrated. DEVK-1065 starts from empty `localStorage`.
+- Cross-tab live synchronisation is **not** supported. Changes made in another browser tab become
+  visible after a page reload.
+- `pageIndex`, row selection, active row, and table content are explicitly **not** saved.
 
 ## Export
 

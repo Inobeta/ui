@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { IView } from "../../store/views/table-view";
+import { IView } from "../../view.types";
 
 @Component({
     selector: "ib-table-view",
@@ -7,9 +7,9 @@ import { IView } from "../../store/views/table-view";
     standalone: false
 })
 export class IbTableView {
-  @Input() view: Readonly<IView>;
-  @Input() selected: boolean = false;
-  @Input() dirty: boolean = false;
+  @Input() view!: Readonly<IView>;
+  @Input() selected = false;
+  @Input() dirty = false;
   @Output() ibRemoveView = new EventEmitter<IView>();
   @Output() ibRenameView = new EventEmitter<IView>();
   @Output() ibDuplicateView = new EventEmitter<IView>();

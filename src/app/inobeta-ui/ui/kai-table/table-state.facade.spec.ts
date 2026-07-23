@@ -1062,4 +1062,109 @@ describe('IbKaiTableStateFacade', () => {
       expect(firstCall.tableName).toBe(TABLE_NAME);
     });
   });
+
+  // ===========================================================================
+  // 14. Default view baseline (DEVK-1065 Step 7)
+  // ===========================================================================
+
+  describe('getDefaultViewBaseline', () => {
+    it('should return technical defaults when tableDef has no initial values', async () => {
+      await facade.initialize(TABLE_NAME, {});
+      const baseline = facade.getDefaultViewBaseline();
+
+      expect(baseline.pageSize).toBe(20);
+      expect(baseline.sort).toEqual({ active: '', direction: '' });
+      expect(baseline.filters).toBeNull();
+      expect(baseline.aggregatedColumns).toEqual({});
+    });
+
+    it('should use initialSort from tableDef', async () => {
+      await facade.initialize(TABLE_NAME, { initialSort: sortA });
+      const baseline = facade.getDefaultViewBaseline();
+
+      expect(baseline.sort).toEqual(sortA);
+    });
+
+    it('should fall back to empty sort when initialSort is explicitly null', async () => {
+      await facade.initialize(TABLE_NAME, { initialSort: null } as any);
+      const baseline = facade.getDefaultViewBaseline();
+
+      expect(baseline.sort).toEqual({ active: '', direction: '' });
+    });
+
+    it('should use initialFilters from tableDef', async () => {
+      await facade.initialize(TABLE_NAME, { initialFilters: filtersA });
+      const baseline = facade.getDefaultViewBaseline();
+
+      expect(baseline.filters).toEqual(filtersA);
+    });
+
+    it('should produce null filters when initialFilters is explicitly null', async () => {
+      await facade.initialize(TABLE_NAME, { initialFilters: null } as any);
+      const baseline = facade.getDefaultViewBaseline();
+
+      expect(baseline.filters).toBeNull();
+    });
+
+    it('should use initialPageSize from tableDef', async () => {
+      await facade.initialize(TABLE_NAME, { initialPageSize: 50 });
+      const baseline = facade.getDefaultViewBaseline();
+
+      expect(baseline.pageSize).toBe(50);
+    });
+
+    it('should fall back to default pageSize when initialPageSize is explicitly null', async () => {
+      await facade.initialize(TABLE_NAME, { initialPageSize: null } as any);
+      const baseline = facade.getDefaultViewBaseline();
+
+      expect(baseline.pageSize).toBe(20);
+    });
+
+    it('should use initialAggregatedColumns from tableDef', async () => {
+      await facade.initialize(TABLE_NAME, { initialAggregatedColumns: { colA: 'sum' } });
+      const baseline = facade.getDefaultViewBaseline();
+
+      expect(baseline.aggregatedColumns).toEqual({ colA: 'sum' });
+    });
+
+    it('should fall back to empty aggregatedColumns when initialAggregatedColumns is explicitly null', async () => {
+      await facade.initialize(TABLE_NAME, { initialAggregatedColumns: null } as any);
+      const baseline = facade.getDefaultViewBaseline();
+
+      expect(baseline.aggregatedColumns).toEqual({});
+    });
+
+    it('should NOT include initialView in the baseline', async () => {
+      await facade.initialize(TABLE_NAME, { initialView: 'some-view' });
+      const baseline = facade.getDefaultViewBaseline();
+
+      // IbTableViewsData has no selectedView / initialView field — the
+      // baseline is a view‑less snapshot representing the "all data" state.
+      expect((baseline as any).selectedView).toBeUndefined();
+      expect((baseline as any).initialView).toBeUndefined();
+    });
+
+    it('should NOT include initialPageIndex in the baseline', async () => {
+      await facade.initialize(TABLE_NAME, { initialPageIndex: 5 });
+      const baseline = facade.getDefaultViewBaseline();
+
+      // IbTableViewsData has no pageIndex field.
+      expect((baseline as any).pageIndex).toBeUndefined();
+    });
+
+    it('should combine multiple initial* values from tableDef', async () => {
+      await facade.initialize(TABLE_NAME, {
+        initialSort: sortA,
+        initialFilters: filtersA,
+        initialPageSize: 30,
+        initialAggregatedColumns: { colA: 'avg' },
+      });
+      const baseline = facade.getDefaultViewBaseline();
+
+      expect(baseline.sort).toEqual(sortA);
+      expect(baseline.filters).toEqual(filtersA);
+      expect(baseline.pageSize).toBe(30);
+      expect(baseline.aggregatedColumns).toEqual({ colA: 'avg' });
+    });
+  });
 });
