@@ -99,6 +99,7 @@ describe("IbFilter", () => {
     const rawValue = component.selectedCriteria["sku"];
     expect(rawValue).toBeDefined();
     expect(rawValue?.value).toEqual(null);
+    expect(component.value).toEqual({});
     expect(filterUpdatedSpy).not.toHaveBeenCalled();
     expect(queryUpdatedSpy).not.toHaveBeenCalled();
   });

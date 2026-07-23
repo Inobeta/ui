@@ -342,6 +342,21 @@ describe('IbKaiTableStateFacade', () => {
       expect(dispatchCall.snapshot.sort).toEqual(sortA);
     });
 
+    it('should preserve explicit null filters instead of falling back to legacy filter data', async () => {
+      viewsHost.setResolveFn(() => of(
+        makeViewsData({ filter: filtersA as never, filters: null }),
+      ));
+
+      await facade.initialize(
+        TABLE_NAME,
+        { initialView: 'init-view', initialFilters: filtersB },
+        viewsHost,
+      );
+
+      const dispatchCall = mockStoreDispatch.calls.mostRecent().args[0];
+      expect(dispatchCall.snapshot.filters).toBeNull();
+    });
+
     it('should resolve URL view and apply its snapshot', async () => {
       viewsHost.setResolveFn((viewId) => {
         if (viewId === 'url-view') {

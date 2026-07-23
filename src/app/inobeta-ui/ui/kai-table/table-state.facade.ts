@@ -373,9 +373,11 @@ export class IbKaiTableStateFacade {
 
   /** Converts `IbTableViewsData` into the canonical `IbKaiTableViewSnapshot` format. */
   private viewsDataToSnapshot(data: IbTableViewsData): IbKaiTableViewSnapshot {
-    // Prefer the canonical `filters` (raw form values) over the legacy `filter`
+    // Prefer the canonical `filters` (including an intentional null) over the legacy `filter`.
     const filters: IbTableFilterState | null =
-      data.filters ?? (data.filter as IbTableFilterState);
+      data.filters !== undefined
+        ? data.filters
+        : (data.filter as IbTableFilterState);
 
     return {
       sort: data.sort?.active ? data.sort : null,

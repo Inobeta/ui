@@ -279,6 +279,28 @@ describe("IbTable", () => {
       );
     });
 
+    it("should preserve null filters when applying the Default baseline", async () => {
+      await hostFixture.whenStable();
+      hostFixture.detectChanges();
+
+      const host = component.viewHost() as IbTableViewsHostStub;
+      const baseline = host.defaultViewBaseline!;
+      const facade = component["stateFacade"] as IbKaiTableStateFacade;
+      const applyViewSpy = spyOn(facade, "applyView");
+
+      expect(baseline.filters).toBeNull();
+      expect(baseline.filter).toEqual({});
+
+      host.emitActiveViewChanged({ ...baseline, viewId: null });
+
+      expect(applyViewSpy).toHaveBeenCalledWith(null, {
+        sort: null,
+        filters: null,
+        pageSize: 20,
+        aggregatedColumns: {},
+      });
+    });
+
     it("should forward toolbar portals from views host", async () => {
       await hostFixture.whenStable();
       hostFixture.detectChanges();

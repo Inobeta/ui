@@ -302,11 +302,21 @@ export class IbTable implements OnDestroy {
       viewHost.syncActiveView(this.stateFacade.selectedView());
 
       this.viewSubscription = viewHost.activeViewChanged.subscribe((view) => {
+        // The implicit Default view has no persisted snapshot to resolve.
+        // Always apply the table-definition baseline so switching from a
+        // named view clears its filters and sort (as well as restoring the
+        // other view-owned state), rather than relying on the host's
+        // selectedView=null sentinel data.
+        const snapshot = view.viewId === null
+          ? this.stateFacade.getDefaultViewBaseline()
+          : view;
         this.stateFacade.applyView(view.viewId, {
-          sort: view.sort?.active ? view.sort : null,
-          filters: view.filters ?? view.filter ?? null,
-          pageSize: view.pageSize,
-          aggregatedColumns: view.aggregatedColumns,
+          sort: snapshot.sort?.active ? snapshot.sort : null,
+          filters: snapshot.filters !== undefined
+            ? snapshot.filters
+            : snapshot.filter ?? null,
+          pageSize: snapshot.pageSize,
+          aggregatedColumns: snapshot.aggregatedColumns,
         });
       });
       this.setupViewGroup();
