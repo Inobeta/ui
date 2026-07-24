@@ -75,12 +75,12 @@ export class IbTableViewGroup extends IbTableViewsHost implements OnDestroy {
       data: this._defaultBaseline
         ? { ...this._defaultBaseline }
         : {
-            filter: {} as IView['data']['filter'],
-            filters: null,
-            pageSize: 20,
-            aggregatedColumns: {},
-            sort: { ...EMPTY_SORT },
-          },
+          filter: {} as IView['data']['filter'],
+          filters: null,
+          pageSize: 20,
+          aggregatedColumns: {},
+          sort: { ...EMPTY_SORT },
+        },
     };
   }
 
@@ -230,6 +230,7 @@ export class IbTableViewGroup extends IbTableViewsHost implements OnDestroy {
    * stored {@link IView.data}.
    */
   checkViewDataChanges(): boolean {
+    console.log('check data changed')
     const current = this._viewDataAccessor();
     if (!current) {
       return false;
@@ -262,9 +263,9 @@ export class IbTableViewGroup extends IbTableViewsHost implements OnDestroy {
         saved.filters ?? null
       ) &&
       IbTableViewGroup._normalizeSort(current.sort).active ===
-        IbTableViewGroup._normalizeSort(saved.sort).active &&
+      IbTableViewGroup._normalizeSort(saved.sort).active &&
       IbTableViewGroup._normalizeSort(current.sort).direction ===
-        IbTableViewGroup._normalizeSort(saved.sort).direction &&
+      IbTableViewGroup._normalizeSort(saved.sort).direction &&
       current.pageSize === saved.pageSize &&
       IbTableViewGroup._deepEqualObj(
         current.aggregatedColumns,
@@ -452,10 +453,16 @@ export class IbTableViewGroup extends IbTableViewsHost implements OnDestroy {
     });
   }
 
-  /** Resets the dirty state by re-synchronising with the current saved view. */
+  /**
+   * Resets the dirty state by re-applying the saved view snapshot through
+   * {@link activeViewChanged}, which requests the table to restore its
+   * canonical state (Default baseline or named-view persisted data).
+   */
   handleDiscardChanges(): void {
     const current = this._activeView.value;
-    this._activeView.next({ ...current, initial: true });
+    // Emit with initial:false so activeViewChanged fires and the table
+    // resets filters/sort etc. to the saved snapshot.
+    this._activeView.next({ ...current, initial: false });
     this._dirty = false;
   }
 

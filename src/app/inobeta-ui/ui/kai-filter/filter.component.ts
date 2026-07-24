@@ -36,7 +36,8 @@ import { IB_FILTER } from "./tokens";
 
     <button
       *ibTableAction
-      mat-icon-button
+      matMiniFab
+      style="margin-left: 5px;"
       [matTooltip]="'shared.ibTableView.showFilters' | translate"
       [color]="!hideFilters ? 'primary' : ''"
       (click)="hideFilters = !hideFilters"
