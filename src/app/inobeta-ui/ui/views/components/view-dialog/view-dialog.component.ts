@@ -40,7 +40,7 @@ export interface IbTableViewDialogData {
     <h2 mat-dialog-title>{{ data?.title | translate }}</h2>
 
     <mat-dialog-content>
-      <div style="display: flex; flex-direction: column;">
+      <div style="display: flex; flex-direction: column;padding:5px;">
       @if (data?.hideInput) {
         <p
           translate

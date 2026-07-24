@@ -31,7 +31,7 @@ export const ibViewTranslations = {
         "renamed": "Vista rinominata",
         "saved": "Vista salvata",
       },
-      "showFilters": "Mostra filtri"
+      "showFilters": "Mostra/Nascondi filtri"
     },
   }
 }

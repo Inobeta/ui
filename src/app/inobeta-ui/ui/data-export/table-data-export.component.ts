@@ -27,7 +27,7 @@ import {
   ],
 })
 export class IbTableDataExportAction {
-  @Input() showAllRowsOption = false;
+  @Input() showAllRowsOption = true;
   @Input() showSelectedRowsOption = false;
   @Output() ibDataExport = new EventEmitter<IDataExportSettings>();
   exportService: IbDataExportService = inject(IbDataExportService);

@@ -39,10 +39,9 @@ import { IB_FILTER } from "./tokens";
       matMiniFab
       style="margin-left: 5px;"
       [matTooltip]="'shared.ibTableView.showFilters' | translate"
-      [color]="!hideFilters ? 'primary' : ''"
       (click)="hideFilters = !hideFilters"
       >
-      <mat-icon>{{ "filter_alt" }}</mat-icon>
+      <mat-icon>{{ (!hideFilters) ? "filter_alt" : "filter_alt_off" }}</mat-icon>
     </button>
     `,
   styleUrls: ["./filter.component.scss"],
