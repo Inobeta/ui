@@ -287,6 +287,29 @@ export class IbTableViewGroup extends IbTableViewsHost implements OnDestroy {
    */
   handleAddView(data?: IView['data']): void {
     const snapshot = data ?? this.defaultView.data;
+
+    // Warn when the user clicks "+" on a dirty view without explicitly saving.
+    if (!data && this._dirty) {
+      const dialogRef = this.viewService.openDialog({
+        title: 'shared.ibTableView.addTitle',
+        confirm: 'shared.ibTableView.add',
+        message: {
+          label: 'shared.ibTableView.unsavedNewViewWarning',
+        },
+        hideInput: false,
+      });
+      dialogRef.afterClosed().subscribe((result) => {
+        if (!result) return;
+        const view = this.viewService.addView({
+          name: result.name,
+          groupName: this.viewGroupName,
+          data: snapshot,
+        });
+        this._activeView.next(view);
+      });
+      return;
+    }
+
     this.viewService.openAddViewDialog().subscribe(({ name }) => {
       const view = this.viewService.addView({
         name,

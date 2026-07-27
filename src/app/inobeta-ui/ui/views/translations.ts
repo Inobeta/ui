@@ -24,6 +24,7 @@ export const ibViewTranslations = {
       "unsavedTitle": "Modifiche non salvate",
       "unsavedView": "Vuoi salvare le modifiche apportate a \"{{viewName}}\"?",
       "unsavedUnnamedView": "Vuoi salvare le modifiche apportate in una nuova vista?",
+      "unsavedNewViewWarning": "La vista corrente ha modifiche non salvate. Proseguendo, le modifiche andranno perse.",
       "view": {
         "added": "Vista creata",
         "removed": "Vista eliminata",
