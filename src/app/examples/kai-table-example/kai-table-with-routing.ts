@@ -4,7 +4,7 @@ import { IbDataExportModule, IbFilterModule, IbKaiTableModule, IbTableActionModu
 import { IbSelectionColumn } from "public_api";
 import { IbUserExample, UserService } from "./users";
 
-import { MatIconButton } from "@angular/material/button";
+import { MatButtonModule, MatIconButton } from "@angular/material/button";
 import { ActivatedRoute, Router, RouterOutlet } from "@angular/router";
 
 @Component({
@@ -21,7 +21,7 @@ import { ActivatedRoute, Router, RouterOutlet } from "@angular/router";
         @if (selectionColumn?.selection.selected.length > 0) {
           <ng-template ibTableAction>
             <button
-              mat-icon-button
+              matMiniFab
               (click)="getSelection()"
               >
               <mat-icon>delete</mat-icon>
@@ -29,7 +29,7 @@ import { ActivatedRoute, Router, RouterOutlet } from "@angular/router";
           </ng-template>
         }
         <ng-template ibTableAction>
-          <button mat-icon-button (click)="getUserOrders()">
+          <button matMiniFab (click)="getUserOrders()">
             <mat-icon>refresh</mat-icon>
           </button>
         </ng-template>
@@ -61,7 +61,7 @@ import { ActivatedRoute, Router, RouterOutlet } from "@angular/router";
       </ib-column>
       <ib-column ib-action-column>
         <section *ibCellDef="let element">
-          <button mat-icon-button (click)="handleView(element)">
+          <button matMiniFab (click)="handleView(element)">
             <mat-icon>chevron_right</mat-icon>
           </button>
         </section>
@@ -88,7 +88,7 @@ import { ActivatedRoute, Router, RouterOutlet } from "@angular/router";
     IbViewModule,
     IbTableActionModule,
     IbDataExportModule,
-    MatIconButton,
+    MatButtonModule,
     RouterOutlet
   ]
 })

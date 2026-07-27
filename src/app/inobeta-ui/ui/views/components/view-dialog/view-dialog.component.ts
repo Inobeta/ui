@@ -35,11 +35,12 @@ export interface IbTableViewDialogData {
 }
 
 @Component({
-    selector: "ib-table-view-dialog",
-    template: `
+  selector: "ib-table-view-dialog",
+  template: `
     <h2 mat-dialog-title>{{ data?.title | translate }}</h2>
 
     <mat-dialog-content>
+      <div style="display: flex; flex-direction: column;padding:5px;">
       @if (data?.hideInput) {
         <p
           translate
@@ -59,6 +60,7 @@ export interface IbTableViewDialogData {
           }
         </mat-form-field>
       }
+      </div>
     </mat-dialog-content>
 
     <div mat-dialog-actions style="justify-content: flex-end">
@@ -110,7 +112,7 @@ export interface IbTableViewDialogData {
       }
     </div>
     `,
-    standalone: false
+  standalone: false
 })
 export class IbTableViewDialog {
   viewName = new FormControl("", { validators: [Validators.required] });

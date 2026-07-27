@@ -507,7 +507,6 @@ describe("IbTable", () => {
       const exportButton = await loader.getHarness(
         MatButtonHarness.with({
           ancestor: ".ib-table__toolbar__actions",
-          variant: "icon",
         })
       );
       await exportButton.click();
@@ -536,7 +535,6 @@ describe("IbTable", () => {
       const exportButton = await loader.getHarness(
         MatButtonHarness.with({
           ancestor: ".ib-table__toolbar__actions",
-          variant: "icon",
         })
       );
       await exportButton.click();
@@ -572,7 +570,6 @@ describe("IbTable", () => {
       const exportButton = await loader.getHarness(
         MatButtonHarness.with({
           ancestor: ".ib-table__toolbar__actions",
-          variant: "icon",
         })
       );
       await exportButton.click();
@@ -606,7 +603,6 @@ describe("IbTable", () => {
       const exportButton = await loader.getHarness(
         MatButtonHarness.with({
           ancestor: ".ib-table__toolbar__actions",
-          variant: "icon",
         })
       );
       await exportButton.click();

@@ -194,10 +194,10 @@ If custom logic is needed instead, please follow [how to build a column](#build-
   <!-- ... -->
   <ib-column ib-action-column>
     <section *ibCellDef="let element">
-      <button mat-icon-button (click)="handleShowReport(element)">
+      <button matMiniFab (click)="handleShowReport(element)">
         <mat-icon>chevron_right</mat-icon>
       </button>
-      <button mat-icon-button [matMenuTriggerFor]="menu">
+      <button matMiniFab [matMenuTriggerFor]="menu">
         <mat-icon>more_vert</mat-icon>
       </button>
       <mat-menu #menu="matMenu">
@@ -717,13 +717,13 @@ To add a set of buttons to a table's toolbar, first import `IbTableActionModule`
 export class TableWithActionsComponent {}
 ```
 
-Then add the `ib-table-action-group` component within `ib-kai-table`, it is recommended to only use `mat-icon-button`s
+Then add the `ib-table-action-group` component within `ib-kai-table`, it is recommended to only use `matMiniFab`s
 in order to maintain a cohesive design.
 
 ```html
 <ib-kai-table tableName="myTable" [data]="data" [displayedColumns]="displayedColumns">
   <ib-table-action-group>
-    <button mat-icon-button (click)="refreshData()">
+    <button matMiniFab (click)="refreshData()">
       <mat-icon>refresh</mat-icon>
     </button>
   </ib-table-action-group>

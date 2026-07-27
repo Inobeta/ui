@@ -30,12 +30,11 @@ import { IbColumn } from '../kai-table/columns';
   template: `
     <div class="ib-kai-table-mobile__toolbar-container">
           <div class="ib-kai-table-mobile__toolbar">
-            <mat-card>
             <div class="ib-kai-table-mobile__toolbar-actions">
 
               @if(sortableColumns().length > 0) {
                 <button
-                  mat-icon-button
+                  matMiniFab
                   (click)="sortOpen.set(!sortOpen())"
                 >
                   <mat-icon>sort</mat-icon>
@@ -44,7 +43,7 @@ import { IbColumn } from '../kai-table/columns';
 
             @if (filters().length) {
                 <button
-                  mat-icon-button
+                  matMiniFab
                   (click)="filtersOpen.set(!filtersOpen())"
                   [matBadge]="activeFiltersCount()"
                   [matBadgeHidden]="activeFiltersCount() === 0"
@@ -55,7 +54,7 @@ import { IbColumn } from '../kai-table/columns';
               @for (action of headerActions(); track $index) {
                 @if(action.kind() === 'export' && canExportCurrentPage()) {
                   <button
-                    mat-icon-button
+                    matMiniFab
                     [matTooltip]="'shared.ibTable.export' | translate"
                     (click)="openExportDialog()"
                   >
@@ -66,7 +65,6 @@ import { IbColumn } from '../kai-table/columns';
                 }
               }
             </div>
-            </mat-card>
           </div>
 
           @if (sortOpen()) {

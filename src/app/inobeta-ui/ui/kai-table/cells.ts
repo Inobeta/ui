@@ -10,11 +10,11 @@ import {
 import { IB_AGGREGATE, IB_AGGREGATE_TYPE, IB_COLUMN } from "./tokens";
 
 @Directive({
-    selector: "[ibCellDef]",
-    standalone: false
+  selector: "[ibCellDef]",
+  standalone: false
 })
 export class IbCellDef {
-  constructor(public templateRef: TemplateRef<unknown>) {}
+  constructor(public templateRef: TemplateRef<unknown>) { }
 }
 
 export interface IbAggregateResult {
@@ -106,11 +106,11 @@ export const IbAverageAggregateProvider = {
 };
 
 @Component({
-    selector: "ib-aggregate",
-    template: `
+  selector: "ib-aggregate",
+  template: `
     <section class="ib-aggregate__function">
       <button
-        mat-icon-button
+        matMiniFab
         [matMenuTriggerFor]="menu"
         [matTooltip]="'shared.aggregate.apply' | translate"
         >
@@ -135,7 +135,7 @@ export const IbAverageAggregateProvider = {
         }}</span>
            {{ result()?.currentPage ? (result()?.currentPage | number) : "--" }}
       </div>
-    
+
       @if (showTotal()) {
         <div>
           <span class="mat-caption">{{
@@ -146,7 +146,7 @@ export const IbAverageAggregateProvider = {
       }
     </section>
     `,
-    standalone: false
+  standalone: false
 })
 export class IbAggregateCell {
   readonly function = input<string>("", { alias: "function" });
