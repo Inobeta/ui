@@ -28,6 +28,7 @@ You write **only one type of file**: `docs/plans/<ticketCode>-<feature-name>-fee
 - `angular-i18n`
 - `angular-template-safety`
 - `executor-handoff`
+- `caveman lite` - in order to reduce token usage
 
 ## Core Responsibilities
 

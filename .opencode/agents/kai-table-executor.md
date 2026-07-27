@@ -18,6 +18,7 @@ Load these skills when applicable:
 - `angular-i18n` — when adding or modifying any user-visible text, labels, or messages.
 - `angular-template-safety` — when editing component templates.
 - `kai-table-shared` — always load; contains shared contracts, DI tokens, and data-flow guidance between desktop and mobile.
+- `caveman lite` - in order to reduce token usage
 
 ## Background and Goals
 

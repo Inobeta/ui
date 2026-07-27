@@ -16,6 +16,7 @@ Load these skills when applicable:
 
 - `focused-execution` — always load; enforces scope discipline and stop conditions.
 - `inobeta-ui-conventions` — when the test involves library naming or barrel imports.
+- `caveman lite` - in order to reduce token usage
 
 ## Testing Framework
 

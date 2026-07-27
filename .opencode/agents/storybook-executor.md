@@ -15,6 +15,7 @@ Load these skills when applicable:
 
 - `focused-execution` — always load; enforces scope discipline and stop conditions.
 - `angular-i18n` — when adding or modifying any user-visible text in stories.
+- `caveman lite` - in order to reduce token usage
 
 ## Domain
 
