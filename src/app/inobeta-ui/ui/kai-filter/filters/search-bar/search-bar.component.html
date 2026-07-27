@@ -11,13 +11,7 @@
       [placeholder]="'shared.ibFilter.search' | translate"
       />
     @if (searchCriteria.value) {
-      <button
-        matSuffix
-        mat-icon-button
-        (click)="clear()"
-        >
-        <mat-icon>close</mat-icon>
-      </button>
+      <mat-icon matSuffix (click)="clear()" style="cursor: pointer;">close</mat-icon>
     }
   </mat-form-field>
 </ng-template>
