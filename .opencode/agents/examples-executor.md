@@ -20,6 +20,7 @@ Load skills dynamically based on what the example touches:
 - Always load `inobeta-ui-conventions` — naming and public API awareness.
 - Load `angular-i18n` when the example introduces new user-visible text.
 - Load `angular-template-safety` when editing component templates.
+- `caveman lite` - in order to reduce token usage
 
 ## Domain
 

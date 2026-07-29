@@ -3,11 +3,12 @@
 
 @mixin base($theme) {
   .ib-table__container {
-    @if (mat.get-theme-version($theme) == 1) {
-      border-radius: 28px;
-    } @else {
-      border-radius: 4px;
-    }
+    border-radius: 10px;
+  }
+
+  .ib-table__toolbar__actions {
+    display: flex;
+    gap: 4px;
   }
 }
 

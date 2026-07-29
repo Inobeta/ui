@@ -7,16 +7,16 @@
 section.ib-filter {
   opacity: 1;
   overflow: hidden;
+  padding:5px;
+  word-wrap: nowrap;
 
-  ib-search-bar {
-    display: block;
-  }
-  
+
   &__list {
     display: flex;
     max-height: 56px;
-    padding: 12px 0 12px 12px;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
     align-items: center;
 
     gap: 0.4em;
@@ -26,16 +26,23 @@ section.ib-filter {
     .ib-add-filter-button {
       font-size: 12px;
       border-radius: 20px;
+      flex-shrink: 0;
     }
 
     .ib-add-column-filter-button
-      .mdc-evolution-chip__cell--primary
-      .mdc-evolution-chip__action {
+    .mdc-evolution-chip__cell--primary
+    .mdc-evolution-chip__action {
       padding-left: 0;
     }
 
     mat-icon:first-child {
       margin: 0 12px;
+      flex-shrink: 0;
+    }
+
+    ib-search-bar {
+      flex: 1 1 120px;
+      min-width: 0;
     }
   }
 }

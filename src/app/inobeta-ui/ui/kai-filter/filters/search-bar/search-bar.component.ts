@@ -8,37 +8,10 @@ import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: "ib-search-bar",
-  template: `
-    <ng-template #renderer>
-      <mat-form-field
-        [formGroup]="filter?.form"
-        subscriptSizing="dynamic"
-        style="width: 100%; padding-bottom: 0"
-        >
-        <mat-icon matPrefix>search</mat-icon>
-        <input
-          matInput
-          [formControlName]="name"
-          [placeholder]="'shared.ibFilter.search' | translate"
-          />
-        @if (searchCriteria.value) {
-          <button
-            matSuffix
-            mat-icon-button
-            (click)="clear()"
-            >
-            <mat-icon>close</mat-icon>
-          </button>
-        }
-      </mat-form-field>
-    </ng-template>
-
-    <ng-container *ngTemplateOutlet="renderer"></ng-container>
-
-
-    `,
+  templateUrl: "search-bar.component.html",
+  styleUrls: ["./search-bar.component.scss"],
   providers: [{ provide: IbFilterBase, useExisting: IbSearchBar }],
-  standalone: false
+  standalone: false,
 })
 export class IbSearchBar extends IbFilterBase {
   name = "ibSearchBar";

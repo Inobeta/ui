@@ -25,12 +25,12 @@ import { IB_FILTER } from "./tokens";
       [class.ib-filter--hidden]="hideFilters"
       [attr.aria-hidden]="hideFilters"
       >
-      <ng-content select="ib-search-bar"></ng-content>
       <section #list class="ib-filter__list">
         @if (list.children.length > 1) {
           <mat-icon>filter_list</mat-icon>
         }
         <ng-content></ng-content>
+        <ng-content select="ib-search-bar"></ng-content>
       </section>
     </section>
 

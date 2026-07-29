@@ -41,7 +41,7 @@ export interface IbTableViewDialogData {
 
     <mat-dialog-content>
       <div style="display: flex; flex-direction: column;padding:5px;">
-      @if (data?.hideInput) {
+      @if (data?.message) {
         <p
           translate
           [translateParams]="data?.message?.args"

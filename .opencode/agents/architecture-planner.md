@@ -20,6 +20,7 @@ Your job is to analyze the current codebase and produce a minimal-risk, incremen
 - `inobeta-ui-conventions` — always load; covers naming and public API rules.
 - `angular-i18n` — whenever planning UI-visible text, labels, metadata, dialogs, forms, or messages
 - `angular-template-safety` — whenever planning Angular template work
+- `caveman lite` - in order to reduce token usage
 
 ## Core Responsibilities
 

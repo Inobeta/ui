@@ -1,0 +1,19 @@
+<ng-template #renderer>
+  <mat-form-field
+    [formGroup]="filter?.form"
+    subscriptSizing="dynamic"
+    style="width: 100%;"
+    >
+    <mat-icon matPrefix>search</mat-icon>
+    <input
+      matInput
+      [formControlName]="name"
+      [placeholder]="'shared.ibFilter.search' | translate"
+      />
+    @if (searchCriteria.value) {
+      <mat-icon matSuffix (click)="clear()" style="cursor: pointer;">close</mat-icon>
+    }
+  </mat-form-field>
+</ng-template>
+
+<ng-container *ngTemplateOutlet="renderer"></ng-container>
