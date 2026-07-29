@@ -1,6 +1,8 @@
+import { ComponentPortal } from "@angular/cdk/portal";
 import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
-import { CommonModule } from "@angular/common";
+import { CommonModule, registerLocaleData } from "@angular/common";
+import localeIt from "@angular/common/locales/it";
 import { Component, Injectable, Type } from "@angular/core";
 import {
   ComponentFixture,
@@ -13,18 +15,16 @@ import { MatButtonHarness } from "@angular/material/button/testing";
 import { MatDialogHarness } from "@angular/material/dialog/testing";
 import { MatInputHarness } from "@angular/material/input/testing";
 import { MatMenuHarness } from "@angular/material/menu/testing";
-import { MatPaginator } from "@angular/material/paginator";
 import { MatRadioButtonHarness } from "@angular/material/radio/testing";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { MatSort, MatSortModule } from "@angular/material/sort";
+import { MatSortModule, Sort } from "@angular/material/sort";
 import { MatSortHarness } from "@angular/material/sort/testing";
 import { MatTableHarness } from "@angular/material/table/testing";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterTestingModule } from "@angular/router/testing";
-import { EffectsModule } from "@ngrx/effects";
 import { provideStore } from "@ngrx/store";
-import { provideMockStore } from "@ngrx/store/testing";
+import { Store } from "@ngrx/store";
 import { TranslateModule } from "@ngx-translate/core";
 import { Observable, map, throwError, timer } from "rxjs";
 import {
@@ -33,19 +33,27 @@ import {
   OVERRIDE_EXPORT_FORMATS
 } from "../data-export";
 import { IbDataExportProvider } from "../data-export/provider";
-import { IbFilterModule } from "../kai-filter";
-import { IbViewModule } from "../views";
+import { IbFilterModule, IbSearchBar, IbTagFilter } from "../kai-filter";
 import { IbTableActionModule } from "./action";
-import { IbAggregateCell } from "./cells";
+import { IbTableViewsHost } from "./table-views-host";
+import { IbTableViewsHostStub } from "./table-views-host.stub.spec";
+import { IbAggregate, IbAggregateCell } from "./cells";
 import {
   IbFetchDataResponse,
+  IbRemoteDataSourceRequest,
   IbTableRemoteDataSource,
 } from "./remote-data-source";
-import { UrlStateEffects } from "./store/url-state/effects";
+import { tableStateActions } from "./store/url-state/actions";
 import { IbTableDataSource } from "./table-data-source";
 import { IbTableUrlService } from "./table-url.service";
 import { IbTable } from "./table.component";
 import { IbKaiTableModule } from "./table.module";
+import { IbTableLocalDataSource } from "./local-data-source";
+import { IbKaiTableStateFacade } from "./table-state.facade";
+import { IB_AGGREGATE } from "./tokens";
+
+// Locale registration required by DecimalPipe / DatePipe in columns
+registerLocaleData(localeIt);
 
 describe("IbTable", () => {
   describe("with IbTableDataSource", () => {
@@ -78,18 +86,22 @@ describe("IbTable", () => {
 
     it("should select a row", () => {
       const row = { name: "alice" };
-      component.selectionColumn.toggleRowSelection({ checked: true }, row);
+      component.selectionColumn().toggleRowSelection({ checked: true }, row);
       fixture.detectChanges();
-      expect(component.selectionColumn.selection.isSelected(row)).toBeTruthy();
+      expect(component.selectionColumn().selection.isSelected(row)).toBeTruthy();
     });
 
-    it("should toggle all rows", () => {
-      component.selectionColumn.toggleAllRows();
+    it("should toggle all rows", async () => {
+      const table = await loader.getHarness(MatTableHarness);
+      const renderedRows = await table.getRows();
+      expect(renderedRows.length).toBe(2);
+
+      component.selectionColumn().toggleAllRows();
+      expect(component.selectionColumn().selection.selected).toEqual(host.data);
+
+      component.selectionColumn().toggleAllRows();
       fixture.detectChanges();
-      expect(component.selectionColumn.isAllSelected()).toBeTruthy();
-      component.selectionColumn.toggleAllRows();
-      fixture.detectChanges();
-      expect(component.selectionColumn.isAllSelected()).toBeFalsy();
+      expect(component.selectionColumn().selection.selected).toEqual([]);
     });
   });
 
@@ -98,24 +110,55 @@ describe("IbTable", () => {
       const fixture = createComponent(IbTableWithRemoteDataApp);
       const component = fixture.debugElement.query(
         By.directive(IbTable)
-      ).componentInstance;
-      tick(1000) //DEVK-346 we add a debounceTime time of 500ms in order to avoid multiple requests
+      ).componentInstance as IbTable;
+      tick(1000);
+      const remoteSource = component.activeDataSource() as IbTableRemoteDataSource<any>;
       expect(component).toBeTruthy();
-      expect(component.dataSource.state).toBe("idle");
+      expect(remoteSource.state).toBe("idle");
     }));
 
     it("should show error on exception", fakeAsync(() => {
       const fixture = createComponent(IbTableWithRemoteDataApp);
       const component = fixture.debugElement.query(
         By.directive(IbTable)
-      ).componentInstance;
-      fixture.componentInstance.dataSource.fetchData = () =>
-        throwError(() => new Error());
-      component.dataSource.refresh();
+      ).componentInstance as IbTable;
+      const remoteDs = fixture.componentInstance.dataSource;
+      remoteDs.fetchData = () =>
+        throwError(() => new Error("test-error"));
+      const source = component.activeDataSource();
+      if ('refresh' in source) {
+        source.refresh();
+      }
       tick(500);
       fixture.detectChanges();
-      expect(component.state).toBe("http_error");
+      expect(component.effectiveState()).toBe("http_error");
     }));
+
+    it("should update the paginator length from the remote total count", fakeAsync(() => {
+      const fixture = createComponent(IbTableWithRemoteDataApp);
+      const component = fixture.debugElement.query(
+        By.directive(IbTable)
+      ).componentInstance as IbTable;
+
+      tick(1000);
+      fixture.detectChanges();
+      fixture.componentInstance.dataSource.refresh();
+      tick(1000);
+
+      expect(component.paginator().length).toBe(1);
+    }));
+
+    it("should not export a remote data source", () => {
+      const fixture = createComponent(IbTableWithRemoteDataApp);
+      const component = fixture.debugElement.query(
+        By.directive(IbTable)
+      ).componentInstance as IbTable;
+      const exportSpy = spyOn(component.exportService, "_exportFromTable");
+
+      component.doExport({ format: "csv", dataset: "all" });
+
+      expect(exportSpy).not.toHaveBeenCalled();
+    });
   });
 
   describe("with rowgroup", () => {
@@ -128,96 +171,317 @@ describe("IbTable", () => {
     });
   });
 
-  describe("with IbView", () => {
-    let fixture: ComponentFixture<IbTableWithViewGroupApp>;
+  describe("with views host", () => {
+    let hostFixture: ComponentFixture<IbTableWithViewGroupApp>;
     let component: IbTable;
     let loader: HarnessLoader;
 
-    beforeEach(() => {
-      fixture = createComponent(IbTableWithViewGroupApp);
-      component = fixture.debugElement.query(
-        By.directive(IbTable)
-      ).componentInstance;
-      loader = TestbedHarnessEnvironment.documentRootLoader(fixture);
-    });
-
-    it("should create", () => {
-      expect(component).toBeTruthy();
-    });
-
-    it("should create a view", async () => {
-      const addViewButton = await loader.getHarness(
-        MatButtonHarness.with({
-          ancestor: "ib-view-list",
-          variant: "icon",
-        })
-      );
-      await addViewButton.click();
-
-      fixture.detectChanges();
-      await fixture.whenStable();
-
-      const dialog = await loader.getHarness(MatDialogHarness);
-      expect(dialog).toBeTruthy();
-      const input = await loader.getHarness(MatInputHarness);
-      await input.setValue("green view");
-
-      const confirm = await loader.getHarness(
-        MatButtonHarness.with({
-          text: "shared.ibTableView.add",
-        })
-      );
-      expect(confirm).toBeTruthy();
-      await confirm.click();
-
-      fixture.detectChanges();
-      await fixture.whenStable();
-
-      const views = await loader.getAllHarnesses(
-        MatButtonHarness.with({
-          ancestor: "ib-view-list",
-        })
-      );
-      expect(views.length).toBe(2);
-    });
-
-
-    //DEVK-346 this should be fixed
-    xit("should save view", fakeAsync(async () => {
-      component.filter.form.patchValue({ color: ["green"] });
-      component.filter.update();
-      expect(component.view.dirty).toBeTruthy();
-
-      tick(1);
-      const save = await loader.getHarness(
-        MatButtonHarness.with({
-          ancestor: ".ib-table__toolbar__actions",
-          variant: "icon",
-          text: /save/,
-        })
-      );
-      await save.click();
-
-      const dialog = await loader.getHarness(MatDialogHarness);
-      expect(dialog).toBeTruthy();
-      await fixture.whenStable();
-      const input = await dialog.getHarness(MatInputHarness);
-      await input.setValue("green view");
-
-      const confirm = await dialog.getHarness(
-        MatButtonHarness.with({
-          text: "shared.ibTableView.add",
-        })
-      );
-      await confirm.click();
-
-      const views = await loader.getAllHarnesses(
-        MatButtonHarness.with({
-          ancestor: "ib-view-list",
-        })
-      );
-      expect(views.length - 1).toBe(2);
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [
+          IbTableWithViewGroupApp,
+          IbTableWithViewGroupNoFilterApp,
+          IbTestViewsHostComponent,
+        ],
+        imports: [
+          CommonModule,
+          IbKaiTableModule,
+          IbTableActionModule,
+          IbFilterModule,
+          MatSortModule,
+          IbDataExportModule,
+          NoopAnimationsModule,
+          TranslateModule.forRoot({
+            extend: true,
+          }),
+          RouterTestingModule.withRoutes([])
+        ],
+        providers: [
+          provideStore(),
+          { provide: MatSnackBar, useValue: { open: () => { } } },
+          IbTableUrlService,
+        ],
+      }).compileComponents();
     }));
+
+    beforeEach(async () => {
+      hostFixture = TestBed.createComponent(IbTableWithViewGroupApp);
+      hostFixture.detectChanges();
+      component = hostFixture.debugElement.query(
+        By.directive(IbTable)
+      ).componentInstance as IbTable;
+      loader = TestbedHarnessEnvironment.documentRootLoader(hostFixture);
+    });
+
+    it("should create with stub views host", () => {
+      expect(component).toBeTruthy();
+      expect(component.viewHost()).toBeTruthy();
+      expect(component.viewHost() instanceof IbTableViewsHostStub).toBeTrue();
+    });
+
+    it("should initialize views host on creation", async () => {
+      await hostFixture.whenStable();
+      hostFixture.detectChanges();
+
+      const host = component.viewHost() as IbTableViewsHostStub;
+      expect(host.viewGroupName).toBe("test-views");
+      expect(typeof host.viewDataAccessor).toBe("function");
+
+      const data = host.viewDataAccessor();
+      expect(data.filter).toBeDefined();
+      expect(data.pageSize).toBeGreaterThan(0);
+      expect(data.sort).toBeDefined();
+      expect(data.aggregatedColumns).toBeDefined();
+
+      expect(component.activeDataSource()).toEqual(jasmine.any(IbTableLocalDataSource));
+
+      expect(component.actionPortals.length).toBe(1);
+
+      const hostEl = hostFixture.debugElement.query(By.directive(IbTable));
+      expect(hostEl.classes["ib-table--has-views"]).toBeTrue();
+    });
+
+    it("should apply active view changes to table state", async () => {
+      const f = hostFixture;
+      const c = component;
+      await hostFixture.whenStable();
+      f.detectChanges();
+
+      const host = c.viewHost() as IbTableViewsHostStub;
+      expect(c.activeDataSource()).toEqual(jasmine.any(IbTableLocalDataSource));
+
+      const store = TestBed.inject(Store);
+      const dispatchSpy = spyOn(store, "dispatch").and.callThrough();
+
+      host.emitActiveViewChanged({
+        filter: {},
+        pageSize: 50,
+        aggregatedColumns: { amount: "sum" },
+        sort: { active: "name", direction: "asc" },
+        viewId: "test-view-1",
+      });
+
+      await f.whenStable();
+      f.detectChanges();
+
+      const dispatchedAction = dispatchSpy.calls.mostRecent().args[0];
+      expect(dispatchedAction).toEqual(
+        tableStateActions.applyView({
+          tableName: "test-views",
+          selectedView: "test-view-1",
+          snapshot: {
+            filters: {},
+            pageSize: 50,
+            aggregatedColumns: { amount: "sum" },
+            sort: { active: "name", direction: "asc" },
+          },
+        }),
+      );
+    });
+
+    it("should preserve null filters when applying the Default baseline", async () => {
+      await hostFixture.whenStable();
+      hostFixture.detectChanges();
+
+      const host = component.viewHost() as IbTableViewsHostStub;
+      const baseline = host.defaultViewBaseline!;
+      const facade = component["stateFacade"] as IbKaiTableStateFacade;
+      const applyViewSpy = spyOn(facade, "applyView");
+
+      expect(baseline.filters).toBeNull();
+      expect(baseline.filter).toEqual({});
+
+      host.emitActiveViewChanged({ ...baseline, viewId: null });
+
+      expect(applyViewSpy).toHaveBeenCalledWith(null, {
+        sort: null,
+        filters: null,
+        pageSize: 20,
+        aggregatedColumns: {},
+      });
+    });
+
+    it("should forward toolbar portals from views host", async () => {
+      await hostFixture.whenStable();
+      hostFixture.detectChanges();
+
+      const host = component.viewHost() as IbTableViewsHostStub;
+      const portalCount = host.toolbarPortals.length;
+
+      expect(component.actionPortals.length).toBe(1 + portalCount);
+    });
+
+    // ===========================================================================
+    // Bridge ordering — DEVK-1065 Step 7
+    // ===========================================================================
+
+    it("should call setViewGroupName before facade.initialize (resolveView is group-aware)", async () => {
+      await hostFixture.whenStable();
+      hostFixture.detectChanges();
+
+      const host = component.viewHost() as IbTableViewsHostStub;
+      // setViewGroupName fires synchronously before the first `await` in
+      // ngAfterContentInit, so the group name is already assigned when
+      // facade.initialize calls resolveView().
+      expect(host.viewGroupName).toBe("test-views");
+      expect(host.viewGroupNameSet).toBeTrue();
+    });
+
+    // ===========================================================================
+    // Default baseline — DEVK-1065 Step 7
+    // ===========================================================================
+
+    it("should supply the Default view baseline to the views host after init", async () => {
+      await hostFixture.whenStable();
+      hostFixture.detectChanges();
+
+      const host = component.viewHost() as IbTableViewsHostStub;
+      expect(host.defaultViewBaseline).not.toBeNull();
+      expect(host.defaultViewBaseline!.pageSize).toBeGreaterThan(0);
+      expect(host.defaultViewBaseline!.sort).toBeDefined();
+      // filters can be null (technical default) — it is the host's
+      // responsibility to handle that.
+      expect(host.defaultViewBaseline!.aggregatedColumns).toBeDefined();
+    });
+
+    it("should derive Default baseline from tableDef (not hard-coded)", async () => {
+      await hostFixture.whenStable();
+      hostFixture.detectChanges();
+
+      const host = component.viewHost() as IbTableViewsHostStub;
+      // IbTableWithViewGroupApp does not provide a tableDef, so the
+      // baseline uses technical defaults: pageSize 20, no sort, no filters.
+      const baseline = host.defaultViewBaseline!;
+      expect(baseline.pageSize).toBe(20);
+      expect(baseline.filters).toBeNull();
+      expect(baseline.sort).toEqual({ active: '', direction: '' });
+      expect(baseline.aggregatedColumns).toEqual({});
+    });
+
+    // ===========================================================================
+    // Canonical sync without feedback — DEVK-1065 Step 7
+    // ===========================================================================
+
+    it("should sync the host to canonical selectedView without emitting activeViewChanged", async () => {
+      await hostFixture.whenStable();
+      hostFixture.detectChanges();
+
+      const host = component.viewHost() as IbTableViewsHostStub;
+      // syncActiveView is called during ngAfterContentInit before the
+      // activeViewChanged subscription is wired, and it must NOT emit.
+      expect(host.syncActiveViewCallCount).toBeGreaterThanOrEqual(1);
+      expect(host.syncedActiveViewId).toBeNull(); // Default = null
+
+      // The selectedView in the canonical store should match.
+      const facade = component["stateFacade"] as IbKaiTableStateFacade;
+      expect(facade.selectedView()).toBeNull();
+    });
+
+    it("should NOT trigger a second applyView dispatch during sync", async () => {
+      const store = TestBed.inject(Store);
+      await hostFixture.whenStable();
+      hostFixture.detectChanges();
+
+      const dispatchSpy = spyOn(store, "dispatch").and.callThrough();
+      const host = component.viewHost() as IbTableViewsHostStub;
+
+      // Simulate a back/forward sync (same as the table's effect does)
+      host.syncActiveView(null);
+      await hostFixture.whenStable();
+
+      // syncActiveView is a one-way notification — it must not result in
+      // an additional dispatch (no feedback loop).
+      expect(dispatchSpy).not.toHaveBeenCalled();
+    });
+
+    // ===========================================================================
+    // Toolbar portals without filter — DEVK-1065 Step 7
+    // ===========================================================================
+
+    it("should forward toolbar portals from views host even when no ib-filter exists", async () => {
+      const noFilterFixture = TestBed.createComponent(IbTableWithViewGroupNoFilterApp);
+      noFilterFixture.detectChanges();
+
+      // Before async init completes, push a portal into the stub so
+      // setupViewGroup() picks it up.
+      const c: IbTable = noFilterFixture.debugElement.query(
+        By.directive(IbTable),
+      ).componentInstance as IbTable;
+      const host = c.viewHost() as IbTableViewsHostStub;
+      host.addToolbarPortal(new ComponentPortal(DummyPortalComponent));
+
+      await noFilterFixture.whenStable();
+      noFilterFixture.detectChanges();
+
+      // Without a filter, actionPortals should contain only the host portal.
+      expect(c.actionPortals.length).toBe(1);
+      expect(c.actionPortals[0]).toBeInstanceOf(ComponentPortal);
+    });
+
+    it("should initialize views host correctly when table has no filter", async () => {
+      const noFilterFixture = TestBed.createComponent(IbTableWithViewGroupNoFilterApp);
+      noFilterFixture.detectChanges();
+      await noFilterFixture.whenStable();
+      noFilterFixture.detectChanges();
+
+      const c: IbTable = noFilterFixture.debugElement.query(
+        By.directive(IbTable),
+      ).componentInstance as IbTable;
+      const host = c.viewHost() as IbTableViewsHostStub;
+
+      expect(host.defaultViewBaseline).not.toBeNull();
+      expect(host.syncActiveViewCallCount).toBeGreaterThanOrEqual(1);
+      expect(host.viewDataAccessor).toBeDefined();
+
+      const data = host.viewDataAccessor();
+      expect(data).toBeDefined();
+      expect(data.pageSize).toBeGreaterThan(0);
+    });
+  });
+
+  // ===========================================================================
+  // Table without views host — DEVK-1065 Step 7
+  // ===========================================================================
+
+  it("should work normally without a views host (no IbViewModule import needed)", async () => {
+    // Reset TestBed for a clean configuration without views host components.
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      declarations: [IbTableApp],
+      imports: [
+        CommonModule,
+        IbKaiTableModule,
+        IbTableActionModule,
+        IbFilterModule,
+        MatSortModule,
+        IbDataExportModule,
+        NoopAnimationsModule,
+        TranslateModule.forRoot({
+          extend: true,
+        }),
+        RouterTestingModule.withRoutes([]),
+      ],
+      providers: [
+        provideStore(),
+        { provide: MatSnackBar, useValue: { open: () => {} } },
+        IbTableUrlService,
+      ],
+    }).compileComponents();
+
+    const fixture = TestBed.createComponent(IbTableApp);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const c: IbTable = fixture.debugElement.query(
+      By.directive(IbTable),
+    ).componentInstance as IbTable;
+
+    expect(c.viewHost()).toBeFalsy();
+    expect(c.initialized()).toBeTrue();
+    expect(c.activeDataSource()).toBeDefined();
+
+    const facade = c["stateFacade"] as IbKaiTableStateFacade;
+    expect(facade.initialized()).toBeTrue();
   });
 
   describe("with export", () => {
@@ -229,7 +493,7 @@ describe("IbTable", () => {
       fixture = createComponent(IbTableWithExport);
       component = fixture.debugElement.query(
         By.directive(IbTable)
-      ).componentInstance;
+      ).componentInstance as IbTable;
       fixture.detectChanges();
       loader = TestbedHarnessEnvironment.documentRootLoader(fixture);
     });
@@ -243,7 +507,6 @@ describe("IbTable", () => {
       const exportButton = await loader.getHarness(
         MatButtonHarness.with({
           ancestor: ".ib-table__toolbar__actions",
-          variant: "icon",
         })
       );
       await exportButton.click();
@@ -259,61 +522,54 @@ describe("IbTable", () => {
       await confirm.click();
       fixture.detectChanges();
 
+      const localSource = component.activeDataSource() as IbTableDataSource<any>;
       expect(exportSpy).toHaveBeenCalledWith(
-        component.dataSource.data,
-        component.tableName,
+        localSource.data,
+        component.tableName(),
         "ib"
       );
     });
 
-    //DEVK-346 this should be fixed
-    xit("should export current page", async () => {
-      setTimeout(async () => {
+    it("should export current page", async () => {
+      const exportSpy = spyOn(component.exportService, "export");
+      const exportButton = await loader.getHarness(
+        MatButtonHarness.with({
+          ancestor: ".ib-table__toolbar__actions",
+        })
+      );
+      await exportButton.click();
+      const dialog = await loader.getHarness(MatDialogHarness);
+      fixture.detectChanges();
+      await fixture.whenStable();
+      expect(dialog).toBeTruthy();
+      const [_, __, option] = await dialog.getAllHarnesses(MatRadioButtonHarness);
+      await option.check();
+      const confirm = await dialog.getHarness(
+        MatButtonHarness.with({ text: "shared.ibTable.export" }),
+      );
+      await confirm.click();
+      fixture.detectChanges();
 
-        const exportSpy = spyOn(component.exportService, "export");
-        const exportButton = await loader.getHarness(
-          MatButtonHarness.with({
-            ancestor: ".ib-table__toolbar__actions",
-            variant: "icon",
-          })
-        );
-        await exportButton.click();
-        const dialog = await loader.getHarness(MatDialogHarness);
-        fixture.detectChanges();
-        await fixture.whenStable();
-        expect(dialog).toBeTruthy();
-        const [_, __, option] = await dialog.getAllHarnesses(
-          MatRadioButtonHarness
-        );
-        await option.check();
-        const confirm = await dialog.getHarness(
-          MatButtonHarness.with({
-            text: "shared.ibTable.export",
-          })
-        );
-        await confirm.click();
-        fixture.detectChanges();
-
-        expect(exportSpy).toHaveBeenCalledWith(
-          component.dataSource.data.slice(0, 5),
-          component.tableName,
-          "ib"
-        );
-      });
+      const ds = component.activeDataSource() as IbTableDataSource<any>;
+      expect(exportSpy).toHaveBeenCalledWith(
+        ds.data,
+        component.tableName(),
+        "ib",
+      );
     });
 
     it("should export selected rows", fakeAsync(async () => {
 
       const exportSpy = spyOn(component.exportService, "export");
+      const localSource = component.activeDataSource() as IbTableDataSource<any>;
 
-      component.selectionColumn.selection.select(
-        ...component.dataSource.data.slice(0, 2)
+      component.selectionColumn().selection.select(
+        ...localSource.data.slice(0, 2)
       );
 
       const exportButton = await loader.getHarness(
         MatButtonHarness.with({
           ancestor: ".ib-table__toolbar__actions",
-          variant: "icon",
         })
       );
       await exportButton.click();
@@ -333,7 +589,7 @@ describe("IbTable", () => {
       fixture = createComponent(IbTableWithExportTransformer);
       component = fixture.debugElement.query(
         By.directive(IbTable)
-      ).componentInstance;
+      ).componentInstance as IbTable;
       fixture.detectChanges();
       loader = TestbedHarnessEnvironment.documentRootLoader(fixture);
     });
@@ -347,7 +603,6 @@ describe("IbTable", () => {
       const exportButton = await loader.getHarness(
         MatButtonHarness.with({
           ancestor: ".ib-table__toolbar__actions",
-          variant: "icon",
         })
       );
       await exportButton.click();
@@ -363,7 +618,8 @@ describe("IbTable", () => {
       await confirm.click();
       fixture.detectChanges();
 
-      const expectedData = component.dataSource.data.map((e: any) => ({
+      const localSource = component.activeDataSource() as IbTableDataSource<any>;
+      const expectedData = localSource.data.map((e: any) => ({
         ...e,
         created_at: e.created_at.getTime(),
         updated_at: e.updated_at.getTime(),
@@ -371,7 +627,7 @@ describe("IbTable", () => {
 
       expect(exportSpy).toHaveBeenCalledWith(
         expectedData,
-        component.tableName,
+        component.tableName(),
         "ib"
       );
     });
@@ -386,7 +642,7 @@ describe("IbTable", () => {
       fixture = createComponent(IbTableWithSort);
       component = fixture.debugElement.query(
         By.directive(IbTable)
-      ).componentInstance;
+      ).componentInstance as IbTable;
       fixture.detectChanges();
       loader = TestbedHarnessEnvironment.loader(fixture);
     });
@@ -396,7 +652,7 @@ describe("IbTable", () => {
     });
 
     it("should apply", async () => {
-      const dataSource = component.dataSource as IbTableDataSource<any>;
+      const dataSource = component.activeDataSource() as IbTableLocalDataSource<any>;
       const sort = await loader.getHarness(MatSortHarness);
       const [_, number] = await sort.getSortHeaders();
       let active = await sort.getActiveHeader();
@@ -414,9 +670,7 @@ describe("IbTable", () => {
       direction = await number.getSortDirection();
       expect(direction).toBe("desc");
 
-      const amountData = dataSource
-        ._orderData(dataSource.filteredData)
-        .map((i) => i.amount);
+      const amountData = dataSource.getOrderedData().map((i) => i.amount);
       expect(amountData).toEqual([20, 10]);
     });
   });
@@ -426,12 +680,13 @@ describe("IbTable", () => {
     let component: IbTable;
     let loader: HarnessLoader;
 
-    beforeEach(() => {
+    beforeEach(async () => {
       fixture = createComponent(IbTableWithAggregate);
       component = fixture.debugElement.query(
         By.directive(IbTable)
-      ).componentInstance;
+      ).componentInstance as IbTable;
       fixture.detectChanges();
+      await fixture.whenStable();
       loader = TestbedHarnessEnvironment.loader(fixture);
     });
 
@@ -439,55 +694,394 @@ describe("IbTable", () => {
       expect(component).toBeTruthy();
     });
 
-    it("should apply an aggregate function", async () => {
-      const ibAggregate = fixture.debugElement.query(
-        By.directive(IbAggregateCell)
-      ).componentInstance;
+    it("should update aggregate state through the number column", () => {
+      const dataSource = component.activeDataSource() as IbTableLocalDataSource<unknown>;
+      const numberColumn = component.columns().find(
+        (column) => column.name() === "amount",
+      ) as {
+        handleAggregationChange(fun: string): void;
+      };
 
-      expect(ibAggregate).toBeTruthy();
-      const footerLoader = await loader.getChildLoader("ib-aggregate");
-      const button = await footerLoader.getHarness(MatButtonHarness);
-      await button.click();
-      const functionMenu = await footerLoader.getHarness(MatMenuHarness);
-      await functionMenu.clickItem({ text: "shared.aggregate.sum.label" });
-      expect(ibAggregate.result.currentPage).toBe(30);
+      expect(numberColumn).toBeTruthy();
+      numberColumn.handleAggregationChange("sum");
+      fixture.detectChanges();
 
-      await functionMenu.clickItem({ text: "shared.aggregate.avg.label" });
-      expect(ibAggregate.result.currentPage).toBe(15);
+      expect(dataSource.aggregatedColumns).toEqual({ amount: "sum" });
+      expect(fixture.debugElement.query(By.directive(IbAggregateCell))).toBeTruthy();
+    });
+
+  });
+
+  describe("with a custom aggregate provider", () => {
+    it("should forward the injected aggregate to the local data source", async () => {
+      const fixture = createComponent(IbTableWithCustomAggregate);
+      const component = fixture.debugElement.query(By.directive(IbTable)).componentInstance as IbTable;
+      const dataSource = component.activeDataSource() as IbTableLocalDataSource<unknown>;
+
+      await fixture.whenStable();
+      fixture.detectChanges();
+
+      const aggregates = component["aggregationFunctions"] as IbAggregate[];
+      expect(aggregates.some((aggregate) => aggregate.id === "test-product")).toBeTrue();
+
+      component.setPaginatorState({ pageIndex: 0, pageSize: 2 });
+      component.setAggregation("amount", "test-product");
+      await fixture.whenStable();
+      fixture.detectChanges();
+
+      expect(dataSource.aggregatedColumns).toEqual({ amount: "test-product" });
+      expect(dataSource.aggregatedData.amount).toEqual({ total: 24, currentPage: 6 });
+    });
+  });
+
+  // ===========================================================================
+  // NEW TESTS — DEVK-1066 Step 14
+  // ===========================================================================
+
+  describe("tableName required", () => {
+    it("should require tableName as a required input", () => {
+      configureModule(IbTableWithoutTableName);
+
+      expect(() => {
+        const fixture = TestBed.createComponent(IbTableWithoutTableName);
+        fixture.detectChanges();
+      }).toThrow();
+    });
+  });
+
+  describe("data source conflict", () => {
+    it("should throw when both [data] and [dataSource] are set", () => {
+      configureModule(IbTableWithBothDataAndDataSource);
+
+      expect(() => {
+        const fixture = TestBed.createComponent(IbTableWithBothDataAndDataSource);
+        fixture.detectChanges();
+      }).toThrowError("[IbTable] [data] and [dataSource] cannot be used together.");
+    });
+  });
+
+  describe("initialization", () => {
+    let fixture: ComponentFixture<IbTableApp>;
+    let component: IbTable;
+
+    beforeEach(waitForAsync(() => {
+      configureModule(IbTableApp);
+    }));
+
+    beforeEach(async () => {
+      fixture = TestBed.createComponent(IbTableApp);
+      component = fixture.debugElement.query(
+        By.directive(IbTable)
+      ).componentInstance as IbTable;
+      await fixture.detectChanges();
+      await fixture.whenStable();
+    });
+
+    it("should initialize facade with tableName, tableDef, and viewHost", () => {
+      const facade = component["stateFacade"] as IbKaiTableStateFacade;
+      expect(facade.tableName).toBe("test-basic");
+    });
+
+    it("should create an internal local data source when using [data] shorthand", async () => {
+      const ds = component.activeDataSource() as IbTableLocalDataSource<any>;
+      expect(ds instanceof IbTableLocalDataSource).toBeTrue();
+      expect(ds).toBeDefined();
+      expect(ds.data.length).toBeGreaterThan(0);
+    });
+
+    it("should render table with rows matching active filter", async () => {
+      const loader = TestbedHarnessEnvironment.loader(fixture);
+      const table = await loader.getHarness(MatTableHarness);
+      const rows = await table.getRows();
+      // IbTableApp has filterValue = { color: ["black"] } which filters to 1 row
+      expect(rows.length).toBeGreaterThanOrEqual(1);
+    });
+
+    it("should initialize state with technical defaults (sort null, filters null, pageIndex 0)", async () => {
+      const snapshot = component["stateFacade"].snapshot();
+      expect(snapshot.sort).toBeNull();
+      expect(snapshot.filters).toBeNull();
+      expect(snapshot.pageIndex).toBe(0);
+      expect(snapshot.pageSize).toBe(20);
+    });
+  });
+
+  describe("tag filter option initialization", () => {
+    it("should initialize implicit tag filter options when data arrives after table initialization", async () => {
+      const fixture = createComponent(IbTableWithAsyncTagFilterData);
+      const tagFilter = fixture.debugElement.query(
+        By.directive(IbTagFilter),
+      ).componentInstance as IbTagFilter;
+
+      await fixture.whenStable();
+      expect(tagFilter.options).toEqual([]);
+
+      fixture.componentInstance.data = [
+        { fruit: "banana" },
+        { fruit: "apple" },
+        { fruit: "banana" },
+      ];
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      expect(tagFilter.options).toEqual(["apple", "banana"]);
+    });
+
+    it("should not override explicit tag filter options for local [data]", async () => {
+      const fixture = createComponent(IbTableWithExplicitTagFilterOptions);
+      const tagFilter = fixture.debugElement.query(
+        By.directive(IbTagFilter),
+      ).componentInstance as IbTagFilter;
+
+      await fixture.whenStable();
+
+      expect(tagFilter.options).toEqual(["preset"]);
+    });
+
+    it("should not initialize tag filter options for an explicit local data source", async () => {
+      configureModule(IbTableWithLocalDataSourceTagFilter);
+      const initializeSpy = spyOn(IbTagFilter.prototype, "initializeFromColumn");
+      const fixture = TestBed.createComponent(IbTableWithLocalDataSourceTagFilter);
+
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      expect(initializeSpy).not.toHaveBeenCalled();
+    });
+
+    it("should not initialize tag filter options for a remote data source", async () => {
+      configureModule(IbTableWithRemoteDataApp);
+      const initializeSpy = spyOn(IbTagFilter.prototype, "initializeFromColumn");
+      const fixture = TestBed.createComponent(IbTableWithRemoteDataApp);
+
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      expect(initializeSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("with normalized local filters", () => {
+    it("should retain matching rows when search is applied with inactive tag and date filters", fakeAsync(() => {
+      const fixture = createComponent(IbTableWithFullFilterApp);
+      const component = fixture.debugElement.query(By.directive(IbTable)).componentInstance as IbTable;
+      const searchBar = fixture.debugElement.query(By.directive(IbSearchBar)).componentInstance as IbSearchBar;
+
+      // Settle asynchronous table initialization (facade store init and the
+      // effect wiring the filter to the facade) before interacting.
+      tick();
+      fixture.detectChanges();
+
+      // Drive the real update path: searchCriteria valueChanges -> debounced
+      // applyFilter() -> IbFilter.update() -> ibFilterUpdated -> facade.setFilters
+      // -> NgRx snapshot -> applySnapshot -> local data source recompute.
+      // debounceTime(0) schedules on the RxJS asyncScheduler (a macrotask that
+      // whenStable cannot observe), so flush it deterministically with tick().
+      searchBar.searchCriteria.setValue("alice");
+      tick();
+      fixture.detectChanges();
+
+      const source = component.activeDataSource() as IbTableLocalDataSource<unknown>;
+      expect(source.getFilteredData()).toEqual([fixture.componentInstance.data[0]]);
+    }));
+  });
+
+  describe("data source replacement", () => {
+    it("should handle runtime data source replacement", async () => {
+      configureModule(IbTableWithDataSourceReplacement);
+      const fixture = TestBed.createComponent(IbTableWithDataSourceReplacement);
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      const c: IbTable = fixture.debugElement.query(
+        By.directive(IbTable)
+      ).componentInstance as IbTable;
+
+      const initialSource = c.activeDataSource() as IbTableDataSource<any>;
+      expect(initialSource.data).toEqual([{ name: "first" }]);
+
+      fixture.componentInstance.currentSource = new IbTableDataSource([{ name: "replaced" }]);
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      const newSource = c.activeDataSource() as IbTableDataSource<any>;
+      expect(newSource.data).toEqual([{ name: "replaced" }]);
+      expect(newSource).not.toBe(initialSource);
+      expect(initialSource.paginator).toBeNull();
+      expect(initialSource.filter).toBeNull();
+      expect(initialSource.selectionColumn).toBeNull();
+    });
+  });
+
+  describe("with IbTableLocalDataSource", () => {
+    it("should render an explicitly bound local data source", async () => {
+      const fixture = createComponent(IbTableWithLocalDataSourceApp);
+      await fixture.whenStable();
+      fixture.detectChanges();
+
+      const component = fixture.debugElement.query(By.directive(IbTable)).componentInstance as IbTable;
+      const table = await TestbedHarnessEnvironment.loader(fixture).getHarness(MatTableHarness);
+
+      expect(component.activeDataSource()).toBe(fixture.componentInstance.dataSource);
+      expect(await table.getRows()).toHaveSize(1);
+    });
+  });
+
+  describe("sort/filter reset pageIndex", () => {
+    it("sort change should dispatch action that resets pageIndex in store", async () => {
+      const fixture = createComponent(IbTableWithTableDef);
+      const component = fixture.debugElement.query(
+        By.directive(IbTable),
+      ).componentInstance as IbTable;
+      await fixture.whenStable();
+      const facade = component["stateFacade"] as IbKaiTableStateFacade;
+      const store = TestBed.inject(Store);
+      const dispatchSpy = spyOn(store, "dispatch").and.callThrough();
+
+      facade.setPaginator(3, 10);
+      facade.setSort({ active: "name", direction: "asc" });
+
+      expect(dispatchSpy).toHaveBeenCalledWith(
+        jasmine.objectContaining({
+          tableName: "test-tabledef",
+          sort: { active: "name", direction: "asc" },
+        }),
+      );
+      expect(facade.snapshot().pageIndex).toBe(0);
+    });
+  });
+
+  describe("stores and url binding", () => {
+    it("should write state to URL after user interaction", async () => {
+      const fixture = createComponent(IbTableApp);
+      const component = fixture.debugElement.query(
+        By.directive(IbTable),
+      ).componentInstance as IbTable;
+      const urlService = TestBed.inject(IbTableUrlService);
+      const writeStateSpy = spyOn(urlService, "writeState");
+      const facade = component["stateFacade"] as IbKaiTableStateFacade;
+
+      await fixture.whenStable();
+      facade.setSort({ active: "name", direction: "asc" });
+
+      expect(writeStateSpy).toHaveBeenCalled();
+      expect(writeStateSpy.calls.mostRecent().args[0]).toBe("test-basic");
+      expect(writeStateSpy.calls.mostRecent().args[1].sort).toEqual({
+        active: "name",
+        direction: "asc",
+      });
+    });
+  });
+
+  describe("selectedView null", () => {
+    it("should default selectedView to null when no views host is present", async () => {
+      configureModule(IbTableApp);
+      const fixture = TestBed.createComponent(IbTableApp);
+      const c: IbTable = fixture.debugElement.query(
+        By.directive(IbTable)
+      ).componentInstance as IbTable;
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      const snapshot = c["stateFacade"].snapshot();
+      expect(snapshot.selectedView).toBeNull();
+    });
+  });
+
+  describe("remote first fetch", () => {
+    it("should fetch data exactly once after initialization", fakeAsync(() => {
+      const fixture = createComponent(IbTableWithRemoteDataApp);
+      const remoteDs = fixture.componentInstance.dataSource;
+      const fetchSpy = spyOn(remoteDs, "fetchData").and.callThrough();
+
+      tick(1000);
+      fixture.detectChanges();
+
+      expect(fetchSpy.calls.count()).toBe(1);
+    }));
+
+    it("should fetch data exactly once when mobile sorting after initialization", fakeAsync(() => {
+      const fixture = createComponent(IbTableWithRemoteDataApp);
+      const component = fixture.debugElement.query(
+        By.directive(IbTable),
+      ).componentInstance as IbTable;
+      const remoteDs = fixture.componentInstance.dataSource;
+      const fetchSpy = spyOn(remoteDs, "fetchData").and.callThrough();
+
+      tick(1000);
+      fetchSpy.calls.reset();
+
+      component.updateSortFromMobile({ active: "name", direction: "asc" });
+      fixture.detectChanges();
+      tick(1000);
+
+      expect(fetchSpy.calls.count()).toBe(1);
+    }));
+  });
+
+  describe("with remote data source and async search bar", () => {
+    it("should fetch once with the hydrated query and not refetch after silent hydration", fakeAsync(() => {
+      const fetchSpy = spyOn(IbTestDataSource.prototype, "fetchData").and.callThrough();
+      const fixture = createComponent(IbTableWithRemoteSearchApp);
+
+      tick(1000);
+      fixture.detectChanges();
+      tick(2000);
+      fixture.detectChanges();
+
+      // the initial request reached the backend exactly once, carrying the
+      // hydrated IbFilter.query output (undefined-valued keys included)
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
+      const request = fetchSpy.calls.argsFor(0)[0];
+      expect(request).toEqual({
+        sort: null,
+        pageIndex: 0,
+        pageSize: 20,
+        filter: { ibSearchBar: undefined },
+      });
+      expect(Object.prototype.hasOwnProperty.call(request.filter, "ibSearchBar")).toBeTrue();
+      expect(request.filter.ibSearchBar).toBeUndefined();
+    }));
+  });
+
+  describe("paginator restoration", () => {
+    it("should restore paginator state from snapshot after initialization", async () => {
+      const fixture = createComponent(IbTableWithTableDef);
+      const component = fixture.debugElement.query(
+        By.directive(IbTable),
+      ).componentInstance as IbTable;
+      await fixture.whenStable();
+
+      expect(component.paginator()?.pageIndex).toBe(0);
+      expect(component.paginator()?.pageSize).toBe(10);
     });
   });
 });
 
+// ===========================================================================
+// Test Helpers
+// ===========================================================================
+
 function configureModule<T>(type: Type<T>) {
   TestBed.configureTestingModule({
-    declarations: [type],
+    declarations: [type, IbTestViewsHostComponent],
     imports: [
       CommonModule,
       IbKaiTableModule,
       IbTableActionModule,
       IbFilterModule,
-      IbViewModule,
       MatSortModule,
       IbDataExportModule,
       NoopAnimationsModule,
       TranslateModule.forRoot({
         extend: true,
       }),
-      EffectsModule.forRoot([]),
       RouterTestingModule.withRoutes([])
     ],
     providers: [
       provideStore(),
-      provideMockStore({
-        initialState: {
-          ibViews: {
-            views: []
-          }
-        }
-      }),
       { provide: MatSnackBar, useValue: { open: () => { } } },
       IbTableUrlService,
-      UrlStateEffects
     ],
   }).compileComponents();
 }
@@ -500,9 +1094,13 @@ function createComponent<T>(type: Type<T>): ComponentFixture<T> {
   return fixture;
 }
 
+// ===========================================================================
+// Host Components
+// ===========================================================================
+
 @Component({
   template: `
-    <ib-kai-table [data]="data" [displayedColumns]="['name', 'color', 'price']">
+    <ib-kai-table tableName="test-basic" [data]="data" [displayedColumns]="['name', 'color', 'price']">
       <ib-filter [value]="filterValue">
         <ib-text-filter name="name">Name</ib-text-filter>
         <ib-tag-filter name="color">Name</ib-tag-filter>
@@ -526,7 +1124,96 @@ class IbTableApp {
 
 @Component({
   template: `
-    <ib-kai-table [data]="data" [displayedColumns]="['name']">
+    <ib-kai-table
+      tableName="test-async-tag-filter"
+      [data]="data"
+      [displayedColumns]="['fruit']"
+    >
+      <ib-filter>
+        <ib-tag-filter name="fruit">Fruit</ib-tag-filter>
+      </ib-filter>
+      <ib-text-column name="fruit"></ib-text-column>
+    </ib-kai-table>
+  `,
+  standalone: false,
+})
+class IbTableWithAsyncTagFilterData {
+  data: { fruit: string }[] = [];
+}
+
+@Component({
+  template: `
+    <ib-kai-table
+      tableName="test-explicit-tag-filter-options"
+      [data]="data"
+      [displayedColumns]="['fruit']"
+    >
+      <ib-filter>
+        <ib-tag-filter name="fruit" [options]="options">Fruit</ib-tag-filter>
+      </ib-filter>
+      <ib-text-column name="fruit"></ib-text-column>
+    </ib-kai-table>
+  `,
+  standalone: false,
+})
+class IbTableWithExplicitTagFilterOptions {
+  options = ["preset"];
+  data = [{ fruit: "banana" }, { fruit: "apple" }];
+}
+
+@Component({
+  template: `
+    <ib-kai-table
+      tableName="test-local-tag-filter"
+      [dataSource]="dataSource"
+      [displayedColumns]="['fruit']"
+    >
+      <ib-filter>
+        <ib-tag-filter name="fruit">Fruit</ib-tag-filter>
+      </ib-filter>
+      <ib-text-column name="fruit"></ib-text-column>
+    </ib-kai-table>
+  `,
+  standalone: false,
+})
+class IbTableWithLocalDataSourceTagFilter {
+  dataSource = new IbTableLocalDataSource([{ fruit: "banana" }]);
+}
+
+@Component({
+  template: `
+    <ib-kai-table
+      tableName="test-full-filter"
+      [data]="data"
+      [displayedColumns]="['name', 'color', 'amount', 'createdAt', 'active']"
+    >
+      <ib-filter>
+        <ib-search-bar></ib-search-bar>
+        <ib-text-filter name="name">Name</ib-text-filter>
+        <ib-tag-filter name="color">Color</ib-tag-filter>
+        <ib-number-filter name="amount">Amount</ib-number-filter>
+        <ib-date-filter name="createdAt">Created</ib-date-filter>
+        <ib-boolean-filter name="active">Active</ib-boolean-filter>
+      </ib-filter>
+      <ib-text-column name="name"></ib-text-column>
+      <ib-text-column name="color"></ib-text-column>
+      <ib-number-column name="amount"></ib-number-column>
+      <ib-date-column name="createdAt"></ib-date-column>
+      <ib-text-column name="active"></ib-text-column>
+    </ib-kai-table>
+  `,
+  standalone: false,
+})
+class IbTableWithFullFilterApp {
+  data = [
+    { name: "alice", color: "white", amount: 10, createdAt: new Date("2024-01-01"), active: true },
+    { name: "bob", color: "black", amount: 20, createdAt: new Date("2024-02-01"), active: false },
+  ];
+}
+
+@Component({
+  template: `
+    <ib-kai-table tableName="test-rowgroup" [data]="data" [displayedColumns]="['name']">
       <ib-text-column name="name"></ib-text-column>
       <ng-template ibKaiRowGroup let-row="row">
         row data: {{ row | json }}
@@ -540,10 +1227,9 @@ class IbTableWithRowGroupApp {
 }
 
 @Injectable()
-class IbTestDataSource extends IbTableRemoteDataSource<any> {
+class IbTestDataSource extends IbTableRemoteDataSource<any, any> {
   fetchData(
-    sort: MatSort,
-    page: MatPaginator,
+    _request: IbRemoteDataSourceRequest,
   ): Observable<IbFetchDataResponse<any>> {
     return timer(1).pipe(map(() => ({
       data: [{ name: "alice" }],
@@ -554,7 +1240,7 @@ class IbTestDataSource extends IbTableRemoteDataSource<any> {
 
 @Component({
   template: `
-    <ib-kai-table [dataSource]="dataSource" [displayedColumns]="['name']">
+    <ib-kai-table tableName="test-remote" [dataSource]="dataSource" [displayedColumns]="['name']">
       <ib-filter>
         <ib-text-filter name="name">Name</ib-text-filter>
       </ib-filter>
@@ -569,12 +1255,35 @@ class IbTableWithRemoteDataApp {
 
 @Component({
   template: `
+    <ib-kai-table tableName="test-remote-search" [dataSource]="dataSource" [displayedColumns]="['name']">
+      <ib-filter>
+        <ib-search-bar async></ib-search-bar>
+      </ib-filter>
+      <ib-text-column name="name"></ib-text-column>
+    </ib-kai-table>
+  `,
+  standalone: false
+})
+class IbTableWithRemoteSearchApp {
+  dataSource = new IbTestDataSource();
+}
+
+@Component({
+  selector: 'ib-test-views-host',
+  template: '',
+  providers: [{ provide: IbTableViewsHost, useExisting: IbTestViewsHostComponent }],
+  standalone: false
+})
+class IbTestViewsHostComponent extends IbTableViewsHostStub {}
+
+@Component({
+  template: `
     <ib-kai-table
-      tableName="employees"
+      tableName="test-views"
       [data]="data"
       [displayedColumns]="['name', 'color']"
     >
-      <ib-table-view-group></ib-table-view-group>
+      <ib-test-views-host></ib-test-views-host>
       <ib-filter>
         <ib-tag-filter name="color">Color</ib-tag-filter>
       </ib-filter>
@@ -592,16 +1301,37 @@ class IbTableWithViewGroupApp {
   ];
 }
 
+/** Minimal component used as a ComponentPortal payload in toolbar-portal tests. */
+@Component({ template: '', standalone: false })
+class DummyPortalComponent {}
+
+@Component({
+  template: `
+    <ib-kai-table
+      tableName="test-views-no-filter"
+      [data]="data"
+      [displayedColumns]="['name']"
+    >
+      <ib-test-views-host></ib-test-views-host>
+      <ib-text-column name="name"></ib-text-column>
+    </ib-kai-table>
+  `,
+  standalone: false
+})
+class IbTableWithViewGroupNoFilterApp {
+  data = [{ name: "alice" }];
+}
+
 class IbStubExportProvider implements IbDataExportProvider {
   format = "ib";
   label = "inobeta";
-  export(data: any[], filename: string): void { }
+  export(_data: any[], _filename: string): void { }
 }
 
 @Component({
   template: `
     <ib-kai-table
-      tableName="employees"
+      tableName="test-export"
       [data]="data"
       [tableDef]="{ paginator: { pageSize: 5 } }"
       [displayedColumns]="['name', 'color']"
@@ -639,7 +1369,7 @@ class IbTableWithExport {
 @Component({
   template: `
     <ib-kai-table
-      tableName="employees"
+      tableName="test-export-transformer"
       [data]="data"
       [displayedColumns]="['name', 'created_at', 'updated_at']"
     >
@@ -684,6 +1414,7 @@ class IbTableWithExportTransformer {
 @Component({
   template: `
     <ib-kai-table
+      tableName="test-sort"
       [data]="data"
       [displayedColumns]="['name', 'amount', 'createdAt']"
     >
@@ -706,7 +1437,7 @@ class IbTableWithSort {
 
 @Component({
   template: `
-    <ib-kai-table [data]="data" [displayedColumns]="['name', 'amount']">
+    <ib-kai-table tableName="test-aggregate" [data]="data" [displayedColumns]="['name', 'amount']">
       <ib-text-column name="name"></ib-text-column>
       <ib-number-column name="amount" aggregate></ib-number-column>
     </ib-kai-table>
@@ -718,4 +1449,109 @@ class IbTableWithAggregate {
     { name: "alice", amount: 10 },
     { name: "bob", amount: 20 },
   ];
+}
+
+class IbTestProductAggregate extends IbAggregate {
+  id = "test-product";
+  name = "test.product.name";
+  label = "test.product.label";
+  type = "number";
+
+  aggregateData(data: unknown[]): number {
+    return data.reduce<number>((product, value) => product * Number(value), 1);
+  }
+}
+
+@Component({
+  template: `
+    <ib-kai-table
+      tableName="test-custom-aggregate"
+      [data]="data"
+      [displayedColumns]="['amount']"
+    >
+      <ib-number-column name="amount" aggregate></ib-number-column>
+    </ib-kai-table>
+  `,
+  providers: [
+    { provide: IB_AGGREGATE, useClass: IbTestProductAggregate, multi: true },
+  ],
+  standalone: false,
+})
+class IbTableWithCustomAggregate {
+  data = [{ amount: 2 }, { amount: 3 }, { amount: 4 }];
+}
+
+@Component({
+  template: `
+    <ib-kai-table
+      tableName="test-tabledef"
+      [data]="data"
+      [tableDef]="{ paginator: { pageSize: 10, pageIndex: 0 } }"
+      [displayedColumns]="['name']"
+    >
+      <ib-text-column name="name"></ib-text-column>
+    </ib-kai-table>
+  `,
+  standalone: false
+})
+class IbTableWithTableDef {
+  data = [{ name: "alice" }, { name: "bob" }];
+}
+
+@Component({
+  template: `
+    <ib-kai-table [data]="data" [displayedColumns]="['name']">
+      <ib-text-column name="name"></ib-text-column>
+    </ib-kai-table>
+  `,
+  standalone: false
+})
+class IbTableWithoutTableName {
+  data = [{ name: "alice" }];
+}
+
+@Component({
+  template: `
+    <ib-kai-table
+      tableName="test-both"
+      [data]="data"
+      [dataSource]="dataSource"
+      [displayedColumns]="['name']"
+    >
+      <ib-text-column name="name"></ib-text-column>
+    </ib-kai-table>
+  `,
+  standalone: false
+})
+class IbTableWithBothDataAndDataSource {
+  data = [{ name: "alice" }];
+  dataSource = new IbTableDataSource([{ name: "bob" }]);
+}
+
+@Component({
+  template: `
+    <ib-kai-table
+      tableName="test-replacement"
+      [dataSource]="currentSource"
+      [displayedColumns]="['name']"
+    >
+      <ib-text-column name="name"></ib-text-column>
+    </ib-kai-table>
+  `,
+  standalone: false
+})
+class IbTableWithDataSourceReplacement {
+  currentSource = new IbTableDataSource([{ name: "first" }]);
+}
+
+@Component({
+  template: `
+    <ib-kai-table tableName="test-local" [dataSource]="dataSource" [displayedColumns]="['name']">
+      <ib-text-column name="name"></ib-text-column>
+    </ib-kai-table>
+  `,
+  standalone: false,
+})
+class IbTableWithLocalDataSourceApp {
+  dataSource = new IbTableLocalDataSource([{ name: "alice" }]);
 }

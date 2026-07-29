@@ -1,7 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  Input,
+  input,
   ViewEncapsulation,
 } from "@angular/core";
 import { IB_AGGREGATE_TYPE, IB_COLUMN } from "../tokens";
@@ -21,22 +21,22 @@ import { IbColumn } from "./column";
     <ng-container
       matColumnDef
       matSort
-      [sticky]="sticky"
-      [stickyEnd]="stickyEnd"
+      [sticky]="stickyInput()"
+      [stickyEnd]="stickyEndInput()"
     >
       <th
         class="ib-table__header-cell"
         mat-header-cell
         *matHeaderCellDef
-        [style.text-align]="justify"
-        [ibSortHeaderFor]="matSort"
+         [style.text-align]="justify()"
+        [ibSortHeaderFor]="matSort()"
         mat-sort-header
-        [disabled]="!sort"
+        [disabled]="!sortInput()"
       >
-        {{ headerText }}
+        {{ headerText() }}
       </th>
-      <td mat-cell *matCellDef="let data" [style.text-align]="justify">
-        {{ dataAccessor(data, name) }}
+       <td mat-cell *matCellDef="let data" [style.text-align]="justify()">
+        {{ dataAccessor()(data, name()) }}
       </td>
       <td mat-footer-cell *matFooterCellDef style="max-width: fit-content">
       </td>
@@ -53,5 +53,5 @@ import { IbColumn } from "./column";
 })
 export class IbTextColumn<T> extends IbColumn<T> {
   /** Alignment of the cell values. */
-  @Input() justify: "start" | "end" | "center" = "start";
+  readonly justify = input<"start" | "end" | "center">("start");
 }

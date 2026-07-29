@@ -30,7 +30,6 @@ const reduxStorageSave = ibSetupHydration("__redux-store-inobeta-ui__", [
   "ibHttpSessionState",
   "exampleLazyFeature",
   "ibTable",
-  "ibViews",
 ]);
 
 

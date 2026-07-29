@@ -36,12 +36,12 @@ import { IB_FILTER } from "./tokens";
 
     <button
       *ibTableAction
-      mat-icon-button
+      matMiniFab
+      style="margin-left: 5px;"
       [matTooltip]="'shared.ibTableView.showFilters' | translate"
-      [color]="!hideFilters ? 'primary' : ''"
       (click)="hideFilters = !hideFilters"
       >
-      <mat-icon>{{ "filter_alt" }}</mat-icon>
+      <mat-icon>{{ (!hideFilters) ? "filter_alt" : "filter_alt_off" }}</mat-icon>
     </button>
     `,
   styleUrls: ["./filter.component.scss"],
@@ -106,10 +106,36 @@ export class IbFilter {
   }
 
   update() {
-    this._value = this.buildFilter();
-    this.query = this.toQuery();
+    this._computeValues();
     this.ibFilterUpdated.emit(this._value);
     this.ibQueryUpdated.emit(this.query);
+  }
+
+  /**
+   * Silently hydrates raw form values from a canonical source (e.g., URL, NgRx)
+   * without emitting {@link ibFilterUpdated} or {@link ibQueryUpdated}.
+   *
+   * @param value Serialized raw filter criteria, or `null` to clear all filters.
+   */
+  hydrateRawValue(value: IbFilterSyntaxExtended | null): void {
+    if (value === null) {
+      this.form.reset(undefined, { emitEvent: false });
+      // A reset form still builds each registered filter's inactive value
+      // (for example, a number range or a date period). Those values must
+      // not be retained as canonical criteria when the snapshot explicitly
+      // requests no filters.
+      this._value = {};
+      this.query = this.toQuery();
+      return;
+    } else {
+      this.form.patchValue(value, { emitEvent: false });
+    }
+    this._computeValues();
+  }
+
+  private _computeValues(): void {
+    this._value = this.buildFilter();
+    this.query = this.toQuery();
   }
 
   reset() {

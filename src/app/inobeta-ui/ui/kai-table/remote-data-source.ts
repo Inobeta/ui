@@ -1,171 +1,194 @@
-import { MatPaginator, PageEvent } from "@angular/material/paginator";
-import { MatSort, Sort } from "@angular/material/sort";
-import {
-  BehaviorSubject,
-  Observable,
-  Subject,
-  Subscription,
-  combineLatest,
-  merge,
-  of,
-} from "rxjs";
-import { catchError, debounceTime, map, switchMap } from "rxjs/operators";
-import { IbTableDataSource } from "./table-data-source";
-import { IbKaiTableState } from "./table.types";
-import { urlStateActions } from "./store/url-state/actions";
+import { DataSource } from "@angular/cdk/collections";
+import { Sort } from "@angular/material/sort";
+import { BehaviorSubject, Observable, Subject, Subscription, merge, of, timer } from "rxjs";
+import { catchError, map, switchMap } from "rxjs/operators";
+import { IbDataSourceCapability } from "./data-source.types";
+import { IbKaiTableState, IbTableFilterState } from "./table.types";
 
 export type IbFetchDataResponse<T> = {
-  /**
-   * Subset of rows returned by the server.
-   */
   data: T[];
-  /**
-   * Total row count of the query without pagination.
-   */
   totalCount: number;
 };
 
-export abstract class IbTableRemoteDataSource<
-  T,
-  V = Record<string, any>
-> extends IbTableDataSource<T> {
-  private _refresh = new Subject<void>();
+export type IbRemoteDataSourceRequest<V = IbTableFilterState> = Readonly<{
+  sort: Sort | null;
+  pageIndex: number;
+  pageSize: number;
+  filter: V | null;
+}>;
 
-  _renderChangesSubscription: Subscription | null = null;
-  get state() {
+type IbRemoteTrigger<V> = Readonly<{
+  request: IbRemoteDataSourceRequest<V>;
+  debounceFilter: boolean;
+}>;
+
+function areStructurallyEqual(left: unknown, right: unknown): boolean {
+  const traversedObjects = new WeakSet<object>();
+
+  const compare = (leftValue: unknown, rightValue: unknown): boolean => {
+    if (leftValue === rightValue) {
+      return leftValue === null || leftValue === undefined || typeof leftValue === "string" || typeof leftValue === "boolean" ||
+        typeof leftValue === "bigint" || typeof leftValue === "symbol" ||
+        (typeof leftValue === "number" && Number.isFinite(leftValue));
+    }
+
+    if (typeof leftValue !== typeof rightValue || leftValue === null || rightValue === null) return false;
+    if (typeof leftValue !== "object") return false;
+
+    const leftObject = leftValue as object;
+    const rightObject = rightValue as object;
+    if (traversedObjects.has(leftObject)) return false;
+    traversedObjects.add(leftObject);
+
+    try {
+      const leftIsArray = Array.isArray(leftObject);
+      if (leftIsArray !== Array.isArray(rightObject)) return false;
+      if (!leftIsArray && (Object.getPrototypeOf(leftObject) !== Object.prototype || Object.getPrototypeOf(rightObject) !== Object.prototype)) {
+        return false;
+      }
+      if (Object.getOwnPropertySymbols(leftObject).length > 0 || Object.getOwnPropertySymbols(rightObject).length > 0) return false;
+
+      const leftKeys = Object.keys(leftObject);
+      const rightKeys = Object.keys(rightObject);
+      if (leftKeys.length !== rightKeys.length) return false;
+
+      return leftKeys.every((key) =>
+        Object.prototype.hasOwnProperty.call(rightObject, key) && compare(
+          (leftObject as Record<string, unknown>)[key],
+          (rightObject as Record<string, unknown>)[key],
+        ),
+      );
+    } catch {
+      return false;
+    } finally {
+      traversedObjects.delete(leftObject);
+    }
+  };
+
+  return compare(left, right);
+}
+
+/** Server-side table data source with cancellable, value-object requests. */
+export abstract class IbTableRemoteDataSource<T, V = IbTableFilterState>
+  extends DataSource<T> {
+  private readonly renderData = new BehaviorSubject<T[]>([]);
+  private readonly _totalCount = new BehaviorSubject<number>(0);
+  private readonly _error = new BehaviorSubject<unknown>(null);
+  private readonly _trigger = new Subject<IbRemoteTrigger<V>>();
+  private readonly _refresh = new Subject<void>();
+  private initialRequestIssued = false;
+  private consumers = 0;
+  private pipelineSubscription: Subscription | null = null;
+  private _request: IbRemoteDataSourceRequest<V> = {
+    sort: null,
+    pageIndex: 0,
+    pageSize: 20,
+    filter: null,
+  };
+
+  constructor(readonly filterDebounceMs = 500) {
+    super();
+  }
+
+  readonly capabilities: ReadonlySet<IbDataSourceCapability> = new Set();
+  readonly totalCount$ = this._totalCount.asObservable();
+  readonly error$ = this._error.asObservable();
+  readonly request$ = new BehaviorSubject<IbRemoteDataSourceRequest<V>>(this._request);
+  readonly _state = new BehaviorSubject<IbKaiTableState>("idle");
+
+  /** Compatibility read access for the table state binding. */
+  get state(): IbKaiTableState {
     return this._state.value;
   }
 
-  set state(value) {
-    this._state.next(value);
+  get request(): IbRemoteDataSourceRequest<V> {
+    return { ...this._request };
   }
 
-  readonly _state = new BehaviorSubject<IbKaiTableState>("loading");
+  get filteredData(): T[] {
+    return this.renderData.value;
+  }
 
-  _updateChangeSubscription() {
-    if (!this._state) {
-      return;
+  get sortState(): Sort {
+    return this._request.sort ?? { active: "", direction: "" };
+  }
+
+  get shouldDisplayAggregationFooter(): boolean {
+    return false;
+  }
+
+  private connectPipeline(): void {
+    this.pipelineSubscription = merge(
+      this._trigger,
+      this._refresh.pipe(map(() => ({ request: this.request, debounceFilter: false }))),
+    )
+      .pipe(
+        switchMap(({ request, debounceFilter }) => {
+          this._state.next("loading");
+          this._error.next(null);
+          const request$ = debounceFilter ? timer(this.filterDebounceMs).pipe(map(() => request)) : of(request);
+          return request$.pipe(
+            switchMap((nextRequest) => this.fetchData(nextRequest)),
+            catchError((error: unknown) => {
+              this._state.next("http_error");
+              this._error.next(error);
+              return of(null);
+            }),
+          );
+        }),
+      )
+      .subscribe((result) => {
+        if (result === null) return;
+        this._totalCount.next(result.totalCount);
+        this._state.next(result.data.length === 0 ? "no_data" : "idle");
+        this.renderData.next([...result.data]);
+      });
+  }
+
+  setInput(value: Partial<IbRemoteDataSourceRequest<V>>): void {
+    const nextRequest: IbRemoteDataSourceRequest<V> = {
+      ...this._request,
+      ...value,
+    };
+    if (areStructurallyEqual(nextRequest, this._request)) return;
+
+    const filterChanged = !areStructurallyEqual(nextRequest.filter, this._request.filter);
+    this._request = nextRequest;
+    this.request$.next(this.request);
+    if (this.consumers > 0) {
+      this.triggerRequest({ request: this.request, debounceFilter: filterChanged });
     }
-
-    const sortChange: Observable<Sort | null | void> = this.sort
-      ? (merge(
-          this.sort.sortChange,
-          this.sort.initialized
-        ) as Observable<Sort | void>)
-      : of(null);
-
-    const pageChange: Observable<PageEvent | null | void> = this.paginator
-      ? (merge(
-          this.paginator.page,
-          // this._internalPageChanges,
-          this.paginator.initialized
-        ) as Observable<PageEvent | void>)
-      : of(null);
-
-    const filterChange: Observable<Record<string, any> | null | void> = this
-      .filter
-      ? merge(this.filter.ibQueryUpdated, this.filter.initialized)
-      : of(null);
-
-    const refresh = this._refresh?.asObservable();
-    const pipeline = combineLatest([filterChange, sortChange, pageChange]);
-
-    const dataChange = merge(refresh, pipeline).pipe(
-      map(() => this.state = "loading"),
-      debounceTime(500),
-      map((v) => {
-        if(this.sort?.active !== this.sortState?.active || this.sort?.direction !== this.sortState?.direction){
-          this.sortState = this.sort;
-        }
-        if(this.filter?.initialized){
-          this.store.dispatch(urlStateActions.setRemoteDatasourceParams({
-            tableName: this.tableName,
-            filters: this.filter?.selectedCriteria ?? {},
-            sort: this.sortState ?? {active: '', direction: ''}
-          }));
-        }
-        else if(this.sort?.active !== this.sortState?.active || this.sort?.direction !== this.sortState?.direction){
-          this.store.dispatch(urlStateActions.setSort({tableName: this.tableName, params: this.sortState}));
-        }
-        return v
-      }),
-      switchMap(() => {
-        this.state = "loading";
-        return this.fetchData(
-          this.sort,
-          this.paginator,
-          this.filter.query as V
-        ).pipe(
-          catchError(() => {
-            this.state = "http_error";
-            return of(null);
-          })
-        );
-      }),
-      map((result) => {
-        if (result === null || result === undefined) {
-          return [];
-        }
-
-        this.state = "idle";
-        this.paginator.length = result.totalCount;
-        return result.data;
-      }),
-      map((data) => this._filterData(data)),
-      map((data) => this._aggregatePaginatedData(data))
-    );
-
-    this._renderChangesSubscription?.unsubscribe();
-    this._renderChangesSubscription = dataChange.subscribe((data) =>
-      this._renderData.next(data)
-    );
   }
 
-  refresh() {
-    this._refresh.next();
+  refresh(): void {
+    if (this.consumers > 0) this._refresh.next();
   }
 
-  /** Disable _filterData */
-  _filterData(data: T[]): T[] {
-    return (this.filteredData = data);
+  connect(): BehaviorSubject<T[]> {
+    this.consumers++;
+    if (!this.pipelineSubscription) this.connectPipeline();
+    if (!this.initialRequestIssued) {
+      this.triggerRequest({ request: this.request, debounceFilter: false });
+    }
+    return this.renderData;
   }
 
-  /**
-   * Data fetching strategy
-   *
-   * ```typescript
-   * class ProductDataSource extends IbTableRemoteDataSource<Product> {
-   *   private http = inject(HttpClient)
-   *
-   *   fetchData(
-   *     sort: MatSort,
-   *     page: MatPaginator
-   *   ): Observable<IbFetchDataResponse<Product>> {
-   *       return this.http.get("/products", {
-   *         params: {
-   *           sort: sort.active,
-   *           order: sort.direction,
-   *           page: page.pageIndex + 1,
-   *           per_page: page.pageSize
-   *         }
-   *       }).pipe(
-   *         map((result) => ({
-   *           data: result.items,
-   *           totalCount: result.total_count
-   *         }))
-   *       );
-   *   }
-   * }
-   * ```
-   *
-   * @param sort Sort state
-   * @param page Paginator state
-   * @param filter Filter applied
-   * @returns Observable of data and total count
-   */
+  disconnect(): void {
+    this.consumers = Math.max(0, this.consumers - 1);
+    if (this.consumers === 0) {
+      this.pipelineSubscription?.unsubscribe();
+      this.pipelineSubscription = null;
+      this.initialRequestIssued = false;
+      this._state.next('idle');
+    }
+  }
+
+  private triggerRequest(trigger: IbRemoteTrigger<V>): void {
+    this.initialRequestIssued = true;
+    this._trigger.next(trigger);
+  }
+
   abstract fetchData(
-    sort: MatSort,
-    page: MatPaginator,
-    filter?: V
+    request: IbRemoteDataSourceRequest<V>,
   ): Observable<IbFetchDataResponse<T>>;
 }

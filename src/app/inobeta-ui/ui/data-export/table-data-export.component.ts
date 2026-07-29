@@ -13,7 +13,8 @@ import {
   selector: "ib-table-data-export-action",
   template: `
     <button
-      mat-icon-button
+      matMiniFab
+      style="margin-left: 5px;"
       [matTooltip]="'shared.ibTable.export' | translate"
       (click)="openExportDialog()"
     >
@@ -26,7 +27,7 @@ import {
   ],
 })
 export class IbTableDataExportAction {
-  @Input() showAllRowsOption = false;
+  @Input() showAllRowsOption = true;
   @Input() showSelectedRowsOption = false;
   @Output() ibDataExport = new EventEmitter<IDataExportSettings>();
   exportService: IbDataExportService = inject(IbDataExportService);

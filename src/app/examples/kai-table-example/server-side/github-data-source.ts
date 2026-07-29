@@ -1,17 +1,14 @@
 import { HttpClient } from "@angular/common/http";
 import { inject } from "@angular/core";
-import { MatPaginator } from "@angular/material/paginator";
-import { MatSort } from "@angular/material/sort";
 import { Observable, map } from "rxjs";
 import {
   IbDateQuery,
+  IbFetchDataResponse,
+  IbRemoteDataSourceRequest,
+  IbTableRemoteDataSource,
   IbTagQuery,
   IbTextQuery,
-} from "../../../inobeta-ui/ui/kai-filter/filter.types";
-import {
-  IbFetchDataResponse,
-  IbTableRemoteDataSource,
-} from "../../../inobeta-ui/ui/kai-table/remote-data-source";
+} from "public_api";
 
 type GithubApi = {
   items: GithubIssue[];
@@ -58,20 +55,17 @@ export class GithubDataSource extends IbTableRemoteDataSource<
   }
 
   fetchData(
-    sort: MatSort,
-    page: MatPaginator,
-    filter: GithubApiQueryFilter
+    request: IbRemoteDataSourceRequest<GithubApiQueryFilter>
   ): Observable<IbFetchDataResponse<GithubIssue>> {
-    console.log('filter', filter)
-    const query = this.getQuery(filter);
+    const query = this.getQuery(request.filter);
     return this.http
       .get<GithubApi>(this.href, {
         params: {
           q: `repo:angular/components ${query}`,
-          sort: sort?.active,
-          order: sort?.direction,
-          page: page.pageIndex + 1,
-          per_page: page.pageSize,
+          sort: request.sort?.active ?? "",
+          order: request.sort?.direction ?? "",
+          page: request.pageIndex + 1,
+          per_page: request.pageSize,
         },
       })
       .pipe(

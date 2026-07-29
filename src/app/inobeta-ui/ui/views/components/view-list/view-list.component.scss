@@ -7,7 +7,42 @@
   flex-wrap: wrap;
 }
 
+.ib-view-list__dropzone {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.ib-view-list__add {
+  flex-shrink: 0;
+}
+
 ib-default-table-view,
 ib-table-view {
   @include mat.button-density(-2);
+}
+
+/* CDK drag placeholder — shows where the item will land */
+.cdk-drag-placeholder {
+  opacity: 0.3;
+}
+
+/* CDK drag preview — the item being dragged */
+.cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: 4px;
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+              0 8px 10px 1px rgba(0, 0, 0, 0.14),
+              0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+/* Animate items when they move in the list */
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.ib-view-list__dropzone.cdk-drop-list-dragging
+  ib-table-view:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }

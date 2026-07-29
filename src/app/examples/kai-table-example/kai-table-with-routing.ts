@@ -1,11 +1,10 @@
 import { Component, inject, ViewChild } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { IbDataExportModule, IbFilterModule, IbKaiTableModule, IbTableActionModule, IbViewModule } from "public_api";
-import { IbSelectionColumn } from "../../inobeta-ui/ui/kai-table/columns/selection-column";
-import { IbKaiTableState } from "../../inobeta-ui/ui/kai-table/table.types";
+import { IbSelectionColumn } from "public_api";
 import { IbUserExample, UserService } from "./users";
 
-import { MatIconButton } from "@angular/material/button";
+import { MatButtonModule, MatIconButton } from "@angular/material/button";
 import { ActivatedRoute, Router, RouterOutlet } from "@angular/router";
 
 @Component({
@@ -13,17 +12,16 @@ import { ActivatedRoute, Router, RouterOutlet } from "@angular/router";
   template: `
   <div style="display: flex; flex-direction: row; gap: 2em;">
     <ib-kai-table
-      tableName="fullExample"
+      tableName="routingExample"
       [displayedColumns]="columns"
       [data]="data"
-      [state]="state"
       [activeRowParams]="{ dataParamId: 'id', childRouteParamId: 'id'}"
       >
       <ib-table-action-group>
         @if (selectionColumn?.selection.selected.length > 0) {
           <ng-template ibTableAction>
             <button
-              mat-icon-button
+              matMiniFab
               (click)="getSelection()"
               >
               <mat-icon>delete</mat-icon>
@@ -31,7 +29,7 @@ import { ActivatedRoute, Router, RouterOutlet } from "@angular/router";
           </ng-template>
         }
         <ng-template ibTableAction>
-          <button mat-icon-button (click)="getUserOrders()">
+          <button matMiniFab (click)="getUserOrders()">
             <mat-icon>refresh</mat-icon>
           </button>
         </ng-template>
@@ -63,7 +61,7 @@ import { ActivatedRoute, Router, RouterOutlet } from "@angular/router";
       </ib-column>
       <ib-column ib-action-column>
         <section *ibCellDef="let element">
-          <button mat-icon-button (click)="handleView(element)">
+          <button matMiniFab (click)="handleView(element)">
             <mat-icon>chevron_right</mat-icon>
           </button>
         </section>
@@ -90,7 +88,7 @@ import { ActivatedRoute, Router, RouterOutlet } from "@angular/router";
     IbViewModule,
     IbTableActionModule,
     IbDataExportModule,
-    MatIconButton,
+    MatButtonModule,
     RouterOutlet
   ]
 })
@@ -100,7 +98,6 @@ export class IbKaiTableWithRouting {
 
   data: IbUserExample[] = [];
   columns = ["name", "fruit", "amount", "created_at", "subscribed"];
-  state: IbKaiTableState = "idle";
   router = inject(Router);
   activatedRoute = inject(ActivatedRoute);
   constructor(private userService: UserService) { }
@@ -110,10 +107,8 @@ export class IbKaiTableWithRouting {
   }
 
   getUserOrders() {
-    this.state = "loading";
     this.userService.getUserOrders().subscribe((orders) => {
       this.data = orders;
-      this.state = "idle";
     });
   }
 
@@ -127,6 +122,9 @@ export class IbKaiTableWithRouting {
 
   handleView(row: IbUserExample) {
     console.log("handleView", row);
-    this.router.navigate([`details/${row.id}`], { relativeTo: this.activatedRoute });
+    this.router.navigate([`details/${row.id}`], {
+      relativeTo: this.activatedRoute,
+      queryParamsHandling: "preserve",
+    });
   }
 }

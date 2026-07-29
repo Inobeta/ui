@@ -1,25 +1,21 @@
 import {
   Component,
-  ElementRef,
-  OnDestroy,
-  ViewChild,
   computed,
-  effect,
   input,
   output,
   signal
 } from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 
-import { MatSort } from '@angular/material/sort';
-import { Subscription } from 'rxjs';
+import { CollectionViewer, DataSource } from '@angular/cdk/collections';
+import { Sort } from '@angular/material/sort';
+import { asapScheduler, concat, defer, finalize, map, observeOn, of, switchMap } from 'rxjs';
 import { IDataExportSettings } from '../data-export/data-export.service';
 import { IbFilter } from '../kai-filter';
 import { IbFilterBase } from '../kai-filter/filters/base/filter-base';
-import { IbKaiTableAction, } from "../kai-table/action";
-import { IbActionColumn } from "../kai-table/columns/action-column";
-import { IbColumn } from "../kai-table/columns/column";
+import { IbKaiTableAction } from "../kai-table/action";
+import { IbActionColumn, IbColumn } from "../kai-table/columns";
 import { IbKaiRowGroupDirective } from "../kai-table/rowgroup";
-import { IbTableDataSource } from '../kai-table/table-data-source';
 import { IbKaiTableState, IbTableDef } from "../kai-table/table.types";
 import { IbKaiTableMobileInfiniteScrollComponent } from './table-mobile-infinitescroll.component';
 import { IbKaiTableMobileItemComponent } from './table-mobile-item.component';
@@ -27,6 +23,11 @@ import { IbKaiTableMobileToolbarComponent } from './table-mobile-toolbar.compone
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslatePipe } from '@ngx-translate/core';
+
+type IbKaiTableMobileDataSource<T> = DataSource<T> & {
+  readonly sortState?: Sort;
+  readonly input?: { sort: Sort | null };
+};
 @Component({
   selector: 'ib-kai-table-mobile',
   standalone: true,
@@ -40,6 +41,8 @@ import { TranslatePipe } from '@ngx-translate/core';
             [filters]="filters()"
             [sortableColumns]="sortableColumns()"
             [currentSort]="currentSort()"
+            [canExportAllRows]="canExportAllRows()"
+            [canExportCurrentPage]="canExportCurrentPage()"
             (doExport)="doExport.emit($event)"
             (sortUpdated)="sortUpdate($event)"
           ></ib-kai-table-mobile-toolbar>
@@ -147,9 +150,9 @@ import { TranslatePipe } from '@ngx-translate/core';
     }
   `]
 })
-export class IbKaiTableMobileComponent implements OnDestroy {
+export class IbKaiTableMobileComponent {
   state = input<IbKaiTableState>('idle');
-  dataSource = input<IbTableDataSource<any>>();
+  dataSource = input<IbKaiTableMobileDataSource<unknown>>();
   tableName = input<string>(btoa(window.location.pathname + window.location.hash));
   tableDef = input<Partial<IbTableDef>>({});
   displayedColumns = input<string[]>([]);
@@ -162,47 +165,52 @@ export class IbKaiTableMobileComponent implements OnDestroy {
   headerActions = input<readonly IbKaiTableAction[]>();
   actionColumn = input<IbActionColumn>();
 
-  doExport = output<Partial<IDataExportSettings>>()
-  sortUpdated = output<MatSort>()
+  canExportAllRows = input(true);
+  canExportCurrentPage = input(true);
 
-  @ViewChild('scrollAnchor') scrollAnchor?: ElementRef<HTMLElement>;
+  doExport = output<Partial<IDataExportSettings>>()
+  sortUpdated = output<Sort>()
 
   visibleCount = signal(this.pageSize());
   filtersOpen = signal(false);
 
-  data = signal<any[]>([]);
-  datasourceConnection: Subscription | null = null;
-  currentSort = signal<{ active: string, direction: 'asc' | 'desc' } | null>(null);
+  private readonly connectedData = toSignal(
+    toObservable(this.dataSource).pipe(
+      switchMap((dataSource) => {
+        const rows = dataSource
+          ? defer(() => {
+            const collectionViewer = {} as CollectionViewer;
+            return dataSource.connect(collectionViewer).pipe(
+              finalize(() => dataSource.disconnect(collectionViewer))
+            );
+          })
+          : of<unknown[]>([]);
 
-  constructor() {
-    effect(() => {
-      const datasource = this.dataSource();
-      if (datasource) {
-        if (this.datasourceConnection) this.datasourceConnection.unsubscribe()
-        this.datasourceConnection = datasource.connect().asObservable().subscribe(data => {
-          this.data.set(data);
-          this.currentSort.set(datasource.sort ? { active: datasource.sort.active, direction: datasource.sort.direction as 'asc' | 'desc' } : null);
-        }
-        )
-      }
-    })
-  }
+        return concat(of<unknown[]>([]), rows).pipe(
+          observeOn(asapScheduler),
+          map((rows) => [...rows])
+        );
+      })
+    ),
+    { initialValue: [] as unknown[] }
+  );
 
-  ngOnDestroy() {
-    if (this.datasourceConnection) {
-      this.datasourceConnection.unsubscribe();
-    }
-  }
+  readonly data = computed(() => this.connectedData());
+  readonly currentSort = computed(() => {
+    this.connectedData();
+    const sortState = this.dataSource()?.sortState ?? this.dataSource()?.input?.sort ?? null;
+    return sortState?.active ? { ...sortState } : null;
+  });
 
   sortableColumns = computed(() => {
     const cols = this.columns() ?? [];
-    return cols.filter(c => c.sort);
+    return cols.filter(c => c.sortInput());
   });
 
   visibleColumns = computed(() => {
     const cols = this.columns() ?? [];
     const displayed = [...(this.displayedColumns() ?? [])]
-    if (!!this.actionColumn && !displayed.includes('ib-action')) {
+      if (this.actionColumn() && !displayed.includes('ib-action')) {
       displayed.push('ib-action');
     }
 
@@ -210,18 +218,18 @@ export class IbKaiTableMobileComponent implements OnDestroy {
       return cols;
     }
 
-    const byName = new Map(cols.map(col => [col.name, col]));
+    const byName = new Map(cols.map(col => [col.name(), col]));
     return displayed
       .map(name => byName.get(name))
       .filter((col): col is IbColumn<any> => !!col);
   });
 
   cardDataColumns = computed(() => {
-    return this.visibleColumns().filter(col => !col.isActionColumn);
+    return this.visibleColumns().filter(col => !col.isActionColumnInput());
   });
 
   cardActionColumns = computed(() => {
-    return this.visibleColumns().filter(col => col.isActionColumn);
+    return this.visibleColumns().filter(col => col.isActionColumnInput());
   });
 
   visibleRows = computed(() => {
@@ -242,19 +250,11 @@ export class IbKaiTableMobileComponent implements OnDestroy {
     return row?.id ?? row?.uuid ?? row?.key ?? index;
   }
 
-  sortUpdate(columnName: string) {
-    const currentSort = this.dataSource().sort;
-    if (currentSort.active === columnName) {
-      const newDirection = currentSort.direction === 'asc' ? 'desc' : 'asc';
-      const newSort: MatSort = new MatSort();
-      newSort.active = columnName;
-      newSort.direction = newDirection;
-      this.sortUpdated.emit(newSort);
-      return;
-    }
-    const newSort: MatSort = new MatSort();
-    newSort.active = columnName;
-    newSort.direction = 'asc';
-    this.sortUpdated.emit(newSort);
+  sortUpdate(columnName: string): void {
+    const currentSort = this.currentSort();
+    const direction = currentSort?.active === columnName && currentSort.direction === 'asc'
+      ? 'desc'
+      : 'asc';
+    this.sortUpdated.emit({ active: columnName, direction });
   }
 }

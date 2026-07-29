@@ -2,6 +2,7 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  OnDestroy,
   ViewChild,
   effect,
   input,
@@ -24,7 +25,7 @@ import {
     }
   `]
 })
-export class IbKaiTableMobileInfiniteScrollComponent implements AfterViewInit {
+export class IbKaiTableMobileInfiniteScrollComponent implements AfterViewInit, OnDestroy {
 
   hasMoreRows = input<boolean>(false);
   data = input<any[]>([]);
@@ -55,6 +56,10 @@ export class IbKaiTableMobileInfiniteScrollComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.setupInfiniteScroll();
+  }
+
+  ngOnDestroy(): void {
+    this.observer?.disconnect();
   }
 
   private setupInfiniteScroll(): void {

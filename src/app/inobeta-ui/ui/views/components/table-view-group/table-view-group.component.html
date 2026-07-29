@@ -8,11 +8,13 @@
   (ibRemoveView)="handleRemoveView($event)"
   (ibRenameView)="handleRenameView($event)"
   (ibDuplicateView)="handleDuplicateView($event)"
+  (ibReorderViews)="handleReorderViews($event)"
 ></ib-view-list>
 
 <button
   *ibTableAction
-  mat-icon-button
+  matMiniFab
+  style="margin-left: 5px;"
   [matTooltip]="'shared.ibTableView.undo' | translate"
   (click)="handleDiscardChanges()"
   [disabled]="!dirty"
@@ -22,7 +24,8 @@
 
 <button
   *ibTableAction
-  mat-icon-button
+  matMiniFab
+  style="margin-left: 5px;"
   [matTooltip]="'shared.ibTableView.save' | translate"
   (click)="handleSaveView()"
   [disabled]="!dirty"

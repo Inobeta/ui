@@ -7,11 +7,10 @@ import { IbColumn } from "./column";
 })
 export class IbActionColumn {
   constructor(public ibColumn: IbColumn<unknown>) {
-    this.ibColumn.name = "ib-action";
+    this.ibColumn.name.set("ib-action");
   }
 
   ngOnInit() {
-    this.ibColumn.headerText = "";
-    this.ibColumn._table?.displayedColumns?.push("ib-action")
+    this.ibColumn.headerText.set("");
   }
 }

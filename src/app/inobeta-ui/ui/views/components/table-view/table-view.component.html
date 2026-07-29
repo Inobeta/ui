@@ -1,5 +1,6 @@
 @if (!selected) {
   <button mat-button (click)="ibChangeView.emit(view)">
+    <mat-icon cdkDragHandle>drag_indicator</mat-icon>
     {{ view.name }}
   </button>
 }
@@ -9,6 +10,7 @@
     mat-flat-button
     [matMenuTriggerFor]="menu"
     >
+    <mat-icon cdkDragHandle>drag_indicator</mat-icon>
     {{ view.name }} {{ dirty ? "*" : "" }}
     <mat-icon iconPositionEnd>keyboard_arrow_down</mat-icon>
   </button>

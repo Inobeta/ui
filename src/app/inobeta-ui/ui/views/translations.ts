@@ -8,6 +8,7 @@ export const ibViewTranslations = {
       "duplicate": "Duplica vista",
       "duplicatePlaceholder": "Copia di {{viewName}}",
       "save": "Salva",
+      "discard": "Non salvare",
       "undo": "Annulla modifiche",
       "cancel": "Annulla",
       "addTitle": "Crea una nuova vista",
@@ -16,7 +17,10 @@ export const ibViewTranslations = {
       "duplicateTitle": "Duplica vista",
       "removeMessage": "Questa operazione non è reversivbile. \"{{viewName}}\" non sarà più disponibile.",
       "viewName": "Nome vista",
-      "defaultView": "Tutti",
+      "defaultView": "Default",
+      "nameRequired": "Il nome è obbligatorio",
+      "duplicateName": "Esiste già una vista con questo nome",
+      "storageError": "Impossibile salvare la vista",
       "unsavedTitle": "Modifiche non salvate",
       "unsavedView": "Vuoi salvare le modifiche apportate a \"{{viewName}}\"?",
       "unsavedUnnamedView": "Vuoi salvare le modifiche apportate in una nuova vista?",
@@ -27,7 +31,7 @@ export const ibViewTranslations = {
         "renamed": "Vista rinominata",
         "saved": "Vista salvata",
       },
-      "showFilters": "Mostra filtri"
+      "showFilters": "Mostra/Nascondi filtri"
     },
   }
 }
