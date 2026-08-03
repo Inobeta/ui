@@ -164,10 +164,17 @@ const meta: Meta = {
   ],
   argTypes: {
     dataSource: { control: { disable: true } },
+    tableHeight: { control: "text" },
   },
   parameters: {
     controls: {
-      include: ["displayedColumns", "data", "tableDef", "tableName"],
+      include: [
+        "displayedColumns",
+        "data",
+        "tableDef",
+        "tableName",
+        "tableHeight",
+      ],
     },
   },
 };
@@ -361,7 +368,79 @@ export const WithRowGroup: Story = {
         <ib-text-column headerText="Product name" name="name" sort />
         <ib-text-column headerText="SKU" name="sku" />
         <ib-number-column name="price" sort />
-        <ib-text-column name="category" sort />
+        <ib-text-column  name="category" sort />
+        <ib-date-column headerText="Created at" name="created_at" sort />
+      </ib-kai-table>
+    `,
+  }),
+};
+
+/**
+ * Demonstrates parent mode: the table fills its container.
+ * The wrapper div below provides a definitively sized parent (500px).
+ * The content area uses flex to fill the remaining space after
+ * toolbar, filter, and paginator.
+ */
+export const ParentHeight: Story = {
+  args: {
+    tableName: "products-parent-height",
+    displayedColumns: ["id", "name", "sku", "category", "price"],
+    tableHeight: "parent",
+  },
+  render: (args) => ({
+    props: {
+      data: generateData().slice(0, 30),
+      ...args,
+    },
+    template: `
+      <div style="height: 500px; resize: vertical; overflow: hidden; border: 1px dashed var(--mat-sys-outline, #ccc); padding: 4px;">
+        <ib-kai-table [tableName]="tableName" [data]="data" [displayedColumns]="displayedColumns" [tableHeight]="tableHeight">
+          <ib-text-column headerText="ID" name="id" sort />
+          <ib-text-column headerText="Product name" name="name" sort />
+          <ib-text-column headerText="SKU" name="sku" />
+          <ib-text-column  name="category" sort />
+          <ib-number-column name="price" sort />
+        </ib-kai-table>
+      </div>
+    `,
+  }),
+};
+
+/**
+ * Demonstrates exact CSS height mode with sticky start/end columns.
+ * The content area respects the explicit height while toolbar,
+ * filter, and paginator remain outside the scroll zone.
+ */
+export const ExactHeight: Story = {
+  args: {
+    tableName: "products-exact-height",
+    displayedColumns: ["id", "name", "sku", "category", "price", "created_at"],
+    tableHeight: "400px",
+    tableDef: {
+      paginator: {
+        pageSizeOptions: [10, 20, 50, 100],
+        showFirstLastButtons: true,
+        pageSize: 20,
+      },
+    },
+  },
+  render: (args) => ({
+    props: {
+      data: tableData,
+      ...args,
+    },
+    template: `
+      <ib-kai-table [tableName]="tableName" [data]="data" [displayedColumns]="displayedColumns" [tableHeight]="tableHeight" [tableDef]="tableDef">
+        <ib-filter>
+          <ib-text-filter name="name">Product name</ib-text-filter>
+          <ib-text-filter name="category">Category</ib-text-filter>
+        </ib-filter>
+
+        <ib-text-column headerText="ID" name="id" sort sticky stickyEnd />
+        <ib-text-column headerText="Product name" name="name" sort />
+        <ib-text-column headerText="SKU" name="sku" />
+        <ib-text-column  name="category" sort />
+        <ib-number-column name="price" sort stickyEnd />
         <ib-date-column headerText="Created at" name="created_at" sort />
       </ib-kai-table>
     `,

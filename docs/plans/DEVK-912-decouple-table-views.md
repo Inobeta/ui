@@ -83,7 +83,7 @@ No DI token tricks needed; the content projection mechanism remains identical.
 
 ---
 
-### Step 1 — Create `IbTableViewsHost` abstraction in kai-table
+### Step 1 — Create `IbTableViewsHost` abstraction in kai-table ✅ DONE
 
 | Field | Value |
 |---|---|
@@ -154,7 +154,7 @@ write "NEED CLARIFICATION" and take no action
 
 ---
 
-### Step 2 — Refactor `IbTableViewGroup` to extend `IbTableViewsHost`
+### Step 2 — Refactor `IbTableViewGroup` to extend `IbTableViewsHost` ✅ DONE
 
 | Field | Value |
 |---|---|
@@ -210,7 +210,7 @@ write "NEED CLARIFICATION" and take no action
 
 ---
 
-### Step 3 — Refactor `IbTableDataSource` to use `IbTableViewsHost`
+### Step 3 — Refactor `IbTableDataSource` to use `IbTableViewsHost` ✅ DONE
 
 | Field | Value |
 |---|---|
@@ -278,7 +278,7 @@ write "NEED CLARIFICATION" and take no action
 
 ---
 
-### Step 4 — Refactor `IbTable` component to use `IbTableViewsHost`
+### Step 4 — Refactor `IbTable` component to use `IbTableViewsHost` ✅ DONE
 
 | Field | Value |
 |---|---|
@@ -358,7 +358,7 @@ write "NEED CLARIFICATION" and take no action
 
 ---
 
-### Step 5 — Update SCSS to remove `ib-table-view-group` element selector dependency
+### Step 5 — Update SCSS to remove `ib-table-view-group` element selector dependency ✅ DONE
 
 | Field | Value |
 |---|---|
@@ -417,7 +417,7 @@ write "NEED CLARIFICATION" and take no action
 
 ---
 
-### Step 6 — Update `IbTable` unit tests (remove views coupling)
+### Step 6 — Update `IbTable` unit tests (remove views coupling) ✅ DONE
 
 | Field | Value |
 |---|---|
@@ -473,7 +473,7 @@ write "NEED CLARIFICATION" and take no action
 
 ---
 
-### Step 7 — Move view-specific tests to views module
+### Step 7 — Move view-specific tests to views module ✅ DONE
 
 | Field | Value |
 |---|---|
@@ -528,7 +528,7 @@ write "NEED CLARIFICATION" and take no action
 
 ---
 
-### Step 8 — Update public API and barrel exports
+### Step 8 — Update public API and barrel exports ✅ DONE
 
 | Field | Value |
 |---|---|
@@ -573,7 +573,7 @@ write "NEED CLARIFICATION" and take no action
 
 ---
 
-### Step 9 — Update examples (if needed)
+### Step 9 — Update examples (if needed) ✅ DONE
 
 | Field | Value |
 |---|---|
@@ -619,7 +619,7 @@ write "NEED CLARIFICATION" and take no action
 
 ---
 
-### Step 10 — Update Storybook stories (if needed)
+### Step 10 — Update Storybook stories (if needed) ✅ DONE
 
 | Field | Value |
 |---|---|

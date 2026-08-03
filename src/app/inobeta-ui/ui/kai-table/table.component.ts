@@ -122,9 +122,14 @@ export class IbTable implements OnDestroy {
   readonly tableName = input.required<string>();
   tableDef = input<Partial<IbTableDef>>({});
   readonly displayedColumns = input<string[]>([],);
+  readonly tableHeight = input('parent', {
+    transform: (value: string | null | undefined): string => value?.trim() ? value : 'parent',
+  });
   stripedRows = input(false, { transform: booleanAttribute });
   activeRowParams = input<{ dataParamId: string, childRouteParamId: string }>({ dataParamId: null, childRouteParamId: null });
 
+  readonly usesParentHeight = computed(() => this.tableHeight() === 'parent');
+  readonly contentHeight = computed(() => this.usesParentHeight() ? null : this.tableHeight());
   readonly isRemote = computed(() => this.isRemoteDataSource(this.activeDataSource()));
 
   readonly effectiveTableDef = computed<IbTableDef>(() => ({
@@ -171,6 +176,7 @@ export class IbTable implements OnDestroy {
   private aggregationFunctions = inject(IB_AGGREGATE, { optional: true }) as IbAggregate[] | null;
 
   @HostBinding('class.ib-table--has-views') get hasViews() { return !!this.viewHost(); }
+  @HostBinding('class.ib-table__container--parent-height') get hasParentHeight() { return this.usesParentHeight(); }
   @HostBinding("class.ib-table-striped-rows") get hasStripedRows() { return this.stripedRows(); }
   activeRouteId = signal<string>(null);
 

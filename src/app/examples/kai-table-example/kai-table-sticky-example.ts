@@ -12,6 +12,7 @@ import { IbUserExample, createNewUser } from "./users";
       [data]="data"
       [displayedColumns]="displayedColumns"
       [style.max-width]="'600px'"
+      tableHeight="500px"
     >
       <ib-text-column headerText="ID" name="id" sort></ib-text-column>
       <ib-text-column headerText="Name" name="name" sticky sort></ib-text-column>
@@ -23,7 +24,7 @@ import { IbUserExample, createNewUser } from "./users";
     </ib-kai-table>
   `,
   styles: [
-    `:host { display: block; overflow-x: auto; padding: 30px; }`,
+    `:host { display: block; padding: 30px; }`,
   ],
 })
 export class IbKaiTableStickyExamplePage {

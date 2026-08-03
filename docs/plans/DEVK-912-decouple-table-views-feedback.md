@@ -103,7 +103,7 @@
 
 ## Remediation plan
 
-### Remediation 1 — Correct views toolbar selector [agent: kai-table-executor] [model: github-copilot/gpt-5.6-terra]
+### Remediation 1 — Correct views toolbar selector [agent: kai-table-executor] [model: github-copilot/gpt-5.6-terra] ✅ DONE
 
 **Observed problem**: `[BLOCKER]` The host class is bound to `ib-kai-table`, but `table.component.scss` matches it only on the nested toolbar, so views styling is never applied.
 
@@ -142,7 +142,7 @@ Return the changed file path and a concise description of the selector relations
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Remediation 2 — Restore table-spec validation [agent: unit-jasmine-executor] [model: github-copilot/gpt-5.6-terra]
+### Remediation 2 — Restore table-spec validation [agent: unit-jasmine-executor] [model: github-copilot/gpt-5.6-terra] ✅ DONE
 
 **Observed problem**: `[WARNING]` `table.component.spec.ts` fails under its planned targeted command because the TestBed lacks Italian locale data for number/date pipes. The new host contract is also only tested for discovery, not interactions.
 

@@ -121,7 +121,7 @@ Entrambi i fix sono chirurgici e non richiedono modifiche a `IbTableUrlService`,
 
 ## 5. Step-by-Step Plan
 
-### Step 1 — Deep merge nel setter + URL paginator applicato solo con querystring esplicito
+### Step 1 — Deep merge nel setter + URL paginator applicato solo con querystring esplicito ✅ DONE
 
 **Target Executor:** `kai-table-executor`
 

@@ -1,4 +1,4 @@
-<div class="ib-table-desktop">
+<div class="ib-table-desktop" [class.ib-table-desktop--parent-height]="usesParentHeight()">
   <section class="ib-table__toolbar">
     <ng-content select="ib-table-view-group" />
     <section class="ib-table__toolbar__actions">
@@ -21,7 +21,11 @@
 
   <ng-content select="ib-filter" />
 
-  <section class="ib-table__content" [class.ib-table__content--loading]="effectiveState() === 'loading'">
+  <section class="ib-table__content"
+    [class.ib-table__content--parent-height]="usesParentHeight()"
+    [class.ib-table__content--exact-height]="!usesParentHeight()"
+    [class.ib-table__content--loading]="effectiveState() === 'loading'"
+    [style.height]="contentHeight()">
     @if (effectiveState() === 'loading') {
       <div class="ib-table__content__progress-bar">
         <mat-progress-bar mode="indeterminate" />

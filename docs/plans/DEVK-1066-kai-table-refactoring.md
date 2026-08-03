@@ -246,7 +246,7 @@ costituisce breaking change.
 
 ## 5. Step-by-Step Plan
 
-### Step 1 — Definire stato, `tableDef` e resolver di precedenza
+### Step 1 — Definire stato, `tableDef` e resolver di precedenza ✅ DONE
 
 **Target executor:** `kai-table-executor`  
 **Model:** DeepSeek v4 Pro  
@@ -298,7 +298,7 @@ Elenco dei file modificati e sintesi della matrice di precedenza implementata.
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Step 2 — Testare resolver e semantica `null`
+### Step 2 — Testare resolver e semantica `null` ✅ DONE
 
 **Target executor:** `unit-jasmine-executor`  
 **Model:** DeepSeek v4 Pro  
@@ -344,7 +344,7 @@ Spec aggiunta e riepilogo dei casi coperti.
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Step 3 — Ricostruire lo slice NgRx come source of truth
+### Step 3 — Ricostruire lo slice NgRx come source of truth ✅ DONE
 
 **Target executor:** `kai-table-executor`  
 **Model:** DeepSeek v4 Pro  
@@ -394,7 +394,7 @@ File store aggiornati, nuove action/selector e note sulla compatibility facade.
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Step 4 — Coprire reducer, action e selector NgRx
+### Step 4 — Coprire reducer, action e selector NgRx ✅ DONE
 
 **Target executor:** `unit-jasmine-executor`  
 **Model:** DeepSeek v4 Pro  
@@ -441,7 +441,7 @@ Spec store aggiunte/aggiornate e riepilogo copertura.
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Step 5 — Introdurre codec URL versionato e persistenza full-state
+### Step 5 — Introdurre codec URL versionato e persistenza full-state ✅ DONE
 
 **Target executor:** `kai-table-executor`  
 **Model:** DeepSeek v4 Pro  
@@ -496,7 +496,7 @@ Codec, service ed effect aggiornati; descrizione schema v2 e comportamento legac
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Step 6 — Testare codec, URL effect e race prevention
+### Step 6 — Testare codec, URL effect e race prevention ✅ DONE
 
 **Target executor:** `unit-jasmine-executor`  
 **Model:** DeepSeek v4 Pro  
@@ -547,7 +547,7 @@ Spec aggiunte e riepilogo dei casi URL coperti.
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Step 7 — Estendere il contratto opzionale delle views
+### Step 7 — Estendere il contratto opzionale delle views ✅ DONE
 
 **Target executor:** `task-executor`  
 **Model:** DeepSeek v4 Pro  
@@ -603,7 +603,7 @@ Contratto e adapter aggiornati, inclusa la strategia di normalizzazione legacy.
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Step 8 — Testare risoluzione e normalizzazione views
+### Step 8 — Testare risoluzione e normalizzazione views ✅ DONE
 
 **Target executor:** `unit-jasmine-executor`  
 **Model:** DeepSeek v4 Pro  
@@ -649,7 +649,7 @@ Spec e stub aggiornati.
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Step 9 — Creare la facade per-table di inizializzazione e URL hydration
+### Step 9 — Creare la facade per-table di inizializzazione e URL hydration ✅ DONE
 
 **Target executor:** `kai-table-executor`  
 **Model:** DeepSeek v4 Pro  
@@ -702,7 +702,7 @@ Facade aggiunta e descrizione del lifecycle.
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Step 10 — Testare facade, back/forward e primo init
+### Step 10 — Testare facade, back/forward e primo init ✅ DONE
 
 **Target executor:** `unit-jasmine-executor`  
 **Model:** DeepSeek v4 Pro  
@@ -747,7 +747,7 @@ Spec facade e riepilogo lifecycle coperto.
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Step 11 — Definire il contratto comune e il data source locale
+### Step 11 — Definire il contratto comune e il data source locale ✅ DONE
 
 **Target executor:** `kai-table-executor`  
 **Model:** DeepSeek v4 Pro  
@@ -807,7 +807,7 @@ File modificati, pipeline locale e lista delle API pubbliche/compatibility.
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Step 12 — Coprire la pipeline locale
+### Step 12 — Coprire la pipeline locale ✅ DONE
 
 **Target executor:** `unit-jasmine-executor`  
 **Model:** DeepSeek v4 Pro  
@@ -851,7 +851,7 @@ Spec locale e riepilogo dei flussi coperti.
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Step 12.1 — Separare il remoto e integrare i data source in `IbTable`
+### Step 12.1 — Separare il remoto e integrare i data source in `IbTable` ✅ DONE
 
 **Target executor:** `kai-table-executor`  
 **Model:** DeepSeek v4 Pro  
@@ -923,7 +923,7 @@ Remote data source e IbTable aggiornati; descrizione di pipeline, trigger e life
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Step 12.2 — Coprire la pipeline remota
+### Step 12.2 — Coprire la pipeline remota ✅ DONE
 
 **Target executor:** `unit-jasmine-executor`  
 **Model:** DeepSeek v4 Pro  
@@ -970,7 +970,7 @@ Spec remota e riepilogo dei trigger coperti.
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Step 12.3 — Preparare gli esempi al cutover remoto e a `tableName` required
+### Step 12.3 — Preparare gli esempi al cutover remoto e a `tableName` required ✅ DONE
 
 **Target executor:** `examples-executor`  
 **Model:** DeepSeek v4 Flash  
@@ -1012,7 +1012,7 @@ Esempi aggiornati e inventario tableName assegnati.
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Step 13 — Migrare `IbTable` alle signal API
+### Step 13 — Migrare `IbTable` alle signal API ✅ DONE
 
 **Target executor:** `kai-table-executor`  
 **Model:** DeepSeek v4 Pro  
@@ -1069,7 +1069,7 @@ Component e template aggiornati; elenco delle proprietà TypeScript divenute sig
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Step 14 — Riscrivere le integration spec di `IbTable`
+### Step 14 — Riscrivere le integration spec di `IbTable` ✅ DONE
 
 **Target executor:** `unit-jasmine-executor`  
 **Model:** DeepSeek v4 Pro  
@@ -1123,7 +1123,7 @@ Spec aggiornata e lista dei vecchi test sostituiti.
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Step 15 — Migrare le API signal dei child desktop
+### Step 15 — Migrare le API signal dei child desktop ✅ DONE
 
 **Target executor:** `kai-table-executor`  
 **Model:** DeepSeek v4 Pro  
@@ -1180,7 +1180,7 @@ Child component aggiornati e inventario delle breaking property signal.
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Step 16 — Coprire le API signal dei child desktop
+### Step 16 — Coprire le API signal dei child desktop ✅ DONE
 
 **Target executor:** `unit-jasmine-executor`  
 **Model:** DeepSeek v4 Pro  
@@ -1230,7 +1230,7 @@ Spec child aggiunte/aggiornate.
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Step 17 — Disaccoppiare data export dagli internals del data source
+### Step 17 — Disaccoppiare data export dagli internals del data source ✅ DONE
 
 **Target executor:** `task-executor`  
 **Model:** DeepSeek v4 Flash  
@@ -1276,7 +1276,7 @@ Service aggiornato e lista degli internals eliminati.
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Step 18 — Aggiornare i test data export
+### Step 18 — Aggiornare i test data export ✅ DONE
 
 **Target executor:** `unit-jasmine-executor`  
 **Model:** DeepSeek v4 Flash  
@@ -1316,7 +1316,7 @@ Spec aggiornate.
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Step 19 — Adattare il renderer mobile al nuovo contratto
+### Step 19 — Adattare il renderer mobile al nuovo contratto ✅ DONE
 
 **Target executor:** `kai-table-mobile-executor`  
 **Model:** DeepSeek v4 Pro  
@@ -1365,7 +1365,7 @@ File mobile aggiornati e limiti mobile rimasti fuori scope.
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Step 20 — Aggiungere unit test mobile di integrazione
+### Step 20 — Aggiungere unit test mobile di integrazione ✅ DONE
 
 **Target executor:** `unit-jasmine-executor`  
 **Model:** DeepSeek v4 Pro  
@@ -1408,7 +1408,7 @@ Nuove spec mobile.
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Step 21 — Finalizzare barrel e public API
+### Step 21 — Finalizzare barrel e public API ✅ DONE
 
 **Target executor:** `task-executor`  
 **Model:** DeepSeek v4 Flash  
@@ -1457,7 +1457,7 @@ Barrel aggiornati e lista dei nuovi simboli pubblici.
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Step 22 — Migrare gli esempi applicativi
+### Step 22 — Migrare gli esempi applicativi ✅ DONE
 
 **Target executor:** `examples-executor`  
 **Model:** DeepSeek v4 Flash  
@@ -1507,7 +1507,7 @@ Esempi aggiornati e inventario tableName assegnati.
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Step 23 — Aggiornare Storybook e documentazione d'uso
+### Step 23 — Aggiornare Storybook e documentazione d'uso ✅ DONE
 
 **Target executor:** `storybook-executor`  
 **Model:** DeepSeek v4 Flash  
@@ -1560,7 +1560,7 @@ Stories/MDX aggiornati e sezioni nuove indicate.
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Step 24 — Scrivere la migration guide delle breaking change
+### Step 24 — Scrivere la migration guide delle breaking change ✅ DONE
 
 **Target executor:** `task-executor`  
 **Model:** DeepSeek v4 Flash  
@@ -1611,7 +1611,7 @@ Migration guide e deprecation guide aggiornate.
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Step 25 — Review finale integrata
+### Step 25 — Review finale integrata ✅ DONE
 
 **Target executor:** `code-reviewer`  
 **Model:** DeepSeek v4 Pro  

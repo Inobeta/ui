@@ -710,6 +710,18 @@ describe("IbTable", () => {
       expect(fixture.debugElement.query(By.directive(IbAggregateCell))).toBeTruthy();
     });
 
+    it("should render the aggregation footer as sticky", () => {
+      component.setAggregation("amount", "sum");
+      fixture.detectChanges();
+
+      const footer = fixture.nativeElement.querySelector(
+        ".mat-mdc-footer-cell",
+      ) as HTMLElement;
+
+      expect(footer).toBeTruthy();
+      expect(getComputedStyle(footer).position).toBe("sticky");
+    });
+
   });
 
   describe("with a custom aggregate provider", () => {
@@ -1056,7 +1068,158 @@ describe("IbTable", () => {
       expect(component.paginator()?.pageSize).toBe(10);
     });
   });
+
+  describe("desktop height and scroll layout", () => {
+    let fixture: ComponentFixture<IbTableHeightHost>;
+    let host: IbTableHeightHost;
+
+    beforeEach(waitForAsync(() => {
+      configureModule(IbTableHeightHost);
+    }));
+
+    beforeEach(async () => {
+      fixture = TestBed.createComponent(IbTableHeightHost);
+      host = fixture.componentInstance;
+      fixture.detectChanges();
+      await fixture.whenStable();
+      fixture.debugElement.queryAll(By.directive(IbTable)).forEach((element) => {
+        (element.componentInstance as IbTable).isMobile = false;
+      });
+      fixture.detectChanges();
+      (fixture.nativeElement.querySelectorAll(".ib-table-desktop") as NodeListOf<HTMLElement>)
+        .forEach((element) => element.style.setProperty("display", "flex", "important"));
+      (fixture.nativeElement.querySelectorAll(".ib-table-mobile") as NodeListOf<HTMLElement>)
+        .forEach((element) => element.style.setProperty("display", "none", "important"));
+    });
+
+    it("should use parent mode when tableHeight is omitted", () => {
+      const omittedTable = fixture.nativeElement.querySelector(
+        ".ib-table-height-host__omitted ib-kai-table",
+      ) as HTMLElement;
+
+      expect(omittedTable.classList).toContain("ib-table__container--parent-height");
+      expect(omittedTable.querySelector(".ib-table__content")!.classList)
+        .toContain("ib-table__content--parent-height");
+    });
+
+    it("should normalize empty and whitespace tableHeight values to parent mode", () => {
+      const table = heightTableElement(fixture);
+      const component = fixture.debugElement.queryAll(By.directive(IbTable))[1]
+        .componentInstance as IbTable;
+
+      host.tableHeight = "";
+      fixture.detectChanges();
+      expect(component.usesParentHeight()).toBeTrue();
+      expect(table.classList).toContain("ib-table__container--parent-height");
+
+      host.tableHeight = "   ";
+      fixture.detectChanges();
+      expect(component.usesParentHeight()).toBeTrue();
+      expect(table.classList).toContain("ib-table__container--parent-height");
+    });
+
+    it("should fill a definitively sized parent in parent mode", () => {
+      const parent = fixture.nativeElement.querySelector(
+        ".ib-table-height-host__bound",
+      ) as HTMLElement;
+      const table = heightTableElement(fixture);
+      const desktop = table.querySelector<HTMLElement>(".ib-table-desktop")!;
+
+      expect(getComputedStyle(table).height).toBe("700px");
+      expect(table.getBoundingClientRect().height).toBe(parent.clientHeight);
+      expect(desktop.getBoundingClientRect().height + table.clientTop * 2)
+        .toBe(parent.clientHeight);
+      expect(getComputedStyle(desktop).display).toBe("flex");
+    });
+
+    it("should give a short dataset an exact 500px content viewport", () => {
+      host.tableHeight = "500px";
+      fixture.detectChanges();
+
+      const content = heightTableElement(fixture).querySelector<HTMLElement>(
+        ".ib-table__content",
+      )!;
+
+      expect(content.classList).toContain("ib-table__content--exact-height");
+      expect(getComputedStyle(content).height).toBe("500px");
+      expect(content.getBoundingClientRect().height).toBe(500);
+    });
+
+    it("should use the 400px default minimum content height in parent mode", () => {
+      const content = heightTableElement(fixture).querySelector<HTMLElement>(
+        ".ib-table__content",
+      )!;
+
+      expect(getComputedStyle(content).minHeight).toBe("400px");
+    });
+
+    it("should honor a custom minimum content height CSS variable", () => {
+      host.minimumContentHeight = "420px";
+      fixture.detectChanges();
+
+      const content = heightTableElement(fixture).querySelector<HTMLElement>(
+        ".ib-table__content",
+      )!;
+
+      expect(getComputedStyle(content).minHeight).toBe("420px");
+    });
+
+    it("should keep toolbar, projected filter, and paginator outside the content viewport", () => {
+      const table = heightTableElement(fixture);
+      const content = table.querySelector<HTMLElement>(".ib-table__content")!;
+      const toolbar = table.querySelector<HTMLElement>(".ib-table__toolbar")!;
+      const filter = table.querySelector<HTMLElement>("ib-filter")!;
+      const paginator = table.querySelector<HTMLElement>(".ib-table__paginator")!;
+
+      expect(content.contains(toolbar)).toBeFalse();
+      expect(content.contains(filter)).toBeFalse();
+      expect(content.contains(paginator)).toBeFalse();
+    });
+
+    it("should keep content as the only table-owned scroll container", () => {
+      const table = heightTableElement(fixture);
+      const ownedElements: HTMLElement[] = [
+        table,
+        ...Array.from(table.querySelectorAll<HTMLElement>("*")),
+      ].filter((el) => {
+        let ancestor = el.parentElement;
+        while (ancestor && ancestor !== table) {
+          if (/^IB-/i.test(ancestor.tagName)) return false;
+          ancestor = ancestor.parentElement;
+        }
+        return true;
+      });
+
+      const scrollOwners = ownedElements.filter((element) => {
+        const style = getComputedStyle(element);
+        return [style.overflow, style.overflowX, style.overflowY].some(
+          (value) => value === "auto" || value === "scroll",
+        );
+      });
+
+      expect(scrollOwners).toEqual([
+        table.querySelector<HTMLElement>(".ib-table__content")!,
+      ]);
+    });
+
+    it("should retain sticky header and sticky column styles inside content", () => {
+      const content = heightTableElement(fixture).querySelector<HTMLElement>(
+        ".ib-table__content",
+      )!;
+      const header = content.querySelector<HTMLElement>("th.mat-column-name")!;
+      const stickyColumn = content.querySelector<HTMLElement>("td.mat-column-name")!;
+
+      expect(getComputedStyle(header).position).toBe("sticky");
+      expect(getComputedStyle(stickyColumn).position).toBe("sticky");
+    });
+  });
 });
+
+function heightTableElement(fixture: ComponentFixture<IbTableHeightHost>): HTMLElement {
+  return fixture.nativeElement.querySelector(
+    ".ib-table-height-host__bound ib-kai-table",
+  ) as HTMLElement;
+}
 
 // ===========================================================================
 // Test Helpers
@@ -1554,4 +1717,48 @@ class IbTableWithDataSourceReplacement {
 })
 class IbTableWithLocalDataSourceApp {
   dataSource = new IbTableLocalDataSource([{ name: "alice" }]);
+}
+
+@Component({
+  template: `
+    <div class="ib-table-height-host__omitted" style="height: 700px">
+      <ib-kai-table
+        tableName="test-height-omitted"
+        [data]="data"
+        [displayedColumns]="['name', 'description']"
+      >
+        <ib-text-column name="name" [sticky]="true"></ib-text-column>
+        <ib-text-column name="description"></ib-text-column>
+      </ib-kai-table>
+    </div>
+
+    <div
+      class="ib-table-height-host__bound"
+      [style.height]="parentHeight"
+      [style.--ib-table-min-content-height]="minimumContentHeight"
+    >
+      <ib-kai-table
+        tableName="test-height-bound"
+        [data]="data"
+        [tableHeight]="tableHeight"
+        [displayedColumns]="['name', 'description']"
+      >
+        <ib-filter>
+          <ib-text-filter name="name">Name</ib-text-filter>
+        </ib-filter>
+        <ib-text-column name="name" [sticky]="true"></ib-text-column>
+        <ib-text-column name="description"></ib-text-column>
+      </ib-kai-table>
+    </div>
+  `,
+  standalone: false,
+})
+class IbTableHeightHost {
+  parentHeight = "700px";
+  tableHeight = "parent";
+  minimumContentHeight: string | null = null;
+  data = [
+    { name: "alice", description: "short dataset" },
+    { name: "bob", description: "short dataset" },
+  ];
 }

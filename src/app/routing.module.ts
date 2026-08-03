@@ -9,7 +9,9 @@ import { IbKaiTableDatasourceExamplePage } from './examples/kai-table-example/ka
 import { KaiTableDetailComponent } from './examples/kai-table-example/kai-table-detail';
 import { IbKaiTableExamplePage } from './examples/kai-table-example/kai-table-example';
 import { IbKaiTableFullExamplePage } from './examples/kai-table-example/kai-table-full-example';
+import { IbKaiTableParentHeightExamplePage } from './examples/kai-table-example/kai-table-parent-height-example';
 import { IbKaiTableStickyExamplePage } from './examples/kai-table-example/kai-table-sticky-example';
+import { IbKaiTableStickyParentExamplePage } from './examples/kai-table-example/kai-table-sticky-parent-height-example';
 import { IbKaiTableWithRouting } from './examples/kai-table-example/kai-table-with-routing';
 import { IbKaiTableApiExamplePage } from './examples/kai-table-example/server-side/kai-table-api-example';
 import { IbKaiTableMobileEmptyExamplePage } from './examples/kai-table-example/kai-table-mobile-empty-example';
@@ -74,8 +76,18 @@ export const appRoutes: Routes = [
           },
           {
             path: 'sticky',
-            data: { breadcrumb: 'Sticky Columns' },
+            data: { breadcrumb: 'examples.ibMainMenu.kaiTableSticky' },
             component: IbKaiTableStickyExamplePage
+          },
+          {
+            path: 'parent-height',
+            data: { breadcrumb: 'examples.ibMainMenu.kaiTableParentHeight' },
+            component: IbKaiTableParentHeightExamplePage
+          },
+          {
+            path: 'sticky-parent',
+            data: { breadcrumb: 'examples.ibMainMenu.kaiTableStickyParent' },
+            component: IbKaiTableStickyParentExamplePage
           },
           {
             path: 'custom-sort-filter',

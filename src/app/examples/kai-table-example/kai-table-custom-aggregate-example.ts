@@ -6,7 +6,25 @@ import { IbUserExample, createNewUser } from "./users";
   selector: "ib-kai-table-custom-aggregate-example",
   standalone: true,
   imports: [IbKaiTableModule],
-  styles: [":host { display: flex; flex-direction: column; padding: 30px }"],
+  styles: [
+    `
+      :host {
+        --ib-table-min-content-height: 0px;
+
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: column;
+        min-height: 0;
+        overflow: hidden;
+        padding: 30px;
+      }
+
+      ib-kai-table {
+        flex: 1 1 auto;
+        min-height: 0;
+      }
+    `,
+  ],
   providers: [
     {
       provide: IB_AGGREGATE,

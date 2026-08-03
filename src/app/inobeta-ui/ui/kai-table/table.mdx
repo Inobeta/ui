@@ -744,6 +744,132 @@ A `*ibKaiRowGroup` directive is available to display contextual content for each
 
 <Canvas of={TableStories.WithRowGroup} />
 
+## Table Height
+
+The `tableHeight` input controls how the **desktop** table body is sized.
+It accepts a string and defaults to `"parent"` when omitted, empty, or whitespace-only.
+
+This is a **breaking change**: tables that previously relied on implicit
+row-count-based sizing now fill their parent container by default.
+See the [migration guide](#migration-guide) for how to adapt existing consumers.
+
+<Canvas of={TableStories.ParentHeight} />
+
+### Parent mode
+
+When `tableHeight` is `"parent"` (or omitted), the table uses a column flex layout
+that stretches to fill the height of its parent:
+
+```html
+<div style="height: 500px">
+  <ib-kai-table tableName="myTable" [data]="data" [displayedColumns]="displayedColumns">
+    <!-- columns... -->
+  </ib-kai-table>
+</div>
+```
+
+The content area takes the remaining space after toolbar, filter, and paginator.
+Host and wrapper use `overflow: hidden` — only `.ib-table__content` is scrollable.
+
+### Exact CSS height
+
+Pass any non-empty CSS string (e.g. `400px`, `50vh`, `30rem`) to set an exact
+height for the scrollable content area:
+
+```html
+<ib-kai-table tableName="myTable" [data]="data" [displayedColumns]="displayedColumns"
+  tableHeight="400px">
+  <!-- columns... -->
+</ib-kai-table>
+```
+
+> `tableHeight` sets the exact height of the scroll content, **not** the total
+> component height. Toolbar, filter, and paginator are stacked outside the
+> content area and add to the overall component size.
+
+With a short dataset, the content area keeps the empty space; with a long
+dataset, a single scrollbar appears inside `.ib-table__content`.
+
+<Canvas of={TableStories.ExactHeight} />
+
+### CSS Variable: `--ib-table-min-content-height`
+
+Defines the minimum height of the content area in **parent mode**.
+Default is `400px`.
+
+```css
+:host {
+  --ib-table-min-content-height: 300px;
+}
+```
+
+When the host parent provides less space than the minimum, the content area
+maintains at least this height (toolbar, filter, and paginator add on top).
+
+### What stays outside the content area
+
+In **both** modes, toolbar, filter, and paginator are sibling elements of
+`.ib-table__content` and are never part of the scroll region. In **parent mode**,
+they consume space from the parent and therefore reduce the `.ib-table__content`
+viewport. In **exact mode**, they remain outside the content area and add to the
+component's total height.
+
+### Removed CSS variables
+
+These variables no longer control table height and have been removed:
+
+- `--ib-table-minimum-rows` — removed. Use `--ib-table-min-content-height` or `tableHeight` instead.
+- `--ib-table-content-max-height` — removed. Use `tableHeight` with an exact CSS value instead.
+
+### Mobile
+
+The `tableHeight` input does not affect the mobile component.
+Mobile layout and workflow remain unchanged.
+
+### Migration Guide
+
+Consumer code written before `tableHeight` was introduced must be updated.
+The old behaviour auto-computed a `max-height` from `--ib-table-minimum-rows`
+(default 10 rows) and Material row tokens. That logic is no longer active.
+
+#### 1. Direct template consumers
+
+- **Choose a mode**: decide whether the table should fill its parent
+  (`tableHeight="parent"` or omit the input) or use an exact content height
+  (e.g. `tableHeight="500px"`).
+- **Parent mode**: ensure the table's ancestor has a defined height. Without it,
+  the content area defaults to `--ib-table-min-content-height` (400 px).
+  This can produce a taller component than the old implicit sizing.
+- **Remove old overrides**: delete any custom `--ib-table-minimum-rows` or
+  `--ib-table-content-max-height` values from your stylesheets.
+- **Check for double scroll**: do not wrap `ib-kai-table` in a container with
+  `overflow: auto`. The table already owns its scroll behaviour.
+
+#### 2. Wrapper and adapter components
+
+If you maintain a wrapper component that wraps `ib-kai-table`:
+
+- **Propagate `tableHeight`**: expose an equivalent input on the wrapper and
+  forward it to the underlying table.
+- **Decide a wrapper default**: if the wrapper previously hardcoded sizing,
+  choose either `"parent"` or a fixed CSS value as the new default.
+- **Remove scroll from the wrapper**: ensure the wrapper does not add its own
+  `overflow: auto` — `.ib-table__content` must remain the single scroll owner.
+
+#### 3. External consumers
+
+The following known consumers are in separate repositories and require
+follow-up updates:
+
+| Consumer | Action required |
+| --- | --- |
+| **Seed project** | Audit templates for `ib-kai-table` usage. Remove old CSS variable overrides. Choose `tableHeight` mode per table. |
+| **Kaiboard** | Audit templates and adapters. Propagate `tableHeight` in any wrapper components. Remove old `max-height` workarounds. |
+| **Simple Table adapter** | Expose a `tableHeight` input (or document the adapter's own default). Remove old sizing logic based on the removed CSS variables. |
+
+> These repositories are not part of this codebase. Perform the listed actions
+> in each repository before releasing this library version.
+
 ## Customization
 
 #### Striped rows
@@ -765,8 +891,11 @@ Then you may change the text or background color with the variables:
 
 ```css
 :host {
-  /** Minimum number of rows to be shown. Defaults to 20 */
-  --ib-table-minimum-rows: 20;
+  /**
+    Minimum height of the content area in parent mode.
+    Defaults to 400px.
+  */
+  --ib-table-min-content-height: 400px;
 
   /** Header text color. Defaults to the darker constrast available for the primary palette */
   --ib-table-header-text-color: black;
@@ -794,13 +923,6 @@ Then you may change the text or background color with the variables:
   --ib-table-outline-color: var(--mat-table-row-item-outline-color);
   /** Whether to show a vertical outline for each column (Es. `1px`) */
   --ib-table-column-outline-width: 0;
-
-  /**
-    Maximum height of the table content.
-    By default it takes row density, header, footer,
-    and `ib-table-minimum-rows` into consideration.
-  */
-  --ib-table-content-max-height: 500px;
 }
 ```
 

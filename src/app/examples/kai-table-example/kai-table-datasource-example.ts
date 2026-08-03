@@ -12,15 +12,39 @@ import { IbUserExample, createNewUser } from "./users";
     <div style="display:flex; align-items:center; gap:1em;">
       <button mat-raised-button (click)="refresh()">Refresh</button>
     </div>
-
-    <ib-kai-table tableName="datasourceExample" [dataSource]="dataSource" [displayedColumns]="displayedColumns">
-      <ib-text-column headerText="Name" name="name" sort></ib-text-column>
-      <ib-text-column headerText="Fruit" name="fruit" sort></ib-text-column>
-      <ib-number-column headerText="Amount" name="amount" sort></ib-number-column>
-    </ib-kai-table>
+    <div class="table-wrapper">
+      <ib-kai-table tableName="datasourceExample" [dataSource]="dataSource" [displayedColumns]="displayedColumns">
+        <ib-text-column headerText="Name" name="name" sort></ib-text-column>
+        <ib-text-column headerText="Fruit" name="fruit" sort></ib-text-column>
+        <ib-number-column headerText="Amount" name="amount" sort></ib-number-column>
+      </ib-kai-table>
+    </div>
   `,
   styles: [
-    `:host { display: flex; flex-direction: column; padding: 30px; gap: 1em; }`,
+    `:host {
+        --ib-table-min-content-height: 0px;
+
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: column;
+        min-height: 0;
+        overflow: hidden;
+        padding: 30px;
+    }
+    .table-wrapper {
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: column;
+        min-height: 0;
+        overflow: hidden;
+      }
+
+      ib-kai-table {
+        flex: 1 1 auto;
+        min-height: 0;
+      }
+
+    `,
   ],
 })
 export class IbKaiTableDatasourceExamplePage {
