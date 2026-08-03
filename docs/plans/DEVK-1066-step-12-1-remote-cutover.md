@@ -132,7 +132,7 @@ deterministico invece di dipendere dall'ordine degli input.
 
 ## 5. Step-by-Step Plan
 
-### Step 12.1 — Remote data source e cutover `IbTable`
+### Step 12.1 — Remote data source e cutover `IbTable` ✅ DONE
 
 **Target executor:** `kai-table-executor`  
 **Model:** DeepSeek v4 Pro

@@ -77,7 +77,7 @@ quando ci sono righe.
 
 ---
 
-### Step 1 — Nuovo esempio: 4 tabelle `ib-kai-table` vuote
+### Step 1 — Nuovo esempio: 4 tabelle `ib-kai-table` vuote ✅ DONE
 
 **Target executor:** `examples-executor`
 
@@ -168,7 +168,7 @@ write "NEED CLARIFICATION" and take no action
 
 ---
 
-### Step 2 — Empty-state placeholder in `IbKaiTableMobileComponent`
+### Step 2 — Empty-state placeholder in `IbKaiTableMobileComponent` ✅ DONE
 
 **Dipende da:** Step 1 (il bug è già visibile nell'esempio creato)
 
@@ -260,7 +260,7 @@ write "NEED CLARIFICATION" and take no action
 
 ---
 
-### Step 3 — Unit test per l'empty-state
+### Step 3 — Unit test per l'empty-state ✅ DONE
 
 **Dipende da:** Step 2
 

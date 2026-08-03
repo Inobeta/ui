@@ -221,7 +221,7 @@ rename e reorder aggiornano storage/UI senza riapplicare la view.
 
 ## 5. Step-by-Step Plan
 
-### Step 1 — Estendere in modo compatibile il bridge Kai Table/Views
+### Step 1 — Estendere in modo compatibile il bridge Kai Table/Views ✅ DONE
 
 **Target executor:** `kai-table-executor`  
 **Model:** `github-copilot/gpt-5.6-sol`  
@@ -308,7 +308,7 @@ Return changed files, the initialization order, the Default-baseline rule, and c
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Step 2 — Introdurre storage locale e service Views tipizzati
+### Step 2 — Introdurre storage locale e service Views tipizzati ✅ DONE
 
 **Target executor:** `task-executor`  
 **Model:** `github-copilot/gpt-5.6-sol`  
@@ -411,7 +411,7 @@ Return changed files, storage format/key strategy, public symbols, validation ru
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Step 3 — Collegare UI Views, dirty state e drag-and-drop
+### Step 3 — Collegare UI Views, dirty state e drag-and-drop ✅ DONE
 
 **Target executor:** `task-executor`  
 **Model:** `github-copilot/gpt-5.6-sol`  
@@ -513,7 +513,7 @@ Return changed files, event flow, dirty-state rules, drag/drop behavior, and com
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Step 4 — Rimuovere lo store Views obsoleto e finalizzare gli export
+### Step 4 — Rimuovere lo store Views obsoleto e finalizzare gli export ✅ DONE
 
 **Target executor:** `task-executor`  
 **Model:** `github-copilot/gpt-5.6-sol`  
@@ -596,7 +596,7 @@ Return deleted/changed files, final public Views symbols, and validation command
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Step 5 — Testare storage, service, dialog e validazione nomi
+### Step 5 — Testare storage, service, dialog e validazione nomi ✅ DONE
 
 **Target executor:** `unit-jasmine-executor`  
 **Model:** `github-copilot/gpt-5.6-sol`  
@@ -665,7 +665,7 @@ Return changed specs, covered cases, focused test commands and results.
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Step 6 — Testare i flussi UI del view host
+### Step 6 — Testare i flussi UI del view host ✅ DONE
 
 **Target executor:** `unit-jasmine-executor`  
 **Model:** `github-copilot/gpt-5.6-sol`  
@@ -740,7 +740,7 @@ Return changed/deleted specs, covered scenarios and focused test results.
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Step 7 — Coprire il bridge Kai Table e la sincronizzazione URL
+### Step 7 — Coprire il bridge Kai Table e la sincronizzazione URL ✅ DONE
 
 **Target executor:** `unit-jasmine-executor`  
 **Model:** `github-copilot/gpt-5.6-sol`  
@@ -809,7 +809,7 @@ Return changed specs/stub, covered bridge cases and test/build results.
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Step 8 — Validare e allineare gli esempi full, API e routing
+### Step 8 — Validare e allineare gli esempi full, API e routing ✅ DONE
 
 **Target executor:** `examples-executor`  
 **Model:** `github-copilot/gpt-5.6-sol`  
@@ -874,7 +874,7 @@ Return changed files, build result and manual verification result for each examp
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Step 9 — Aggiornare la documentazione Storybook di Kai Table Views
+### Step 9 — Aggiornare la documentazione Storybook di Kai Table Views ✅ DONE
 
 **Target executor:** `storybook-executor`  
 **Model:** `github-copilot/gpt-5.6-sol`  

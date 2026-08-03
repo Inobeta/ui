@@ -101,7 +101,7 @@ minime a quelli esistenti) sotto `src/app/examples/kai-table-example/` e relativ
 
 ---
 
-### Step 1 — Esempio `IbTableDataSource` esplicito
+### Step 1 — Esempio `IbTableDataSource` esplicito ✅ DONE
 
 **Target executor:** `examples-executor`
 
@@ -175,7 +175,7 @@ Scrivi "NEED CLARIFICATION" e non procedere.
 
 ---
 
-### Step 2 — Esempio Sticky Columns
+### Step 2 — Esempio Sticky Columns ✅ DONE
 
 **Target executor:** `examples-executor`
 
@@ -240,7 +240,7 @@ Scrivi "NEED CLARIFICATION" e non procedere.
 
 ---
 
-### Step 3 — `tableDef.paginator.hide` nell'esempio Simple
+### Step 3 — `tableDef.paginator.hide` nell'esempio Simple ✅ DONE
 
 **Target executor:** `examples-executor`
 
@@ -305,7 +305,7 @@ Scrivi "NEED CLARIFICATION" e non procedere.
 
 ---
 
-### Step 4 — Esempio `filterPredicate` e `sortData` custom
+### Step 4 — Esempio `filterPredicate` e `sortData` custom ✅ DONE
 
 **Target executor:** `examples-executor`
 
@@ -376,7 +376,7 @@ Scrivi "NEED CLARIFICATION" e non procedere.
 
 ---
 
-### Step 5 — Esempio Custom Aggregate Function (`IB_AGGREGATE`)
+### Step 5 — Esempio Custom Aggregate Function (`IB_AGGREGATE`) ✅ DONE
 
 **Target executor:** `examples-executor`
 
@@ -454,7 +454,7 @@ Scrivi "NEED CLARIFICATION" e non procedere.
 
 ---
 
-### Step 6 — ~~Esempio Selettori NgRx Pubblici~~ ❌ RIMOSSO
+### Step 6 — ~~Esempio Selettori NgRx Pubblici~~ ❌ RIMOSSO ✅ DONE
 
 Step rimosso su indicazione del team. Il file skeleton
 `kai-table-ngrx-selectors-example.ts` (creato in Step 0) è da considerarsi
@@ -462,7 +462,7 @@ inutilizzato — non rimuoverlo per non rompere le route già registrate.
 
 ---
 
-### Step 7 — Esempio `stripedRows`
+### Step 7 — Esempio `stripedRows` ✅ DONE
 
 **Target executor:** `examples-executor`
 
@@ -523,7 +523,7 @@ Scrivi "NEED CLARIFICATION" e non procedere.
 
 ---
 
-### Step 8 — Esempio `IB_COLUMN_OPTIONS`
+### Step 8 — Esempio `IB_COLUMN_OPTIONS` ✅ DONE
 
 **Target executor:** `examples-executor`
 

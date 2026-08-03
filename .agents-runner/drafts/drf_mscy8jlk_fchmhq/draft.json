@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "id": "drf_mscy8jlk_fchmhq",
+  "target": {
+    "kind": "plan"
+  },
+  "ticket": "DEVK-1046",
+  "scopeText": "La table attualmente ha una altezza statica impostata in base all’altezza righe (e numero di righe)\n\ndovremmo cambiare la modalità, impostandone una a “container”, per far si che sia alta quanto il suo contenitore\n\n \n\ncreerei un nuovo input (che rompe il vecchio funzionamento) che chiede una stringa che assume i valori:\n\nparent: altezza pari a quella del contenitore (l’altezza deve essere esattamente quella)\n\n[val]px: valore in pixel che deve assumere l’altezza (inteso come altezza massima)\n\nè importante che le aree sticky rimangano tali e che lo scroll funzioni con coerenza\n\n \n\nNB: c'è un probabile impatto anche nell’adapter simple table nel caso in cui cambiano gli input, nel caso andrà riportata la cosa nel seed project e su kaiboard",
+  "contextText": "kai-table è una libreria pubblicata: l'input è API pubblica e il cambiamento è\nbreaking per tutti i consumatori. Ce ne sono almeno due noti fuori da questo\nrepo, seed project e kaiboard.\n\nLa table è stata rifattorizzata di recente: vedi docs/plans/DEVK-1066-kai-table-refactoring.md\ne il suo feedback. Leggili prima di propormi qualunque cosa.\n\nEsiste un adapter simple table che probabilmente è impattato — lo sarà se vengono aggiunti input required, nel caso va segnalato\n",
+  "objectivesText": "- Un input di altezza che accetta \"parent\" e \"<n>px\".\n- In modalità parent la table occupa esattamente l'altezza del contenitore.\n- In modalità px l'altezza non supera il valore dato.\n- Header/footer/colonne sticky restano sticky in entrambe le modalità.\n- Lo scroll resta coerente: una sola area scrollabile, nessun doppio scroll.\n- I consumatori esistenti hanno un percorso di migrazione dichiarato.\n",
+  "title": "DEVK-1046 — Altezza container per Kai Table",
+  "phase": "promoted",
+  "sessionId": "ses_0395398c1ffeZV5ZOWL29y2s2u",
+  "interviewAgent": "architecture-planner",
+  "interviewModel": {
+    "id": "opencode-go/deepseek-v4-pro",
+    "providerID": "opencode-go",
+    "modelID": "deepseek-v4-pro"
+  },
+  "plannerAgent": "architecture-planner",
+  "plannerModel": {
+    "id": "openai/gpt-5.6-sol",
+    "providerID": "openai",
+    "modelID": "gpt-5.6-sol"
+  },
+  "plannerVariant": "high",
+  "extraction": "markers",
+  "planVersion": 4,
+  "createdAt": "2026-08-03T08:10:15.224Z",
+  "updatedAt": "2026-08-03T09:42:16.258Z",
+  "turnCount": 22,
+  "promotedTo": "/home/salvo/workspace/devkit/inobeta-ui/docs/plans/devk-1046-altezza-container-per-kai-table.md"
+}

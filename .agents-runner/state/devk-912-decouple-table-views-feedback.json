@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "docPath": "/home/salvo/workspace/devkit/inobeta-ui/docs/plans/DEVK-912-decouple-table-views-feedback.md",
+  "docHash": "4dcafd0f950099f873f89d643c17d7bc05b4ce467fb87c050302a6872e98d872",
+  "units": {
+    "R1": {
+      "status": "done",
+      "updatedAt": "2026-08-03T09:50:04.581Z"
+    },
+    "R2": {
+      "status": "done",
+      "updatedAt": "2026-08-03T09:50:05.050Z"
+    }
+  }
+}

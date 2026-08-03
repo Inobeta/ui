@@ -79,7 +79,7 @@ Start with Remediations 1–5 because they restore the core local/filter/state/U
 
 ## Remediation plan
 
-### Remediation 1 — Complete local data-source cutover [agent: kai-table-executor] [model: github-copilot/gpt-5.6-sol]
+### Remediation 1 — Complete local data-source cutover [agent: kai-table-executor] [model: github-copilot/gpt-5.6-sol] ✅ DONE
 
 **Observed problem**: The public local source is exported/documented but cannot be bound to `IbTable`, and `[data]` still creates the deprecated wrapper.
 
@@ -118,7 +118,7 @@ Changed files and focused build/test results.
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Remediation 2 — Add silent raw-filter hydration [agent: task-executor] [model: github-copilot/gpt-5.6-sol]
+### Remediation 2 — Add silent raw-filter hydration [agent: task-executor] [model: github-copilot/gpt-5.6-sol] ✅ DONE
 
 **Observed problem**: IbFilter cannot silently apply/clear serialized raw criteria, so canonical hydration emits user events and ignores null.
 
@@ -156,7 +156,7 @@ Changed files, API summary, and focused Jasmine result.
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Remediation 3 — Correct filter bridge and first fetch [agent: kai-table-executor] [model: github-copilot/gpt-5.6-sol]
+### Remediation 3 — Correct filter bridge and first fetch [agent: kai-table-executor] [model: github-copilot/gpt-5.6-sol] ✅ DONE
 
 **Observed problem**: IbTable persists processed filters, sends raw filters as remote queries, and fetches before filter initialization.
 
@@ -196,7 +196,7 @@ Changed files and focused Jasmine result.
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Remediation 4 — Route aggregation through NgRx [agent: kai-table-executor] [model: github-copilot/gpt-5.6-sol]
+### Remediation 4 — Route aggregation through NgRx [agent: kai-table-executor] [model: github-copilot/gpt-5.6-sol] ✅ DONE
 
 **Observed problem**: Column aggregation mutates the compatibility data source directly, bypassing canonical state.
 
@@ -233,7 +233,7 @@ Changed files and focused test results.
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Remediation 5 — Reuse precedence for URL hydration [agent: kai-table-executor] [model: github-copilot/gpt-5.6-sol]
+### Remediation 5 — Reuse precedence for URL hydration [agent: kai-table-executor] [model: github-copilot/gpt-5.6-sol] ✅ DONE
 
 **Observed problem**: Initial and post-init URL resolution diverge; null/default/unresolved-view behavior violates the plan.
 
@@ -273,7 +273,7 @@ Changed files and focused Jasmine result.
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Remediation 6 — Fix source and async teardown [agent: kai-table-executor] [model: github-copilot/gpt-5.6-sol]
+### Remediation 6 — Fix source and async teardown [agent: kai-table-executor] [model: github-copilot/gpt-5.6-sol] ✅ DONE
 
 **Observed problem**: Replaced/destroyed local and remote sources retain bindings or active pipelines; async init can subscribe after destroy.
 
@@ -313,7 +313,7 @@ Changed files and focused test results.
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Remediation 7 — Gate desktop remote capabilities [agent: kai-table-executor] [model: github-copilot/gpt-5.6-sol]
+### Remediation 7 — Gate desktop remote capabilities [agent: kai-table-executor] [model: github-copilot/gpt-5.6-sol] ✅ DONE
 
 **Observed problem**: Desktop exposes remote selection and export actions that the contract does not support.
 
@@ -351,7 +351,7 @@ Changed files and focused test results.
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Remediation 8 — Gate mobile export and fix template [agent: kai-table-mobile-executor] [model: github-copilot/gpt-5.6-sol]
+### Remediation 8 — Gate mobile export and fix template [agent: kai-table-mobile-executor] [model: github-copilot/gpt-5.6-sol] ✅ DONE
 
 **Observed problem**: Mobile always offers full export and has signal/i18n/template-safety regressions.
 
@@ -391,7 +391,7 @@ Changed files and focused Jasmine result.
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Remediation 9 — Finish public signal API [agent: kai-table-executor] [model: github-copilot/gpt-5.6-sol]
+### Remediation 9 — Finish public signal API [agent: kai-table-executor] [model: github-copilot/gpt-5.6-sol] ✅ DONE
 
 **Observed problem**: Public names are value getters while actual input/query signals use internal `__` names, contrary to the accepted breaking API.
 
@@ -430,7 +430,7 @@ Changed files, breaking-name inventory, build and focused test results.
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Remediation 10 — Repair Storybook signal story [agent: storybook-executor] [model: github-copilot/gpt-5.6-sol]
+### Remediation 10 — Repair Storybook signal story [agent: storybook-executor] [model: github-copilot/gpt-5.6-sol] ✅ DONE
 
 **Observed problem**: The custom timestamp column still uses decorator-era properties and fails TS2416.
 
@@ -468,7 +468,7 @@ Changed files and Storybook build result.
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Remediation 11 — Enable integration acceptance tests [agent: unit-jasmine-executor] [model: github-copilot/gpt-5.6-sol]
+### Remediation 11 — Enable integration acceptance tests [agent: unit-jasmine-executor] [model: github-copilot/gpt-5.6-sol] ✅ DONE
 
 **Observed problem**: Eight table tests are disabled and the planned Kai Table glob command fails in NgRx effects teardown.
 
@@ -506,7 +506,7 @@ Changed specs and exact test command results.
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Remediation 12 — Enforce export capability contract [agent: task-executor] [model: github-copilot/gpt-5.6-sol]
+### Remediation 12 — Enforce export capability contract [agent: task-executor] [model: github-copilot/gpt-5.6-sol] ✅ DONE
 
 **Observed problem**: Data export does not reject unsupported remote datasets and remains coupled to the compatibility source.
 
@@ -544,7 +544,7 @@ Changed files and focused Jasmine result.
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Remediation 13 — Migrate local examples [agent: examples-executor] [model: github-copilot/gpt-5.6-sol]
+### Remediation 13 — Migrate local examples [agent: examples-executor] [model: github-copilot/gpt-5.6-sol] ✅ DONE
 
 **Observed problem**: Four examples still teach the deprecated compatibility source.
 
@@ -581,7 +581,7 @@ Changed examples and build result.
 write "NEED CLARIFICATION" and take no action
 ~~~
 
-### Remediation 14 — Align migration documentation [agent: task-executor] [model: github-copilot/gpt-5.6-sol]
+### Remediation 14 — Align migration documentation [agent: task-executor] [model: github-copilot/gpt-5.6-sol] ✅ DONE
 
 **Observed problem**: Guides contain invalid signal calls, omit a precedence layer, and include invalid/contradictory snippets.
 

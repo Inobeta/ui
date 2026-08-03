@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "docPath": "/home/salvo/workspace/devkit/inobeta-ui/docs/plans/DEVK-1065-restore-table-views.md",
+  "docHash": "edaf7947d17e6aa01aa8304cac4fb52acba8e05ca5d12a83efef2a7dd122090b",
+  "units": {
+    "1": {
+      "status": "done",
+      "updatedAt": "2026-08-03T09:49:50.221Z"
+    },
+    "2": {
+      "status": "done",
+      "updatedAt": "2026-08-03T09:49:50.305Z"
+    },
+    "3": {
+      "status": "done",
+      "updatedAt": "2026-08-03T09:49:50.309Z"
+    },
+    "4": {
+      "status": "done",
+      "updatedAt": "2026-08-03T09:49:50.312Z"
+    },
+    "5": {
+      "status": "done",
+      "updatedAt": "2026-08-03T09:49:50.333Z"
+    },
+    "6": {
+      "status": "done",
+      "updatedAt": "2026-08-03T09:49:50.337Z"
+    },
+    "7": {
+      "status": "done",
+      "updatedAt": "2026-08-03T09:49:50.340Z"
+    },
+    "8": {
+      "status": "done",
+      "updatedAt": "2026-08-03T09:49:50.343Z"
+    },
+    "9": {
+      "status": "done",
+      "updatedAt": "2026-08-03T09:49:50.345Z"
+    }
+  }
+}
