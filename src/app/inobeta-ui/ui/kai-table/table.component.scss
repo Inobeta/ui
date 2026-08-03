@@ -117,8 +117,9 @@
 
     .ib-table__row-group {
       height: 0;
+
       &--hidden {
-        .mat-mdc-cell {
+        > td {
           border-bottom-width: 0;
         }
       }
@@ -152,9 +153,11 @@
     }
   }
 
-  .ib-table__rollup-row {
-    box-shadow: 0 -1px var(--ib-table-outline-color-private);
-  }
+    .ib-table__rollup-row {
+      box-shadow:
+        0 -1px var(--ib-table-outline-color-private),
+        0 1px var(--ib-table-outline-color-private);
+    }
   .ib-table__paginator {
     border-top: 1px solid var(--ib-table-outline-color-private);
   }

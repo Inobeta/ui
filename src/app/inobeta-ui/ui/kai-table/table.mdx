@@ -809,8 +809,10 @@ maintains at least this height (toolbar, filter, and paginator add on top).
 ### What stays outside the content area
 
 In **both** modes, toolbar, filter, and paginator are sibling elements of
-`.ib-table__content`. They are never part of the scroll region. Their sizes
-contribute to the total component height but do not reduce the content viewport.
+`.ib-table__content` and are never part of the scroll region. In **parent mode**,
+they consume space from the parent and therefore reduce the `.ib-table__content`
+viewport. In **exact mode**, they remain outside the content area and add to the
+component's total height.
 
 ### Removed CSS variables
 

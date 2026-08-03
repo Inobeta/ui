@@ -69,7 +69,9 @@
       "kaiTableApi": "Data from API",
       "kaiTableRouting": "With Routing",
       "kaiTableDatasource": "Explicit DataSource",
-      "kaiTableSticky": "Sticky Columns",
+      "kaiTableSticky": "Sticky Columns (Fixed Height)",
+      "kaiTableParentHeight": "Parent Height",
+      "kaiTableStickyParent": "Sticky Columns (Parent Height)",
       "kaiTablePaginatorHide": "Paginator Hide",
       "kaiTableCustomSortFilter": "Custom Sort & Filter",
       "kaiTableCustomAggregate": "Custom Aggregate",
@@ -95,6 +97,19 @@
       "toastToast": "Toast"
     },
     "kaiTable": {
+      "dataset": {
+        "small": "Small dataset",
+        "large": "Large dataset"
+      },
+      "columns": {
+        "id": "ID",
+        "name": "Name",
+        "fruit": "Fruit",
+        "amount": "Amount",
+        "number": "Number",
+        "createdAt": "Created at",
+        "subscribed": "Subscribed"
+      },
       "hidePaginator": "Nascondi paginatore",
       "showPaginator": "Mostra paginatore",
       "emptyState": "Nessun elemento"

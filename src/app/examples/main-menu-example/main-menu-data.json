@@ -12,6 +12,10 @@
         "link": "/home/kai-table/simple"
       },
       {
+        "label": "examples.ibMainMenu.kaiTableParentHeight",
+        "link": "/home/kai-table/parent-height"
+      },
+      {
         "label": "examples.ibMainMenu.kaiTableContextAction",
         "link": "/home/kai-table/actions"
       },
@@ -34,6 +38,10 @@
       {
         "label": "examples.ibMainMenu.kaiTableSticky",
         "link": "/home/kai-table/sticky"
+      },
+      {
+        "label": "examples.ibMainMenu.kaiTableStickyParent",
+        "link": "/home/kai-table/sticky-parent"
       },
       {
         "label": "examples.ibMainMenu.kaiTableCustomSortFilter",

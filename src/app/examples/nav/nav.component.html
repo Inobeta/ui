@@ -1,8 +1,10 @@
 
-<div style="display:flex;flex-direction:column">
-  <div style="display:flex;flex-direction:row;place-items: center;" >
-  <ib-main-menu-example></ib-main-menu-example>
-  <ib-material-breadcrumb  style="flex: 1"></ib-material-breadcrumb>
+<div class="nav-shell">
+  <div class="nav-header">
+    <ib-main-menu-example></ib-main-menu-example>
+    <ib-material-breadcrumb></ib-material-breadcrumb>
   </div>
-  <router-outlet></router-outlet>
+  <div class="route-content">
+    <router-outlet></router-outlet>
+  </div>
 </div>

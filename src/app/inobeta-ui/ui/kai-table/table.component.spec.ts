@@ -1178,21 +1178,24 @@ describe("IbTable", () => {
 
     it("should keep content as the only table-owned scroll container", () => {
       const table = heightTableElement(fixture);
-      const tableOwnedElements = [
+      const ownedElements: HTMLElement[] = [
         table,
-        table.querySelector<HTMLElement>(".ib-table-desktop")!,
-        table.querySelector<HTMLElement>(".ib-table__toolbar")!,
-        table.querySelector<HTMLElement>(".ib-table__content")!,
-        table.querySelector<HTMLElement>(".ib-table__paginator")!,
-      ];
-      const scrollOwners = tableOwnedElements.filter(
-        (element) => {
-          const style = getComputedStyle(element);
-          return [style.overflow, style.overflowX, style.overflowY].some(
-            (value) => value === "auto" || value === "scroll",
-          );
-        },
-      );
+        ...Array.from(table.querySelectorAll<HTMLElement>("*")),
+      ].filter((el) => {
+        let ancestor = el.parentElement;
+        while (ancestor && ancestor !== table) {
+          if (/^IB-/i.test(ancestor.tagName)) return false;
+          ancestor = ancestor.parentElement;
+        }
+        return true;
+      });
+
+      const scrollOwners = ownedElements.filter((element) => {
+        const style = getComputedStyle(element);
+        return [style.overflow, style.overflowX, style.overflowY].some(
+          (value) => value === "auto" || value === "scroll",
+        );
+      });
 
       expect(scrollOwners).toEqual([
         table.querySelector<HTMLElement>(".ib-table__content")!,

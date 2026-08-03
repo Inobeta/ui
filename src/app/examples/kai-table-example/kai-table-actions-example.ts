@@ -36,9 +36,19 @@ import { MatButtonModule, MatIconButton } from "@angular/material/button";
   styles: [
     `
       :host {
+        --ib-table-min-content-height: 0px;
+
         display: flex;
+        flex: 1 1 auto;
         flex-direction: column;
+        min-height: 0;
+        overflow: hidden;
         padding: 30px;
+      }
+
+      ib-kai-table {
+        flex: 1 1 auto;
+        min-height: 0;
       }
     `,
   ],

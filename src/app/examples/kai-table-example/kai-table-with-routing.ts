@@ -10,7 +10,7 @@ import { ActivatedRoute, Router, RouterOutlet } from "@angular/router";
 @Component({
   selector: "ib-kai-table-with-routing",
   template: `
-  <div style="display: flex; flex-direction: row; gap: 2em;">
+  <div class="content">
     <ib-kai-table
       tableName="routingExample"
       [displayedColumns]="columns"
@@ -73,10 +73,29 @@ import { ActivatedRoute, Router, RouterOutlet } from "@angular/router";
   styles: [
     `
       :host {
+        --ib-table-min-content-height: 0px;
+
         display: flex;
+        flex: 1 1 auto;
         flex-direction: column;
+        min-height: 0;
+        overflow: hidden;
         padding: 30px;
         gap: 3em;
+      }
+
+      .content {
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: row;
+        gap: 2em;
+        min-height: 0;
+      }
+
+      ib-kai-table {
+        flex: 1 1 auto;
+        min-width: 0;
+        min-height: 0;
       }
     `,
   ],

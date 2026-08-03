@@ -1,0 +1,41 @@
+<mat-button-toggle-group
+  [value]="datasetMode"
+  (change)="selectDataset($event.value)"
+>
+  <mat-button-toggle value="small">
+    {{ "examples.kaiTable.dataset.small" | translate }}
+  </mat-button-toggle>
+  <mat-button-toggle value="large">
+    {{ "examples.kaiTable.dataset.large" | translate }}
+  </mat-button-toggle>
+</mat-button-toggle-group>
+
+<div class="table-wrapper">
+  <ib-kai-table
+    tableName="parentHeightExample"
+    tableHeight="parent"
+    [data]="data"
+    [displayedColumns]="displayedColumns"
+  >
+    <ib-text-column
+      name="name"
+      [headerText]="'examples.kaiTable.columns.name' | translate"
+      sort
+    ></ib-text-column>
+    <ib-text-column
+      name="fruit"
+      [headerText]="'examples.kaiTable.columns.fruit' | translate"
+      sort
+    ></ib-text-column>
+    <ib-number-column
+      name="number"
+      [headerText]="'examples.kaiTable.columns.number' | translate"
+      sort
+    ></ib-number-column>
+    <ib-date-column
+      name="created_at"
+      [headerText]="'examples.kaiTable.columns.createdAt' | translate"
+      sort
+    ></ib-date-column>
+  </ib-kai-table>
+</div>

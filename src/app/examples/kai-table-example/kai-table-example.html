@@ -2,7 +2,7 @@
   <button mat-stroked-button (click)="toggle()">{{ paginatorToggleKey | translate }}</button>
 </div>
 <div class="table-wrapper">
-  <ib-kai-table tableName="basicExample" [data]="data" [displayedColumns]="['name', 'fruit', 'number', 'created_at']" [tableDef]="tableDef">
+  <ib-kai-table tableName="basicExample" tableHeight="parent" [data]="data" [displayedColumns]="['name', 'fruit', 'number', 'created_at']" [tableDef]="tableDef">
     <ib-text-column name="name"></ib-text-column>
     <ib-text-column name="fruit" sort></ib-text-column>
     <ib-number-column name="number" um="GB" digitsInfo="1.2-2"></ib-number-column>
