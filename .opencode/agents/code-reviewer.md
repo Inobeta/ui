@@ -29,6 +29,7 @@ You write **only one type of file**: `docs/plans/<ticketCode>-<feature-name>-fee
 - `angular-template-safety`
 - `executor-handoff`
 - `caveman lite` - in order to reduce token usage
+- `plan-authoring` — always load; defines the canonical document format that
 
 ## Core Responsibilities
 

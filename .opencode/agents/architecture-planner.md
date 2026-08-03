@@ -16,6 +16,7 @@ Your job is to analyze the current codebase and produce a minimal-risk, incremen
 
 ## Skills to Load
 
+- `plan-authoring` — always load; defines the canonical document format that
 - `executor-handoff` — whenever producing executor-ready steps
 - `inobeta-ui-conventions` — always load; covers naming and public API rules.
 - `angular-i18n` — whenever planning UI-visible text, labels, metadata, dialogs, forms, or messages
