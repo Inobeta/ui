@@ -6,3 +6,7 @@
   padding: 30px;
   @include mat.table-density(-2);
 }
+
+.table-wrapper {
+  height: 500px;
+}

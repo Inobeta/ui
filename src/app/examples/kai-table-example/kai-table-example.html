@@ -1,11 +1,13 @@
 <div style="display:flex; gap:8px; margin-bottom:12px; align-items:center;">
   <button mat-stroked-button (click)="toggle()">{{ paginatorToggleKey | translate }}</button>
 </div>
-<ib-kai-table tableName="basicExample" [data]="data" [displayedColumns]="['name', 'fruit', 'number', 'created_at']" [tableDef]="tableDef">
-  <ib-text-column name="name"></ib-text-column>
-  <ib-text-column name="fruit" sort></ib-text-column>
-  <ib-number-column name="number" um="GB" digitsInfo="1.2-2"></ib-number-column>
-  <ib-date-column name="created_at"></ib-date-column>
+<div class="table-wrapper">
+  <ib-kai-table tableName="basicExample" [data]="data" [displayedColumns]="['name', 'fruit', 'number', 'created_at']" [tableDef]="tableDef">
+    <ib-text-column name="name"></ib-text-column>
+    <ib-text-column name="fruit" sort></ib-text-column>
+    <ib-number-column name="number" um="GB" digitsInfo="1.2-2"></ib-number-column>
+    <ib-date-column name="created_at"></ib-date-column>
 
-  <section *ibKaiRowGroup="let row">row data: {{row | json}}</section>
-</ib-kai-table>
+    <section *ibKaiRowGroup="let row">row data: {{row | json}}</section>
+  </ib-kai-table>
+</div>

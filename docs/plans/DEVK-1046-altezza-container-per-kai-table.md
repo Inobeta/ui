@@ -176,7 +176,7 @@ write "NEED CLARIFICATION" and take no action
 
 ---
 
-### Step 2 — Coprire altezza, fallback e scroll con Jasmine
+### Step 2 — Coprire altezza, fallback e scroll con Jasmine ✅ DONE
 
 - **Executor**: `unit-jasmine-executor`
 - **Modelli suggeriti**: gruppo R — `opencode/deepseek-v4-pro`
@@ -241,7 +241,7 @@ write "NEED CLARIFICATION" and take no action
 
 ---
 
-### Step 3 — Aggiornare gli esempi desktop rappresentativi
+### Step 3 — Aggiornare gli esempi desktop rappresentativi ✅ DONE
 
 - **Executor**: `examples-executor`
 - **Modelli suggeriti**: gruppo R — `opencode/gpt-5.6-luna`
@@ -300,7 +300,7 @@ write "NEED CLARIFICATION" and take no action
 
 ---
 
-### Step 4 — Documentare API e migrazione consumer
+### Step 4 — Documentare API e migrazione consumer ✅ DONE
 
 - **Executor**: `storybook-executor`
 - **Modelli suggeriti**: gruppo R — `opencode/gpt-5.6-luna`

@@ -1,0 +1,11 @@
+# Written by agents-runner the first time it ran here.
+#
+# Everything under .agents-runner/ is machine-local run history — job event
+# logs alone are megabytes per execution — except config.json, which is project
+# configuration worth sharing with the team.
+#
+# Delete this file if you would rather manage the rules yourself: it is only
+# created when absent, never overwritten.
+*
+!.gitignore
+!config.json
