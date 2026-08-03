@@ -64,6 +64,7 @@ export class IbMainMenuBarComponent  {
     private renderer: Renderer2) {
       this.temporaryWrapper = this.renderer.createElement('div');
       this.renderer.addClass(this.temporaryWrapper, 'blur-effect');
+      this.renderer.setStyle(this.temporaryWrapper, 'display', 'none');
       this.renderer.appendChild(document.body, this.temporaryWrapper);
     }
 
@@ -112,6 +113,5 @@ export class IbMainMenuBarComponent  {
       })
   }
 }
-
 
 
