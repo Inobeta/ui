@@ -104,7 +104,7 @@ Il vecchio calcolo basato su header, numero minimo di righe, footer e altezza fi
 
 ---
 
-### Step 1 — Implementare il contratto desktop `tableHeight`
+### Step 1 — Implementare il contratto desktop `tableHeight` ✅ DONE
 
 - **Executor**: `kai-table-executor`
 - **Modelli suggeriti**: gruppo R — `opencode/gpt-5.6-terra`
