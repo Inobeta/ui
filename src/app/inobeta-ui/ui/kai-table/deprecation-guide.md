@@ -1,40 +1,14 @@
 # Kai Table migration guide
 
-This document replaces the pre-DEVK-1066 decorator-era migration notes. The
-signal API is the supported API; there is no adapter facade for the old
-decorator properties.
+This guide describes the public migration from the 19.0.0 Kai Table API to the
+current signal-based API. There is no adapter facade for the former decorator
+properties.
 
-## Inputs and outputs
+## 1. Table inputs and outputs
 
-Template bindings keep their usual names, but the component inputs are now
-signal inputs. In TypeScript, read them by calling the signal:
-
-```ts
-// Before
-table.tableName;
-table.displayedColumns;
-
-// After
-table.tableName();
-table.displayedColumns();
-```
-
-Use `tableDef` for initial state instead of the former initialization inputs:
-`initialSort`, `initialFilters`, `initialView`, `initialPageIndex`,
-`initialPageSize`, and `initialAggregatedColumns`.
-
-The table component does not expose a generic row-click output. Do not migrate
-code to `ibRowClicked`; it is not part of the implemented API. Row selection
-is exposed by `IbSelectionColumn.ibRowSelectionChange`.
-
-For TypeScript access to Material child queries, use the signal queries
-`matTable()`, `sort()`, and `paginator()`. There are no longer any
-compatibility getters — the signal queries are the canonical properties.
-
-## `tableName` is required
-
-`tableName` must be supplied and must be unique for every table on the page.
-It scopes NgRx state, URL state, views, selection events, and exported files.
+`tableName` is now a required input. It must be unique for every table on the
+page because it scopes table state, URL state, views, selection events, and
+exported files.
 
 ```html
 <ib-kai-table
@@ -44,86 +18,101 @@ It scopes NgRx state, URL state, views, selection events, and exported files.
 </ib-kai-table>
 ```
 
-## Data sources
+Table inputs remain usable with the same template binding names, but they are
+signals in TypeScript. Invoke them when reading them programmatically:
 
-`[data]` and `[dataSource]` are mutually exclusive. Use one of them, never
-both.
+```ts
+table.tableName();
+table.displayedColumns();
+table.data();
+table.dataSource();
+table.tableDef();
+table.tableHeight();
+```
 
-### Local data
+The Material child queries are also signals: `matTable()`, `sort()`, and
+`paginator()`. The former decorator-style query properties and compatibility
+getters are not part of the current contract.
 
-`[data]` is the shorthand for a table-managed `IbTableLocalDataSource`.
-Construct the source explicitly when its typed API or extension points are
-needed:
+The selection and aggregation outputs now use Angular signal output APIs. Their
+template names and payloads remain compatible:
+
+- `IbSelectionColumn.ibRowSelectionChange` emits
+  `IbTableRowSelectionChange[]`.
+- `IbAggregateCell.ibFunctionChange` emits a `string`.
+
+The table itself does not expose a generic row-click output. Do not add or
+migrate to `ibRowClicked`; row selection uses the selection-column output.
+
+## 2. Initial state
+
+Initial state belongs in the `tableDef` input. These are `IbTableDef` fields,
+not standalone table inputs: `initialSort`, `initialFilters`, `initialView`,
+`initialPageIndex`, `initialPageSize`, and `initialAggregatedColumns`.
+
+State is resolved independently for each field in this order, from highest to
+lowest priority:
+
+1. Explicit URL field
+2. URL view snapshot, resolved from the views provider using the URL `view`
+   parameter
+3. Initial view snapshot, resolved using `tableDef.initialView`
+4. The corresponding `tableDef.initial*` field
+5. Technical default: `sort`, `filters`, and `selectedView` are `null`,
+   `pageIndex` is `0`, and `pageSize` is `20`
+
+An absent field leaves lower-priority state untouched. `null` is an explicit
+clear. A URL payload with `view: null` suppresses both view snapshot layers.
+
+```ts
+tableDef: IbTableDef = {
+  initialSort: { active: "name", direction: "asc" },
+  initialFilters: null,
+  initialView: null,
+  initialPageIndex: 0,
+  initialPageSize: 20,
+};
+```
+
+## 3. Data sources
+
+`[data]` and `[dataSource]` are mutually exclusive. Use one, never both.
+
+`[data]` is shorthand for a table-managed `IbTableLocalDataSource`. Construct
+one explicitly when its typed API or extension points are needed:
 
 ```ts
 dataSource = new IbTableLocalDataSource<User>(users);
 dataSource.setInput({ sort, rawFilter, pageIndex, pageSize });
 ```
 
-`IbTableLocalDataSource` owns local filtering, sorting, pagination, and
-aggregation. Its relevant state is available through `input`,
-`filteredData`, `orderedData`, `currentPageData`, and `aggregatedData`.
+The local source exposes `input`, `filteredData`, `orderedData`,
+`currentPageData`, and `aggregatedData`.
 
-`IbTableDataSource` is retained as a compatibility bridge for integrations
-using the old Material-control API. It is deprecated and should not be used
-for new code. It is not a promise of support for arbitrary
-`MatTableDataSource` instances.
+`IbTableDataSource` remains a deprecated compatibility bridge for integrations
+using the old Material-control API. It is not a promise of support for
+arbitrary `MatTableDataSource` instances and should not be used for new code.
 
-### Remote data
-
-Extend `IbTableRemoteDataSource<T, V>` and implement the new value-object
-contract:
+For remote data, extend `IbTableRemoteDataSource<T, V>` and implement the
+value-object contract:
 
 ```ts
 fetchData(request: IbRemoteDataSourceRequest<V>)
   : Observable<IbFetchDataResponse<T>>
 ```
 
-The request contains `sort`, `pageIndex`, `pageSize`, and `filter`; the
-response contains `data` and `totalCount`. Set `filterDebounceMs` in the
-constructor when the default 500 ms filter debounce is not appropriate.
-Remote sources are cancellable: a newer request supersedes an older one.
+The request contains `sort`, `pageIndex`, `pageSize`, and `filter`; the response
+contains `data` and `totalCount`. Configure `filterDebounceMs` in the
+constructor when the default 500 ms debounce is not suitable. New requests
+cancel older requests.
 
-Remote capabilities are explicit. Remote export-all and global aggregation
-are not provided by default, and selection is not supported by the current
-remote integration.
+Remote export-all, global aggregation, and selection are not provided by the
+current remote integration.
 
-## `tableDef` and initialization precedence
+## 4. Canonical state and URL migration
 
-State is resolved independently for each field using this order, from highest
-to lowest priority:
-
-1. Explicit URL field
-2. URL view snapshot (resolved from views provider using the URL `view` param)
-3. Initial view snapshot (resolved from views provider using `tableDef.initialView`)
-4. `tableDef.initial*` field
-5. Technical default (`sort`, `filters`, and `selectedView` are `null`;
-   `pageIndex` is `0`; `pageSize` is `20`)
-
-`initialView` is a view ID used to resolve an initial view snapshot (layer 3).
-A field absent from a layer does not override a lower layer. `null` is an explicit
-override: for example, `initialFilters: null` clears filters, while
-`initialView: null` selects the implicit all-data view. A URL payload with
-`view: null` suppresses both view snapshot layers (2 and 3), allowing
-lower `initial*` fields to emerge.
-
-## URL state
-
-New URL state is written as a v2 payload under the table name:
-
-```json
-{"v":2,"f":null,"sv":null,"pi":0,"ps":20,"ac":null,"so":null}
-```
-
-The writer always emits v2 and never writes the legacy
-`__ibTableView__all` sentinel. The reader still accepts the legacy v1 fields
-(`ibfilter`, `ibview`, `ibpage`, `ibpagesize`, `ibaggregatedcolumns`, and
-`ibsort`) and maps `__ibTableView__all` to `view: null`.
-
-### Canonical selectors
-
-Read table state through the canonical selectors. Each returns a signal when
-used with `store.selectSignal`:
+Read table state with the canonical selectors. `store.selectSignal` returns a
+signal, so invoke the returned signal to read its value:
 
 ```ts
 import {
@@ -134,46 +123,63 @@ import {
   selectTablePageSize,
   selectTableSelectedView,
   selectTableAggregatedColumns,
-} from "public_api";
+} from "@inobeta/ui";
 
-// Full snapshot
-const snap = this.store.selectSignal(
+const snapshot = this.store.selectSignal(
   selectIbKaiTableSnapshot("myTable"),
 );
-
-// Individual field signals
 const sort = this.store.selectSignal(selectTableSort("myTable"));
-const pageSize = this.store.selectSignal(selectTablePageSize("myTable"));
+
+console.log(snapshot());
+console.log(sort());
 ```
 
-### Legacy selectors (deprecated)
+The canonical writer emits a v2 payload under the table name:
 
-The following selectors are retained for backward compatibility only:
+```json
+{"v":2,"f":null,"sv":null,"pi":0,"ps":20,"ac":null,"so":null}
+```
 
-| Legacy selector | Canonical replacement |
+Deprecated compatibility writers on `IbTableUrlService` may still write legacy
+payloads. Therefore, do not claim that every public writer path emits v2. The
+reader accepts legacy v1 fields (`ibfilter`, `ibview`, `ibpage`, `ibpagesize`,
+`ibaggregatedcolumns`, and `ibsort`) and maps the legacy all-data sentinel to
+`view: null`.
+
+The following selectors remain public for backward compatibility and are
+deprecated; use the canonical selectors above for new code:
+
+| Deprecated selector | Canonical replacement |
 | --- | --- |
 | `ibTableSelectUrlState` | `selectIbKaiTableRecord` |
 | `ibTableSelectLastQueryStringRaw` | `selectIbKaiTableSnapshot` |
 | `ibTableSelectLastQueryString` | `selectIbKaiTableSnapshot` |
 
-Use the canonical selectors for all new code.
+The legacy `IbTableUrlService` readers and writers (`getRawParams`,
+`getFilters`, `getActiveView`, `getPaginator`, `getAggregatedColumns`,
+`getSort`, `getViewState`, and their setter methods) are also deprecated.
+Prefer the canonical state selectors and writer integration.
 
-## Removed or changed legacy options
+## 5. `tableHeight` migration
 
-| Legacy usage | Migration |
-| --- | --- |
-| `items` | `[data]` or `[dataSource]` |
-| `titles` | Column components and `[displayedColumns]` |
-| `currentSort` | `tableDef.initialSort` |
-| `hasPaginator` | `tableDef.paginator.hide` |
-| `hasFooter` | Column aggregation configuration |
-| `selectableRows` / `rowChecked` | `IbSelectionColumn` and `ibRowSelectionChange` |
-| `hasAdd`, `hasEdit`, `hasDelete`, `actions` | Table action group or action column |
-| `hasExport` | Data export action/module |
-| `hasConfig` | Table view group / views host |
-| `stickyAreas` | Column `sticky` / `stickyEnd` |
-| `structureTemplates`, `templateHeaders` | No direct replacement; use supported column/action APIs |
-| `deleteConfirm`, `actionsPosition` | No direct replacement |
+`tableHeight` is a new desktop-table input. It defaults to `"parent"` when it
+is omitted, empty, or whitespace-only. Parent mode makes the table fill the
+available height of its parent; the parent or an ancestor should therefore
+have a defined height. Without suitable parent sizing, layout can differ from
+the previous row-count-based behavior.
 
-`enableReduxStore` is not a consumer option in the new contract. Table state
-is managed by the table integration; views remain optional.
+Use an explicit content height when needed:
+
+```html
+<ib-kai-table
+  tableName="users"
+  [data]="users"
+  tableHeight="400px">
+</ib-kai-table>
+```
+
+In parent mode, the content area uses the remaining parent height after the
+toolbar, filters, and paginator. In exact mode, a non-empty CSS value controls
+the scrollable content area. The table content is the scroll owner; do not add
+a second `overflow: auto` wrapper. `tableHeight` does not affect the mobile
+component.

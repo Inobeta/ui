@@ -29,15 +29,15 @@ export class SimpleKaiTableExample {
 
 ### Table identity and data sources
 
-`tableName` is required and must be unique for each table on a page. It scopes the
-NgRx state, URL state, views, selection events, and exported files.
+`tableName` is required. Use a distinct value for each table on a page because it
+keys NgRx state, URL state, views, selection events, and exported files.
 
 For client-side data, `[data]` is shorthand for an `IbTableLocalDataSource` managed
 by the table. You can also construct the source yourself when you need its typed
 API (`setInput`, `filteredData`, `aggregatedData`, or custom sorting/filtering).
 
 ```typescript
-import { IbTableLocalDataSource } from "public_api";
+import { IbTableLocalDataSource } from "@inobeta/ui";
 
 dataSource = new IbTableLocalDataSource(this.data);
 ```
@@ -64,9 +64,10 @@ field: for example, `initialFilters: null` means no filters, and a URL payload w
 payload with `view: null` suppresses the URL view snapshot layer and the initial
 view snapshot layer, letting lower `initial*` fields emerge.
 
-`selectedView` is `null` when no view host is present, when no view is selected, or
-when the implicit all-data view is active. Views are optional; the table does not
-require `IbViewModule` or an `IbTableViewsHost`.
+`selectedView` is `null` when no view is selected or when the implicit all-data
+view is active. A projected views host is required to resolve and apply named-view
+snapshots. Views are optional; the table does not require `IbViewModule` or an
+`IbTableViewsHost`.
 
 ```typescript
 tableDef: IbTableDef = {
@@ -366,17 +367,22 @@ This behaviour can be overriden with the `sortingDataAccessor` input, available 
 />
 ```
 
-For custom columns, you can override the getter function within you component's class.
+For custom columns, configure the inherited model signals in the constructor.
 
 ```typescript
 @Component({
   /** ... */
 })
 export class IbCustomColumn<T> extends IbColumn<T> {
-  dataAccessor = (data: T, name: string): any => data[name].somethingNested;
-
-  sortingDataAccessor = (data: T, name: string): any =>
-    data[name].somethingElse;
+  constructor() {
+    super();
+    this.dataAccessor.set((data, name) =>
+      (data as Record<string, { somethingNested: string }>)[name].somethingNested,
+    );
+    this.sortingDataAccessor.set((data, name) =>
+      (data as Record<string, { somethingElse: string }>)[name].somethingElse,
+    );
+  }
 }
 ```
 
@@ -442,16 +448,22 @@ This behaviour can be overriden with the `filterDataAccessor` input, available f
 <ib-date-column name="firstName" [filterDataAccessor]="filterDataAccessor" />
 ```
 
-For custom columns, you can override the getter function within you component's class.
+For custom columns, configure the inherited model signals in the constructor.
 
 ```typescript
 @Component({
   /** ... */
 })
 export class IbCustomColumn<T> extends IbColumn<T> {
-  dataAccessor = (data: T, name: string): any => data[name].somethingNested;
-
-  filterDataAccessor = (data: T, name: string): any => data[name].somethingElse;
+  constructor() {
+    super();
+    this.dataAccessor.set((data, name) =>
+      (data as Record<string, { somethingNested: string }>)[name].somethingNested,
+    );
+    this.filterDataAccessor.set((data, name) =>
+      (data as Record<string, { somethingElse: string }>)[name].somethingElse,
+    );
+  }
 }
 ```
 
@@ -492,7 +504,13 @@ export class SelectionColumnExample {
 
 ## Pagination
 
-Through the `paginator` property of `IbTableDef` it is possible to change the appearance of the paginator, for example with `hide` set to `true` the paginator will disappear, or with `showFirstLastButtons` set to `false` the jump to first and last page buttons will disappear.
+Use `initialPageSize` to initialize the table's canonical page-size state. The
+`paginator` property of `IbTableDef` configures the Material paginator: `hide`
+controls its display, `pageSizeOptions` supplies its selectable sizes, and
+`showFirstLastButtons` controls its first/last buttons. Its `pageSize` value is
+passed to the paginator control; it is not the canonical initial-state setting.
+Set `initialPageIndex` when an initial page index is needed; do not use
+`paginator.pageIndex` for canonical state initialization.
 
 ```html
 <ib-kai-table tableName="myTable" ... [tableDef]="tableDef">
@@ -503,12 +521,13 @@ Through the `paginator` property of `IbTableDef` it is possible to change the ap
 ```typescript
 export class IbKaiTableExamplePage {
   tableDef: IbTableDef = {
+    initialPageSize: 20,
     paginator: {
-      pageSize: 20
+      pageSize: 20,
       pageSizeOptions: [10, 20, 50, 100],
       hidePageSize: false,
       showFirstLastButtons: true,
-      hide: false
+      hide: false,
     },
   };
 }
@@ -517,14 +536,14 @@ export class IbKaiTableExamplePage {
 ## Views
 
 View management is an optional feature provided by the decoupled `IbViewModule`. The table works
-without it — views are only needed when you want to let users save and restore table state. Each view
-captures a snapshot of the current filters, sort order, page size, and column aggregations.
+without it. Project an `ib-table-view-group` only when users need to save and restore filters, sort,
+page size, and column aggregations.
 
 ### Setup
 
-Import `IbViewModule` alongside `IbKaiTableModule` and `IbTableActionModule`. Filters are **not**
-required: a view can be created and restored on any table, with or without an `ib-filter` component.
-The only requirement is a unique `tableName` on `ib-kai-table`, which acts as the storage group key.
+Import `IbViewModule` alongside `IbKaiTableModule` and `IbTableActionModule`. Filters are not
+required. `tableName` is used as the Views storage-group key, so use a distinct value for each table
+that uses Views.
 
 ```typescript
 @Component({
@@ -584,8 +603,9 @@ Named views are user-defined snapshots stored in the browser's `localStorage`. E
 
 #### Create a new view
 
-Click the **`+`** button next to the Default tab to create a view from the **current** table state.
-The new view is appended to the list and automatically selected.
+Click the **`+`** button next to the Default tab to open the create-view dialog. This flow creates a
+named view from the Default baseline. Saving while the Default view is active creates a named view
+from the current table state instead.
 
 #### Save an existing view
 
@@ -594,9 +614,8 @@ view's snapshot in place. Saving does not change the current page or re-apply th
 
 #### Rename
 
-Use the context menu (`⋮`) on a named view tab and select **Rename**. Names are trimmed and must be
-unique case-insensitively within the same table. Renaming does not re-apply the view or change the
-table URL.
+Use the context menu (`⋮`) on a named view tab and select **Rename**. Names are trimmed before they
+are stored. Renaming does not re-apply the view or change the table URL.
 
 #### Duplicate
 
@@ -643,14 +662,13 @@ providers: [
 ]
 ```
 
-The selected view ID is stored in the table URL query parameter (`sv` field). On page load or browser
-back/forward, the table resolves the view from `localStorage` by ID, within the correct `tableName`
-group. If the URL contains an unknown or deleted view ID, the table falls back to Default.
+The selected view ID is stored in the table's canonical URL payload (`sv`). On initial URL resolution
+and URL hydration, the table resolves a named view within its `tableName` group. An unknown or deleted
+view ID is resolved as the Default view.
 
 ### Limitations
 
-- Old view data stored under the legacy `__redux-store-inobeta-ui__` hydration key is **not**
-  migrated. DEVK-1065 starts from empty `localStorage`.
+- View data stored under legacy hydration keys is not migrated into the dedicated Views storage.
 - Cross-tab live synchronisation is **not** supported. Changes made in another browser tab become
   visible after a page reload.
 - `pageIndex`, row selection, active row, and table content are explicitly **not** saved.
@@ -749,9 +767,9 @@ A `*ibKaiRowGroup` directive is available to display contextual content for each
 The `tableHeight` input controls how the **desktop** table body is sized.
 It accepts a string and defaults to `"parent"` when omitted, empty, or whitespace-only.
 
-This is a **breaking change**: tables that previously relied on implicit
-row-count-based sizing now fill their parent container by default.
-See the [migration guide](#migration-guide) for how to adapt existing consumers.
+Tables that rely on row-count-based sizing can change layout because the default
+mode fills the parent container. See the [migration guide](#migration-guide) for
+adaptation guidance.
 
 <Canvas of={TableStories.ParentHeight} />
 
@@ -828,9 +846,9 @@ Mobile layout and workflow remain unchanged.
 
 ### Migration Guide
 
-Consumer code written before `tableHeight` was introduced must be updated.
-The old behaviour auto-computed a `max-height` from `--ib-table-minimum-rows`
-(default 10 rows) and Material row tokens. That logic is no longer active.
+If earlier styling depended on row-count-based sizing, choose an explicit height
+mode and remove obsolete height-variable overrides. The current desktop renderer
+does not use row-count-based sizing.
 
 #### 1. Direct template consumers
 
@@ -855,20 +873,6 @@ If you maintain a wrapper component that wraps `ib-kai-table`:
   choose either `"parent"` or a fixed CSS value as the new default.
 - **Remove scroll from the wrapper**: ensure the wrapper does not add its own
   `overflow: auto` — `.ib-table__content` must remain the single scroll owner.
-
-#### 3. External consumers
-
-The following known consumers are in separate repositories and require
-follow-up updates:
-
-| Consumer | Action required |
-| --- | --- |
-| **Seed project** | Audit templates for `ib-kai-table` usage. Remove old CSS variable overrides. Choose `tableHeight` mode per table. |
-| **Kaiboard** | Audit templates and adapters. Propagate `tableHeight` in any wrapper components. Remove old `max-height` workarounds. |
-| **Simple Table adapter** | Expose a `tableHeight` input (or document the adapter's own default). Remove old sizing logic based on the removed CSS variables. |
-
-> These repositories are not part of this codebase. Perform the listed actions
-> in each repository before releasing this library version.
 
 ## Customization
 
@@ -967,8 +971,8 @@ Enable server-side interactions with an `IbTableRemoteDataSource` provided to th
 
 1. Define your data source
 
-Your data source must extend `IbTableRemoteDataSource` in order to be compatible with the table. This is an abstract class, and it needs the `fetchData` method
-to be implemented. The request is a value object containing `sort`, `pageIndex`, `pageSize`, and `filter`.
+Your data source must extend `IbTableRemoteDataSource` and implement `fetchData`.
+The request value object contains `sort`, `pageIndex`, `pageSize`, and `filter`.
 
 The method `fetchData` is called whenever data is needed. Requests are cancellable: new sort, page, or filter state cancels the previous request through `switchMap`. Filter requests are debounced by `filterDebounceMs` (500 ms by default).
 
@@ -980,14 +984,14 @@ The request fields replace the old Material control parameters:
 
 ```typescript
 // product-data-source.ts
-export class ProductDataSource extends IbTableRemoteDataSource<Product> {
+export class ProductDataSource extends IbTableRemoteDataSource<Product, ProductQuery> {
   private http = inject(HttpClient);
 
   fetchData(
     request: IbRemoteDataSourceRequest<ProductQuery>
   ): Observable<IbFetchDataResponse<Product>> {
     return this.http
-      .get<ProductReponse>("/products", {
+      .get<{ items: Product[]; total_count: number }>("/products", {
         params: {
           sort: request.sort?.active,
           order: request.sort?.direction,
@@ -1063,7 +1067,7 @@ Considering the following table as an example:
 </ib-kai-table>
 ```
 
-1. Describe a type from your filters
+1. Describe a type for your filters
 
 For each filter type exists a query object holding the values provided by the user.
 
@@ -1080,7 +1084,7 @@ Meaning that the filters above can be represented with the type:
 
 ```typescript
 type ProductQuery = {
-  title: IbTextQuery;
+  sku: IbTextQuery;
   created: IbDateQuery;
   price: IbNumberQuery;
   status: IbTagQuery;
@@ -1092,7 +1096,8 @@ type ProductQuery = {
 The `IbTableRemoteDataSource` class accepts a second generic type to specify the type for the filter model.
 The filter is available as `request.filter` in the method `fetchData`
 
-> The parameters of `filter` may be undefined if left untouched by the user.
+> `request.filter` is `null` when no filter is applied. Map its fields to the
+> request format expected by your API.
 
 ```typescript
 class ProductDataSource extends IbTableRemoteDataSource<Product, ProductQuery> {
@@ -1108,7 +1113,12 @@ class ProductDataSource extends IbTableRemoteDataSource<Product, ProductQuery> {
           order: request.sort?.direction,
           page: request.pageIndex,
           per_page: request.pageSize,
-          // use request.filter here
+          sku: request.filter?.sku.text,
+          createdStart: request.filter?.created.start,
+          createdEnd: request.filter?.created.end,
+          minimumPrice: request.filter?.price.min,
+          maximumPrice: request.filter?.price.max,
+          statuses: request.filter?.status.joined,
         },
       })
       .pipe(
@@ -1326,19 +1336,24 @@ cy.get('[data-cy="ib-filter-update"]').click();
 ```
 
 
-## Url state manager
+## URL state manager
 
-The following feature are always serialized in url bar:
-- current sort
-- applied filters
-- paginator settings (only page size)
-- active view
+The canonical URL writer stores a version 2 payload per table. It contains:
 
-The URL stores the full canonical state for each table, including explicit `null`
-values. Sort and filter changes reset the page to zero. Browser back/forward
-replays the URL snapshot, restoring sort, filters, view, pagination, and aggregation.
+- raw applied filters;
+- selected view ID;
+- page index and page size;
+- column aggregations; and
+- current sort.
 
-In order to recover previous state, you have to use history.back() call that will preserve url querystring and the table will be reinizialized.
+The payload represents the full canonical snapshot, including explicit `null`
+values. Sort, filter, and view changes reset the page index to zero. Legacy v1
+payloads and deprecated compatibility APIs are still decoded or available for
+backward compatibility; new canonical writes use v2.
+
+While a table is mounted, browser back/forward or other query-parameter changes
+hydrate the existing table state from the URL. This updates the table state and
+bound controls; it does not require the table component to be reinitialized.
 
 ### Reading table state via canonical selectors
 
@@ -1353,7 +1368,7 @@ import {
   selectTablePageSize,
   selectTableSelectedView,
   selectTableAggregatedColumns,
-} from "public_api";
+} from "@inobeta/ui";
 
 // Full snapshot (signal)
 snapshot = this.store.selectSignal(selectIbKaiTableSnapshot("YOUR_TABLE_NAME"));
@@ -1385,7 +1400,7 @@ canonical selectors above for new code.
 **`ibTableSelectLastQueryString`** — Returns a JSON string for URL recovery. If you must recover a previous URL query string, use:
 
 ```typescript
-import { ibTableSelectLastQueryString } from "public_api";
+import { ibTableSelectLastQueryString } from "@inobeta/ui";
 
 tableState = this.store.selectSignal(
   ibTableSelectLastQueryString("YOUR_TABLE_NAME"),

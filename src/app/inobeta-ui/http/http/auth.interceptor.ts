@@ -9,7 +9,7 @@ import { IbAPITokens, IbAuthTypes, IbSession } from "../auth/session.model";
 import { ibSelectActiveSession } from "../store/";
 
 @Injectable({ providedIn: "root" })
-/** @deprecated this element will be removed in v21 */
+/** @deprecated Migration scripts toward Angular core APIs are planned no earlier than v22. */
 export class IbAuthInterceptor implements HttpInterceptor {
   store = inject(Store);
   session$: Observable<IbSession<IbAPITokens> | null> = this.store.select(

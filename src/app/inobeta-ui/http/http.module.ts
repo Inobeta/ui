@@ -86,7 +86,7 @@ const components = [
       provideHttpClient(withInterceptorsFromDi()),
     ]
 })
-/** @deprecated this element will be removed in v21 */
+/** @deprecated Migration scripts toward Angular core APIs are planned no earlier than v22. */
 export class IbHttpModule {
   static injector: Injector = null;
 

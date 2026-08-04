@@ -135,7 +135,7 @@ export class IbTimestampColumn<T> extends IbColumn<T> {
   }
 }
 
-const meta: Meta = {
+const meta: Meta<IbTable> = {
   title: "Components/Table",
   component: IbTable,
   tags: ["autodocs"],
@@ -163,8 +163,17 @@ const meta: Meta = {
     }),
   ],
   argTypes: {
-    dataSource: { control: { disable: true } },
-    tableHeight: { control: "text" },
+    dataSource: {
+      control: { disable: true },
+      description: "Alternative to data for supplying a table data source.",
+    },
+    tableName: {
+      description: "Required unique identity used for table state and persistence.",
+    },
+    tableHeight: {
+      control: "text",
+      description: 'Desktop content height. Defaults to "parent".',
+    },
   },
   parameters: {
     controls: {
@@ -193,9 +202,9 @@ export const Simple: Story = {
       paginator: {
         pageSizeOptions: [10, 20, 50, 100],
         showFirstLastButtons: true,
-        pageSize: 20,
         hide: false,
       },
+      initialPageSize: 20,
     },
   },
   render: (args) => ({
@@ -220,8 +229,8 @@ export const WithSort: Story = {
       paginator: {
         pageSizeOptions: [10, 20, 50, 100],
         showFirstLastButtons: true,
-        pageSize: 20,
       },
+      initialPageSize: 20,
     },
   },
   render: (args) => ({
@@ -317,8 +326,8 @@ export const WithCustomColumn: Story = {
       paginator: {
         pageSizeOptions: [10, 20, 50, 100],
         showFirstLastButtons: true,
-        pageSize: 20,
       },
+      initialPageSize: 20,
     },
   },
   render: (args) => ({
@@ -348,9 +357,7 @@ export const WithRowGroup: Story = {
     tableName: "products-row-group",
     displayedColumns: ["id", "name", "sku", "category", "price", "created_at"],
     tableDef: {
-      paginator: {
-        pageSize: 5,
-      },
+      initialPageSize: 5,
     },
   },
   render: (args) => ({
@@ -420,8 +427,8 @@ export const ExactHeight: Story = {
       paginator: {
         pageSizeOptions: [10, 20, 50, 100],
         showFirstLastButtons: true,
-        pageSize: 20,
       },
+      initialPageSize: 20,
     },
   },
   render: (args) => ({
@@ -436,12 +443,12 @@ export const ExactHeight: Story = {
           <ib-text-filter name="category">Category</ib-text-filter>
         </ib-filter>
 
-        <ib-text-column headerText="ID" name="id" sort sticky stickyEnd />
+        <ib-text-column headerText="ID" name="id" sort sticky />
         <ib-text-column headerText="Product name" name="name" sort />
         <ib-text-column headerText="SKU" name="sku" />
         <ib-text-column  name="category" sort />
-        <ib-number-column name="price" sort stickyEnd />
-        <ib-date-column headerText="Created at" name="created_at" sort />
+        <ib-number-column name="price" sort />
+        <ib-date-column headerText="Created at" name="created_at" sort stickyEnd />
       </ib-kai-table>
     `,
   }),

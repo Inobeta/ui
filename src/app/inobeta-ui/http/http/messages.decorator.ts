@@ -19,7 +19,7 @@ import { IbHttpModule } from '../http.module';
  * }
  * ```
  */
-/** @deprecated this element will be removed in v21 */
+/** @deprecated Migration scripts toward Angular core APIs are planned no earlier than v22. */
 export function ibCrudToast(
   enableBackCall = false,
   successMessage = 'shared.ibCrudToast.success',

@@ -15,7 +15,7 @@ import { IbAPITokens } from "../auth/session.model";
   selector: "[ibRoleCheck]",
   standalone: true,
 })
-/** @deprecated this element will be removed in v21 */
+/** @deprecated Migration scripts toward Angular core APIs are planned no earlier than v22. */
 export class IbRoleCheckDirective implements OnInit, OnDestroy {
   @Input("ibRoleCheck") roles: string[];
   destroy: Subject<void> = new Subject();

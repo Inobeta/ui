@@ -12,8 +12,7 @@ import {
   applicationConfig,
   moduleMetadata,
 } from "@storybook/angular";
-import { IbModalMessageService } from "./modal-message.service";
-import { IbModalModule } from "./modal.module";
+import { IbModalMessageService, IbModalModule } from "public_api";
 
 @Component({
   selector: "app-modal",
@@ -71,9 +70,9 @@ export class IbModalWithActionsApp {
   }
 }
 
-const meta: Meta<IbModalMessageService> = {
+const meta: Meta<IbModalApp> = {
   title: "Features/Modal",
-  component: IbModalMessageService,
+  component: IbModalApp,
   decorators: [
     moduleMetadata({
       imports: [
@@ -90,7 +89,7 @@ const meta: Meta<IbModalMessageService> = {
 };
 
 export default meta;
-type Story = StoryObj<IbModalMessageService>;
+type Story = StoryObj<IbModalApp>;
 
 /**
  * Display modal messages

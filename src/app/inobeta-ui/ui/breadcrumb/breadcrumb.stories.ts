@@ -14,7 +14,7 @@ import { IbBreadcrumbComponent } from "./breadcrumb.component";
 import { IbBreadcrumbModule } from "./breadcrumb.module";
 
 @Component({
-  selector: "app-breadbrumb",
+  selector: "app-breadcrumb",
   standalone: true,
   imports: [
     NgIf,

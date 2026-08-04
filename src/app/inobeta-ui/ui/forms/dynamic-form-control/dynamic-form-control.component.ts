@@ -10,7 +10,7 @@ import { UntypedFormGroup, UntypedFormControl } from '@angular/forms';
   },
   standalone: false
 })
-/** @deprecated this element will be removed in v21 */
+/** @deprecated Migration scripts toward Formly are planned no earlier than v22. */
 export class IbDynamicFormControlComponent {
   @Input() base: IbFormControlBase<any>;
   @Input() form: UntypedFormGroup;

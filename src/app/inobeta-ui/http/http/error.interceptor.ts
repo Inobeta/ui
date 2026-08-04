@@ -6,7 +6,7 @@ import { catchError } from "rxjs/operators";
 import { IbToastNotification } from "../../ui/toast/toast.service";
 
 @Injectable({ providedIn: "root" })
-/** @deprecated this element will be removed in v21 */
+/** @deprecated Migration scripts toward Angular core APIs are planned no earlier than v22. */
 export class IbErrorInterceptor implements HttpInterceptor {
   constructor(
     private ibToast: IbToastNotification,

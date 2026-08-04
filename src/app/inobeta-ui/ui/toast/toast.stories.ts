@@ -16,8 +16,7 @@ import {
   applicationConfig,
   moduleMetadata,
 } from "@storybook/angular";
-import { IbToastModule } from "./toast.module";
-import { IbToastNotification } from "./toast.service";
+import { IbToastModule, IbToastNotification } from "public_api";
 
 @Component({
   selector: "app-toast-service-host",
@@ -87,9 +86,9 @@ export class IbToastNotificationApp {
   }
 }
 
-const meta: Meta<IbToastNotification> = {
+const meta: Meta<IbToastNotificationApp> = {
   title: "Features/Toast",
-  component: IbToastNotification,
+  component: IbToastNotificationApp,
   decorators: [
     moduleMetadata({
       imports: [
@@ -105,7 +104,7 @@ const meta: Meta<IbToastNotification> = {
 };
 
 export default meta;
-type Story = StoryObj<IbToastNotification>;
+type Story = StoryObj<IbToastNotificationApp>;
 
 /**
  * Displays toast notifications
@@ -130,7 +129,7 @@ export const Documentation: Story = {
   }),
 };
 
-export const Example: StoryObj<IbToastNotificationApp> = {
+export const Example: Story = {
   render: () => ({
     template: `<app-toast-service-host></app-toast-service-host>`,
   }),

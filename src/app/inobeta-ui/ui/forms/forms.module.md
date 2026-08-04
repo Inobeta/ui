@@ -2,6 +2,8 @@
 
 Modulo per generare forms.
 
+> **Deprecated:** `IbDynamicFormsModule` is deprecated and will be removed in v21. This guide describes the legacy forms API. `IbMaterialFormModule` is also deprecated and will be removed in v21; its `ib-material-form` component is marked deprecated as well. See the Forms Storybook page for the maintained examples.
+
 ## Utilizzo
 
 Definire i campi del form attraverso un array di [IbFormField](/classes/IbFormField.html). Gli unici valori richiesti sono `key` e `label`, dove `key` viene assegnato come `formControlName`.

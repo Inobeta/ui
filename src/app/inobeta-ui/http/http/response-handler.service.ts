@@ -7,7 +7,7 @@ import { HttpEvent } from '@angular/common/http';
  * @deprecated Use Angular standard interceptors to deal with response and errors
  */
 @Injectable({ providedIn: 'root' })
-/** @deprecated this element will be removed in v21 */
+/** @deprecated Migration scripts toward Angular core APIs are planned no earlier than v22. */
 export class IbResponseHandlerService {
 
   disableGlobalErrors = false;
