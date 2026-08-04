@@ -121,11 +121,9 @@ docs_build:
   tags:
     - gitlab-org-docker
   only:
-    - never
-    #- master
-    #- /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
-    #- /^canary\/[0-9]+\.[0-9]+\.[0-9]+$/
-    #- /^[0-9]+\.[0-9]+\.[0-9]+$/
+    - master
+    - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
+    - /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 docs_publish:
   stage: docs:deploy
@@ -141,11 +139,9 @@ docs_publish:
     - dedicated
   interruptible: true
   only:
-    - never
-    #- master
-    #- /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
-    #- /^canary\/[0-9]+\.[0-9]+\.[0-9]+$/
-    #- /^[0-9]+\.[0-9]+\.[0-9]+$/
+    - master
+    - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
+    - /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 examples:build:
   stage: examples:build
@@ -161,9 +157,9 @@ examples:build:
   tags:
     - gitlab-org-docker
   only:
-    - never
-    #- /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
-    #- /^[0-9]+\.[0-9]+\.[0-9]+$/
+    - master
+    - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
+    - /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 examples:image:
   image: docker:27.1.1
@@ -179,9 +175,9 @@ examples:image:
     - DOCKER_BUILDKIT=1 docker build --memory 128m --progress=plain --push -t $IMAGE:latest . || { echo "Docker build failed with exit code $?"; true; }
     - echo "image build done"
   only:
-    - never
-    #- /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
-    #- /^[0-9]+\.[0-9]+\.[0-9]+$/
+    - master
+    - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
+    - /^[0-9]+\.[0-9]+\.[0-9]+$/
   tags:
     - gitlab-org-docker
 
@@ -199,9 +195,9 @@ examples:deploy:
     name: examples
     url: $STAGING_URL
   only:
-    - never
-    #- /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
-    #- /^[0-9]+\.[0-9]+\.[0-9]+$/
+    - master
+    - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
+    - /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 .inobeta_pkg: &inobeta_pkg |
   [[ "$TRACE" ]] && set -x
