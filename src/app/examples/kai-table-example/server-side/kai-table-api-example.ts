@@ -2,27 +2,28 @@ import { Component } from "@angular/core";
 import { GithubDataSource } from "./github-data-source";
 import { IbDataExportModule, IbFilterModule, IbKaiTableModule, IbTableActionModule, IbViewModule } from "public_api";
 import { MatIconModule } from "@angular/material/icon";
-import { MatIconButton } from "@angular/material/button";
+import { MatButtonModule, MatIconButton } from "@angular/material/button";
 
 @Component({
-    selector: "ib-kai-table-api-example",
-    template: `
+  selector: "ib-kai-table-api-example",
+  template: `
     <ib-kai-table
+      tableName="remoteExample"
       [displayedColumns]="['created', 'state', 'number', 'title']"
       [dataSource]="dataSource"
     >
       <ib-table-action-group>
         <button
-          mat-icon-button
+          matMiniFab
           (click)="simulateError()"
           matTooltip="Simulate error"
         >
           <mat-icon color="warn">error</mat-icon>
         </button>
-        <button mat-icon-button (click)="refresh()" matTooltip="Refresh data">
+        <button matMiniFab (click)="refresh()" matTooltip="Refresh data">
           <mat-icon>refresh</mat-icon>
         </button>
-        <ib-table-data-export-action />
+        <ng-template ibTableAction [kind]="'export'"></ng-template>
       </ib-table-action-group>
 
       <ib-table-view-group />
@@ -50,31 +51,33 @@ import { MatIconButton } from "@angular/material/button";
       <ib-text-column name="title" />
     </ib-kai-table>
   `,
-    styles: [
-        `
+  styles: [
+    `
       :host {
+        --ib-table-min-content-height: 0px;
+
         display: flex;
+        flex: 1 1 auto;
         flex-direction: column;
+        min-height: 0;
+        overflow: hidden;
         padding: 30px;
       }
+
+      ib-kai-table {
+        flex: 1 1 auto;
+        min-height: 0;
+      }
     `,
-    ],
-    imports: [
-      IbKaiTableModule, IbFilterModule, IbViewModule, IbDataExportModule, MatIconModule, IbTableActionModule, MatIconButton
-    ]
+  ],
+  imports: [
+    IbKaiTableModule, IbFilterModule, IbViewModule, IbDataExportModule, MatIconModule, IbTableActionModule, MatButtonModule
+  ]
 })
 export class IbKaiTableApiExamplePage {
   dataSource = new GithubDataSource();
 
   createdAtAccessor = (data: any, name: string) => data.created_at;
-
-  setState(state: string) {
-    if (state === "loading") {
-      return (this.dataSource.state = "loading");
-    }
-
-    this.dataSource.state = "idle";
-  }
 
   refresh() {
     this.dataSource.refresh();

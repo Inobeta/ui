@@ -1,3 +1,4 @@
+import { DragDropModule } from "@angular/cdk/drag-drop";
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
@@ -8,14 +9,12 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatTooltipModule } from "@angular/material/tooltip";
-import { provideState } from "@ngrx/store";
 import { TranslateModule } from "@ngx-translate/core";
 import { IbDefaultTableView } from "./components/default-table-view/default-table-view.component";
 import { IbTableViewGroup } from "./components/table-view-group/table-view-group.component";
 import { IbTableView } from "./components/table-view/table-view.component";
 import { IbTableViewDialog } from "./components/view-dialog/view-dialog.component";
 import { IbViewList } from "./components/view-list/view-list.component";
-import { ibViewsFeature } from "./store/reducer";
 import { IbViewService } from "./view.service";
 import { IbTableActionModule } from "../kai-table/action";
 
@@ -36,6 +35,7 @@ import { IbTableActionModule } from "../kai-table/action";
   ],
   imports: [
     CommonModule,
+    DragDropModule,
     FormsModule,
     MatIconModule,
     MatMenuModule,
@@ -51,7 +51,6 @@ import { IbTableActionModule } from "../kai-table/action";
     }),
   ],
   providers: [
-    provideState(ibViewsFeature),
     IbViewService
   ],
 })

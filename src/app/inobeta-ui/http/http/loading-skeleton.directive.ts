@@ -21,9 +21,10 @@ const defaultConfig = {
 };
 
 @Directive({
-    selector: "[ibLoading]",
-    standalone: false
+  selector: "[ibLoading]",
+  standalone: false
 })
+/** @deprecated Migration scripts toward Angular core APIs are planned no earlier than v22. */
 export class IbLoadingDirective implements OnInit, OnDestroy {
   store = inject(Store);
   isLoading$ = this.store.select(ibSelectIsHttpLoading);
@@ -37,7 +38,7 @@ export class IbLoadingDirective implements OnInit, OnDestroy {
   } = { ...defaultConfig };
 
   loadingSub?: Subscription;
-  constructor(private tpl: TemplateRef<any>, private vcr: ViewContainerRef) {}
+  constructor(private tpl: TemplateRef<any>, private vcr: ViewContainerRef) { }
 
   ngOnInit(): void {
     const { size, width, height, className, endpoint } = {

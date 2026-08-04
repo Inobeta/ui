@@ -1,18 +1,19 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
-    selector: 'ib-loading-skeleton-container',
-    template: `
+  selector: 'ib-loading-skeleton-container',
+  template: `
   <div class="ib-skeleton-container">
-    <ib-loading-skeleton-rect
-      *ngFor="let s of skeletons"
-      [width]="s.width"
-      [height]="s.height"
-      [className]="s.className"
-    ></ib-loading-skeleton-rect>
+    @for (s of skeletons; track s) {
+      <ib-loading-skeleton-rect
+        [width]="s.width"
+        [height]="s.height"
+        [className]="s.className"
+      ></ib-loading-skeleton-rect>
+    }
   </div>
   `,
-    styles: [`
+  styles: [`
   :host{
     flex: 1;
     width: 100%;
@@ -23,9 +24,9 @@ import { Component, Input, OnInit } from '@angular/core';
   }
 
   `],
-    standalone: false
+  standalone: false
 })
-
+/** @deprecated Migration scripts toward Angular core APIs are planned no earlier than v22. */
 export class IbLoadingSkeletonContainerComponent implements OnInit {
   @Input() skeletons: {
     width: string;

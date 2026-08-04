@@ -5,12 +5,12 @@ import { and, gte, lte, none } from "../../filters";
 import { IbFilterBase } from "../base/filter-base";
 
 @Component({
-    selector: "ib-number-filter",
-    templateUrl: "filter-number.component.html",
-    styleUrls: ["./filter-number.component.scss"],
-    encapsulation: ViewEncapsulation.None,
-    providers: [{ provide: IbFilterBase, useExisting: IbNumberFilter }],
-    standalone: false
+  selector: "ib-number-filter",
+  templateUrl: "filter-number.component.html",
+  styleUrls: ["./filter-number.component.scss"],
+  encapsulation: ViewEncapsulation.None,
+  providers: [{ provide: IbFilterBase, useExisting: IbNumberFilter }],
+  standalone: false
 })
 export class IbNumberFilter extends IbFilterBase {
   @Input() min: number = 0;
@@ -107,5 +107,31 @@ export class IbNumberFilter extends IbFilterBase {
       min: this.slider.value.min,
       max: this.slider.value.max,
     };
+  }
+
+  mobileSummary(): string {
+    const raw = this.rawValue;
+
+    if (raw == null || raw.value == null) {
+      return "";
+    }
+
+    const min = raw.value[0]?.value;
+    const max = raw.value[1]?.value;
+
+    if (min != null && max != null) {
+      return `${min} - ${max}`;
+    }
+    if (min != null) {
+      return `>= ${min}`;
+    }
+    if (max != null) {
+      return `<= ${max}`;
+    }
+    return "";
+  }
+
+  mobileHasValue(): boolean {
+    return !!this.rawValue.value?.[0]?.value || !!this.rawValue.value?.[1]?.value;
   }
 }

@@ -11,7 +11,7 @@ import { Component, inject } from "@angular/core";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
-import { IbFormControlErrors } from "./form-control-errors.component";
+import { IbFormControlErrors, IbPatchFormValue } from "public_api";
 import {
   FormBuilder,
   FormControl,
@@ -20,7 +20,6 @@ import {
   ReactiveFormsModule,
   Validators,
 } from "@angular/forms";
-import { IbPatchFormValue } from "./patch-value.directive";
 
 @Component({
   selector: "ib-form-story",

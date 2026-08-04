@@ -78,29 +78,29 @@ registerLocaleData(localeIt);
   template: `<ng-container
     matColumnDef
     matSort
-    [sticky]="sticky"
-    [stickyEnd]="stickyEnd"
+     [sticky]="stickyInput()"
+     [stickyEnd]="stickyEndInput()"
   >
     <!-- ibSortHeaderFor: Replaces the temporary \`matSort\` instance with the one declared in the table component -->
     <th
       class="ib-table__header-cell"
       mat-header-cell
       *matHeaderCellDef
-      [ibSortHeaderFor]="matSort"
+       [ibSortHeaderFor]="matSort()"
       mat-sort-header
-      [disabled]="!sort"
+       [disabled]="!sortInput()"
     >
-      {{ headerText }}
+       {{ headerText() }}
     </th>
     <td
       mat-cell
       *matCellDef="let data"
-      [matTooltip]="dataAccessor(data, name) + ' ms'"
+       [matTooltip]="dataAccessor()(data, name()) + ' ms'"
     >
-      {{ dataAccessor(data, name) | date: "MMM d, YYYY 'at' hh:mm" }}
+       {{ dataAccessor()(data, name()) | date: "MMM d, YYYY 'at' hh:mm" }}
     </td>
     <td mat-footer-cell *matFooterCellDef style="max-width: fit-content">
-      <ib-aggregate *ngIf="aggregate"></ib-aggregate>
+       <ib-aggregate *ngIf="aggregateInput()"></ib-aggregate>
     </td>
   </ng-container>`,
   // View encapsulation must be removed so that the styles can be applied accordingly.
@@ -127,10 +127,15 @@ registerLocaleData(localeIt);
   ],
 })
 export class IbTimestampColumn<T> extends IbColumn<T> {
-  dataAccessor = (data: T, name: string): any => data[name].seconds * 1000;
+  constructor() {
+    super();
+    this.dataAccessor.set((data: T, name: string) =>
+      (data as Record<string, { seconds: number }>)[name].seconds * 1000
+    );
+  }
 }
 
-const meta: Meta = {
+const meta: Meta<IbTable> = {
   title: "Components/Table",
   component: IbTable,
   tags: ["autodocs"],
@@ -158,11 +163,27 @@ const meta: Meta = {
     }),
   ],
   argTypes: {
-    dataSource: { control: { disable: true } },
+    dataSource: {
+      control: { disable: true },
+      description: "Alternative to data for supplying a table data source.",
+    },
+    tableName: {
+      description: "Required unique identity used for table state and persistence.",
+    },
+    tableHeight: {
+      control: "text",
+      description: 'Desktop content height. Defaults to "parent".',
+    },
   },
   parameters: {
     controls: {
-      include: ["displayedColumns", "data", "tableDef", "tableName"],
+      include: [
+        "displayedColumns",
+        "data",
+        "tableDef",
+        "tableName",
+        "tableHeight",
+      ],
     },
   },
 };
@@ -175,14 +196,15 @@ type Story = StoryObj<IbTable>;
  */
 export const Simple: Story = {
   args: {
+    tableName: "products-simple",
     displayedColumns: ["name", "category"],
     tableDef: {
       paginator: {
-        pageSizeOptions: [5, 10, 25, 100],
+        pageSizeOptions: [10, 20, 50, 100],
         showFirstLastButtons: true,
-        pageSize: 5,
         hide: false,
       },
+      initialPageSize: 20,
     },
   },
   render: (args) => ({
@@ -191,7 +213,7 @@ export const Simple: Story = {
       ...args,
     },
     template: `
-      <ib-kai-table tableName="products" [data]="data" [displayedColumns]="displayedColumns" [tableDef]="tableDef">
+      <ib-kai-table [tableName]="tableName" [data]="data" [displayedColumns]="displayedColumns" [tableDef]="tableDef">
         <ib-text-column headerText="Product name" name="name" />
         <ib-text-column name="category" />
       </ib-kai-table>
@@ -201,13 +223,14 @@ export const Simple: Story = {
 
 export const WithSort: Story = {
   args: {
+    tableName: "products-sort",
     displayedColumns: ["id", "name", "sku", "category", "price", "created_at"],
     tableDef: {
       paginator: {
-        pageSizeOptions: [5, 10, 25, 100],
+        pageSizeOptions: [10, 20, 50, 100],
         showFirstLastButtons: true,
-        pageSize: 5,
       },
+      initialPageSize: 20,
     },
   },
   render: (args) => ({
@@ -216,7 +239,7 @@ export const WithSort: Story = {
       ...args,
     },
     template: `
-      <ib-kai-table tableName="products" [data]="data" [displayedColumns]="displayedColumns" [tableDef]="tableDef">
+      <ib-kai-table [tableName]="tableName" [data]="data" [displayedColumns]="displayedColumns" [tableDef]="tableDef">
         <ib-text-column headerText="ID" name="id" sort />
         <ib-text-column headerText="Product name" name="name" sort />
         <ib-text-column headerText="SKU" name="sku" />
@@ -231,6 +254,7 @@ export const WithSort: Story = {
 export const WithFilters: Story = {
   render: () => ({
     props: {
+      tableName: "products-filters",
       data: tableData,
       displayedColumns: [
         "id",
@@ -242,7 +266,7 @@ export const WithFilters: Story = {
       ],
     },
     template: `
-      <ib-kai-table tableName="products" [displayedColumns]="displayedColumns" [data]="data">
+      <ib-kai-table [tableName]="tableName" [displayedColumns]="displayedColumns" [data]="data">
         <ib-filter>
           <ib-text-filter name="name">Product name</ib-text-filter>
           <ib-text-filter name="sku">SKU</ib-text-filter>
@@ -264,13 +288,14 @@ export const WithFilters: Story = {
 
 export const WithExport: Story = {
   args: {
+    tableName: "products-export",
     data: tableData,
     displayedColumns: ["id", "name", "sku", "category", "price", "created_at"],
   },
   render: (args) => ({
     props: args,
     template: `
-      <ib-kai-table tableName="products" [displayedColumns]="displayedColumns" [data]="data">
+      <ib-kai-table [tableName]="tableName" [displayedColumns]="displayedColumns" [data]="data">
         <ib-table-action-group>
           <ib-table-data-export-action />
         </ib-table-action-group>
@@ -288,6 +313,7 @@ export const WithExport: Story = {
 
 export const WithCustomColumn: Story = {
   args: {
+    tableName: "products-custom-column",
     displayedColumns: [
       "id",
       "name",
@@ -298,10 +324,10 @@ export const WithCustomColumn: Story = {
     ],
     tableDef: {
       paginator: {
-        pageSizeOptions: [5, 10, 25, 100],
+        pageSizeOptions: [10, 20, 50, 100],
         showFirstLastButtons: true,
-        pageSize: 5,
       },
+      initialPageSize: 20,
     },
   },
   render: (args) => ({
@@ -310,7 +336,7 @@ export const WithCustomColumn: Story = {
       ...args,
     },
     template: `
-      <ib-kai-table tableName="products" [data]="data" [displayedColumns]="displayedColumns" [tableDef]="tableDef">
+      <ib-kai-table [tableName]="tableName" [data]="data" [displayedColumns]="displayedColumns" [tableDef]="tableDef">
         <ib-text-column headerText="ID" name="id" sort />
         <ib-text-column headerText="Product name" name="name" sort />
         <ib-text-column headerText="SKU" name="sku" />
@@ -328,11 +354,10 @@ export const WithCustomColumn: Story = {
  */
 export const WithRowGroup: Story = {
   args: {
+    tableName: "products-row-group",
     displayedColumns: ["id", "name", "sku", "category", "price", "created_at"],
     tableDef: {
-      paginator: {
-        pageSize: 5,
-      },
+      initialPageSize: 5,
     },
   },
   render: (args) => ({
@@ -341,7 +366,7 @@ export const WithRowGroup: Story = {
       ...args,
     },
     template: `
-      <ib-kai-table tableName="products" [data]="data" [displayedColumns]="displayedColumns" [tableDef]="tableDef">
+      <ib-kai-table [tableName]="tableName" [data]="data" [displayedColumns]="displayedColumns" [tableDef]="tableDef">
         <ng-container *ibKaiRowGroup="let data">
           Description for {{ data.name }}: {{ data.description }}
         </ng-container>
@@ -350,8 +375,80 @@ export const WithRowGroup: Story = {
         <ib-text-column headerText="Product name" name="name" sort />
         <ib-text-column headerText="SKU" name="sku" />
         <ib-number-column name="price" sort />
-        <ib-text-column name="category" sort />
+        <ib-text-column  name="category" sort />
         <ib-date-column headerText="Created at" name="created_at" sort />
+      </ib-kai-table>
+    `,
+  }),
+};
+
+/**
+ * Demonstrates parent mode: the table fills its container.
+ * The wrapper div below provides a definitively sized parent (500px).
+ * The content area uses flex to fill the remaining space after
+ * toolbar, filter, and paginator.
+ */
+export const ParentHeight: Story = {
+  args: {
+    tableName: "products-parent-height",
+    displayedColumns: ["id", "name", "sku", "category", "price"],
+    tableHeight: "parent",
+  },
+  render: (args) => ({
+    props: {
+      data: generateData().slice(0, 30),
+      ...args,
+    },
+    template: `
+      <div style="height: 500px; resize: vertical; overflow: hidden; border: 1px dashed var(--mat-sys-outline, #ccc); padding: 4px;">
+        <ib-kai-table [tableName]="tableName" [data]="data" [displayedColumns]="displayedColumns" [tableHeight]="tableHeight">
+          <ib-text-column headerText="ID" name="id" sort />
+          <ib-text-column headerText="Product name" name="name" sort />
+          <ib-text-column headerText="SKU" name="sku" />
+          <ib-text-column  name="category" sort />
+          <ib-number-column name="price" sort />
+        </ib-kai-table>
+      </div>
+    `,
+  }),
+};
+
+/**
+ * Demonstrates exact CSS height mode with sticky start/end columns.
+ * The content area respects the explicit height while toolbar,
+ * filter, and paginator remain outside the scroll zone.
+ */
+export const ExactHeight: Story = {
+  args: {
+    tableName: "products-exact-height",
+    displayedColumns: ["id", "name", "sku", "category", "price", "created_at"],
+    tableHeight: "400px",
+    tableDef: {
+      paginator: {
+        pageSizeOptions: [10, 20, 50, 100],
+        showFirstLastButtons: true,
+      },
+      initialPageSize: 20,
+    },
+  },
+  render: (args) => ({
+    props: {
+      data: tableData,
+      ...args,
+    },
+    template: `
+      <ib-kai-table [tableName]="tableName" [data]="data" [displayedColumns]="displayedColumns" [tableHeight]="tableHeight" [tableDef]="tableDef">
+        <ib-filter>
+          <ib-text-filter name="name">Product name</ib-text-filter>
+          <ib-text-filter name="category">Category</ib-text-filter>
+        </ib-filter>
+
+        <ib-text-column headerText="ID" name="id" sort sticky />
+        <ib-text-column headerText="Product name" name="name" sort />
+        <ib-text-column headerText="SKU" name="sku" />
+        <ib-text-column  name="category" sort />
+        <ib-number-column name="price" sort />
+        <ib-date-column headerText="Created at" name="created_at" sort stickyEnd />
       </ib-kai-table>
     `,
   }),

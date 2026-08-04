@@ -13,6 +13,7 @@ type IbBreadcrumbItem = {
     templateUrl: './breadcrumb.component.html',
     standalone: false
 })
+/** @deprecated this component will be removed in v21 */
 export class IbBreadcrumbComponent implements OnInit {
   static readonly ROUTE_DATA_BREADCRUMB = 'breadcrumb';
   /**

@@ -1,19 +1,20 @@
-import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 
-@Component ({
-    selector: 'ib-uploader',
-    template: `
+/** @deprecated this element will be removed in v21 */
+@Component({
+  selector: 'ib-uploader',
+  template: `
     <input (change)="onChooseChange()" #uploader style="display:none;"type="file"/>
     <button mat-button (click)="onChooseClick()" >{{textKey | translate}}</button>
   `,
-    standalone: false
+  standalone: false
 })
-export class IbUploaderComponent {
+export class IbUploaderComponentLegacy {
   @ViewChild('uploader') uploader !: ElementRef;
   @Input() textKey: string;
   @Output() onFileSelected: EventEmitter<any> = new EventEmitter<any>();
 
-  constructor() {}
+  constructor() { }
 
   onChooseClick() {
     this.uploader.nativeElement.click();

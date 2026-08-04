@@ -1,8 +1,10 @@
 import { Meta } from "@storybook/blocks";
 
-<Meta title="Components/Main Menu/Overview" />
+<Meta title="Components/Main Menu (**Deprecated**)/Overview" />
 
-# Main Menu
+# Main Menu (**Deprecated**)
+
+> ⚠️ Main Menu is deprecated and planned for removal in v21. Keep using this page only when maintaining an existing integration.
 
 This module generates the main menu (desktop version).
 
@@ -41,11 +43,11 @@ export class IbMainMenuExampleComponent {
   // declare data for first and second levels menu navigation
   exampleNavData: IbMainMenuData[] = navData;
 
-  // decalre data for bottom left button
+  // declare data for bottom left button
   exampleNavBottomLeft: IbMainMenuButton = navBottomLeftData;
 
   // declare string you want to display on the bottom right of the menu (like copyright)
-  exampleNavBottomRight: string = "© Acme 2021";
+  exampleNavBottomRight: string = "© Example";
 
   handleMenuClick(whoHasBeenEmitted) {
     //handling event example
@@ -71,7 +73,7 @@ After doing that, you need to declare the `<ib-main-menu-bar>` in the template a
   [navBottomLeft]="exampleNavBottomLeft"
   [navButtonBottomRight]="exampleNavBottomRight"
   (action)="handleMenuClick($event)"
-/>`
+/>
 ```
 
 That's it! Your menu is ready to be used for navigation.
@@ -145,7 +147,7 @@ export interface IbMainMenuData extends IbMainMenuButton {
   }
 ```
 
-This data model is designed so you can set a first level menu section with second level menu sections connected to it. The design requires the icon field set for the first levels, where the label refers to the material icon name, and the type to the different styles material icons offers: outlined, two-tone, filled, rounded and sharp. In order to be able to use this variants you must set also your `index.html` file, providing the right link element. For example, to be able to use all the variants, you must add this code:  
+This data model is designed so you can set a first level menu section with second level menu sections connected to it. The design requires the icon field set for the first levels, where the label refers to the material icon name, and the type to the different styles material icons offers: outlined, two-tone, filled, rounded and sharp. In order to be able to use this variants you must set also your `index.html` file, providing the right link element. For example, to be able to use all the variants, you must add this code:
 ```html
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons%7CMaterial+Icons+Outlined%7CMaterial+Icons+Two+Tone%7CMaterial+Icons+Round%7CMaterial+Icons+Sharp" rel="stylesheet">
 ```

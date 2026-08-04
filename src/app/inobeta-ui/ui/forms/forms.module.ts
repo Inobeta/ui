@@ -22,4 +22,5 @@ import { IbFormPipeModule } from "./forms.pipes";
     IbDynamicFormArrayComponent,
   ],
 })
-export class IbDynamicFormsModule {}
+/** @deprecated Migration scripts toward Formly are planned no earlier than v22. */
+export class IbDynamicFormsModule { }

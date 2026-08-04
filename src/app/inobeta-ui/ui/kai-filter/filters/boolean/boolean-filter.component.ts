@@ -1,4 +1,4 @@
-import { LowerCasePipe, NgIf } from "@angular/common";
+import { LowerCasePipe, NgTemplateOutlet } from "@angular/common";
 import { Component } from "@angular/core";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
@@ -10,22 +10,24 @@ import { IbFilterButton } from "../../filter-button/filter-button.component";
 import { IbFilterDef } from "../../filter.types";
 import { eq, none } from "../../filters";
 import { IbFilterBase } from "../base/filter-base";
+import { IbFilterValueDirective } from "../../filter-value.directive";
 
 @Component({
-    imports: [
-        NgIf,
-        IbFilterButton,
-        IbFilterActionGroup,
-        ReactiveFormsModule,
-        MatButtonModule,
-        MatButtonToggleModule,
-        MatRadioModule,
-        TranslateModule,
-        LowerCasePipe,
-    ],
-    selector: "ib-boolean-filter",
-    templateUrl: "boolean-filter.component.html",
-    providers: [{ provide: IbFilterBase, useExisting: IbBooleanFilter }]
+  imports: [
+    IbFilterButton,
+    IbFilterActionGroup,
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatButtonToggleModule,
+    MatRadioModule,
+    TranslateModule,
+    LowerCasePipe,
+    IbFilterValueDirective,
+    NgTemplateOutlet
+  ],
+  selector: "ib-boolean-filter",
+  templateUrl: "boolean-filter.component.html",
+  providers: [{ provide: IbFilterBase, useExisting: IbBooleanFilter }]
 })
 export class IbBooleanFilter extends IbFilterBase {
   searchCriteria = new FormControl(null);

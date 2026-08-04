@@ -17,6 +17,7 @@ import { IbMainMenuDataSet } from '../../models/main-menu-data-set.model';
     styleUrls: ['./main-menu-dialog.component.css'],
     standalone: false
 })
+/** @deprecated this component will be removed in v21 */
 export class IbMainMenuDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<IbMainMenuDialogComponent>,

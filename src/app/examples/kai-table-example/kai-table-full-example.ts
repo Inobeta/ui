@@ -1,33 +1,41 @@
-import { Component, ViewChild } from "@angular/core";
-import { IbSelectionColumn } from "../../inobeta-ui/ui/kai-table/columns/selection-column";
-import { IbKaiTableState } from "../../inobeta-ui/ui/kai-table/table.types";
-import { UserService } from "./users";
+import { Component, signal, ViewChild } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
-import { IbDataExportModule, IbFilterModule, IbKaiTableModule, IbTableActionModule, IbViewModule } from "public_api";
-import { CommonModule } from "@angular/common";
-import { MatIconButton } from "@angular/material/button";
+import { IbDataExportModule, IbFilterModule, IbKaiTableModule, IbTableActionModule, IbTableDef, IbViewModule } from "public_api";
+import { IbSelectionColumn } from "public_api";
+import { UserService } from "./users";
+
+import { MatButtonModule, MatIconButton } from "@angular/material/button";
 
 @Component({
-    selector: "ib-kai-table-full-example",
-    template: `
+  selector: "ib-kai-table-full-example",
+  template: `
+  <div class="table-wrapper">
     <ib-kai-table
       tableName="fullExample"
+      tableHeight="parent"
+      [state]="tableLoader() ? 'loading' : 'idle'"
       [displayedColumns]="columns"
       [data]="data"
-      [state]="state"
-    >
+      [tableDef]="tableDef"
+      [stripedRows]="true"
+      >
       <ib-table-action-group>
-        <button
-          mat-icon-button
-          (click)="getSelection()"
-          *ngIf="selectionColumn?.selection.selected.length > 0"
-        >
-          <mat-icon>delete</mat-icon>
-        </button>
-        <button mat-icon-button (click)="getUserOrders()">
-          <mat-icon>refresh</mat-icon>
-        </button>
-        <ib-table-data-export-action />
+        @if (selectionColumn?.selection.selected.length > 0) {
+          <ng-template ibTableAction>
+            <button
+              matMiniFab
+              (click)="getSelection()"
+              >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </ng-template>
+        }
+        <ng-template ibTableAction>
+          <button matMiniFab (click)="getUserOrders()">
+            <mat-icon>refresh</mat-icon>
+          </button>
+        </ng-template>
+        <ng-template ibTableAction [kind]="'export'"></ng-template>
       </ib-table-action-group>
 
       <ib-table-view-group />
@@ -55,27 +63,50 @@ import { MatIconButton } from "@angular/material/button";
       </ib-column>
       <ib-column ib-action-column>
         <section *ibCellDef="let element">
-          <button mat-icon-button (click)="handleView(element)">
+          <button matMiniFab (click)="handleView(element)">
             <mat-icon>chevron_right</mat-icon>
           </button>
         </section>
       </ib-column>
     </ib-kai-table>
+  </div>
   `,
-    styles: [
-        `
+  styles: [
+    `
       :host {
+        --ib-table-min-content-height: 0px;
+
         display: flex;
+        flex: 1 1 auto;
         flex-direction: column;
+        min-height: 0;
+        overflow: hidden;
         padding: 30px;
-        gap: 3em;
+      }
+      .table-wrapper {
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: column;
+        min-height: 0;
+        overflow: hidden;
+      }
+
+      ib-kai-table {
+        flex: 1 1 auto;
+        min-height: 0;
       }
     `,
-    ],
-    providers: [UserService],
-    imports: [
-      MatIconModule, IbKaiTableModule, IbFilterModule, IbViewModule, IbTableActionModule, IbDataExportModule, CommonModule, MatIconButton
-    ]
+  ],
+  providers: [UserService],
+  imports: [
+    MatIconModule,
+    IbKaiTableModule,
+    IbFilterModule,
+    IbViewModule,
+    IbTableActionModule,
+    IbDataExportModule,
+    MatButtonModule
+  ]
 })
 export class IbKaiTableFullExamplePage {
   @ViewChild(IbSelectionColumn, { static: true })
@@ -83,19 +114,23 @@ export class IbKaiTableFullExamplePage {
 
   data: any[] = [];
   columns = ["name", "fruit", "amount", "created_at", "subscribed"];
-  state: IbKaiTableState = "idle";
 
-  constructor(private userService: UserService) {}
+  tableDef: Partial<IbTableDef> = {
+    initialSort: { active: 'name', direction: 'desc' },
+  }
+
+  tableLoader = signal<boolean>(true);
+  constructor(private userService: UserService) { }
 
   ngOnInit() {
     this.getUserOrders();
   }
 
   getUserOrders() {
-    this.state = "loading";
+    this.tableLoader.set(true)
     this.userService.getUserOrders().subscribe((orders) => {
       this.data = orders;
-      this.state = "idle";
+      this.tableLoader.set(false)
     });
   }
 

@@ -3,12 +3,13 @@ import { IbUserExample, createNewUser } from "./users";
 import { IbKaiTableModule } from "public_api";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatIconModule } from "@angular/material/icon";
-import { MatIconButton } from "@angular/material/button";
+import { MatButtonModule, MatIconButton } from "@angular/material/button";
 
 @Component({
-    selector: "ib-kai-table-context-action-example",
-    template: `
+  selector: "ib-kai-table-context-action-example",
+  template: `
     <ib-kai-table
+      tableName="actionsExample"
       style="text-direction: rtl"
       [displayedColumns]="['name', 'fruit', 'number']"
       [data]="data"
@@ -19,10 +20,10 @@ import { MatIconButton } from "@angular/material/button";
       <ib-text-column name="number" sort></ib-text-column>
       <ib-column ib-action-column>
         <section *ibCellDef="let element">
-          <button mat-icon-button (click)="handleShowReport(element)">
+          <button matMiniFab (click)="handleShowReport(element)">
             <mat-icon>chevron_right</mat-icon>
           </button>
-          <button mat-icon-button [matMenuTriggerFor]="menu">
+          <button matMiniFab [matMenuTriggerFor]="menu">
             <mat-icon>more_vert</mat-icon>
           </button>
           <mat-menu #menu="matMenu">
@@ -32,18 +33,28 @@ import { MatIconButton } from "@angular/material/button";
       </ib-column>
     </ib-kai-table>
   `,
-    styles: [
-        `
+  styles: [
+    `
       :host {
+        --ib-table-min-content-height: 0px;
+
         display: flex;
+        flex: 1 1 auto;
         flex-direction: column;
+        min-height: 0;
+        overflow: hidden;
         padding: 30px;
       }
+
+      ib-kai-table {
+        flex: 1 1 auto;
+        min-height: 0;
+      }
     `,
-    ],
-    imports: [
-      IbKaiTableModule, MatMenuModule, MatIconModule, MatIconButton
-    ]
+  ],
+  imports: [
+    IbKaiTableModule, MatMenuModule, MatIconModule, MatButtonModule
+  ]
 })
 export class IbKaiTableActionColumnExamplePage implements OnInit {
   data: IbUserExample[];

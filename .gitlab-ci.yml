@@ -1,4 +1,4 @@
-image: node:20
+image: node:24.8
 
 stages:
   - quality
@@ -35,7 +35,7 @@ install:
     - master
 
 test_unit:
-  image: inobeta/node-chrome:20
+  image: inobeta/node-chrome:24.8
   stage: quality
   script:
     - set_current_version
@@ -121,10 +121,11 @@ docs_build:
   tags:
     - gitlab-org-docker
   only:
-    - master
-    - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
-    - /^canary\/[0-9]+\.[0-9]+\.[0-9]+$/
-    - /^[0-9]+\.[0-9]+\.[0-9]+$/
+    - never
+    #- master
+    #- /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
+    #- /^canary\/[0-9]+\.[0-9]+\.[0-9]+$/
+    #- /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 docs_publish:
   stage: docs:deploy
@@ -140,10 +141,11 @@ docs_publish:
     - dedicated
   interruptible: true
   only:
-    - master
-    - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
-    - /^canary\/[0-9]+\.[0-9]+\.[0-9]+$/
-    - /^[0-9]+\.[0-9]+\.[0-9]+$/
+    - never
+    #- master
+    #- /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
+    #- /^canary\/[0-9]+\.[0-9]+\.[0-9]+$/
+    #- /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 examples:build:
   stage: examples:build
@@ -157,10 +159,11 @@ examples:build:
     when: on_success
     expire_in: "30 mins"
   tags:
-  - gitlab-org-docker
+    - gitlab-org-docker
   only:
-    - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
-    - /^[0-9]+\.[0-9]+\.[0-9]+$/
+    - never
+    #- /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
+    #- /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 examples:image:
   image: docker:27.1.1
@@ -176,16 +179,17 @@ examples:image:
     - DOCKER_BUILDKIT=1 docker build --memory 128m --progress=plain --push -t $IMAGE:latest . || { echo "Docker build failed with exit code $?"; true; }
     - echo "image build done"
   only:
-    - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
-    - /^[0-9]+\.[0-9]+\.[0-9]+$/
+    - never
+    #- /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
+    #- /^[0-9]+\.[0-9]+\.[0-9]+$/
   tags:
-  - gitlab-org-docker
+    - gitlab-org-docker
 
 examples:deploy:
   image: docker:latest
   stage: examples:deploy
   services:
-  - docker:dind
+    - docker:dind
   script:
     - prepare_staging
     - service_pullrestart_staging $IMAGE latest $SERVICE
@@ -195,8 +199,9 @@ examples:deploy:
     name: examples
     url: $STAGING_URL
   only:
-    - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
-    - /^[0-9]+\.[0-9]+\.[0-9]+$/
+    - never
+    #- /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
+    #- /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 .inobeta_pkg: &inobeta_pkg |
   [[ "$TRACE" ]] && set -x

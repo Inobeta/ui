@@ -2,9 +2,11 @@ import { Meta, Canvas } from "@storybook/blocks";
 
 import * as stories from "./breadcrumb.stories";
 
-<Meta title="Components/Breadcrumbs/Overview" />
+<Meta title="Components/Breadcrumbs (**Deprecated**)/Overview" />
 
-# Breadcrumbs
+# Breadcrumbs (**Deprecated**)
+
+> ⚠️ Breadcrumbs are deprecated and planned for removal in v21. Keep using this page only when maintaining an existing integration.
 
 ## Getting started
 
@@ -64,7 +66,7 @@ items = [
     icon: "home",
   },
   {
-    url: "/some-deep/page"
+    url: "/some-deep/page",
     label: "page.title"
   }
 ];
@@ -94,7 +96,7 @@ type IbBreadcrumbItem = {
 
 ```typescript
 @Component({
-  selector: "app-breadbrumb",
+  selector: "app-breadcrumb",
   template: `<ul class="breadcrumbs">
     <li *ngFor="let item of items" class="breadcrumbs-item">
       <!-- The first element will always be rendered as a title -->

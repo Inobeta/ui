@@ -1,12 +1,12 @@
 import { Component, ElementRef, Input } from "@angular/core";
 
 @Component({
-    selector: 'ib-loading-skeleton-rect',
-    host: {
-        'class': 'pulse'
-    },
-    template: ``,
-    styles: [`
+  selector: 'ib-loading-skeleton-rect',
+  host: {
+    'class': 'pulse'
+  },
+  template: ``,
+  styles: [`
     :host {
       display: block;
       width: var(--skeleton-rect-width);
@@ -16,8 +16,9 @@ import { Component, ElementRef, Input } from "@angular/core";
     }
 
   `],
-    standalone: false
+  standalone: false
 })
+/** @deprecated Migration scripts toward Angular core APIs are planned no earlier than v22. */
 export class IbLoadingSkeletonRectComponent {
   @Input() width: string;
   @Input() height: string;

@@ -5,6 +5,7 @@ export const ibKaiFilterTranslations = {
     },
     "ibFilter": {
       "search": "Cerca",
+      "fullTextSearch": "Ricerca full-text",
       "condition": "Condizione",
       "eq": "Uguale a",
       "contains": "Contiene",

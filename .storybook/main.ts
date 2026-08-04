@@ -6,7 +6,8 @@ const config: StorybookConfig = {
     "@storybook/addon-essentials",
     "@storybook/addon-interactions",
     './version-selector',
-    "@storybook/addon-mdx-gfm"
+    "@storybook/addon-mdx-gfm",
+    "@storybook/addon-docs"
   ],
 
   framework: {
@@ -18,5 +19,16 @@ const config: StorybookConfig = {
     disableTelemetry: true,
   },
   staticDirs: [{ from: "../src/assets", to: "assets" }],
+  webpackFinal: async (config) => {
+    if (config.resolve) {
+      config.resolve.alias = {
+        ...(config.resolve.alias || {}),
+        html2canvas: false,
+        dompurify: false,
+        canvg: false,
+      };
+    }
+    return config;
+  },
 };
 export default config;

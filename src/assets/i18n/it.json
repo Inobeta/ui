@@ -1,4 +1,7 @@
 {
+  "common": {
+    "noItems": "Nessun elemento"
+  },
   "shared": {
     "login": {
       "email": "E-mail",
@@ -7,45 +10,109 @@
     },
     "ibMainMenu": {
       "returnToDash": "Ritorna alla Dashboard"
+    },
+    "ibTableView": {
+      "no": "No",
+      "add": "Crea vista",
+      "remove": "Elimina vista",
+      "rename": "Rinomina vista",
+      "duplicate": "Duplica vista",
+      "duplicatePlaceholder": "Copia di {{viewName}}",
+      "save": "Salva",
+      "discard": "Non salvare",
+      "undo": "Annulla modifiche",
+      "cancel": "Annulla",
+      "addTitle": "Crea una nuova vista",
+      "removeTitle": "Elimina vista",
+      "renameTitle": "Rinomina vista",
+      "duplicateTitle": "Duplica vista",
+      "removeMessage": "Questa operazione non è reversivbile. \"{{viewName}}\" non sarà più disponibile.",
+      "viewName": "Nome vista",
+      "defaultView": "Default",
+      "nameRequired": "Il nome è obbligatorio",
+      "duplicateName": "Esiste già una vista con questo nome",
+      "storageError": "Impossibile salvare la vista",
+      "unsavedTitle": "Modifiche non salvate",
+      "unsavedView": "Vuoi salvare le modifiche apportate a \"{{viewName}}\"?",
+      "unsavedUnnamedView": "Vuoi salvare le modifiche apportate in una nuova vista?",
+      "unsavedNewViewWarning": "La vista corrente ha modifiche non salvate. Proseguendo, le modifiche andranno perse.",
+      "view": {
+        "added": "Vista creata",
+        "removed": "Vista eliminata",
+        "duplicated": "Vista duplicata",
+        "renamed": "Vista rinominata",
+        "saved": "Vista salvata"
+      },
+      "showFilters": "Mostra/Nascondi filtri"
     }
   },
   "examples": {
     "toastMenu": "Toast",
     "toastMessage": "Messaggio toast",
     "customErrorMessageExample": "Il valore di questo campo deve essere \"{{forcedValue}}\"",
-    "ibMainMenu":{
+    "fruits": {
+      "name": "Nome",
+      "fruit": "Frutta",
+      "amount": "Quantità",
+      "purchased": "Acquistato"
+    },
+    "ibMainMenu": {
       "title": "DevKit",
       "copyright": "© Inobeta 2021",
       "getHelp": "Richiedi assistenza",
       "settings": "Settings",
       "logout": "Logout",
-
       "kaiTable": "Table",
       "kaiTableSimple": "Simple",
       "kaiTableContextAction": "Row Actions",
       "kaiTableFull": "Full Example",
       "kaiTableApi": "Data from API",
-
+      "kaiTableRouting": "With Routing",
+      "kaiTableDatasource": "Explicit DataSource",
+      "kaiTableSticky": "Sticky Columns (Fixed Height)",
+      "kaiTableParentHeight": "Parent Height",
+      "kaiTableStickyParent": "Sticky Columns (Parent Height)",
+      "kaiTablePaginatorHide": "Paginator Hide",
+      "kaiTableCustomSortFilter": "Custom Sort & Filter",
+      "kaiTableCustomAggregate": "Custom Aggregate",
+      "kaiTableNgrxSelectors": "NgRx Selectors",
+      "kaiTableStripedRows": "Striped Rows",
+      "kaiTableColumnOptions": "Column Options",
+      "kaiTableMobileEmpty": "Empty Tables",
       "dynamicFormsMain": "Dynamic forms",
       "dynamicFormsDynamicForms": "Dynamic forms (API)",
       "basicForm": "Material Form",
       "formArray": "With Array",
       "formValue": "With Value",
       "formGrid": "With Grid",
-
       "httpMain": "Http",
       "httpBase": "Base",
       "httpAuth": "Auth",
       "httpProtected": "Role Admin",
-
       "reduxMain": "Redux",
       "reduxRedux": "Redux",
-
       "dialogMain": "Dialog",
       "dialogDialog": "Dialog",
-
       "toastMain": "Toast",
       "toastToast": "Toast"
+    },
+    "kaiTable": {
+      "dataset": {
+        "small": "Small dataset",
+        "large": "Large dataset"
+      },
+      "columns": {
+        "id": "ID",
+        "name": "Name",
+        "fruit": "Fruit",
+        "amount": "Amount",
+        "number": "Number",
+        "createdAt": "Created at",
+        "subscribed": "Subscribed"
+      },
+      "hidePaginator": "Nascondi paginatore",
+      "showPaginator": "Mostra paginatore",
+      "emptyState": "Nessun elemento"
     }
   }
 }

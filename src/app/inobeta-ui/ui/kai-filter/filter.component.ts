@@ -3,8 +3,10 @@ import {
   ContentChildren,
   EventEmitter,
   Input,
+  Optional,
   Output,
   QueryList,
+  TemplateRef,
   ViewChild,
   ViewEncapsulation,
 } from "@angular/core";
@@ -22,24 +24,26 @@ import { IB_FILTER } from "./tokens";
       class="ib-filter"
       [class.ib-filter--hidden]="hideFilters"
       [attr.aria-hidden]="hideFilters"
-    >
-      <ng-content select="ib-search-bar"></ng-content>
+      >
       <section #list class="ib-filter__list">
-        <mat-icon *ngIf="list.children.length > 1">filter_list</mat-icon>
+        @if (list.children.length > 1) {
+          <mat-icon>filter_list</mat-icon>
+        }
         <ng-content></ng-content>
+        <ng-content select="ib-search-bar"></ng-content>
       </section>
     </section>
 
     <button
       *ibTableAction
-      mat-icon-button
+      matMiniFab
+      style="margin-left: 5px;"
       [matTooltip]="'shared.ibTableView.showFilters' | translate"
-      [color]="!hideFilters ? 'primary' : ''"
       (click)="hideFilters = !hideFilters"
-    >
-      <mat-icon>{{ "filter_alt" }}</mat-icon>
+      >
+      <mat-icon>{{ (!hideFilters) ? "filter_alt" : "filter_alt_off" }}</mat-icon>
     </button>
-  `,
+    `,
   styleUrls: ["./filter.component.scss"],
   encapsulation: ViewEncapsulation.None,
   providers: [{ provide: IB_FILTER, useExisting: IbFilter }],
@@ -84,7 +88,7 @@ export class IbFilter {
   form: FormGroup = new FormGroup({});
 
   initialRawValue: IbFilterSyntaxExtended = {};
-  get selectedCriteria(){
+  get selectedCriteria() {
     return this.form.getRawValue();
   }
   query: Record<string, any> = {};
@@ -92,7 +96,7 @@ export class IbFilter {
   hideFilters = false;
 
   initialized = new ReplaySubject<void>(1);
-
+  constructor(@Optional() public templateRef: TemplateRef<any>) { }
   ngOnInit() {
   }
 
@@ -102,10 +106,36 @@ export class IbFilter {
   }
 
   update() {
-    this._value = this.buildFilter();
-    this.query = this.toQuery();
+    this._computeValues();
     this.ibFilterUpdated.emit(this._value);
     this.ibQueryUpdated.emit(this.query);
+  }
+
+  /**
+   * Silently hydrates raw form values from a canonical source (e.g., URL, NgRx)
+   * without emitting {@link ibFilterUpdated} or {@link ibQueryUpdated}.
+   *
+   * @param value Serialized raw filter criteria, or `null` to clear all filters.
+   */
+  hydrateRawValue(value: IbFilterSyntaxExtended | null): void {
+    if (value === null) {
+      this.form.reset(undefined, { emitEvent: false });
+      // A reset form still builds each registered filter's inactive value
+      // (for example, a number range or a date period). Those values must
+      // not be retained as canonical criteria when the snapshot explicitly
+      // requests no filters.
+      this._value = {};
+      this.query = this.toQuery();
+      return;
+    } else {
+      this.form.patchValue(value, { emitEvent: false });
+    }
+    this._computeValues();
+  }
+
+  private _computeValues(): void {
+    this._value = this.buildFilter();
+    this.query = this.toQuery();
   }
 
   reset() {

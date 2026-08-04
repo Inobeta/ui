@@ -1,21 +1,20 @@
 import {
   Component,
   Directive,
-  EventEmitter,
+  output,
   Inject,
-  Input,
+  input,
   Optional,
-  Output,
   TemplateRef,
 } from "@angular/core";
 import { IB_AGGREGATE, IB_AGGREGATE_TYPE, IB_COLUMN } from "./tokens";
 
 @Directive({
-    selector: "[ibCellDef]",
-    standalone: false
+  selector: "[ibCellDef]",
+  standalone: false
 })
 export class IbCellDef {
-  constructor(public templateRef: TemplateRef<unknown>) {}
+  constructor(public templateRef: TemplateRef<unknown>) { }
 }
 
 export interface IbAggregateResult {
@@ -53,10 +52,9 @@ export abstract class IbAggregate {
     dataSource: any,
     column: string
   ): IbAggregateResult {
-    const dataset = dataSource
-      ._orderData(dataSource.filteredData)
-      .map((i) => i[column]);
-    const pagedData = dataSource._pageData(dataset);
+    const orderedData = dataSource.getOrderedData();
+    const dataset = orderedData.map((i) => i[column]);
+    const pagedData = dataSource.getCurrentPageData().map((i) => i[column]);
     return {
       currentPage: this.aggregateData(pagedData),
       total: this.aggregateData(dataset),
@@ -108,59 +106,62 @@ export const IbAverageAggregateProvider = {
 };
 
 @Component({
-    selector: "ib-aggregate",
-    template: `
+  selector: "ib-aggregate",
+  template: `
     <section class="ib-aggregate__function">
       <button
-        mat-icon-button
+        matMiniFab
         [matMenuTriggerFor]="menu"
         [matTooltip]="'shared.aggregate.apply' | translate"
-      >
+        >
         <mat-icon>functions</mat-icon>
       </button>
       <span class="mat-caption">{{ displayName | translate }}</span>
     </section>
     <mat-menu #menu="matMenu">
-      <button
-        *ngFor="let function of availableFunctions"
-        mat-menu-item
-        (click)="apply(function.id)"
-      >
-        {{ function.label | translate }}
-      </button>
+      @for (function of availableFunctions; track function) {
+        <button
+          mat-menu-item
+          (click)="apply(function.id)"
+          >
+          {{ function.label | translate }}
+        </button>
+      }
     </mat-menu>
     <section class="ib-aggregate__display-value">
       <div>
         <span class="mat-caption">{{
           "shared.aggregate.currentPage" | translate
         }}</span>
-        {{ result?.currentPage ? (result.currentPage | number) : "--" }}
+           {{ result()?.currentPage ? (result()?.currentPage | number) : "--" }}
       </div>
 
-      <div *ngIf="showTotal">
-        <span class="mat-caption">{{
-          "shared.aggregate.total" | translate
-        }}</span>
-        {{ result?.total ? (result.total | number) : "--" }}
-      </div>
+      @if (showTotal()) {
+        <div>
+          <span class="mat-caption">{{
+            "shared.aggregate.total" | translate
+          }}</span>
+           {{ result()?.total ? (result()?.total | number) : "--" }}
+        </div>
+      }
     </section>
-  `,
-    standalone: false
+    `,
+  standalone: false
 })
 export class IbAggregateCell {
-  @Input() set function(fun: string) {
-    this.updateDisplayName(fun);
-  }
-  @Input() result: IbAggregateResult = {
+  readonly function = input<string>("", { alias: "function" });
+  readonly result = input<IbAggregateResult>({
     currentPage: undefined,
     total: undefined,
-  };
+  });
 
-  @Input() showTotal = true;
-  @Output() ibFunctionChange = new EventEmitter<string>();
+  readonly showTotal = input(true);
+  readonly ibFunctionChange = output<string>();
 
   availableFunctions: IbAggregate[] = [];
   displayName = "";
+
+  ngOnInit() { this.updateDisplayName(this.function()); }
 
   constructor(
     @Inject(IB_COLUMN) private column: any,
@@ -178,7 +179,6 @@ export class IbAggregateCell {
     const strategy = this.availableFunctions.find((f) => f.id === fun);
     if (!strategy) {
       this.displayName = "";
-      this.result = { currentPage: undefined, total: undefined };
       return;
     }
 

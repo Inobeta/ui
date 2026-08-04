@@ -1,0 +1,28 @@
+:host {
+  --ib-table-min-content-height: 0px;
+
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  padding: 30px;
+}
+
+mat-button-toggle-group {
+  flex-shrink: 0;
+}
+
+.table-wrapper {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+ib-kai-table {
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+}

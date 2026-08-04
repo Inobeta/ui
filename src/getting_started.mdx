@@ -16,6 +16,8 @@ npm i --save @inobeta/ui
 
 (Recommended) Generate a palette with this [schematic](https://github.com/angular/components/blob/main/src/material/schematics/ng-generate/m3-theme/README.md)
 
+> `IbMainMenuModule` and `IbBreadcrumbModule` are deprecated and planned for removal in v21. Do not use them for new development.
+
 ```
 ng generate @angular/material:m3-theme
 ```
@@ -86,28 +88,31 @@ $app-theme: mat.m2-define-light-theme(
 3. Setup translations
 
 - Create a file located in `src/assets/i18n/it.json` for your app's translations
-- Import `TranslateModule` in `app.module.ts`
+- Configure translations in your standalone `ApplicationConfig`
 
 ```typescript
-// app.module.ts
-import { HttpClient } from "@angular/common/http";
-import { IbTranslateModuleLoader } from "@inobeta/ui";
+import { HttpClient, provideHttpClient } from "@angular/common/http";
+import { ApplicationConfig } from "@angular/core";
+import {
+  IB_TRANSLATE_ASSETS_PATH,
+  IbTranslateModuleLoader,
+} from "@inobeta/ui";
 import { TranslateLoader, provideTranslateService } from "@ngx-translate/core";
 
 export const appConfig: ApplicationConfig = {
-  providers: [{
+  providers: [
+    provideHttpClient(),
     // this injection token is optional. Default value: './assets/i18n/'
     { provide: IB_TRANSLATE_ASSETS_PATH, useValue: '/public/shared/i18n/' },
     provideTranslateService({
-        loader: {
-          provide: TranslateLoader,
-          useExisting: IbTranslateModuleLoader,
-          deps: [HttpClient],
-        },
+      loader: {
+        provide: TranslateLoader,
+        useExisting: IbTranslateModuleLoader,
+        deps: [HttpClient],
+      },
     }),
-  }]
-  /** ... */
-}
+  ],
+};
 ```
 
 4. Wait for translations to be loaded

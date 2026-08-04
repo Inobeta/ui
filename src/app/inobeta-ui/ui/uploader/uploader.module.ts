@@ -2,10 +2,10 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { TranslateModule } from '@ngx-translate/core';
-import { IbUploaderComponent } from './uploader.component';
+import { IbUploaderComponentLegacy } from './uploader.component';
 
 const components = [
-  IbUploaderComponent
+  IbUploaderComponentLegacy
 ];
 
 @NgModule({
@@ -14,7 +14,7 @@ const components = [
     MatButtonModule,
     TranslateModule.forChild({
       extend: true
-  }),
+    }),
     MatButtonModule
   ],
   exports: [
@@ -25,4 +25,5 @@ const components = [
   ],
   providers: []
 })
+/** @deprecated this element will be removed in v21 */
 export class IbUploaderModule { }

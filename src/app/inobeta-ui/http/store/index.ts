@@ -7,7 +7,7 @@ import { IbSessionState } from './session/interfaces';
 import { ibLoaderReducerMain } from './loader/reducers';
 import { ibLoaderExtraSelectors } from './loader/selectors';
 
-export interface IHttpStore{
+export interface IHttpStore {
   session: IbSessionState;
   loader: IbLoaderState;
 }
@@ -17,7 +17,7 @@ export const ibHttpEffects = [
   IbSessionEffects
 ]
 
-
+/** @deprecated Migration scripts toward Angular core APIs are planned no earlier than v22. */
 export const ibSessionFeature = createFeature({
   name: 'ibHttpSessionState',
   reducer: ibSessionReducerMain,
@@ -31,7 +31,7 @@ export const {
 } = ibSessionFeature
 
 
-
+/** @deprecated Migration scripts toward Angular core APIs are planned no earlier than v22. */
 export const ibLoaderFeature = createFeature({
   name: 'ibHttpLoaderState',
   reducer: ibLoaderReducerMain,
@@ -42,7 +42,7 @@ export const {
   ibSelectIsHttpLoading,
   ibSelectIsHttpUrlLoading
 } = ibLoaderFeature
-
+/** @deprecated Migration scripts toward Angular core APIs are planned no earlier than v22. */
 export const ibHttpReducers: ActionReducerMap<IHttpStore> = {
   session: ibSessionFeature.reducer,
   loader: ibLoaderFeature.reducer,

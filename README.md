@@ -1,1 +1,1 @@
-For usage information, refer  to the [documentation](https://ui-docs.inobeta.net/current/?path=/docs/getting-started--docs)
+For usage information, refer to the [documentation](https://ui-docs.inobeta.net/current/?path=/docs/getting-started--docs)

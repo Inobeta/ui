@@ -1,91 +1,73 @@
 [
   {
     "label": "examples.ibMainMenu.kaiTable",
-    "icon": {"label": "table_rows", "type": "two-tone"},
+    "icon": {
+      "label": "table_rows",
+      "type": "two-tone"
+    },
     "link": "/home/kai-table",
     "paths": [
       {
         "label": "examples.ibMainMenu.kaiTableSimple",
-        "link":  "/home/kai-table/simple"
+        "link": "/home/kai-table/simple"
+      },
+      {
+        "label": "examples.ibMainMenu.kaiTableParentHeight",
+        "link": "/home/kai-table/parent-height"
       },
       {
         "label": "examples.ibMainMenu.kaiTableContextAction",
-        "link":  "/home/kai-table/actions"
+        "link": "/home/kai-table/actions"
       },
       {
         "label": "examples.ibMainMenu.kaiTableFull",
-        "link":  "/home/kai-table/full"
+        "link": "/home/kai-table/full"
       },
       {
         "label": "examples.ibMainMenu.kaiTableApi",
-        "link":  "/home/kai-table/api"
+        "link": "/home/kai-table/api"
+      },
+      {
+        "label": "examples.ibMainMenu.kaiTableRouting",
+        "link": "/home/kai-table/with-routing"
+      },
+      {
+        "label": "examples.ibMainMenu.kaiTableDatasource",
+        "link": "/home/kai-table/datasource"
+      },
+      {
+        "label": "examples.ibMainMenu.kaiTableSticky",
+        "link": "/home/kai-table/sticky"
+      },
+      {
+        "label": "examples.ibMainMenu.kaiTableStickyParent",
+        "link": "/home/kai-table/sticky-parent"
+      },
+      {
+        "label": "examples.ibMainMenu.kaiTableCustomSortFilter",
+        "link": "/home/kai-table/custom-sort-filter"
+      },
+      {
+        "label": "examples.ibMainMenu.kaiTableCustomAggregate",
+        "link": "/home/kai-table/custom-aggregate"
+      },
+      {
+        "label": "examples.ibMainMenu.kaiTableColumnOptions",
+        "link": "/home/kai-table/column-options"
       }
-    ]
-  },
-  {
-    "label": "examples.ibMainMenu.dynamicFormsMain",
-    "icon": {"label": "view_list", "type": "two-tone"},
-    "link": "/home/forms",
-    "paths": [
+      ,
       {
-        "label": "examples.ibMainMenu.dynamicFormsDynamicForms",
-        "link": "/home/forms/api"
-      },
-      {
-        "label": "examples.ibMainMenu.basicForm",
-        "link": "/home/forms/basic"
-      },
-      {
-        "label": "examples.ibMainMenu.formArray",
-        "link": "/home/forms/array"
-      },
-      {
-        "label": "examples.ibMainMenu.formValue",
-        "link": "/home/forms/value"
-      },
-      {
-        "label": "examples.ibMainMenu.formGrid",
-        "link": "/home/forms/grid"
-      }
-    ]
-  },
-  {
-    "label": "examples.ibMainMenu.httpMain",
-    "icon": {"label": "http", "type": "two-tone"},
-    "link": "/home/http",
-    "paths": [
-      {
-        "label": "examples.ibMainMenu.httpBase",
-        "link": "/home/http/base"
-      },
-      {
-        "label": "examples.ibMainMenu.httpAuth",
-        "link": "/home/http/auth"
-      },
-      {
-        "label": "examples.ibMainMenu.httpProtected",
-        "link": "/home/http/protected-admin"
-      }
-    ]
-  },
-  {
-    "label": "examples.ibMainMenu.reduxMain",
-    "icon": {"label": "archive", "type": "two-tone"},
-    "link": "/home/redux/base",
-    "paths": [
-      {
-        "label": "examples.ibMainMenu.reduxRedux",
-        "link": "/home/redux/base"
-      },
-      {
-        "label": "Lazy loaded hydration",
-        "link": "/home/redux/lazy"
+        "label": "examples.ibMainMenu.kaiTableMobileEmpty",
+        "link": "/home/kai-table/mobile-empty"
       }
     ]
   },
   {
     "label": "examples.ibMainMenu.dialogMain",
-    "icon": {"label": "announcement", "type": "two-tone"},
+    "icon": {
+      "label": "announcement",
+      "type": "two-tone"
+    },
     "link": "/home/dialog",
     "paths": [
       {
@@ -96,7 +78,10 @@
   },
   {
     "label": "examples.ibMainMenu.toastMain",
-    "icon": {"label": "breakfast_dining", "type": "two-tone"},
+    "icon": {
+      "label": "breakfast_dining",
+      "type": "two-tone"
+    },
     "link": "/home/toast",
     "paths": [
       {

@@ -8,6 +8,7 @@ import { IbMainMenuDataSet } from '../../models/main-menu-data-set.model';
     styleUrls: ['./main-menu-expanded.component.css'],
     standalone: false
 })
+/** @deprecated this component will be removed in v21 */
 export class IbMainMenuExpandedComponent {
   @Input() navDataSet: IbMainMenuDataSet;
   @Output() actionDo: EventEmitter<any> = new EventEmitter<any>();

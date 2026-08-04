@@ -6,7 +6,7 @@ import * as TableStories from "./table.stories";
 
 # Table
 
-The `ib-kai-table` provides high customization capabilities and out-of-the-box compatibility with other components such as `ib-filter` for filtering, `ib-table-view-group` to manage user-defined views, and much more.
+The `ib-kai-table` provides high customization capabilities and compatibility with other optional components such as `ib-filter` for filtering, `ib-table-view-group` (requires the separate `IbViewModule`) to manage user-defined views, and much more.
 
 ## Getting started
 
@@ -15,7 +15,7 @@ First, add the `ib-kai-table` component to your template and pass in data.
 You can provide data to the table using a data array.
 
 ```html
-<ib-kai-table [data]="data"> ... </ib-kai-table>
+<ib-kai-table tableName="myTable" [data]="data"> ... </ib-kai-table>
 ```
 
 ```typescript
@@ -25,6 +25,58 @@ You can provide data to the table using a data array.
 export class SimpleKaiTableExample {
   data = [{ column1: "a value", column2: "another value" }];
 }
+```
+
+### Table identity and data sources
+
+`tableName` is required. Use a distinct value for each table on a page because it
+keys NgRx state, URL state, views, selection events, and exported files.
+
+For client-side data, `[data]` is shorthand for an `IbTableLocalDataSource` managed
+by the table. You can also construct the source yourself when you need its typed
+API (`setInput`, `filteredData`, `aggregatedData`, or custom sorting/filtering).
+
+```typescript
+import { IbTableLocalDataSource } from "@inobeta/ui";
+
+dataSource = new IbTableLocalDataSource(this.data);
+```
+
+`[data]` and `[dataSource]` are mutually exclusive. Use `[data]` for local rows or
+`[dataSource]` for an `IbTableLocalDataSource` / `IbTableRemoteDataSource`, never both.
+
+### Initial state precedence
+
+At initialization, each state field is resolved independently using this precedence
+(highest priority first):
+
+| Priority | Source |
+| --- | --- |
+| 1 | Explicit URL field |
+| 2 | URL view snapshot (resolved from views provider using the URL `view` param) |
+| 3 | Initial view snapshot (resolved from views provider using `tableDef.initialView`) |
+| 4 | `tableDef` `initial*` field |
+| 5 | Technical default (`sort: null`, `filters: null`, `selectedView: null`, page `0`, page size `20`) |
+
+An **absent** field does not override a lower layer. An explicit `null` clears the
+field: for example, `initialFilters: null` means no filters, and a URL payload with
+`filters: null` clears filters even when a view or `tableDef` defines them. A URL
+payload with `view: null` suppresses the URL view snapshot layer and the initial
+view snapshot layer, letting lower `initial*` fields emerge.
+
+`selectedView` is `null` when no view is selected or when the implicit all-data
+view is active. A projected views host is required to resolve and apply named-view
+snapshots. Views are optional; the table does not require `IbViewModule` or an
+`IbTableViewsHost`.
+
+```typescript
+tableDef: IbTableDef = {
+  initialSort: { active: "name", direction: "asc" },
+  initialFilters: null,
+  initialView: null,
+  initialPageIndex: 0,
+  initialPageSize: 20,
+};
 ```
 
 Next, write your table's column templates.
@@ -62,7 +114,7 @@ export class SimpleKaiTableExample {
 ```
 
 ```html
-<ib-kai-table [data]="data" [displayedColumns]="displayedColumns">
+<ib-kai-table tableName="myTable" [data]="data" [displayedColumns]="displayedColumns">
   <ib-text-column name="name" />
   <ib-text-column name="category" />
 </ib-kai-table>
@@ -75,7 +127,7 @@ export class SimpleKaiTableExample {
 Columns are defined by adding a column component as slots within `ib-kai-table`
 
 ```html
-<ib-kai-table [data]="data" [displayedColumns]="displayedColumns">
+<ib-kai-table tableName="myTable" [data]="data" [displayedColumns]="displayedColumns">
   <ib-text-column name="name" />
   <ib-text-column name="surname" />
 </ib-kai-table>
@@ -86,7 +138,7 @@ Columns are defined by adding a column component as slots within `ib-kai-table`
 To change the label shown in the header, use `headerText`.
 
 ```html
-<ib-kai-table [data]="data" [displayedColumns]="displayedColumns">
+<ib-kai-table tableName="myTable" [data]="data" [displayedColumns]="displayedColumns">
   <ib-text-column [headerText]="'user.name' | translate" name="name" />
   <ib-text-column [headerText]="'user.surname' | translate" name="surname" />
 </ib-kai-table>
@@ -139,14 +191,14 @@ If custom logic is needed instead, please follow [how to build a column](#build-
 `ib-action-column` is a helper directive to define a column that will be added at the end of a table. It is recommended to use a container element (like `section` or `div`) to avoid layout issues.
 
 ```html
-<ib-kai-table [displayedColumns]="['name', 'fruit', 'stock']" [data]="data">
+<ib-kai-table tableName="myTable" [displayedColumns]="['name', 'fruit', 'stock']" [data]="data">
   <!-- ... -->
   <ib-column ib-action-column>
     <section *ibCellDef="let element">
-      <button mat-icon-button (click)="handleShowReport(element)">
+      <button matMiniFab (click)="handleShowReport(element)">
         <mat-icon>chevron_right</mat-icon>
       </button>
-      <button mat-icon-button [matMenuTriggerFor]="menu">
+      <button matMiniFab [matMenuTriggerFor]="menu">
         <mat-icon>more_vert</mat-icon>
       </button>
       <mat-menu #menu="matMenu">
@@ -222,8 +274,13 @@ You can fetch and transform data within a nested object by overriding the `dataA
   ],
 })
 export class IbTimestampColumn<T> extends IbColumn<T> {
-  // Get seconds as milliseconds
-  dataAccessor = (data: T, name: string): any => data[name].seconds * 1000;
+  constructor() {
+    super();
+    // Get seconds as milliseconds through the inherited model signal.
+    this.dataAccessor.set((data: T, name: string) =>
+      (data as Record<string, { seconds: number }>)[name].seconds * 1000
+    );
+  }
 }
 ```
 
@@ -237,28 +294,28 @@ It will be used as a getter function in your template.
   matSort: "Dummy" instance of `matSort`
   sticky & stickyEnd: Whether the column should be sticky positioned
 -->
-<ng-container matColumnDef matSort [sticky]="sticky" [stickyEnd]="stickyEnd">
+<ng-container matColumnDef matSort [sticky]="stickyInput()" [stickyEnd]="stickyEndInput()">
   <!-- ibSortHeaderFor: Replaces the temporary \`matSort\` instance with the one declared in the table component -->
   <th
     class="ib-table__header-cell"
     mat-header-cell
     *matHeaderCellDef
-    [ibSortHeaderFor]="matSort"
+    [ibSortHeaderFor]="matSort()"
     mat-sort-header
-    [disabled]="!sort"
+    [disabled]="!sortInput()"
   >
-    {{ headerText }}
+    {{ headerText() }}
   </th>
   <td
     mat-cell
     *matCellDef="let data"
-    [matTooltip]="dataAccessor(data, name) + ' ms'"
+    [matTooltip]="dataAccessor()(data, name()) + ' ms'"
   >
     <!-- Here the dataAccessor function is called within the cell's template and passed down a date pipe -->
-    {{ dataAccessor(data, name) | date: "MMM d, YYYY hh:mm" }}
+  {{ dataAccessor()(data, name()) | date: "MMM d, YYYY hh:mm" }}
   </td>
   <td mat-footer-cell *matFooterCellDef style="max-width: fit-content">
-    <ib-aggregate *ngIf="aggregate"></ib-aggregate>
+    <ib-aggregate *ngIf="aggregateInput()"></ib-aggregate>
   </td>
 </ng-container>
 ```
@@ -277,10 +334,10 @@ By default, sorting is disabled in any column. To enable sorting, use `sort` in 
 
 #### Set initial sort
 
-Through the `initialSort` property of `IbTableDef` a sort direction can be activated during the first render of the table. The property `active` corresponds to the `name` of a column, and `direction` can only be either `asc` or `desc`.
+Through the `initialSort` property of `IbTableDef` a sort direction can be activated during the first render of the table. The property `active` corresponds to the `name` of a column, and `direction` can only be either `asc` or `desc`. The other `initial*` fields are `initialFilters`, `initialView`, `initialPageIndex`, `initialPageSize`, and `initialAggregatedColumns`; absent and `null` values follow the precedence rules above.
 
 ```html
-<ib-kai-table ... [tableDef]="tableDef">
+<ib-kai-table tableName="myTable" ... [tableDef]="tableDef">
   <!-- ... -->
 </ib-kai-table>
 ```
@@ -310,17 +367,22 @@ This behaviour can be overriden with the `sortingDataAccessor` input, available 
 />
 ```
 
-For custom columns, you can override the getter function within you component's class.
+For custom columns, configure the inherited model signals in the constructor.
 
 ```typescript
 @Component({
   /** ... */
 })
 export class IbCustomColumn<T> extends IbColumn<T> {
-  dataAccessor = (data: T, name: string): any => data[name].somethingNested;
-
-  sortingDataAccessor = (data: T, name: string): any =>
-    data[name].somethingElse;
+  constructor() {
+    super();
+    this.dataAccessor.set((data, name) =>
+      (data as Record<string, { somethingNested: string }>)[name].somethingNested,
+    );
+    this.sortingDataAccessor.set((data, name) =>
+      (data as Record<string, { somethingElse: string }>)[name].somethingElse,
+    );
+  }
 }
 ```
 
@@ -341,7 +403,7 @@ export class TableWithFiltersComponent {}
 Then, add the necessary filters withing your table. Each filter requires a `name` that must match a column defined with the same name.
 
 ```html
-<ib-kai-table
+<ib-kai-table tableName="myTable"
   [displayedColumns]="['name', 'fruit', 'quantity', 'purchased_at']"
   [data]="data"
 >
@@ -386,16 +448,22 @@ This behaviour can be overriden with the `filterDataAccessor` input, available f
 <ib-date-column name="firstName" [filterDataAccessor]="filterDataAccessor" />
 ```
 
-For custom columns, you can override the getter function within you component's class.
+For custom columns, configure the inherited model signals in the constructor.
 
 ```typescript
 @Component({
   /** ... */
 })
 export class IbCustomColumn<T> extends IbColumn<T> {
-  dataAccessor = (data: T, name: string): any => data[name].somethingNested;
-
-  filterDataAccessor = (data: T, name: string): any => data[name].somethingElse;
+  constructor() {
+    super();
+    this.dataAccessor.set((data, name) =>
+      (data as Record<string, { somethingNested: string }>)[name].somethingNested,
+    );
+    this.filterDataAccessor.set((data, name) =>
+      (data as Record<string, { somethingElse: string }>)[name].somethingElse,
+    );
+  }
 }
 ```
 
@@ -436,10 +504,16 @@ export class SelectionColumnExample {
 
 ## Pagination
 
-Through the `paginator` property of `IbTableDef` it is possible to change the appearance of the paginator, for example with `hide` set to `true` the paginator will disappear, or with `showFirstLastButtons` set to `false` the jump to first and last page buttons will disappear.
+Use `initialPageSize` to initialize the table's canonical page-size state. The
+`paginator` property of `IbTableDef` configures the Material paginator: `hide`
+controls its display, `pageSizeOptions` supplies its selectable sizes, and
+`showFirstLastButtons` controls its first/last buttons. Its `pageSize` value is
+passed to the paginator control; it is not the canonical initial-state setting.
+Set `initialPageIndex` when an initial page index is needed; do not use
+`paginator.pageIndex` for canonical state initialization.
 
 ```html
-<ib-kai-table ... [tableDef]="tableDef">
+<ib-kai-table tableName="myTable" ... [tableDef]="tableDef">
   <!-- ... -->
 </ib-kai-table>
 ```
@@ -447,12 +521,13 @@ Through the `paginator` property of `IbTableDef` it is possible to change the ap
 ```typescript
 export class IbKaiTableExamplePage {
   tableDef: IbTableDef = {
+    initialPageSize: 20,
     paginator: {
-      pageSize: 10
-      pageSizeOptions: [5, 10, 25, 100],
+      pageSize: 20,
+      pageSizeOptions: [10, 20, 50, 100],
       hidePageSize: false,
       showFirstLastButtons: true,
-      hide: false
+      hide: false,
     },
   };
 }
@@ -460,32 +535,143 @@ export class IbKaiTableExamplePage {
 
 ## Views
 
-To add views to a table, first import `IbViewModule` alongside `IbKaiTableModule`, `IbTableActionModule`, and `IbFilterModule`.
+View management is an optional feature provided by the decoupled `IbViewModule`. The table works
+without it. Project an `ib-table-view-group` only when users need to save and restore filters, sort,
+page size, and column aggregations.
+
+### Setup
+
+Import `IbViewModule` alongside `IbKaiTableModule` and `IbTableActionModule`. Filters are not
+required. `tableName` is used as the Views storage-group key, so use a distinct value for each table
+that uses Views.
 
 ```typescript
 @Component({
-  imports: [IbKaiTableModule, IbTableActionModule, IbViewModule, IbFilterModule],
+  imports: [IbKaiTableModule, IbTableActionModule, IbViewModule],
   // ...
 })
 export class TableWithViewsComponent {}
 ```
 
-> ⚠️ An `ib-filter` component is required to use `ib-table-view-group`.
-> Also, the `tableName` property must be set in the `ib-kai-table` component as it is used as a reference for the views.
-
-Then add the `ib-table-view-group` component within `ib-kai-table`.
+Add `<ib-table-view-group />` inside `ib-kai-table`:
 
 ```html
 <ib-kai-table tableName="products" [data]="data" [displayedColumns]="displayedColumns">
   <ib-table-view-group />
 
-  <ib-filter>
-    <!-- ... -->
-  </ib-filter>
-
-  <!-- ... --->
+  <!-- optional filters, columns, etc. -->
 </ib-kai-table>
 ```
+
+### What is saved and what is excluded
+
+A view stores exactly four fields:
+
+| Field | Description |
+| --- | --- |
+| `filters` | Raw filter form values (`IbTableFilterState`), or `null` when no filter is applied. |
+| `sort` | Active sort column and direction (`Sort`), or `null` when unsorted. |
+| `pageSize` | Number of rows per page (e.g. `20`). |
+| `aggregatedColumns` | Active column aggregation functions (column name → aggregate key). |
+
+The following are **not** stored in a view:
+
+- `pageIndex` (current page number)
+- Row selection state
+- Active row / child route state
+- Table data (rows)
+- The elaborated `filter` object (only the canonical raw `filters` are persisted)
+
+Applying a view always resets `pageIndex` to `0` (the first page).
+
+### Default view
+
+Every table automatically shows a **Default** tab as the first view. The Default view represents the
+table baseline derived from `tableDef` initial values and technical defaults — it is never persisted
+to storage.
+
+Default view constraints:
+
+- Cannot be saved, renamed, deleted, or reordered.
+- Cannot be dragged (drag-and-drop applies only to named views).
+- Saving the Default opens a **create new view** dialog instead of overwriting it.
+
+### Named views
+
+Named views are user-defined snapshots stored in the browser's `localStorage`. Each table group
+(identified by `tableName`) owns an independent, ordered list of views.
+
+#### Create a new view
+
+Click the **`+`** button next to the Default tab to open the create-view dialog. This flow creates a
+named view from the Default baseline. Saving while the Default view is active creates a named view
+from the current table state instead.
+
+#### Save an existing view
+
+When a named view is active and the table state has changed (dirty), click **Save** to update the
+view's snapshot in place. Saving does not change the current page or re-apply the view.
+
+#### Rename
+
+Use the context menu (`⋮`) on a named view tab and select **Rename**. Names are trimmed before they
+are stored. Renaming does not re-apply the view or change the table URL.
+
+#### Duplicate
+
+Use the context menu on a named view tab and select **Duplicate**. The new view captures the
+**current** table state (not the saved snapshot), gets a fresh ID, and is automatically selected.
+
+#### Delete
+
+Use the context menu on a named view tab and select **Delete**.
+
+- Deleting the **active** view immediately applies the Default view and updates the URL to
+  `selectedView: null`.
+- Deleting an **inactive** view does not alter the current table state.
+
+#### Drag-and-drop reorder
+
+Named view tabs support horizontal drag-and-drop. The persisted order matches the visual order and
+survives page reloads. Default and the `+` button are not draggable.
+
+### Dirty state and unsaved changes
+
+When the table state differs from the saved view snapshot (or from the Default baseline when Default
+is active), the view is marked as **dirty**. Switching to another view while dirty opens a
+**Save / Discard / Cancel** dialog:
+
+| Action | Result |
+| --- | --- |
+| **Save** | Saves changes into the current named view, or creates a new view if Default is active. Then applies the selected view. |
+| **Discard** | Discards unsaved changes and applies the selected view. |
+| **Cancel** | Cancels the view switch and stays on the current view and page. |
+
+If Default is active and the user chooses **Save**, a second dialog prompts for the new view name.
+Cancelling either dialog keeps the current state and view.
+
+### Persistence and URL behavior
+
+Views are persisted in `localStorage` under a dedicated key per table, using the format
+`<prefix>:<tableName>`. The default prefix is `inobeta-ui-views` and can be customised via the
+`IB_VIEWS_STORAGE_KEY` injection token:
+
+```typescript
+providers: [
+  { provide: IB_VIEWS_STORAGE_KEY, useValue: 'my-app-views' },
+]
+```
+
+The selected view ID is stored in the table's canonical URL payload (`sv`). On initial URL resolution
+and URL hydration, the table resolves a named view within its `tableName` group. An unknown or deleted
+view ID is resolved as the Default view.
+
+### Limitations
+
+- View data stored under legacy hydration keys is not migrated into the dedicated Views storage.
+- Cross-tab live synchronisation is **not** supported. Changes made in another browser tab become
+  visible after a page reload.
+- `pageIndex`, row selection, active row, and table content are explicitly **not** saved.
 
 ## Export
 
@@ -549,13 +735,13 @@ To add a set of buttons to a table's toolbar, first import `IbTableActionModule`
 export class TableWithActionsComponent {}
 ```
 
-Then add the `ib-table-action-group` component within `ib-kai-table`, it is recommended to only use `mat-icon-button`s
+Then add the `ib-table-action-group` component within `ib-kai-table`, it is recommended to only use `matMiniFab`s
 in order to maintain a cohesive design.
 
 ```html
-<ib-kai-table [data]="data" [displayedColumns]="displayedColumns">
+<ib-kai-table tableName="myTable" [data]="data" [displayedColumns]="displayedColumns">
   <ib-table-action-group>
-    <button mat-icon-button (click)="refreshData()">
+    <button matMiniFab (click)="refreshData()">
       <mat-icon>refresh</mat-icon>
     </button>
   </ib-table-action-group>
@@ -576,6 +762,118 @@ A `*ibKaiRowGroup` directive is available to display contextual content for each
 
 <Canvas of={TableStories.WithRowGroup} />
 
+## Table Height
+
+The `tableHeight` input controls how the **desktop** table body is sized.
+It accepts a string and defaults to `"parent"` when omitted, empty, or whitespace-only.
+
+Tables that rely on row-count-based sizing can change layout because the default
+mode fills the parent container. See the [migration guide](#migration-guide) for
+adaptation guidance.
+
+<Canvas of={TableStories.ParentHeight} />
+
+### Parent mode
+
+When `tableHeight` is `"parent"` (or omitted), the table uses a column flex layout
+that stretches to fill the height of its parent:
+
+```html
+<div style="height: 500px">
+  <ib-kai-table tableName="myTable" [data]="data" [displayedColumns]="displayedColumns">
+    <!-- columns... -->
+  </ib-kai-table>
+</div>
+```
+
+The content area takes the remaining space after toolbar, filter, and paginator.
+Host and wrapper use `overflow: hidden` — only `.ib-table__content` is scrollable.
+
+### Exact CSS height
+
+Pass any non-empty CSS string (e.g. `400px`, `50vh`, `30rem`) to set an exact
+height for the scrollable content area:
+
+```html
+<ib-kai-table tableName="myTable" [data]="data" [displayedColumns]="displayedColumns"
+  tableHeight="400px">
+  <!-- columns... -->
+</ib-kai-table>
+```
+
+> `tableHeight` sets the exact height of the scroll content, **not** the total
+> component height. Toolbar, filter, and paginator are stacked outside the
+> content area and add to the overall component size.
+
+With a short dataset, the content area keeps the empty space; with a long
+dataset, a single scrollbar appears inside `.ib-table__content`.
+
+<Canvas of={TableStories.ExactHeight} />
+
+### CSS Variable: `--ib-table-min-content-height`
+
+Defines the minimum height of the content area in **parent mode**.
+Default is `400px`.
+
+```css
+:host {
+  --ib-table-min-content-height: 300px;
+}
+```
+
+When the host parent provides less space than the minimum, the content area
+maintains at least this height (toolbar, filter, and paginator add on top).
+
+### What stays outside the content area
+
+In **both** modes, toolbar, filter, and paginator are sibling elements of
+`.ib-table__content` and are never part of the scroll region. In **parent mode**,
+they consume space from the parent and therefore reduce the `.ib-table__content`
+viewport. In **exact mode**, they remain outside the content area and add to the
+component's total height.
+
+### Removed CSS variables
+
+These variables no longer control table height and have been removed:
+
+- `--ib-table-minimum-rows` — removed. Use `--ib-table-min-content-height` or `tableHeight` instead.
+- `--ib-table-content-max-height` — removed. Use `tableHeight` with an exact CSS value instead.
+
+### Mobile
+
+The `tableHeight` input does not affect the mobile component.
+Mobile layout and workflow remain unchanged.
+
+### Migration Guide
+
+If earlier styling depended on row-count-based sizing, choose an explicit height
+mode and remove obsolete height-variable overrides. The current desktop renderer
+does not use row-count-based sizing.
+
+#### 1. Direct template consumers
+
+- **Choose a mode**: decide whether the table should fill its parent
+  (`tableHeight="parent"` or omit the input) or use an exact content height
+  (e.g. `tableHeight="500px"`).
+- **Parent mode**: ensure the table's ancestor has a defined height. Without it,
+  the content area defaults to `--ib-table-min-content-height` (400 px).
+  This can produce a taller component than the old implicit sizing.
+- **Remove old overrides**: delete any custom `--ib-table-minimum-rows` or
+  `--ib-table-content-max-height` values from your stylesheets.
+- **Check for double scroll**: do not wrap `ib-kai-table` in a container with
+  `overflow: auto`. The table already owns its scroll behaviour.
+
+#### 2. Wrapper and adapter components
+
+If you maintain a wrapper component that wraps `ib-kai-table`:
+
+- **Propagate `tableHeight`**: expose an equivalent input on the wrapper and
+  forward it to the underlying table.
+- **Decide a wrapper default**: if the wrapper previously hardcoded sizing,
+  choose either `"parent"` or a fixed CSS value as the new default.
+- **Remove scroll from the wrapper**: ensure the wrapper does not add its own
+  `overflow: auto` — `.ib-table__content` must remain the single scroll owner.
+
 ## Customization
 
 #### Striped rows
@@ -583,7 +881,7 @@ A `*ibKaiRowGroup` directive is available to display contextual content for each
 You can use the `stripedRows` input to apply alternating styles to the rows.
 
 ```html
-<ib-kai-table [data]="data" [displayedColumns]="displayedColumns" stripedRows>
+<ib-kai-table tableName="myTable" [data]="data" [displayedColumns]="displayedColumns" stripedRows>
 ```
 
 Then you may change the text or background color with the variables:
@@ -597,8 +895,11 @@ Then you may change the text or background color with the variables:
 
 ```css
 :host {
-  /** Minimum number of rows to be shown. Defaults to 10 */
-  --ib-table-minimum-rows: 10;
+  /**
+    Minimum height of the content area in parent mode.
+    Defaults to 400px.
+  */
+  --ib-table-min-content-height: 400px;
 
   /** Header text color. Defaults to the darker constrast available for the primary palette */
   --ib-table-header-text-color: black;
@@ -617,17 +918,15 @@ Then you may change the text or background color with the variables:
   /** Background color when hovering rows */
   --ib-table-row-background-color-on-hover: #111;
 
+  /** Background color when a child route is activated */
+  --ib-table-row-background-color-selected: #ABABAB
+
+
+
   /** Outline color for both container and table content */
   --ib-table-outline-color: var(--mat-table-row-item-outline-color);
   /** Whether to show a vertical outline for each column (Es. `1px`) */
   --ib-table-column-outline-width: 0;
-
-  /**
-    Maximum height of the table content.
-    By default it takes row density, header, footer,
-    and `ib-table-minimum-rows` into consideration.
-  */
-  --ib-table-content-max-height: 500px;
 }
 ```
 
@@ -668,34 +967,36 @@ Include the rule within your component hosting `ib-kai-table`
 
 > 🚧 Aggregation, selection, and exporting are not fully supported
 
-Enable server-side interactions with an `IbTableRemoteDataSource` provided to the `dataSource` input.
+Enable server-side interactions with an `IbTableRemoteDataSource` provided to the `dataSource` input. Remote multi-page selection, full export, and global aggregation are not supported; use a local data source when those capabilities are required.
 
 1. Define your data source
 
-Your data source must extend `IbTableRemoteDataSource` in order to be compatible with the table. This is an abstract class, and it needs the `fetchData` method
-to be implemented.
+Your data source must extend `IbTableRemoteDataSource` and implement `fetchData`.
+The request value object contains `sort`, `pageIndex`, `pageSize`, and `filter`.
 
-The method `fetchData` will be called with two parameters whenever some data from the server is needed:
+The method `fetchData` is called whenever data is needed. Requests are cancellable: new sort, page, or filter state cancels the previous request through `switchMap`. Filter requests are debounced by `filterDebounceMs` (500 ms by default).
 
-- `sort` is of type `MatSort`¹, the current sorted column is available in `sort.active` and the order in `sort.direction`².
-- `page` is of type `MatPaginator`³, the requested page index can be accessed with `page.pageIndex`, and the current page size with `page.pageSize`.
+The request fields replace the old Material control parameters:
+
+- `sort` is a `Sort | null` value.
+- `pageIndex` and `pageSize` identify the requested page.
+- `filter` contains the current filter state, or `null` when no filter is applied.
 
 ```typescript
 // product-data-source.ts
-export class ProductDataSource extends IbTableRemoteDataSource<Product> {
+export class ProductDataSource extends IbTableRemoteDataSource<Product, ProductQuery> {
   private http = inject(HttpClient);
 
   fetchData(
-    sort: MatSort,
-    page: MatPaginator
+    request: IbRemoteDataSourceRequest<ProductQuery>
   ): Observable<IbFetchDataResponse<Product>> {
     return this.http
-      .get<ProductReponse>("/products", {
+      .get<{ items: Product[]; total_count: number }>("/products", {
         params: {
-          sort: sort.active,
-          order: sort.direction,
-          page: page.pageIndex,
-          per_page: page.pageSize,
+          sort: request.sort?.active,
+          order: request.sort?.direction,
+          page: request.pageIndex,
+          per_page: request.pageSize,
         },
       })
       .pipe(
@@ -744,21 +1045,17 @@ export class RemoteDataSourceExample {
 ```
 
 ```html
-<ib-kai-table [dataSource]="dataSource" [displayedColumns]="displayedColumns">
+<ib-kai-table tableName="products" [dataSource]="dataSource" [displayedColumns]="displayedColumns">
   <!-- ... --->
 </ib-kai-table>
 ```
-
-¹ [More about MatSort](https://material.angular.io/components/sort/api#MatSort)
-² Both are null as per initial state. Can also be empty strings when undefined, please refer to the documentation.
-³ [More about MatPaginator](https://material.angular.io/components/paginator/api#MatPaginator)
 
 #### Filtering
 
 Considering the following table as an example:
 
 ```html
-<ib-kai-table [dataSource]="dataSource" [displayedColumns]="displayedColumns">
+<ib-kai-table tableName="products" [dataSource]="dataSource" [displayedColumns]="displayedColumns">
   <ib-filter>
     <ib-text-filter name="sku">SKU</ib-text-filter>
     <ib-date-filter name="created">Created</ib-date-filter>
@@ -770,7 +1067,7 @@ Considering the following table as an example:
 </ib-kai-table>
 ```
 
-1. Describe a type from your filters
+1. Describe a type for your filters
 
 For each filter type exists a query object holding the values provided by the user.
 
@@ -787,7 +1084,7 @@ Meaning that the filters above can be represented with the type:
 
 ```typescript
 type ProductQuery = {
-  title: IbTextQuery;
+  sku: IbTextQuery;
   created: IbDateQuery;
   price: IbNumberQuery;
   status: IbTagQuery;
@@ -797,27 +1094,31 @@ type ProductQuery = {
 2. Update your data source
 
 The `IbTableRemoteDataSource` class accepts a second generic type to specify the type for the filter model.
-Also, a third `filter` parameter is provided to the method `fetchData`
+The filter is available as `request.filter` in the method `fetchData`
 
-> The parameters of `filter` may be undefined if left untouched by the user.
+> `request.filter` is `null` when no filter is applied. Map its fields to the
+> request format expected by your API.
 
 ```typescript
 class ProductDataSource extends IbTableRemoteDataSource<Product, ProductQuery> {
   private http = inject(HttpClient);
 
   fetchData(
-    sort: MatSort,
-    page: MatPaginator,
-    filter: ProductQuery
+    request: IbRemoteDataSourceRequest<ProductQuery>
   ): Observable<IbFetchDataResponse<Product>> {
     return this.http
       .get("/products", {
         params: {
-          sort: sort.active,
-          order: sort.direction,
-          page: page.pageIndex,
-          per_page: page.pageSize,
-          // use your filters here
+          sort: request.sort?.active,
+          order: request.sort?.direction,
+          page: request.pageIndex,
+          per_page: request.pageSize,
+          sku: request.filter?.sku.text,
+          createdStart: request.filter?.created.start,
+          createdEnd: request.filter?.created.end,
+          minimumPrice: request.filter?.price.min,
+          maximumPrice: request.filter?.price.max,
+          statuses: request.filter?.status.joined,
         },
       })
       .pipe(
@@ -1035,32 +1336,82 @@ cy.get('[data-cy="ib-filter-update"]').click();
 ```
 
 
-## Url state manager
+## URL state manager
 
-The following feature are always serialized in url bar:
-- current sort
-- applied filters
-- paginator settings (only page size)
-- active view
+The canonical URL writer stores a version 2 payload per table. It contains:
 
-In order to recover previous state, you have to use history.back() call that will preserve url querystring and the table will be reinizialized.
+- raw applied filters;
+- selected view ID;
+- page index and page size;
+- column aggregations; and
+- current sort.
 
-Is it possibile to recover the last table state also by using `ibTableSelectLastQueryString` selector as follow:
+The payload represents the full canonical snapshot, including explicit `null`
+values. Sort, filter, and view changes reset the page index to zero. Legacy v1
+payloads and deprecated compatibility APIs are still decoded or available for
+backward compatibility; new canonical writes use v2.
+
+While a table is mounted, browser back/forward or other query-parameter changes
+hydrate the existing table state from the URL. This updates the table state and
+bound controls; it does not require the table component to be reinitialized.
+
+### Reading table state via canonical selectors
+
+Use the canonical selectors to read full state snapshots or individual fields:
 
 ```typescript
+import {
+  selectIbKaiTableSnapshot,
+  selectTableSort,
+  selectTableFilters,
+  selectTablePageIndex,
+  selectTablePageSize,
+  selectTableSelectedView,
+  selectTableAggregatedColumns,
+} from "@inobeta/ui";
 
-tableState = this.store.selectSignal(ibTableSelectLastQueryString('YOUR_TABLE_NAME'))
+// Full snapshot (signal)
+snapshot = this.store.selectSignal(selectIbKaiTableSnapshot("YOUR_TABLE_NAME"));
 
-///......
+// Individual field signals
+sort = this.store.selectSignal(selectTableSort("YOUR_TABLE_NAME"));
+filters = this.store.selectSignal(selectTableFilters("YOUR_TABLE_NAME"));
+pageIndex = this.store.selectSignal(selectTablePageIndex("YOUR_TABLE_NAME"));
+pageSize = this.store.selectSignal(selectTablePageSize("YOUR_TABLE_NAME"));
+selectedView = this.store.selectSignal(selectTableSelectedView("YOUR_TABLE_NAME"));
+aggregatedColumns = this.store.selectSignal(
+  selectTableAggregatedColumns("YOUR_TABLE_NAME"),
+);
 
+// Returned values are signals — call them to read
+console.log(sort()); // { active: "name", direction: "asc" }
+console.log(pageSize()); // 20
+```
+
+### Legacy selectors (deprecated)
+
+The following selectors are retained for backward compatibility only. Prefer the
+canonical selectors above for new code.
+
+**`ibTableSelectUrlState`** — Maps the canonical record to the legacy `IbKaiTableNamedParams` shape.
+
+**`ibTableSelectLastQueryStringRaw`** — Maps the legacy params to the old `IbTableQsParams` flat object.
+
+**`ibTableSelectLastQueryString`** — Returns a JSON string for URL recovery. If you must recover a previous URL query string, use:
+
+```typescript
+import { ibTableSelectLastQueryString } from "@inobeta/ui";
+
+tableState = this.store.selectSignal(
+  ibTableSelectLastQueryString("YOUR_TABLE_NAME"),
+);
 
 this.router.navigate([your path], {
   queryParams: {
-    'YOUR_TABLE_NAME': this.tableState()
+    'YOUR_TABLE_NAME': this.tableState(),
   },
-  queryParamsHandling: 'merge'
-})
-
+  queryParamsHandling: "merge",
+});
 ```
 
 Multiple tables on the same page are supported as long as different table names are used.

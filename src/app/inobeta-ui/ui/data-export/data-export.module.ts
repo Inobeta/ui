@@ -31,6 +31,7 @@ import { IbDataTransformer } from "./transformer";
     MatFormFieldModule,
     ReactiveFormsModule,
     IbTableActionModule,
+    IbTableDataExportAction,
     TranslateModule.forChild(),
   ],
   exports: [
@@ -39,7 +40,6 @@ import { IbDataTransformer } from "./transformer";
     IbDataTransformer,
   ],
   declarations: [
-    IbTableDataExportAction,
     IbTableDataExportDialog,
     IbDataTransformer,
   ],
@@ -50,4 +50,4 @@ import { IbDataTransformer } from "./transformer";
     IbCSVExportProvider,
   ],
 })
-export class IbDataExportModule {}
+export class IbDataExportModule { }

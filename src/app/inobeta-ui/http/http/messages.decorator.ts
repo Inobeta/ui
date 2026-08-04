@@ -19,16 +19,17 @@ import { IbHttpModule } from '../http.module';
  * }
  * ```
  */
+/** @deprecated Migration scripts toward Angular core APIs are planned no earlier than v22. */
 export function ibCrudToast(
   enableBackCall = false,
   successMessage = 'shared.ibCrudToast.success',
   timeoutOnSave = 500,
-  ): MethodDecorator {
-  return function(target, key: string, descriptor: any) {
+): MethodDecorator {
+  return function (target, key: string, descriptor: any) {
 
     const originalMethod = descriptor.value;
 
-    descriptor.value =  function(...args: any[]) {
+    descriptor.value = function (...args: any[]) {
 
       const result = originalMethod.apply(this, args);
       const toast = IbHttpModule.injector.get<IbToastNotification>(IbToastNotification);

@@ -14,7 +14,7 @@ import { IbBreadcrumbComponent } from "./breadcrumb.component";
 import { IbBreadcrumbModule } from "./breadcrumb.module";
 
 @Component({
-  selector: "app-breadbrumb",
+  selector: "app-breadcrumb",
   standalone: true,
   imports: [
     NgIf,
@@ -95,7 +95,7 @@ import { IbBreadcrumbModule } from "./breadcrumb.module";
 class CustomBreadcrumb extends IbBreadcrumbComponent {}
 
 const meta: Meta<CustomBreadcrumb> = {
-  title: "Components/Breadcrumbs",
+  title: "Components/Breadcrumbs (**Deprecated**)",
   component: CustomBreadcrumb,
   tags: ["autodocs"],
   decorators: [

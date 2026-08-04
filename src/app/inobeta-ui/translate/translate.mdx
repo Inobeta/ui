@@ -7,22 +7,23 @@ import { Meta } from "@storybook/blocks";
 ## Usage
 
 ```typescript
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, provideHttpClient } from "@angular/common/http";
+import { ApplicationConfig } from "@angular/core";
 import { IbTranslateModuleLoader, IB_TRANSLATE_ASSETS_PATH } from "@inobeta/ui";
 import { TranslateLoader, provideTranslateService } from "@ngx-translate/core";
 
 export const appConfig: ApplicationConfig = {
-  providers: [{
+  providers: [
+    provideHttpClient(),
     // this injection token is optional. Default value: './assets/i18n/'
     { provide: IB_TRANSLATE_ASSETS_PATH, useValue: '/public/shared/i18n/' },
     provideTranslateService({
-        loader: {
-          provide: TranslateLoader,
-          useExisting: IbTranslateModuleLoader,
-          deps: [HttpClient],
-        },
+      loader: {
+        provide: TranslateLoader,
+        useExisting: IbTranslateModuleLoader,
+        deps: [HttpClient],
+      },
     }),
-  }]
-  /** ... */
-}
+  ],
+};
 ```

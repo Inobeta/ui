@@ -1,15 +1,20 @@
-<button *ngIf="!selected" mat-button (click)="ibChangeView.emit(view)">
-  {{ view.name }}
-</button>
+@if (!selected) {
+  <button mat-button (click)="ibChangeView.emit(view)">
+    <mat-icon cdkDragHandle>drag_indicator</mat-icon>
+    {{ view.name }}
+  </button>
+}
 
-<button
-  *ngIf="selected"
-  mat-flat-button
-  [matMenuTriggerFor]="menu"
->
-  {{ view.name }} {{ dirty ? "*" : "" }}
-  <mat-icon iconPositionEnd>keyboard_arrow_down</mat-icon>
-</button>
+@if (selected) {
+  <button
+    mat-flat-button
+    [matMenuTriggerFor]="menu"
+    >
+    <mat-icon cdkDragHandle>drag_indicator</mat-icon>
+    {{ view.name }} {{ dirty ? "*" : "" }}
+    <mat-icon iconPositionEnd>keyboard_arrow_down</mat-icon>
+  </button>
+}
 
 <mat-menu #menu="matMenu">
   <button mat-menu-item (click)="ibRenameView.emit(view)">

@@ -63,7 +63,6 @@ export function ibMatDatepickerTranslate() {
   return new IbMatDatepickerI18n().getDateFormats();
 }
 
-/** @deprecated */
 @NgModule({
   imports: [
     CommonModule,
@@ -98,4 +97,5 @@ export function ibMatDatepickerTranslate() {
     { provide: MAT_DATE_FORMATS, useFactory: ibMatDatepickerTranslate },
   ],
 })
-export class IbMaterialFormModule {}
+/** @deprecated Migration scripts toward Formly are planned no earlier than v22. */
+export class IbMaterialFormModule { }

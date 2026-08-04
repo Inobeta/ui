@@ -1,4 +1,4 @@
-import { Directive, Input, ViewChild, inject } from "@angular/core";
+import { Directive, Input, TemplateRef, ViewChild, inject } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
@@ -25,8 +25,8 @@ export interface IFilterBase {
 }
 
 @Directive({
-    selector: "ib-filter-base",
-    standalone: false
+  selector: "ib-filter-base",
+  standalone: false
 })
 export class IbFilterBase implements IFilterBase {
   @ViewChild(IbFilterButton) button: IbFilterButton;
@@ -34,6 +34,13 @@ export class IbFilterBase implements IFilterBase {
   @Input() name: string;
 
   searchCriteria: FormGroup | FormControl;
+
+  @ViewChild("renderer", { static: false })
+  mobileRendererTemplate?: TemplateRef<unknown>;
+
+  getMobileTemplate(): TemplateRef<unknown> | undefined {
+    return this.mobileRendererTemplate;
+  }
 
   get rawValue() {
     return this.filter?.selectedCriteria[this.name];
@@ -95,7 +102,7 @@ export class IbFilterBase implements IFilterBase {
     this.closeMenu();
   }
 
-  initializeFromColumn(data: any[]): void {}
+  initializeFromColumn(data: any[]): void { }
 
   clear() {
     this.searchCriteria.markAsPristine();
@@ -106,5 +113,28 @@ export class IbFilterBase implements IFilterBase {
 
   closeMenu() {
     this.button?.closeMenu();
+  }
+
+  mobileLabel(): string {
+    return '';
+  }
+
+  mobileSummary(): string {
+    const raw = this.rawValue;
+
+    if (raw == null) {
+      return "";
+    }
+
+    if (typeof raw !== "object") {
+      return String(raw);
+    }
+
+    const values = Object.values(raw).filter(v => v != null && v !== "");
+    return values.length ? values.map(v => String(v)).join(" • ") : "";
+  }
+
+  mobileHasValue(): boolean {
+    return !!this.mobileSummary();
   }
 }

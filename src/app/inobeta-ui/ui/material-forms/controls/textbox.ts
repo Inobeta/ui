@@ -8,59 +8,65 @@ import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, 
   <mat-form-field appearance="fill" style="width: 100%;" [formGroup]="data.form">
     <mat-label>{{data.base.label | translate}}</mat-label>
     <!--
-      https://github.com/angular/angular/issues/13243
-      type is not dynamic (see angular issue)
+    https://github.com/angular/angular/issues/13243
+    type is not dynamic (see angular issue)
     -->
-    <input
-      matInput
-      *ngIf="data.base.type === 'number'"
-      [formControlName]="data.base.key"
-      [min]="minValidator"
-      [max]="maxValidator"
-      type="number"
-      (keyup)="data.base.change(data.self)"
-      (input)="data.base.change(data.self)"
-    />
-    <input
-      matInput
-      *ngIf="data.base.type === 'text'"
-      [formControlName]="data.base.key"
-      [maxlength]="maxLengthValidator"
-      type="text"
-      (keyup)="data.base.change(data.self)"
-      (change)="data.base.change(data.self)"
-    />
-    <input
-      matInput
-      *ngIf="data.base.type === 'email'"
-      [formControlName]="data.base.key"
-      type="email"
-      (keyup)="data.base.change(data.self)"
-      (change)="data.base.change(data.self)"
-    />
-    <input
-      matInput
-      *ngIf="data.base.type === 'password'"
-      [formControlName]="data.base.key"
-      type="password"
-      (keyup)="data.base.change(data.self)"
-      (change)="data.base.change(data.self)"
-    />
-    <input
-      matInput
-      *ngIf="data.base.type === 'date'"
-      [formControlName]="data.base.key"
-      type="date"
-      (keyup)="data.base.change(data.self)"
-      (change)="data.base.change(data.self)"
-    />
-    <mat-icon
-      matSuffix
-      *ngIf="hintMessage"
-      [matTooltip]="hintMessage | translate"
-    >
+    @if (data.base.type === 'number') {
+      <input
+        matInput
+        [formControlName]="data.base.key"
+        [min]="minValidator"
+        [max]="maxValidator"
+        type="number"
+        (keyup)="data.base.change(data.self)"
+        (input)="data.base.change(data.self)"
+        />
+    }
+    @if (data.base.type === 'text') {
+      <input
+        matInput
+        [formControlName]="data.base.key"
+        [maxlength]="maxLengthValidator"
+        type="text"
+        (keyup)="data.base.change(data.self)"
+        (change)="data.base.change(data.self)"
+        />
+    }
+    @if (data.base.type === 'email') {
+      <input
+        matInput
+        [formControlName]="data.base.key"
+        type="email"
+        (keyup)="data.base.change(data.self)"
+        (change)="data.base.change(data.self)"
+        />
+    }
+    @if (data.base.type === 'password') {
+      <input
+        matInput
+        [formControlName]="data.base.key"
+        type="password"
+        (keyup)="data.base.change(data.self)"
+        (change)="data.base.change(data.self)"
+        />
+    }
+    @if (data.base.type === 'date') {
+      <input
+        matInput
+        [formControlName]="data.base.key"
+        type="date"
+        (keyup)="data.base.change(data.self)"
+        (change)="data.base.change(data.self)"
+        />
+    }
+    @if (hintMessage) {
+      <mat-icon
+        matSuffix
+        [matTooltip]="hintMessage | translate"
+        >
         help_outline
-    </mat-icon>
+      </mat-icon>
+    }
     <mat-error>
       <ng-container *ngTemplateOutlet="data.formControlErrors;context: this"></ng-container>
     </mat-error>

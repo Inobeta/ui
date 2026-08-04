@@ -1,0 +1,162 @@
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.single-value {
+  width: 100%;
+  height: 100%;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.single-value--header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.single-value--stacked {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.5rem;
+}
+
+.single-value--inline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.single-value--side-icon {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.single-value__header-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.single-value__header-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.single-value__inline-start {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.single-value__side-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.single-value__icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.single-value__icon {
+  flex: 0 0 auto;
+}
+
+.single-value__icon--header {
+  width: 48px;
+  height: 48px;
+  font-size: 48px;
+}
+
+.single-value__icon--stacked {
+  width: 62px;
+  height: 62px;
+  font-size: 62px;
+}
+
+.single-value__icon--inline {
+  width: 32px;
+  height: 32px;
+  font-size: 32px;
+}
+
+.single-value__title--xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
+.single-value__title--md {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+.single-value__additional-info {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.single-value__additional-info--md {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+.single-value__additional-icon {
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
+}
+
+.single-value__value-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.single-value__value-row--center {
+  justify-content: center;
+  align-items: center;
+}
+
+.single-value__value-row--end {
+  align-items: flex-end;
+}
+
+.single-value__value {
+  font-weight: 700;
+}
+
+.single-value__value--5xl {
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.single-value__value--3xl {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+
+.single-value__value--2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+.single-value__unit--xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
+.single-value__unit--lg {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}

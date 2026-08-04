@@ -2,17 +2,32 @@
   [selected]="activeView?.id === defaultView.id"
   (ibChangeView)="ibChangeView.emit(defaultView)"
 ></ib-default-table-view>
-<ib-table-view
-  *ngFor="let view of views"
-  [view]="view"
-  [selected]="activeView?.id === view.id"
-  [dirty]="dirty"
-  (ibChangeView)="ibChangeView.emit($event)"
-  (ibRemoveView)="ibRemoveView.emit($event)"
-  (ibRenameView)="ibRenameView.emit($event)"
-  (ibDuplicateView)="ibDuplicateView.emit($event)"
-></ib-table-view>
 
-<button mat-icon-button (click)="ibAddView.emit()">
+<div
+  cdkDropList
+  cdkDropListOrientation="horizontal"
+  [cdkDropListData]="namedViews"
+  (cdkDropListDropped)="onDrop($event)"
+  class="ib-view-list__dropzone"
+>
+  @for (view of namedViews; track view.id) {
+    <ib-table-view
+      cdkDrag
+      [view]="view"
+      [selected]="activeView?.id === view.id"
+      [dirty]="dirty"
+      (ibChangeView)="ibChangeView.emit($event)"
+      (ibRemoveView)="ibRemoveView.emit($event)"
+      (ibRenameView)="ibRenameView.emit($event)"
+      (ibDuplicateView)="ibDuplicateView.emit($event)"
+    ></ib-table-view>
+  }
+</div>
+
+<button
+  mat-icon-button
+  (click)="ibAddView.emit()"
+  class="ib-view-list__add"
+>
   <mat-icon>add</mat-icon>
 </button>

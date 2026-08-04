@@ -5,10 +5,10 @@ import { none } from "../../filters";
 import { IbFilterBase } from "../base/filter-base";
 
 @Component({
-    selector: "ib-text-filter",
-    templateUrl: "filter-text.component.html",
-    providers: [{ provide: IbFilterBase, useExisting: IbTextFilter }],
-    standalone: false
+  selector: "ib-text-filter",
+  templateUrl: "filter-text.component.html",
+  providers: [{ provide: IbFilterBase, useExisting: IbTextFilter }],
+  standalone: false
 })
 export class IbTextFilter extends IbFilterBase {
   searchCriteria = new FormGroup({
@@ -95,5 +95,13 @@ export class IbTextFilter extends IbFilterBase {
     }
 
     return { regex, like, condition, text };
+  }
+
+  override mobileSummary(): string {
+    if (!this.displayValue) {
+      return "";
+    }
+
+    return `${this.displayCondition ?? ""} ${this.displayValue}`.trim();
   }
 }

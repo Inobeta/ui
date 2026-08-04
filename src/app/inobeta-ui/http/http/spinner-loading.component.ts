@@ -1,11 +1,11 @@
-import {Component, ViewEncapsulation, inject} from '@angular/core';
+import { Component, ViewEncapsulation, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ibSelectIsHttpLoading } from '../store/index';
 import { Observable } from 'rxjs';
 
 @Component({
-    selector: 'ib-spinner-loading',
-    styles: [`
+  selector: 'ib-spinner-loading',
+  styles: [`
     .spinner {
       width: 40px;
       height: 40px;
@@ -61,17 +61,19 @@ import { Observable } from 'rxjs';
       background-color: rgba(0, 0, 0, 0.4);
     }
   `],
-    template: `
-    <div *ngIf="showLoading$ | async" class="modal-spinner">
-      <div class="spinner">
-        <div class="double-bounce1"></div>
-        <div class="double-bounce2"></div>
+  template: `
+    @if (showLoading$ | async) {
+      <div class="modal-spinner">
+        <div class="spinner">
+          <div class="double-bounce1"></div>
+          <div class="double-bounce2"></div>
+        </div>
       </div>
-    </div>`,
-    encapsulation: ViewEncapsulation.None,
-    standalone: false
+    }`,
+  encapsulation: ViewEncapsulation.None,
+  standalone: false
 })
-
+/** @deprecated Migration scripts toward Angular core APIs are planned no earlier than v22. */
 export class IbSpinnerLoadingComponent {
   store = inject(Store);
   showLoading$: Observable<boolean> = this.store.select(ibSelectIsHttpLoading)

@@ -1,7 +1,11 @@
-<button *ngIf="!selected" mat-button (click)="ibChangeView.emit()">
-  {{ "shared.ibTableView.defaultView" | translate }}
-</button>
+@if (!selected) {
+  <button mat-button (click)="ibChangeView.emit()">
+    {{ "shared.ibTableView.defaultView" | translate }}
+  </button>
+}
 
-<button *ngIf="selected" mat-flat-button color="primary">
-  {{ "shared.ibTableView.defaultView" | translate }}
-</button>
+@if (selected) {
+  <button mat-flat-button color="primary">
+    {{ "shared.ibTableView.defaultView" | translate }}
+  </button>
+}

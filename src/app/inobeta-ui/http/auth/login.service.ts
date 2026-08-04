@@ -16,6 +16,7 @@ import {
 } from "./session.model";
 
 @Injectable({ providedIn: "root" })
+/** @deprecated Migration scripts toward Angular core APIs are planned no earlier than v22. */
 export class IbLoginService<T extends IbAPITokens | IbAPITokens> {
   constructor(
     private httpClient: HttpClient,
@@ -43,7 +44,7 @@ export class IbLoginService<T extends IbAPITokens | IbAPITokens> {
     /** Property name of the user roles within the JWT claims field */
     @Inject("ibHttpJWTRolesField")
     public ibHttpJWTRolesField
-  ) {}
+  ) { }
 
   /**
    * Attempts a login to the server by contacting the endpoint provided by the token {@link ibHttpAPILoginUrl}
@@ -110,7 +111,7 @@ export class IbLoginService<T extends IbAPITokens | IbAPITokens> {
       map((decodedData) => {
         const userRoles: string[] =
           decodedData?.[this.ibHttpJWTClaimsField]?.[
-            this.ibHttpJWTRolesField
+          this.ibHttpJWTRolesField
           ] ?? [];
         for (let r of roles) {
           if (userRoles.findIndex((ur) => ur === r) >= 0) {

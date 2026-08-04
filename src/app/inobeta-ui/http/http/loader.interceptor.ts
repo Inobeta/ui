@@ -11,6 +11,7 @@ export interface IbHttpRequestDefinition {
 }
 
 @Injectable({ providedIn: "root" })
+/** @deprecated Migration scripts toward Angular core APIs are planned no earlier than v22. */
 export class IbLoaderInterceptor implements HttpInterceptor {
   constructor(
     private store: Store,
@@ -18,7 +19,7 @@ export class IbLoaderInterceptor implements HttpInterceptor {
     public ibHttpEnableInterceptors: boolean,
     @Inject("ibHttpUrlExcludedFromLoader")
     public ibHttpUrlExcludedFromLoader: IbHttpRequestDefinition[]
-  ) {}
+  ) { }
 
   intercept(
     request: HttpRequest<any>,

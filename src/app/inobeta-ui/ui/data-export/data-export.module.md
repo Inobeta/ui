@@ -19,12 +19,20 @@ export class IbExampleModule {}
 
 ```html
 <!-- example.component.html --->
-<ib-kai-table tableName="fullExample" [columns]="columns" [dataSource]="dataSource">
+<ib-kai-table
+  tableName="fullExample"
+  [data]="data"
+  [displayedColumns]="['name', 'category']"
+>
   <ib-table-action-group>
     <ib-table-data-export-action></ib-table-data-export-action>
   </ib-table-action-group>
+  <ib-text-column name="name"></ib-text-column>
+  <ib-text-column name="category"></ib-text-column>
 </ib-kai-table>
 ```
+
+With local data (`[data]` or `IbTableLocalDataSource`), export supports all filtered rows and the current page; selected-row export is available when row selection is configured. `IbTableRemoteDataSource` supports exporting the currently fetched page by default. It does not provide full-dataset or row-selection export unless a subclass explicitly implements and advertises those capabilities.
 
 ### Override a data accessor during export
 
@@ -32,8 +40,7 @@ Use `ibDataTransformer` directive to return a different value derived from the o
 
 By default it accepts a function passing a single parameter, the value of a cell.
 
-In the example below,
-a boolean value is evaluated to string, “SUBSCRIBED” if true, “NOT SUBSCRIBED” if not.
+In the example below, a boolean value is converted to the string “SUBSCRIBED” when true and “NOT SUBSCRIBED” when false.
 
 This transformer function will be applied to **all** formats available.
 
@@ -47,7 +54,8 @@ class IbTableWithExportTransformer {
     { name: "rabbit", subscribed: false },
   ];
 
-  subscribedTransformer = (isSubscribed: boolean) => date.getTime();
+  subscribedTransformer = (isSubscribed: boolean): string =>
+    isSubscribed ? "SUBSCRIBED" : "NOT SUBSCRIBED";
 }
 ```
 
