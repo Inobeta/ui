@@ -1,10 +1,9 @@
-import { Component, inject, ViewChild } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { IbDataExportModule, IbFilterModule, IbKaiTableModule, IbTableActionModule, IbViewModule } from "public_api";
-import { IbSelectionColumn } from "public_api";
 import { IbUserExample, UserService } from "./users";
 
-import { MatButtonModule, MatIconButton } from "@angular/material/button";
+import { MatButtonModule } from "@angular/material/button";
 import { ActivatedRoute, Router, RouterOutlet } from "@angular/router";
 
 @Component({
@@ -18,16 +17,6 @@ import { ActivatedRoute, Router, RouterOutlet } from "@angular/router";
       [activeRowParams]="{ dataParamId: 'id', childRouteParamId: 'id'}"
       >
       <ib-table-action-group>
-        @if (selectionColumn?.selection.selected.length > 0) {
-          <ng-template ibTableAction>
-            <button
-              matMiniFab
-              (click)="getSelection()"
-              >
-              <mat-icon>delete</mat-icon>
-            </button>
-          </ng-template>
-        }
         <ng-template ibTableAction>
           <button matMiniFab (click)="getUserOrders()">
             <mat-icon>refresh</mat-icon>
@@ -47,7 +36,6 @@ import { ActivatedRoute, Router, RouterOutlet } from "@angular/router";
         <ib-boolean-filter name="subscribed">Subscribed</ib-boolean-filter>
       </ib-filter>
 
-      <ib-selection-column (ibRowSelectionChange)="selectionChange($event)" />
       <ib-text-column headerText="Name" name="name" sort />
       <ib-text-column headerText="Fruit" name="fruit" sort />
       <ib-number-column headerText="Amount" name="amount" aggregate sort />
@@ -112,8 +100,6 @@ import { ActivatedRoute, Router, RouterOutlet } from "@angular/router";
   ]
 })
 export class IbKaiTableWithRouting {
-  @ViewChild(IbSelectionColumn, { static: true })
-  selectionColumn: IbSelectionColumn;
 
   data: IbUserExample[] = [];
   columns = ["name", "fruit", "amount", "created_at", "subscribed"];
@@ -129,14 +115,6 @@ export class IbKaiTableWithRouting {
     this.userService.getUserOrders().subscribe((orders) => {
       this.data = orders;
     });
-  }
-
-  selectionChange(data: any[]) {
-    console.log("selection change", data);
-  }
-
-  getSelection() {
-    console.log("selection", this.selectionColumn?.selection.selected);
   }
 
   handleView(row: IbUserExample) {

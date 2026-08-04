@@ -1,9 +1,14 @@
 import { DataSource } from '@angular/cdk/collections';
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { Component, computed, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, flushMicrotasks, TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MatButtonHarness } from '@angular/material/button/testing';
+import { MatDialogHarness } from '@angular/material/dialog/testing';
+import { MatRadioButtonHarness } from '@angular/material/radio/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { IbDataExportModule } from '../data-export';
 import { IbColumn } from '../kai-table/columns';
 import { IbKaiRowGroupDirective } from '../kai-table/rowgroup';
 import { IbKaiTableAction } from '../kai-table/action';
@@ -65,10 +70,15 @@ describe('IbKaiTableMobileComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         IbKaiTableMobileComponent,
+        IbDataExportModule,
         NoopAnimationsModule,
         TranslateModule.forRoot(),
       ],
-      providers: [{ provide: OVERRIDE_EXPORT_FORMATS, useValue: [], multi: true }],
+       providers: [{
+         provide: OVERRIDE_EXPORT_FORMATS,
+         useValue: [{ format: 'xlsx', label: 'XLSX', export: () => undefined }],
+         multi: true,
+       }],
     }).compileComponents();
   }));
 
@@ -212,6 +222,76 @@ describe('IbKaiTableMobileComponent', () => {
         (el: Element) => el.textContent?.trim() === 'file_download'
       );
       expect(exportIcon).toBeUndefined();
+    });
+
+    it('renders all-only export and hides current-page and selected radios', async () => {
+      fixture.componentRef.setInput('canExportAllRows', true);
+      fixture.componentRef.setInput('canExportCurrentPage', false);
+      fixture.detectChanges();
+
+      const loader = TestbedHarnessEnvironment.documentRootLoader(fixture);
+      expect(await loader.getAllHarnesses(
+        MatButtonHarness.with({ ancestor: '.ib-kai-table-mobile__toolbar-actions' }),
+      )).toHaveSize(1);
+
+      const exportButton = await loader.getHarness(
+        MatButtonHarness.with({ ancestor: '.ib-kai-table-mobile__toolbar-actions' }),
+      );
+      await exportButton.click();
+      const dialog = await loader.getHarness(MatDialogHarness);
+      const values = await Promise.all(
+        (await dialog.getAllHarnesses(MatRadioButtonHarness)).map((radio) => radio.getValue()),
+      );
+
+      expect(values).toEqual(['all']);
+    });
+
+    it('renders current-only export with only the current-page radio', async () => {
+      fixture.componentRef.setInput('canExportAllRows', false);
+      fixture.componentRef.setInput('canExportCurrentPage', true);
+      fixture.detectChanges();
+
+      const loader = TestbedHarnessEnvironment.documentRootLoader(fixture);
+      const exportButton = await loader.getHarness(
+        MatButtonHarness.with({ ancestor: '.ib-kai-table-mobile__toolbar-actions' }),
+      );
+      await exportButton.click();
+      const dialog = await loader.getHarness(MatDialogHarness);
+      const values = await Promise.all(
+        (await dialog.getAllHarnesses(MatRadioButtonHarness)).map((radio) => radio.getValue()),
+      );
+
+      expect(values).toEqual(['current']);
+    });
+
+    it('renders no export button when no export capability is enabled', async () => {
+      fixture.componentRef.setInput('canExportAllRows', false);
+      fixture.componentRef.setInput('canExportCurrentPage', false);
+      fixture.detectChanges();
+
+      const loader = TestbedHarnessEnvironment.documentRootLoader(fixture);
+
+      expect(await loader.getAllHarnesses(
+        MatButtonHarness.with({ ancestor: '.ib-kai-table-mobile__toolbar-actions' }),
+      )).toHaveSize(0);
+    });
+
+    it('never offers selected-row export', async () => {
+      fixture.componentRef.setInput('canExportAllRows', true);
+      fixture.componentRef.setInput('canExportCurrentPage', true);
+      fixture.detectChanges();
+
+      const loader = TestbedHarnessEnvironment.documentRootLoader(fixture);
+      const exportButton = await loader.getHarness(
+        MatButtonHarness.with({ ancestor: '.ib-kai-table-mobile__toolbar-actions' }),
+      );
+      await exportButton.click();
+      const dialog = await loader.getHarness(MatDialogHarness);
+      const values = await Promise.all(
+        (await dialog.getAllHarnesses(MatRadioButtonHarness)).map((radio) => radio.getValue()),
+      );
+
+      expect(values).not.toContain('selected');
     });
 
     it('invokes column headerText signal for labels', fakeAsync(() => {

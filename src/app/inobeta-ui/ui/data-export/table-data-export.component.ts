@@ -29,6 +29,7 @@ import {
 export class IbTableDataExportAction {
   @Input() showAllRowsOption = true;
   @Input() showSelectedRowsOption = false;
+  @Input() showCurrentPageOption = true;
   @Output() ibDataExport = new EventEmitter<IDataExportSettings>();
   exportService: IbDataExportService = inject(IbDataExportService);
   openExportDialog() {
@@ -36,6 +37,7 @@ export class IbTableDataExportAction {
       .openExportDialog({
         showSelectedRowsOption: this.showSelectedRowsOption,
         showAllRowsOption: this.showAllRowsOption,
+        showCurrentPageOption: this.showCurrentPageOption,
       })
       .pipe(filter((settings) => !!settings))
       .subscribe((settings) => this.ibDataExport.emit(settings));

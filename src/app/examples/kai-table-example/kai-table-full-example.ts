@@ -35,9 +35,7 @@ import { MatButtonModule, MatIconButton } from "@angular/material/button";
             <mat-icon>refresh</mat-icon>
           </button>
         </ng-template>
-        <ng-template ibTableAction>
-          <ib-table-data-export-action />
-        </ng-template>
+        <ng-template ibTableAction [kind]="'export'"></ng-template>
       </ib-table-action-group>
 
       <ib-table-view-group />

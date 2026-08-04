@@ -90,7 +90,19 @@ export abstract class IbTableRemoteDataSource<T, V = IbTableFilterState>
     super();
   }
 
-  readonly capabilities: ReadonlySet<IbDataSourceCapability> = new Set();
+  /**
+   * Capabilities this data source advertises to the table renderer.
+   *
+   * By default the remote source only supports exporting the currently
+   * fetched page (`filteredData`); full export, row selection and global
+   * aggregation are intentionally absent because the base implementation
+   * does not implement them. Subclasses may override this set by redeclaring
+   * the property, but must only advertise capabilities whose behavior the
+   * subclass actually implements.
+   */
+  readonly capabilities: ReadonlySet<IbDataSourceCapability> = new Set([
+    IbDataSourceCapability.CurrentPageExport,
+  ]);
   readonly totalCount$ = this._totalCount.asObservable();
   readonly error$ = this._error.asObservable();
   readonly request$ = new BehaviorSubject<IbRemoteDataSourceRequest<V>>(this._request);

@@ -23,7 +23,7 @@ import { MatButtonModule, MatIconButton } from "@angular/material/button";
         <button matMiniFab (click)="refresh()" matTooltip="Refresh data">
           <mat-icon>refresh</mat-icon>
         </button>
-        <ib-table-data-export-action />
+        <ng-template ibTableAction [kind]="'export'"></ng-template>
       </ib-table-action-group>
 
       <ib-table-view-group />

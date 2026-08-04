@@ -50,16 +50,18 @@ import { IbColumn } from '../kai-table/columns';
                 >
                   <mat-icon>filter_alt</mat-icon>
                 </button>
-            }
+              }
               @for (action of headerActions(); track $index) {
-                @if(action.kind() === 'export' && canExportCurrentPage()) {
-                  <button
-                    matMiniFab
-                    [matTooltip]="'shared.ibTable.export' | translate"
-                    (click)="openExportDialog()"
-                  >
-                    <mat-icon>file_download</mat-icon>
-                  </button>
+                @if (action.kind() === 'export') {
+                  @if (canExportAllRows() || canExportCurrentPage()) {
+                    <button
+                      matMiniFab
+                      [matTooltip]="'shared.ibTable.export' | translate"
+                      (click)="openExportDialog()"
+                    >
+                      <mat-icon>file_download</mat-icon>
+                    </button>
+                  }
                 } @else {
                     <ng-container *ngTemplateOutlet="action.templateRef()"> </ng-container>
                 }
@@ -303,6 +305,7 @@ export class IbKaiTableMobileToolbarComponent implements OnDestroy {
       .openExportDialog({
         showSelectedRowsOption: false,
         showAllRowsOption: this.canExportAllRows(),
+        showCurrentPageOption: this.canExportCurrentPage(),
       })
       .pipe(filter((settings) => !!settings))
       .subscribe((settings) => this.doExport.emit(settings));
