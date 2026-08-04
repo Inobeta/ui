@@ -8,8 +8,7 @@ import {
   applicationConfig,
   moduleMetadata,
 } from "@storybook/angular";
-import { IbFilter } from "./filter.component";
-import { IbFilterModule } from "./filters.module";
+import { IbFilter, IbFilterModule } from "public_api";
 
 const meta: Meta<IbFilter> = {
   title: "Components/Filter",
@@ -38,7 +37,11 @@ export default meta;
 type Story = StoryObj<IbFilter>;
 
 const renderWithSearchBar = (args) => ({
-  props: args,
+  props: {
+    ...args,
+    ibFilterUpdated: () => undefined,
+    ibQueryUpdated: () => undefined,
+  },
   template: `
   <ib-filter (ibFilterUpdated)="ibFilterUpdated($event)">
     <ib-search-bar></ib-search-bar>
@@ -50,13 +53,17 @@ export const WithSearchBar: Story = {
 };
 
 const renderWithFilters = (args) => ({
-  props: args,
+  props: {
+    ...args,
+    ibFilterUpdated: () => undefined,
+    ibQueryUpdated: () => undefined,
+  },
   template: `
   <ib-filter (ibFilterUpdated)="ibFilterUpdated($event)">
     <ib-text-filter name="sku">SKU</ib-text-filter>
-    <ib-number-filter name="price">Prezzo</ib-number-filter>
-    <ib-tag-filter name="category" [options]="['shirts', 'jeans']">Categoria</ib-tag-filter>
-    <ib-date-filter name="created_at">Aggiunto il</ib-date-filter>
+    <ib-number-filter name="price">Price</ib-number-filter>
+    <ib-tag-filter name="category" [options]="['shirts', 'jeans']">Category</ib-tag-filter>
+    <ib-date-filter name="created_at">Added on</ib-date-filter>
   </ib-filter>
   `,
 });

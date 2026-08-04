@@ -73,7 +73,7 @@ import { Observable } from 'rxjs';
   encapsulation: ViewEncapsulation.None,
   standalone: false
 })
-/** @deprecated this element will be removed in v21 */
+/** @deprecated Migration scripts toward Angular core APIs are planned no earlier than v22. */
 export class IbSpinnerLoadingComponent {
   store = inject(Store);
   showLoading$: Observable<boolean> = this.store.select(ibSelectIsHttpLoading)

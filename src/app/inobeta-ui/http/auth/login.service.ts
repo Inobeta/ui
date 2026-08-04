@@ -16,7 +16,7 @@ import {
 } from "./session.model";
 
 @Injectable({ providedIn: "root" })
-/** @deprecated this element will be removed in v21 */
+/** @deprecated Migration scripts toward Angular core APIs are planned no earlier than v22. */
 export class IbLoginService<T extends IbAPITokens | IbAPITokens> {
   constructor(
     private httpClient: HttpClient,

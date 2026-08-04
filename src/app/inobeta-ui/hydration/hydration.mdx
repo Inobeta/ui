@@ -4,22 +4,27 @@ import { Meta } from "@storybook/blocks";
 
 # Hydration
 
-Use the `ibSetupHydration` function to setup a persisted state. Provide a unique key for your state and
-the keys of other stores present in your app that you wish to save on the browser's storage.
+Use the `ibSetupHydration` function to set up persisted NgRx state. Provide a unique storage key and
+the names of stores present in your app that you want to save in browser storage.
 
-It is recommended to provide the following keys on your application:
-- `ibSessionFeature`: holds user authentication data
-- `ibViews`: table views created by the user
-- `ibTable`: *Legacy table* set of features
+For the stores used by the current application configuration, the persisted keys can include:
+- `ibHttpSessionState`: holds user authentication data
+- `ibKaiTable`: current Kai Table state feature, registered by `IbKaiTableModule`
 
 ```typescript
-// app.module.ts
-import { ibSetupHydration } from "@inobeta/ui";
+import { ApplicationConfig } from "@angular/core";
+import { provideEffects } from "@ngrx/effects";
+import { provideState, provideStore } from "@ngrx/store";
+import {
+  ibHttpEffects,
+  ibLoaderFeature,
+  ibSessionFeature,
+  ibSetupHydration,
+} from "@inobeta/ui";
 
 const appStorage = ibSetupHydration("app-storage", [
   "ibHttpSessionState",
-  "ibViews",
-  "ibTable",
+  "ibKaiTable",
 ]);
 
 export const appConfig: ApplicationConfig = {
@@ -29,7 +34,8 @@ export const appConfig: ApplicationConfig = {
     provideState(ibLoaderFeature),
     provideEffects(ibHttpEffects),
     provideEffects(appStorage.effects),
-  ]
-  /** ... */
-}
+  ],
+};
 ```
+
+Table Views are not hydrated through NgRx. `IbViewStorageService` persists each table's Views in `localStorage`, using a per-table key derived from its configured prefix and group name.

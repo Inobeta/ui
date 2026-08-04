@@ -6,18 +6,22 @@ import * as stories from "./login.stories.ts";
 
 <Meta title="Features/HTTP/Login/API" />
 
+> **Deprecated:** `IbLoginService` and the `IbAPITokens`, `IbUserLogin`, `IbSession`,
+> and `IbAuthTypes` compatibility APIs are deprecated and scheduled for removal in
+> v21. This page documents the existing API for migration purposes.
+
 <Description of={stories.ibLoginService} />
 <ArgTypes of={stories.ibLoginService} />
 
 ## Usage
 
-It is recommended to implement the login login within a store
+Implement login orchestration within a store when integrating this legacy API.
 
 ```typescript
 // actions.ts
 const login = createAction(
   "[Auth] login",
-  props<{ payload: Record<string, any> }>()
+  props<{ payload: IbUserLogin }>()
 );
 const logout = createAction("[Auth] logout");
 ```
@@ -26,7 +30,7 @@ const logout = createAction("[Auth] logout");
 // effects.ts
 import { Inject, Injectable } from "@angular/core";
 import { Router } from "@angular/router";
-import { IbLoginService, ibAuthActions } from "@inobeta/ui";
+import { IbLoginService, IbUserLogin, ibAuthActions } from "@inobeta/ui";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { map, mergeMap, switchMap, tap } from "rxjs/operators";
 import { login, logout } from "./actions.ts";
@@ -113,7 +117,7 @@ API login endpoint
 
 ### ibHttpAuthType
 
-Authorizazion type. Either bearer token (JWT) or basic
+Authorization type. Either bearer token (JWT) or basic authentication.
 
 ```typescript
 { provide: "ibHttpAuthType", useValue: IbAuthTypes.JWT }
@@ -150,5 +154,5 @@ Property name of additional data or claims within the JWT token
 Property name of the user roles within the JWT claims field
 
 ```typescript
-{ provide: "ibHttpJWTClaimsField", useValue: "x-hasura-allowed-roles" }
+{ provide: "ibHttpJWTRolesField", useValue: "x-hasura-allowed-roles" }
 ```

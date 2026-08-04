@@ -55,7 +55,7 @@ export class FormExampleComponent {
 
 Form fields are defined through an array of control instances.
 The only required values are `key` and `label`, where `key` is assigned as `formControlName`
-You can find a list of available controls [here](/docs/forms-controls--docs)
+You can find a list of available controls [here](/docs/components-forms-deprecated-controls--docs)
 
 ```typescript
 fields = [
@@ -351,7 +351,7 @@ export class IbTextboxWithIconControl extends IbFormControlBase<string> {
 By setting the `cols` input in `ib-material-form`, a grid-like layout will be used instead of the flex one.
 Each control has two parameters `cols` and `rows` that determine how many columns and rows to span.
 
-> ⚠️ About `cols` and `rows` parameters: these will only work when `<ib-material-forms [cols]="3" />` is set.
+> ⚠️ About `cols` and `rows` parameters: these will only work when `<ib-material-form [cols]="3" />` is set.
 > This feature will most likely be deprecated in the future, so please refrain to use it without a good reason.
 
 <Canvas of={MatFormStories.WithGridLayout} />

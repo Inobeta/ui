@@ -4,6 +4,9 @@ import { Meta } from "@storybook/blocks";
 
 # HTTP API
 
+> **Deprecated:** `IbHttpModule` is deprecated and scheduled for removal in v21. This
+> page documents its configuration API for existing consumers.
+
 ## Actions
 
 ```typescript
@@ -14,7 +17,7 @@ import { ibAuthActions } from '@inobeta/ui';
 
 Note that the name might be confusing. This action should be dispatched as a login success, rather than a login attempt.
 
-Legacy: only stores a token in the storage. Does not call the `login()` function
+Legacy action: only stores a token in storage. It does not call the `login()` function.
 
 ### `logout`
 

@@ -38,10 +38,10 @@ Parameters:
 ```typescript
 // Save data to localStorage
 const dataToSave = { user: "John Doe", role: "admin" };
-this.storageService.set("userData", dataToSave);
+this.storageService.set("userData", dataToSave, IbStorageTypes.LOCALSTORAGE);
 
-// Retrieve data from cookies
-const retrievedUserData = this.storageService.get("userData", IbStorageTypes.COOKIESTORAGE);
+// Retrieve data from localStorage
+const retrievedUserData = this.storageService.get("userData", IbStorageTypes.LOCALSTORAGE);
 console.log(retrievedUserData);
 ```
 

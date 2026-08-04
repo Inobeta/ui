@@ -24,7 +24,7 @@ const defaultConfig = {
   selector: "[ibLoading]",
   standalone: false
 })
-/** @deprecated this element will be removed in v21 */
+/** @deprecated Migration scripts toward Angular core APIs are planned no earlier than v22. */
 export class IbLoadingDirective implements OnInit, OnDestroy {
   store = inject(Store);
   isLoading$ = this.store.select(ibSelectIsHttpLoading);

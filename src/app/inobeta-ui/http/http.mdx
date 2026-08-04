@@ -6,30 +6,30 @@ import * as loadingStories from "./http/loading-skeleton.stories";
 
 # HTTP Overview
 
+> **Deprecated:** `IbHttpModule` is deprecated and scheduled for removal in v21. Keep
+> this page for existing integrations; symbols with their own deprecation metadata
+> are marked below.
+
 ## Setup
 
-This modules comes with an application wide store, and is required to provide it's features.
+This module provides an application-wide store and must be registered with the features it uses.
 
-- First import `IbHttpModule` in your `AppModule`
-- Then add `provideState` for `ibSessionFeature`, and `ibLoaderFeature`
-- Lastly, apply the effects provided in `ibHttpEffects`
+- Register `IbHttpModule` with the application providers.
+- Add `provideState` for `ibSessionFeature` and `ibLoaderFeature`.
+- Add the effects provided in `ibHttpEffects`.
 
 ```typescript
 
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    /** ... */,
+    importProvidersFrom(IbHttpModule),
+    provideStore(),
     provideState(ibSessionFeature),
     provideState(ibLoaderFeature),
     provideEffects(ibHttpEffects),
-    importProvidersFrom([
-      IbHttpModule
-      ]
-    ),
   ],
-}
-export class AppModule {}
+};
 ```
 
 ## Basic features
@@ -37,7 +37,7 @@ export class AppModule {}
 Besides offering services and directives, this module provides other out-of-the-box features such as:
 
 - Authentication interceptor
-  - Sets the `Authentication` header for every HTTP requests
+  - Sets the `Authorization` header for authenticated HTTP requests
 - Error interceptor
   - Shows error messages if an HTTP request returns an error
 - Loading interceptor
@@ -48,6 +48,9 @@ To know more about customizing the module's behaviour, head over to the [API pag
 ## Directives
 
 ### Loading directive `ibLoading`
+
+> **Deprecated:** `IbLoadingDirective` and its skeleton components are deprecated and
+> scheduled for removal in v21.
 
 Directive to conditionally display a loading skeleton or the original content based on the loading state.
 
@@ -85,6 +88,8 @@ To provide a specific endpoint to listen to, add the `endpoint` parameter
 
 ### Role directive `ibRoleCheck`
 
+> **Deprecated:** `IbRoleCheckDirective` is deprecated and scheduled for removal in v21.
+
 Directive to conditionally render content based on user roles.
 
 ```html
@@ -100,6 +105,8 @@ Directive to conditionally render content based on user roles.
 
 ### Spinner loading
 
+> **Deprecated:** `IbSpinnerLoadingComponent` is deprecated and scheduled for removal in v21.
+
 Display a spinner loading animation while HTTP requests are in progress.
 
 ```html
@@ -111,6 +118,8 @@ Display a spinner loading animation while HTTP requests are in progress.
 ## Route Guards
 
 ### IbAuthGuard
+
+> **Deprecated:** `IbAuthGuard` is deprecated and scheduled for removal in v21.
 
 Guard routes based on user authentication.
 
@@ -176,6 +185,8 @@ const routes: Routes = [
 ## Decorators
 
 ### ibCrudToast
+
+> **Deprecated:** `ibCrudToast` is deprecated and scheduled for removal in v21.
 
 Method decorator for displaying toast notifications, and optionally navigating back after a CRUD operation.
 

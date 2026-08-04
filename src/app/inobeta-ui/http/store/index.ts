@@ -17,7 +17,7 @@ export const ibHttpEffects = [
   IbSessionEffects
 ]
 
-/** @deprecated this element will be removed in v21 */
+/** @deprecated Migration scripts toward Angular core APIs are planned no earlier than v22. */
 export const ibSessionFeature = createFeature({
   name: 'ibHttpSessionState',
   reducer: ibSessionReducerMain,
@@ -31,7 +31,7 @@ export const {
 } = ibSessionFeature
 
 
-/** @deprecated this element will be removed in v21 */
+/** @deprecated Migration scripts toward Angular core APIs are planned no earlier than v22. */
 export const ibLoaderFeature = createFeature({
   name: 'ibHttpLoaderState',
   reducer: ibLoaderReducerMain,
@@ -42,7 +42,7 @@ export const {
   ibSelectIsHttpLoading,
   ibSelectIsHttpUrlLoading
 } = ibLoaderFeature
-/** @deprecated this element will be removed in v21 */
+/** @deprecated Migration scripts toward Angular core APIs are planned no earlier than v22. */
 export const ibHttpReducers: ActionReducerMap<IHttpStore> = {
   session: ibSessionFeature.reducer,
   loader: ibLoaderFeature.reducer,

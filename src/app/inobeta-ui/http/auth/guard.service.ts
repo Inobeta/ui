@@ -27,7 +27,7 @@ import { IbAPITokens, IbSession } from "./session.model";
  * ```
  */
 @Injectable({ providedIn: "root" })
-/** @deprecated this element will be removed in v21 */
+/** @deprecated Migration scripts toward Angular core APIs are planned no earlier than v22. */
 export class IbAuthGuard {
   store = inject(Store);
   session$$ = this.store.selectSignal(ibSelectActiveSession<IbAPITokens>());

@@ -8,6 +8,8 @@ import { Meta, Markdown } from "@storybook/blocks";
 
 ```typescript
 // boolean-filter.component.ts
+import { IbFilterBase, IbFilterDef, eq, none } from "@inobeta/ui";
+
 @Component({
   standalone: true,
   imports: [
@@ -27,7 +29,7 @@ import { Meta, Markdown } from "@storybook/blocks";
   providers: [{ provide: IbFilterBase, useExisting: IbBooleanFilter }],
 })
 export class IbBooleanFilter extends IbFilterBase {
-  searchCriteria = new FormControl(null, { nonNullable: true });
+  searchCriteria = new FormControl(null);
 
   get displayValue() {
     return this.rawValue;
@@ -62,7 +64,7 @@ It can be used to display the current value of the filter in the UI.
 It is called when the filter is applied.
 
 ```html
-<!-- boolean-filter.component.ts -->
+<!-- boolean-filter.component.html -->
 <ib-filter-button>
   <span ib-filter-name><ng-content></ng-content></span>
   <span ib-filter-value *ngIf="isDirty">
@@ -134,11 +136,17 @@ or(eq(2), eq(3), eq(5));
 
 The `toQuery` method is used to convert the filter value to a query that can be sent to the server.  
 This method is called when the filter is applied and the `fetchData` method is called on the data source.
-The query is then passed to the `fetchData` method as the `filter` parameter.
+The query is then passed to the remote data source as the `filter` property of its request object.
 
 The value returned by `toQuery` should be a serializable value useful for APIs, such as a REST API call, or a GraphQL query.
 
 ```typescript
+import {
+  IbFetchDataResponse,
+  IbRemoteDataSourceRequest,
+  IbTableRemoteDataSource,
+} from "@inobeta/ui";
+
 type UserQuery = {
   subscribed: boolean;
 };
@@ -147,11 +155,9 @@ class UserDataSource extends IbTableRemoteDataSource<User, UserQuery> {
   private http = inject(HttpClient);
 
   fetchData(
-    sort: MatSort,
-    page: MatPaginator,
-    filter: UserQuery
+    request: IbRemoteDataSourceRequest<UserQuery>
   ): Observable<IbFetchDataResponse<User>> {
-    console.log(filter.subscribed); // true or false
+    console.log(request.filter?.subscribed); // true or false
     // ...
   }
 }

@@ -12,8 +12,7 @@ import {
   applicationConfig,
   moduleMetadata,
 } from "@storybook/angular";
-import { IbHttpModule } from "../http.module";
-import { ibHttpReducers, ibLoaderFeature } from "../store";
+import { IbHttpModule, ibLoaderFeature } from "public_api";
 import { provideAnimations } from "@angular/platform-browser/animations";
 import { MatButtonModule } from "@angular/material/button";
 

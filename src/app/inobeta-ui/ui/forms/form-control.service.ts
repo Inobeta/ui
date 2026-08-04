@@ -10,7 +10,7 @@ import { IbFormField } from "./forms.types";
 import { IbFormArray } from "./array/array";
 
 @Injectable({ providedIn: "root" })
-/** @deprecated this element will be removed in v21 */
+/** @deprecated Migration scripts toward Formly are planned no earlier than v22. */
 export class IbFormControlService {
   constructor() { }
 
