@@ -3,13 +3,14 @@
     <ng-content select="ib-table-view-group" />
     <section class="ib-table__toolbar__actions">
       @for(action of headerActions(); track $index) {
-        @if(action.kind() === 'export' && canExportCurrentPage()) {
+        @if(action.kind() === 'export' && hasExportableDataset()) {
           <ib-table-data-export-action
             (ibDataExport)="doExport($event)"
             [showSelectedRowsOption]="canSelectRows()"
             [showAllRowsOption]="canExportAllRows()"
+            [showCurrentPageOption]="canExportCurrentPage()"
             />
-        } @else {
+        } @else if (action.kind() !== 'export') {
           <ng-container *ngTemplateOutlet="action.templateRef()"> </ng-container>
         }
       }
@@ -101,6 +102,8 @@
         [filters]="filters()"
         [headerActions]="headerActions()"
         [actionColumn]="actionColumn()"
+        [canExportAllRows]="canExportAllRows()"
+        [canExportCurrentPage]="canExportCurrentPage()"
         (doExport)="doExport($event)"
         (sortUpdated)="updateSortFromMobile($event)"
         >

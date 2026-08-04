@@ -26,12 +26,15 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { provideStore } from "@ngrx/store";
 import { Store } from "@ngrx/store";
 import { TranslateModule } from "@ngx-translate/core";
-import { Observable, map, throwError, timer } from "rxjs";
+import { Observable, map, of, throwError, timer } from "rxjs";
 import {
   IbDataExportModule,
   IbDataExportService,
+  IbExportableSource,
+  IDataExportSettings,
   OVERRIDE_EXPORT_FORMATS
 } from "../data-export";
+import { IbColumn } from "./columns/column";
 import { IbDataExportProvider } from "../data-export/provider";
 import { IbFilterModule, IbSearchBar, IbTagFilter } from "../kai-filter";
 import { IbTableActionModule } from "./action";
@@ -158,6 +161,288 @@ describe("IbTable", () => {
       component.doExport({ format: "csv", dataset: "all" });
 
       expect(exportSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  // ===========================================================================
+  // Export capability gating — DEVK-1105
+  // ===========================================================================
+
+  describe("export capability gating (DEVK-1105)", () => {
+    describe("with a remote data source", () => {
+      it("offers only the current-page dataset in the export dialog", async () => {
+        const fixture = createComponent(IbTableWithRemoteExportApp);
+        const component = fixture.debugElement.query(
+          By.directive(IbTable)
+        ).componentInstance as IbTable;
+        await fixture.whenStable();
+        fixture.detectChanges();
+        component.setPaginatorState({ pageIndex: 0, pageSize: 2 });
+        await fixture.whenStable();
+        fixture.detectChanges();
+        const loader = TestbedHarnessEnvironment.documentRootLoader(fixture);
+
+        const exportButton = await loader.getHarness(
+          MatButtonHarness.with({
+            ancestor: ".ib-table__toolbar__actions",
+          })
+        );
+        await exportButton.click();
+        const dialog = await loader.getHarness(MatDialogHarness);
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        const radios = await dialog.getAllHarnesses(MatRadioButtonHarness);
+        expect(radios.length).toBe(1);
+        expect(await radios[0].getValue()).toBe("current");
+      });
+
+      it("exports the already loaded page and performs no extra fetch", fakeAsync(() => {
+        const fixture = createComponent(IbTableWithRemoteExportApp);
+        const component = fixture.debugElement.query(
+          By.directive(IbTable)
+        ).componentInstance as IbTable;
+        const remoteDs = fixture.componentInstance.dataSource;
+        const fetchSpy = spyOn(remoteDs, "fetchData").and.callThrough();
+        const exportServiceSpy = spyOn(
+          component.exportService,
+          "_exportFromTable"
+        );
+
+        tick(1000);
+        fixture.detectChanges();
+        component.setPaginatorState({ pageIndex: 0, pageSize: 2 });
+        tick(1000);
+        fixture.detectChanges();
+        fetchSpy.calls.reset();
+        const fetchCallsBefore = fetchSpy.calls.count();
+
+        component.doExport({ format: "csv", dataset: "current" });
+
+        expect(fetchSpy.calls.count()).toBe(fetchCallsBefore);
+        const exportCall = exportServiceSpy.calls.mostRecent();
+        expect(exportCall.args[0]).toBe("test-remote-export");
+        expect(exportCall.args[2]).toEqual({ format: "csv", dataset: "current" });
+        const sourceArg = exportCall.args[1] as IbExportableSource;
+        expect(sourceArg.filteredData).toEqual([
+          { name: "alice" },
+          { name: "bob" },
+        ]);
+      }));
+
+      it("never sends an all-row export request to the export service", fakeAsync(() => {
+        const fixture = createComponent(IbTableWithRemoteExportApp);
+        const component = fixture.debugElement.query(
+          By.directive(IbTable)
+        ).componentInstance as IbTable;
+        const exportServiceSpy = spyOn(
+          component.exportService,
+          "_exportFromTable"
+        );
+
+        tick(1000);
+        component.doExport({ format: "csv", dataset: "all" });
+
+        expect(exportServiceSpy).not.toHaveBeenCalled();
+      }));
+
+      it("never sends a selected-row export request to the export service", fakeAsync(() => {
+        const fixture = createComponent(IbTableWithRemoteExportApp);
+        const component = fixture.debugElement.query(
+          By.directive(IbTable)
+        ).componentInstance as IbTable;
+        const exportServiceSpy = spyOn(
+          component.exportService,
+          "_exportFromTable"
+        );
+
+        tick(1000);
+        component.doExport({ format: "csv", dataset: "selected" });
+
+        expect(exportServiceSpy).not.toHaveBeenCalled();
+      }));
+
+      it("ignores an unknown runtime export dataset", fakeAsync(() => {
+        const fixture = createComponent(IbTableWithRemoteExportApp);
+        const component = fixture.debugElement.query(
+          By.directive(IbTable)
+        ).componentInstance as IbTable;
+        const exportServiceSpy = spyOn(
+          component.exportService,
+          "_exportFromTable"
+        ).and.callThrough();
+        const malformedSettings = {
+          format: "csv",
+          dataset: "unknown",
+        } as unknown as Partial<IDataExportSettings>;
+
+        tick(1000);
+
+        expect(() => component.doExport(malformedSettings)).not.toThrow();
+        expect(exportServiceSpy).not.toHaveBeenCalled();
+      }));
+    });
+
+    describe("with a legacy local data source", () => {
+      it("exports only the ordered page slice for a non-first page", async () => {
+        const fixture = createComponent(IbTableWithLegacyExportApp);
+        const component = fixture.debugElement.query(
+          By.directive(IbTable)
+        ).componentInstance as IbTable;
+        const source = component.activeDataSource() as IbTableDataSource<any>;
+
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        source.columns = [createExportColumn("name", "Name")];
+        component.setPaginatorState({ pageIndex: 1, pageSize: 2 });
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        const exportSpy = spyOn(component.exportService, "export");
+        component.doExport({ format: "csv", dataset: "current" });
+
+        expect(exportSpy).toHaveBeenCalledWith(
+          [{ Name: "c" }, { Name: "d" }],
+          component.tableName(),
+          "csv"
+        );
+      });
+
+      it("uses its custom sorter for all, current, and selected exports", async () => {
+        const fixture = createComponent(IbTableWithLegacyExportApp);
+        const component = fixture.debugElement.query(
+          By.directive(IbTable)
+        ).componentInstance as IbTable;
+        const source = component.activeDataSource() as IbTableDataSource<{ name: string }>;
+
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        source.columns = [createExportColumn("name", "Name")];
+        source.sortData = (data) => data.sort((left, right) => right.name.localeCompare(left.name));
+        const sort = component.sort();
+        sort.active = "name";
+        sort.direction = "desc";
+        sort.sortChange.emit({ active: "name", direction: "desc" });
+        component.setPaginatorState({ pageIndex: 1, pageSize: 2 });
+        component.selectionColumn().selection.select(source.data[0], source.data[5], source.data[2]);
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        const exportSpy = spyOn(component.exportService, "export");
+
+        component.doExport({ format: "csv", dataset: "all" });
+        expect(exportSpy.calls.mostRecent().args[0]).toEqual([
+          { Name: "f" }, { Name: "e" }, { Name: "d" },
+          { Name: "c" }, { Name: "b" }, { Name: "a" },
+        ]);
+
+        component.doExport({ format: "csv", dataset: "current" });
+        expect(exportSpy.calls.mostRecent().args[0]).toEqual([{ Name: "d" }, { Name: "c" }]);
+
+        component.doExport({ format: "csv", dataset: "selected" });
+        expect(exportSpy.calls.mostRecent().args[0]).toEqual([{ Name: "f" }, { Name: "c" }, { Name: "a" }]);
+      });
+    });
+
+    it("hides selected export without a selection column", async () => {
+      const noSelectionFixture = createComponent(IbTableWithExportNoSelection);
+      await noSelectionFixture.whenStable();
+      noSelectionFixture.detectChanges();
+      const noSelectionLoader = TestbedHarnessEnvironment.documentRootLoader(noSelectionFixture);
+      const exportButton = await noSelectionLoader.getHarness(
+        MatButtonHarness.with({ ancestor: ".ib-table__toolbar__actions" })
+      );
+      await exportButton.click();
+      const dialog = await noSelectionLoader.getHarness(MatDialogHarness);
+      noSelectionFixture.detectChanges();
+      const radios = await dialog.getAllHarnesses(MatRadioButtonHarness);
+      const values = await Promise.all(radios.map((radio) => radio.getValue()));
+      expect(values).not.toContain("selected");
+    });
+
+    it("shows selected export with a selection column and exports exactly its rows", async () => {
+      const fixture = createComponent(IbTableWithExport);
+      const component = fixture.debugElement.query(
+        By.directive(IbTable)
+      ).componentInstance as IbTable;
+      const exportSpy = spyOn(component.exportService, "export");
+      await fixture.whenStable();
+      fixture.detectChanges();
+
+      const localSource = component.activeDataSource() as IbTableLocalDataSource<any>;
+      component.selectionColumn().selection.select(
+        ...localSource.getCurrentPageData().slice(0, 2)
+      );
+      const loader = TestbedHarnessEnvironment.documentRootLoader(fixture);
+      const exportButton = await loader.getHarness(
+        MatButtonHarness.with({ ancestor: ".ib-table__toolbar__actions" })
+      );
+      await exportButton.click();
+      const dialog = await loader.getHarness(MatDialogHarness);
+      fixture.detectChanges();
+      const values = await Promise.all(
+        (await dialog.getAllHarnesses(MatRadioButtonHarness)).map((radio) => radio.getValue()),
+      );
+      expect(values).toContain("selected");
+      const selectedRadio = await dialog.getHarness(
+        MatRadioButtonHarness.with({ label: "shared.ibTable.exportData.selectedRows" })
+      );
+      await selectedRadio.check();
+      const confirm = await dialog.getHarness(
+        MatButtonHarness.with({ text: "shared.ibTable.export" })
+      );
+      await confirm.click();
+      fixture.detectChanges();
+
+      expect(exportSpy).toHaveBeenCalled();
+      const exportedData = exportSpy.calls.mostRecent().args[0] as Record<string, unknown>[];
+      expect(exportedData.map((row) => row["name"])).toEqual(["alice", "rabbit"]);
+    });
+
+    it("shows current-page export when the paginator has multiple pages", async () => {
+      const fixture = createComponent(IbTableWithExport);
+      const component = fixture.debugElement.query(
+        By.directive(IbTable)
+      ).componentInstance as IbTable;
+      await fixture.whenStable();
+      fixture.detectChanges();
+      component.setPaginatorState({ pageIndex: 0, pageSize: 2 });
+      await fixture.whenStable();
+      fixture.detectChanges();
+      const loader = TestbedHarnessEnvironment.documentRootLoader(fixture);
+      const exportButton = await loader.getHarness(
+        MatButtonHarness.with({ ancestor: ".ib-table__toolbar__actions" })
+      );
+      await exportButton.click();
+      const dialog = await loader.getHarness(MatDialogHarness);
+      fixture.detectChanges();
+      const radios = await dialog.getAllHarnesses(MatRadioButtonHarness);
+      const values = await Promise.all(radios.map((radio) => radio.getValue()));
+      expect(values).toContain("current");
+    });
+
+    it("hides current-page export after the page size changes to one page", async () => {
+      const fixture = createComponent(IbTableWithExport);
+      const component = fixture.debugElement.query(
+        By.directive(IbTable)
+      ).componentInstance as IbTable;
+      await fixture.whenStable();
+      fixture.detectChanges();
+      component.setPaginatorState({ pageIndex: 0, pageSize: 100 });
+      await fixture.whenStable();
+      fixture.detectChanges();
+      const loader = TestbedHarnessEnvironment.documentRootLoader(fixture);
+      const exportButton = await loader.getHarness(
+        MatButtonHarness.with({ ancestor: ".ib-table__toolbar__actions" })
+      );
+      await exportButton.click();
+      const dialog = await loader.getHarness(MatDialogHarness);
+      fixture.detectChanges();
+      const radios = await dialog.getAllHarnesses(MatRadioButtonHarness);
+      const values = await Promise.all(radios.map((radio) => radio.getValue()));
+      expect(values).not.toContain("current");
     });
   });
 
@@ -532,6 +817,10 @@ describe("IbTable", () => {
 
     it("should export current page", async () => {
       const exportSpy = spyOn(component.exportService, "export");
+      await fixture.whenStable();
+      component.setPaginatorState({ pageIndex: 0, pageSize: 2 });
+      fixture.detectChanges();
+      await fixture.whenStable();
       const exportButton = await loader.getHarness(
         MatButtonHarness.with({
           ancestor: ".ib-table__toolbar__actions",
@@ -542,7 +831,11 @@ describe("IbTable", () => {
       fixture.detectChanges();
       await fixture.whenStable();
       expect(dialog).toBeTruthy();
-      const [_, __, option] = await dialog.getAllHarnesses(MatRadioButtonHarness);
+      const options = await dialog.getAllHarnesses(MatRadioButtonHarness);
+      const option = (await Promise.all(
+        options.map(async (radio) => ({ radio, value: await radio.getValue() })),
+      )).find(({ value }) => value === "current")?.radio;
+      expect(option).toBeDefined();
       await option.check();
       const confirm = await dialog.getHarness(
         MatButtonHarness.with({ text: "shared.ibTable.export" }),
@@ -552,7 +845,7 @@ describe("IbTable", () => {
 
       const ds = component.activeDataSource() as IbTableDataSource<any>;
       expect(exportSpy).toHaveBeenCalledWith(
-        ds.data,
+        ds.data.slice(0, 2),
         component.tableName(),
         "ib",
       );
@@ -1527,6 +1820,129 @@ class IbTableWithExport {
     { name: "knight", color: "brown" },
     { name: "king", color: "green" },
   ];
+}
+
+/** Remote source with a synchronously resolved, controlled response. */
+class IbRemoteExportDataSource extends IbTableRemoteDataSource<any, any> {
+  fetchData(
+    _request: IbRemoteDataSourceRequest
+  ): Observable<IbFetchDataResponse<any>> {
+    return of({
+      data: [{ name: "alice" }, { name: "bob" }],
+      totalCount: 10,
+    });
+  }
+}
+
+@Component({
+  template: `
+    <ib-kai-table
+      tableName="test-remote-export"
+      [dataSource]="dataSource"
+      [tableDef]="{ paginator: { pageSize: 2 } }"
+      [displayedColumns]="['name']"
+    >
+      <ib-table-action-group>
+        <ng-template ibTableAction [kind]="'export'"></ng-template>
+      </ib-table-action-group>
+      <ib-text-column headerText="name" name="name"></ib-text-column>
+    </ib-kai-table>
+  `,
+  providers: [
+    IbDataExportService,
+    {
+      provide: OVERRIDE_EXPORT_FORMATS,
+      useClass: IbStubExportProvider,
+      multi: true,
+    },
+  ],
+  standalone: false
+})
+class IbTableWithRemoteExportApp {
+  dataSource = new IbRemoteExportDataSource();
+}
+
+@Component({
+  template: `
+    <ib-kai-table
+      tableName="test-legacy-export"
+      [dataSource]="dataSource"
+      [tableDef]="{ paginator: { pageSize: 2 } }"
+      [displayedColumns]="['name']"
+    >
+      <ib-table-action-group>
+        <ng-template ibTableAction [kind]="'export'"></ng-template>
+      </ib-table-action-group>
+      <ib-selection-column></ib-selection-column>
+      <ib-text-column headerText="name" name="name"></ib-text-column>
+    </ib-kai-table>
+  `,
+  providers: [
+    IbDataExportService,
+    {
+      provide: OVERRIDE_EXPORT_FORMATS,
+      useClass: IbStubExportProvider,
+      multi: true,
+    },
+  ],
+  standalone: false
+})
+class IbTableWithLegacyExportApp {
+  dataSource = new IbTableDataSource([
+    { name: "a" },
+    { name: "b" },
+    { name: "c" },
+    { name: "d" },
+    { name: "e" },
+    { name: "f" },
+  ]);
+}
+
+/** Local table without any selection column (DEVK-1105 selection gating). */
+@Component({
+  template: `
+    <ib-kai-table
+      tableName="test-export-no-selection"
+      [data]="data"
+      [displayedColumns]="['name', 'color']"
+    >
+      <ib-table-action-group>
+        <ng-template ibTableAction [kind]="'export'"></ng-template>
+      </ib-table-action-group>
+      <ib-text-column headerText="name" name="name"></ib-text-column>
+      <ib-text-column headerText="color" name="color"></ib-text-column>
+    </ib-kai-table>
+  `,
+  providers: [
+    IbDataExportService,
+    {
+      provide: OVERRIDE_EXPORT_FORMATS,
+      useClass: IbStubExportProvider,
+      multi: true,
+    },
+  ],
+  standalone: false
+})
+class IbTableWithExportNoSelection {
+  data = [
+    { name: "alice", color: "blue" },
+    { name: "rabbit", color: "white" },
+    { name: "queen", color: "red" },
+  ];
+}
+
+/** Minimal IbColumn-shaped object used to drive export column mapping. */
+function createExportColumn(name: string, headerText: string): IbColumn<unknown> {
+  return {
+    name: () => name,
+    headerText: () => headerText,
+    dataAccessor: () => (row: unknown, colName: string) =>
+      (row as Record<string, unknown>)[colName],
+    sortingDataAccessor: () => (row: unknown, colName: string) =>
+      (row as Record<string, unknown>)[colName],
+    filterDataAccessor: () => (row: unknown, colName: string) =>
+      (row as Record<string, unknown>)[colName],
+  } as unknown as IbColumn<unknown>;
 }
 
 @Component({

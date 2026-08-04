@@ -33,7 +33,7 @@ import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { firstValueFrom, Subscription } from "rxjs";
 import { filter } from "rxjs/operators";
 import { IbActionColumn, IbKaiTableAction, IbKaiTableActionGroup } from ".";
-import { IbDataExportService, IDataExportSettings } from "../data-export";
+import { IbDataExportService, IbExportableSource, IDataExportSettings } from "../data-export";
 import { IbFilter, IbFilterBase } from "../kai-filter";
 import { IbTableViewsHost } from "./table-views-host";
 import { IbColumn } from "./columns/column";
@@ -82,6 +82,7 @@ const defaultTableDef: IbTableDef = {
 export class IbTable implements OnDestroy {
   readonly initialized = signal(false);
   private readonly remoteState = signal<IbKaiTableState | null>(null);
+  private readonly currentPageExportAvailable = signal(false);
   private readonly internalDataSource = new IbTableLocalDataSource<unknown>([]);
   private applyingSnapshot = false;
   private snapshotAppliedSource: IbTableSource | null = null;
@@ -155,8 +156,15 @@ export class IbTable implements OnDestroy {
     return columns;
   });
   readonly canExportAllRows = computed(() => this.hasCapability(IbDataSourceCapability.FullExport));
-  readonly canExportCurrentPage = computed(() => this.hasCapability(IbDataSourceCapability.CurrentPageExport));
-  readonly canSelectRows = computed(() => this.hasCapability(IbDataSourceCapability.RowSelection));
+  readonly canExportCurrentPage = computed(() =>
+    this.hasCapability(IbDataSourceCapability.CurrentPageExport) && this.currentPageExportAvailable(),
+  );
+  readonly canSelectRows = computed(() =>
+    this.hasCapability(IbDataSourceCapability.RowSelection) && !!this.selectionColumn(),
+  );
+  readonly hasExportableDataset = computed(() =>
+    this.canExportAllRows() || this.canExportCurrentPage() || this.canSelectRows(),
+  );
   readonly shouldDisplayAggregationFooter = computed(() => {
     return this.hasCapability(IbDataSourceCapability.GlobalAggregation)
       && this.effectiveDisplayedColumns().some((name) =>
@@ -238,7 +246,17 @@ export class IbTable implements OnDestroy {
       if (!paginator || !('totalCount$' in source)) return;
       const subscription = source.totalCount$.subscribe((totalCount) => {
         paginator.length = totalCount;
+        this.refreshCurrentPageExportAvailability();
       });
+      onCleanup(() => subscription.unsubscribe());
+    });
+    effect((onCleanup) => {
+      if (!this.initialized()) return;
+      this.activeDataSource();
+      const paginator = this.paginator();
+      this.refreshCurrentPageExportAvailability();
+      if (!paginator) return;
+      const subscription = paginator.page.subscribe(() => this.refreshCurrentPageExportAvailability());
       onCleanup(() => subscription.unsubscribe());
     });
     effect(() => {
@@ -355,15 +373,15 @@ export class IbTable implements OnDestroy {
   doExport(settings: Partial<IDataExportSettings>): void {
     if (!this.isExportSettings(settings)) return;
     const source = this.activeDataSource();
-    if (
-      !this.hasCapability(IbDataSourceCapability.CurrentPageExport)
-      || (settings.dataset === 'all' && !this.hasCapability(IbDataSourceCapability.FullExport))
-      || (settings.dataset === 'selected' && !this.hasCapability(IbDataSourceCapability.RowSelection))
-    ) return;
+    if (!this.canExportDataset(settings.dataset)) return;
+
+    const exportableSource = this.createExportableSource(source, settings.dataset);
+    const selectedRows = settings.dataset === 'selected' ? exportableSource.filteredData : undefined;
     this.exportService._exportFromTable(
       this.tableName(),
-      source as IbTableDataSource<unknown>,
-      settings
+      exportableSource,
+      settings,
+      selectedRows,
     );
   }
 
@@ -410,6 +428,7 @@ export class IbTable implements OnDestroy {
     if (paginator) {
       paginator.pageIndex = snapshot.pageIndex;
       paginator.pageSize = snapshot.pageSize;
+      this.refreshCurrentPageExportAvailability();
     }
     if (tableFilter) tableFilter.hydrateRawValue(snapshot.filters as never);
     if (this.isRemoteDataSource(source)) {
@@ -438,6 +457,7 @@ export class IbTable implements OnDestroy {
     source.sort = sort ?? null;
     source.paginator = paginator ?? null;
     source.initializeSortState(snapshot.sort ?? { active: '', direction: '' });
+    this.refreshCurrentPageExportAvailability();
   }
 
   private getViewData() {
@@ -480,6 +500,79 @@ export class IbTable implements OnDestroy {
   }
 
   private isExportSettings(settings: Partial<IDataExportSettings>): settings is IDataExportSettings {
-    return settings.format !== undefined && settings.dataset !== undefined;
+    return settings.format !== undefined
+      && (settings.dataset === 'all'
+        || settings.dataset === 'selected'
+        || settings.dataset === 'current');
+  }
+
+  private refreshCurrentPageExportAvailability(): void {
+    const paginator = this.paginator();
+    this.currentPageExportAvailable.set(!!paginator && paginator.getNumberOfPages() > 1);
+  }
+
+  private canExportDataset(dataset: IDataExportSettings['dataset']): boolean {
+    if (dataset === 'all') return this.canExportAllRows();
+    if (dataset === 'selected') return this.canSelectRows();
+    return this.canExportCurrentPage();
+  }
+
+  private createExportableSource(
+    source: IbTableSource,
+    dataset: IDataExportSettings['dataset'],
+  ): IbExportableSource {
+    return {
+      filteredData: this.exportRows(source, dataset),
+      sort: null,
+      sortData: (data) => data,
+      paginator: null,
+      sortedColumns: this.exportColumns(source),
+      capabilities: this.exportCapabilities(source),
+    };
+  }
+
+  private exportRows(
+    source: IbTableSource,
+    dataset: IDataExportSettings['dataset'],
+  ): unknown[] {
+    const orderedRows = this.orderedExportRows(source);
+
+    if (dataset === 'selected') {
+      const selectedRows = this.selectionColumn()?.selection.selected ?? [];
+      return orderedRows.filter((row) => selectedRows.includes(row));
+    }
+
+    if (this.isRemoteDataSource(source)) return orderedRows;
+
+    if (dataset !== 'current') return orderedRows;
+
+    const paginator = this.paginator();
+    const pageIndex = paginator?.pageIndex ?? 0;
+    const pageSize = paginator?.pageSize ?? orderedRows.length;
+    const start = pageIndex * pageSize;
+    return orderedRows.slice(start, start + pageSize);
+  }
+
+  private orderedExportRows(source: IbTableSource): unknown[] {
+    if (this.isRemoteDataSource(source)) return [...source.filteredData];
+    if (this.isLocalDataSource(source)) return source.getOrderedData();
+    return source.sort ? source.sortData([...source.filteredData], source.sort) : [...source.filteredData];
+  }
+
+  private exportColumns(source: IbTableSource): IbColumn<unknown>[] {
+    if (source instanceof IbTableDataSource && source.sortedColumns.length > 0) {
+      return source.sortedColumns;
+    }
+    return [...this.columns()];
+  }
+
+  private exportCapabilities(source: IbTableSource): ReadonlySet<IbDataSourceCapability> {
+    if ('capabilities' in source) return source.capabilities;
+    return new Set([
+      IbDataSourceCapability.RowSelection,
+      IbDataSourceCapability.CurrentPageExport,
+      IbDataSourceCapability.FullExport,
+      IbDataSourceCapability.GlobalAggregation,
+    ]);
   }
 }

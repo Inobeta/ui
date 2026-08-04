@@ -1,5 +1,6 @@
 import { fakeAsync, tick } from "@angular/core/testing";
 import { Observable, Subject } from "rxjs";
+import { IbDataSourceCapability } from "./data-source.types";
 import {
   IbFetchDataResponse,
   IbRemoteDataSourceRequest,
@@ -220,9 +221,44 @@ describe("IbTableRemoteDataSource", () => {
     secondSubscription.unsubscribe();
   });
 
-  it("declares remote capabilities explicitly", () => {
+  it("exposes only CurrentPageExport by default (DEVK-1105)", () => {
     const source = createSource();
 
-    expect(source.capabilities.size).toBe(0);
+    expect(source.capabilities).toEqual(
+      new Set([IbDataSourceCapability.CurrentPageExport])
+    );
+    expect(
+      source.capabilities.has(IbDataSourceCapability.FullExport)
+    ).toBeFalse();
+    expect(
+      source.capabilities.has(IbDataSourceCapability.RowSelection)
+    ).toBeFalse();
+    expect(
+      source.capabilities.has(IbDataSourceCapability.GlobalAggregation)
+    ).toBeFalse();
+  });
+
+  it("lets subclasses override the capability set (DEVK-1105)", () => {
+    class CapableRemoteSource extends IbTableRemoteDataSource<Row, Filter> {
+      readonly capabilities: ReadonlySet<IbDataSourceCapability> = new Set([
+        IbDataSourceCapability.CurrentPageExport,
+        IbDataSourceCapability.FullExport,
+      ]);
+
+      fetchData(
+        _request: IbRemoteDataSourceRequest<Filter>
+      ): Observable<IbFetchDataResponse<Row>> {
+        return new Subject<IbFetchDataResponse<Row>>().asObservable();
+      }
+    }
+
+    const source = new CapableRemoteSource();
+
+    expect(source.capabilities).toEqual(
+      new Set([
+        IbDataSourceCapability.CurrentPageExport,
+        IbDataSourceCapability.FullExport,
+      ])
+    );
   });
 });

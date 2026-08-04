@@ -5,6 +5,7 @@ import { MAT_DIALOG_DATA } from "@angular/material/dialog";
 export interface IbTableDataExportDialogData {
   showAllRowsOption: boolean;
   showSelectedRowsOption: boolean;
+  showCurrentPageOption?: boolean;
   formats: { value: string, label: string }[]
 }
 
@@ -36,7 +37,7 @@ export interface IbTableDataExportDialogData {
         <mat-radio-button value="selected" *ngIf="data?.showSelectedRowsOption">
           {{ "shared.ibTable.exportData.selectedRows" | translate }}
         </mat-radio-button>
-        <mat-radio-button value="current">{{
+        <mat-radio-button value="current" *ngIf="data?.showCurrentPageOption !== false">{{
           "shared.ibTable.exportData.currentPage" | translate
         }}</mat-radio-button>
       </mat-radio-group>
@@ -46,7 +47,7 @@ export interface IbTableDataExportDialogData {
       <button mat-button mat-dialog-close>
         {{ "shared.ibModal.close" | translate }}
       </button>
-      <button mat-button [mat-dialog-close]="settings">
+      <button mat-button [disabled]="!_settings.controls.dataset.value" [mat-dialog-close]="settings">
         {{ "shared.ibTable.export" | translate }}
       </button>
     </mat-dialog-actions>
@@ -57,8 +58,15 @@ export class IbTableDataExportDialog {
   data: IbTableDataExportDialogData = inject(MAT_DIALOG_DATA);
   _settings = new FormGroup({
     format: new FormControl(this.data.formats[0].value),
-    dataset: new FormControl(this.data.showAllRowsOption ? "all" : "current"),
+    dataset: new FormControl<"all" | "selected" | "current" | null>(this.firstVisibleDataset),
   });
+
+  private get firstVisibleDataset(): "all" | "selected" | "current" | null {
+    if (this.data.showAllRowsOption) return "all";
+    if (this.data.showSelectedRowsOption) return "selected";
+    if (this.data.showCurrentPageOption !== false) return "current";
+    return null;
+  }
 
   get settings() {
     return this._settings.value;
