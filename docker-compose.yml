@@ -1,9 +1,34 @@
-version: '2'
 services:
   examples:
-    image: ${IMAGE}:${version}
-    environment:
-    - NODE_ENV=production
-    command: /bin/bash -c "./env-start > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"
+    image: "${IMAGE}:${version:-latest}"
+    restart: unless-stopped
     ports:
-    - "${EXTERNALPORT_HTTP}:80"
+      - "${EXTERNALPORT_HTTP}:80"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://127.0.0.1/healthz || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - examples-net
+
+  docs:
+    image: "${DOCS_IMAGE}:${version:-latest}"
+    restart: unless-stopped
+    ports:
+      - "${DOCS_EXTERNALPORT_HTTP}:80"
+    volumes:
+      - "./docs/v:/srv/docs/versions:ro"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://127.0.0.1/healthz || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - docs-net
+
+networks:
+  examples-net:
+  docs-net:

@@ -5,7 +5,9 @@ stages:
   - install
   - npm:deploy
   - docs:build
+  - docs:image
   - docs:deploy
+  - docs:history
   - examples:build
   - examples:image
   - examples:deploy
@@ -127,21 +129,60 @@ docs_build:
 
 docs_publish:
   stage: docs:deploy
+  needs:
+    - job: docs_build
+      artifacts: true
   script:
     - set_current_version
     - dir="$CURRENT_VERSION"
-    - if [ "$CI_COMMIT_REF_SLUG" == "$CI_DEFAULT_BRANCH" ]; then dir="current"; fi;
+    - if [ "$CI_COMMIT_REF_SLUG" = "$CI_DEFAULT_BRANCH" ]; then dir="current"; fi;
+    - validate_staging_variables
     - mkdir -p ~/.ssh && echo "$SSH_STAGING" | tr -d '\r' > ~/.ssh/id_rsa && chmod -R 600 ~/.ssh
     - ssh-keyscan -t rsa $STAGING_HOST >> ~/.ssh/known_hosts
-    - ssh $STAGING_USER@$STAGING_HOST "rm -rf ~/Apps/$APPNAME/docs/v/$dir && mkdir -p ~/Apps/$APPNAME/docs/v/$dir"
-    - scp -r dist/storybook/ui/* $STAGING_USER@$STAGING_HOST:~/Apps/$APPNAME/docs/v/$dir
+    - ssh $STAGING_USER@$STAGING_HOST "docker compose version >/dev/null"
+    - remote_docs_root="~/Apps/$APPNAME/docs/v"
+    - remote_temp_dir="$remote_docs_root/.${dir}.tmp-${CI_PIPELINE_ID}-${CI_JOB_ID}"
+    - ssh $STAGING_USER@$STAGING_HOST "set -eu; remote_docs_root=\$HOME/Apps/$APPNAME/docs/v; remote_temp_dir=\$remote_docs_root/.${dir}.tmp-${CI_PIPELINE_ID}-${CI_JOB_ID}; mkdir -p \"\$remote_docs_root\"; rm -rf \"\$remote_temp_dir\"; mkdir \"\$remote_temp_dir\""
+    - scp -r dist/storybook/ui/. "$STAGING_USER@$STAGING_HOST:$remote_temp_dir/" || { ssh $STAGING_USER@$STAGING_HOST "rm -rf \"\$HOME/Apps/$APPNAME/docs/v/.${dir}.tmp-${CI_PIPELINE_ID}-${CI_JOB_ID}\""; exit 1; }
+    - ssh $STAGING_USER@$STAGING_HOST "set -eu; remote_docs_root=\$HOME/Apps/$APPNAME/docs/v; final_dir=\"\$remote_docs_root/$dir\"; backup_dir=\"\$remote_docs_root/.${dir}.previous-${CI_PIPELINE_ID}-${CI_JOB_ID}\"; rm -rf \"\$backup_dir\"; had_final=0; if [ -e \"\$final_dir\" ]; then mv \"\$final_dir\" \"\$backup_dir\"; had_final=1; fi; if mv \"\$HOME/Apps/$APPNAME/docs/v/.${dir}.tmp-${CI_PIPELINE_ID}-${CI_JOB_ID}\" \"\$final_dir\"; then if [ \"\$had_final\" -eq 1 ]; then rm -rf \"\$backup_dir\"; fi; else if [ \"\$had_final\" -eq 1 ]; then mv \"\$backup_dir\" \"\$final_dir\"; fi; exit 1; fi"
+    - prepare_staging
+    - service_pullrestart_staging docs
   tags:
     - dedicated
   interruptible: true
+  resource_group: docs-deployment
   only:
     - master
     - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
     - /^[0-9]+\.[0-9]+\.[0-9]+$/
+
+docs:history:
+  image: docker:27.1.1
+  services:
+    - docker:27.1.1-dind
+  stage: docs:history
+  variables:
+    GIT_DEPTH: "0"
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+  script:
+    - apk add --no-cache git openssh-client
+    - git fetch --force --tags origin
+    - validate_staging_variables
+    - mkdir -p ~/.ssh && echo "$SSH_STAGING" | tr -d '\r' > ~/.ssh/id_rsa && chmod -R 600 ~/.ssh
+    - ssh-keyscan -t rsa "$STAGING_HOST" >> ~/.ssh/known_hosts
+    - sh docker/docs/assets/build-history.sh
+    - prepare_staging
+    - service_pullrestart_staging docs
+    - echo "Docs service recreated once after successful history batch"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      when: manual
+      allow_failure: true
+    - when: never
+  resource_group: docs-deployment
+  tags:
+    - dedicated
 
 examples:build:
   stage: examples:build
@@ -171,13 +212,44 @@ examples:image:
     DOCKER_TLS_CERTDIR: ""
   script:
     - echo "building image $IMAGE:latest"
-    - docker login -u $GITLAB_USER -p $AUTH_TOKEN registry.gitlab.com || { echo "Docker login failed"; exit 1; }
-    - DOCKER_BUILDKIT=1 docker build --memory 128m --progress=plain --push -t $IMAGE:latest . || { echo "Docker build failed with exit code $?"; true; }
+    - echo "$AUTH_TOKEN" | docker login --username "$GITLAB_USER" --password-stdin registry.gitlab.com
+    - DOCKER_BUILDKIT=1 docker build --memory 128m --progress=plain --push -f docker/examples/Dockerfile -t "$IMAGE:latest" .
     - echo "image build done"
   only:
     - master
     - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
     - /^[0-9]+\.[0-9]+\.[0-9]+$/
+  tags:
+    - gitlab-org-docker
+
+docs:image:
+  image: docker:27.1.1
+  services:
+    - docker:27.1.1-dind
+  stage: docs:image
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+  script:
+    - echo "building image $DOCS_IMAGE:latest"
+    - echo "$AUTH_TOKEN" | docker login --username "$GITLAB_USER" --password-stdin registry.gitlab.com
+    - DOCKER_BUILDKIT=1 docker build --memory 128m --progress=plain --push -f docker/docs/Dockerfile -t "$DOCS_IMAGE:latest" .
+    - echo "image build done"
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
+      changes:
+        - docker/docs/Dockerfile
+        - docker/docs/assets/**
+    - if: '$CI_COMMIT_REF_NAME =~ /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/'
+      changes:
+        - docker/docs/Dockerfile
+        - docker/docs/assets/**
+    - if: '$CI_COMMIT_REF_NAME =~ /^[0-9]+\.[0-9]+\.[0-9]+$/'
+      changes:
+        - docker/docs/Dockerfile
+        - docker/docs/assets/**
+    - when: never
+  resource_group: docs-image-publication
   tags:
     - gitlab-org-docker
 
@@ -188,20 +260,19 @@ examples:deploy:
     - docker:dind
   script:
     - prepare_staging
-    - service_pullrestart_staging $IMAGE latest $SERVICE
+    - service_pullrestart_staging examples
   tags:
     - dedicated
   environment:
     name: examples
     url: $STAGING_URL
+  resource_group: examples-deployment
   only:
     - master
     - /^develop\/[0-9]+\.[0-9]+\.[0-9]+$/
     - /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 .inobeta_pkg: &inobeta_pkg |
-  [[ "$TRACE" ]] && set -x
-
   function set_current_version() {
     CURRENT_VERSION=$(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[\",]//g' | tr -d '[[:space:]]')
   }
@@ -213,19 +284,31 @@ examples:deploy:
   }
 
   function prepare_staging() {
+    validate_staging_variables
     mkdir -p ~/.ssh && echo "$SSH_STAGING" | tr -d '\r' > ~/.ssh/id_rsa && chmod -R 600 ~/.ssh
     ssh-keyscan -t rsa $STAGING_HOST >> ~/.ssh/known_hosts
     ssh $STAGING_USER@$STAGING_HOST "mkdir -p ~/Apps/$APPNAME"
     scp docker-compose.yml $STAGING_USER@$STAGING_HOST:~/Apps/$APPNAME
-    echo "IMAGE=$IMAGE" >> ".env"
-    echo "EXTERNALPORT_HTTP=$EXTERNALPORT_HTTP" >> ".env"
-    echo "version=latest" >> ".env"
+    printf 'IMAGE=%s\nDOCS_IMAGE=%s\nEXTERNALPORT_HTTP=%s\nDOCS_EXTERNALPORT_HTTP=%s\nversion=latest\n' "$IMAGE" "$DOCS_IMAGE" "$EXTERNALPORT_HTTP" "$DOCS_EXTERNALPORT_HTTP" > .env
     scp .env $STAGING_USER@$STAGING_HOST:~/Apps/$APPNAME
   }
 
+  function validate_staging_variables() {
+    : "${APPNAME:?APPNAME is required}"
+    : "${IMAGE:?IMAGE is required}"
+    : "${DOCS_IMAGE:?DOCS_IMAGE is required}"
+    : "${EXTERNALPORT_HTTP:?EXTERNALPORT_HTTP is required}"
+    : "${DOCS_EXTERNALPORT_HTTP:?DOCS_EXTERNALPORT_HTTP is required}"
+    : "${SSH_STAGING:?SSH_STAGING is required}"
+    : "${STAGING_USER:?STAGING_USER is required}"
+    : "${STAGING_HOST:?STAGING_HOST is required}"
+    : "${GITLAB_USER:?GITLAB_USER is required}"
+    : "${AUTH_TOKEN:?AUTH_TOKEN is required}"
+  }
 
   function service_pullrestart_staging() {
-    ssh $STAGING_USER@$STAGING_HOST "cd ~/Apps/$APPNAME && docker login -u $GITLAB_USER -p $AUTH_TOKEN registry.gitlab.com && docker pull $1:$2 && docker-compose stop $3 && docker-compose up -d $3"
+    service="$1"
+    printf '%s\n' "$AUTH_TOKEN" | ssh $STAGING_USER@$STAGING_HOST "set -eu; read -r registry_password; printf '%s\\n' \"\$registry_password\" | docker login --username \"$GITLAB_USER\" --password-stdin registry.gitlab.com; cd ~/Apps/$APPNAME; docker compose pull \"$service\"; docker compose up -d --force-recreate \"$service\"; container_id=\$(docker compose ps -q \"$service\"); test -n \"\$container_id\"; for attempt in \$(seq 1 30); do health_status=\$(docker inspect --format '{{.State.Health.Status}}' \"\$container_id\"); if [ \"\$health_status\" = healthy ]; then exit 0; fi; if [ \"\$health_status\" = unhealthy ]; then exit 1; fi; sleep 2; done; exit 1"
   }
 
 before_script:
