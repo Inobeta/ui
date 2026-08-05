@@ -9,7 +9,6 @@ import { MatTableModule } from "@angular/material/table";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { By } from "@angular/platform-browser";
 import { IbCellDef } from "../cells";
-import { IbSortHeader } from "../sort-header";
 import { IbColumn } from "./column";
 import { IB_TABLE } from "../tokens";
 
@@ -94,17 +93,18 @@ describe("IbColumn", () => {
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
         declarations: [ColumnHostComponent, IbCellDef],
-        imports: [NoopAnimationsModule, MatTableModule, MatSortModule, IbColumn, IbSortHeader],
+        imports: [NoopAnimationsModule, MatTableModule, MatSortModule, IbColumn],
       }).compileComponents();
     }));
 
-    beforeEach(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(ColumnHostComponent);
       host = fixture.componentInstance;
+      fixture.detectChanges();
+      await fixture.whenStable();
       component = fixture.debugElement.query(
         By.directive(IbColumn)
       ).componentInstance;
-      fixture.detectChanges();
     });
 
     // --- Requirement 1: name/header/accessor/sort/sticky signals ---
@@ -127,10 +127,11 @@ describe("IbColumn", () => {
       expect(component._createDefaultHeaderText()).toBe("TestCol");
     });
 
-    it("should use the provided dataAccessor function", () => {
+    it("should use the provided dataAccessor function", async () => {
       const accessor = (data: any) => data.custom;
       host.colAccessor = accessor as any;
-      fixture.detectChanges();
+      fixture.changeDetectorRef.markForCheck();
+      await fixture.whenStable();
       expect(component.dataAccessor()({ custom: 42 }, "custom")).toBe(42);
     });
 
@@ -147,54 +148,61 @@ describe("IbColumn", () => {
       expect(component.filterDataAccessor()).toBe(component.dataAccessor());
     });
 
-    it("should provide a custom sortingDataAccessor when set", () => {
+    it("should provide a custom sortingDataAccessor when set", async () => {
       const sortFn = () => "sorted" as any;
       host.colSortAccessor = sortFn as any;
-      fixture.detectChanges();
+      fixture.changeDetectorRef.markForCheck();
+      await fixture.whenStable();
       expect(component.sortingDataAccessor()).toBe(sortFn as any);
     });
 
-    it("should provide a custom filterDataAccessor when set", () => {
+    it("should provide a custom filterDataAccessor when set", async () => {
       const filterFn = () => "filtered" as any;
       host.colFilterAccessor = filterFn as any;
-      fixture.detectChanges();
+      fixture.changeDetectorRef.markForCheck();
+      await fixture.whenStable();
       expect(component.filterDataAccessor()).toBe(filterFn as any);
     });
 
     // --- signal invocation (Requirement 8) ---
 
-    it("should read sort input as a boolean signal", () => {
+    it("should read sort input as a boolean signal", async () => {
       expect(component.sortInput()).toBeFalse();
       host.colSort = true;
-      fixture.detectChanges();
+      fixture.changeDetectorRef.markForCheck();
+      await fixture.whenStable();
       expect(component.sortInput()).toBeTrue();
     });
 
-    it("should read sticky input as a boolean signal", () => {
+    it("should read sticky input as a boolean signal", async () => {
       expect(component.stickyInput()).toBeFalse();
       host.colSticky = true;
-      fixture.detectChanges();
+      fixture.changeDetectorRef.markForCheck();
+      await fixture.whenStable();
       expect(component.stickyInput()).toBeTrue();
     });
 
-    it("should read stickyEnd input as a boolean signal", () => {
+    it("should read stickyEnd input as a boolean signal", async () => {
       expect(component.stickyEndInput()).toBeFalse();
       host.colStickyEnd = true;
-      fixture.detectChanges();
+      fixture.changeDetectorRef.markForCheck();
+      await fixture.whenStable();
       expect(component.stickyEndInput()).toBeTrue();
     });
 
-    it("should read aggregate input as a boolean signal", () => {
+    it("should read aggregate input as a boolean signal", async () => {
       expect(component.aggregateInput()).toBeFalse();
       host.colAggregate = true;
-      fixture.detectChanges();
+      fixture.changeDetectorRef.markForCheck();
+      await fixture.whenStable();
       expect(component.aggregateInput()).toBeTrue();
     });
 
-    it("should read isActionColumnInput as a boolean signal", () => {
+    it("should read isActionColumnInput as a boolean signal", async () => {
       expect(component.isActionColumnInput()).toBeFalse();
       host.colIsAction = true;
-      fixture.detectChanges();
+      fixture.changeDetectorRef.markForCheck();
+      await fixture.whenStable();
       expect(component.isActionColumnInput()).toBeTrue();
     });
 
@@ -208,9 +216,10 @@ describe("IbColumn", () => {
 
     // --- Requirement 8: programmatic access to signal value ---
 
-    it("should allow programmatic signal invocation to read the current sort value", () => {
+    it("should allow programmatic signal invocation to read the current sort value", async () => {
       host.colSort = true;
-      fixture.detectChanges();
+      fixture.changeDetectorRef.markForCheck();
+      await fixture.whenStable();
       const sortValue = component.sortInput();
       expect(sortValue).toBeTrue();
       expect(typeof sortValue).toBe("boolean");
@@ -269,16 +278,17 @@ describe("IbColumn", () => {
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
         declarations: [ColumnWithTableHostComponent],
-        imports: [NoopAnimationsModule, MatTableModule, MatSortModule, IbColumn, IbSortHeader],
+        imports: [NoopAnimationsModule, MatTableModule, MatSortModule, IbColumn],
       }).compileComponents();
     }));
 
-    beforeEach(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(ColumnWithTableHostComponent);
+      fixture.detectChanges();
+      await fixture.whenStable();
       component = fixture.debugElement.query(
         By.directive(IbColumn)
       ).componentInstance;
-      fixture.detectChanges();
     });
 
     // --- Requirement 2: MatColumnDef registration/removal ---
@@ -302,10 +312,6 @@ describe("IbColumn", () => {
       expect(component.columnDef().footerCell).toBe(component.footerCell());
     });
 
-    // --- matSort computed signal ---
-
-    it("should compute matSort from the table's sort property", () => {
-      expect(component.matSort()).toBeNull();
-    });
   });
+
 });

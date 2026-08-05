@@ -29,7 +29,6 @@ import { IbSelectionColumn } from "./columns/selection-column";
 import { IbTextColumn } from "./columns/text-column";
 import { IbTablePaginatorIntl } from "./paginator-intl";
 import { IbKaiRowGroupDirective } from "./rowgroup";
-import { IbSortHeader } from "./sort-header";
 import { IbTable } from "./table.component";
 import { provideState } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
@@ -46,7 +45,6 @@ import { IbTableDataExportAction } from "../data-export/table-data-export.compon
     IbTextColumn,
     IbNumberColumn,
     IbDateColumn,
-    IbSortHeader,
     IbActionColumn,
     IbAggregateCell,
   ],
@@ -65,7 +63,6 @@ import { IbTableDataExportAction } from "../data-export/table-data-export.compon
     CommonModule,
     PortalModule,
     IbColumn,
-    IbSortHeader,
     MatTableModule,
     MatSortModule,
     MatMenuModule,

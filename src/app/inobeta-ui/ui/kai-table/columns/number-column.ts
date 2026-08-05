@@ -7,6 +7,7 @@ import {
 import { IB_AGGREGATE_TYPE, IB_COLUMN } from "../tokens";
 import { IbColumn } from "./column";
 import { DecimalPipe } from "@angular/common";
+import { IB_COLUMN_MAT_SORT_PROVIDER } from "./column-sort.provider";
 
 /**
  * Column that shows a formatted number for the row cells.
@@ -21,7 +22,6 @@ import { DecimalPipe } from "@angular/common";
   template: `
     <ng-container
       matColumnDef
-      matSort
       [sticky]="stickyInput()"
       [stickyEnd]="stickyEndInput()"
       >
@@ -29,7 +29,6 @@ import { DecimalPipe } from "@angular/common";
         class="ib-table__header-cell"
         mat-header-cell
         *matHeaderCellDef
-        [ibSortHeaderFor]="matSort()"
         mat-sort-header
         [disabled]="!sortInput()"
         >
@@ -67,6 +66,7 @@ import { DecimalPipe } from "@angular/common";
     { provide: IB_COLUMN, useExisting: IbNumberColumn },
     { provide: IB_AGGREGATE_TYPE, useValue: "number" },
   ],
+  viewProviders: [IB_COLUMN_MAT_SORT_PROVIDER],
   standalone: false
 })
 export class IbNumberColumn<T> extends IbColumn<T> {

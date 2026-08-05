@@ -52,7 +52,7 @@ describe("IbTableViewGroup", () => {
   let addViewDialog$: Subject<{ name: string }>;
   let saveDiscardCancelDialog$: Subject<{ action: string; name?: string } | null>;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     const storageSpy = jasmine.createSpyObj<IbViewStorageService>(
       "IbViewStorageService",
       [
@@ -129,6 +129,7 @@ describe("IbTableViewGroup", () => {
     }));
     component.setViewGroupName("issues");
     fixture.detectChanges();
+    await fixture.whenStable();
   });
 
   // ---------------------------------------------------------------------------
@@ -160,10 +161,11 @@ describe("IbTableViewGroup", () => {
       expect(component.checkViewDataChanges()).toBeTrue();
     });
 
-    it("handleStateChanges should subscribe and update dirty when data changes", () => {
+    it("handleStateChanges should subscribe and update dirty when data changes", async () => {
       const changes$ = new Subject<void>();
       component.handleStateChanges(changes$);
-      fixture.detectChanges();
+      fixture.changeDetectorRef.markForCheck();
+      await fixture.whenStable();
 
       // Initially not dirty (accessor returns same as default baseline)
       expect(component.dirty).toBeFalse();
@@ -179,7 +181,8 @@ describe("IbTableViewGroup", () => {
 
       // Emit change signal
       changes$.next();
-      fixture.detectChanges();
+      fixture.changeDetectorRef.markForCheck();
+      await fixture.whenStable();
 
       expect(component.dirty).toBeTrue();
     });

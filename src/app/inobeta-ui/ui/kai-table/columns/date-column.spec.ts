@@ -12,7 +12,6 @@ import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { By } from "@angular/platform-browser";
 import { IbDateColumn } from "./date-column";
 import { IbColumn } from "./column";
-import { IbSortHeader } from "../sort-header";
 
 registerLocaleData(localeIt);
 
@@ -42,26 +41,28 @@ describe("IbDateColumn", () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [DateColumnHostComponent, IbDateColumn],
-      imports: [NoopAnimationsModule, MatTableModule, MatSortModule, IbColumn, IbSortHeader],
+      imports: [NoopAnimationsModule, MatTableModule, MatSortModule, IbColumn],
     }).compileComponents();
   }));
 
-  beforeEach(() => {
+  beforeEach(async () => {
     fixture = TestBed.createComponent(DateColumnHostComponent);
     host = fixture.componentInstance;
+    fixture.detectChanges();
+    await fixture.whenStable();
     component = fixture.debugElement.query(
       By.directive(IbDateColumn)
     ).componentInstance;
-    fixture.detectChanges();
   });
 
   it("should read format as a signal with default value", () => {
     expect(component.format()).toBe("dd/MM/yyyy HH:mm z");
   });
 
-  it("should update format signal", () => {
+  it("should update format signal", async () => {
     host.formatValue = "yyyy-MM-dd";
-    fixture.detectChanges();
+    fixture.changeDetectorRef.markForCheck();
+    await fixture.whenStable();
     expect(component.format()).toBe("yyyy-MM-dd");
   });
 
@@ -69,9 +70,10 @@ describe("IbDateColumn", () => {
     expect(component.locale()).toBe("it");
   });
 
-  it("should update locale signal", () => {
+  it("should update locale signal", async () => {
     host.localeValue = "en-US";
-    fixture.detectChanges();
+    fixture.changeDetectorRef.markForCheck();
+    await fixture.whenStable();
     expect(component.locale()).toBe("en-US");
   });
 

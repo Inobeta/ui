@@ -1,5 +1,3 @@
-import { Meta, Canvas, Markdown } from "@storybook/blocks";
-
 import * as TableStories from "./table.stories";
 
 <Meta title="Components/Table/Overview" />
@@ -269,7 +267,6 @@ You can fetch and transform data within a nested object by overriding the `dataA
     MatSortModule,
     MatIconModule,
     MatTooltipModule,
-    IbSortHeader,
     DatePipe,
   ],
 })
@@ -289,18 +286,11 @@ It will be used as a getter function in your template.
 
 ```html
 <!-- timestamp-column.component.html -->
-<!--
-  matColumnDef: Column definition for the mat-table
-  matSort: "Dummy" instance of `matSort`
-  sticky & stickyEnd: Whether the column should be sticky positioned
--->
 <ng-container matColumnDef matSort [sticky]="stickyInput()" [stickyEnd]="stickyEndInput()">
-  <!-- ibSortHeaderFor: Replaces the temporary \`matSort\` instance with the one declared in the table component -->
   <th
     class="ib-table__header-cell"
     mat-header-cell
     *matHeaderCellDef
-    [ibSortHeaderFor]="matSort()"
     mat-sort-header
     [disabled]="!sortInput()"
   >
@@ -429,14 +419,12 @@ Then, add the necessary filters withing your table. Each filter requires a `name
 
 #### Filters
 
-<Markdown>{`
 | Name               | Usage                                                                                                                                                                                    |
 | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| \`ib-text-filter\`   | Text-based search.                                                                                                                                                                       |
-| \`ib-tag-filter\`    | Selection-based search. By default, a distinct set of options is generated from the column's data. Can be overriden with \`options\`. Use \`[multiple]="false"\` to disable mutli selection. |
-| \`ib-number-filter\` | Number-based search. By default, the minimum and maximum values are set from the column's data. Can be overriden with \`min\` and \`max\`. Use \`step\` to define the precision of the slider. |
-| \`ib-date-filter\`   | Date-based search.                                                                                                                                                                       |
-`}</Markdown>
+| `ib-text-filter`   | Text-based search.                                                                                                                                                                       |
+| `ib-tag-filter`    | Selection-based search. By default, a distinct set of options is generated from the column's data. Can be overriden with `options`. Use `[multiple]="false"` to disable mutli selection. |
+| `ib-number-filter` | Number-based search. By default, the minimum and maximum values are set from the column's data. Can be overriden with `min` and `max`. Use `step` to define the precision of the slider. |
+| `ib-date-filter`   | Date-based search.
 
 #### Filtering data accessor
 
@@ -1071,14 +1059,12 @@ Considering the following table as an example:
 
 For each filter type exists a query object holding the values provided by the user.
 
-<Markdown>{`
 | Filter | Type
 | - | - |
-| \`ib-text-filter\`   | \`IbTextQuery\` |
-| \`ib-date-filter\`   | \`IbDateQuery\` |
-| \`ib-number-filter\` | \`IbNumberQuery\` |
-| \`ib-tag-filter\`    | \`IbTagQuery\`  |
-`}</Markdown>
+| `ib-text-filter`   | `IbTextQuery` |
+| `ib-date-filter`   | `IbDateQuery` |
+| `ib-number-filter` | `IbNumberQuery` |
+| `ib-tag-filter`    | `IbTagQuery`  |
 
 Meaning that the filters above can be represented with the type:
 
@@ -1251,30 +1237,28 @@ Will produce
 
 `ib-text-filter-description`
 
-<Markdown>{`
 | Selector | Description
 | - | - |
-| \`[data-cy="ib-text-filter-<filterName>"]\`                 | Text filter button |
-| \`[data-cy="ib-text-filter-<filterName>-condition"]\`       | \`<mat-select>\` Default is \`Contiene\`. |
-| \`[data-cy="ib-text-filter-<filterName>-value"]\`           | Text query input |
-| \`[data-cy="ib-tag-filter-<filterName>"]\`                  | Tag filter button |
-| \`[data-cy="ib-tag-filter-<filterName>-options"]\`          | List of options |
-| \`[data-cy="ib-number-filter-<filterName>"]\`               | Number filter button |
-| \`[data-cy="ib-number-filter-<filterName>-min"]\`           | Minimum value of the range |
-| \`[data-cy="ib-number-filter-<filterName>-max"]\`           | Maximum value of the range |
-| \`[data-cy="ib-date-filter-<filterName>"]\`                 | Date filter button |
-| \`[data-cy="ib-date-filter-<filterName>-within"] [type="radio"]\`          | Within period option (\`A partire da\`). |
-| \`[data-cy="ib-date-filter-<filterName>-within-value"]\`    | Numeric input value for within category |
-| \`[data-cy="ib-date-filter-<filterName>-within-period"]\`   | \`<mat-select>\` Default is \`minuti\` |
-| \`[data-cy="ib-date-filter-<filterName>-moreThan"] [type="radio"]\`        | More than period option (\`Da oltre\`). |
-| \`[data-cy="ib-date-filter-<filterName>-moreThan-value"]\`  | Numeric input value for more than category |
-| \`[data-cy="ib-date-filter-<filterName>-moreThan-period"]\` | \`<mat-select>\` Default is \`minuti fa\` |
-| \`[data-cy="ib-date-filter-<filterName>-range"] [type="radio"]\`           | Range date option (\`Tra\`). |
-| \`[data-cy="ib-date-filter-<filterName>-range-start"]\`     | Start date input. Edit it with \`.type("dd/mm/yyyy")\` |
-| \`[data-cy="ib-date-filter-<filterName>-range-end"]\`       | End date input. Edit it with \`.type("dd/mm/yyyy")\` |
-| \`[data-cy="ib-filter-update"]\`                            | Update button. Call \`.click()\` to apply the filter |
-| \`[data-cy="ib-filter-clear"]\`                             | Clear button. Call \`.click()\`  reset the filter selected |
-`}</Markdown>
+| `[data-cy="ib-text-filter-<filterName>"]`                 | Text filter button |
+| `[data-cy="ib-text-filter-<filterName>-condition"]`       | `<mat-select>` Default is `Contiene`. |
+| `[data-cy="ib-text-filter-<filterName>-value"]`           | Text query input |
+| `[data-cy="ib-tag-filter-<filterName>"]`                  | Tag filter button |
+| `[data-cy="ib-tag-filter-<filterName>-options"]`          | List of options |
+| `[data-cy="ib-number-filter-<filterName>"]`               | Number filter button |
+| `[data-cy="ib-number-filter-<filterName>-min"]`           | Minimum value of the range |
+| `[data-cy="ib-number-filter-<filterName>-max"]`           | Maximum value of the range |
+| `[data-cy="ib-date-filter-<filterName>"]`                 | Date filter button |
+| `[data-cy="ib-date-filter-<filterName>-within"] [type="radio"]`          | Within period option (`A partire da`). |
+| `[data-cy="ib-date-filter-<filterName>-within-value"]`    | Numeric input value for within category |
+| `[data-cy="ib-date-filter-<filterName>-within-period"]`   | `<mat-select>` Default is `minuti` |
+| `[data-cy="ib-date-filter-<filterName>-moreThan"] [type="radio"]`        | More than period option (`Da oltre`). |
+| `[data-cy="ib-date-filter-<filterName>-moreThan-value"]`  | Numeric input value for more than category |
+| `[data-cy="ib-date-filter-<filterName>-moreThan-period"]` | `<mat-select>` Default is `minuti fa` |
+| `[data-cy="ib-date-filter-<filterName>-range"] [type="radio"]`           | Range date option (`Tra`). |
+| `[data-cy="ib-date-filter-<filterName>-range-start"]`     | Start date input. Edit it with `.type("dd/mm/yyyy")` |
+| `[data-cy="ib-date-filter-<filterName>-range-end"]`       | End date input. Edit it with `.type("dd/mm/yyyy")` |
+| `[data-cy="ib-filter-update"]`                            | Update button. Call `.click()` to apply the filter |
+| `[data-cy="ib-filter-clear"]`                             | Clear button. Call `.click()`  reset the filter selected |
 
 #### Usage with `ib-text-filter`
 

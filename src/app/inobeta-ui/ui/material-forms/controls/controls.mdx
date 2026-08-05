@@ -1,5 +1,3 @@
-import { Meta, Markdown } from "@storybook/blocks";
-
 <Meta title="Components/Forms (**Deprecated**)/Controls" />
 
 # Controls
@@ -10,7 +8,6 @@ import { Meta, Markdown } from "@storybook/blocks";
 
 All controls share, and are built upon, the same set of parameters
 
-<Markdown>{`
 |Name|Description|
 |-|-|
 |key|**Required.** Name of a form field
@@ -18,11 +15,10 @@ All controls share, and are built upon, the same set of parameters
 |required|If enabled, marks the field as required
 |disabled|Whether or not disable the form field
 |validators|Array of validators
-|width|Width size for a given form field. Supports css size units (es. \`px\`, \`%\`)
+|width|Width size for a given form field. Supports css size units (es. `px`, `%`)
 |cols|Numbers of columns to span
 |rows|Numbers of rows to span
-|change|Callback fired after a change within the form field<br>Example:<br>\`change: (form) => {/* do something with form */}\`
-`}</Markdown>
+|change|Callback fired after a change within the form field<br/>Example:<br/>`change: (form) => {/* do something with form */}`
 
 > ⚠️ About `cols` and `rows` parameters: these will only work when `<ib-material-form [cols]="3" />` is set.
 > This feature will most likely be deprecated in the future, so please refrain to use it without a good reason.
@@ -44,11 +40,9 @@ new IbMatAutocompleteControl({
 
 #### Parameters
 
-<Markdown>{`
 |Name|Description|
 |-|-|
 |options|Array of filterable options. i18n *not* supported
-`}</Markdown>
 
 ## Button
 
@@ -62,14 +56,12 @@ new IbMatButtonControl({
 ```
 #### Parameters
 
-<Markdown>{`
 |Name|Description|
 |-|-|
-|color|Name of the color palette. (es. \`primary\`, \`accent\`)<br>Same as \`<button mat-button [color]="color" />\`
-|handler|Called upon clicking the button.<br>Example<br>\`handler: (form) => {/* ... */}\`
+|color|Name of the color palette. (es. `primary`, `accent`)<br/>Same as `<button mat-button [color]="color" />`
+|handler|Called upon clicking the button.<br/>Example<br/>`handler: (form) => {/* ... */}`
 |requireValidation|Whether or not the button should be disabled if the form is not valid
 |requireConfirmOnDirty|Whether a confirm dialog should be shown if the form is dirty
-`}</Markdown>
 
 ## Checkbox
 
@@ -107,14 +99,12 @@ new IbMatDropdownControl({
 ```
 #### Parameters
 
-<Markdown>{`
 |Name|Description|
 |-|-|
-|options|Array of objects with two required parameters<br>\`key\` is the concrete value of an option<br>\`value\` is an i18n label
+|options|Array of objects with two required parameters<br/>`key` is the concrete value of an option<br/>`value` is an i18n label
 |multiple|Whether multiple options can be selected
 |emptyRow|A single option, used as a default value
 |hintMessage|Function returning a string that will be shown as a tooltip
-`}</Markdown>
 
 ## Radio
 
@@ -132,11 +122,9 @@ new IbMatRadioControl({
 
 #### Parameters
 
-<Markdown>{`
 |Name|Description|
 |-|-|
-|options|Array of objects with two required parameters<br>\`key\` is the concrete value of an option<br>\`value\` is an i18n label
-`}</Markdown>
+|options|Array of objects with two required parameters<br/>`key` is the concrete value of an option<br/>`value` is an i18n label
 
 ## Slide toggle
 
@@ -161,11 +149,9 @@ new IbMatTextareaControl({
 
 #### Parameters
 
-<Markdown>{`
 |Name|Description|
 |-|-|
-|height|Height size for the text area. Defaults to \`auto\`
-`}</Markdown>
+|height|Height size for the text area. Defaults to `auto`
 
 ## Textbox
 
@@ -179,9 +165,7 @@ new IbMatTextboxControl({
 
 #### Parameters
 
-<Markdown>{`
 |Name|Description|
 |-|-|
-|type|Changes the input type display. Same as \`<input [type]="type" />\`
+|type|Changes the input type display. Same as `<input [type]="type" />`
 |hintMessage|Function returning a string that will be shown as a tooltip
-`}</Markdown>

@@ -6,45 +6,22 @@
 
 .nav-shell {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   height: 100%;
   min-height: 0;
 }
 
-.nav-header {
+.side-menu-column {
   display: flex;
   flex: 0 0 auto;
-  flex-direction: row;
-  align-items: center;
-}
-
-.nav-header ib-material-breadcrumb {
-  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .route-content {
   display: flex;
-  flex: 1 1 auto;
+  flex: 1 1 0;
   flex-direction: column;
   min-height: 0;
   overflow: hidden;
-}
-
-ul {
-  list-style: none;
-  margin: 0;
-  padding: 1em;
-  display: flex;
-  gap: 1em;
-}
-
-a {
-  font-family: 'Roboto', sans-serif;
-  text-decoration: none;
-  color: #777;
-}
-
-a.active-link {
-  text-decoration: none;
-  color: #030303
+  min-width: 0;
 }

@@ -88,10 +88,11 @@ describe("IbCellDef", () => {
     }).compileComponents();
   }));
 
-  beforeEach(() => {
+  beforeEach(async () => {
     fixture = TestBed.createComponent(CellDefHostComponent);
     host = fixture.componentInstance;
     fixture.detectChanges();
+    await fixture.whenStable();
   });
 
   it("should expose a templateRef", () => {
@@ -119,11 +120,12 @@ describe("IbAggregateCell", () => {
     }).compileComponents();
   }));
 
-  beforeEach(() => {
+  beforeEach(async () => {
     fixture = TestBed.createComponent(AggregateHostComponent);
     host = fixture.componentInstance;
-    component = fixture.debugElement.query(By.directive(IbAggregateCell)).componentInstance;
     fixture.detectChanges();
+    await fixture.whenStable();
+    component = fixture.debugElement.query(By.directive(IbAggregateCell)).componentInstance;
   });
 
   it("should read the function input signal", () => {
@@ -136,10 +138,11 @@ describe("IbAggregateCell", () => {
     expect(result.total).toBe(100);
   });
 
-  it("should read showTotal input signal", () => {
+  it("should read showTotal input signal", async () => {
     expect(component.showTotal()).toBeTrue();
     host.showTotal = false;
-    fixture.detectChanges();
+    fixture.changeDetectorRef.markForCheck();
+    await fixture.whenStable();
     expect(component.showTotal()).toBeFalse();
   });
 

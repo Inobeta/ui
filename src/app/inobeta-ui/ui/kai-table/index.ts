@@ -5,7 +5,6 @@ export * from "./data-source.types";
 export * from "./local-data-source";
 export * from "./remote-data-source";
 export * from "./rowgroup";
-export * from "./sort-header";
 export * from "./tokens";
 export {
   // New canonical selectors

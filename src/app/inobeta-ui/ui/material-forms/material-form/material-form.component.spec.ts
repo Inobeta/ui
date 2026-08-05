@@ -251,8 +251,6 @@ describe('IbMaterialFormComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(TestHostComponent);
     hostComponent = fixture.componentInstance;
-    component = fixture.debugElement.query(By.directive(IbMaterialFormComponent)).componentInstance;
-    fixture.detectChanges();
     hostComponent.customFormFields = [
       ...hostComponent.customFormFields,
       new IbMatTextboxControl({
@@ -264,6 +262,7 @@ describe('IbMaterialFormComponent', () => {
       })
     ];
     fixture.detectChanges();
+    component = fixture.debugElement.query(By.directive(IbMaterialFormComponent)).componentInstance;
 
     component.handleSubmit();
     component.handleActionClick({

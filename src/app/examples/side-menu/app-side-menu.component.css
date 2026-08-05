@@ -1,0 +1,36 @@
+:host {
+  display: block;
+  height: 100%;
+  min-height: 0;
+}
+
+.side-menu-container,
+.side-menu {
+  height: 100%;
+  min-height: 0;
+}
+
+.side-menu-container {
+  overflow: hidden;
+}
+
+.side-menu {
+  width: 16rem;
+  overflow: auto;
+}
+
+.side-menu-group-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem 0.25rem;
+  font-weight: 600;
+}
+
+.side-menu-group-title mat-icon {
+  flex: 0 0 auto;
+}
+
+a.active-link {
+  background: color-mix(in srgb, currentColor 12%, transparent);
+}

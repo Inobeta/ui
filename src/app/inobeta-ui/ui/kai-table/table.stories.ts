@@ -16,12 +16,11 @@ import {
   StoryObj,
   applicationConfig,
   moduleMetadata,
-} from "@storybook/angular";
+} from "@storybook/angular-vite";
 import { IbDataExportModule } from "../data-export";
 import { IbFilterModule } from "../kai-filter";
 import { IbTableActionModule } from "./action";
 import { IbColumn } from "./columns/column";
-import { IbSortHeader } from "./sort-header";
 import { IbTable } from "./table.component";
 import { IbKaiTableModule } from "./table.module";
 import { IB_AGGREGATE_TYPE, IB_COLUMN } from "./tokens";
@@ -81,12 +80,10 @@ registerLocaleData(localeIt);
      [sticky]="stickyInput()"
      [stickyEnd]="stickyEndInput()"
   >
-    <!-- ibSortHeaderFor: Replaces the temporary \`matSort\` instance with the one declared in the table component -->
     <th
       class="ib-table__header-cell"
       mat-header-cell
       *matHeaderCellDef
-       [ibSortHeaderFor]="matSort()"
       mat-sort-header
        [disabled]="!sortInput()"
     >
@@ -122,7 +119,6 @@ registerLocaleData(localeIt);
     MatSortModule,
     MatIconModule,
     MatTooltipModule,
-    IbSortHeader,
     DatePipe,
   ],
 })

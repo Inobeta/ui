@@ -10,7 +10,6 @@ import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { By } from "@angular/platform-browser";
 import { IbActionColumn } from "./action-column";
 import { IbColumn } from "./column";
-import { IbSortHeader } from "../sort-header";
 import { IB_TABLE } from "../tokens";
 
 @Component({
@@ -35,7 +34,7 @@ describe("IbActionColumn", () => {
 
     TestBed.configureTestingModule({
       declarations: [ActionColumnHostComponent, IbActionColumn],
-      imports: [NoopAnimationsModule, MatTableModule, MatSortModule, IbColumn, IbSortHeader],
+      imports: [NoopAnimationsModule, MatTableModule, MatSortModule, IbColumn],
       providers: [{ provide: IB_TABLE, useValue: mockTable }],
     }).compileComponents();
   }));

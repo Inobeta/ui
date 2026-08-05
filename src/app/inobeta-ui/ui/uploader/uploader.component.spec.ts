@@ -1,61 +1,64 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
-import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { TranslateModule } from '@ngx-translate/core';
+
 import { IbUploaderComponent } from '.';
-import { IbToolTestModule, serviceDialogStub } from '../../tools';
-
-
-@Component({
-  selector: 'host-test',
-  template: `
-  <ib-uploader></ib-uploader>
-  `,
-  standalone: false
-})
-
-export class TestHostComponent {
-}
-
-
 
 describe('IbUploaderComponent', () => {
-  let hostComponent: TestHostComponent;
-  let fixture: ComponentFixture<TestHostComponent>;
   let component: IbUploaderComponent;
-
+  let fixture: ComponentFixture<IbUploaderComponent>;
+  let fileInput: HTMLInputElement;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [TestHostComponent],
       imports: [
-        IbToolTestModule,
-        CommonModule,
-        MatDialogModule,
         IbUploaderComponent,
-        NoopAnimationsModule
+        NoopAnimationsModule,
+        TranslateModule.forRoot(),
       ],
-      providers: [
-        { provide: MatDialogRef, useValue: serviceDialogStub },
-        { provide: MAT_DIALOG_DATA, useValue: {} }
-      ]
-    })
-      .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TestHostComponent);
-    hostComponent = fixture.componentInstance;
-    component = fixture.debugElement.query(By.directive(IbUploaderComponent)).componentInstance;
+    fixture = TestBed.createComponent(IbUploaderComponent);
+    component = fixture.componentInstance;
     fixture.detectChanges();
-    component.onChooseClick();
-    component.onChooseChange();
+    fileInput = fixture.debugElement.query(By.css('input[type="file"]')).nativeElement;
   });
 
   it('should create', () => {
-    expect(hostComponent).toBeTruthy();
+    expect(component).toBeTruthy();
+  });
+
+  it('should delegate button clicks to the hidden file input', () => {
+    const clickSpy = spyOn(fileInput, 'click');
+
+    fixture.debugElement.query(By.css('button')).nativeElement.click();
+
+    expect(clickSpy).toHaveBeenCalled();
+  });
+
+  it('should emit the selected file and reset the native input', () => {
+    const selectedFile = new File(['content'], 'document.txt', { type: 'text/plain' });
+    const dataTransfer = new DataTransfer();
+    dataTransfer.items.add(selectedFile);
+    fileInput.files = dataTransfer.files;
+    let emittedFile: File | undefined;
+    component.fileSelected.subscribe((file) => emittedFile = file);
+
+    fileInput.dispatchEvent(new Event('change'));
+
+    expect(emittedFile).toBe(selectedFile);
+    expect(fileInput.value).toBe('');
+  });
+
+  it('should not emit when no file is present', () => {
+    let emitted = false;
+    component.fileSelected.subscribe(() => emitted = true);
+
+    fileInput.dispatchEvent(new Event('change'));
+
+    expect(emitted).toBeFalse();
   });
 });

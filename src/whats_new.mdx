@@ -1,8 +1,23 @@
-import { Meta } from "@storybook/blocks";
-
 <Meta title="What's new" />
 
 # What's new
+
+## Version 21.0.0
+
+Version 21 removes deprecated features and migrates Storybook documentation to
+Storybook 10 with MDX3.
+
+### Release highlights
+
+- **Main Menu and Breadcrumbs removed:** `IbMainMenuModule` and
+  `IbBreadcrumbModule` are no longer available. Remove any remaining imports,
+  theme mixins (`ui.main-menu-theme`, `ui.main-menu-color`), and component usage
+  from your application.
+- **Kai Table: IbSortHeader removed:** custom columns that previously used
+  `IbSortHeader` and `[ibSortHeaderFor]` must use standard `mat-sort-header`
+  instead.
+- **Storybook 10 migration:** all MDX documentation pages now use MDX3 with
+  native markdown. `@storybook/blocks` imports are no longer required.
 
 ## Version 20.0.0
 
@@ -45,4 +60,11 @@ for detailed input, output, data-source, and state migration guidance.
 
 ## Deprecations
 
-Main Menu and Breadcrumbs are deprecated in v20 and planned for removal in v21.
+The following features deprecated in v20 have been removed in v21:
+
+- **Main Menu** (`IbMainMenuModule`): removed.
+- **Breadcrumbs** (`IbBreadcrumbModule`): removed.
+- **IbSortHeader** and `[ibSortHeaderFor]`: removed. Use standard
+  `mat-sort-header` instead.
+
+All other deprecations from v20 remain in effect.

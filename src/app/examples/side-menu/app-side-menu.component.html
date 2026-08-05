@@ -1,0 +1,19 @@
+<mat-sidenav-container class="side-menu-container">
+  <mat-sidenav opened mode="side" class="side-menu">
+    <mat-nav-list>
+      @for (group of groups; track group.label) {
+        <div class="side-menu-group">
+          <div class="side-menu-group-title">
+            <mat-icon fontSet="material-icons-two-tone">{{ group.icon }}</mat-icon>
+            <span>{{ group.label | translate }}</span>
+          </div>
+          @for (link of group.links; track link.route) {
+            <a mat-list-item [routerLink]="link.route" routerLinkActive="active-link">
+              {{ link.label | translate }}
+            </a>
+          }
+        </div>
+      }
+    </mat-nav-list>
+  </mat-sidenav>
+</mat-sidenav-container>

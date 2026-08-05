@@ -1,7 +1,7 @@
 import { HttpClientModule } from "@angular/common/http";
 import { importProvidersFrom } from "@angular/core";
-import { applicationConfig, type Preview } from "@storybook/angular";
-import {version} from '../package.json'
+import { applicationConfig, type Preview } from "@storybook/angular-vite";
+import { version } from '../package.json'
 const [major, minor, patch] = version.split('.')
 
 const preview: Preview = {

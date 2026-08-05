@@ -6,6 +6,7 @@ import {
 } from "@angular/core";
 import { IB_AGGREGATE_TYPE, IB_COLUMN } from "../tokens";
 import { IbColumn } from "./column";
+import { IB_COLUMN_MAT_SORT_PROVIDER } from "./column-sort.provider";
 
 /**
  * Column that simply shows text content for the header and row cells.
@@ -20,7 +21,6 @@ import { IbColumn } from "./column";
     template: `
     <ng-container
       matColumnDef
-      matSort
       [sticky]="stickyInput()"
       [stickyEnd]="stickyEndInput()"
     >
@@ -29,7 +29,6 @@ import { IbColumn } from "./column";
         mat-header-cell
         *matHeaderCellDef
          [style.text-align]="justify()"
-        [ibSortHeaderFor]="matSort()"
         mat-sort-header
         [disabled]="!sortInput()"
       >
@@ -49,6 +48,7 @@ import { IbColumn } from "./column";
         { provide: IB_COLUMN, useExisting: IbTextColumn },
         { provide: IB_AGGREGATE_TYPE, useValue: "string" },
     ],
+    viewProviders: [IB_COLUMN_MAT_SORT_PROVIDER],
     standalone: false
 })
 export class IbTextColumn<T> extends IbColumn<T> {
