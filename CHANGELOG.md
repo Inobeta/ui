@@ -1,15 +1,28 @@
 # Inobeta/UI Changelog
 
-## [20.0.0] (unreleased)
+## [20.0.0] (2026-08-05)
 
 | Issue ID | Type | Section | Description |
 | -- | -- | -- | -- |
-| DEVK-693 | feat | all       | added support for Angular 20 |
+| DEVK-693 | feat | all | added support for Angular 20 |
+| DEVK-912 | refactor | IbKaiTable | View module support improvements |
+| DEVK-1066 | refactor | IbKaiTable | Component moved to signal api |
+| DEVK-1046 | feat | IbKaiTable | tableHeight input added |
 
 ### [20.0.0] - Breaking changes
 
-- Main menu deprecated
-- breadcrumbs deprecated
+- IbMainMenu deprecated (planned to remove from v21)
+- IbBreadcrumbs deprecated (planned to remove from v21)
+- ibHttpModule deprecated (planned to migrate from v22)
+- IbFormsModule deprecated  (planned to migrate from v22)
+
+#### The following Kai Table changes require consumer updates:
+
+- Add the required, unique tableName to every table.
+- Read signal-based inputs and queries programmatically by calling them, for example table.tableName() and table.sort().
+- Do not migrate to a generic table-level row-click output: it is not part of the API. Use IbSelectionColumn.ibRowSelectionChange for row selection.
+- Bind either [data] or [dataSource]; they are mutually exclusive.
+- tableHeight now defaults to "parent". Set an explicit CSS height when preserving fixed content sizing, and remove obsolete height overrides.
 
 ## [19.0.0] (2025-02-20)
 
