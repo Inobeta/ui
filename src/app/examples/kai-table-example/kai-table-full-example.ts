@@ -91,6 +91,12 @@ import { MatButtonModule, MatIconButton } from "@angular/material/button";
         overflow: hidden;
       }
 
+      @media (max-width: 767px) {
+        .table-wrapper {
+          overflow: auto;
+        }
+      }
+
       ib-kai-table {
         flex: 1 1 auto;
         min-height: 0;

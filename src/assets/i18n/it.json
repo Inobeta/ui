@@ -63,7 +63,8 @@
       "kaiTableColumnOptions": "Column Options",
       "kaiTableMobileEmpty": "Empty Tables",
       "dialog": "Dialog",
-      "toast": "Toast"
+      "toast": "Toast",
+      "toggleNavigation": "Apri o chiudi il menu di navigazione"
     },
     "toastMenu": "Toast",
     "toastMessage": "Messaggio toast",

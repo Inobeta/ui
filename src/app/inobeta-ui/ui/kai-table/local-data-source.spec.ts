@@ -9,7 +9,7 @@ import { IbTableDataSource } from "./table-data-source";
 
 interface Row {
   name: string;
-  amount: number;
+  amount: number | null;
 }
 
 class SumAggregate extends IbAggregate {
@@ -168,6 +168,69 @@ describe("IbTableLocalDataSource", () => {
         IbDataSourceCapability.GlobalAggregation,
       ]),
     );
+  });
+
+  it("returns defensive state snapshots and accepts aggregate events", () => {
+    const source = createSource();
+
+    expect(source.sortState).toEqual({ active: "", direction: "" });
+    expect(source.sortedColumns).toEqual(columns);
+    source.aggregatedColumns = { amount: "sum" };
+    const input = source.input;
+    input.aggregatedColumns.amount = "changed";
+
+    expect(source.aggregatedColumns).toEqual({ amount: "sum" });
+    source.aggregate.next({ columnName: "amount", function: "missing" });
+    expect(source.aggregatedData).toEqual({});
+  });
+
+  it("normalizes invalid data and non-positive page settings", () => {
+    const source = createSource();
+
+    source.setInput({ pageIndex: -2, pageSize: 0 });
+    expect(source.getCurrentPageData()).toEqual(rows);
+
+    source.data = null as unknown as Row[];
+    expect(source.data).toEqual([]);
+    expect(source.getCurrentPageData()).toEqual([]);
+  });
+
+  it("orders null and equal values in both directions", () => {
+    const equalRows: Row[] = [
+      { name: "first", amount: 10 },
+      { name: "empty-a", amount: null },
+      { name: "second", amount: 10 },
+      { name: "empty-b", amount: null },
+      { name: "low", amount: 5 },
+    ];
+    const source = createSource(equalRows);
+
+    source.setInput({ sort: { active: "amount", direction: "asc" } });
+    expect(source.getOrderedData().map((row) => row.name)).toEqual(["low", "first", "second", "empty-a", "empty-b"]);
+
+    source.setInput({ sort: { active: "amount", direction: "desc" } });
+    expect(source.getOrderedData().map((row) => row.name)).toEqual(["empty-a", "empty-b", "first", "second", "low"]);
+  });
+
+  it("supports inactive, list, object, and nullable scalar filter criteria", () => {
+    const objectRows = [
+      { name: "alice", amount: 10, metadata: { active: true } },
+      { name: "bob", amount: null, metadata: { active: false } },
+    ];
+    const source = new IbTableLocalDataSource(objectRows);
+    source.setColumns(columns);
+
+    source.setInput({ rawFilter: { name: ["bob"], metadata: { active: false }, ignored: null } });
+    expect(source.getFilteredData()).toEqual([objectRows[1]]);
+
+    source.setInput({ rawFilter: { name: "", amount: "" } });
+    expect(source.getFilteredData()).toEqual(objectRows);
+
+    source.setInput({ rawFilter: { amount: "null" } });
+    expect(source.getFilteredData()).toEqual([]);
+
+    source.setInput({ rawFilter: { ibSearchBar: "missing" } });
+    expect(source.getFilteredData()).toEqual([]);
   });
 });
 

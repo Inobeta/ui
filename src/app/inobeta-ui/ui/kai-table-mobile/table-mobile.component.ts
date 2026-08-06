@@ -27,6 +27,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 type IbKaiTableMobileDataSource<T> = DataSource<T> & {
   readonly sortState?: Sort;
   readonly input?: { sort: Sort | null };
+  getOrderedData?: () => T[];
 };
 @Component({
   selector: 'ib-kai-table-mobile',
@@ -73,7 +74,7 @@ type IbKaiTableMobileDataSource<T> = DataSource<T> & {
           }
         </div>
       }
-      @if (cardDataColumns().length === 0 && cardActionColumns().length === 0 && state() !== 'loading') {
+      @if (!hasRenderableRows() && state() !== 'loading') {
         <div class="table-empty">
           <mat-icon class="table-empty-icon">inbox</mat-icon>
           <span class="table-empty-label">{{ "common.noItems" | translate }}</span>
@@ -181,6 +182,7 @@ export class IbKaiTableMobileComponent {
           ? defer(() => {
             const collectionViewer = {} as CollectionViewer;
             return dataSource.connect(collectionViewer).pipe(
+              map((rows) => dataSource.getOrderedData?.() ?? rows),
               finalize(() => dataSource.disconnect(collectionViewer))
             );
           })
@@ -210,7 +212,7 @@ export class IbKaiTableMobileComponent {
   visibleColumns = computed(() => {
     const cols = this.columns() ?? [];
     const displayed = [...(this.displayedColumns() ?? [])]
-      if (this.actionColumn() && !displayed.includes('ib-action')) {
+    if (this.actionColumn() && !displayed.includes('ib-action')) {
       displayed.push('ib-action');
     }
 
@@ -235,6 +237,8 @@ export class IbKaiTableMobileComponent {
   visibleRows = computed(() => {
     return (this.data() ?? []).slice(0, this.visibleCount());
   });
+
+  readonly hasRenderableRows = computed(() => this.visibleRows().length > 0);
 
   hasMoreRows = computed(() => {
     return this.visibleRows().length < (this.data()?.length ?? 0);

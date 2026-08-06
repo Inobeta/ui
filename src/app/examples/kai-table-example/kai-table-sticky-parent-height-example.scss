@@ -21,6 +21,11 @@ mat-button-toggle-group {
   overflow: hidden;
 }
 
+@media (max-width: 767px) {
+  .table-wrapper {
+    overflow: auto;
+  }
+}
 ib-kai-table {
   width: 100%;
   flex: 1 1 auto;
