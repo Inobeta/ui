@@ -2,6 +2,9 @@ import { HttpClientModule } from "@angular/common/http";
 import { importProvidersFrom } from "@angular/core";
 import { applicationConfig, type Preview } from "@storybook/angular-vite";
 import { version } from '../package.json'
+import '../src/styles.css';
+import '../src/app/examples/theme.scss';
+
 const [major, minor, patch] = version.split('.')
 
 const preview: Preview = {

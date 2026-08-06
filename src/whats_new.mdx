@@ -1,70 +1,36 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
 <Meta title="What's new" />
 
 # What's new
 
-## Version 21.0.0
+## Version 21.0.0 — August 6, 2026
 
-Version 21 removes deprecated features and migrates Storybook documentation to
-Storybook 10 with MDX3.
+**DEVK-908 — Angular 21 support and removal of deprecated components.**
 
-### Release highlights
+Version 21 upgrades the library to **Angular 21** and removes the following
+deprecated modules and components:
 
-- **Main Menu and Breadcrumbs removed:** `IbMainMenuModule` and
-  `IbBreadcrumbModule` are no longer available. Remove any remaining imports,
-  theme mixins (`ui.main-menu-theme`, `ui.main-menu-color`), and component usage
-  from your application.
-- **Kai Table: IbSortHeader removed:** custom columns that previously used
-  `IbSortHeader` and `[ibSortHeaderFor]` must use standard `mat-sort-header`
-  instead.
-- **Storybook 10 migration:** all MDX documentation pages now use MDX3 with
-  native markdown. `@storybook/blocks` imports are no longer required.
+### Removed Components
 
-## Version 20.0.0
-
-Version 20 updates the library for **Angular 20** and introduces a refactored Kai
-Table architecture. The package does not enforce a specific Node.js version; use
-a version supported by your Angular 20 toolchain.
-
-## Release highlights
-
-- **DEVK-693 — Angular 20 compatibility:** the library is compatible with Angular
-  20.
-- **DEVK-912 — Decoupled Kai Table views:** Kai Table no longer requires the
-  Views implementation. Views are optional and can be restored by importing the
-  separate Views module and adding a views host.
-- **DEVK-1066 — Kai Table refactor:** table state, signal APIs, and local and
-  remote data-source contracts were redesigned. See the [Kai Table
-  documentation](./app/inobeta-ui/ui/kai-table/table.mdx) and [migration
-  guide](./app/inobeta-ui/ui/kai-table/deprecation-guide.md).
-- **DEVK-1065 — Optional table Views:** user-defined views support is available
-  through the optional Views integration, including saving and restoring table
-  state.
-- **DEVK-1046 — Table height:** desktop Kai Table supports `tableHeight`, with
-  exact CSS heights or parent-filling layout.
-
-## Kai Table migration
-
-The following Kai Table changes require consumer updates:
-
-- Add the required, unique `tableName` to every table.
-- Read signal-based inputs and queries programmatically by calling them, for
-  example `table.tableName()` and `table.sort()`.
-- Do not migrate to a generic table-level row-click output: it is not part of
-  the API. Use `IbSelectionColumn.ibRowSelectionChange` for row selection.
-- Bind either `[data]` or `[dataSource]`; they are mutually exclusive.
-- `tableHeight` now defaults to `"parent"`. Set an explicit CSS height when
-  preserving fixed content sizing, and remove obsolete height overrides.
-
-See the [Kai Table migration guide](./app/inobeta-ui/ui/kai-table/deprecation-guide.md)
-for detailed input, output, data-source, and state migration guidance.
-
-## Deprecations
-
-The following features deprecated in v20 have been removed in v21:
-
-- **Main Menu** (`IbMainMenuModule`): removed.
-- **Breadcrumbs** (`IbBreadcrumbModule`): removed.
-- **IbSortHeader** and `[ibSortHeaderFor]`: removed. Use standard
+- **IbMainMenuModule** (`IbMainMenuBarComponent`, `IbMainMenuDialogComponent`,
+  `IbHeaderFooterButtonsComponent`, `IbMainMenuExpandedComponent`): removed.
+  This also removes the theme mixins `ui.main-menu-theme` and
+  `ui.main-menu-color`, which are no longer available.
+- **IbBreadcrumbModule** (`IbBreadcrumbComponent`,
+  `IbMaterialBreadcrumbComponent`): removed.
+- **IbSortHeader** and `[ibSortHeaderFor]`: removed from Kai Table. Columns
+  that previously used `IbSortHeader` must now use the standard
   `mat-sort-header` instead.
+- **IbUploaderModule**: removed. The `IbUploader` component is now standalone
+  and no longer requires the module import.
 
-All other deprecations from v20 remain in effect.
+### Storybook 10 Migration
+
+All MDX documentation pages have been migrated to MDX3 with native markdown.
+Documentation blocks are now imported from `@storybook/addon-docs/blocks`.
+
+### Angular 21 Compatibility
+
+The library is now compatible with Angular 21. Update peer dependencies for
+`@angular/*`, `@ngrx/*`, and `@angular/material` to version 21.x.
