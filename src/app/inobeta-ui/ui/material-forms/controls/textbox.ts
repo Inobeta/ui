@@ -105,13 +105,13 @@ export class IbMatTextboxComponent implements IbFormControlInterface {
 
   get maxLengthValidator() {
     for (const func of this.data.base.validators) {
-      const getMethods = (obj) => {
-        let properties = new Set()
-        let currentObj = obj
+      const getMethods = (obj: Record<string, unknown>) => {
+        const properties = new Set<string>()
+        let currentObj: object | null = obj
         do {
-          Object.getOwnPropertyNames(currentObj).map(item => properties.add(item))
+          Object.getOwnPropertyNames(currentObj).forEach((item) => properties.add(item))
         } while ((currentObj = Object.getPrototypeOf(currentObj)))
-        return [...properties.keys()].filter((item: any) => typeof obj[item] === 'function') as string[]
+        return [...properties].filter((item) => typeof obj[item] === 'function')
       }
       const sampleString = this.data.self.value
       if(!sampleString) return Infinity
@@ -133,7 +133,7 @@ export class IbMatTextboxComponent implements IbFormControlInterface {
 
 /** @deprecated */
 export class IbMatTextboxControl extends IbFormControlBase<number | string> {
-  hintMessage;
+  hintMessage: (() => string) | null = null;
 
   constructor(options: IbMatTextboxParams) {
     options.type = options.type || 'text';
@@ -153,4 +153,3 @@ export interface IbMatTextboxParams extends IbFormControlBaseParams<number | str
 export interface IbMatTextboxData extends IbFormControlData {
     base: IbMatTextboxParams;
 }
-

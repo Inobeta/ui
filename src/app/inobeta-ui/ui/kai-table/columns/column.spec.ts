@@ -153,7 +153,7 @@ describe("IbColumn", () => {
     it("should provide a custom sortingDataAccessor when set", async () => {
       const sortFn = () => "sorted" as any;
       host.colSortAccessor = sortFn as any;
-      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
       await fixture.whenStable();
       expect(component.sortingDataAccessor()).toBe(sortFn as any);
     });
@@ -161,7 +161,7 @@ describe("IbColumn", () => {
     it("should provide a custom filterDataAccessor when set", async () => {
       const filterFn = () => "filtered" as any;
       host.colFilterAccessor = filterFn as any;
-      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
       await fixture.whenStable();
       expect(component.filterDataAccessor()).toBe(filterFn as any);
     });
@@ -171,7 +171,7 @@ describe("IbColumn", () => {
     it("should read sort input as a boolean signal", async () => {
       expect(component.sortInput()).toBeFalse();
       host.colSort = true;
-      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
       await fixture.whenStable();
       expect(component.sortInput()).toBeTrue();
     });
@@ -179,7 +179,7 @@ describe("IbColumn", () => {
     it("should read sticky input as a boolean signal", async () => {
       expect(component.stickyInput()).toBeFalse();
       host.colSticky = true;
-      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
       await fixture.whenStable();
       expect(component.stickyInput()).toBeTrue();
     });
@@ -187,7 +187,7 @@ describe("IbColumn", () => {
     it("should read stickyEnd input as a boolean signal", async () => {
       expect(component.stickyEndInput()).toBeFalse();
       host.colStickyEnd = true;
-      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
       await fixture.whenStable();
       expect(component.stickyEndInput()).toBeTrue();
     });
@@ -195,7 +195,7 @@ describe("IbColumn", () => {
     it("should read aggregate input as a boolean signal", async () => {
       expect(component.aggregateInput()).toBeFalse();
       host.colAggregate = true;
-      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
       await fixture.whenStable();
       expect(component.aggregateInput()).toBeTrue();
     });
@@ -203,7 +203,7 @@ describe("IbColumn", () => {
     it("should read isActionColumnInput as a boolean signal", async () => {
       expect(component.isActionColumnInput()).toBeFalse();
       host.colIsAction = true;
-      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
       await fixture.whenStable();
       expect(component.isActionColumnInput()).toBeTrue();
     });
@@ -220,7 +220,7 @@ describe("IbColumn", () => {
 
     it("should allow programmatic signal invocation to read the current sort value", async () => {
       host.colSort = true;
-      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
       await fixture.whenStable();
       const sortValue = component.sortInput();
       expect(sortValue).toBeTrue();

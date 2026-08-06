@@ -1,5 +1,5 @@
-import { Inject, Injectable, Optional } from '@angular/core';
-import { MAT_DATE_LOCALE, NativeDateAdapter } from '@angular/material/core';
+import { Injectable } from '@angular/core';
+import { NativeDateAdapter } from '@angular/material/core';
 
 export class IbMatDatepickerI18n {
 
@@ -22,12 +22,10 @@ export class IbMatDatepickerI18n {
 
 @Injectable({providedIn: 'root'})
 export class IbMatDateAdapter extends NativeDateAdapter {
-  constructor(@Optional() @Inject(MAT_DATE_LOCALE) matDateLocale: string) {
-    super(matDateLocale);
-    super.setLocale(matDateLocale);
-  }
-
-  parse(date: string, displayFormat?: string): Date {
+  parse(date: unknown, displayFormat?: unknown): Date | null {
+    if (typeof date !== 'string') {
+      return super.parse(date, displayFormat);
+    }
     if (date === '') {
       return null;
     }

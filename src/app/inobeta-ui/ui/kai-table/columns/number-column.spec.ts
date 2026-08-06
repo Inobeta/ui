@@ -64,7 +64,7 @@ describe("IbNumberColumn", () => {
 
   it("should update digitsInfo signal", async () => {
     host.digitsValue = "1.3-3";
-    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
     await fixture.whenStable();
     expect(component.digitsInfo()).toBe("1.3-3");
   });
@@ -75,7 +75,7 @@ describe("IbNumberColumn", () => {
 
   it("should update locale signal", async () => {
     host.localeValue = "en-US";
-    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
     await fixture.whenStable();
     expect(component.locale()).toBe("en-US");
   });
@@ -83,7 +83,7 @@ describe("IbNumberColumn", () => {
   it("should read um as a signal", async () => {
     expect(component.um()).toBe("€");
     host.umValue = "$";
-    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
     await fixture.whenStable();
     expect(component.um()).toBe("$");
   });
@@ -94,7 +94,7 @@ describe("IbNumberColumn", () => {
 
   it("should update umPosition signal", async () => {
     host.umPosValue = "left";
-    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
     await fixture.whenStable();
     expect(component.umPosition()).toBe("left");
   });
@@ -107,7 +107,7 @@ describe("IbNumberColumn", () => {
 
   it("should prepend unit when umPosition is left", async () => {
     host.umPosValue = "left";
-    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
     await fixture.whenStable();
     const result = component.mobileDataRenderer({ amount: 100 }, "amount");
     expect(result.startsWith("€")).toBeTrue();
@@ -115,7 +115,7 @@ describe("IbNumberColumn", () => {
 
   it("should return formatted value without unit when um is empty", async () => {
     host.umValue = "";
-    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
     await fixture.whenStable();
     const result = component.mobileDataRenderer({ amount: 42 }, "amount");
     expect(result).not.toContain("€");

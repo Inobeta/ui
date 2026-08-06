@@ -64,11 +64,12 @@ export class IbMatDatepickerControl extends IbFormControlBase<string | Date> {
 }
 
 export function dateRequiredValidator(): ValidatorFn {
-  return (control: AbstractControl): {[key: string]: any} | null => {
+  return (control: AbstractControl) => {
     if (!control.value || isNaN(control.value.getTime())) {
       return {
         required: true
       };
     }
+    return null;
   };
 }

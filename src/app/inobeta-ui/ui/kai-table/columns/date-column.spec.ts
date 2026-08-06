@@ -62,7 +62,7 @@ describe("IbDateColumn", () => {
 
   it("should update format signal", async () => {
     host.formatValue = "yyyy-MM-dd";
-    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
     await fixture.whenStable();
     expect(component.format()).toBe("yyyy-MM-dd");
   });
@@ -73,7 +73,7 @@ describe("IbDateColumn", () => {
 
   it("should update locale signal", async () => {
     host.localeValue = "en-US";
-    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
     await fixture.whenStable();
     expect(component.locale()).toBe("en-US");
   });

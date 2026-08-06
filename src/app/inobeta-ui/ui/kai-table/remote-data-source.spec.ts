@@ -1,4 +1,4 @@
-import { fakeAsync, tick } from "@angular/core/testing";
+import { vi } from "vitest";
 import { Observable, Subject } from "rxjs";
 import { IbDataSourceCapability } from "./data-source.types";
 import {
@@ -26,6 +26,9 @@ class ControlledRemoteDataSource extends IbTableRemoteDataSource<Row, Filter> {
 }
 
 describe("IbTableRemoteDataSource", () => {
+  beforeEach(() => vi.useFakeTimers());
+  afterEach(() => vi.useRealTimers());
+
   function createSource(): ControlledRemoteDataSource {
     return new ControlledRemoteDataSource();
   }
@@ -61,20 +64,20 @@ describe("IbTableRemoteDataSource", () => {
     subscription.unsubscribe();
   });
 
-  it("debounces filter changes by 500 milliseconds", fakeAsync(() => {
+  it("debounces filter changes by 500 milliseconds", () => {
     const source = createSource();
     const subscription = source.connect().subscribe();
     source.responses[0].next({ data: [{ id: 1 }], totalCount: 1 });
 
     source.setInput({ filter: { term: "new" } });
     expect(source.requests.length).toBe(1);
-    tick(499);
+    vi.advanceTimersByTime(499);
     expect(source.requests.length).toBe(1);
-    tick(1);
+    vi.advanceTimersByTime(1);
     expect(source.requests.length).toBe(2);
     expect(source.requests[1].filter).toEqual({ term: "new" });
     subscription.unsubscribe();
-  }));
+  });
 
   it("starts sort, page and refresh requests immediately", () => {
     const source = createSource();
@@ -92,7 +95,7 @@ describe("IbTableRemoteDataSource", () => {
     subscription.unsubscribe();
   });
 
-  it("suppresses separately-created equivalent non-null requests and still refreshes", fakeAsync(() => {
+  it("suppresses separately-created equivalent non-null requests and still refreshes", () => {
     const source = createSource();
     const subscription = source.connect().subscribe();
     source.responses[0].next({ data: [{ id: 1 }], totalCount: 1 });
@@ -103,7 +106,7 @@ describe("IbTableRemoteDataSource", () => {
       pageSize: 10,
       filter: { term: "abc", status: "active" },
     });
-    tick(500);
+    vi.advanceTimersByTime(500);
     expect(source.requests.length).toBe(2);
 
     source.setInput({
@@ -120,33 +123,33 @@ describe("IbTableRemoteDataSource", () => {
     expect(source.requests.length).toBe(3);
     expect(source.requests[2]).toEqual(source.request);
     subscription.unsubscribe();
-  }));
+  });
 
-  it("dedupes requests whose filters carry undefined-valued keys and still fetches real changes", fakeAsync(() => {
+  it("dedupes requests whose filters carry undefined-valued keys and still fetches real changes", () => {
     const source = createSource();
     const subscription = source.connect().subscribe();
     source.responses[0].next({ data: [{ id: 1 }], totalCount: 1 });
 
     // Mirrors real IbFilter.query output: keys are present with undefined values
     source.setInput({ filter: { ibSearchBar: undefined, name: undefined } });
-    tick(500);
+    vi.advanceTimersByTime(500);
     expect(source.requests.length).toBe(2);
     expect(source.requests[1].filter).toEqual({ ibSearchBar: undefined, name: undefined });
     source.responses[1].next({ data: [{ id: 1 }], totalCount: 1 });
 
     // a separately-created, structurally-equal filter must be deduped
     source.setInput({ filter: { ibSearchBar: undefined, name: undefined } });
-    tick(500);
+    vi.advanceTimersByTime(500);
     expect(source.requests.length).toBe(2);
 
     // a real change still fetches, after the filter debounce
     source.setInput({ filter: { ibSearchBar: undefined, name: "abc" } });
     expect(source.requests.length).toBe(2);
-    tick(500);
+    vi.advanceTimersByTime(500);
     expect(source.requests.length).toBe(3);
     expect(source.requests[2].filter).toEqual({ ibSearchBar: undefined, name: "abc" });
     subscription.unsubscribe();
-  }));
+  });
 
   it("does not allow an obsolete response to replace the latest response", () => {
     const source = createSource();

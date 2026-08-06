@@ -75,4 +75,11 @@ describe('IbMatButtonComponent', () => {
     expect(spyHandler).toHaveBeenCalledWith(form);
   });
 
+  it('should preserve the missing handler invocation error', () => {
+    component.data.base.key = 'other';
+    component.data.base.handler = undefined;
+
+    expect(() => component.handleActionClick()).toThrow();
+  });
+
 });

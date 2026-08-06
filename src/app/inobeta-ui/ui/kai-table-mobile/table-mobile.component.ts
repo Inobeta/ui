@@ -162,10 +162,10 @@ export class IbKaiTableMobileComponent {
   pageSize = input(20);
 
   columns = input<readonly IbColumn<any>[]>();
-  rowGroup = input<IbKaiRowGroupDirective>();
+  rowGroup = input<IbKaiRowGroupDirective | null>(null);
   filter = input<IbFilter>();
-  filters = input<readonly IbFilterBase[]>();
-  headerActions = input<readonly IbKaiTableAction[]>();
+  filters = input<readonly IbFilterBase[]>([]);
+  headerActions = input<readonly IbKaiTableAction[]>([]);
   actionColumn = input<IbActionColumn>();
 
   canExportAllRows = input(true);

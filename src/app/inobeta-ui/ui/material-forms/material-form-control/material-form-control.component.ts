@@ -9,6 +9,7 @@ import {
   ViewContainerRef,
   ChangeDetectionStrategy
 } from "@angular/core";
+import { ComponentRef } from "@angular/core";
 import { IbFormControlInterface } from "../../forms/controls/form-control-base";
 import { IbDynamicFormControlComponent } from "../../forms/dynamic-form-control/dynamic-form-control.component";
 
@@ -32,11 +33,11 @@ export class IbMaterialFormControlComponent
   implements OnInit, OnChanges
 {
   @ViewChild(IbFormControlDirective, { static: true })
-  formControlHost: IbFormControlDirective;
+  formControlHost!: IbFormControlDirective;
   @ViewChild("formControlErrors", { static: true })
-  formControlErrors: TemplateRef<any>;
+  formControlErrors!: TemplateRef<unknown>;
 
-  componentRef;
+  componentRef!: ComponentRef<IbFormControlInterface>;
   ngOnChanges(changes: SimpleChanges): void {
     const form = changes["form"];
     if (form && !form.isFirstChange()) {
@@ -69,5 +70,47 @@ export class IbMaterialFormControlComponent
       hasError: this.hasError,
       formControlErrors: this.formControlErrors,
     });
+  }
+
+  getMinLength(): unknown {
+    return this.getErrorValue('minlength', 'requiredLength');
+  }
+
+  getMaxLength(): unknown {
+    return this.getErrorValue('maxlength', 'requiredLength');
+  }
+
+  getMin(): unknown {
+    return this.getErrorValue('min', 'min');
+  }
+
+  getMax(): unknown {
+    return this.getErrorValue('max', 'max');
+  }
+
+  getDateParseError(): unknown {
+    return this.getErrorValue('matDatepickerParse', 'matDatepickerParse');
+  }
+
+  getCustomError(): { message: string; params?: object } | null {
+    const error = this.self.errors?.['customError'];
+    if (!error || typeof error !== 'object' || !('message' in error)) {
+      return null;
+    }
+    const { message, params } = error as { message: unknown; params: unknown };
+    if (typeof message !== 'string') {
+      return null;
+    }
+    if (params === undefined) {
+      return { message };
+    }
+    return typeof params === 'object' && params !== null ? { message, params } : null;
+  }
+
+  private getErrorValue(errorCode: string, property: string): unknown {
+    const error = this.self.errors?.[errorCode];
+    return error && typeof error === 'object' && property in error
+      ? error[property]
+      : undefined;
   }
 }

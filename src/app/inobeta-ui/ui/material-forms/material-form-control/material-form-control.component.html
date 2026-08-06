@@ -7,22 +7,22 @@
   }
   @else if (hasError('minlength')) {
     <span>
-      {{base.label | translate}} {{ 'shared.ibForms.errors.minlength' | translate:{v:self.errors.minlength.requiredLength} }}
+      {{base.label | translate}} {{ 'shared.ibForms.errors.minlength' | translate:{v:getMinLength()} }}
     </span>
   }
   @else if (hasError('maxlength')) {
     <span>
-      {{base.label | translate}} {{ 'shared.ibForms.errors.maxlength' | translate:{v:self.errors.maxlength.requiredLength} }}
+      {{base.label | translate}} {{ 'shared.ibForms.errors.maxlength' | translate:{v:getMaxLength()} }}
     </span>
   }
   @else if (hasError('min')) {
     <span>
-      {{base.label | translate}} {{ 'shared.ibForms.errors.min' | translate:{v:self.errors.min.min} }}
+      {{base.label | translate}} {{ 'shared.ibForms.errors.min' | translate:{v:getMin()} }}
     </span>
   }
   @else if (hasError('max')) {
     <span>
-      {{base.label | translate}} {{ 'shared.ibForms.errors.max' | translate:{v:self.errors.max.max} }}
+      {{base.label | translate}} {{ 'shared.ibForms.errors.max' | translate:{v:getMax()} }}
     </span>
   }
   @else if (hasError('email')) {
@@ -32,12 +32,12 @@
   }
   @else if (hasError('matDatepickerParse')) {
     <span>
-      {{ 'shared.ibForms.errors.date' | translate:{v:self.errors.matDatepickerParse.matDatepickerParse} }}
+      {{ 'shared.ibForms.errors.date' | translate:{v:getDateParseError()} }}
     </span>
   }
-  @else if (hasError('customError')) {
+  @else if (getCustomError(); as customError) {
     <span>
-      {{ self.errors.customError.message | translate:self.errors.customError.params }}
+      {{ customError.message | translate:customError.params }}
     </span>
   }
 </ng-template>

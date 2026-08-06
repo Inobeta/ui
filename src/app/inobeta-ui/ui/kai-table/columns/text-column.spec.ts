@@ -54,11 +54,11 @@ describe("IbTextColumn", () => {
 
   it("should update justify signal when host changes value", async () => {
     host.justifyValue = "end";
-    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
     await fixture.whenStable();
     expect(component.justify()).toBe("end");
     host.justifyValue = "center";
-    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
     await fixture.whenStable();
     expect(component.justify()).toBe("center");
   });

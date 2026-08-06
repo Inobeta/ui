@@ -67,7 +67,7 @@ describe('IbAuthInterceptor', () => {
     expect(service).toBeTruthy();
   });
 
-  it('Should detect 401', (done) => {
+  it('Should detect 401', async () => {
     httpHandlerSpy.handle.and.returnValue(
       throwError(
         () =>
@@ -78,17 +78,17 @@ describe('IbAuthInterceptor', () => {
       )
     );
     const requestMock = new HttpRequest('GET', '/test');
-    service.intercept(requestMock, httpHandlerSpy).subscribe(() => {
-      done();
+    await new Promise<void>((resolve) => service.intercept(requestMock, httpHandlerSpy).subscribe(() => {
+      resolve();
     }, () => {
       expect(routerCall).toHaveBeenCalled();
-      done();
-    });
+      resolve();
+    }));
   });
 
 
 
-  it('Should ignore other errors', (done) => {
+  it('Should ignore other errors', async () => {
     httpHandlerSpy.handle.and.returnValue(
       throwError(
         () =>
@@ -100,17 +100,17 @@ describe('IbAuthInterceptor', () => {
     );
     const requestMock = new HttpRequest('GET', '/test');
     console.log('service.ibHttpAPILoginUrl', service.ibHttpAPILoginUrl)
-    service.intercept(requestMock, httpHandlerSpy).subscribe(() => {
+    await new Promise<void>((resolve) => service.intercept(requestMock, httpHandlerSpy).subscribe(() => {
       console.log('success')
-      done();
+      resolve();
     }, (err) => {
       expect(routerCall).not.toHaveBeenCalled();
-      done();
-    });
+      resolve();
+    }));
   });
 
 
-  it('Should be disabled', (done) => {
+  it('Should be disabled', async () => {
     httpHandlerSpy.handle.and.returnValue(throwError(
         {
           status: 401,
@@ -121,16 +121,15 @@ describe('IbAuthInterceptor', () => {
 
     service.ibHttpEnableInterceptors = false;
     const requestMock = new HttpRequest('GET', '/test');
-    service.intercept(requestMock, httpHandlerSpy).subscribe(() => {
-      done();
+    await new Promise<void>((resolve) => service.intercept(requestMock, httpHandlerSpy).subscribe(() => {
+      resolve();
     }, () => {
       expect(routerCall).not.toHaveBeenCalled();
-      done();
-    });
+      resolve();
+    }));
   });
 
 
 
 });
-
 

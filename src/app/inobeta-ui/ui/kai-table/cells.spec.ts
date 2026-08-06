@@ -144,6 +144,7 @@ describe("IbAggregateCell", () => {
     expect(component.showTotal()).toBeTrue();
     host.showTotal = false;
     fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
     await fixture.whenStable();
     expect(component.showTotal()).toBeFalse();
   });

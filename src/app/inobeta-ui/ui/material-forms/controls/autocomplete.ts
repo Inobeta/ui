@@ -15,8 +15,8 @@ import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
       #searchBox
       (keyup)="data.base.change(data.self)"
       (change)="data.base.change(data.self)"
-      (input)="onSearchChange($event.target['value'], data.base.options)"
-      (focus)="onSearchChange($event.target['value'], data.base.options)"
+       (input)="onSearchInput($event)"
+       (focus)="onSearchInput($event)"
       [matAutocomplete]="auto"
       />
     <mat-icon
@@ -45,18 +45,22 @@ import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 export class IbMatAutocompleteComponent implements IbFormControlInterface {
   @Input() data: IbFormControlData;
-  autocompleteFiltered = [];
-  selectedItem: any;
-  multiSearchAnd = (text, searchWords) => (
-    searchWords.every((el) => {
+  autocompleteFiltered: { key?: string | number; value: string }[] = [];
+  selectedItem: { key?: string | number; value: string } | undefined;
+  multiSearchAnd = (text: string, searchWords: string[]) => (
+    searchWords.every((el: string) => {
       return text.match(new RegExp(el, 'i'));
     })
   )
-  onSearchChange(input: string, values) {
-    this.autocompleteFiltered = values.filter(el =>
+  onSearchInput(event: Event) {
+    const input = (event.target as HTMLInputElement | null)?.value ?? '';
+    this.onSearchChange(input, this.data.base.options);
+  }
+  onSearchChange(input: string, values: { key?: string | number; value: string }[]) {
+    this.autocompleteFiltered = values.filter((el) =>
       this.multiSearchAnd((el.value).toLowerCase(),
-        input.toLowerCase().split('%').filter(e => {
-          return e !== '' && e !== ' ';
+        input.toLowerCase().split('%').filter((entry) => {
+          return entry !== '' && entry !== ' ';
         }))
     );
   }

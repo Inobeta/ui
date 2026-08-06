@@ -48,10 +48,10 @@ export class IbMatButtonComponent implements IbFormControlInterface {
 
 /** @deprecated */
 export class IbMatButtonControl extends IbFormControlBase<string> {
-  color;
-  handler;
-  requireValidation;
-  requireConfirmOnDirty;
+  color: string;
+  handler?: (form: UntypedFormGroup) => void;
+  requireValidation: boolean;
+  requireConfirmOnDirty: boolean;
   constructor(options: IbMatButtonParams) {
     if (options.key === 'submit') { options.requireValidation = true; }
     super(options);
@@ -80,4 +80,3 @@ export interface IbMatButtonParams extends IbFormControlBaseParams<string> {
 export interface IbMatButtonData extends IbFormControlData {
   base: IbMatButtonParams;
 }
-

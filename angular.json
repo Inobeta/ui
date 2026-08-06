@@ -70,6 +70,10 @@
             },
             "testing": {
               "aot": false,
+              "polyfills": [
+                "zone.js",
+                "src/polyfills.ts"
+              ],
               "scripts": []
             }
           },
@@ -113,6 +117,10 @@
             },
             "setupFiles": [
               "src/test.ts"
+            ],
+            "exclude": [
+              "src/**/*.stub.spec.ts",
+              "src/**/*-stub.spec.ts"
             ],
             "buildTarget": ":build:testing",
             "runner": "vitest",

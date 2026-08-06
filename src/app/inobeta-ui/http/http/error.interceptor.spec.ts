@@ -53,7 +53,7 @@ describe('IbErrorInterceptor', () => {
     expect(service).toBeTruthy();
   });
 
-  it('Should an error', (done) => {
+  it('Should an error', async () => {
     httpHandlerSpy.handle.and.returnValue(throwError(
         {
           status: 404,
@@ -61,17 +61,17 @@ describe('IbErrorInterceptor', () => {
             {message: 'test-error'}
         }
     ));
-    service.intercept(httpRequestSpy, httpHandlerSpy).subscribe(() => {
-      done();
+    await new Promise<void>((resolve) => service.intercept(httpRequestSpy, httpHandlerSpy).subscribe(() => {
+      resolve();
     }, () => {
       expect(toastCall).toHaveBeenCalled();
-      done();
-    });
+      resolve();
+    }));
   });
 
 
 
-  it('Should ignore 401', (done) => {
+  it('Should ignore 401', async () => {
     httpHandlerSpy.handle.and.returnValue(throwError(() => (
         {
           status: 401,
@@ -80,16 +80,16 @@ describe('IbErrorInterceptor', () => {
         })
     ));
 
-    service.intercept(httpRequestSpy, httpHandlerSpy).subscribe(() => {
-      done();
+    await new Promise<void>((resolve) => service.intercept(httpRequestSpy, httpHandlerSpy).subscribe(() => {
+      resolve();
     }, () => {
       expect(toastCall).not.toHaveBeenCalled();
-      done();
-    });
+      resolve();
+    }));
   });
 
 
-  it('Should be disabled', (done) => {
+  it('Should be disabled', async () => {
     httpHandlerSpy.handle.and.returnValue(throwError(
         {
           status: 404,
@@ -99,15 +99,15 @@ describe('IbErrorInterceptor', () => {
     ));
 
     service.ibHttpEnableInterceptors = false;
-    service.intercept(httpRequestSpy, httpHandlerSpy).subscribe(() => {
-      done();
+    await new Promise<void>((resolve) => service.intercept(httpRequestSpy, httpHandlerSpy).subscribe(() => {
+      resolve();
     }, () => {
       expect(toastCall).not.toHaveBeenCalled();
-      done();
-    });
+      resolve();
+    }));
   });
 
-  it('Should display a custom message from api', (done) => {
+  it('Should display a custom message from api', async () => {
     httpHandlerSpy.handle.and.returnValue(throwError(
         {
           status: 404,
@@ -118,15 +118,15 @@ describe('IbErrorInterceptor', () => {
     ));
 
     service.ibHttpToastErrorField = 'customMessage';
-    service.intercept(httpRequestSpy, httpHandlerSpy).subscribe(() => {
-      done();
+    await new Promise<void>((resolve) => service.intercept(httpRequestSpy, httpHandlerSpy).subscribe(() => {
+      resolve();
     }, () => {
       expect(toastCall).toHaveBeenCalledWith('it does not works', 'error');
-      done();
-    });
+      resolve();
+    }));
   });
 
-  it('Should override message on status code', (done) => {
+  it('Should override message on status code', async () => {
     const spy = httpHandlerSpy.handle.and.returnValue(throwError(
         {
           status: 404,
@@ -139,15 +139,15 @@ describe('IbErrorInterceptor', () => {
     service.ibHttpToastOnStatusCode = {
       404: 'Page not found'
     };
-    service.intercept(httpRequestSpy, httpHandlerSpy).subscribe(() => {
-      done();
+    await new Promise<void>((resolve) => service.intercept(httpRequestSpy, httpHandlerSpy).subscribe(() => {
+      resolve();
     }, () => {
       expect(toastCall).toHaveBeenCalledWith('Page not found', 'error');
-      done();
-    });
+      resolve();
+    }));
   });
 
-  it('Should use a translated message for specific error codes on back end', (done) => {
+  it('Should use a translated message for specific error codes on back end', async () => {
     httpHandlerSpy.handle.and.returnValue(throwError(
         {
           status: 404,
@@ -165,15 +165,14 @@ describe('IbErrorInterceptor', () => {
     service.ibHttpToastOnStatusCode = {
       404: 'Page not found'
     };
-    service.intercept(httpRequestSpy, httpHandlerSpy).subscribe(() => {
-      done();
+    await new Promise<void>((resolve) => service.intercept(httpRequestSpy, httpHandlerSpy).subscribe(() => {
+      resolve();
     }, () => {
       expect(spyT).toHaveBeenCalledWith('shared.ibHttp.error666999');
       expect(toastCall).toHaveBeenCalledWith('translated_code', 'error');
-      done();
-    });
+      resolve();
+    }));
   });
 
 });
-
 

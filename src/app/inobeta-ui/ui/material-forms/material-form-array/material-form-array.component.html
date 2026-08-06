@@ -35,7 +35,9 @@
         <button mat-flat-button (click)="addField()"
           [disabled]="array.disabled">
           <mat-icon>add</mat-icon>
-          {{ base.options.addFieldLabel | translate }}
+          @if (addFieldLabel; as label) {
+            {{ label | translate }}
+          }
         </button>
       </div>
     </section>

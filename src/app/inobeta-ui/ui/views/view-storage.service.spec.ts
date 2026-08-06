@@ -27,6 +27,7 @@ function makeView(id: string, name: string, overrides?: Partial<IbViewSnapshot>)
 
 describe("IbViewStorageService", () => {
   let service: IbViewStorageService;
+  const originalSetItem = localStorage.setItem;
 
   /** Helper to construct the expected localStorage key for a group. */
   function storageKey(groupName: string): string {
@@ -50,6 +51,10 @@ describe("IbViewStorageService", () => {
     localStorage.clear();
   });
 
+  afterEach(() => {
+    localStorage.setItem = originalSetItem;
+  });
+
   // ---------------------------------------------------------------------------
   // getViews / watchViews — empty state
   // ---------------------------------------------------------------------------
@@ -58,11 +63,11 @@ describe("IbViewStorageService", () => {
     expect(service.getViews("group-a")).toEqual([]);
   });
 
-  it("should emit an empty array via watchViews for an unknown group", (done) => {
-    service.watchViews("group-a").subscribe((views) => {
+  it("should emit an empty array via watchViews for an unknown group", async () => {
+    await new Promise<void>((resolve) => service.watchViews("group-a").subscribe((views) => {
       expect(views).toEqual([]);
-      done();
-    });
+      resolve();
+    }));
   });
 
   // ---------------------------------------------------------------------------
@@ -261,11 +266,11 @@ describe("IbViewStorageService", () => {
   // watchViews reactivity
   // ---------------------------------------------------------------------------
 
-  it("should emit initial empty state via watchViews", (done) => {
-    service.watchViews("group-a").subscribe((views) => {
+  it("should emit initial empty state via watchViews", async () => {
+    await new Promise<void>((resolve) => service.watchViews("group-a").subscribe((views) => {
       expect(views).toEqual([]);
-      done();
-    });
+      resolve();
+    }));
   });
 
   it("should reflect create in subsequent getViews call", () => {

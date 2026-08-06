@@ -18,7 +18,7 @@ const asWarnings = (...configs) => Object.fromEntries(
 
 module.exports = defineConfig([
   {
-    ignores: ['src/coverage/**'],
+    ignores: ['coverage/**', 'src/coverage/**'],
   },
   {
     files: ['**/*.ts'],

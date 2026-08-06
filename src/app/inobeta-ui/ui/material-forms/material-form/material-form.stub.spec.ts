@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { of } from 'rxjs';
 import { IbFormControlBase } from '../../forms/controls/form-control-base';
 import { IbFormAction } from '../../forms/dynamic-form/dynamic-form.component';
@@ -17,7 +17,7 @@ export class IbMaterialFormStubComponent {
   @Input() actionsPosition = IbMatActionsPosition.BOTTOM;
   @Input() disabledOnInit = false;
   @Output() ibSubmit = new EventEmitter<any>();
-  form: UntypedFormGroup;
+  form = new UntypedFormGroup({});
 
   constructor() {
   }
@@ -45,7 +45,7 @@ export class IbMaterialFormStubComponent {
         value: field.value || '',
         disabled: field.disabled
       };
-      let validators = [];
+      let validators: ValidatorFn[] = [];
       if (field.validators && field.validators.length) {
         validators = validators.concat(field.validators);
       }

@@ -3,8 +3,6 @@ import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { Component, ChangeDetectionStrategy } from "@angular/core";
 import {
   ComponentFixture,
-  fakeAsync,
-  flush,
   TestBed,
 } from "@angular/core/testing";
 import { MatButtonHarness } from "@angular/material/button/testing";
@@ -467,7 +465,7 @@ describe("IbViewService", () => {
   // ---------------------------------------------------------------------------
 
   describe("viewsForGroup", () => {
-    it("should convert saved views to IView format", (done) => {
+    it("should convert saved views to IView format", async () => {
       storageService.watchViews.and.returnValue(
         of([
           makeSaved("v1", "First", { pageSize: 30 }),
@@ -477,7 +475,7 @@ describe("IbViewService", () => {
         ])
       );
 
-      service.viewsForGroup("grp").subscribe((views) => {
+      await new Promise<void>((resolve) => service.viewsForGroup("grp").subscribe((views) => {
         expect(views.length).toBe(2);
         expect(views[0].id).toBe("v1");
         expect(views[0].name).toBe("First");
@@ -487,8 +485,8 @@ describe("IbViewService", () => {
           active: "name",
           direction: "asc",
         });
-        done();
-      });
+        resolve();
+      }));
     });
   });
 
@@ -676,7 +674,7 @@ describe("IbViewService — Dialogs", () => {
     expect(inputValue).toBe("Old Name");
   });
 
-  it("should confirm rename dialog", fakeAsync(async () => {
+  it("should confirm rename dialog", async () => {
     const view = makeTestView({ name: "Old Name" });
     const sub = service.openRenameViewDialog(view).subscribe((result) => {
       expect(result.name).toBe("New Name");
@@ -687,7 +685,6 @@ describe("IbViewService — Dialogs", () => {
     await input.setValue("New Name");
 
     fixture.detectChanges();
-    flush();
 
     const confirm = await dialog.getHarness(
       MatButtonHarness.with({
@@ -697,9 +694,8 @@ describe("IbViewService — Dialogs", () => {
     await confirm.click();
 
     fixture.detectChanges();
-    flush();
     sub.unsubscribe();
-  }));
+  });
 
   // ---------------------------------------------------------------------------
   // openDuplicateViewDialog
@@ -795,7 +791,7 @@ describe("IbViewService — Dialogs", () => {
   // openSaveAsDialog
   // ---------------------------------------------------------------------------
 
-  it("should open save as dialog, save and chain name dialog", fakeAsync(async () => {
+  it("should open save as dialog, save and chain name dialog", async () => {
     service.openSaveAsDialog().subscribe((result) => {
       expect(result.name).toBe("saved-as-name");
     });
@@ -810,14 +806,12 @@ describe("IbViewService — Dialogs", () => {
     await saveBtn.click();
 
     fixture.detectChanges();
-    flush();
 
     // Second dialog: name input
     const input = await loader.getHarness(MatInputHarness);
     await input.setValue("saved-as-name");
 
     fixture.detectChanges();
-    flush();
 
     dialog = await loader.getHarness(MatDialogHarness);
     const addBtn = await dialog.getHarness(
@@ -828,10 +822,9 @@ describe("IbViewService — Dialogs", () => {
     await addBtn.click();
 
     fixture.detectChanges();
-    flush();
-  }));
+  });
 
-  it("should open save as dialog and discard (no)", fakeAsync(async () => {
+  it("should open save as dialog and discard (no)", async () => {
     let emitted = false;
     service.openSaveAsDialog().subscribe((result) => {
       expect(result.confirmed).toBeFalse();
@@ -847,9 +840,8 @@ describe("IbViewService — Dialogs", () => {
     await noBtn.click();
 
     fixture.detectChanges();
-    flush();
     expect(emitted).toBeTrue();
-  }));
+  });
 
   // ---------------------------------------------------------------------------
   // openDialog — general and discardLabel (save/discard/cancel) mode

@@ -43,7 +43,7 @@ describe('IbUploaderComponent', () => {
     const selectedFile = new File(['content'], 'document.txt', { type: 'text/plain' });
     const dataTransfer = new DataTransfer();
     dataTransfer.items.add(selectedFile);
-    fileInput.files = dataTransfer.files;
+    Object.defineProperty(fileInput, 'files', { configurable: true, value: dataTransfer.files });
     let emittedFile: File | undefined;
     component.fileSelected.subscribe((file) => emittedFile = file);
 

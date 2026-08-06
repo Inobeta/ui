@@ -23,7 +23,7 @@ export class IbMatDatepickerI18n {
 @Injectable({providedIn: 'root'})
 export class IbMatDateAdapter extends NativeDateAdapter {
   constructor(@Optional() @Inject(MAT_DATE_LOCALE) matDateLocale: string) {
-    super(matDateLocale);
+    super();
     super.setLocale(matDateLocale);
   }
 

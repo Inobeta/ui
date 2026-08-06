@@ -93,7 +93,7 @@ export class IbMatDropdownComponent implements IbFormControlInterface {
       if (option.value.includes("__all")) {
         this.selectAll();
       }
-      const currentValue = this.data.self.value.filter((t) => t !== "__all");
+      const currentValue = this.data.self.value.filter((t: unknown) => t !== "__all");
       this.all =
         currentValue && currentValue.length === this.data.base.options.length;
     }
@@ -107,8 +107,8 @@ export class IbMatDropdownControl extends IbFormControlBase<
   string | string[] | number | number[]
 > {
   multiple = false;
-  emptyRow = null;
-  hintMessage;
+  emptyRow: { key?: string | number; value: string } | null = null;
+  hintMessage: (() => string) | null = null;
   constructor(options: IbMatDropdownParams) {
     super(options);
     this.multiple = options.multiple || false;

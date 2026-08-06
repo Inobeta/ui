@@ -60,4 +60,15 @@ describe('IbMaterialFormControlComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should render a custom error message without params', () => {
+    component.self.setErrors({ customError: { message: 'custom.error' } });
+    const errorView = component.formControlErrors.createEmbeddedView({});
+    errorView.detectChanges();
+    const renderedText = errorView.rootNodes
+      .map((node: Node) => node.textContent)
+      .join('');
+
+    expect(renderedText).toContain('custom.error');
+  });
 });

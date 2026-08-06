@@ -8,4 +8,8 @@ import { IbDynamicFormArrayComponent } from "../../forms/dynamic-form-array/dyna
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
-export class IbMaterialFormArrayComponent extends IbDynamicFormArrayComponent {}
+export class IbMaterialFormArrayComponent extends IbDynamicFormArrayComponent {
+  get addFieldLabel(): string | undefined {
+    return this.base.options.addFieldLabel;
+  }
+}

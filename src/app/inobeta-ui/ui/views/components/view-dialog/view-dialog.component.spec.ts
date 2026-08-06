@@ -2,8 +2,6 @@ import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { Component, ChangeDetectionStrategy } from "@angular/core";
 import {
-  fakeAsync,
-  flush,
   TestBed,
 } from "@angular/core/testing";
 import { MatButtonHarness } from "@angular/material/button/testing";
@@ -236,7 +234,7 @@ describe("IbTableViewDialog", () => {
     expect(noBtn).toBeTruthy();
   });
 
-  it("should emit confirmed=false when No button is clicked", fakeAsync(async () => {
+  it("should emit confirmed=false when No button is clicked", async () => {
     const { harness, ref } = await openWithRef({
       title: "shared.ibTableView.unsavedTitle",
       confirm: "shared.ibTableView.save",
@@ -258,11 +256,10 @@ describe("IbTableViewDialog", () => {
     );
     await noBtn.click();
 
-    flush();
     expect(result).toEqual({ confirmed: false });
-  }));
+  });
 
-  it("should emit confirmed=true when confirm is clicked in hasNo mode", fakeAsync(async () => {
+  it("should emit confirmed=true when confirm is clicked in hasNo mode", async () => {
     const { harness, ref } = await openWithRef({
       title: "shared.ibTableView.unsavedTitle",
       confirm: "shared.ibTableView.save",
@@ -284,9 +281,8 @@ describe("IbTableViewDialog", () => {
     );
     await confirmBtn.click();
 
-    flush();
     expect(result).toEqual({ name: "", confirmed: true });
-  }));
+  });
 
   // ---------------------------------------------------------------------------
   // Three-outcome mode — discardLabel
@@ -326,7 +322,7 @@ describe("IbTableViewDialog", () => {
     expect(saveBtn).toBeTruthy();
   });
 
-  it("should emit discard action when discard is clicked", fakeAsync(async () => {
+  it("should emit discard action when discard is clicked", async () => {
     const { harness, ref } = await openWithRef({
       title: "shared.ibTableView.unsavedTitle",
       confirm: "shared.ibTableView.save",
@@ -347,11 +343,10 @@ describe("IbTableViewDialog", () => {
     );
     await discardBtn.click();
 
-    flush();
     expect(result).toEqual({ action: "discard", name: "" });
-  }));
+  });
 
-  it("should emit save action when confirm is clicked in discardLabel mode", fakeAsync(async () => {
+  it("should emit save action when confirm is clicked in discardLabel mode", async () => {
     const { harness, ref } = await openWithRef({
       title: "shared.ibTableView.unsavedTitle",
       confirm: "shared.ibTableView.save",
@@ -372,11 +367,10 @@ describe("IbTableViewDialog", () => {
     );
     await saveBtn.click();
 
-    flush();
     expect(result).toEqual({ action: "save", name: "" });
-  }));
+  });
 
-  it("should emit cancel (undefined) when cancel is clicked in discardLabel mode", fakeAsync(async () => {
+  it("should emit cancel (undefined) when cancel is clicked in discardLabel mode", async () => {
     const { harness, ref } = await openWithRef({
       title: "shared.ibTableView.unsavedTitle",
       confirm: "shared.ibTableView.save",
@@ -397,16 +391,15 @@ describe("IbTableViewDialog", () => {
     );
     await cancelBtn.click();
 
-    flush();
     // Cancel button with [mat-dialog-close] and no value emits empty string
     expect(result).toBe("");
-  }));
+  });
 
   // ---------------------------------------------------------------------------
   // Three-outcome + name input
   // ---------------------------------------------------------------------------
 
-  it("should include name in save action when name input is filled", fakeAsync(async () => {
+  it("should include name in save action when name input is filled", async () => {
     const { harness, ref } = await openWithRef({
       title: "shared.ibTableView.addTitle",
       confirm: "shared.ibTableView.add",
@@ -426,11 +419,10 @@ describe("IbTableViewDialog", () => {
     );
     await saveBtn.click();
 
-    flush();
     expect(result).toEqual({ action: "save", name: "My Custom Name" });
-  }));
+  });
 
-  it("should include name in discard action when name input has value", fakeAsync(async () => {
+  it("should include name in discard action when name input has value", async () => {
     const { harness, ref } = await openWithRef({
       title: "shared.ibTableView.addTitle",
       confirm: "shared.ibTableView.add",
@@ -448,9 +440,8 @@ describe("IbTableViewDialog", () => {
     );
     await discardBtn.click();
 
-    flush();
     expect(result).toEqual({ action: "discard", name: "PreFilled" });
-  }));
+  });
 
   // ---------------------------------------------------------------------------
   // Name length hint / FormField

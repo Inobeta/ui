@@ -60,6 +60,7 @@ describe("IbKaiTableAction", () => {
   it("should update kind signal when host changes value", async () => {
     host.actionKind = "export";
     fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
     await fixture.whenStable();
     expect(component.kind()).toBe("export");
   });

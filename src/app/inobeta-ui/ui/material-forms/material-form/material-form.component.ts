@@ -1,5 +1,6 @@
-import { Component, Input, OnChanges, ChangeDetectionStrategy } from "@angular/core";
+import { Component, Input, OnChanges, ChangeDetectionStrategy, SimpleChanges } from "@angular/core";
 import { IbDynamicFormComponent } from "../../forms/dynamic-form/dynamic-form.component";
+import { IbFormControlBase } from "../../forms/controls/form-control-base";
 
 /**
  * Crea un form dinamico usando componenti di Angular Material.
@@ -29,19 +30,20 @@ export class IbMaterialFormComponent
 {
   @Input() actionsPosition = IbMatActionsPosition.BOTTOM;
   @Input() rowHeight = "80px";
-  simpleActions = [];
-  submitAction = null;
+  simpleActions: IbFormControlBase<unknown>[] = [];
+  submitAction: IbFormControlBase<unknown> | null = null;
   ibMatActionsPosition = IbMatActionsPosition;
 
-  ngOnChanges(changes) {
+  ngOnChanges(changes: SimpleChanges) {
     super.ngOnChanges(changes);
     if (changes.actions && changes.actions.currentValue) {
-      this.simpleActions = changes.actions.currentValue.filter(
+      const actions = changes.actions.currentValue as IbFormControlBase<unknown>[];
+      this.simpleActions = actions.filter(
         (a) => a.key !== "submit"
       );
-      this.submitAction = changes.actions.currentValue.find(
+      this.submitAction = actions.find(
         (a) => a.key === "submit"
-      );
+      ) ?? null;
     }
   }
 }
