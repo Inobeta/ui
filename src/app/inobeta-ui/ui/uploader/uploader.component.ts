@@ -1,28 +1,31 @@
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, input, output, viewChild } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { TranslatePipe } from '@ngx-translate/core';
 
-/** @deprecated this element will be removed in v21 */
 @Component({
   selector: 'ib-uploader',
+  standalone: true,
+  imports: [MatButtonModule, TranslatePipe],
   template: `
-    <input (change)="onChooseChange()" #uploader style="display:none;"type="file"/>
-    <button mat-button (click)="onChooseClick()" >{{textKey | translate}}</button>
+    <input (change)="onChooseChange()" #uploader style="display:none;" type="file" />
+    <button mat-button type="button" (click)="onChooseClick()">{{ textKey() | translate }}</button>
   `,
-  standalone: false
 })
-export class IbUploaderComponentLegacy {
-  @ViewChild('uploader') uploader !: ElementRef;
-  @Input() textKey: string;
-  @Output() onFileSelected: EventEmitter<any> = new EventEmitter<any>();
+export class IbUploaderComponent {
+  readonly uploader = viewChild.required<ElementRef<HTMLInputElement>>('uploader');
 
-  constructor() { }
+  readonly textKey = input('');
+  readonly fileSelected = output<File>();
 
-  onChooseClick() {
-    this.uploader.nativeElement.click();
+  onChooseClick(): void {
+    this.uploader().nativeElement.click();
   }
 
-  onChooseChange() {
-    if (this.uploader.nativeElement.files && this.uploader.nativeElement.files.length > 0) {
-      this.onFileSelected.emit(this.uploader.nativeElement.files[0]);
+  onChooseChange(): void {
+    const files = this.uploader().nativeElement.files;
+    if (files && files.length > 0) {
+      this.fileSelected.emit(files[0]);
+      this.uploader().nativeElement.value = '';
     }
   }
 }

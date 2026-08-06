@@ -1,0 +1,65 @@
+:host {
+  display: flex;
+  height: 100%;
+  min-height: 0;
+}
+
+.side-menu {
+  box-sizing: border-box;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  background-color: var(--mat-sys-surface, var(--mat-app-background-color));
+  color: var(--mat-sys-on-surface, var(--mat-app-text-color));
+}
+
+.side-menu-group-toggle {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 0.5rem;
+  border: 0;
+  border-radius: 0;
+  padding: 0.75rem 1rem;
+  background-color: var(--mat-sys-surface, var(--mat-app-background-color));
+  color: var(--mat-sys-on-surface, var(--mat-app-text-color));
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+}
+
+.side-menu-group-toggle:hover,
+.side-menu-group-toggle:focus-visible,
+.side-menu-link:hover,
+.side-menu-link:focus-visible {
+  background-color: var(--mat-sys-surface-container-high, var(--mat-card-filled-container-color));
+}
+
+.side-menu-group-toggle:focus-visible,
+.side-menu-link:focus-visible {
+  outline: 2px solid var(--mat-sys-primary, var(--mat-button-filled-container-color));
+  outline-offset: -2px;
+}
+
+.side-menu-group-toggle mat-icon {
+  flex: 0 0 auto;
+}
+
+.side-menu-expand-icon {
+  margin-left: auto;
+}
+
+.side-menu-link {
+  display: block;
+  border-radius: 0;
+  padding: 0.75rem 1rem 0.75rem 3.5rem;
+  background-color: var(--mat-sys-surface, var(--mat-app-background-color));
+  color: var(--mat-sys-on-surface, var(--mat-app-text-color));
+  text-decoration: none;
+}
+
+.side-menu-link.active-link {
+  background-color: var(--mat-sys-secondary-container, var(--mat-button-tonal-container-color));
+  color: var(--mat-sys-on-secondary-container, var(--mat-app-text-color));
+}

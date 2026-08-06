@@ -5,13 +5,13 @@ import {
   Input,
   inject,
 } from "@angular/core";
-import {  provideState, provideStore } from "@ngrx/store";
+import { provideState, provideStore } from "@ngrx/store";
 import {
   Meta,
   StoryObj,
   applicationConfig,
   moduleMetadata,
-} from "@storybook/angular";
+} from "@storybook/angular-vite";
 import { IbHttpModule, ibLoaderFeature } from "public_api";
 import { provideAnimations } from "@angular/platform-browser/animations";
 import { MatButtonModule } from "@angular/material/button";
@@ -28,7 +28,7 @@ export class IbLoadingScreen {
   private http = inject(HttpClient);
   @Input() props: Record<string, any> = {};
 
-  constructor() {}
+  constructor() { }
 
   reload() {
     this.http.get("./assets/i18n/it.json").subscribe();

@@ -1,6 +1,6 @@
 import { StorybookTranslateModule } from ".storybook/i18n";
 import { HttpClientModule } from "@angular/common/http";
-import { Meta, StoryObj, moduleMetadata } from "@storybook/angular";
+import { Meta, StoryObj, moduleMetadata } from "@storybook/angular-vite";
 import { IbAPITokens, IbHttpModule, IbLoginService } from "public_api";
 
 const meta: Meta<IbLoginService<IbAPITokens>> = {

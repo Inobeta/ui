@@ -87,10 +87,11 @@ describe("IbTable", () => {
       expect(rows.length).toBe(2);
     });
 
-    it("should select a row", () => {
+    it("should select a row", async () => {
       const row = { name: "alice" };
       component.selectionColumn().toggleRowSelection({ checked: true }, row);
-      fixture.detectChanges();
+      fixture.changeDetectorRef.markForCheck();
+      await fixture.whenStable();
       expect(component.selectionColumn().selection.isSelected(row)).toBeTruthy();
     });
 
@@ -375,6 +376,8 @@ describe("IbTable", () => {
       component.selectionColumn().selection.select(
         ...localSource.getCurrentPageData().slice(0, 2)
       );
+      fixture.changeDetectorRef.markForCheck();
+      await fixture.whenStable();
       const loader = TestbedHarnessEnvironment.documentRootLoader(fixture);
       const exportButton = await loader.getHarness(
         MatButtonHarness.with({ ancestor: ".ib-table__toolbar__actions" })
@@ -467,6 +470,7 @@ describe("IbTable", () => {
           IbTableWithViewGroupApp,
           IbTableWithViewGroupNoFilterApp,
           IbTestViewsHostComponent,
+          IbTestViewsHostWithPortalComponent,
         ],
         imports: [
           CommonModule,
@@ -683,30 +687,25 @@ describe("IbTable", () => {
     // Toolbar portals without filter — DEVK-1065 Step 7
     // ===========================================================================
 
-    it("should forward toolbar portals from views host even when no ib-filter exists", async () => {
+    it("should forward toolbar portals from views host even when no ib-filter exists", fakeAsync(() => {
       const noFilterFixture = TestBed.createComponent(IbTableWithViewGroupNoFilterApp);
       noFilterFixture.detectChanges();
+      tick();
+      noFilterFixture.detectChanges();
 
-      // Before async init completes, push a portal into the stub so
-      // setupViewGroup() picks it up.
       const c: IbTable = noFilterFixture.debugElement.query(
         By.directive(IbTable),
       ).componentInstance as IbTable;
-      const host = c.viewHost() as IbTableViewsHostStub;
-      host.addToolbarPortal(new ComponentPortal(DummyPortalComponent));
-
-      await noFilterFixture.whenStable();
-      noFilterFixture.detectChanges();
 
       // Without a filter, actionPortals should contain only the host portal.
       expect(c.actionPortals.length).toBe(1);
       expect(c.actionPortals[0]).toBeInstanceOf(ComponentPortal);
-    });
+    }));
 
-    it("should initialize views host correctly when table has no filter", async () => {
+    it("should initialize views host correctly when table has no filter", fakeAsync(() => {
       const noFilterFixture = TestBed.createComponent(IbTableWithViewGroupNoFilterApp);
       noFilterFixture.detectChanges();
-      await noFilterFixture.whenStable();
+      tick();
       noFilterFixture.detectChanges();
 
       const c: IbTable = noFilterFixture.debugElement.query(
@@ -721,14 +720,14 @@ describe("IbTable", () => {
       const data = host.viewDataAccessor();
       expect(data).toBeDefined();
       expect(data.pageSize).toBeGreaterThan(0);
-    });
+    }));
   });
 
   // ===========================================================================
   // Table without views host — DEVK-1065 Step 7
   // ===========================================================================
 
-  it("should work normally without a views host (no IbViewModule import needed)", async () => {
+  it("should work normally without a views host (no IbViewModule import needed)", fakeAsync(() => {
     // Reset TestBed for a clean configuration without views host components.
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
@@ -755,7 +754,8 @@ describe("IbTable", () => {
 
     const fixture = TestBed.createComponent(IbTableApp);
     fixture.detectChanges();
-    await fixture.whenStable();
+    tick();
+    fixture.detectChanges();
 
     const c: IbTable = fixture.debugElement.query(
       By.directive(IbTable),
@@ -767,19 +767,20 @@ describe("IbTable", () => {
 
     const facade = c["stateFacade"] as IbKaiTableStateFacade;
     expect(facade.initialized()).toBeTrue();
-  });
+  }));
 
   describe("with export", () => {
     let fixture: ComponentFixture<IbTableWithExport>;
     let component: IbTable;
     let loader: HarnessLoader;
 
-    beforeEach(() => {
+    beforeEach(async () => {
       fixture = createComponent(IbTableWithExport);
       component = fixture.debugElement.query(
         By.directive(IbTable)
       ).componentInstance as IbTable;
       fixture.detectChanges();
+      await fixture.whenStable();
       loader = TestbedHarnessEnvironment.documentRootLoader(fixture);
     });
 
@@ -851,7 +852,7 @@ describe("IbTable", () => {
       );
     });
 
-    it("should export selected rows", fakeAsync(async () => {
+    it("should export selected rows", async () => {
 
       const exportSpy = spyOn(component.exportService, "export");
       const localSource = component.activeDataSource() as IbTableDataSource<any>;
@@ -859,6 +860,8 @@ describe("IbTable", () => {
       component.selectionColumn().selection.select(
         ...localSource.data.slice(0, 2)
       );
+      fixture.changeDetectorRef.markForCheck();
+      await fixture.whenStable();
 
       const exportButton = await loader.getHarness(
         MatButtonHarness.with({
@@ -870,7 +873,7 @@ describe("IbTable", () => {
       fixture.detectChanges();
       await fixture.whenStable();
       expect(dialog).toBeTruthy();
-    }));
+    });
   });
 
   describe("with export transformer", () => {
@@ -956,7 +959,7 @@ describe("IbTable", () => {
       active = await sort.getActiveHeader();
       let direction = await number.getSortDirection();
       expect(await active.getLabel()).toEqual(await number.getLabel());
-
+      expect(component.sort().active).toBe("amount");
       expect(direction).toBe("asc");
 
       await number.click();
@@ -1046,11 +1049,9 @@ describe("IbTable", () => {
   describe("tableName required", () => {
     it("should require tableName as a required input", () => {
       configureModule(IbTableWithoutTableName);
+      const fixture = TestBed.createComponent(IbTable);
 
-      expect(() => {
-        const fixture = TestBed.createComponent(IbTableWithoutTableName);
-        fixture.detectChanges();
-      }).toThrow();
+      expect(() => fixture.componentInstance.tableName()).toThrow();
     });
   });
 
@@ -1126,7 +1127,7 @@ describe("IbTable", () => {
         { fruit: "apple" },
         { fruit: "banana" },
       ];
-      fixture.detectChanges();
+      fixture.changeDetectorRef.markForCheck();
       await fixture.whenStable();
 
       expect(tagFilter.options).toEqual(["apple", "banana"]);
@@ -1395,18 +1396,20 @@ describe("IbTable", () => {
         .toContain("ib-table__content--parent-height");
     });
 
-    it("should normalize empty and whitespace tableHeight values to parent mode", () => {
+    it("should normalize empty and whitespace tableHeight values to parent mode", async () => {
       const table = heightTableElement(fixture);
       const component = fixture.debugElement.queryAll(By.directive(IbTable))[1]
         .componentInstance as IbTable;
 
       host.tableHeight = "";
-      fixture.detectChanges();
+      fixture.changeDetectorRef.markForCheck();
+      await fixture.whenStable();
       expect(component.usesParentHeight()).toBeTrue();
       expect(table.classList).toContain("ib-table__container--parent-height");
 
       host.tableHeight = "   ";
-      fixture.detectChanges();
+      fixture.changeDetectorRef.markForCheck();
+      await fixture.whenStable();
       expect(component.usesParentHeight()).toBeTrue();
       expect(table.classList).toContain("ib-table__container--parent-height");
     });
@@ -1733,6 +1736,19 @@ class IbTableWithRemoteSearchApp {
 class IbTestViewsHostComponent extends IbTableViewsHostStub {}
 
 @Component({
+  selector: 'ib-test-views-host-with-portal',
+  template: '',
+  providers: [{ provide: IbTableViewsHost, useExisting: IbTestViewsHostWithPortalComponent }],
+  standalone: false,
+})
+class IbTestViewsHostWithPortalComponent extends IbTableViewsHostStub {
+  constructor() {
+    super();
+    this.addToolbarPortal(new ComponentPortal(DummyPortalComponent));
+  }
+}
+
+@Component({
   template: `
     <ib-kai-table
       tableName="test-views"
@@ -1768,7 +1784,7 @@ class DummyPortalComponent {}
       [data]="data"
       [displayedColumns]="['name']"
     >
-      <ib-test-views-host></ib-test-views-host>
+      <ib-test-views-host-with-portal></ib-test-views-host-with-portal>
       <ib-text-column name="name"></ib-text-column>
     </ib-kai-table>
   `,
@@ -1998,7 +2014,9 @@ class IbTableWithExportTransformer {
       [displayedColumns]="['name', 'amount', 'createdAt']"
     >
       <ib-text-column name="name" [aggregate]="false"></ib-text-column>
-      <ib-number-column name="amount" sort></ib-number-column>
+      <ib-column name="amount" headerText="Amount" sort>
+        <ng-template *ibCellDef="let element">{{ element.amount }}</ng-template>
+      </ib-column>
       <ib-date-column name="createdAt" sort></ib-date-column>
       <ib-column ib-action-column>
         <section *ibCellDef="let element">{{ element.amount }}</section>

@@ -10,7 +10,6 @@ import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { By } from "@angular/platform-browser";
 import { IbTextColumn } from "./text-column";
 import { IbColumn } from "./column";
-import { IbSortHeader } from "../sort-header";
 
 @Component({
   template: `
@@ -34,29 +33,32 @@ describe("IbTextColumn", () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [TextColumnHostComponent, IbTextColumn],
-      imports: [NoopAnimationsModule, MatTableModule, MatSortModule, IbColumn, IbSortHeader],
+      imports: [NoopAnimationsModule, MatTableModule, MatSortModule, IbColumn],
     }).compileComponents();
   }));
 
-  beforeEach(() => {
+  beforeEach(async () => {
     fixture = TestBed.createComponent(TextColumnHostComponent);
     host = fixture.componentInstance;
+    fixture.detectChanges();
+    await fixture.whenStable();
     component = fixture.debugElement.query(
       By.directive(IbTextColumn)
     ).componentInstance;
-    fixture.detectChanges();
   });
 
   it("should read justify as a signal with default 'start'", () => {
     expect(component.justify()).toBe("start");
   });
 
-  it("should update justify signal when host changes value", () => {
+  it("should update justify signal when host changes value", async () => {
     host.justifyValue = "end";
-    fixture.detectChanges();
+    fixture.changeDetectorRef.markForCheck();
+    await fixture.whenStable();
     expect(component.justify()).toBe("end");
     host.justifyValue = "center";
-    fixture.detectChanges();
+    fixture.changeDetectorRef.markForCheck();
+    await fixture.whenStable();
     expect(component.justify()).toBe("center");
   });
 

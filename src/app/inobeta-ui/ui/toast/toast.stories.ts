@@ -15,7 +15,7 @@ import {
   StoryObj,
   applicationConfig,
   moduleMetadata,
-} from "@storybook/angular";
+} from "@storybook/angular-vite";
 import { IbToastModule, IbToastNotification } from "public_api";
 
 @Component({

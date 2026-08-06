@@ -7,7 +7,7 @@ import {
   StoryObj,
   applicationConfig,
   moduleMetadata,
-} from "@storybook/angular";
+} from "@storybook/angular-vite";
 import { IbFilter, IbFilterModule } from "public_api";
 
 const meta: Meta<IbFilter> = {

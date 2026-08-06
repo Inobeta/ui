@@ -1,4 +1,4 @@
-import { Meta } from "@storybook/blocks";
+import { Meta } from "@storybook/addon-docs/blocks";
 
 # Getting started
 
@@ -15,8 +15,6 @@ npm i --save @inobeta/ui
 2. Apply your theme to the library's components
 
 (Recommended) Generate a palette with this [schematic](https://github.com/angular/components/blob/main/src/material/schematics/ng-generate/m3-theme/README.md)
-
-> `IbMainMenuModule` and `IbBreadcrumbModule` are deprecated and planned for removal in v21. Do not use them for new development.
 
 ```
 ng generate @angular/material:m3-theme
@@ -35,7 +33,6 @@ html {
   @include mat.color-variants-backwards-compatibility(app-theme.$light-theme);
 
   /** Only include themes of components that are actually beign used */
-  @include ui.main-menu-theme(app-theme.$light-theme);
   @include ui.table-theme(app-theme.$light-theme);
   @include ui.toast-theme(app-theme.$light-theme);
 
@@ -46,7 +43,6 @@ html {
     @include mat.color-variants-backwards-compatibility(app-theme.$dark-theme);
 
     /** Use the *-color mixin for dark theme to avoid duplicates */
-    @include ui.main-menu-color(app-theme.$dark-theme);
     @include ui.table-color(app-theme.$dark-theme);
     @include ui.toast-color(app-theme.$dark-theme);
   }
@@ -80,7 +76,6 @@ $app-theme: mat.m2-define-light-theme(
 @include mat.all-component-themes($app-theme);
 
 /** Only include themes of components that are actually beign used */
-@include ui.main-menu-theme($app-theme);
 @include ui.table-theme($app-theme);
 @include ui.toast-theme($app-theme);
 ```

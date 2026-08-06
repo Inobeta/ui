@@ -25,88 +25,71 @@ export const appRoutes: Routes = [
     children: [
       {
         path: 'dialog',
-        data: { breadcrumb: 'Dialog' },
         component: DialogExampleComponent,
       },
       {
         path: 'toast',
-        data: { breadcrumb: 'examples.toastMenu' },
         component: IbToastExampleComponent
       },
       {
         path: 'kai-table',
-        data: { breadcrumb: 'Table' },
         children: [
           {
             path: 'simple',
-            data: { breadcrumb: 'Simple' },
             component: IbKaiTableExamplePage
           },
           {
             path: 'actions',
-            data: { breadcrumb: 'Actions' },
             component: IbKaiTableActionColumnExamplePage
           },
           {
             path: 'api',
-            data: { breadcrumb: 'Api' },
             component: IbKaiTableApiExamplePage
           },
           {
             path: 'full',
-            data: { breadcrumb: 'Full' },
             component: IbKaiTableFullExamplePage
           },
           {
             path: 'with-routing',
-            data: { breadcrumb: 'With Routing' },
             component: IbKaiTableWithRouting,
             children: [
               {
                 path: 'details/:id',
-                data: { breadcrumb: 'Details' },
                 component: KaiTableDetailComponent
               }
             ]
           },
           {
             path: 'datasource',
-            data: { breadcrumb: 'DataSource' },
             component: IbKaiTableDatasourceExamplePage
           },
           {
             path: 'sticky',
-            data: { breadcrumb: 'examples.ibMainMenu.kaiTableSticky' },
             component: IbKaiTableStickyExamplePage
           },
           {
             path: 'parent-height',
-            data: { breadcrumb: 'examples.ibMainMenu.kaiTableParentHeight' },
             component: IbKaiTableParentHeightExamplePage
           },
           {
             path: 'sticky-parent',
-            data: { breadcrumb: 'examples.ibMainMenu.kaiTableStickyParent' },
             component: IbKaiTableStickyParentExamplePage
           },
           {
             path: 'custom-sort-filter',
-            data: { breadcrumb: 'Custom Sort & Filter' },
             component: IbKaiTableCustomSortFilterExamplePage
           },
           {
             path: 'custom-aggregate',
-            data: { breadcrumb: 'Custom Aggregate' },
             component: IbKaiTableCustomAggregateExamplePage
           },
           {
             path: 'column-options',
-            data: { breadcrumb: 'Column Options' },
             component: IbKaiTableColumnOptionsExamplePage
           },
           {
             path: 'mobile-empty',
-            data: { breadcrumb: 'Empty Tables' },
             component: IbKaiTableMobileEmptyExamplePage
           },
           {

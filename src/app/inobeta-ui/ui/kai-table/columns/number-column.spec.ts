@@ -12,7 +12,6 @@ import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { By } from "@angular/platform-browser";
 import { IbNumberColumn } from "./number-column";
 import { IbColumn } from "./column";
-import { IbSortHeader } from "../sort-header";
 
 registerLocaleData(localeIt);
 
@@ -44,26 +43,28 @@ describe("IbNumberColumn", () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [NumberColumnHostComponent, IbNumberColumn],
-      imports: [NoopAnimationsModule, MatTableModule, MatSortModule, IbColumn, IbSortHeader],
+      imports: [NoopAnimationsModule, MatTableModule, MatSortModule, IbColumn],
     }).compileComponents();
   }));
 
-  beforeEach(() => {
+  beforeEach(async () => {
     fixture = TestBed.createComponent(NumberColumnHostComponent);
     host = fixture.componentInstance;
+    fixture.detectChanges();
+    await fixture.whenStable();
     component = fixture.debugElement.query(
       By.directive(IbNumberColumn)
     ).componentInstance;
-    fixture.detectChanges();
   });
 
   it("should read digitsInfo as a signal", () => {
     expect(component.digitsInfo()).toBe("1.2-2");
   });
 
-  it("should update digitsInfo signal", () => {
+  it("should update digitsInfo signal", async () => {
     host.digitsValue = "1.3-3";
-    fixture.detectChanges();
+    fixture.changeDetectorRef.markForCheck();
+    await fixture.whenStable();
     expect(component.digitsInfo()).toBe("1.3-3");
   });
 
@@ -71,16 +72,18 @@ describe("IbNumberColumn", () => {
     expect(component.locale()).toBe("it");
   });
 
-  it("should update locale signal", () => {
+  it("should update locale signal", async () => {
     host.localeValue = "en-US";
-    fixture.detectChanges();
+    fixture.changeDetectorRef.markForCheck();
+    await fixture.whenStable();
     expect(component.locale()).toBe("en-US");
   });
 
-  it("should read um as a signal", () => {
+  it("should read um as a signal", async () => {
     expect(component.um()).toBe("€");
     host.umValue = "$";
-    fixture.detectChanges();
+    fixture.changeDetectorRef.markForCheck();
+    await fixture.whenStable();
     expect(component.um()).toBe("$");
   });
 
@@ -88,9 +91,10 @@ describe("IbNumberColumn", () => {
     expect(component.umPosition()).toBe("right");
   });
 
-  it("should update umPosition signal", () => {
+  it("should update umPosition signal", async () => {
     host.umPosValue = "left";
-    fixture.detectChanges();
+    fixture.changeDetectorRef.markForCheck();
+    await fixture.whenStable();
     expect(component.umPosition()).toBe("left");
   });
 
@@ -100,16 +104,18 @@ describe("IbNumberColumn", () => {
     expect(result).toContain("€");
   });
 
-  it("should prepend unit when umPosition is left", () => {
+  it("should prepend unit when umPosition is left", async () => {
     host.umPosValue = "left";
-    fixture.detectChanges();
+    fixture.changeDetectorRef.markForCheck();
+    await fixture.whenStable();
     const result = component.mobileDataRenderer({ amount: 100 }, "amount");
     expect(result.startsWith("€")).toBeTrue();
   });
 
-  it("should return formatted value without unit when um is empty", () => {
+  it("should return formatted value without unit when um is empty", async () => {
     host.umValue = "";
-    fixture.detectChanges();
+    fixture.changeDetectorRef.markForCheck();
+    await fixture.whenStable();
     const result = component.mobileDataRenderer({ amount: 42 }, "amount");
     expect(result).not.toContain("€");
   });

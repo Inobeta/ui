@@ -12,6 +12,7 @@ import { IbDataExportModule } from '../data-export';
 import { IbColumn } from '../kai-table/columns';
 import { IbKaiRowGroupDirective } from '../kai-table/rowgroup';
 import { IbKaiTableAction } from '../kai-table/action';
+import { IbTableLocalDataSource } from '../kai-table';
 import { OVERRIDE_EXPORT_FORMATS } from '../data-export/data-export.service';
 import { IbKaiTableMobileComponent } from './table-mobile.component';
 import { IbKaiTableMobileItemComponent } from './table-mobile-item.component';
@@ -103,6 +104,58 @@ describe('IbKaiTableMobileComponent', () => {
 
     expect(component.data()).toEqual([{ id: 1, name: 'Alice' }]);
     expect(fixture.nativeElement.querySelectorAll('ib-kai-table-mobile-item').length).toBe(1);
+    expect(fixture.nativeElement.querySelector('.table-empty')).toBeNull();
+  }));
+
+  it('keeps infinite scroll active when the local source has rows beyond its rendered page', fakeAsync(() => {
+    const rows = Array.from({ length: 25 }, (_, index) => ({
+      id: index + 1,
+      name: `Row ${index + 1}`,
+    }));
+    const source = new IbTableLocalDataSource(rows);
+    source.setInput({ pageIndex: 0, pageSize: 20 });
+    fixture.componentRef.setInput('dataSource', source);
+
+    fixture.detectChanges();
+    flushMicrotasks();
+    fixture.detectChanges();
+
+    expect(component.visibleRows()).toHaveSize(20);
+    expect(component.hasMoreRows()).toBeTrue();
+    expect(fixture.nativeElement.querySelector('ib-kai-table-mobile-infinitescroll')).not.toBeNull();
+  }));
+
+  it('renders the no-items fallback when a configured data source emits no rows', fakeAsync(() => {
+    const source = new MobileDataSource();
+    fixture.componentRef.setInput('dataSource', source);
+    fixture.detectChanges();
+    flushMicrotasks();
+
+    source.rows.next([]);
+    flushMicrotasks();
+    fixture.detectChanges();
+
+    const emptyState = fixture.nativeElement.querySelector('.table-empty');
+    expect(emptyState).toBeTruthy();
+    expect(emptyState.querySelector('.table-empty-icon').textContent.trim()).toBe('inbox');
+    expect(emptyState.querySelector('.table-empty-label').textContent.trim()).toBe('common.noItems');
+    expect(fixture.nativeElement.querySelectorAll('ib-kai-table-mobile-item')).toHaveSize(0);
+  }));
+
+  it('suppresses the no-items fallback while an empty table is loading', fakeAsync(() => {
+    const source = new MobileDataSource();
+    fixture.componentRef.setInput('dataSource', source);
+    fixture.componentRef.setInput('state', 'loading');
+    fixture.detectChanges();
+    flushMicrotasks();
+
+    source.rows.next([]);
+    flushMicrotasks();
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('mat-progress-bar')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('.table-empty')).toBeNull();
+    expect(fixture.nativeElement.querySelectorAll('ib-kai-table-mobile-item')).toHaveSize(0);
   }));
 
   it('renders a synchronous BehaviorSubject initial value without NG0600', fakeAsync(() => {

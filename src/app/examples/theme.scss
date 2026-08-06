@@ -12,7 +12,6 @@ html {
   @include mat.color-variants-backwards-compatibility(red-palette.$light-theme);
 
   @include ui.form-utilities();
-  @include ui.main-menu-theme(red-palette.$light-theme);
   @include ui.table-theme(red-palette.$light-theme);
   @include ui.toast-theme(red-palette.$light-theme);
 
@@ -21,7 +20,6 @@ html {
 
     @include mat.color-variants-backwards-compatibility(red-palette.$dark-theme);
 
-    @include ui.main-menu-color(red-palette.$dark-theme);
     @include ui.table-color(red-palette.$dark-theme);
     @include ui.toast-color(red-palette.$dark-theme);
   }

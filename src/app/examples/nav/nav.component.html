@@ -1,10 +1,29 @@
-
 <div class="nav-shell">
-  <div class="nav-header">
-    <ib-main-menu-example></ib-main-menu-example>
-    <ib-material-breadcrumb></ib-material-breadcrumb>
-  </div>
-  <div class="route-content">
-    <router-outlet></router-outlet>
-  </div>
+  @if (isMobile()) {
+    <div class="mobile-navigation">
+      <button
+        mat-icon-button
+        type="button"
+        [attr.aria-label]="'examples.sideMenu.toggleNavigation' | translate"
+        (click)="drawer.toggle()"
+      >
+        <mat-icon aria-hidden="true">menu</mat-icon>
+      </button>
+    </div>
+  }
+
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav
+      #drawer
+      class="side-menu-column"
+      [mode]="drawerMode()"
+      [(opened)]="drawerOpened"
+    >
+      <app-side-menu></app-side-menu>
+    </mat-sidenav>
+
+    <mat-sidenav-content class="route-content">
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
 </div>

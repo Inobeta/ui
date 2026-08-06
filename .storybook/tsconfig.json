@@ -2,11 +2,15 @@
   "extends": "../tsconfig.app.json",
   "compilerOptions": {
     "types": ["node"],
+    "jsx": "react-jsx",
     "allowSyntheticDefaultImports": true,
     "emitDecoratorMetadata": true,
     "resolveJsonModule": true
   },
-  "exclude": ["../src/test.ts", "../src/**/*.spec.ts"],
-  "include": ["../src/**/*", "./preview.ts"],
+  "exclude": [
+    "../src/test.ts",
+    "../src/**/*.spec.ts"
+  ],
+  "include": ["../src/**/*", "./**/*.ts", "./**/*.tsx"],
   "files": ["./typings.d.ts"]
 }

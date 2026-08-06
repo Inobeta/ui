@@ -33,5 +33,5 @@ const services = [
     provideHttpClientTesting()
   ]
 })
-/** @deprecated this element will be removed in v21 */
+/** @deprecated This element will be removed in a future major release after v22. */
 export class IbToolTestModule { }

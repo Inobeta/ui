@@ -1,0 +1,28 @@
+<nav class="side-menu">
+  @for (group of groups; track group.id) {
+    @let expanded = isGroupExpanded(group);
+    <section class="side-menu-group">
+      <button
+        type="button"
+        class="side-menu-group-toggle"
+        [attr.aria-controls]="group.linksId"
+        [attr.aria-expanded]="expanded"
+        (click)="toggleGroup(group)"
+      >
+        <mat-icon aria-hidden="true">{{ group.icon }}</mat-icon>
+        <span>{{ group.label | translate }}</span>
+        <mat-icon class="side-menu-expand-icon" aria-hidden="true">
+          {{ expanded ? 'expand_less' : 'expand_more' }}
+        </mat-icon>
+      </button>
+
+      <div class="side-menu-links" [id]="group.linksId" [hidden]="!expanded">
+        @for (link of group.links; track link.route) {
+          <a class="side-menu-link" [routerLink]="link.route" routerLinkActive="active-link">
+            {{ link.label | translate }}
+          </a>
+        }
+      </div>
+    </section>
+  }
+</nav>

@@ -43,20 +43,22 @@ describe("IbKaiTableAction", () => {
     }).compileComponents();
   }));
 
-  beforeEach(() => {
+  beforeEach(async () => {
     fixture = TestBed.createComponent(ActionHostComponent);
     host = fixture.componentInstance;
-    component = host.action;
     fixture.detectChanges();
+    await fixture.whenStable();
+    component = host.action;
   });
 
   it("should read kind as an input signal with default 'default'", () => {
     expect(component.kind()).toBe("default");
   });
 
-  it("should update kind signal when host changes value", () => {
+  it("should update kind signal when host changes value", async () => {
     host.actionKind = "export";
-    fixture.detectChanges();
+    fixture.changeDetectorRef.markForCheck();
+    await fixture.whenStable();
     expect(component.kind()).toBe("export");
   });
 
@@ -86,11 +88,12 @@ describe("IbKaiTableActionGroup", () => {
     }).compileComponents();
   }));
 
-  beforeEach(() => {
+  beforeEach(async () => {
     fixture = TestBed.createComponent(ActionGroupHostComponent);
     host = fixture.componentInstance;
-    component = host.group;
     fixture.detectChanges();
+    await fixture.whenStable();
+    component = host.group;
   });
 
   it("should expose the TemplateRef query signal", () => {

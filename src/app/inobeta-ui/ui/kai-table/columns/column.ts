@@ -3,7 +3,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   contentChild,
-  computed,
   input,
   model,
   OnDestroy,
@@ -21,9 +20,9 @@ import {
   MatTableModule,
 } from "@angular/material/table";
 import { IbAggregateCell, IbCellDef } from "../cells";
-import { IbSortHeader } from "../sort-header";
 //import { IbTable } from "../table.component";
 import { IB_COLUMN_OPTIONS, IB_TABLE, IbColumnOptions } from "../tokens";
+import { IB_COLUMN_MAT_SORT_PROVIDER } from "./column-sort.provider";
 
 /**
  * Column that shows any arbitrary content for the row cells.
@@ -39,15 +38,13 @@ import { IB_COLUMN_OPTIONS, IB_TABLE, IbColumnOptions } from "../tokens";
   template: `
     <ng-container
       matColumnDef
-      matSort
-       [sticky]="stickyInput()"
-       [stickyEnd]="stickyEndInput()"
+      [sticky]="stickyInput()"
+      [stickyEnd]="stickyEndInput()"
     >
       <th
         class="ib-table__header-cell"
         mat-header-cell
         *matHeaderCellDef
-         [ibSortHeaderFor]="matSort()"
         mat-sort-header
          [disabled]="!sortInput()"
       >
@@ -72,7 +69,8 @@ import { IB_COLUMN_OPTIONS, IB_TABLE, IbColumnOptions } from "../tokens";
   // an ExpressionChangedAfterItHasBeenCheckedError).
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
-  imports: [MatSortModule, MatTableModule, IbSortHeader, NgTemplateOutlet]
+  imports: [MatSortModule, MatTableModule, NgTemplateOutlet],
+  viewProviders: [IB_COLUMN_MAT_SORT_PROVIDER],
 })
 export class IbColumn<T> implements OnDestroy, OnInit {
   /** Column name that should be used to reference this column. */
@@ -141,9 +139,6 @@ export class IbColumn<T> implements OnDestroy, OnInit {
   readonly aggregateCell = viewChild(IbAggregateCell);
 
   readonly isActionColumnInput = input(false, { alias: 'ib-action-column', transform: booleanAttribute });
-
-  /** @ignore */
-  readonly matSort = computed(() => this._table.sort());
 
   _table = inject(IB_TABLE, { optional: true });
   _options: IbColumnOptions<T> =

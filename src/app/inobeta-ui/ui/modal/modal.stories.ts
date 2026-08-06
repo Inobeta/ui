@@ -11,7 +11,7 @@ import {
   StoryObj,
   applicationConfig,
   moduleMetadata,
-} from "@storybook/angular";
+} from "@storybook/angular-vite";
 import { IbModalMessageService, IbModalModule } from "public_api";
 
 @Component({
@@ -21,7 +21,7 @@ import { IbModalMessageService, IbModalModule } from "public_api";
   imports: [MatButtonModule],
 })
 export class IbModalApp {
-  constructor(private modalService: IbModalMessageService) {}
+  constructor(private modalService: IbModalMessageService) { }
 
   showModal() {
     const modalData = {
@@ -46,7 +46,7 @@ export class IbModalApp {
   imports: [MatButtonModule],
 })
 export class IbModalWithActionsApp {
-  constructor(private modalService: IbModalMessageService) {}
+  constructor(private modalService: IbModalMessageService) { }
 
   showModal() {
     const customActions = [

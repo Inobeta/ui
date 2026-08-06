@@ -16,11 +16,7 @@
     "src/**/*.spec.ts",
   ],
   "angularCompilerOptions": {
-    "skipTemplateCodegen": true,
-    "strictMetadataEmit": true,
     "enableResourceInlining": true,
-    "fullTemplateTypeCheck": true,
-    "enableIvy": true,
     "strictTemplates": true
   },
 }

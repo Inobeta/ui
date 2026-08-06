@@ -6,6 +6,7 @@ import { IbTableUrlService } from './table-url.service';
 import { IbKaiTableSnapshot } from './table.types';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
+import { IbFilterSyntaxExtended } from '../kai-filter/filter.types';
 
 describe('IbTableUrlService', () => {
 
@@ -14,6 +15,7 @@ describe('IbTableUrlService', () => {
   // -----------------------------------------------------------------------
   const sortA: Sort = { active: 'name', direction: 'asc' };
   const filtersA = { search: 'hello' };
+  const legacyFilters = filtersA as unknown as IbFilterSyntaxExtended;
   const aggregatedA: Record<string, string> = { colA: 'sum' };
   const TABLE_A = 'table-a';
   const TABLE_B = 'table-b';
@@ -256,6 +258,72 @@ describe('IbTableUrlService', () => {
 
         expect(paramsA.pageIndex).toBe(3);
         expect(paramsB.pageIndex).toBe(7);
+      });
+    });
+
+    describe('legacy URL API', () => {
+      it('provides defaults and uses configured empty filters when no state exists', () => {
+        const route = TestBed.inject(ActivatedRoute);
+        (route.snapshot as any).queryParams = {};
+        service.emptyFilterSchema = { [TABLE_A]: legacyFilters };
+
+        expect(service.getRawParams(TABLE_A)).toEqual(jasmine.objectContaining({
+          ibfilter: filtersA,
+          ibview: '__ibTableView__all',
+          ibpage: 0,
+          ibpagesize: 20,
+        }));
+        expect(service.getFilters(TABLE_A)).toEqual(legacyFilters);
+        expect(service.getActiveView(TABLE_A)).toBe('__ibTableView__all');
+        expect(service.getPaginator(TABLE_A)).toEqual({ pageIndex: 0, pageSize: 20 });
+        expect(service.getAggregatedColumns(TABLE_A)).toEqual({});
+        expect(Object.keys(service.getSort(TABLE_A))).toEqual([]);
+      });
+
+      it('reads legacy state and serializes each legacy state update', () => {
+        const route = TestBed.inject(ActivatedRoute);
+        const navigateSpy = spyOn(router, 'navigate');
+        (route.snapshot as any).queryParams = {
+          [TABLE_A]: JSON.stringify({
+            ibfilter: filtersA,
+            ibview: 'saved',
+            ibpage: 2,
+            ibpagesize: 40,
+            ibaggregatedcolumns: aggregatedA,
+            ibsort: sortA,
+          }),
+        };
+
+        expect(service.getViewState(TABLE_A)).toEqual({
+          view: 'saved', page: 2, pageSize: 40, filters: legacyFilters,
+          aggregatedColumns: aggregatedA, sort: sortA,
+        });
+
+        service.setFilters(TABLE_A, legacyFilters);
+        service.setPaginator(TABLE_A, { pageIndex: 3, pageSize: 10 });
+        service.setAggregatedColumns(TABLE_A, { total: 'sum' });
+        service.setSort(TABLE_A, sortA);
+        service.setSort(TABLE_A, { active: 'name', direction: '' });
+        service.setFilterAndSort(TABLE_A, legacyFilters, sortA);
+        service.setFilterAndSort(TABLE_A, legacyFilters, { active: 'name', direction: '' });
+        service.handleViewChange(TABLE_A, {
+          view: 'other', page: 1, pageSize: 15, filters: legacyFilters,
+          aggregatedColumns: { total: 'avg' }, sort: sortA,
+        });
+
+        expect(navigateSpy).toHaveBeenCalledTimes(8);
+        const payloads = navigateSpy.calls.all().map((call) => JSON.parse((call.args[1] as any).queryParams[TABLE_A]));
+        expect(payloads[0]).toEqual(jasmine.objectContaining({ ibfilter: filtersA }));
+        expect(payloads[1]).toEqual(jasmine.objectContaining({ ibpage: 3, ibpagesize: 10 }));
+        expect(payloads[2]).toEqual(jasmine.objectContaining({ ibaggregatedcolumns: { total: 'sum' } }));
+        expect(payloads[3].ibsort).toEqual(sortA);
+        expect(payloads[4].ibsort).toBeNull();
+        expect(payloads[5].ibsort).toEqual(sortA);
+        expect(payloads[6].ibsort).toBeNull();
+        expect(payloads[7]).toEqual(jasmine.objectContaining({
+          ibview: 'other', ibpage: 1, ibpagesize: 15, ibfilter: filtersA,
+          ibaggregatedcolumns: { total: 'avg' }, ibsort: sortA,
+        }));
       });
     });
   });

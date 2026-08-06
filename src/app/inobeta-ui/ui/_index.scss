@@ -2,24 +2,19 @@
 @use "@angular/material" as mat;
 
 @use "./kai-table/table-theme";
-@use "./main-menu/main-menu-theme";
 @use "./toast/toast-theme";
 
 @forward "./forms-utilities/form-utilities" as form-* show form-utilities;
 
 @forward "./kai-table/table-theme" as table-* show table-theme, table-color;
-@forward "./main-menu/main-menu-theme" as main-menu-* show main-menu-theme,
-  main-menu-color;
 @forward "./toast/toast-theme" as toast-* show toast-theme, toast-color;
 
 @mixin all-component-themes($theme) {
-  @include main-menu-theme.theme($theme);
   @include table-theme.theme($theme);
   @include toast-theme.theme($theme);
 }
 
 @mixin all-component-colors($theme) {
-  @include main-menu-theme.color($theme);
   @include table-theme.color($theme);
   @include toast-theme.color(theme);
 }

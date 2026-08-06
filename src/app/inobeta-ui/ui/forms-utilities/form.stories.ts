@@ -5,7 +5,7 @@ import {
   StoryObj,
   applicationConfig,
   moduleMetadata,
-} from "@storybook/angular";
+} from "@storybook/angular-vite";
 
 import { Component, inject } from "@angular/core";
 import { MatFormFieldModule } from "@angular/material/form-field";

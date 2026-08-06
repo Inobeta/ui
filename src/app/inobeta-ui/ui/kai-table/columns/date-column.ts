@@ -7,6 +7,7 @@ import {
 } from "@angular/core";
 import { IB_COLUMN } from "../tokens";
 import { IbColumn } from "./column";
+import { IB_COLUMN_MAT_SORT_PROVIDER } from "./column-sort.provider";
 
 /**
  * Column that shows a formatted date for the row cells.
@@ -21,7 +22,6 @@ import { IbColumn } from "./column";
   template: `
     <ng-container
       matColumnDef
-      matSort
       [sticky]="stickyInput()"
       [stickyEnd]="stickyEndInput()"
     >
@@ -29,7 +29,6 @@ import { IbColumn } from "./column";
         class="ib-table__header-cell"
         mat-header-cell
         *matHeaderCellDef
-        [ibSortHeaderFor]="matSort()"
         mat-sort-header
         [disabled]="!sortInput()"
       >
@@ -48,6 +47,7 @@ import { IbColumn } from "./column";
     { provide: IbColumn, useExisting: IbDateColumn },
     { provide: IB_COLUMN, useExisting: IbDateColumn },
   ],
+  viewProviders: [IB_COLUMN_MAT_SORT_PROVIDER],
   standalone: false
 })
 export class IbDateColumn<T> extends IbColumn<T> {

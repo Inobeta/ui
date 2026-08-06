@@ -6,7 +6,7 @@ import {
   StoryObj,
   applicationConfig,
   moduleMetadata,
-} from "@storybook/angular";
+} from "@storybook/angular-vite";
 import { IbFormArray } from "../forms/array/array";
 import { IbMatButtonControl } from "./controls/button";
 import { IbMatDropdownControl } from "./controls/dropdown";
