@@ -6,6 +6,7 @@ import {
   input,
   Optional,
   TemplateRef,
+  ChangeDetectionStrategy
 } from "@angular/core";
 import { IB_AGGREGATE, IB_AGGREGATE_TYPE, IB_COLUMN } from "./tokens";
 
@@ -133,7 +134,7 @@ export const IbAverageAggregateProvider = {
         <span class="mat-caption">{{
           "shared.aggregate.currentPage" | translate
         }}</span>
-           {{ result()?.currentPage ? (result()?.currentPage | number) : "--" }}
+           {{ result()?.currentPage ? ($safeNavigationMigration(result()?.currentPage) | number) : "--" }}
       </div>
 
       @if (showTotal()) {
@@ -141,11 +142,12 @@ export const IbAverageAggregateProvider = {
           <span class="mat-caption">{{
             "shared.aggregate.total" | translate
           }}</span>
-           {{ result()?.total ? (result()?.total | number) : "--" }}
+           {{ result()?.total ? ($safeNavigationMigration(result()?.total) | number) : "--" }}
         </div>
       }
     </section>
     `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class IbAggregateCell {

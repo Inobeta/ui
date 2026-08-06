@@ -1,5 +1,5 @@
 import { LowerCasePipe, NgTemplateOutlet } from "@angular/common";
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
@@ -27,6 +27,7 @@ import { IbFilterValueDirective } from "../../filter-value.directive";
   ],
   selector: "ib-boolean-filter",
   templateUrl: "boolean-filter.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [{ provide: IbFilterBase, useExisting: IbBooleanFilter }]
 })
 export class IbBooleanFilter extends IbFilterBase {

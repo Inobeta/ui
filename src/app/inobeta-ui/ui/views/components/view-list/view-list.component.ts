@@ -1,11 +1,12 @@
 import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from "@angular/core";
 import { IView } from "../../view.types";
 
 @Component({
     selector: "ib-view-list",
     templateUrl: "./view-list.component.html",
     styleUrls: ["./view-list.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class IbViewList {

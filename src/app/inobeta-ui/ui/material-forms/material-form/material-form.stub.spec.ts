@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { of } from 'rxjs';
 import { IbFormControlBase } from '../../forms/controls/form-control-base';
@@ -8,6 +8,7 @@ import { IbMatActionsPosition } from './material-form.component';
 @Component({
     selector: 'ib-material-form',
     template: ``,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class IbMaterialFormStubComponent {

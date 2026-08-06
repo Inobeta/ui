@@ -7,7 +7,8 @@ import {
   input,
   OnDestroy,
   output,
-  signal
+  signal,
+  ChangeDetectionStrategy
 } from '@angular/core';
 
 import { MatBadgeModule } from '@angular/material/badge';
@@ -130,6 +131,7 @@ import { IbColumn } from '../kai-table/columns';
         </div>
 
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [`
     .ib-kai-table-mobile__toolbar-container{
       display: flex;

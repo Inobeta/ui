@@ -20,7 +20,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { IbMatTextboxControl, IbMatTextboxComponent } from '../controls/textbox';
@@ -45,6 +45,7 @@ import { IbFormPipeModule } from '../../forms/forms.pipes';
     template: `
   <ib-material-form #customForm [actions]="customFormActions" [fields]="customFormFields" (ibSubmit)="onSubmit($event)"></ib-material-form>
   `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 

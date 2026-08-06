@@ -1,5 +1,5 @@
 import { SelectionModel } from "@angular/cdk/collections";
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import {
   ComponentFixture,
   TestBed,
@@ -36,6 +36,7 @@ function createMockTable(overrides: Partial<any> = {}) {
 
 @Component({
   template: `<ib-selection-column></ib-selection-column>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 class SelectionHostComponent {}

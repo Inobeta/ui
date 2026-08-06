@@ -3,7 +3,8 @@ import {
   computed,
   input,
   output,
-  signal
+  signal,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 
@@ -82,6 +83,7 @@ type IbKaiTableMobileDataSource<T> = DataSource<T> & {
       }
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [`
     :host {
       display: block;

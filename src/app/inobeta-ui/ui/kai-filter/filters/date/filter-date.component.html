@@ -7,7 +7,7 @@
       </span>
     }
 
-    <section [formGroup]="filter?.form" style="padding: 0.5em 1em 0 1em">
+    <section [formGroup]="$safeNavigationMigration(filter?.form)" style="padding: 0.5em 1em 0 1em">
       <section [formGroupName]="name" class="ib-filter-date">
         <mat-radio-group formControlName="categorySelected">
           <mat-radio-button value="within" [attr.data-cy]="'ib-date-filter-' + name + '-within'">{{

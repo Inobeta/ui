@@ -9,6 +9,7 @@ import {
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
+  ChangeDetectionStrategy
 } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { ReplaySubject } from "rxjs";
@@ -47,6 +48,7 @@ import { IB_FILTER } from "./tokens";
   styleUrls: ["./filter.component.scss"],
   encapsulation: ViewEncapsulation.None,
   providers: [{ provide: IB_FILTER, useExisting: IbFilter }],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class IbFilter {

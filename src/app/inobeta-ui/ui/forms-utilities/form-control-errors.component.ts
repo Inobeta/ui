@@ -1,10 +1,11 @@
-import { Component, computed, inject, input } from "@angular/core";
+import { Component, computed, inject, input, ChangeDetectionStrategy } from "@angular/core";
 import { FormGroupDirective } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
 
 @Component({
     imports: [TranslateModule],
     selector: "ib-form-control-errors",
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
     @if (control().hasError("required")) {
       {{ "shared.ibFormsUtilities.errors.required" | translate }}

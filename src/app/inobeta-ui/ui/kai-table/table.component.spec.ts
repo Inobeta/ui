@@ -3,7 +3,7 @@ import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { CommonModule, registerLocaleData } from "@angular/common";
 import localeIt from "@angular/common/locales/it";
-import { Component, Injectable, Type } from "@angular/core";
+import { Component, Injectable, Type, ChangeDetectionStrategy } from "@angular/core";
 import {
   ComponentFixture,
   TestBed,
@@ -1571,6 +1571,7 @@ function createComponent<T>(type: Type<T>): ComponentFixture<T> {
       <ib-number-column name="price"></ib-number-column>
     </ib-kai-table>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 class IbTableApp {
@@ -1594,6 +1595,7 @@ class IbTableApp {
       <ib-text-column name="fruit"></ib-text-column>
     </ib-kai-table>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 class IbTableWithAsyncTagFilterData {
@@ -1613,6 +1615,7 @@ class IbTableWithAsyncTagFilterData {
       <ib-text-column name="fruit"></ib-text-column>
     </ib-kai-table>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 class IbTableWithExplicitTagFilterOptions {
@@ -1633,6 +1636,7 @@ class IbTableWithExplicitTagFilterOptions {
       <ib-text-column name="fruit"></ib-text-column>
     </ib-kai-table>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 class IbTableWithLocalDataSourceTagFilter {
@@ -1661,6 +1665,7 @@ class IbTableWithLocalDataSourceTagFilter {
       <ib-text-column name="active"></ib-text-column>
     </ib-kai-table>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 class IbTableWithFullFilterApp {
@@ -1679,6 +1684,7 @@ class IbTableWithFullFilterApp {
       </ng-template>
     </ib-kai-table>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 class IbTableWithRowGroupApp {
@@ -1706,6 +1712,7 @@ class IbTestDataSource extends IbTableRemoteDataSource<any, any> {
       <ib-text-column name="name"></ib-text-column>
     </ib-kai-table>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 class IbTableWithRemoteDataApp {
@@ -1721,6 +1728,7 @@ class IbTableWithRemoteDataApp {
       <ib-text-column name="name"></ib-text-column>
     </ib-kai-table>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 class IbTableWithRemoteSearchApp {
@@ -1731,6 +1739,7 @@ class IbTableWithRemoteSearchApp {
   selector: 'ib-test-views-host',
   template: '',
   providers: [{ provide: IbTableViewsHost, useExisting: IbTestViewsHostComponent }],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 class IbTestViewsHostComponent extends IbTableViewsHostStub {}
@@ -1739,6 +1748,7 @@ class IbTestViewsHostComponent extends IbTableViewsHostStub {}
   selector: 'ib-test-views-host-with-portal',
   template: '',
   providers: [{ provide: IbTableViewsHost, useExisting: IbTestViewsHostWithPortalComponent }],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 class IbTestViewsHostWithPortalComponent extends IbTableViewsHostStub {
@@ -1764,6 +1774,7 @@ class IbTestViewsHostWithPortalComponent extends IbTableViewsHostStub {
       <ib-text-column name="color"></ib-text-column>
     </ib-kai-table>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 class IbTableWithViewGroupApp {
@@ -1774,7 +1785,8 @@ class IbTableWithViewGroupApp {
 }
 
 /** Minimal component used as a ComponentPortal payload in toolbar-portal tests. */
-@Component({ template: '', standalone: false })
+@Component({ template: '', changeDetection: ChangeDetectionStrategy.Eager,
+ standalone: false })
 class DummyPortalComponent {}
 
 @Component({
@@ -1788,6 +1800,7 @@ class DummyPortalComponent {}
       <ib-text-column name="name"></ib-text-column>
     </ib-kai-table>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 class IbTableWithViewGroupNoFilterApp {
@@ -1824,6 +1837,7 @@ class IbStubExportProvider implements IbDataExportProvider {
       multi: true,
     },
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 class IbTableWithExport {
@@ -1872,6 +1886,7 @@ class IbRemoteExportDataSource extends IbTableRemoteDataSource<any, any> {
       multi: true,
     },
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 class IbTableWithRemoteExportApp {
@@ -1901,6 +1916,7 @@ class IbTableWithRemoteExportApp {
       multi: true,
     },
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 class IbTableWithLegacyExportApp {
@@ -1937,6 +1953,7 @@ class IbTableWithLegacyExportApp {
       multi: true,
     },
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 class IbTableWithExportNoSelection {
@@ -1995,6 +2012,7 @@ function createExportColumn(name: string, headerText: string): IbColumn<unknown>
       multi: true,
     },
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 class IbTableWithExportTransformer {
@@ -2023,6 +2041,7 @@ class IbTableWithExportTransformer {
       </ib-column>
     </ib-kai-table>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 class IbTableWithSort {
@@ -2039,6 +2058,7 @@ class IbTableWithSort {
       <ib-number-column name="amount" aggregate></ib-number-column>
     </ib-kai-table>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 class IbTableWithAggregate {
@@ -2072,6 +2092,7 @@ class IbTestProductAggregate extends IbAggregate {
   providers: [
     { provide: IB_AGGREGATE, useClass: IbTestProductAggregate, multi: true },
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 class IbTableWithCustomAggregate {
@@ -2089,6 +2110,7 @@ class IbTableWithCustomAggregate {
       <ib-text-column name="name"></ib-text-column>
     </ib-kai-table>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 class IbTableWithTableDef {
@@ -2101,6 +2123,7 @@ class IbTableWithTableDef {
       <ib-text-column name="name"></ib-text-column>
     </ib-kai-table>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 class IbTableWithoutTableName {
@@ -2118,6 +2141,7 @@ class IbTableWithoutTableName {
       <ib-text-column name="name"></ib-text-column>
     </ib-kai-table>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 class IbTableWithBothDataAndDataSource {
@@ -2135,6 +2159,7 @@ class IbTableWithBothDataAndDataSource {
       <ib-text-column name="name"></ib-text-column>
     </ib-kai-table>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 class IbTableWithDataSourceReplacement {
@@ -2147,6 +2172,7 @@ class IbTableWithDataSourceReplacement {
       <ib-text-column name="name"></ib-text-column>
     </ib-kai-table>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 class IbTableWithLocalDataSourceApp {
@@ -2185,6 +2211,7 @@ class IbTableWithLocalDataSourceApp {
       </ib-kai-table>
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 class IbTableHeightHost {

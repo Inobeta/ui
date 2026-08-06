@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { By } from "@angular/platform-browser";
 import { createFilterComponent } from "../../filter.component.spec";
 import { contains, none } from "../../filters";
@@ -46,6 +46,7 @@ describe("IbSearchBar", () => {
       <ib-search-bar></ib-search-bar>
     </ib-filter>
   `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 class IbFilterSearchBarApp {}

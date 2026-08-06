@@ -1,6 +1,6 @@
 import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { MatButtonHarness } from "@angular/material/button/testing";
 import { MatDateRangeInputHarness } from "@angular/material/datepicker/testing";
 import { MatInputHarness } from "@angular/material/input/testing";
@@ -191,6 +191,7 @@ describe("IbDateFilter", () => {
       <ib-date-filter name="updated"></ib-date-filter>
     </ib-filter>
   `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 class IbDateFilterApp {}

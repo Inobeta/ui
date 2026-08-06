@@ -1,4 +1,4 @@
-import { Component, signal, ViewChild } from "@angular/core";
+import { Component, signal, ViewChild, ChangeDetectionStrategy } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { IbDataExportModule, IbFilterModule, IbKaiTableModule, IbTableActionModule, IbTableDef, IbViewModule } from "public_api";
 import { IbSelectionColumn } from "public_api";
@@ -104,6 +104,7 @@ import { MatButtonModule, MatIconButton } from "@angular/material/button";
     `,
   ],
   providers: [UserService],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatIconModule,
     IbKaiTableModule,

@@ -1,4 +1,4 @@
-import { Component, Input, ViewEncapsulation } from "@angular/core";
+import { Component, Input, ViewEncapsulation, ChangeDetectionStrategy } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { IbFilterDef, IbNumberQuery } from "../../filter.types";
 import { and, gte, lte, none } from "../../filters";
@@ -10,6 +10,7 @@ import { IbFilterBase } from "../base/filter-base";
   styleUrls: ["./filter-number.component.scss"],
   encapsulation: ViewEncapsulation.None,
   providers: [{ provide: IbFilterBase, useExisting: IbNumberFilter }],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class IbNumberFilter extends IbFilterBase {

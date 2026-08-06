@@ -1,4 +1,4 @@
-import { Component, Inject, inject } from "@angular/core";
+import { Component, Inject, inject, ChangeDetectionStrategy } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { MAT_DIALOG_DATA } from "@angular/material/dialog";
 
@@ -52,6 +52,7 @@ export interface IbTableDataExportDialogData {
       </button>
     </mat-dialog-actions>
   `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class IbTableDataExportDialog {

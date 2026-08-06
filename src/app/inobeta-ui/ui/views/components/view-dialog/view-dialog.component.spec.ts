@@ -1,6 +1,6 @@
 import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import {
   fakeAsync,
   flush,
@@ -474,6 +474,7 @@ describe("IbTableViewDialog", () => {
 
 @Component({
   template: ``,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 class DialogAnchorComponent {}

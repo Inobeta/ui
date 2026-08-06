@@ -6,6 +6,7 @@ import {
   Optional,
   output,
   viewChild,
+  ChangeDetectionStrategy
 } from "@angular/core";
 import {
   MatCellDef,
@@ -46,6 +47,7 @@ import { IB_TABLE } from "../tokens";
       <td mat-footer-cell *matFooterCellDef></td>
     </ng-container>
   `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class IbSelectionColumn implements OnInit {

@@ -1,5 +1,5 @@
 import { formatDate } from "@angular/common";
-import { Component, ViewEncapsulation } from "@angular/core";
+import { Component, ViewEncapsulation, ChangeDetectionStrategy } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { DateAdapter } from "@angular/material/core";
 import { TranslateService } from "@ngx-translate/core";
@@ -18,6 +18,7 @@ import { IbFilterBase } from "../base/filter-base";
   styleUrls: ["./filter-date.component.scss"],
   providers: [{ provide: IbFilterBase, useExisting: IbDateFilter }],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class IbDateFilter extends IbFilterBase {

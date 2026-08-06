@@ -1,7 +1,7 @@
 import { Injector, ModuleWithProviders, NgModule } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
 import { CommonModule } from "@angular/common";
-import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi, withXhr } from "@angular/common/http";
 import { IbAuthGuard, IbLoginGuard, IbRoleGuard } from "./auth/guard.service";
 import { IbSpinnerLoadingComponent } from "./http/spinner-loading.component";
 import { ReactiveFormsModule } from "@angular/forms";
@@ -83,7 +83,7 @@ const components = [
       { provide: HTTP_INTERCEPTORS, useClass: IbAuthInterceptor, multi: true },
       { provide: HTTP_INTERCEPTORS, useClass: IbErrorInterceptor, multi: true },
       { provide: HTTP_INTERCEPTORS, useClass: IbLoaderInterceptor, multi: true },
-      provideHttpClient(withInterceptorsFromDi()),
+      provideHttpClient(withXhr(), withInterceptorsFromDi()),
     ]
 })
 /** @deprecated Migration scripts toward Angular core APIs are planned no earlier than v22. */

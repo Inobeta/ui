@@ -24,6 +24,7 @@ import {
   signal,
   untracked,
   viewChild,
+  ChangeDetectionStrategy
 } from "@angular/core";
 import { takeUntilDestroyed, toObservable, toSignal } from "@angular/core/rxjs-interop";
 import { MatPaginator } from "@angular/material/paginator";
@@ -77,6 +78,7 @@ const defaultTableDef: IbTableDef = {
     IbKaiTableStateFacade,
   ],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class IbTable implements OnDestroy {

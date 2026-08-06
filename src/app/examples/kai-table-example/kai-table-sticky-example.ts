@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { IbKaiTableModule } from "public_api";
 import { IbUserExample, createNewUser } from "./users";
 
@@ -23,6 +23,7 @@ import { IbUserExample, createNewUser } from "./users";
       <ib-text-column headerText="Subscribed" name="subscribed" stickyEnd sort></ib-text-column>
     </ib-kai-table>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [
     `:host { display: block; padding: 30px; }`,
   ],

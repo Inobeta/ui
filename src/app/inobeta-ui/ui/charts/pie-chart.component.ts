@@ -1,5 +1,5 @@
 import { DecimalPipe } from "@angular/common";
-import { Component, computed, inject, input, InputSignal, Signal } from "@angular/core";
+import { Component, computed, inject, input, InputSignal, Signal, ChangeDetectionStrategy } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
@@ -34,6 +34,7 @@ import 'chart.js/auto';
       }
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [`
     :host {
       display: block;

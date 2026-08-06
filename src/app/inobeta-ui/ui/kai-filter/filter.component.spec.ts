@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, Type } from "@angular/core";
+import { Component, Type, ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
@@ -151,6 +151,7 @@ export const createFilterComponent = createComponent;
       <ib-text-filter name="sku">SKU</ib-text-filter>
     </ib-filter>
   `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 class IbFilterApp {}

@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from "@angular/core";
+import { Component, Input, OnChanges, ChangeDetectionStrategy } from "@angular/core";
 import { IbDynamicFormComponent } from "../../forms/dynamic-form/dynamic-form.component";
 
 /**
@@ -20,6 +20,7 @@ export enum IbMatActionsPosition {
 @Component({
     selector: "ib-material-form",
     templateUrl: "./material-form.component.html",
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class IbMaterialFormComponent

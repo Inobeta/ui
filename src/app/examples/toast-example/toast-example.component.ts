@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { IbToastModule } from 'public_api';
 import { IbToastNotification } from 'src/app/inobeta-ui/ui/toast/toast.service';
 
@@ -11,6 +11,7 @@ import { IbToastNotification } from 'src/app/inobeta-ui/ui/toast/toast.service';
     <button (click)="open('error')">open error toast</button>
   </div>
   `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
       IbToastModule
     ]

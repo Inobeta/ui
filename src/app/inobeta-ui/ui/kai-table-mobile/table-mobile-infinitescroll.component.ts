@@ -7,7 +7,8 @@ import {
   effect,
   input,
   output,
-  signal
+  signal,
+  ChangeDetectionStrategy
 } from '@angular/core';
 
 
@@ -18,6 +19,7 @@ import {
   template: `
     <div #scrollAnchor class="ib-kai-table-mobile__scroll-anchor"></div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [`
     .ib-kai-table-mobile__scroll-anchor {
       width: 100%;

@@ -1,6 +1,6 @@
 import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { MatButtonHarness } from "@angular/material/button/testing";
 import { MatMenuHarness } from "@angular/material/menu/testing";
 import { MatSliderHarness } from "@angular/material/slider/testing";
@@ -84,6 +84,7 @@ describe("IbNumberFilter", () => {
       <ib-number-filter name="price" [min]="0" [max]="100"></ib-number-filter>
     </ib-filter>
   `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 class IbNumberFilterApp {}

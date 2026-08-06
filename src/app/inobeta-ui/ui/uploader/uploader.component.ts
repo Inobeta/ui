@@ -1,4 +1,4 @@
-import { Component, ElementRef, input, output, viewChild } from '@angular/core';
+import { Component, ElementRef, input, output, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -6,6 +6,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   selector: 'ib-uploader',
   standalone: true,
   imports: [MatButtonModule, TranslatePipe],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <input (change)="onChooseChange()" #uploader style="display:none;" type="file" />
     <button mat-button type="button" (click)="onChooseClick()">{{ textKey() | translate }}</button>

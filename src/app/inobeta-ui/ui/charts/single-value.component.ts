@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, inject, input, ChangeDetectionStrategy } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { SingleValueAdditionalInfo } from './types';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -169,6 +169,7 @@ import { DecimalPipe } from '@angular/common';
     </div>
   </div>
   }`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./single-value.component.scss']
 })
 export class SingleValueComponent {

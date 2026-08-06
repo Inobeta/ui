@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { TranslatePipe } from "@ngx-translate/core";
 import { IbKaiTableModule } from "public_api";
@@ -11,6 +11,7 @@ type IbParentHeightDatasetMode = "small" | "large";
   standalone: true,
   imports: [IbKaiTableModule, MatButtonToggleModule, TranslatePipe],
   templateUrl: "./kai-table-parent-height-example.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: "./kai-table-parent-height-example.scss",
 })
 export class IbKaiTableParentHeightExamplePage {

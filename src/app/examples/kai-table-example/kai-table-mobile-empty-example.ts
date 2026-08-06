@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { IbKaiTableModule } from 'public_api';
 
 @Component({
@@ -32,6 +32,7 @@ import { IbKaiTableModule } from 'public_api';
       </ib-kai-table>
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [':host { display: block; }']
 })
 export class IbKaiTableMobileEmptyExamplePage {}

@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import {
   ComponentFixture,
   TestBed,
@@ -25,6 +25,7 @@ registerLocaleData(localeIt);
       [dataAccessor]="accessorFn"
     ></ib-date-column>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 class DateColumnHostComponent {

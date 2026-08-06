@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { Sort } from "@angular/material/sort";
 import { IbFilterModule, IbKaiTableModule, IbTableLocalDataSource } from "public_api";
 import { IbUserExample, createNewUser } from "./users";
@@ -20,6 +20,7 @@ import { IbUserExample, createNewUser } from "./users";
   `,
   standalone: true,
   imports: [IbKaiTableModule, IbFilterModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [
     `
       :host {

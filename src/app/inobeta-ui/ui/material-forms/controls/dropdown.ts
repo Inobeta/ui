@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input, ChangeDetectionStrategy } from "@angular/core";
 import { MatSelectChange } from "@angular/material/select";
 import {
   IbFormControlBase,
@@ -67,6 +67,7 @@ import {
       }
     `,
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class IbMatDropdownComponent implements IbFormControlInterface {

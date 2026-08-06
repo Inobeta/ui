@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { IB_AGGREGATE, IbKaiTableModule, IbTableLocalDataSource } from "public_api";
 import { IbUserExample, createNewUser } from "./users";
 
@@ -39,6 +39,7 @@ import { IbUserExample, createNewUser } from "./users";
       ],
     },
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <ib-kai-table tableName="customAggregate" [dataSource]="dataSource" [displayedColumns]="displayedColumns">
       <ib-text-column headerText="Name" name="name"></ib-text-column>

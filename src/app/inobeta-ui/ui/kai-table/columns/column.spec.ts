@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import {
   ComponentFixture,
   TestBed,
@@ -39,6 +39,7 @@ import { IB_TABLE } from "../tokens";
       <ng-template *ibCellDef="let data">{{ data?.field }}</ng-template>
     </ib-column>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 class ColumnHostComponent {
@@ -75,6 +76,7 @@ const columnTableMock = {
     <ib-column [name]="'regCol'" [headerText]="'Reg'"></ib-column>
   `,
   standalone: false,
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [
     {
       provide: IB_TABLE,

@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { MatButtonHarness } from "@angular/material/button/testing";
@@ -16,6 +16,7 @@ import { IbTableDataExportAction } from "./table-data-export.component";
       [showCurrentPageOption]="showCurrentPageOption"
     />
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 class IbTableDataExportActionHostComponent {

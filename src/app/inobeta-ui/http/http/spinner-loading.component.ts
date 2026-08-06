@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, inject } from '@angular/core';
+import { Component, ViewEncapsulation, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ibSelectIsHttpLoading } from '../store/index';
 import { Observable } from 'rxjs';
@@ -71,6 +71,7 @@ import { Observable } from 'rxjs';
       </div>
     }`,
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 /** @deprecated Migration scripts toward Angular core APIs are planned no earlier than v22. */

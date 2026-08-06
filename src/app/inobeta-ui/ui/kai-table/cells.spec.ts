@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild } from "@angular/core";
+import { Component, TemplateRef, ViewChild, ChangeDetectionStrategy } from "@angular/core";
 import {
   ComponentFixture,
   TestBed,
@@ -26,6 +26,7 @@ import { IB_AGGREGATE, IB_AGGREGATE_TYPE, IB_COLUMN } from "./tokens";
   template: `
     <ng-template *ibCellDef="let data">{{ data?.value }}</ng-template>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 class CellDefHostComponent {
@@ -66,6 +67,7 @@ class StubCountAggregate extends IbAggregate {
     ></ib-aggregate>
   `,
   standalone: false,
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [
     { provide: IB_COLUMN, useValue: { name: () => "amount" } },
     { provide: IB_AGGREGATE_TYPE, useValue: "number" },

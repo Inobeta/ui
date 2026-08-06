@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { IbModalMessageService } from 'src/app/inobeta-ui/ui/modal/modal-message.service';
 
 @Component({
@@ -7,6 +7,7 @@ import { IbModalMessageService } from 'src/app/inobeta-ui/ui/modal/modal-message
   <button (click)="open()">open dialog</button>
   <div>{{ response }}</div>
   `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 

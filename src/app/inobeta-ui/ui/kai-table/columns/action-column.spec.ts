@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import {
   ComponentFixture,
   TestBed,
@@ -14,6 +14,7 @@ import { IB_TABLE } from "../tokens";
 
 @Component({
   template: `<ib-column ib-action-column name="foo" headerText="Bar"></ib-column>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 class ActionColumnHostComponent {}

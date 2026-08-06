@@ -67,6 +67,10 @@
               "sourceMap": false,
               "namedChunks": false,
               "extractLicenses": true
+            },
+            "testing": {
+              "aot": false,
+              "scripts": []
             }
           },
           "defaultConfiguration": ""
@@ -89,28 +93,29 @@
           }
         },
         "test": {
-          "builder": "@angular/build:karma",
+          "builder": "@angular/build:unit-test",
           "options": {
-            "main": "src/test.ts",
-            "polyfills": [
-              "src/polyfills.ts"
-            ],
             "tsConfig": "tsconfig.spec.json",
-            "karmaConfig": "src/karma.conf.js",
-            "styles": [
-              "src/styles.css",
-              "src/app/examples/theme.scss"
+            "reporters": [
+              "default"
             ],
-            "scripts": [],
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
+            "coverageReporters": [
+              "html",
+              "lcovonly",
+              "text-summary"
             ],
-            "externalDependencies": [
-              "html2canvas",
-              "dompurify",
-              "canvg"
+            "coverageThresholds": {
+              "statements": 80,
+              "branches": 80,
+              "functions": 80,
+              "lines": 80,
+              "perFile": false
+            },
+            "setupFiles": [
+              "src/test.ts"
             ],
+            "buildTarget": ":build:testing",
+            "runner": "vitest",
           }
         },
         "lint": {

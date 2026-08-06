@@ -1,4 +1,4 @@
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, computed, inject, input, ChangeDetectionStrategy } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { RingGaugeAdditionalInfo } from './types';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -71,6 +71,7 @@ import { DecimalPipe } from '@angular/common';
       }
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [`
     :host {
       display: block;

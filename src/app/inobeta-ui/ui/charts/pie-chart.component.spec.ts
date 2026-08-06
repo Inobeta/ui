@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { registerLocaleData } from "@angular/common";
 import localeIt from "@angular/common/locales/it";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
@@ -13,6 +13,7 @@ registerLocaleData(localeIt);
 @Component({
   standalone: true,
   imports: [PieChartComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `<pie-chart [data]="data" [unit]="unit" [options]="options" />`,
 })
 class IbPieChartHostComponent {

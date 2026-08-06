@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { IbFormControlBase, IbFormControlBaseComponent, IbFormControlBaseParams, IbFormControlData, IbFormControlInterface } from '../../forms/controls/form-control-base';
 
 @Component({
@@ -19,6 +19,7 @@ import { IbFormControlBase, IbFormControlBaseComponent, IbFormControlBaseParams,
     </mat-error>
   </mat-form-field>
   `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 

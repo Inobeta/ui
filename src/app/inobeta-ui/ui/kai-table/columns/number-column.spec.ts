@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import {
   ComponentFixture,
   TestBed,
@@ -26,6 +26,7 @@ registerLocaleData(localeIt);
       [umPosition]="umPosValue"
     ></ib-number-column>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 class NumberColumnHostComponent {

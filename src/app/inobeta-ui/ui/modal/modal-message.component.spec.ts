@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,6 +15,7 @@ import { IbToolTestModule, serviceDialogStub } from '../../tools';
     template: `
   <ib-modal-message></ib-modal-message>
   `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 

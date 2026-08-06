@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -26,6 +26,7 @@ interface AppSideMenuGroup {
     TranslatePipe,
   ],
   templateUrl: './app-side-menu.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./app-side-menu.component.css'],
 })
 export class AppSideMenuComponent {

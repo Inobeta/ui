@@ -1,4 +1,4 @@
-import { Component, Input, ViewEncapsulation } from "@angular/core";
+import { Component, Input, ViewEncapsulation, ChangeDetectionStrategy } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { IbFilterDef, IbTagQuery } from "../../filter.types";
 import { eq, none, or } from "../../filters";
@@ -10,6 +10,7 @@ import { IbFilterBase } from "../base/filter-base";
     styleUrls: ["./filter-tag.component.scss"],
     providers: [{ provide: IbFilterBase, useExisting: IbTagFilter }],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class IbTagFilter extends IbFilterBase {

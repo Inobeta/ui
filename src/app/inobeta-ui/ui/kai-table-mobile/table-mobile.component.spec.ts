@@ -1,6 +1,6 @@
 import { DataSource } from '@angular/cdk/collections';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { Component, computed, ViewChild } from '@angular/core';
+import { Component, computed, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, fakeAsync, flushMicrotasks, TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonHarness } from '@angular/material/button/testing';
@@ -376,6 +376,7 @@ describe('IbKaiTableMobileComponent', () => {
       details: {{ value.name }}
     </ng-template>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 class MobileItemHostComponent {

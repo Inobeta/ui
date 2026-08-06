@@ -5,6 +5,7 @@ import {
   OnDestroy,
   QueryList,
   ViewChildren,
+  ChangeDetectionStrategy
 } from "@angular/core";
 import { BehaviorSubject, Observable, Subject, of } from "rxjs";
 import { filter, map, takeUntil } from "rxjs/operators";
@@ -35,6 +36,7 @@ const EMPTY_SORT: Sort = { active: '', direction: '' as SortDirection };
   providers: [
     { provide: IbTableViewsHost, useExisting: forwardRef(() => IbTableViewGroup) },
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class IbTableViewGroup extends IbTableViewsHost implements OnDestroy {

@@ -1,4 +1,4 @@
-import { Component, Inject } from "@angular/core";
+import { Component, Inject, ChangeDetectionStrategy } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { MAT_DIALOG_DATA } from "@angular/material/dialog";
 
@@ -37,14 +37,14 @@ export interface IbTableViewDialogData {
 @Component({
   selector: "ib-table-view-dialog",
   template: `
-    <h2 mat-dialog-title>{{ data?.title | translate }}</h2>
+    <h2 mat-dialog-title>{{ $safeNavigationMigration(data?.title) | translate }}</h2>
 
     <mat-dialog-content>
       <div style="display: flex; flex-direction: column;padding:5px;">
       @if (data?.message) {
         <p
           translate
-          [translateParams]="data?.message?.args"
+          [translateParams]="$safeNavigationMigration(data?.message?.args)"
           >
           {{ data?.message?.label }}
         </p>
@@ -84,7 +84,7 @@ export interface IbTableViewDialogData {
             name: viewName.value
           }"
           >
-          {{ data?.confirm | translate }}
+          {{ $safeNavigationMigration(data?.confirm) | translate }}
         </button>
       } @else {
         <!-- Legacy binary mode -->
@@ -107,11 +107,12 @@ export interface IbTableViewDialogData {
             confirmed: true
           }"
           >
-          {{ data?.confirm | translate }}
+          {{ $safeNavigationMigration(data?.confirm) | translate }}
         </button>
       }
     </div>
     `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class IbTableViewDialog {

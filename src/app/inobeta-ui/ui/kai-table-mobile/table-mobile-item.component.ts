@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, input, Input, signal } from '@angular/core';
+import { Component, input, Input, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatCard } from '@angular/material/card';
 import { IbColumn } from "../kai-table/columns";
 import { IbKaiRowGroupDirective } from "../kai-table/rowgroup";
@@ -83,6 +83,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   imports: [
     MatCard, NgTemplateOutlet, TranslatePipe
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [`
 
     .ib-kai-table-mobile__card {

@@ -42,7 +42,7 @@ import { IB_COLUMN_MAT_SORT_PROVIDER } from "./column-sort.provider";
     </ng-container>
   `,
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.Default,
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [
         { provide: IbColumn, useExisting: IbTextColumn },
         { provide: IB_COLUMN, useExisting: IbTextColumn },

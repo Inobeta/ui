@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { IbTableDef } from "public_api";
 import { createNewUser } from "./users";
 import { JsonPipe } from "@angular/common";
@@ -10,6 +10,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: "ib-kai-table-example",
     templateUrl: "kai-table-example.html",
     styleUrl: "./kai-table-example.scss",
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
       JsonPipe, IbKaiTableModule, MatButtonModule, TranslatePipe
     ]

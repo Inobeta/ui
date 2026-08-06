@@ -7,6 +7,7 @@ import {
   TemplateRef,
   ViewChild,
   ViewContainerRef,
+  ChangeDetectionStrategy
 } from "@angular/core";
 import { IbFormControlInterface } from "../../forms/controls/form-control-base";
 import { IbDynamicFormControlComponent } from "../../forms/dynamic-form-control/dynamic-form-control.component";
@@ -23,6 +24,7 @@ export class IbFormControlDirective {
 @Component({
     selector: "ib-material-form-control",
     templateUrl: "./material-form-control.component.html",
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class IbMaterialFormControlComponent

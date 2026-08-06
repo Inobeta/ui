@@ -1,5 +1,5 @@
 import { registerLocaleData } from "@angular/common";
-import { HttpClient, provideHttpClient } from "@angular/common/http";
+import { HttpClient, provideHttpClient, withXhr } from "@angular/common/http";
 import { ApplicationConfig, importProvidersFrom, isDevMode, provideZoneChangeDetection } from "@angular/core";
 import { provideEffects } from "@ngrx/effects";
 import { provideState, provideStore } from "@ngrx/store";
@@ -50,7 +50,7 @@ export const appConfig: ApplicationConfig = {
       withPreloading(PreloadAllModules)
     ),
     provideAnimationsAsync(),
-    provideHttpClient(),
+    provideHttpClient(withXhr()),
     importProvidersFrom([IbHttpModule]),
     provideTranslateService({
       loader: {

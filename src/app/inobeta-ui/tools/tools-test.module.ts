@@ -7,7 +7,7 @@ import { registerLocaleData } from '@angular/common';
 import localeIt from '@angular/common/locales/it';
 import { MatDialogRef } from '@angular/material/dialog';
 import { serviceDialogStub } from './stubs/dialog.stub.spec';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 
 registerLocaleData(localeIt, 'it');
 
@@ -29,7 +29,7 @@ const services = [
     ...components
   ], imports: [], providers: [
     ...services,
-    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(withXhr(), withInterceptorsFromDi()),
     provideHttpClientTesting()
   ]
 })

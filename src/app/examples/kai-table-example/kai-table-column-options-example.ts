@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { IB_COLUMN_OPTIONS, IbKaiTableModule, IbTableLocalDataSource } from "public_api";
 import { createNewUser } from "./users";
 
@@ -24,6 +24,7 @@ import { createNewUser } from "./users";
       <ib-text-column name="created_at"></ib-text-column>
     </ib-kai-table>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [
     `
       :host {

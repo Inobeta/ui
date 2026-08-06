@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { Component, inject, ChangeDetectionStrategy } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { IbDataExportModule, IbFilterModule, IbKaiTableModule, IbTableActionModule, IbViewModule } from "public_api";
 import { IbUserExample, UserService } from "./users";
@@ -88,6 +88,7 @@ import { ActivatedRoute, Router, RouterOutlet } from "@angular/router";
     `,
   ],
   providers: [UserService],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatIconModule,
     IbKaiTableModule,

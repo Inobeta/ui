@@ -7,7 +7,7 @@ import { throwError } from 'rxjs';
 import { IbErrorInterceptor } from './error.interceptor';
 import { IbToastNotification } from '../../ui/toast/toast.service';
 import { TranslateService } from '@ngx-translate/core';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 
 describe('IbErrorInterceptor', () => {
 
@@ -40,7 +40,7 @@ describe('IbErrorInterceptor', () => {
             useValue: null,
         },
         IbErrorInterceptor,
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting()
     ]
 }).compileComponents();

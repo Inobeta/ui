@@ -6,16 +6,17 @@ import { IbToolTestModule } from '../../tools/tools-test.module';
 import { IbToastTestModule } from '../../ui/toast/toast-test.module';
 import { throwError } from 'rxjs';
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { IbLoginService } from '../auth/login.service';
 import { IbLoginServiceStub } from '../auth/login.service.stub.spec';
-import { HttpRequest, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HttpRequest, provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideMockStore } from '@ngrx/store/testing';
 import { IbAuthTypes } from '../auth/session.model';
 
 @Component({
     selector: 'login-dummy',
     template: ``,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 
@@ -54,7 +55,7 @@ describe('IbAuthInterceptor', () => {
         },
         IbAuthInterceptor,
         provideMockStore({}),
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
     ]
 }).compileComponents();

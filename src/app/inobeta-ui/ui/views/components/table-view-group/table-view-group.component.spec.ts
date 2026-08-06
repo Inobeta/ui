@@ -1,5 +1,5 @@
 import { Portal } from "@angular/cdk/portal";
-import { Component, Type } from "@angular/core";
+import { Component, Type, ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
@@ -1212,6 +1212,7 @@ function firstValueFrom<T>(obs: Observable<T>): Promise<T> {
 
 @Component({
   template: ` <ib-view-group></ib-view-group> `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 class IbViewApp {

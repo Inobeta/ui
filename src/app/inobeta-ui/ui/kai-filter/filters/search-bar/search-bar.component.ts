@@ -1,4 +1,4 @@
-import { Component, Input, booleanAttribute, inject } from "@angular/core";
+import { Component, Input, booleanAttribute, inject, ChangeDetectionStrategy } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { debounceTime } from "rxjs";
 import { IbFilterOperator, IbTextQuery } from "../../filter.types";
@@ -11,6 +11,7 @@ import { TranslateService } from "@ngx-translate/core";
   templateUrl: "search-bar.component.html",
   styleUrls: ["./search-bar.component.scss"],
   providers: [{ provide: IbFilterBase, useExisting: IbSearchBar }],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class IbSearchBar extends IbFilterBase {

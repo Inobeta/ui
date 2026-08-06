@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, Type } from "@angular/core";
+import { Component, Type, ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatPaginator, PageEvent } from "@angular/material/paginator";
 import { MatSort, Sort } from "@angular/material/sort";
@@ -584,6 +584,7 @@ class IbStubExportProvider implements IbDataExportProvider {
             multi: true,
         },
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 class IbDataExportWithOverrideApp {
@@ -592,6 +593,7 @@ class IbDataExportWithOverrideApp {
 
 @Component({
     template: ``,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 class IbDataExportApp {

@@ -1,6 +1,6 @@
 <ng-template #renderer>
   <mat-form-field
-    [formGroup]="filter?.form"
+    [formGroup]="$safeNavigationMigration(filter?.form)"
     subscriptSizing="dynamic"
     style="width: 100%;"
     >

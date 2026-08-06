@@ -53,7 +53,7 @@ import { IB_COLUMN_MAT_SORT_PROVIDER } from "./column-sort.provider";
       <td mat-cell *matCellDef="let data">
         <ng-container
           *ngTemplateOutlet="
-             ibCellDef()?.templateRef;
+             $safeNavigationMigration(ibCellDef()?.templateRef);
             context: { $implicit: data }
           "
         >
@@ -68,7 +68,7 @@ import { IB_COLUMN_MAT_SORT_PROVIDER } from "./column-sort.provider";
   // mean's the template in the table's view will not have the updated value (and in fact will cause
   // an ExpressionChangedAfterItHasBeenCheckedError).
   // tslint:disable-next-line:validate-decorators
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatSortModule, MatTableModule, NgTemplateOutlet],
   viewProviders: [IB_COLUMN_MAT_SORT_PROVIDER],
 })

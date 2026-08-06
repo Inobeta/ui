@@ -10,7 +10,7 @@
     <mat-form-field class="ib-tag-filter-search" subscriptSizing="dynamic">
       <input matInput [formControl]="query" [placeholder]="'shared.ibFilter.search' | translate"/>
     </mat-form-field>
-    <section [formGroup]="filter?.form">
+    <section [formGroup]="$safeNavigationMigration(filter?.form)">
       <section class="ib-tag-filter">
         <mat-selection-list
           [multiple]="multiple"

@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input } from "@angular/core";
+import { Component, ElementRef, Input, ChangeDetectionStrategy } from "@angular/core";
 
 @Component({
   selector: 'ib-loading-skeleton-rect',
@@ -16,6 +16,7 @@ import { Component, ElementRef, Input } from "@angular/core";
     }
 
   `],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 /** @deprecated Migration scripts toward Angular core APIs are planned no earlier than v22. */

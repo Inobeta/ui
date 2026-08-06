@@ -1,6 +1,6 @@
 import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
-import { Component, inject } from "@angular/core";
+import { Component, inject, ChangeDetectionStrategy } from "@angular/core";
 import { MatButtonHarness } from "@angular/material/button/testing";
 import { MatInputHarness } from "@angular/material/input/testing";
 import { MatMenuHarness } from "@angular/material/menu/testing";
@@ -89,6 +89,7 @@ describe("IbTextFilter", () => {
       <ib-text-filter name="sku"></ib-text-filter>
     </ib-filter>
   `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 class IbTextFilterApp {

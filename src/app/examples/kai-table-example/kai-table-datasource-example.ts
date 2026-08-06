@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { IbKaiTableModule } from "public_api";
 import { IbTableLocalDataSource } from "public_api";
@@ -20,6 +20,7 @@ import { IbUserExample, createNewUser } from "./users";
       </ib-kai-table>
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [
     `:host {
         --ib-table-min-content-height: 0px;

@@ -1,10 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { IbFormControlBase } from '..';
 import { UntypedFormGroup } from '@angular/forms';
 
 @Component({
     selector: 'ib-dynamic-form-control',
     template: ``,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 

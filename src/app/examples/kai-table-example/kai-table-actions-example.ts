@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { IbUserExample, createNewUser } from "./users";
 import { IbKaiTableModule } from "public_api";
 import { MatMenuModule } from "@angular/material/menu";
@@ -52,6 +52,7 @@ import { MatButtonModule, MatIconButton } from "@angular/material/button";
       }
     `,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     IbKaiTableModule, MatMenuModule, MatIconModule, MatButtonModule
   ]

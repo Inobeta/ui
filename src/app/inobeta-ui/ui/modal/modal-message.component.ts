@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, ChangeDetectionStrategy} from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { IbModalMessage } from './modal-message.model';
 
@@ -37,6 +37,7 @@ import { IbModalMessage } from './modal-message.model';
         </button>
       }
     </mat-dialog-actions>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class IbModalMessageComponent {

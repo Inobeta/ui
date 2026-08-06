@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild } from "@angular/core";
+import { Component, TemplateRef, ViewChild, ChangeDetectionStrategy } from "@angular/core";
 import {
   ComponentFixture,
   TestBed,
@@ -12,6 +12,7 @@ import { IbKaiTableAction, IbKaiTableActionGroup } from "./action";
       <span>Action Content</span>
     </ng-template>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 class ActionHostComponent {
@@ -26,6 +27,7 @@ class ActionHostComponent {
       <ng-template ibTableAction [kind]="'custom'"></ng-template>
     </ib-table-action-group>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 class ActionGroupHostComponent {

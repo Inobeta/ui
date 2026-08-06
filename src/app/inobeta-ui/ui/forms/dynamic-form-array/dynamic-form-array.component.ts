@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input, ChangeDetectionStrategy } from "@angular/core";
 import { UntypedFormArray, UntypedFormGroup } from "@angular/forms";
 import { IbFormArray } from "../array/array";
 import { IbFormControlService } from "../form-control.service";
@@ -7,6 +7,7 @@ import { IbFormControlService } from "../form-control.service";
 @Component({
     selector: "ib-dynamic-form-array",
     templateUrl: "dynamic-form-array.component.html",
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class IbDynamicFormArrayComponent {

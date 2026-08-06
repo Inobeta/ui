@@ -1,4 +1,4 @@
-import { Component, computed, contentChild, inject, ViewChild } from "@angular/core";
+import { Component, computed, contentChild, inject, ViewChild, ChangeDetectionStrategy } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
@@ -14,6 +14,7 @@ import { FilterOverlayService } from "./filter-overlay.service";
     MatDividerModule
   ],
   selector: "ib-filter-button",
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: "filter-button.component.html"
 })
 export class IbFilterButton {

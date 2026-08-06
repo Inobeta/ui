@@ -1,6 +1,6 @@
 import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { MatButtonHarness } from "@angular/material/button/testing";
 import { MatSelectionListHarness } from "@angular/material/list/testing";
 import { MatMenuHarness } from "@angular/material/menu/testing";
@@ -85,6 +85,7 @@ describe("IbTagFilter", () => {
       <ib-tag-filter name="colour" [options]="options"></ib-tag-filter>
     </ib-filter>
   `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 class IbTagFilterApp {

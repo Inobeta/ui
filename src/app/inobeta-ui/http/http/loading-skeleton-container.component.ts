@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'ib-loading-skeleton-container',
@@ -24,6 +24,7 @@ import { Component, Input, OnInit } from '@angular/core';
   }
 
   `],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 /** @deprecated Migration scripts toward Angular core APIs are planned no earlier than v22. */

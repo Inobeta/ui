@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { IbFormControlBase } from '../controls/form-control-base';
 import { UntypedFormGroup, UntypedFormControl } from '@angular/forms';
 
@@ -8,6 +8,7 @@ import { UntypedFormGroup, UntypedFormControl } from '@angular/forms';
   host: {
     class: 'ibFormControl'
   },
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 /** @deprecated Migration scripts toward Formly are planned no earlier than v22. */

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { AbstractControl, ValidatorFn } from '@angular/forms';
 import { DateAdapter } from '@angular/material/core';
 import { TranslateService } from '@ngx-translate/core';
@@ -26,6 +26,7 @@ import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent,
     </mat-error>
   </mat-form-field>
   `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 

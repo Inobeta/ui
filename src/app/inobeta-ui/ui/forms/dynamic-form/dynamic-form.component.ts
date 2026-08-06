@@ -7,6 +7,7 @@ import {
   OnInit,
   Output,
   SimpleChanges,
+  ChangeDetectionStrategy
 } from "@angular/core";
 import { UntypedFormGroup } from "@angular/forms";
 import { Observable, Subject } from "rxjs";
@@ -30,6 +31,7 @@ interface IbFormOnChanges {
 @Component({
     selector: "ib-form",
     templateUrl: "./dynamic-form.component.html",
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class IbDynamicFormComponent implements OnInit, OnChanges, OnDestroy {

@@ -1,6 +1,6 @@
 import { TestBed, waitForAsync } from "@angular/core/testing";
 
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import {
   FormsModule,
   UntypedFormBuilder,
@@ -24,6 +24,7 @@ import { MatSelectHarness } from "@angular/material/select/testing";
 @Component({
     selector: "ib-dropdown-app",
     template: ` <ib-material-form [fields]="fields" /> `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 class IbDropdownApp {

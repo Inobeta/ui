@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { IbFilterDef, IbFilterOperator, IbTextQuery } from "../../filter.types";
 import { none } from "../../filters";
@@ -8,6 +8,7 @@ import { IbFilterBase } from "../base/filter-base";
   selector: "ib-text-filter",
   templateUrl: "filter-text.component.html",
   providers: [{ provide: IbFilterBase, useExisting: IbTextFilter }],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class IbTextFilter extends IbFilterBase {

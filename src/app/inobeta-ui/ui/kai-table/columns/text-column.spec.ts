@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import {
   ComponentFixture,
   TestBed,
@@ -19,6 +19,7 @@ import { IbColumn } from "./column";
       [justify]="justifyValue"
     ></ib-text-column>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 class TextColumnHostComponent {
