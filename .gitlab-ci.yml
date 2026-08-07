@@ -22,7 +22,7 @@ install:
   stage: install
   script:
     - set_current_version
-    - npm ci --cache .npm --prefer-offline --no-audit --no-fund
+    - npm ci --cache .npm-v2 --prefer-offline --no-audit --no-fund
     - npm run build
     - rm -rf node_modules
   artifacts:
@@ -41,7 +41,7 @@ test_unit:
   stage: quality
   script:
     - set_current_version
-    - npm ci --cache .npm --prefer-offline --no-audit --no-fund && npm run test-ci
+    - npm ci --cache .npm-v2 --prefer-offline --no-audit --no-fund && npm run test-ci
   allow_failure: true
   artifacts:
     paths: [coverage/ui]
