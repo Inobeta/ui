@@ -1,23 +1,19 @@
-import { CommonModule } from "@angular/common";
-import { Component, Type, ChangeDetectionStrategy } from "@angular/core";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { By } from "@angular/platform-browser";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { TranslateModule } from "@ngx-translate/core";
 import { IbFilter } from "./filter.component";
-import { IbFilterModule } from "./filters.module";
+import { createFilterComponent } from "./filter.component.stub.spec";
 import { IbFilterOperator } from "./filter.types";
 import { contains } from "./filters";
 
 describe("IbFilter", () => {
   it("should create", () => {
-    const fixture = createComponent(IbFilterApp);
+    const fixture = createFilterComponent(IbFilterApp);
     const component = fixture.componentInstance;
     expect(component).toBeTruthy();
   });
 
   it("should reset", () => {
-    const fixture = createComponent(IbFilterApp);
+    const fixture = createFilterComponent(IbFilterApp);
     const component = fixture.debugElement.query(
       By.directive(IbFilter)
     ).componentInstance;
@@ -30,7 +26,7 @@ describe("IbFilter", () => {
   });
 
   it("should not update with falsey values", () => {
-    const fixture = createComponent(IbFilterApp);
+    const fixture = createFilterComponent(IbFilterApp);
     const component = fixture.debugElement.query(
       By.directive(IbFilter)
     ).componentInstance;
@@ -40,7 +36,7 @@ describe("IbFilter", () => {
   });
 
   it("should hydrate raw values silently without emitting events", () => {
-    const fixture = createComponent(IbFilterApp);
+    const fixture = createFilterComponent(IbFilterApp);
     const component = fixture.debugElement.query(
       By.directive(IbFilter)
     ).componentInstance;
@@ -56,7 +52,7 @@ describe("IbFilter", () => {
   });
 
   it("should not emit form valueChanges while recomputing value and query during hydration", () => {
-    const fixture = createComponent(IbFilterApp);
+    const fixture = createFilterComponent(IbFilterApp);
     const component = fixture.debugElement.query(
       By.directive(IbFilter)
     ).componentInstance;
@@ -83,7 +79,7 @@ describe("IbFilter", () => {
   });
 
   it("should clear raw values silently with null", () => {
-    const fixture = createComponent(IbFilterApp);
+    const fixture = createFilterComponent(IbFilterApp);
     const component = fixture.debugElement.query(
       By.directive(IbFilter)
     ).componentInstance;
@@ -105,7 +101,7 @@ describe("IbFilter", () => {
   });
 
   it("should still emit events on interactive update after hydration", () => {
-    const fixture = createComponent(IbFilterApp);
+    const fixture = createFilterComponent(IbFilterApp);
     const component = fixture.debugElement.query(
       By.directive(IbFilter)
     ).componentInstance;
@@ -119,30 +115,6 @@ describe("IbFilter", () => {
     expect(queryUpdatedSpy).toHaveBeenCalledTimes(1);
   });
 });
-
-function configureModule<T>(type: Type<T>) {
-  TestBed.configureTestingModule({
-    declarations: [type],
-    imports: [
-      CommonModule,
-      BrowserAnimationsModule,
-      IbFilterModule,
-      TranslateModule.forRoot({
-        extend: true,
-      }),
-    ],
-  }).compileComponents();
-}
-
-function createComponent<T>(type: Type<T>): ComponentFixture<T> {
-  configureModule(type);
-
-  const fixture = TestBed.createComponent(type);
-  fixture.detectChanges();
-  return fixture;
-}
-
-export const createFilterComponent = createComponent;
 
 @Component({
     template: `

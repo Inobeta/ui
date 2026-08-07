@@ -44,4 +44,5 @@ Thumbs.db
 /documentation
 documentation.json
 
-.npm
+.npm*
+test.pdf

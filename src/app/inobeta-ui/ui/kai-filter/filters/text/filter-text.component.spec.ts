@@ -7,7 +7,7 @@ import { MatMenuHarness } from "@angular/material/menu/testing";
 import { MatSelectHarness } from "@angular/material/select/testing";
 import { By } from "@angular/platform-browser";
 import { IbTextFilter } from "../..";
-import { createFilterComponent } from "../../filter.component.spec";
+import { createFilterComponent } from "../../filter.component.stub.spec";
 import { contains, eq, none } from "../../filters";
 
 describe("IbTextFilter", () => {

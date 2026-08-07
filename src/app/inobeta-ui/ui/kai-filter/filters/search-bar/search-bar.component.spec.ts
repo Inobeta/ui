@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { By } from "@angular/platform-browser";
-import { createFilterComponent } from "../../filter.component.spec";
+import { createFilterComponent } from "../../filter.component.stub.spec";
 import { contains, none } from "../../filters";
 import { IbSearchBar } from "./search-bar.component";
 

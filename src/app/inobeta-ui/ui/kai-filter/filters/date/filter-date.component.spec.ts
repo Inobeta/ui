@@ -8,7 +8,7 @@ import { MatMenuHarness } from "@angular/material/menu/testing";
 import { MatRadioButtonHarness } from "@angular/material/radio/testing";
 import { MatSelectHarness } from "@angular/material/select/testing";
 import { By } from "@angular/platform-browser";
-import { createFilterComponent } from "../../filter.component.spec";
+import { createFilterComponent } from "../../filter.component.stub.spec";
 import { and, gte, lte, none } from "../../filters";
 import { IbDateFilter } from "./filter-date.component";
 

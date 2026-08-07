@@ -4,33 +4,6 @@ import { Meta } from "@storybook/addon-docs/blocks";
 
 # What's new
 
-## Version 21.0.0 — August 6, 2026
+## Version 22.0.0
 
-**DEVK-908 — Angular 21 support and removal of deprecated components.**
-
-Version 21 upgrades the library to **Angular 21** and removes the following
-deprecated modules and components:
-
-### Removed Components
-
-- **IbMainMenuModule** (`IbMainMenuBarComponent`, `IbMainMenuDialogComponent`,
-  `IbHeaderFooterButtonsComponent`, `IbMainMenuExpandedComponent`): removed.
-  This also removes the theme mixins `ui.main-menu-theme` and
-  `ui.main-menu-color`, which are no longer available.
-- **IbBreadcrumbModule** (`IbBreadcrumbComponent`,
-  `IbMaterialBreadcrumbComponent`): removed.
-- **IbSortHeader** and `[ibSortHeaderFor]`: removed from Kai Table. Columns
-  that previously used `IbSortHeader` must now use the standard
-  `mat-sort-header` instead.
-- **IbUploaderModule**: removed. The `IbUploader` component is now standalone
-  and no longer requires the module import.
-
-### Storybook 10 Migration
-
-All MDX documentation pages have been migrated to MDX3 with native markdown.
-Documentation blocks are now imported from `@storybook/addon-docs/blocks`.
-
-### Angular 21 Compatibility
-
-The library is now compatible with Angular 21. Update peer dependencies for
-`@angular/*`, `@ngrx/*`, and `@angular/material` to version 21.x.
+The library is now compatible with Angular 22.

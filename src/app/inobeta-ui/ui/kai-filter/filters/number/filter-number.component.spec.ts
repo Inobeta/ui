@@ -6,7 +6,7 @@ import { MatMenuHarness } from "@angular/material/menu/testing";
 import { MatSliderHarness } from "@angular/material/slider/testing";
 import { By } from "@angular/platform-browser";
 import { IbNumberFilter } from "../..";
-import { createFilterComponent } from "../../filter.component.spec";
+import { createFilterComponent } from "../../filter.component.stub.spec";
 import { and, gte, lte, none } from "../../filters";
 
 describe("IbNumberFilter", () => {

@@ -5,7 +5,7 @@ import { MatButtonHarness } from "@angular/material/button/testing";
 import { MatSelectionListHarness } from "@angular/material/list/testing";
 import { MatMenuHarness } from "@angular/material/menu/testing";
 import { By } from "@angular/platform-browser";
-import { createFilterComponent } from "../../filter.component.spec";
+import { createFilterComponent } from "../../filter.component.stub.spec";
 import { eq, none, or } from "../../filters";
 import { IbTagFilter } from "./filter-tag.component";
 
