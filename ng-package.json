@@ -8,6 +8,11 @@
       "glob": "**/_*.scss",
       "output": "src/app/inobeta-ui/ui"
     },
+    {
+      "input": "migrations",
+      "glob": "**/*",
+      "output": "migrations"
+    },
     "LICENSE"
   ],
   "lib": {

@@ -34,6 +34,7 @@ Do not continue if the task clearly belongs to a specialized executor:
 - **kai-table-mobile-executor** — for KAI table mobile-specific implementation
 - **storybook-executor** — for Storybook story creation and maintenance
 - **unit-jasmine-executor** — for unit test creation and modification
+- **migration-executor** — for `ng update` migration collections, Node migration scripts, payloads, fixtures, and migration-specific package configuration
 
 If the task belongs to a specialized executor, write:
 `NEED SPECIALIZED EXECUTOR: [executor-name]`

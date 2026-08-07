@@ -3,8 +3,6 @@ import { inject, Injectable, InjectionToken } from "@angular/core";
 import { TranslateLoader } from "@ngx-translate/core";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
-import { ibHttpTranslations } from "../http/translations";
-import { ibMaterialFormTranslations } from "../ui/material-forms/translations";
 import { ibKaiFilterTranslations } from "../ui/kai-filter/translations";
 import { ibViewTranslations } from "../ui/views/translations";
 import { ibKaiTableTranslations } from "../ui/kai-table/translations";
@@ -25,8 +23,6 @@ export class IbTranslateModuleLoader implements TranslateLoader{
       map(tran => ({
         ...tran,
         shared: {
-          ...ibHttpTranslations[lang],
-          ...ibMaterialFormTranslations[lang],
           ...ibKaiFilterTranslations[lang],
           ...ibViewTranslations[lang],
           ...ibKaiTableTranslations[lang],

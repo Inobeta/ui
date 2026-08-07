@@ -1,0 +1,10 @@
+{
+  "$schema": "../../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "schematics": {
+    "22.0.0": {
+      "version": "22.0.0",
+      "description": "Migrate @inobeta/ui to v22",
+      "factory": "./update-22/index"
+    }
+  }
+}

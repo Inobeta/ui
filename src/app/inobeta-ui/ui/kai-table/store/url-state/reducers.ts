@@ -1,5 +1,5 @@
 import { createReducer, on } from "@ngrx/store";
-import { urlStateActions, tableStateActions } from "./actions";
+import { tableStateActions } from "./actions";
 import { IbKaiTableRecord, IUrlStateState } from "./interfaces";
 
 /** Technical defaults for a record that has not yet been initialized. */
@@ -106,62 +106,6 @@ export const urlStateReducer = createReducer(INITIAL,
     return state;
   }),
 
-  // =========================================================================
-  // LEGACY actions (urlStateActions) — backward compatibility
-  // =========================================================================
-
-  // Legacy setFilters: type-cast IbFilterSyntaxExtended → IbTableFilterState, reset pageIndex
-  on(urlStateActions.setFilters, (stateIn, action) => {
-    const state = structuredClone(stateIn);
-    const record = getOrCreateRecord(state, action.tableName);
-    record.filters = action.params as Record<string, unknown>;
-    record.pageIndex = 0;
-    return state;
-  }),
-
-  on(urlStateActions.setPaginator, (stateIn, action) => {
-    const state = structuredClone(stateIn);
-    const record = getOrCreateRecord(state, action.tableName);
-    record.pageIndex = action.params.pageIndex;
-    record.pageSize = action.params.pageSize;
-    return state;
-  }),
-
-  on(urlStateActions.setAggregatedColumns, (stateIn, action) => {
-    const state = structuredClone(stateIn);
-    const record = getOrCreateRecord(state, action.tableName);
-    record.aggregatedColumns = { ...action.params };
-    return state;
-  }),
-
-  on(urlStateActions.setSort, (stateIn, action) => {
-    const state = structuredClone(stateIn);
-    const record = getOrCreateRecord(state, action.tableName);
-    record.sort = { ...action.params };
-    return state;
-  }),
-
-  // Legacy handleViewChange: bulk apply + pageIndex = 0
-  on(urlStateActions.handleViewChange, (stateIn, action) => {
-    const state = structuredClone(stateIn);
-    const record = getOrCreateRecord(state, action.tableName);
-    record.selectedView = action.params.view;
-    record.pageIndex = 0;
-    record.pageSize = action.params.pageSize;
-    record.filters = action.params.filters as Record<string, unknown>;
-    record.aggregatedColumns = { ...action.params.aggregatedColumns };
-    record.sort = { ...action.params.sort };
-    return state;
-  }),
-
-  // Legacy setRemoteDatasourceParams: update filters + sort (was missing from reducer!)
-  on(urlStateActions.setRemoteDatasourceParams, (stateIn, action) => {
-    const state = structuredClone(stateIn);
-    const record = getOrCreateRecord(state, action.tableName);
-    record.filters = action.filters as Record<string, unknown>;
-    record.sort = { ...action.sort };
-    return state;
-  }),
 );
 
 // ---------------------------------------------------------------------------

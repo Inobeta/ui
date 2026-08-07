@@ -47,7 +47,6 @@ import {
   IbTableRemoteDataSource,
 } from "./remote-data-source";
 import { tableStateActions } from "./store/url-state/actions";
-import { IbTableDataSource } from "./table-data-source";
 import { IbTableUrlService } from "./table-url.service";
 import { IbTable } from "./table.component";
 import { IbKaiTableModule } from "./table.module";
@@ -58,57 +57,20 @@ import { IB_AGGREGATE } from "./tokens";
 // Locale registration required by DecimalPipe / DatePipe in columns
 registerLocaleData(localeIt);
 
+interface IbNamedRow {
+  name: string;
+}
+
+interface IbExportRow extends IbNamedRow {
+  color: string;
+}
+
+interface IbExportTransformerRow extends IbNamedRow {
+  created_at: Date;
+  updated_at: Date;
+}
+
 describe("IbTable", () => {
-  describe("with IbTableDataSource", () => {
-    let host: IbTableApp;
-    let fixture: ComponentFixture<IbTableApp>;
-    let component: IbTable;
-    let loader: HarnessLoader;
-
-    beforeEach(waitForAsync(() => {
-      configureModule(IbTableApp);
-    }));
-
-    beforeEach(async () => {
-      fixture = TestBed.createComponent(IbTableApp);
-      host = fixture.componentInstance;
-      component = fixture.debugElement.query(
-        By.directive(IbTable)
-      ).componentInstance;
-      await fixture.detectChanges();
-      await fixture.whenStable();
-      loader = TestbedHarnessEnvironment.loader(fixture);
-    });
-
-    it("should create", async () => {
-      const table = await loader.getHarness(MatTableHarness);
-      const rows = await table.getRows();
-      expect(component).toBeTruthy();
-      expect(rows.length).toBe(2);
-    });
-
-    it("should select a row", async () => {
-      const row = { name: "alice" };
-      component.selectionColumn().toggleRowSelection({ checked: true }, row);
-      fixture.changeDetectorRef.markForCheck();
-      await fixture.whenStable();
-      expect(component.selectionColumn().selection.isSelected(row)).toBeTruthy();
-    });
-
-    it("should toggle all rows", async () => {
-      const table = await loader.getHarness(MatTableHarness);
-      const renderedRows = await table.getRows();
-      expect(renderedRows.length).toBe(2);
-
-      component.selectionColumn().toggleAllRows();
-      expect(component.selectionColumn().selection.selected).toEqual(host.data);
-
-      component.selectionColumn().toggleAllRows();
-      fixture.detectChanges();
-      expect(component.selectionColumn().selection.selected).toEqual([]);
-    });
-  });
-
   describe("with IbRemoteTableDataSource", () => {
     it("should create", fakeAsync(() => {
       const fixture = createComponent(IbTableWithRemoteDataApp);
@@ -284,18 +246,18 @@ describe("IbTable", () => {
       }));
     });
 
-    describe("with a legacy local data source", () => {
+    describe("with a local data source", () => {
       it("exports only the ordered page slice for a non-first page", async () => {
-        const fixture = createComponent(IbTableWithLegacyExportApp);
+        const fixture = createComponent(IbTableWithLocalExportApp);
         const component = fixture.debugElement.query(
           By.directive(IbTable)
         ).componentInstance as IbTable;
-        const source = component.activeDataSource() as IbTableDataSource<any>;
+        const source = component.activeDataSource() as IbTableLocalDataSource<IbNamedRow>;
 
         await fixture.whenStable();
         fixture.detectChanges();
 
-        source.columns = [createExportColumn("name", "Name")];
+        source.setColumns([createExportColumn("name", "Name")]);
         component.setPaginatorState({ pageIndex: 1, pageSize: 2 });
         await fixture.whenStable();
         fixture.detectChanges();
@@ -304,23 +266,23 @@ describe("IbTable", () => {
         component.doExport({ format: "csv", dataset: "current" });
 
         expect(exportSpy).toHaveBeenCalledWith(
-          [{ Name: "c" }, { Name: "d" }],
+          [{ name: "c" }, { name: "d" }],
           component.tableName(),
           "csv"
         );
       });
 
       it("uses its custom sorter for all, current, and selected exports", async () => {
-        const fixture = createComponent(IbTableWithLegacyExportApp);
+        const fixture = createComponent(IbTableWithLocalExportApp);
         const component = fixture.debugElement.query(
           By.directive(IbTable)
         ).componentInstance as IbTable;
-        const source = component.activeDataSource() as IbTableDataSource<{ name: string }>;
+        const source = component.activeDataSource() as IbTableLocalDataSource<{ name: string }>;
 
         await fixture.whenStable();
         fixture.detectChanges();
 
-        source.columns = [createExportColumn("name", "Name")];
+        source.setColumns([createExportColumn("name", "Name")]);
         source.sortData = (data) => data.sort((left, right) => right.name.localeCompare(left.name));
         const sort = component.sort();
         sort.active = "name";
@@ -335,15 +297,15 @@ describe("IbTable", () => {
 
         component.doExport({ format: "csv", dataset: "all" });
         expect(exportSpy.calls.mostRecent().args[0]).toEqual([
-          { Name: "f" }, { Name: "e" }, { Name: "d" },
-          { Name: "c" }, { Name: "b" }, { Name: "a" },
+          { name: "f" }, { name: "e" }, { name: "d" },
+          { name: "c" }, { name: "b" }, { name: "a" },
         ]);
 
         component.doExport({ format: "csv", dataset: "current" });
-        expect(exportSpy.calls.mostRecent().args[0]).toEqual([{ Name: "d" }, { Name: "c" }]);
+        expect(exportSpy.calls.mostRecent().args[0]).toEqual([{ name: "d" }, { name: "c" }]);
 
         component.doExport({ format: "csv", dataset: "selected" });
-        expect(exportSpy.calls.mostRecent().args[0]).toEqual([{ Name: "f" }, { Name: "c" }, { Name: "a" }]);
+        expect(exportSpy.calls.mostRecent().args[0]).toEqual([{ name: "f" }, { name: "c" }, { name: "a" }]);
       });
     });
 
@@ -372,7 +334,7 @@ describe("IbTable", () => {
       await fixture.whenStable();
       fixture.detectChanges();
 
-      const localSource = component.activeDataSource() as IbTableLocalDataSource<any>;
+      const localSource = component.activeDataSource() as IbTableLocalDataSource<IbExportRow>;
       component.selectionColumn().selection.select(
         ...localSource.getCurrentPageData().slice(0, 2)
       );
@@ -808,7 +770,7 @@ describe("IbTable", () => {
       await confirm.click();
       fixture.detectChanges();
 
-      const localSource = component.activeDataSource() as IbTableDataSource<any>;
+      const localSource = component.activeDataSource() as IbTableLocalDataSource<IbExportRow>;
       expect(exportSpy).toHaveBeenCalledWith(
         localSource.data,
         component.tableName(),
@@ -844,7 +806,7 @@ describe("IbTable", () => {
       await confirm.click();
       fixture.detectChanges();
 
-      const ds = component.activeDataSource() as IbTableDataSource<any>;
+      const ds = component.activeDataSource() as IbTableLocalDataSource<IbExportRow>;
       expect(exportSpy).toHaveBeenCalledWith(
         ds.data.slice(0, 2),
         component.tableName(),
@@ -855,7 +817,7 @@ describe("IbTable", () => {
     it("should export selected rows", async () => {
 
       const exportSpy = spyOn(component.exportService, "export");
-      const localSource = component.activeDataSource() as IbTableDataSource<any>;
+      const localSource = component.activeDataSource() as IbTableLocalDataSource<IbExportRow>;
 
       component.selectionColumn().selection.select(
         ...localSource.data.slice(0, 2)
@@ -914,7 +876,7 @@ describe("IbTable", () => {
       await confirm.click();
       fixture.detectChanges();
 
-      const localSource = component.activeDataSource() as IbTableDataSource<any>;
+      const localSource = component.activeDataSource() as IbTableLocalDataSource<IbExportTransformerRow>;
       const expectedData = localSource.data.map((e: any) => ({
         ...e,
         created_at: e.created_at.getTime(),
@@ -1203,19 +1165,17 @@ describe("IbTable", () => {
         By.directive(IbTable)
       ).componentInstance as IbTable;
 
-      const initialSource = c.activeDataSource() as IbTableDataSource<any>;
+      const initialSource = c.activeDataSource() as IbTableLocalDataSource<IbNamedRow>;
       expect(initialSource.data).toEqual([{ name: "first" }]);
 
-      fixture.componentInstance.currentSource = new IbTableDataSource([{ name: "replaced" }]);
+      fixture.componentInstance.currentSource = new IbTableLocalDataSource([{ name: "replaced" }]);
       fixture.detectChanges();
       await fixture.whenStable();
 
-      const newSource = c.activeDataSource() as IbTableDataSource<any>;
+      const newSource = c.activeDataSource() as IbTableLocalDataSource<IbNamedRow>;
       expect(newSource.data).toEqual([{ name: "replaced" }]);
       expect(newSource).not.toBe(initialSource);
-      expect(initialSource.paginator).toBeNull();
-      expect(initialSource.filter).toBeNull();
-      expect(initialSource.selectionColumn).toBeNull();
+      expect(initialSource.data).toEqual([{ name: "first" }]);
     });
   });
 
@@ -1895,7 +1855,7 @@ class IbTableWithRemoteExportApp {
 @Component({
   template: `
     <ib-kai-table
-      tableName="test-legacy-export"
+      tableName="test-local-export"
       [dataSource]="dataSource"
       [tableDef]="{ paginator: { pageSize: 2 } }"
       [displayedColumns]="['name']"
@@ -1918,8 +1878,8 @@ class IbTableWithRemoteExportApp {
   changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
-class IbTableWithLegacyExportApp {
-  dataSource = new IbTableDataSource([
+class IbTableWithLocalExportApp {
+  dataSource = new IbTableLocalDataSource([
     { name: "a" },
     { name: "b" },
     { name: "c" },
@@ -2145,7 +2105,7 @@ class IbTableWithoutTableName {
 })
 class IbTableWithBothDataAndDataSource {
   data = [{ name: "alice" }];
-  dataSource = new IbTableDataSource([{ name: "bob" }]);
+  dataSource = new IbTableLocalDataSource([{ name: "bob" }]);
 }
 
 @Component({
@@ -2162,7 +2122,7 @@ class IbTableWithBothDataAndDataSource {
   standalone: false
 })
 class IbTableWithDataSourceReplacement {
-  currentSource = new IbTableDataSource([{ name: "first" }]);
+  currentSource = new IbTableLocalDataSource([{ name: "first" }]);
 }
 
 @Component({

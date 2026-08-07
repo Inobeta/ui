@@ -8,31 +8,19 @@ Use the `ibSetupHydration` function to set up persisted NgRx state. Provide a un
 the names of stores present in your app that you want to save in browser storage.
 
 For the stores used by the current application configuration, the persisted keys can include:
-- `ibHttpSessionState`: holds user authentication data
 - `ibKaiTable`: current Kai Table state feature, registered by `IbKaiTableModule`
 
 ```typescript
 import { ApplicationConfig } from "@angular/core";
 import { provideEffects } from "@ngrx/effects";
-import { provideState, provideStore } from "@ngrx/store";
-import {
-  ibHttpEffects,
-  ibLoaderFeature,
-  ibSessionFeature,
-  ibSetupHydration,
-} from "@inobeta/ui";
+import { provideStore } from "@ngrx/store";
+import { ibSetupHydration } from "@inobeta/ui";
 
-const appStorage = ibSetupHydration("app-storage", [
-  "ibHttpSessionState",
-  "ibKaiTable",
-]);
+const appStorage = ibSetupHydration("app-storage", ["ibKaiTable"]);
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideStore(undefined, { metaReducers: appStorage.metareducers }),
-    provideState(ibSessionFeature),
-    provideState(ibLoaderFeature),
-    provideEffects(ibHttpEffects),
     provideEffects(appStorage.effects),
   ],
 };

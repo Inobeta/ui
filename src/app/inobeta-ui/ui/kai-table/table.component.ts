@@ -41,7 +41,6 @@ import { IbColumn } from "./columns/column";
 import { IbSelectionColumn } from "./columns/selection-column";
 import { IbTableRemoteDataSource } from "./remote-data-source";
 import { IbKaiRowGroupDirective } from "./rowgroup";
-import { IbTableDataSource } from "./table-data-source";
 import { IbKaiTableSnapshot, IbKaiTableState, IbTableDef } from "./table.types";
 import { IB_AGGREGATE, IB_TABLE } from "./tokens";
 import { IbKaiTableStateFacade } from "./table-state.facade";
@@ -50,7 +49,6 @@ import { IbTableLocalDataSource } from "./local-data-source";
 import { IbAggregate } from "./cells";
 
 type IbTableSource =
-  | IbTableDataSource<unknown>
   | IbTableLocalDataSource<unknown>
   | IbTableRemoteDataSource<unknown>;
 
@@ -229,9 +227,6 @@ export class IbTable implements OnDestroy {
       const snapshot = this.stateFacade.snapshot();
       const source = this.activeDataSource();
       if (source === this.snapshotAppliedSource && snapshot === this.snapshotAppliedState) return;
-      if (this.snapshotAppliedSource && this.snapshotAppliedSource !== source) {
-        this.detachSource(this.snapshotAppliedSource);
-      }
       this.applyingSnapshot = true;
       try {
         untracked(() => this.applySnapshot(source, snapshot));
@@ -351,7 +346,6 @@ export class IbTable implements OnDestroy {
   }
 
   ngOnDestroy() {
-    this.detachSource(this.snapshotAppliedSource);
     this.viewSubscription?.unsubscribe();
     this.stateFacade.destroy();
   }
@@ -425,7 +419,6 @@ export class IbTable implements OnDestroy {
     snapshot: IbKaiTableSnapshot,
   ): void {
     const paginator = this.paginator();
-    const sort = this.sort();
     const tableFilter = this.filter();
     if (paginator) {
       paginator.pageIndex = snapshot.pageIndex;
@@ -442,24 +435,13 @@ export class IbTable implements OnDestroy {
       });
       return;
     }
-    if (this.isLocalDataSource(source)) {
-      source.setInput({
-        sort: snapshot.sort,
-        rawFilter: tableFilter?.value ?? null,
-        pageIndex: snapshot.pageIndex,
-        pageSize: snapshot.pageSize,
-        aggregatedColumns: snapshot.aggregatedColumns,
-      });
-      return;
-    }
-    source.tableName = this.tableName();
-    source.selectionColumn = this.selectionColumn() ?? null;
-    source.filter = tableFilter ?? null;
-    source.aggregatedColumns = snapshot.aggregatedColumns;
-    source.sort = sort ?? null;
-    source.paginator = paginator ?? null;
-    source.initializeSortState(snapshot.sort ?? { active: '', direction: '' });
-    this.refreshCurrentPageExportAvailability();
+    source.setInput({
+      sort: snapshot.sort,
+      rawFilter: tableFilter?.value ?? null,
+      pageIndex: snapshot.pageIndex,
+      pageSize: snapshot.pageSize,
+      aggregatedColumns: snapshot.aggregatedColumns,
+    });
   }
 
   private getViewData() {
@@ -483,15 +465,6 @@ export class IbTable implements OnDestroy {
 
   private rendererDataSource(): IbTableRendererDataSource<unknown> {
     return this.activeDataSource();
-  }
-
-  private detachSource(source: IbTableSource | null): void {
-    if (source instanceof IbTableDataSource) {
-      source.sort = null;
-      source.paginator = null;
-      source.filter = null;
-      source.selectionColumn = null;
-    }
   }
 
   private hasCapability(capability: IbDataSourceCapability): boolean {
@@ -528,7 +501,7 @@ export class IbTable implements OnDestroy {
       sort: null,
       sortData: (data) => data,
       paginator: null,
-      sortedColumns: this.exportColumns(source),
+      sortedColumns: this.exportColumns(),
       capabilities: this.exportCapabilities(source),
     };
   }
@@ -548,33 +521,19 @@ export class IbTable implements OnDestroy {
 
     if (dataset !== 'current') return orderedRows;
 
-    const paginator = this.paginator();
-    const pageIndex = paginator?.pageIndex ?? 0;
-    const pageSize = paginator?.pageSize ?? orderedRows.length;
-    const start = pageIndex * pageSize;
-    return orderedRows.slice(start, start + pageSize);
+    return source.getCurrentPageData();
   }
 
   private orderedExportRows(source: IbTableSource): unknown[] {
     if (this.isRemoteDataSource(source)) return [...source.filteredData];
-    if (this.isLocalDataSource(source)) return source.getOrderedData();
-    return source.sort ? source.sortData([...source.filteredData], source.sort) : [...source.filteredData];
+    return source.getOrderedData();
   }
 
-  private exportColumns(source: IbTableSource): IbColumn<unknown>[] {
-    if (source instanceof IbTableDataSource && source.sortedColumns.length > 0) {
-      return source.sortedColumns;
-    }
+  private exportColumns(): IbColumn<unknown>[] {
     return [...this.columns()];
   }
 
   private exportCapabilities(source: IbTableSource): ReadonlySet<IbDataSourceCapability> {
-    if ('capabilities' in source) return source.capabilities;
-    return new Set([
-      IbDataSourceCapability.RowSelection,
-      IbDataSourceCapability.CurrentPageExport,
-      IbDataSourceCapability.FullExport,
-      IbDataSourceCapability.GlobalAggregation,
-    ]);
+    return source.capabilities;
   }
 }

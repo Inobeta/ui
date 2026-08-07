@@ -1,4 +1,3 @@
-import { Platform } from "@angular/cdk/platform";
 import { PortalModule } from "@angular/cdk/portal";
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
@@ -21,11 +20,9 @@ import { MatRadioModule } from "@angular/material/radio";
 import { MatSelectModule } from "@angular/material/select";
 import { MatSliderModule } from "@angular/material/slider";
 import { MatTooltipModule } from "@angular/material/tooltip";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import { IbFilterPipe } from "../../core";
+import { TranslateModule } from "@ngx-translate/core";
+import { IbFilterPipe, IbMatDateAdapter, IbMatDatepickerI18n } from "../../core";
 import { IbTableActionModule } from "../kai-table/action";
-import { IbMatDateAdapter } from "../material-forms/intl/datepicker.intl";
-import { ibMatDatepickerTranslate } from "../material-forms/material-form.module";
 import { IbFilterActionGroup } from "./filter-button/filter-action-group.component";
 import { IbFilterButton } from "./filter-button/filter-button.component";
 import { IbFilter } from "./filter.component";
@@ -92,12 +89,11 @@ import { IbFilterValueDirective } from "./filter-value.directive";
     {
       provide: DateAdapter,
       useClass: IbMatDateAdapter,
-      deps: [MAT_DATE_LOCALE, Platform],
+      deps: [MAT_DATE_LOCALE],
     },
     {
       provide: MAT_DATE_FORMATS,
-      deps: [TranslateService],
-      useFactory: ibMatDatepickerTranslate,
+      useFactory: () => new IbMatDatepickerI18n().getDateFormats(),
     },
   ],
 })

@@ -43,7 +43,7 @@ export abstract class IbAggregate {
    *
    * It takes into account only filtered data.
    *
-   * @param dataSource `IbTableDataSource` compatible data source instance
+   * @param dataSource Local data source instance
    * @param column Column name
    */
   aggregate(

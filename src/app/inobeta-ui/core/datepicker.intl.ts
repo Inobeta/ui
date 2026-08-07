@@ -27,7 +27,10 @@ export class IbMatDateAdapter extends NativeDateAdapter {
     super.setLocale(matDateLocale);
   }
 
-  parse(date: string, displayFormat?: string): Date {
+  parse(date: unknown, displayFormat?: unknown): Date | null {
+    if (typeof date !== 'string') {
+      return super.parse(date, displayFormat);
+    }
     if (date === '') {
       return null;
     }

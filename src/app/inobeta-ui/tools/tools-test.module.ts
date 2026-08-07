@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { IbMockTranslatePipeDirective } from './stubs/mock-translate.directive.stub.spec';
 import { TranslateService } from '@ngx-translate/core';
 import { translateServiceStub } from './stubs/translate.service.stub.spec';
@@ -7,7 +6,6 @@ import { registerLocaleData } from '@angular/common';
 import localeIt from '@angular/common/locales/it';
 import { MatDialogRef } from '@angular/material/dialog';
 import { serviceDialogStub } from './stubs/dialog.stub.spec';
-import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 
 registerLocaleData(localeIt, 'it');
 
@@ -28,10 +26,7 @@ const services = [
   declarations: [
     ...components
   ], imports: [], providers: [
-    ...services,
-    provideHttpClient(withXhr(), withInterceptorsFromDi()),
-    provideHttpClientTesting()
+    ...services
   ]
 })
-/** @deprecated This element will be removed in a future major release after v22. */
 export class IbToolTestModule { }

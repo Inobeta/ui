@@ -89,10 +89,6 @@ dataSource.setInput({ sort, rawFilter, pageIndex, pageSize });
 The local source exposes `input`, `filteredData`, `orderedData`,
 `currentPageData`, and `aggregatedData`.
 
-`IbTableDataSource` remains a deprecated compatibility bridge for integrations
-using the old Material-control API. It is not a promise of support for
-arbitrary `MatTableDataSource` instances and should not be used for new code.
-
 For remote data, extend `IbTableRemoteDataSource<T, V>` and implement the
 value-object contract:
 
@@ -140,25 +136,9 @@ The canonical writer emits a v2 payload under the table name:
 {"v":2,"f":null,"sv":null,"pi":0,"ps":20,"ac":null,"so":null}
 ```
 
-Deprecated compatibility writers on `IbTableUrlService` may still write legacy
-payloads. Therefore, do not claim that every public writer path emits v2. The
-reader accepts legacy v1 fields (`ibfilter`, `ibview`, `ibpage`, `ibpagesize`,
+The reader accepts legacy v1 fields (`ibfilter`, `ibview`, `ibpage`, `ibpagesize`,
 `ibaggregatedcolumns`, and `ibsort`) and maps the legacy all-data sentinel to
 `view: null`.
-
-The following selectors remain public for backward compatibility and are
-deprecated; use the canonical selectors above for new code:
-
-| Deprecated selector | Canonical replacement |
-| --- | --- |
-| `ibTableSelectUrlState` | `selectIbKaiTableRecord` |
-| `ibTableSelectLastQueryStringRaw` | `selectIbKaiTableSnapshot` |
-| `ibTableSelectLastQueryString` | `selectIbKaiTableSnapshot` |
-
-The legacy `IbTableUrlService` readers and writers (`getRawParams`,
-`getFilters`, `getActiveView`, `getPaginator`, `getAggregatedColumns`,
-`getSort`, `getViewState`, and their setter methods) are also deprecated.
-Prefer the canonical state selectors and writer integration.
 
 ## 5. `tableHeight` migration
 

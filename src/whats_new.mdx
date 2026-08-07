@@ -7,3 +7,11 @@ import { Meta } from "@storybook/addon-docs/blocks";
 ## Version 22.0.0
 
 The library is now compatible with Angular 22.
+
+### Removed
+
+- The HTTP module is no longer part of the library. If you still use it, run `ng update @inobeta/ui@22` to copy it into your project under `src/app/core/http/`.
+- The Forms and Material Forms modules are no longer part of the library. If you still use them, run `ng update @inobeta/ui@22` to copy them into your project under `src/app/core/forms/` and `src/app/core/material-forms/`.
+- Kai Table removed `IbTableDataSource`; use `IbTableLocalDataSource` instead. It also removed `urlStateActions`; use `tableStateActions` instead.
+- Kai Table removed legacy URL types (`IbKaiTableParams`, `IbKaiTableNamedParams`, and `IbTableQsParams`) and selectors (`ibTableSelectUrlState`, `ibTableSelectLastQueryStringRaw`, and `ibTableSelectLastQueryString`). Use `IbKaiTableRecord`, `IbKaiTableSnapshot`, and granular canonical selectors such as `selectTableSort`, `selectTableFilters`, `selectTablePageIndex`, `selectTablePageSize`, `selectTableSelectedView`, and `selectTableAggregatedColumns`.
+- Kai Table removed composite store exports `IKaiTableStore` and `kaiTableReducers`, plus legacy `IbTableUrlService` methods (`getRawParams`, `getFilters`, `setFilters`, `getActiveView`, `setPaginator`, `getPaginator`, `setAggregatedColumns`, `getAggregatedColumns`, `setSort`, `getSort`, `handleViewChange`, `getViewState`, and `setFilterAndSort`). Use `decodeUrlParams()` and `writeState()` where URL access is required. These Kai Table compatibility removals do not have an HTTP/Forms vendoring migration.

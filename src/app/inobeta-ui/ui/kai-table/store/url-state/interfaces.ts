@@ -1,10 +1,5 @@
 import { Sort } from "@angular/material/sort";
-import { IbFilterSyntaxExtended } from "../../../kai-filter";
 import { IbTableFilterState } from "../../table.types";
-
-// ---------------------------------------------------------------------------
-// Canonical table record (new — source of truth for DEVK-1066)
-// ---------------------------------------------------------------------------
 
 /**
  * Complete per-table state record stored in the `ibKaiTable` NgRx slice.
@@ -43,31 +38,3 @@ export interface IbKaiTableRecord {
 export type IUrlStateState = {
   tables: Record<string, IbKaiTableRecord>;
 };
-
-// ---------------------------------------------------------------------------
-// Legacy types (kept for backward compatibility — will be removed in v21+)
-// ---------------------------------------------------------------------------
-
-/**
- * @deprecated Use {@link IbKaiTableRecord} instead.
- *
- * Legacy per-table parameter shape exposed through the old URL-state
- * selectors and actions.  Consumers should migrate to the canonical
- * `IbKaiTableRecord` and the new `tableStateActions`.
- */
-export type IbKaiTableParams = {
-  view: string;
-  pageSize: number;
-  page: number;
-  filters: IbFilterSyntaxExtended;
-  aggregatedColumns: Record<string, string>;
-  sort: Sort;
-};
-
-/**
- * @deprecated Use {@link IbKaiTableRecord} instead.
- *
- * Legacy partial record shape used by the old `ibTableSelectUrlState`
- * selector.  Retained so existing consumers continue to compile.
- */
-export type IbKaiTableNamedParams = Partial<IbKaiTableParams> & { tableName: string };

@@ -1,6 +1,6 @@
 import { Sort } from '@angular/material/sort';
 import { urlStateReducer } from './reducers';
-import { tableStateActions, urlStateActions } from './actions';
+import { tableStateActions } from './actions';
 import { IbKaiTableRecord, IUrlStateState } from './interfaces';
 import { IbKaiTableSnapshot, IbKaiTableViewSnapshot } from '../../table.types';
 
@@ -431,164 +431,6 @@ describe('urlStateReducer', () => {
   });
 
   // ===========================================================================
-  // 2. Legacy urlStateActions
-  // ===========================================================================
-
-  describe('urlStateActions (legacy)', () => {
-
-    // -----------------------------------------------------------------------
-    // 2.1 Legacy setFilters
-    // -----------------------------------------------------------------------
-    describe('setFilters', () => {
-
-      it('should update filters and reset pageIndex to 0', () => {
-        const initState = urlStateReducer(undefined as never, tableStateActions.initialize({
-          tableName: TABLE_A,
-          snapshot: makeSnapshot({ pageIndex: 5 }),
-        }));
-
-        const state = urlStateReducer(initState, urlStateActions.setFilters({
-          tableName: TABLE_A,
-          params: filtersA as never,
-        }));
-
-        const record = getRecord(state, TABLE_A)!;
-        expect(record.filters).toEqual(filtersA);
-        expect(record.pageIndex).toBe(0);
-      });
-    });
-
-    // -----------------------------------------------------------------------
-    // 2.2 Legacy setPaginator
-    // -----------------------------------------------------------------------
-    describe('setPaginator', () => {
-
-      it('should update pageIndex and pageSize', () => {
-        const state = urlStateReducer(undefined as never, urlStateActions.setPaginator({
-          tableName: TABLE_A,
-          params: { pageIndex: 4, pageSize: 30 },
-        }));
-
-        const record = getRecord(state, TABLE_A)!;
-        expect(record.pageIndex).toBe(4);
-        expect(record.pageSize).toBe(30);
-      });
-    });
-
-    // -----------------------------------------------------------------------
-    // 2.3 Legacy setAggregatedColumns
-    // -----------------------------------------------------------------------
-    describe('setAggregatedColumns', () => {
-
-      it('should update aggregatedColumns', () => {
-        const state = urlStateReducer(undefined as never, urlStateActions.setAggregatedColumns({
-          tableName: TABLE_A,
-          params: aggregatedA,
-        }));
-
-        expect(getRecord(state, TABLE_A)!.aggregatedColumns).toEqual(aggregatedA);
-      });
-    });
-
-    // -----------------------------------------------------------------------
-    // 2.4 Legacy setSort
-    // -----------------------------------------------------------------------
-    describe('setSort', () => {
-
-      it('should update sort', () => {
-        const initState = urlStateReducer(undefined as never, tableStateActions.initialize({
-          tableName: TABLE_A,
-          snapshot: makeSnapshot({ sort: null }),
-        }));
-
-        const state = urlStateReducer(initState, urlStateActions.setSort({
-          tableName: TABLE_A,
-          params: sortA,
-        }));
-
-        expect(getRecord(state, TABLE_A)!.sort).toEqual(sortA);
-      });
-
-      it('should NOT reset pageIndex (legacy behavior — canonical action handles reset)', () => {
-        const initState = urlStateReducer(undefined as never, tableStateActions.initialize({
-          tableName: TABLE_A,
-          snapshot: makeSnapshot({ pageIndex: 5, sort: null }),
-        }));
-
-        const state = urlStateReducer(initState, urlStateActions.setSort({
-          tableName: TABLE_A,
-          params: sortA,
-        }));
-
-        // Legacy sort does NOT reset pageIndex
-        expect(getRecord(state, TABLE_A)!.pageIndex).toBe(5);
-      });
-    });
-
-    // -----------------------------------------------------------------------
-    // 2.5 Legacy handleViewChange
-    // -----------------------------------------------------------------------
-    describe('handleViewChange', () => {
-
-      it('should bulk-apply all fields and reset pageIndex to 0', () => {
-        const state = urlStateReducer(undefined as never, urlStateActions.handleViewChange({
-          tableName: TABLE_A,
-          params: {
-            view: 'bulk-view',
-            pageSize: 30,
-            page: 0,
-            filters: filtersA as never,
-            aggregatedColumns: aggregatedA,
-            sort: sortA,
-          },
-        }));
-
-        const record = getRecord(state, TABLE_A)!;
-        expect(record.selectedView).toBe('bulk-view');
-        expect(record.pageIndex).toBe(0);
-        expect(record.pageSize).toBe(30);
-        expect(record.filters).toEqual(filtersA);
-        expect(record.aggregatedColumns).toEqual(aggregatedA);
-        expect(record.sort).toEqual(sortA);
-      });
-    });
-
-    // -----------------------------------------------------------------------
-    // 2.6 Legacy setRemoteDatasourceParams
-    // -----------------------------------------------------------------------
-    describe('setRemoteDatasourceParams', () => {
-
-      it('should update both filters and sort', () => {
-        const initState = urlStateReducer(undefined as never, tableStateActions.initialize({
-          tableName: TABLE_A,
-          snapshot: makeSnapshot({ filters: null, sort: null }),
-        }));
-
-        const state = urlStateReducer(initState, urlStateActions.setRemoteDatasourceParams({
-          tableName: TABLE_A,
-          filters: filtersA as never,
-          sort: sortA,
-        }));
-
-        const record = getRecord(state, TABLE_A)!;
-        expect(record.filters).toEqual(filtersA);
-        expect(record.sort).toEqual(sortA);
-      });
-
-      it('should create a record if none exists', () => {
-        const state = urlStateReducer(undefined as never, urlStateActions.setRemoteDatasourceParams({
-          tableName: TABLE_A,
-          filters: filtersA as never,
-          sort: sortA,
-        }));
-
-        expect(getRecord(state, TABLE_A)).toBeDefined();
-        expect(getRecord(state, TABLE_A)!.filters).toEqual(filtersA);
-      });
-    });
-  });
-
-  // ===========================================================================
   // 3. Two independent tableNames
   // ===========================================================================
 
@@ -789,19 +631,6 @@ describe('urlStateReducer', () => {
     it('should handle undefined initial state (reducer init)', () => {
       const state = urlStateReducer(undefined as never, { type: '@@INIT' } as never);
       expect(state).toEqual({ tables: {} });
-    });
-
-    it('should handle an action for a non-existing table via legacy action (lazy create)', () => {
-      const state = urlStateReducer(undefined as never, urlStateActions.setPaginator({
-        tableName: TABLE_A,
-        params: { pageIndex: 5, pageSize: 10 },
-      }));
-
-      const record = getRecord(state, TABLE_A)!;
-      expect(record).toBeDefined();
-      expect(record.pageIndex).toBe(5);
-      expect(record.pageSize).toBe(10);
-      expect(record.initialized).toBe(false);
     });
 
     it('should handle multiple actions in sequence for the same table', () => {

@@ -1333,8 +1333,7 @@ The canonical URL writer stores a version 2 payload per table. It contains:
 
 The payload represents the full canonical snapshot, including explicit `null`
 values. Sort, filter, and view changes reset the page index to zero. Legacy v1
-payloads and deprecated compatibility APIs are still decoded or available for
-backward compatibility; new canonical writes use v2.
+fields in the URL are decoded for migration support; canonical writes use v2.
 
 While a table is mounted, browser back/forward or other query-parameter changes
 hydrate the existing table state from the URL. This updates the table state and
@@ -1371,32 +1370,6 @@ aggregatedColumns = this.store.selectSignal(
 // Returned values are signals — call them to read
 console.log(sort()); // { active: "name", direction: "asc" }
 console.log(pageSize()); // 20
-```
-
-### Legacy selectors (deprecated)
-
-The following selectors are retained for backward compatibility only. Prefer the
-canonical selectors above for new code.
-
-**`ibTableSelectUrlState`** — Maps the canonical record to the legacy `IbKaiTableNamedParams` shape.
-
-**`ibTableSelectLastQueryStringRaw`** — Maps the legacy params to the old `IbTableQsParams` flat object.
-
-**`ibTableSelectLastQueryString`** — Returns a JSON string for URL recovery. If you must recover a previous URL query string, use:
-
-```typescript
-import { ibTableSelectLastQueryString } from "@inobeta/ui";
-
-tableState = this.store.selectSignal(
-  ibTableSelectLastQueryString("YOUR_TABLE_NAME"),
-);
-
-this.router.navigate([your path], {
-  queryParams: {
-    'YOUR_TABLE_NAME': this.tableState(),
-  },
-  queryParamsHandling: "merge",
-});
 ```
 
 Multiple tables on the same page are supported as long as different table names are used.

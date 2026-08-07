@@ -1,0 +1,154 @@
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { AbstractControl, Validators } from '@angular/forms';
+import { IbFormControlInterface, IbFormControlBase, IbFormControlBaseComponent, IbFormControlBaseParams, IbFormControlData } from '../../forms/controls/form-control-base';
+
+@Component({
+    selector: '[ib-mat-textbox]',
+    template: `
+  <mat-form-field appearance="fill" style="width: 100%;" [formGroup]="data.form">
+    <mat-label>{{data.base.label | translate}}</mat-label>
+    <!--
+    https://github.com/angular/angular/issues/13243
+    type is not dynamic (see angular issue)
+    -->
+    @if (data.base.type === 'number') {
+      <input
+        matInput
+        [formControlName]="data.base.key"
+        [min]="minValidator"
+        [max]="maxValidator"
+        type="number"
+        (keyup)="data.base.change(data.self)"
+        (input)="data.base.change(data.self)"
+        />
+    }
+    @if (data.base.type === 'text') {
+      <input
+        matInput
+        [formControlName]="data.base.key"
+        [maxlength]="maxLengthValidator"
+        type="text"
+        (keyup)="data.base.change(data.self)"
+        (change)="data.base.change(data.self)"
+        />
+    }
+    @if (data.base.type === 'email') {
+      <input
+        matInput
+        [formControlName]="data.base.key"
+        type="email"
+        (keyup)="data.base.change(data.self)"
+        (change)="data.base.change(data.self)"
+        />
+    }
+    @if (data.base.type === 'password') {
+      <input
+        matInput
+        [formControlName]="data.base.key"
+        type="password"
+        (keyup)="data.base.change(data.self)"
+        (change)="data.base.change(data.self)"
+        />
+    }
+    @if (data.base.type === 'date') {
+      <input
+        matInput
+        [formControlName]="data.base.key"
+        type="date"
+        (keyup)="data.base.change(data.self)"
+        (change)="data.base.change(data.self)"
+        />
+    }
+    @if (hintMessage) {
+      <mat-icon
+        matSuffix
+        [matTooltip]="hintMessage | translate"
+        >
+        help_outline
+      </mat-icon>
+    }
+    <mat-error>
+      <ng-container *ngTemplateOutlet="data.formControlErrors;context: this"></ng-container>
+    </mat-error>
+  </mat-form-field>
+  `,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
+})
+
+export class IbMatTextboxComponent implements IbFormControlInterface {
+  @Input() data: IbMatTextboxData;
+  get hintMessage() {
+    return (this.data.base.hintMessage) ? this.data.base.hintMessage() : null;
+  }
+
+  get minValidator() {
+    for (const func of this.data.base.validators) {
+      const validation = func({value: -Infinity} as AbstractControl);
+      if (validation && validation.min) {
+        return validation.min.min;
+      }
+    }
+    return null;
+  }
+
+  get maxValidator() {
+    for (const func of this.data.base.validators) {
+      const validation = func({value: Infinity} as AbstractControl);
+      if (validation && validation.max) {
+        return validation.max.max;
+      }
+    }
+    return null;
+  }
+
+
+  get maxLengthValidator() {
+    for (const func of this.data.base.validators) {
+      const getMethods = (obj: Record<string, unknown>) => {
+        const properties = new Set<string>()
+        let currentObj: object | null = obj
+        do {
+          Object.getOwnPropertyNames(currentObj).forEach((item) => properties.add(item))
+        } while ((currentObj = Object.getPrototypeOf(currentObj)))
+        return [...properties].filter((item) => typeof obj[item] === 'function')
+      }
+      const sampleString = this.data.self.value
+      if(!sampleString) return Infinity
+
+      const methods: string[] = getMethods(sampleString)
+      const fakeString: any = {}
+      for(let m of methods){
+        fakeString[m] = sampleString[m].bind(sampleString)
+      }
+      fakeString['length'] = Infinity
+      const validation = func({value: fakeString} as AbstractControl);
+      if (validation && validation.maxlength) {
+        return validation.maxlength.requiredLength;
+      }
+    }
+    return Infinity;
+  }
+}
+
+export class IbMatTextboxControl extends IbFormControlBase<number | string> {
+  hintMessage: (() => string) | null = null;
+
+  constructor(options: IbMatTextboxParams) {
+    options.type = options.type || 'text';
+    super(options);
+    this.hintMessage = options.hintMessage || null;
+    this.control = new IbFormControlBaseComponent(IbMatTextboxComponent, {
+      base: this
+    });
+  }
+}
+
+
+export interface IbMatTextboxParams extends IbFormControlBaseParams<number | string> {
+  hintMessage?: () => string;
+}
+
+export interface IbMatTextboxData extends IbFormControlData {
+    base: IbMatTextboxParams;
+}

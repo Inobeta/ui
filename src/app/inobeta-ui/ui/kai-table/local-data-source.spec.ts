@@ -5,7 +5,6 @@ import { IbAggregate } from "./cells";
 import { IbColumn } from "./columns";
 import { IbDataSourceCapability } from "./data-source.types";
 import { IbTableLocalDataSource } from "./local-data-source";
-import { IbTableDataSource } from "./table-data-source";
 
 interface Row {
   name: string;
@@ -231,27 +230,5 @@ describe("IbTableLocalDataSource", () => {
 
     source.setInput({ rawFilter: { ibSearchBar: "missing" } });
     expect(source.getFilteredData()).toEqual([]);
-  });
-});
-
-describe("IbTableDataSource compatibility wrapper", () => {
-  it("preserves essential local data processing", () => {
-    const source = new IbTableDataSource<Row>([
-      { name: "alice", amount: 10 },
-      { name: "bob", amount: 20 },
-    ]);
-    source.columns = [column("name"), column("amount")];
-
-    expect(source._filterData(source.data)).toEqual(source.data);
-    expect(source._orderData(source.data)).toEqual(source.data);
-    expect(source._pageData(source.data)).toEqual(source.data);
-
-    const rendered: Row[][] = [];
-    const subscription = source.connect().subscribe((value) => rendered.push(value));
-    source.data = [{ name: "carol", amount: 30 }];
-
-    expect(rendered.at(-1)).toEqual([{ name: "carol", amount: 30 }]);
-    source.disconnect();
-    subscription.unsubscribe();
   });
 });

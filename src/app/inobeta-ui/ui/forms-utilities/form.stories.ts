@@ -34,7 +34,7 @@ class IbFormStoryComponent {
 }
 
 const meta: Meta<IbFormStoryComponent> = {
-  title: "Components/Forms (new)",
+  title: "Components/Forms",
   component: IbFormStoryComponent,
   decorators: [
     moduleMetadata({

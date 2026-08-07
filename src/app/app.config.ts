@@ -1,17 +1,11 @@
 import { registerLocaleData } from "@angular/common";
 import { HttpClient, provideHttpClient, withXhr } from "@angular/common/http";
-import { ApplicationConfig, importProvidersFrom, isDevMode, provideZoneChangeDetection } from "@angular/core";
+import { ApplicationConfig, isDevMode, provideZoneChangeDetection } from "@angular/core";
 import { provideEffects } from "@ngrx/effects";
-import { provideState, provideStore } from "@ngrx/store";
+import { provideStore } from "@ngrx/store";
 import { provideStoreDevtools } from "@ngrx/store-devtools";
 import { provideTranslateService, TranslateLoader } from "@ngx-translate/core";
 
-import { IbHttpModule } from "./inobeta-ui/http/http.module";
-import {
-  ibHttpEffects,
-  ibLoaderFeature,
-  ibSessionFeature,
-} from "./inobeta-ui/http/store";
 import { ibSetupHydration } from "./inobeta-ui/hydration";
 import { IbTranslateModuleLoader } from "./inobeta-ui/translate/translate-loader.service";
 import { appRoutes } from "./routing.module";
@@ -24,10 +18,7 @@ import { IbCSVExportProvider, IbXLXSExportProvider, IbPDFExportProvider } from "
 registerLocaleData(localeIt);
 
 
-export const statusErrorMessages = { 404: "Risorsa non trovata" };
-
 const reduxStorageSave = ibSetupHydration("__redux-store-inobeta-ui__", [
-  "ibHttpSessionState",
   "exampleLazyFeature",
   "ibTable",
 ]);
@@ -36,13 +27,6 @@ const reduxStorageSave = ibSetupHydration("__redux-store-inobeta-ui__", [
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    { provide: "HttpMode", useValue: "NORMAL" },
-    { provide: "ibHttpToastOnStatusCode", useValue: statusErrorMessages },
-    { provide: "ibHttpToastErrorCode", useValue: "code" },
-    {
-      provide: "ibHttpUrlExcludedFromLoader",
-      useValue: [{ url: "http://repubblica.it", method: "GET" }],
-    },
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(
       appRoutes,
@@ -51,7 +35,6 @@ export const appConfig: ApplicationConfig = {
     ),
     provideAnimationsAsync(),
     provideHttpClient(withXhr()),
-    importProvidersFrom([IbHttpModule]),
     provideTranslateService({
       loader: {
         provide: TranslateLoader,
@@ -60,9 +43,6 @@ export const appConfig: ApplicationConfig = {
       },
     }),
     provideStore(undefined, { metaReducers: reduxStorageSave.metareducers }),
-    provideState(ibSessionFeature),
-    provideState(ibLoaderFeature),
-    provideEffects(ibHttpEffects),
     provideEffects(reduxStorageSave.effects),
     provideStoreDevtools({
       maxAge: 25,
@@ -74,4 +54,3 @@ export const appConfig: ApplicationConfig = {
     IbCSVExportProvider,
   ],
 };
-

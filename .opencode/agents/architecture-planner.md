@@ -58,6 +58,7 @@ Route each implementation step to the most appropriate executor:
 | `examples-executor` | Demo app under `src/app/examples/` |
 | `storybook-executor` | Story files and `.storybook/` config |
 | `unit-jasmine-executor` | Karma/Jasmine spec files |
+| `migration-executor` | `ng update` migrations, Node migration scripts, payloads, and fixtures under `migrations/` |
 
 ## Executor Routing Rules
 

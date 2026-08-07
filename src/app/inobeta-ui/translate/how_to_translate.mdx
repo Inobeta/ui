@@ -31,9 +31,6 @@ export class IbTranslateModuleLoader implements TranslateLoader{
       map(tran => ({
         ...tran,
         shared: {
-          ...ibHttpTranslations[lang],
-          ...ibFormTranslations[lang],
-          ...ibMaterialFormTranslations[lang],
           ...ibKaiFilterTranslations[lang],
           ...ibViewTranslations[lang],
           ...ibKaiTableTranslations[lang],

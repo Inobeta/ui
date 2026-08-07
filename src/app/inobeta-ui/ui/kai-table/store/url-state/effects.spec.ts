@@ -5,7 +5,7 @@ import { Action } from '@ngrx/store';
 import { of, Subject } from 'rxjs';
 import { Sort } from '@angular/material/sort';
 import { UrlStateEffects } from './effects';
-import { tableStateActions, urlStateActions } from './actions';
+import { tableStateActions } from './actions';
 import { IbTableUrlService } from '../../table-url.service';
 import { IbKaiTableSnapshot } from '../../table.types';
 
@@ -50,12 +50,6 @@ describe('UrlStateEffects', () => {
 
     const urlServiceSpy = jasmine.createSpyObj('IbTableUrlService', [
       'writeState',
-      'setFilters',
-      'setSort',
-      'setPaginator',
-      'setAggregatedColumns',
-      'handleViewChange',
-      'setFilterAndSort',
     ]);
 
     TestBed.configureTestingModule({
@@ -265,79 +259,4 @@ describe('UrlStateEffects', () => {
     });
   });
 
-  // =========================================================================
-  // 5. Legacy effects still work
-  // =========================================================================
-  describe('legacy effects', () => {
-
-    it('should call setFilters on urlStateActions.setFilters', () => {
-      effects.setFilters$.subscribe();
-      actions$.next(urlStateActions.setFilters({
-        tableName: TABLE_A,
-        params: filtersA as never,
-      }));
-
-      expect(tableUrlService.setFilters).toHaveBeenCalledWith(TABLE_A, filtersA as never);
-    });
-
-    it('should call setSort on urlStateActions.setSort', () => {
-      effects.setSort$.subscribe();
-      actions$.next(urlStateActions.setSort({
-        tableName: TABLE_A,
-        params: sortA,
-      }));
-
-      expect(tableUrlService.setSort).toHaveBeenCalledWith(TABLE_A, sortA);
-    });
-
-    it('should call setPaginator on urlStateActions.setPaginator', () => {
-      effects.setPaginator$.subscribe();
-      actions$.next(urlStateActions.setPaginator({
-        tableName: TABLE_A,
-        params: { pageIndex: 3, pageSize: 30 },
-      }));
-
-      expect(tableUrlService.setPaginator).toHaveBeenCalledWith(TABLE_A, { pageIndex: 3, pageSize: 30 });
-    });
-
-    it('should call setAggregatedColumns on urlStateActions.setAggregatedColumns', () => {
-      effects.setAggregatedColumns$.subscribe();
-      actions$.next(urlStateActions.setAggregatedColumns({
-        tableName: TABLE_A,
-        params: aggregatedA,
-      }));
-
-      expect(tableUrlService.setAggregatedColumns).toHaveBeenCalledWith(TABLE_A, aggregatedA);
-    });
-
-    it('should call handleViewChange on urlStateActions.handleViewChange', () => {
-      effects.handleViewChange$.subscribe();
-      const params = {
-        view: 'bulk-view',
-        pageSize: 30,
-        page: 0,
-        filters: filtersA as never,
-        aggregatedColumns: aggregatedA,
-        sort: sortA,
-      };
-
-      actions$.next(urlStateActions.handleViewChange({
-        tableName: TABLE_A,
-        params,
-      }));
-
-      expect(tableUrlService.handleViewChange).toHaveBeenCalledWith(TABLE_A, params);
-    });
-
-    it('should call setFilterAndSort on urlStateActions.setRemoteDatasourceParams', () => {
-      effects.setRemoteDatasourceParams$.subscribe();
-      actions$.next(urlStateActions.setRemoteDatasourceParams({
-        tableName: TABLE_A,
-        filters: filtersA as never,
-        sort: sortA,
-      }));
-
-      expect(tableUrlService.setFilterAndSort).toHaveBeenCalledWith(TABLE_A, filtersA as never, sortA);
-    });
-  });
 });
